@@ -1,0 +1,18 @@
+{
+  "checked_at_utc": "2026-10-11T19:53:07.212193+00:00",
+  "candidate_source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "docs_head": "a22742cd5fcf46c381d6e0d43034ca716f726721",
+  "all482_source_bindings_match": true,
+  "changed_paths": [
+    "design/food-rc3-native-acceptance.md",
+    "design/runtime-qa.md",
+    "design/status.md",
+    "evidence/toolbar-2026.10.4-rc.3/README.md",
+    "evidence/toolbar-2026.10.4-rc.3/candidate/build68/dispatched-final-candidate.json",
+    "evidence/toolbar-2026.10.4-rc.3/candidate/build68/frozen-source-inventory-independent-verification.json",
+    "evidence/toolbar-2026.10.4-rc.3/candidate/build68/root-frozen-build68-source-verification.json",
+    "evidence/toolbar-2026.10.4-rc.3/manifest.json",
+    "evidence/toolbar-2026.10.4-rc.3/reviews/independent-build68-editorial-frozen-final.json"
+  ],
+  "qualification": "Docs-only extension preserves original candidate source, pipeline, dependency and media bytes;193frozen and197current evidence bindings remain separate."
+}

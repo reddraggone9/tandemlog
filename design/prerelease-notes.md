@@ -17,3 +17,7 @@ Waiting for the folder chooser no longer shows running-work progress or disables
 New workspaces set up shared text editing automatically. The old Settings setup action has been removed.
 
 Preview trials with Unspecified contents or uninitialized shared text cannot be upgraded in place. Preserve the old trial and use a fresh workspace and import plan.
+
+Fixed cramped Tasks editor layouts with larger text or an open keyboard, including after folder chooser errors and window resizing. Long folder chooser errors are scrollable.
+
+Fixed clipped Tasks bulk-edit save errors with larger text or an open keyboard.

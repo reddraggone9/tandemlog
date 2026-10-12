@@ -1,0 +1,331 @@
+{
+  "checked_at_utc": "2026-10-11T20:44:50.747342+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "job": 114559658408,
+  "verdict": "PASS_LINUX_EXACT_CANDIDATE_AND_ALL158_NATIVE_CASES",
+  "units": 1030,
+  "native_workflows": 158,
+  "rust_passed": 4,
+  "native_contracts": 107,
+  "tooling_checks": 79,
+  "log": {
+    "bytes": 742779,
+    "sha256": "77ec4a396d7122ebdfc349f7b81e58efb734192111a8f8f60b0835e44e29a78a"
+  },
+  "retained_geometry": [
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 483.6000061035156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 272.79998779296875,
+      "height": 16.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 483.6000061035156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 256.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 256.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 483.6000061035156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 272.79998779296875,
+      "height": 16.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 483.6000061035156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 256.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 256.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 256.9007873535156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 144.8312530517578,
+      "height": 16.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 256.9007873535156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "whitespace_horizontal_overflows": [
+        {
+          "offset": 13,
+          "character": "' '",
+          "box": [
+            166.79061889648438,
+            2.071249008178711,
+            174.8195343017578,
+            30.00874900817871
+          ]
+        }
+      ],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 168.0,
+      "height": 96.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "whitespace_horizontal_overflows": [
+        {
+          "offset": 13,
+          "character": "' '",
+          "box": [
+            166.79061889648438,
+            2.071249008178711,
+            174.8195343017578,
+            30.00874900817871
+          ]
+        }
+      ],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 256.9007873535156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 144.8312530517578,
+      "height": 16.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 256.9007873535156,
+      "height": 16.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "whitespace_horizontal_overflows": [
+        {
+          "offset": 13,
+          "character": "' '",
+          "box": [
+            166.79061889648438,
+            2.071249008178711,
+            174.8195343017578,
+            30.00874900817871
+          ]
+        }
+      ],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 168.0,
+      "height": 96.0,
+      "nonspace_count": 20,
+      "range_horizontal_overflows": [],
+      "whitespace_horizontal_overflows": [],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_count": 33,
+      "range_horizontal_overflows": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "whitespace_horizontal_overflows": [
+        {
+          "offset": 13,
+          "character": "' '",
+          "box": [
+            166.79061889648438,
+            2.071249008178711,
+            174.8195343017578,
+            30.00874900817871
+          ]
+        }
+      ],
+      "nonspace_overflows": [],
+      "missing_nonspaces": []
+    }
+  ],
+  "qualification": "Root independently parses exact official provider-decoded bytes retained once by reviewer. Aggregate native step actuallypasses158cases; prior three failures remain preserved. Replacement hosted per-character geometry is directly observed, distinct from the older failed run whose exact character offset was not logged. Signing/original APK and parent Android acceptance remain separate."
+}

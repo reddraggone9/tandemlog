@@ -1,0 +1,73 @@
+{
+  "checked_at_utc": "2026-10-11T20:52:07.447945+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "verdict": "PASS_ALL_5_HOSTED_CANDIDATE_JOBS",
+  "logs": [
+    {
+      "platform": "candidate",
+      "job_id": 114559613997,
+      "bytes_of_retained_UTF8_representation": 22407,
+      "sha256_of_retained_UTF8_representation": "f51fd824628bffce221acfca2081d81d8b39aa41a081d24c8f99d43e1857a8a7",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [],
+      "all_steps_success": true
+    },
+    {
+      "platform": "windows",
+      "job_id": 114559658361,
+      "bytes_of_retained_UTF8_representation": 414611,
+      "sha256_of_retained_UTF8_representation": "490db71155f6cc2137334aa6a1142889a6bfa88cd51fe39747f71e5bfc64228c",
+      "CRLF_count": 3292,
+      "utf8_bom": true,
+      "summary_lines": [
+        "2026-10-11T19:58:40.1610933Z 05:44 +1027 ~2: All tests passed!",
+        "2026-10-11T19:58:53.8616337Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "2026-10-11T19:58:58.7805217Z Ran 107 tests in 4.709s",
+        "2026-10-11T19:59:02.2528792Z Ran 79 tests in 2.937s",
+        "2026-10-11T19:59:02.2529042Z OK (skipped=4)"
+      ],
+      "all_steps_success": true
+    },
+    {
+      "platform": "linux",
+      "job_id": 114559658408,
+      "bytes_of_retained_UTF8_representation": 742779,
+      "sha256_of_retained_UTF8_representation": "77ec4a396d7122ebdfc349f7b81e58efb734192111a8f8f60b0835e44e29a78a",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [
+        "2026-10-11T19:52:47.3277007Z No issues found! (ran in 10.9s)",
+        "2026-10-11T19:57:31.2623058Z \ud83c\udf89 1030 tests passed.",
+        "2026-10-11T19:57:40.9361443Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "2026-10-11T19:57:45.5809964Z Ran 107 tests in 4.530s",
+        "2026-10-11T19:57:46.9709852Z Ran 79 tests in 1.146s",
+        "2026-10-11T20:38:50.2774368Z \ud83c\udf89 158 tests passed."
+      ],
+      "all_steps_success": false
+    },
+    {
+      "platform": "android-debug",
+      "job_id": 114559658517,
+      "bytes_of_retained_UTF8_representation": 185626,
+      "sha256_of_retained_UTF8_representation": "980197d5edd1ad7557b7900df53a140b7599efd48de47dfee79305e21e3063ce",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [],
+      "all_steps_success": false
+    },
+    {
+      "platform": "signed-android",
+      "job_id": 114570143219,
+      "bytes_of_retained_UTF8_representation": 191556,
+      "sha256_of_retained_UTF8_representation": "37a9a75916c52451f2dc152f33ab5d38784076ed0ab6b4f576b27bc6dacb05ff",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [],
+      "all_steps_success": true
+    }
+  ],
+  "representation_qualification": "Official GitHub App fetch_workflow_job_logs returns decoded UTF8 content. Retained that representation without newline or BOM normalization; these hashes are of the retained decoded representation, not independently attested raw download hashes. Raw log download not independently attested for this run; original platform archive/member hashes independently match API digests.",
+  "runtime_qualification": "Hosted native Linux and installed Windows/Flatpak lifecycles do not replace parent exact Android runtime acceptance."
+}

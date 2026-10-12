@@ -17,6 +17,7 @@ class TaskEditor extends StatefulWidget {
     required this.save,
     this.onDelete,
     this.onClose,
+    this.contextNotice,
     this.selectionCount,
     this.onClearSelection,
     this.users = const [],
@@ -34,6 +35,7 @@ class TaskEditor extends StatefulWidget {
   save;
   final Future<void> Function()? onDelete;
   final VoidCallback? onClose;
+  final Widget? contextNotice;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
@@ -55,6 +57,7 @@ class TaskEditorState extends State<TaskEditor> {
     tagInventory: widget.tagInventory,
     panel: widget.panel,
     onClose: widget.onClose,
+    contextNotice: widget.contextNotice,
     selectionCount: widget.selectionCount,
     onClearSelection: widget.onClearSelection,
     onDelete: widget.onDelete,
@@ -72,6 +75,7 @@ class BulkTaskEditor extends StatefulWidget {
     required this.onSave,
     this.onDelete,
     this.onClose,
+    this.contextNotice,
     this.selectionCount,
     this.onClearSelection,
     this.users = const [],
@@ -82,6 +86,7 @@ class BulkTaskEditor extends StatefulWidget {
   final Future<void> Function(BulkTaskEdit) onSave;
   final Future<void> Function()? onDelete;
   final VoidCallback? onClose;
+  final Widget? contextNotice;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
@@ -103,6 +108,7 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     tagInventory: widget.tagInventory,
     panel: widget.panel,
     onClose: widget.onClose,
+    contextNotice: widget.contextNotice,
     selectionCount: widget.selectionCount,
     onClearSelection: widget.onClearSelection,
     onDelete: widget.onDelete,
@@ -118,6 +124,7 @@ class _EditorBody extends StatefulWidget {
     required this.tagInventory,
     required this.panel,
     this.onClose,
+    this.contextNotice,
     this.selectionCount,
     this.onClearSelection,
     this.onDelete,
@@ -134,6 +141,7 @@ class _EditorBody extends StatefulWidget {
   final bool panel;
   final List<String> tagInventory;
   final VoidCallback? onClose;
+  final Widget? contextNotice;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
   final Future<void> Function()? onDelete;
@@ -153,7 +161,8 @@ class _EditorBodyState extends State<_EditorBody> {
   final scroll = ScrollController();
   bool busy = false, attempted = false, showOverride = false, allowPop = false;
   String? failure, assignee;
-  bool applyAssignee = false;
+  bool applyAssignee = false, modalActionsInContent = false;
+  double? modalViewportHeight;
   Future<bool>? closeRequest;
   double notesMaxHeight = 360,
       scheduleWidth = 480,
@@ -453,6 +462,7 @@ class _EditorBodyState extends State<_EditorBody> {
     final choice = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
+        scrollable: true,
         title: const Text('Unsaved changes'),
         content: const Text('Save your draft before continuing?'),
         actions: [
@@ -889,12 +899,37 @@ class _EditorBodyState extends State<_EditorBody> {
       final availableHeight = constraints.maxHeight < visibleHeight
           ? constraints.maxHeight
           : visibleHeight;
+      double lineHeight(TextStyle? style) {
+        final painter = TextPainter(
+          text: TextSpan(text: 'Ag', style: style),
+          textDirection: Directionality.of(context),
+          textScaler: media.textScaler,
+        )..layout();
+        final height = painter.height;
+        painter.dispose();
+        return height;
+      }
+
+      // A two-line title, potentially stacked action labels and dialog/input
+      // padding need real scaled space. Scroll the full actions with the form
+      // below that budget instead of allowing a fixed footer to consume it.
+      final styles = Theme.of(context).textTheme;
+      modalActionsInContent =
+          !widget.panel &&
+          availableHeight <
+              2 * lineHeight(styles.bodyLarge) +
+                  3 * lineHeight(styles.labelLarge) +
+                  96;
       notesMaxHeight = (availableHeight * .4).clamp(100.0, 360.0);
       failureMaxHeight = availableHeight * .4;
       // Match the dialog's vertical insets and action padding. Flexible notice
       // space below also accommodates buttons that wrap with enlarged text.
-      modalActionsMaxHeight = (availableHeight - 48 - media.padding.vertical)
-          .clamp(0.0, double.infinity);
+      final failureBodyReserve = modalActionsInContent
+          ? lineHeight(styles.bodyLarge) + 8
+          : 0.0;
+      modalActionsMaxHeight =
+          (availableHeight - 48 - media.padding.vertical - failureBodyReserve)
+              .clamp(0.0, double.infinity);
       return buildEditor(context);
     },
   );
@@ -1051,39 +1086,54 @@ class _EditorBodyState extends State<_EditorBody> {
         ],
       ),
     );
-    final actions = Row(
-      children: [
-        if (widget.onDelete != null)
-          TextButton(
+    final deleteAction = widget.onDelete == null
+        ? null
+        : TextButton(
             onPressed: editingFrozen ? null : delete,
             child: const Text('Delete'),
-          ),
-        Expanded(
-          child: Wrap(
+          );
+    final cancelAction = TextButton(
+      onPressed: editingFrozen ? null : close,
+      child: const Text('Cancel'),
+    );
+    final saveAction = FilledButton(
+      onPressed: busy || error != null ? null : submit,
+      child: Text(
+        busy
+            ? 'Saving…'
+            : widget.textSession?.hasPendingReceipt == true
+            ? 'Retry Save'
+            : 'Save changes',
+      ),
+    );
+    final actions = bulk && failure != null && modalActionsInContent
+        // Give failed bulk actions the full footer width. A fixed Delete
+        // column otherwise wraps Save into an extra line and squeezes the
+        // readable notice at enlarged phone text.
+        ? Wrap(
             alignment: WrapAlignment.end,
             spacing: 8,
             runSpacing: 4,
+            children: [?deleteAction, cancelAction, saveAction],
+          )
+        : Row(
             children: [
-              TextButton(
-                onPressed: editingFrozen ? null : close,
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                onPressed: busy || error != null ? null : submit,
-                child: Text(
-                  busy
-                      ? 'Saving…'
-                      : widget.textSession?.hasPendingReceipt == true
-                      ? 'Retry Save'
-                      : 'Save changes',
+              ?deleteAction,
+              Expanded(
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [cancelAction, saveAction],
                 ),
               ),
             ],
-          ),
-        ),
-      ],
-    );
+          );
     final pinBulkFailure = bulk && !widget.panel;
+    // A rejected bulk Save must keep its feedback beside the retry/close
+    // actions, even when the clean editor uses scrolling actions for space.
+    final actionsInContent =
+        modalActionsInContent && !(pinBulkFailure && failure != null);
     Widget failureNotice(String message) => Semantics(
       liveRegion: true,
       child: Text(
@@ -1129,6 +1179,7 @@ class _EditorBodyState extends State<_EditorBody> {
               padding: const EdgeInsets.only(top: 8),
               child: failureNotice(message),
             ),
+        if (widget.contextNotice != null) widget.contextNotice!,
       ],
     );
     final editor = widget.panel
@@ -1164,46 +1215,75 @@ class _EditorBodyState extends State<_EditorBody> {
             contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             title: heading,
-            content: SizedBox(width: 480, child: content),
-            actions: [
-              if (pinBulkFailure && failure != null)
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: modalActionsMaxHeight),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: ConstrainedBox(
-                            key: const ValueKey('bulk-save-failure'),
-                            // Long provider errors and enlarged text must leave
-                            // the actions reachable above a small keyboard viewport.
-                            constraints: BoxConstraints(
-                              maxHeight: failureMaxHeight,
-                            ),
-                            child: SingleChildScrollView(
-                              child: failureNotice(failure!),
-                            ),
-                          ),
+            content: SizedBox(
+              width: 480,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [content, if (actionsInContent) actions],
+              ),
+            ),
+            actions: actionsInContent
+                ? const []
+                : [
+                    if (pinBulkFailure && failure != null)
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: modalActionsMaxHeight,
                         ),
-                      ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: ConstrainedBox(
+                                  key: const ValueKey('bulk-save-failure'),
+                                  // Long provider errors and enlarged text must leave
+                                  // the actions reachable above a small keyboard viewport.
+                                  constraints: BoxConstraints(
+                                    maxHeight: failureMaxHeight,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: failureNotice(failure!),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            actions,
+                          ],
+                        ),
+                      )
+                    else
                       actions,
-                    ],
-                  ),
-                )
-              else
-                actions,
-            ],
+                  ],
           );
-    if (widget.onClose != null) return editor;
+    final boundedEditor = widget.panel
+        ? editor
+        : NotificationListener<ScrollMetricsNotification>(
+            onNotification: (notification) {
+              if (notification.depth == 0 &&
+                  notification.metrics.axis == Axis.vertical &&
+                  modalViewportHeight !=
+                      notification.metrics.viewportDimension) {
+                modalViewportHeight = notification.metrics.viewportDimension;
+                // The Dialog inset animation can resize after the first metrics
+                // callback. Reveal the existing caret again at the final bounds.
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) => revealFocusedCaret(),
+                );
+              }
+              return false;
+            },
+            child: editor,
+          );
+    if (widget.onClose != null) return boundedEditor;
     return PopScope(
       canPop: allowPop,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) close();
       },
-      child: editor,
+      child: boundedEditor,
     );
   }
 }

@@ -1,0 +1,25 @@
+{
+  "atUtc": "2026-10-12T02:13:10.713709+00:00",
+  "baseSource": "49fdfb8393df175d282d06dd091add07aaca9aa6",
+  "version": "2026.10.4-rc.3+70",
+  "platform": "actual Linux GTK; Android Material override and simulated IME, not Android runtime",
+  "matrix": {
+    "passed": 12,
+    "failed": 0,
+    "logSha256": "1ed82e23b65c61ca971168f2f17243b0209508d23b9c570aae1feba22334ad03",
+    "includes": "five stale bulk failure variants, phone single/bulk 1.0/1.3/2.0, all six picker-error/resize cases"
+  },
+  "editorUnits": {
+    "passed": 44,
+    "failed": 0,
+    "logSha256": "0f02ea1640178a775ce9e7dde3a74e971121cb7b0ab2350405150f217165319d"
+  },
+  "analysis": "PASS",
+  "independentReview": "no blocking findings; exact reviewed source and captures retained",
+  "recordingSetupFailure": {
+    "logSha256": "24c46f3ec8e36baa0fb57e7016d4e934211c161202c4f721d30121241a2a4f0a",
+    "cause": "xsetroot missing in ephemeral container; recording setup failed before UI case",
+    "recovered": "container-only x11-xserver-utils/fonts prerequisite; no app change"
+  },
+  "remainingGate": "full exact candidate and actual signed Android acceptance; no publication or live cutover"
+}

@@ -1,0 +1,88 @@
+{
+  "checked_at_utc": "2026-10-11T20:54:26.923747+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "supported_route": "One GitHub App original download per platform -> exact returned resolved file reference -> currentLibrary prepare_materialize -> currenthelper whole opaque transfer. No guessed storage URL/rawcurl/CLI blob/substitution.",
+  "helper": {
+    "source": "c0/library/scripts/library_file_transfer.py",
+    "bytes": 11084,
+    "sha256": "5e1557817be17db06e2375f8c34ed83e948d520242e5ee4cb50a30c7a4c83378"
+  },
+  "disk_failure_and_recovery": "Initial Linux materialization failed Errno28; destination absent. Failure/fulltransfer preserved. Root reclaimed only its accounted current64,041,824B kernel compiler file; same resolved GitHub file reference re-prepared to freshcomplete opaque transfer and materialized successfully, no secondGitHub download. All prior source/originals/logs/data preserved; no cleanup by reviewer.",
+  "originals_per_platform": 1,
+  "retained_evidence": [
+    {
+      "file": "private-android-release-resolved-response.json",
+      "bytes": 2172,
+      "sha256": "280ccac506469852c809b85fa462877144877451610a5b3e66a86ae3e9d210b5",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-android-release-complete-transfer.json",
+      "bytes": 831,
+      "sha256": "5b735552108dd671d613c2ae2954d37a2c62d5816cb0bbf76f34d2cb16208219",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-android-release-materialization.log",
+      "bytes": 78,
+      "sha256": "2c23a40213ea34dd536a19c06e3bd1623243ee6e52566590c8d5e1a0912246e7",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-windows-resolved-response.json",
+      "bytes": 2140,
+      "sha256": "d7e0a37392c2deb6a2780c2afa3d651f6933ce0e6ea6f6035991cfd96738fbc9",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-windows-complete-transfer.json",
+      "bytes": 813,
+      "sha256": "2a4bf0fdbeab2742fe84c73f11e930d77827d40bfbb6b784669554c4dba1e0b2",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-windows-materialization.log",
+      "bytes": 70,
+      "sha256": "4a06cb998ce77f2c60d21f5da871cf69622ad4962acc3fd6a4b30d0b5af1bed8",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-linux-resolved-response.json",
+      "bytes": 2126,
+      "sha256": "5051b91aa16ba751d3904a0e75098ff2d94c6295651387e1087f2ae24eb2e00d",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-linux-complete-transfer.json",
+      "bytes": 808,
+      "sha256": "30417fdf93d9feafd15f62b2f035586b91f73dc86dbe2b9db9a129795fc661c7",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-linux-materialization.log",
+      "bytes": 65,
+      "sha256": "7075ad84f37f974dd56843254a4b8a7d232aa3fae8e741a25542f1f5ad3bf1a0",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-linux-retry-complete-transfer.json",
+      "bytes": 808,
+      "sha256": "754e6a0768a4f8595a1fd086c4a0f3c6d90c23f7b42ba7a010ff307b29004bad",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "private-linux-retry-materialization.log",
+      "bytes": 68,
+      "sha256": "3cafb96b8aace3cf5432efa8ca533c5f7f60c6c70b114762c20b8d71510b161d",
+      "private_transfer_metadata_not_public": true
+    },
+    {
+      "file": "root-current-generated-kernel-capacity-reclaim.json",
+      "bytes": 1997,
+      "sha256": "31384f5a9f1f231c2516f76f50b88c7ad543d52101a50e9ee79a2832d9ebbe9b",
+      "private_transfer_metadata_not_public": false
+    }
+  ],
+  "final_free_bytes": 36667392
+}

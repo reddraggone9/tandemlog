@@ -1,0 +1,18 @@
+{
+  "checked_at_utc": "2026-10-11T20:04:19.948977+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "job": 114559658361,
+  "verdict": "PASS_WINDOWS_EXACT_CANDIDATE_GATE_REUSE_OF_ONCE_RETAINED_LOG",
+  "unit_passed": 1027,
+  "unit_skips": 2,
+  "rust_passed": 4,
+  "contracts_passed": 107,
+  "tooling_tests": 79,
+  "tooling_skips": 4,
+  "log": {
+    "bytes": 414611,
+    "sha256": "490db71155f6cc2137334aa6a1142889a6bfa88cd51fe39747f71e5bfc64228c"
+  },
+  "qualification": "Root parses exact official provider-decoded bytes retained once by independent reviewer; no duplicate fetch or newline/BOM normalization. Windows job terminalSUCCESS; Linux aggregate and signing still pending. Original artifact/static/desktop report verification is separate; no local Windows GUI execution claimed."
+}

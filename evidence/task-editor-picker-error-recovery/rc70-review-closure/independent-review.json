@@ -1,0 +1,43 @@
+{
+  "reviewedAtUtc": "2026-10-12T02:03:55Z",
+  "reviewer": "rc70_independent_review",
+  "baseSource": "49fdfb8393df175d282d06dd091add07aaca9aa6",
+  "branch": "fix/task-editor-bulk-error-rc70",
+  "version": "2026.10.4-rc.3+70",
+  "verdict": "No blocking findings in the reviewed source and pixel snapshots; proceed to remaining gates and actual Android acceptance.",
+  "blockingFindings": [],
+  "reviewedSourceSha256": {
+    "lib/presentation/task_editor.dart": "c922a74fc2ed4adb374e630cd3f9eb14e6c92f1da2366232f2fdba7dfa0a383c",
+    "integration_test/bulk_failure_visibility_test.dart": "cab3fd123059380bdac5f52e26d392c01beca276bce8adfcd9d5547ad62cd9be",
+    "integration_test/task_flow_test.dart": "207254eb88af1b6725b0d5d12af490c5a63e5f215521601b1cd591de0abf76fb",
+    "pubspec.yaml": "d4055881c518be855661d2f586e2af1f01acca90981d65db4a211218910e4ea7",
+    "semantic-diff.patch": "8a48e02a84f5dd9f4d84233c1bdda5c9bacee1df2a009ebde3883cc796f2fbb9"
+  },
+  "evidence": [
+    "Rejected bulk Save moves existing failure feedback beside the retry/close actions even when clean modal actions scroll with the form. The existing live-region notice remains scrollable; controller, stale-save, busy, validation, delete, close and submit callbacks are unchanged.",
+    "Full-width Wrap is limited to failed bulk editors whose clean layout already scrolls actions. The scaled body-line reserve is applied to the failure-footer height cap. Nonfailed and panel action structure is retained.",
+    "320dp dark 200-percent capture after rejection shows the warning beginning above the action footer; after a real touch drag, the complete final phrase 'try again.' is visible and Delete, Cancel and Save remain visible above the simulated IME.",
+    "The 360dp dark and 390dp light enlarged-text captures show the complete warning alongside reachable actions. Red capture lacked any visible warning or actions.",
+    "Single and bulk enlarged-text Cancel captures show full Cancel targets above the simulated IME after form scrolling. The modified fixture keeps prior caret/focus/viewport assertions, explicitly checks enabled >=48dp Cancel and retained IME metrics, taps Cancel, and verifies unchanged canonical data.",
+    "The new bulk fixture asserts a nonzero >=48dp form viewport, uses tester.drag on the actual warning, rejects empty final-phrase TextBoxes, verifies all final-phrase boxes vertically inside the notice, retries stale Save without canonical mutation or focus/draft changes, and exercises dirty Cancel/Discard without applying the stale draft."
+  ],
+  "reviewedCaptureSha256": {
+    "captures-red/bulk-failure-small-dark-200-ime-after-rejection.png": "6da9acea44703cc1bec3952cbb58017dd5e4f8e77d7b7ee84ef2ecf9ecc9a953",
+    "captures-red/phone-editor-single-2-0-before-cancel.png": "dfa38baf8dc4884455c8c5b4689e787e09b4c3affd7009a140e6f154d99794db",
+    "captures-green/bulk-failure-android-small-dark-200-ime-after-rejection.png": "ff4d5a66efd0df13bc192b2bfea7498b9e20d8940d8f7de1fc51af6bc67babc2",
+    "captures-green/bulk-failure-android-small-dark-200-ime-after-warning-drag.png": "83f8264a36aac00fd366819f47cefce2b930976df8f2346494e3498bf920709a",
+    "captures-green/bulk-failure-narrow-light-200-ime-after-rejection.png": "a32bde7c4161d9625a842c51e83833af6d92583a3d6f5efc4b81484e18318fc0",
+    "captures-green/bulk-failure-small-dark-200-ime-after-rejection.png": "7ad5a451db7aca84ba735c3d3930564977c698a7c06762481061d3c7dcc492a0",
+    "captures-green/phone-editor-bulk-2-0-cancel-reachable.png": "55b86ea2b9d0785b51729775b4a0a387cf4f31f304816230105d8eea52e20307",
+    "captures-green/phone-editor-single-2-0-cancel-reachable.png": "9982f40582ce055ef12d3b6f5c27ff0040c736a3cb1cdf156799cee02f65999f"
+  },
+  "nonblockingSuggestions": [
+    "For future fixture hardening, bound Cancel's full target top and width as well as its current hit-test, minimum height and bottom checks; the reviewed captures already show it fully visible.",
+    "For future warning fixture hardening, assert final-phrase TextBoxes' horizontal bounds as well as the present vertical bounds; reviewed text wraps within the notice width."
+  ],
+  "limits": [
+    "Read-only independent source/pixel review; no tests were launched by this reviewer and no current matrix result is asserted here.",
+    "All captures are Linux GTK rendering with simulated Android/IME metrics, not actual Android/Gboard evidence.",
+    "Actual signed APK, real Android/Gboard behavior, full release gates and fresh trial acceptance remain the primary executor's work."
+  ]
+}

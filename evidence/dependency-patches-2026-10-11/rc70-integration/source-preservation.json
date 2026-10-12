@@ -1,0 +1,19 @@
+{
+  "atUtc": "2026-10-12T05:54:55.746225+00:00",
+  "priorAuditedHead": "54e4ac0011710648d670c7e9c801f058e79256fe",
+  "integratedMain": "b9474a575bba7bae70ed55eac7f8d80020ca8859",
+  "branch": "audit/dependabot-5-6-7-20261011",
+  "mergeConflicts": [],
+  "productionMainFilesCompared": 214,
+  "productionFilesEqualMain": true,
+  "releaseNotesEqualReviewedMain": true,
+  "workflowsEqualMainExceptAuditedImmutablePins": true,
+  "auditedLockBytesUnchanged": true,
+  "urlLauncherArchiveSha256": "e8cc955c97e06df9879140a1fe301f3d493f01b7c62dec7f46834be31d7e9fda",
+  "appVersion": "2026.10.4-rc.3+70",
+  "signingPermissionsAndMainAdmissionPreserved": true,
+  "noTemporarySmokeBranchMerged": true,
+  "noHeldPR1or2Changes": true,
+  "noReleaseOrStablePublication": true,
+  "privateFoodDataUsed": false
+}

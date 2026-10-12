@@ -1,0 +1,25 @@
+{
+  "qualification": "Source/review transfer; rawconsole bytes preserved including whitespace. PrivateLibrary/importtrial omitted.",
+  "files": {
+    "README.md": {
+      "bytes": 2009,
+      "sha256": "efe687dd336fae3d1f829ebebb4da01df4f01575955788bb717e11a78c6bc1e5"
+    },
+    "actual-scoped-native-four-pass.txt": {
+      "bytes": 7363,
+      "sha256": "db73b8b09f7d6cc9107c90acd6c57332290aa9ab8959d0c4230188712d88b217"
+    },
+    "actual-source-layout-red.txt": {
+      "bytes": 14003,
+      "sha256": "beb557b92f0b7467ba84e408cf08a51e3ddf1d3f6404df46bf7e4137f9b8c452"
+    },
+    "checkpoint.json": {
+      "bytes": 5126,
+      "sha256": "7b45242611907e7ced8e851735e7ceba231459c6cea69d08ad9db04591ec30fd"
+    },
+    "independent-review-findings.json": {
+      "bytes": 1466,
+      "sha256": "56b7d40fdcf56f3e5313634d0f48e2ed9f0e28bc0fe0160d25d6427fca8de5e0"
+    }
+  }
+}

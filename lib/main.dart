@@ -2352,6 +2352,79 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         _targetBaseline(current) == _targetBaseline(frozen);
   }
 
+  // The narrow editor shares the host diagnostic without letting a sibling
+  // notice take all of its keyboard-safe height. Wide panels keep the banner.
+  bool get _taskModalOpen =>
+      !foodVisible &&
+      store != null &&
+      user != null &&
+      taskView != null &&
+      viewError == null &&
+      sharedSafetyError == null &&
+      _taskEditorModalAtWidth(
+        MediaQuery.sizeOf(context).width -
+            MediaQuery.paddingOf(context).horizontal,
+      );
+
+  bool _taskEditorModalAtWidth(double width) =>
+      width < 900 &&
+      (editingTask != null || editingBulk != null) &&
+      (!selecting ||
+          mobileEditorOpen ||
+          (wideLayout &&
+              (editorKey.currentState != null ||
+                  bulkEditorKey.currentState != null)));
+
+  Widget _actionErrorNotice() => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    child: Material(
+      color: Theme.of(context).colorScheme.errorContainer,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.error_outline),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 120),
+                child: SingleChildScrollView(
+                  primary: false,
+                  key: const ValueKey('action-error-scroll'),
+                  child: Shortcuts(
+                    shortcuts: const {
+                      SingleActivator(LogicalKeyboardKey.arrowDown):
+                          ScrollIntent(direction: AxisDirection.down),
+                      SingleActivator(LogicalKeyboardKey.arrowUp): ScrollIntent(
+                        direction: AxisDirection.up,
+                      ),
+                    },
+                    child: Focus(
+                      key: const ValueKey('action-error-details'),
+                      child: Text(error!),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            if (errorFromRefresh && store != null)
+              TextButton(
+                onPressed: busy ? null : _retryFolderRead,
+                child: const Text('Retry'),
+              ),
+            if (!settingsLoaded)
+              TextButton(
+                onPressed: busy ? null : _retryStartup,
+                child: const Text('Retry'),
+              ),
+          ],
+        ),
+      ),
+    ),
+  );
+
   Widget _editorSurface(
     Widget list,
     List<Map<String, dynamic>> users,
@@ -2362,18 +2435,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         return list;
       }
       final panel = constraints.maxWidth >= 900;
+      final modal = _taskEditorModalAtWidth(constraints.maxWidth);
       if (wideLayout &&
-          !panel &&
+          modal &&
           (editorKey.currentState != null ||
               bulkEditorKey.currentState != null)) {
         mobileEditorOpen = true;
       }
       wideLayout = panel;
-      if (!panel && selecting && !mobileEditorOpen) return list;
+      if (!panel && !modal) return list;
       final task = editingTask;
       final editor = task != null
           ? TaskEditor(
               key: editorKey,
+              contextNotice:
+                  !panel && error != null && sharedSafetyError == null
+                  ? _actionErrorNotice()
+                  : null,
               task: task,
               tagInventory: _tagInventory(),
               textSession: editingText,
@@ -2505,6 +2583,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             )
           : BulkTaskEditor(
               key: bulkEditorKey,
+              contextNotice:
+                  !panel && error != null && sharedSafetyError == null
+                  ? _actionErrorNotice()
+                  : null,
               tasks: editingBulk!,
               tagInventory: _tagInventory(),
               users: users,
@@ -3959,70 +4041,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           busy: busy && !awaitingCompletionConfirmation,
                         ),
                       if (error != null &&
-                          (sharedSafetyError == null || keepSetupInputs))
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 8,
-                          ),
-                          child: Material(
-                            color: Theme.of(context).colorScheme.errorContainer,
-                            borderRadius: BorderRadius.circular(12),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Icon(Icons.error_outline),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        maxHeight: 120,
-                                      ),
-                                      child: SingleChildScrollView(
-                                        primary: false,
-                                        key: const ValueKey(
-                                          'action-error-scroll',
-                                        ),
-                                        child: Shortcuts(
-                                          shortcuts: const {
-                                            SingleActivator(
-                                              LogicalKeyboardKey.arrowDown,
-                                            ): ScrollIntent(
-                                              direction: AxisDirection.down,
-                                            ),
-                                            SingleActivator(
-                                              LogicalKeyboardKey.arrowUp,
-                                            ): ScrollIntent(
-                                              direction: AxisDirection.up,
-                                            ),
-                                          },
-                                          child: Focus(
-                                            key: const ValueKey(
-                                              'action-error-details',
-                                            ),
-                                            child: Text(error!),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  if (errorFromRefresh && store != null)
-                                    TextButton(
-                                      onPressed: busy ? null : _retryFolderRead,
-                                      child: const Text('Retry'),
-                                    ),
-                                  if (!settingsLoaded)
-                                    TextButton(
-                                      onPressed: busy ? null : _retryStartup,
-                                      child: const Text('Retry'),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                          (sharedSafetyError == null || keepSetupInputs) &&
+                          !_taskModalOpen)
+                        _actionErrorNotice(),
                       if (!foodVisible && store?.clockWarning != null)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),

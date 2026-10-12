@@ -242,3 +242,9 @@ smokes retain their scoped validity: reviewed package bytes, federated native
 locks, FolderActions adapter and smoke fixtures are unchanged. Full exact-head CI
 is now required once for this updated proposal; this does not accept or alter the
 parent's separate release candidate. Keep the temporary smoke branch unmergeable.
+
+## Published RC70 integration — 2026-10-12
+
+The proposal now integrates current main `b9474a575bba7bae70ed55eac7f8d80020ca8859`, including exact RC70 editor fixes and approved release-note copy. RC3 publication has completed from the original accepted candidate; these dependency changes do not alter its binaries. There are no merge conflicts, all214 compared application/platform/native/packaging files equal main, and the audited lock, smoke fixtures and upstream audit evidence retain exact bytes. Workflow changes remain only the reviewed immutable action pins and upload annotation; signing/admission safeguards stay intact.
+
+All three jobs in prior exact-head CI38170327228 passed. New integrated-head full CI is required before merge readiness; prior results retain their historical attribution. Local79 release/tool tests pass with one existing skip. [Integration evidence](../evidence/dependency-patches-2026-10-11/rc70-integration/) distinguishes the setup-only sudo failure and preserved raw logs from actual passing checks. Keep PR8 draft and unmerged while the coordinator reviews the new terminal result. No stable publication, live Food operation or temporary smoke-branch merge is authorized.

@@ -1,0 +1,26 @@
+{
+  "atUtc": "2026-10-12T00:05:57.602694+00:00",
+  "reviewedBase": "6e89353ca7c1740c56b80fdb542612f30c2db908",
+  "handoffHead": "0286c0da343efd6366232083c113ce8509a2d71d",
+  "version": "2026.10.4-rc.3+69",
+  "platform": "actual Linux GTK using Android Material override, simulated IME; not actual Android",
+  "analysis": "PASS",
+  "nativeCases": {
+    "passed": 6,
+    "failed": 0
+  },
+  "editorUnitCases": {
+    "passed": 44,
+    "failed": 0
+  },
+  "redResize": {
+    "passed": 0,
+    "failed": 2,
+    "failure": "two diagnostic scrollables on first narrow frame in both themes"
+  },
+  "logSha256": "d4f0a11872dc407a49a56c117b59a932a0c2ddc64145749014d98bc696579571",
+  "redLogSha256": "5aacb88d2cc387ba7fb8c6b41cad36fb98f95f63f993cba309130538ffa39a22",
+  "visualReview": "actual GTK captures show title caret and wrapped Delete/Cancel/Save above simulated IME; final Try again. line readable after inner scroll",
+  "architectureReview": "single modal predicate used by host notice and editor avoids first-frame disagreement; existing selection promotion, draft/controller/composition/text session and guarded Save are retained; no storage/importer/dependency changes",
+  "remainingGate": "Full exact signed candidate and actual Android acceptance required; no publication or live cutover"
+}

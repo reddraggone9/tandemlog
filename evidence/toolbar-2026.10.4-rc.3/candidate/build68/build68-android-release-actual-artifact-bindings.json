@@ -1,0 +1,96 @@
+{
+  "checked_at_utc": "2026-10-11T20:49:52.176302+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "version": "2026.10.4-rc.3+68",
+  "artifact_api_metadata": {
+    "id": 11714269945,
+    "node_id": "MDg6QXJ0aWZhY3QxMTcxNDI2OTk0NQ==",
+    "name": "android-release",
+    "size_in_bytes": 31115048,
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11714269945",
+    "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11714269945/zip",
+    "expired": false,
+    "digest": "sha256:b21231f0991405e56e1588ce316e3a483abf23c059eb61395953c4c611449bd1",
+    "created_at": "2026-10-11T20:47:20Z",
+    "updated_at": "2026-10-11T20:47:20Z",
+    "expires_at": "2026-10-16T20:47:17Z",
+    "workflow_run": {
+      "id": 38169726969,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "8c6ee23c78232094715b9bf79f9d3be54b3b522a"
+    }
+  },
+  "actual_archive": {
+    "path": "/tmp/food-rc68-final-artifact-review/android-release-38169726969-original.zip",
+    "bytes": 31115048,
+    "sha256": "b21231f0991405e56e1588ce316e3a483abf23c059eb61395953c4c611449bd1"
+  },
+  "original_member_inventory_and_crc": "PASS",
+  "strict_member_checksums": "PASS",
+  "actual_members": [
+    {
+      "name": "android-release-metadata.json",
+      "bytes": 295,
+      "sha256": "40942d434137d9f32c87129dcb38a230144cf733bc814959ba08fec09ef4d5bb",
+      "crc_valid": true,
+      "crc32": "e12e92ae",
+      "payload_extracted": true
+    },
+    {
+      "name": "android-SHA256SUMS.txt",
+      "bytes": 88,
+      "sha256": "d55e04136d75ddcd3ad93db6d5d081243721d018cc54aa5a790ee98567376051",
+      "crc_valid": true,
+      "crc32": "cd623530",
+      "payload_extracted": true
+    },
+    {
+      "name": "android-signature.txt",
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "crc_valid": true,
+      "crc32": "02981044",
+      "payload_extracted": true
+    },
+    {
+      "name": "tandemlog-android.apk",
+      "bytes": 67099301,
+      "sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c",
+      "crc_valid": true,
+      "crc32": "b5a1b65c",
+      "payload_extracted": true
+    }
+  ],
+  "frozen_policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+  "apk_crc_member_count": 79,
+  "actual_native_libraries": [
+    {
+      "name": "lib/arm64-v8a/libtandemlog_text.so",
+      "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0"
+    },
+    {
+      "name": "lib/armeabi-v7a/libtandemlog_text.so",
+      "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5"
+    },
+    {
+      "name": "lib/x86_64/libtandemlog_text.so",
+      "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+    }
+  ],
+  "android_metadata": {
+    "source_commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+    "version": "2026.10.4-rc.3",
+    "version_code": 68,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c"
+  },
+  "actual_apk": {
+    "path": "/tmp/food-rc68-final-artifact-review/android-release-38169726969/tandemlog-android.apk",
+    "bytes": 67099301,
+    "sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c"
+  },
+  "own_sdk_signature_badging_and_static_payload": "PASS pinned owner/package/code68/nondebuggable/threeABI/whole-APK ZIP alignment/custom-text ELF+RELRO+exports/notices; no app execution or full-APK16K runtime/compliance claim"
+}

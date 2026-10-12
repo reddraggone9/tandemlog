@@ -1,0 +1,59 @@
+{
+  "recorded_at_utc": "2026-10-11T23:35:43.928795+00:00",
+  "baseline_main": "6e89353ca7c1740c56b80fdb542612f30c2db908",
+  "failed_native_candidate_source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "failed_native_candidate_run": 38169726969,
+  "failed_native_APK_sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c",
+  "scope": "Minimal Tasks host-notice/modal-action/late-caret/draft-confirmation layout fix and4theme/error-control source regressions. No canonical/model/native/dependency/picker lifecycle change.",
+  "source_files": {
+    "lib/main.dart": {
+      "bytes": 204875,
+      "sha256": "1145f14483c18caa8bc04caebb0a9b022996a92f42ce27b2f1afcadd86351b02"
+    },
+    "lib/presentation/task_editor.dart": {
+      "bytes": 44346,
+      "sha256": "ca64de56408de6f0adaa05d9fe3b6426516199b35eb5777c6cf536976cb4e258"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 175158,
+      "sha256": "fe148139ddd73e625aae0d8c16c999ff83d5560c3dbf1b563c8cbd41d6bdeff2"
+    },
+    "integration_test/task_editor_error_keyboard_workflow_test.dart": {
+      "bytes": 12166,
+      "sha256": "36b10af7069188371a4c5ae07e45bb8a5427ea0c0e0bafaf33489064d732100a"
+    }
+  },
+  "actual_product_RED": "Native GTK with captured320x640@200%/280dp IME metrics and Android Material targets; actual TandemlogApp, source picker diagnostic and initialized synthetic store. Editor viewport0px and RenderFlex78px overflow. This is not actual Android Gboard execution.",
+  "native_failure_qualification": "Original parent screenshots personally viewed. Stablev2026.10.3 has same structural susceptibility, but old exactAndroidAPK not reproduced. PrivateLibraryv2 remains local/library; private notes/trial content not in Git.",
+  "cleanup": {
+    "receipt_sha256": "e692a15c26a85bfa0ab8a9499659ad6036a46fe0bdf1180afa34bebbd02d8121",
+    "removed_generated_files": 943,
+    "removed_Dart_kernel_bytes": 754358456,
+    "removed_Rust_incremental_bytes": 233743713,
+    "after_free_bytes": {
+      "/tmp": 754044928,
+      "/workspace": 168554496
+    },
+    "protected": "Source/config/Git histories/oldtask/private evidence/original installers/unique experiments/credentials/workspace data retained. No whole-directory/cache deletion."
+  },
+  "checks": "Dart formatting PASS; focused4case nativeGTK source regression PASS4/0in40sec after explicit-finally override reset. Theme/error/clean layout/caret/fulltargets/dirtycomposition/session/Cancel-keepediting-Discard/canonical-byte guards pass. Exact-patch independent review finds resize mustfix before release.",
+  "parent_steering": "Repeated disconnect23:29UTC: prioritize transferable source/regression/receipt checkpoint. No corrected candidate or publication until verified gates/parent clearance.",
+  "remaining": [
+    "Finish focused native regression and relevant existing editor/draft checks",
+    "Independent architecture/correctness and final release editorial reviews",
+    "Monotonic corrected candidate version/build, full exact-source hosted/signing/original-artifact gates",
+    "Parent focused installed Android retest and freshquota; PR8 merge remains held"
+  ],
+  "raw_RED_log_qualification": "Original console bytes preserved including native build progress padding/trailing whitespace. Source, JSON and Markdown whitespace checks are separate.",
+  "actual_GREEN_log_sha256": "db73b8b09f7d6cc9107c90acd6c57332290aa9ab8959d0c4230188712d88b217",
+  "independent_review": {
+    "recording": "Root records final messages from independent architecture_review and correctness_review; no additional reviewer test/build execution.",
+    "reviewed_production_commit": "5e8c7017562674309eec7365c38c22ba86150fef",
+    "verdict": "PHONE_SCOPED_GATES_PASS_RESIZE_MUST_FIX_BEFORE_CANDIDATE",
+    "actual_checks": "Independently read4PASS/0FAIL40sec, native GTK with simulated captured320dp/200% and280dp IME, Android Material targets. Root and architecture reviewer viewed valid title/fullaction/error viewport pixels. Body/session keys, composition/callbacks/receipt/draft guards unchanged. No physical Android claim.",
+    "must_fix": "_taskModalOpen evaluates before _editorSurface promotes wide selected editor to narrow modal via mobileEditorOpen. First narrow frame can retain external banner and also add contextNotice. Share/derive effective-modal predicate including wide active-editor promotion; verify exactly one action-error-scroll, same editor/text session and draft/composition, reachable title/actions on bounded resize.",
+    "remaining_error_readability": "Scroll inner diagnostic viewport to prove full final Try again. line. Current screenshot/test proves viewport access, not simultaneous fullmessage display.",
+    "remaining": "Relevant editor/bulk/analysis gates and final independent closure/editorial, monotonic corrected candidate, full hosted/signing/originals, parent focused installedAndroid/freshquota. No candidate/publication."
+  },
+  "handoff_priority": "Parent23:29disconnect steering requires transferable checkpoint; no new long operations/candidate/publication. Transfer resize/readability completion explicitly."
+}

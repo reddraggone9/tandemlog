@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' show PointerDeviceKind;
 
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tandemlog/platform/log_folder.dart';
@@ -18,6 +20,8 @@ import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 
 import 'native_text_fixtures.dart';
+import 'task_editor_error_keyboard_workflow_test.dart'
+    show registerTaskEditorErrorKeyboardTests, registerTaskEditorResizeTests;
 import 'checklist_disclosure_layout_test.dart'
     show registerChecklistDisclosureLayoutTests;
 import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
@@ -299,163 +303,200 @@ void main() {
   registerFoodAccountWorkflowTests();
   registerFoodUndoStackWorkflowTests();
   registerFolderPickerProgressTests();
+  registerTaskEditorErrorKeyboardTests();
+  registerTaskEditorResizeTests();
   registerFoodAddAnotherTests();
   registerFoodBulkDetailsHostUndoReviewTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
-    final root = await Directory.systemTemp.createTemp('rc4-phone-editors-');
-    final folder = await Directory('${root.path}/shared').create();
-    final profile = await Directory('${root.path}/profile').create();
-    final writer = await openNativeFixtureStore(
-      LocalLogFolder(folder.path),
-      '${root.path}/writer',
-    );
-    final user = const Uuid().v4();
-    final ids = [const Uuid().v4(), const Uuid().v4()];
-    await writer.command(user, 'user.created', {'name': 'Alex Example'});
-    for (var i = 0; i < ids.length; i++) {
-      await writer.createNativeFixtureTask(ids[i], {
-        'title': 'Synthetic editor task ${i + 1}',
-        'description': 'Reference notes for keyboard regression.',
-        'assignee': user,
-        'schedule': {
-          'dueDate': '2030-05-01',
-          'dueTime': i == 0 ? '12:30' : '13:45',
-          'recurrence': 'every week when done',
-        },
-      });
-    }
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
-    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
-    await tester.pumpAndSettle();
-    tester.view.devicePixelRatio = 1.5;
-    tester.view.physicalSize = const Size(540, 960);
-    tester.view.viewPadding = const FakeViewPadding(top: 36, bottom: 36);
-    tester.view.padding = const FakeViewPadding(top: 36, bottom: 36);
-    await tester.pumpAndSettle();
-    Future<Map<String, String>> canonicalContents() async => {
-      await for (final entry in folder.list())
-        if (entry is File) entry.path: base64Encode(await entry.readAsBytes()),
-    };
-    final before = await canonicalContents();
-    for (final scale in [1.0, 1.3, 2.0]) {
-      tester.platformDispatcher.textScaleFactorTestValue = scale;
-      await tester.pumpAndSettle();
-      for (final bulk in [false, true]) {
-        if (bulk) {
-          await selectTask(tester, ids[0], control: false, longPress: true);
-          await selectTask(tester, ids[1], control: false);
-          // The selection commands remain outside the scrolling task viewport.
-          tester.state<ScrollableState>(taskScrollable()).position.jumpTo(0);
-          await tester.pumpAndSettle();
-          await tester.ensureVisible(
-            find.byKey(const ValueKey('edit-selected-tasks')),
-          );
-          await tester.pumpAndSettle();
-          await tester.tap(find.byKey(const ValueKey('edit-selected-tasks')));
-        } else {
-          await selectTask(tester, ids[0], control: false);
-        }
-        await tester.pumpAndSettle();
-        final initial = find.byKey(ValueKey(bulk ? 'addTags' : 'title'));
-        await tester.ensureVisible(initial);
-        await tester.pumpAndSettle();
-        await tester.tap(initial);
-        await tester.pumpAndSettle();
-        tester.view.padding = const FakeViewPadding(top: 36);
-        tester.view.viewInsets = const FakeViewPadding(bottom: 420);
-        await tester.pumpAndSettle();
-        void usable(Finder field) {
-          final viewport = tester.getRect(
-            find
-                .ancestor(
-                  of: field,
-                  matching: find.byType(SingleChildScrollView),
-                )
-                .first,
-          );
-          expect(viewport.height, greaterThanOrEqualTo(48));
-          final state = tester.state<EditableTextState>(
-            find.descendant(of: field, matching: find.byType(EditableText)),
-          );
-          expect(state.widget.focusNode.hasFocus, isTrue);
-          final local = state.renderEditable.getLocalRectForCaret(
-            state.widget.controller.selection.extent,
-          );
-          final caret = local.shift(
-            state.renderEditable.localToGlobal(Offset.zero),
-          );
-          expect(caret.top, greaterThanOrEqualTo(viewport.top - 1));
-          expect(caret.bottom, lessThanOrEqualTo(viewport.bottom + 1));
-          expect(caret.bottom, lessThanOrEqualTo(360));
-          expect(tester.takeException(), isNull);
-        }
-
-        usable(initial);
-        for (final key in [
-          'dueTime',
-          bulk ? 'removeTags' : 'description',
-          bulk ? 'addTags' : 'title',
-        ]) {
-          final field = find.byKey(ValueKey(key));
-          await tester.ensureVisible(field);
-          await tester.pumpAndSettle();
-          await tester.tap(field);
-          await tester.pumpAndSettle();
-          usable(field);
-        }
-        // Repeat keyboard closing/opening without another edit or route.
-        tester.view.resetViewInsets();
-        tester.view.padding = const FakeViewPadding(top: 36, bottom: 36);
-        await tester.pumpAndSettle();
-        tester.view.padding = const FakeViewPadding(top: 36);
-        tester.view.viewInsets = const FakeViewPadding(bottom: 420);
-        await tester.pumpAndSettle();
-        usable(initial);
-        if (find.byKey(const ValueKey('tag-results')).evaluate().isNotEmpty) {
-          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-          await tester.pumpAndSettle();
-          expect(find.byKey(const ValueKey('tag-results')), findsNothing);
-        }
-        expect(find.text('Cancel').last.hitTestable(), findsOneWidget);
-        await tester.tap(find.text('Cancel').last);
-        await tester.pumpAndSettle();
-        expect(find.text('Unsaved changes'), findsNothing);
-        tester.view.resetViewInsets();
-        tester.view.padding = const FakeViewPadding(top: 36, bottom: 36);
-        await tester.pumpAndSettle();
-        expect(find.byType(TaskEditor), findsNothing);
-        expect(find.byType(BulkTaskEditor), findsNothing);
+    final previousPlatform = debugDefaultTargetPlatformOverride;
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    try {
+      final root = await Directory.systemTemp.createTemp('rc4-phone-editors-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await openNativeFixtureStore(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4();
+      final ids = [const Uuid().v4(), const Uuid().v4()];
+      await writer.command(user, 'user.created', {'name': 'Alex Example'});
+      for (var i = 0; i < ids.length; i++) {
+        await writer.createNativeFixtureTask(ids[i], {
+          'title': 'Synthetic editor task ${i + 1}',
+          'description': 'Reference notes for keyboard regression.',
+          'assignee': user,
+          'schedule': {
+            'dueDate': '2030-05-01',
+            'dueTime': i == 0 ? '12:30' : '13:45',
+            'recurrence': 'every week when done',
+          },
+        });
       }
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpAndSettle();
+      tester.view.devicePixelRatio = 1.5;
+      tester.view.physicalSize = const Size(540, 960);
+      tester.view.viewPadding = const FakeViewPadding(top: 36, bottom: 36);
+      tester.view.padding = const FakeViewPadding(top: 36, bottom: 36);
+      await tester.pumpAndSettle();
+      Future<Map<String, String>> canonicalContents() async => {
+        await for (final entry in folder.list())
+          if (entry is File)
+            entry.path: base64Encode(await entry.readAsBytes()),
+      };
+      final before = await canonicalContents();
+      for (final scale in [1.0, 1.3, 2.0]) {
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        await tester.pumpAndSettle();
+        for (final bulk in [false, true]) {
+          if (bulk) {
+            await selectTask(tester, ids[0], control: false, longPress: true);
+            await selectTask(tester, ids[1], control: false);
+            // The selection commands remain outside the scrolling task viewport.
+            tester.state<ScrollableState>(taskScrollable()).position.jumpTo(0);
+            await tester.pumpAndSettle();
+            await tester.ensureVisible(
+              find.byKey(const ValueKey('edit-selected-tasks')),
+            );
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const ValueKey('edit-selected-tasks')));
+          } else {
+            await selectTask(tester, ids[0], control: false);
+          }
+          await tester.pumpAndSettle();
+          final initial = find.byKey(ValueKey(bulk ? 'addTags' : 'title'));
+          await tester.ensureVisible(initial);
+          await tester.pumpAndSettle();
+          await tester.tap(initial);
+          await tester.pumpAndSettle();
+          tester.view.padding = const FakeViewPadding(top: 36);
+          tester.view.viewInsets = const FakeViewPadding(bottom: 420);
+          await tester.pumpAndSettle();
+          void usable(Finder field) {
+            final viewport = tester.getRect(
+              find
+                  .ancestor(
+                    of: field,
+                    matching: find.byType(SingleChildScrollView),
+                  )
+                  .first,
+            );
+            expect(viewport.height, greaterThanOrEqualTo(48));
+            final state = tester.state<EditableTextState>(
+              find.descendant(of: field, matching: find.byType(EditableText)),
+            );
+            expect(state.widget.focusNode.hasFocus, isTrue);
+            final local = state.renderEditable.getLocalRectForCaret(
+              state.widget.controller.selection.extent,
+            );
+            final caret = local.shift(
+              state.renderEditable.localToGlobal(Offset.zero),
+            );
+            expect(caret.top, greaterThanOrEqualTo(viewport.top - 1));
+            expect(caret.bottom, lessThanOrEqualTo(viewport.bottom + 1));
+            expect(caret.bottom, lessThanOrEqualTo(360));
+            expect(tester.takeException(), isNull);
+          }
+
+          usable(initial);
+          for (final key in [
+            'dueTime',
+            bulk ? 'removeTags' : 'description',
+            bulk ? 'addTags' : 'title',
+          ]) {
+            final field = find.byKey(ValueKey(key));
+            await tester.ensureVisible(field);
+            await tester.pumpAndSettle();
+            await tester.tap(field);
+            await tester.pumpAndSettle();
+            usable(field);
+          }
+          // Repeat keyboard closing/opening without another edit or route.
+          tester.view.resetViewInsets();
+          tester.view.padding = const FakeViewPadding(top: 36, bottom: 36);
+          await tester.pumpAndSettle();
+          tester.view.padding = const FakeViewPadding(top: 36);
+          tester.view.viewInsets = const FakeViewPadding(bottom: 420);
+          await tester.pumpAndSettle();
+          usable(initial);
+          if (find.byKey(const ValueKey('tag-results')).evaluate().isNotEmpty) {
+            await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+            await tester.pumpAndSettle();
+            expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+          }
+          await captureNativeFixtureUi(
+            tester,
+            'phone-editor-${bulk ? 'bulk' : 'single'}-${scale.toString().replaceAll('.', '-')}-before-cancel',
+          );
+          // At enlarged text the reviewed dialog scrolls actions with the form.
+          // Prove the user can drag to a full-size actionable Cancel while the
+          // IME remains open, after the focused caret checks above.
+          final cancel = find.widgetWithText(TextButton, 'Cancel').last;
+          if (cancel.hitTestable().evaluate().isEmpty) {
+            final actionScroll = find
+                .ancestor(of: cancel, matching: find.byType(Scrollable))
+                .first;
+            await tester.scrollUntilVisible(
+              cancel,
+              120,
+              scrollable: actionScroll,
+              maxScrolls: 30,
+            );
+          }
+          await tester.pumpAndSettle();
+          expect(cancel.hitTestable(), findsOneWidget);
+          expect(tester.getRect(cancel).height, greaterThanOrEqualTo(48));
+          expect(tester.getRect(cancel).bottom, lessThanOrEqualTo(360));
+          expect(tester.widget<TextButton>(cancel).onPressed, isNotNull);
+          expect(tester.view.viewInsets.bottom, 420);
+          await captureNativeFixtureUi(
+            tester,
+            'phone-editor-${bulk ? 'bulk' : 'single'}-${scale.toString().replaceAll('.', '-')}-cancel-reachable',
+          );
+          await tester.tap(cancel);
+          await tester.pumpAndSettle();
+          expect(find.text('Unsaved changes'), findsNothing);
+          tester.view.resetViewInsets();
+          tester.view.padding = const FakeViewPadding(top: 36, bottom: 36);
+          await tester.pumpAndSettle();
+          expect(find.byType(TaskEditor), findsNothing);
+          expect(find.byType(BulkTaskEditor), findsNothing);
+        }
+      }
+      expect(await canonicalContents(), before);
+      await writer.refresh();
+      expect(writer.rows.where((row) => row['kind'] == 'task').length, 2);
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids[0],
+        )['schedule']['dueTime'],
+        '12:30',
+      );
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids[1],
+        )['schedule']['dueTime'],
+        '13:45',
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      tester.view.resetViewInsets();
+      tester.view.resetViewPadding();
+      tester.view.resetPadding();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+      await writer.close();
+      await root.delete(recursive: true);
+    } finally {
+      debugDefaultTargetPlatformOverride = previousPlatform;
     }
-    expect(await canonicalContents(), before);
-    await writer.refresh();
-    expect(writer.rows.where((row) => row['kind'] == 'task').length, 2);
-    expect(
-      writer.rows.firstWhere(
-        (row) => row['id'] == ids[0],
-      )['schedule']['dueTime'],
-      '12:30',
-    );
-    expect(
-      writer.rows.firstWhere(
-        (row) => row['id'] == ids[1],
-      )['schedule']['dueTime'],
-      '13:45',
-    );
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpAndSettle();
-    tester.view.resetViewInsets();
-    tester.view.resetViewPadding();
-    tester.view.resetPadding();
-    tester.view.resetPhysicalSize();
-    tester.view.resetDevicePixelRatio();
-    tester.platformDispatcher.clearTextScaleFactorTestValue();
-    await writer.close();
-    await root.delete(recursive: true);
   });
   testWidgets('phone tag dropdown stays tappable above an open keyboard', (
     tester,

@@ -18,9 +18,15 @@ Linux build66 also ends155passes/3 native fixture failures; build67 is cancelled
 because those failures share source. Build68 preserves approved app/UI code,
 uses reviewed bounded navigation readiness and visible-character Retained bounds,
 and passes the targeted local native/widget checks with qualified capture evidence.
-Fresh full build68 candidate38169726969 uses exact8c6ee23c78232094715b9bf79f9d3be54b3b522a. Frozen-source and final editorial checks pass; full hosted gates, original archive identities and owner-signed APK are pending.
-Use the eventual
-verified original APK without rebuilding. This document does not claim installed
+Full [build68 candidate38169726969](https://github.com/reddraggone9/tandemlog/actions/runs/38169726969) uses exact source `8c6ee23c78232094715b9bf79f9d3be54b3b522a` and is terminal5/5SUCCESS. Frozen-source, final editorial, original archive/member, signer and desktop lifecycle checks pass. Use the verified original APK without rebuilding:
+
+- Android artifact ID: `11714269945`; original ZIP31,115,048 bytes, SHA256 `b21231f0991405e56e1588ce316e3a483abf23c059eb61395953c4c611449bd1`.
+- APK67,099,301 bytes, SHA256 `19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c`.
+- Package `com.reddraggone9.tandemlog`, version `2026.10.4-rc.3`, code68, nondebuggable; armeabi-v7a/arm64-v8a/x86_64.
+- Owner certificate SHA256 `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`.
+
+[Exact handoff and original identities](../evidence/toolbar-2026.10.4-rc.3/candidate/build68/exact-parent-handoff.json) and [independent final review](../evidence/toolbar-2026.10.4-rc.3/candidate/build68/build68-final-independent-artifact-review.json) retain source-bound evidence. Parent owns installed Android acceptance and publication after fresh quota; no further cloud downloads or cleanup are needed.
+This document does not claim installed
 Android acceptance. [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md)
 retains failures, attributed actual checks and independent reviews.
 

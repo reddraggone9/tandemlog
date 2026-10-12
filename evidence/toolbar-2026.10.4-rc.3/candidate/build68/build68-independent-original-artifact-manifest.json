@@ -1,0 +1,129 @@
+{
+  "checked_at_utc": "2026-10-11T20:54:05.684981+00:00",
+  "source_commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "version": "2026.10.4-rc.3+68",
+  "archives": {
+    "windows": {
+      "artifact_id": 11713188716,
+      "bytes": 26236993,
+      "sha256": "088a4a414291610a0bd366410f30c8945302d7b971f2063772b5efff5d04fa14",
+      "original_API_size_digest_source_run_crc": "PASS"
+    },
+    "linux": {
+      "artifact_id": 11715045921,
+      "bytes": 9215794,
+      "sha256": "02ae9abff4117c02acf56dd9e7aed0c1861a23c88912ee42eabd2b1a27b91576",
+      "original_API_size_digest_source_run_crc": "PASS"
+    },
+    "android-release": {
+      "artifact_id": 11714269945,
+      "bytes": 31115048,
+      "sha256": "b21231f0991405e56e1588ce316e3a483abf23c059eb61395953c4c611449bd1",
+      "original_API_size_digest_source_run_crc": "PASS"
+    }
+  },
+  "members": {
+    "windows/tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12390469,
+      "sha256": "bc1606ddd179a7f61ae6aacbf884f106c8e8bd2150876fe634bd695d114e79b9",
+      "crc32": "606531ae",
+      "crc_valid": true
+    },
+    "windows/tandemlog-windows-x64-unsigned-portable.zip": {
+      "bytes": 14412983,
+      "sha256": "b0a1c414cd3bee2483bb53ace80fc76734bb7f758ac4fdd8b90c8eee27d19ce7",
+      "crc32": "cbf23e36",
+      "crc_valid": true
+    },
+    "windows/windows-install-smoke.json": {
+      "bytes": 1758,
+      "sha256": "b39f5f10ca9bd3ebc102240928b292c34db1fe25bdd2e285a0f9849611496a27",
+      "crc32": "ee0f9cc3",
+      "crc_valid": true
+    },
+    "windows/windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "9fcd2d1af052b0352120973a84d9c0248bbb5dce5d0d56caa1939b0d3bd98d9f",
+      "crc32": "1b6b9217",
+      "crc_valid": true
+    },
+    "windows/windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "0b25c8054b15a90a6a969a71baca9e2873c3c673b86c70243c494fed3165c2a4",
+      "crc32": "fa48bd5a",
+      "crc_valid": true
+    },
+    "windows/windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "376b6e9edb53f5a4fbb1614c0635bb4b440c2c65b48588b2d913a7203c33d9c4",
+      "crc32": "effa71ae",
+      "crc_valid": true
+    },
+    "linux/linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "7eec8cf888555ffa8f650f4a85728276d581a1af9afcebabb1df7e5a43dbc08c",
+      "crc32": "775e2492",
+      "crc_valid": true
+    },
+    "linux/linux-install-smoke.json": {
+      "bytes": 2919,
+      "sha256": "e4d1f228f9c7be71bd3ec2f1b3274ecb864d74b1eefb4bfe78406136bac65e8d",
+      "crc32": "035f0584",
+      "crc_valid": true
+    },
+    "linux/linux-startup.json": {
+      "bytes": 6537,
+      "sha256": "2bcfdbbf38092cd6f48eb0ab5cae2e4021afe52375df00203d4b202425f64fad",
+      "crc32": "4d0ec8c1",
+      "crc_valid": true
+    },
+    "linux/tandemlog-linux-x64.flatpak": {
+      "bytes": 9210600,
+      "sha256": "2e55902f6608cfdeb32afe2d194d367dd17037f5eff71861dfe9be73b9c391b8",
+      "crc32": "27d12b07",
+      "crc_valid": true
+    },
+    "android-release/android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "40942d434137d9f32c87129dcb38a230144cf733bc814959ba08fec09ef4d5bb",
+      "crc32": "e12e92ae",
+      "crc_valid": true
+    },
+    "android-release/android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "d55e04136d75ddcd3ad93db6d5d081243721d018cc54aa5a790ee98567376051",
+      "crc32": "cd623530",
+      "crc_valid": true
+    },
+    "android-release/android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "crc32": "02981044",
+      "crc_valid": true
+    },
+    "android-release/tandemlog-android.apk": {
+      "bytes": 67099301,
+      "sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c",
+      "crc32": "b5a1b65c",
+      "crc_valid": true
+    }
+  },
+  "independent_platform_receipts": [
+    {
+      "path": "/tmp/food-rc68-final-artifact-review/build68-windows-actual-artifact-bindings.json",
+      "sha256": "fce20d6a2c0508b0e59da45fba79288c701b8b12219a5ea444f3c88f787fbce9"
+    },
+    {
+      "path": "/tmp/food-rc68-final-artifact-review/build68-linux-actual-artifact-bindings.json",
+      "sha256": "54ac61d0fc44b486851334d8eba58e157f688d312eb10338801fb8bbeb511288"
+    },
+    {
+      "path": "/tmp/food-rc68-final-artifact-review/build68-android-release-actual-artifact-bindings.json",
+      "sha256": "54cfed8562ab21dcf80706e0c72cdf51a3d8fe6840b2fbcaaa3ad9ca93734a2f"
+    }
+  ],
+  "verdict": "PASS_EXACT_ORIGINAL_PLATFORM_ARCHIVE_AND_MEMBER_BINDINGS",
+  "superseded_for_final_ui_acceptance": false,
+  "qualification": "Exact build68 original-byte verification; no rebuild, recompression or substitution. Static and hosted report verification remains source-bound. Parent exact installed Android acceptance and publication clearance remain separate."
+}
