@@ -1,0 +1,241 @@
+{
+  "atUtc": "2026-10-12T14:12:27.841955+00:00",
+  "provider": "OSV current RustSec/GitHub advisory data",
+  "results": [
+    {
+      "package": "arc-swap",
+      "version": "1.9.2",
+      "advisories": []
+    },
+    {
+      "package": "async-lock",
+      "version": "3.4.2",
+      "advisories": []
+    },
+    {
+      "package": "async-trait",
+      "version": "0.1.92",
+      "advisories": []
+    },
+    {
+      "package": "base64",
+      "version": "0.22.1",
+      "advisories": []
+    },
+    {
+      "package": "bitflags",
+      "version": "2.13.2",
+      "advisories": []
+    },
+    {
+      "package": "bumpalo",
+      "version": "3.20.3",
+      "advisories": []
+    },
+    {
+      "package": "cfg-if",
+      "version": "1.0.5",
+      "advisories": []
+    },
+    {
+      "package": "crossbeam-utils",
+      "version": "0.8.23",
+      "advisories": []
+    },
+    {
+      "package": "dashmap",
+      "version": "6.2.1",
+      "advisories": []
+    },
+    {
+      "package": "event-listener",
+      "version": "5.4.2",
+      "advisories": []
+    },
+    {
+      "package": "event-listener-strategy",
+      "version": "0.5.4",
+      "advisories": []
+    },
+    {
+      "package": "fastrand",
+      "version": "2.5.0",
+      "advisories": []
+    },
+    {
+      "package": "getrandom",
+      "version": "0.4.3",
+      "advisories": []
+    },
+    {
+      "package": "hashbrown",
+      "version": "0.14.5",
+      "advisories": []
+    },
+    {
+      "package": "itoa",
+      "version": "1.0.18",
+      "advisories": []
+    },
+    {
+      "package": "js-sys",
+      "version": "0.3.106",
+      "advisories": []
+    },
+    {
+      "package": "libc",
+      "version": "0.2.190",
+      "advisories": []
+    },
+    {
+      "package": "lock_api",
+      "version": "0.4.14",
+      "advisories": []
+    },
+    {
+      "package": "memchr",
+      "version": "2.8.3",
+      "advisories": []
+    },
+    {
+      "package": "once_cell",
+      "version": "1.21.4",
+      "advisories": []
+    },
+    {
+      "package": "parking",
+      "version": "2.2.1",
+      "advisories": []
+    },
+    {
+      "package": "parking_lot_core",
+      "version": "0.9.12",
+      "advisories": []
+    },
+    {
+      "package": "pin-project-lite",
+      "version": "0.2.17",
+      "advisories": []
+    },
+    {
+      "package": "proc-macro2",
+      "version": "1.0.107",
+      "advisories": []
+    },
+    {
+      "package": "quote",
+      "version": "1.0.47",
+      "advisories": []
+    },
+    {
+      "package": "r-efi",
+      "version": "6.0.0",
+      "advisories": []
+    },
+    {
+      "package": "redox_syscall",
+      "version": "0.5.18",
+      "advisories": []
+    },
+    {
+      "package": "rustversion",
+      "version": "1.0.23",
+      "advisories": []
+    },
+    {
+      "package": "scopeguard",
+      "version": "1.2.0",
+      "advisories": []
+    },
+    {
+      "package": "serde",
+      "version": "1.0.229",
+      "advisories": []
+    },
+    {
+      "package": "serde_core",
+      "version": "1.0.229",
+      "advisories": []
+    },
+    {
+      "package": "serde_derive",
+      "version": "1.0.229",
+      "advisories": []
+    },
+    {
+      "package": "serde_json",
+      "version": "1.0.151",
+      "advisories": []
+    },
+    {
+      "package": "smallstr",
+      "version": "0.3.1",
+      "advisories": [
+        {
+          "id": "RUSTSEC-2026-0215",
+          "modified": "2026-07-23T07:30:03.466694Z"
+        }
+      ]
+    },
+    {
+      "package": "smallvec",
+      "version": "1.16.2",
+      "advisories": []
+    },
+    {
+      "package": "syn",
+      "version": "3.0.6",
+      "advisories": []
+    },
+    {
+      "package": "thiserror",
+      "version": "2.0.21",
+      "advisories": []
+    },
+    {
+      "package": "thiserror-impl",
+      "version": "2.0.21",
+      "advisories": []
+    },
+    {
+      "package": "unicode-ident",
+      "version": "1.0.26",
+      "advisories": []
+    },
+    {
+      "package": "wasm-bindgen",
+      "version": "0.2.129",
+      "advisories": []
+    },
+    {
+      "package": "wasm-bindgen-macro",
+      "version": "0.2.129",
+      "advisories": []
+    },
+    {
+      "package": "wasm-bindgen-macro-support",
+      "version": "0.2.129",
+      "advisories": []
+    },
+    {
+      "package": "wasm-bindgen-shared",
+      "version": "0.2.129",
+      "advisories": []
+    },
+    {
+      "package": "windows-link",
+      "version": "0.2.1",
+      "advisories": []
+    },
+    {
+      "package": "zmij",
+      "version": "1.0.23",
+      "advisories": []
+    },
+    {
+      "package": "serde_json",
+      "version": "1.0.154",
+      "advisories": []
+    }
+  ]
+}

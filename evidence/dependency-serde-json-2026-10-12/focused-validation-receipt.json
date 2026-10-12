@@ -1,0 +1,13 @@
+{
+  "atUtc": "2026-10-12T14:20:32.009332+00:00",
+  "exitCode": 69,
+  "logBytes": 65070,
+  "logSha256": "f884128818c9e7d58455f711fc61f84292bfa75a4c731282debb11a003bf923e",
+  "limits": {
+    "memoryGiB": 6,
+    "cpus": 2,
+    "swapGiB": 0,
+    "maximumSeconds": 1800
+  },
+  "transientUnitOnly": true
+}

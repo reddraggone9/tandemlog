@@ -1,0 +1,20 @@
+{
+  "atUtc": "2026-10-12T14:15:51.727526+00:00",
+  "upstreamReleaseCommit": "20572a6d066958542d79cdd6cf1a7cd9f0c8e1f8",
+  "officialSourceArchiveSha256": "d638770aea490d6b9b94b67fa14c3533778431a8715792b2fac80e7ca405d721",
+  "crateRuntimeBuildAndLicenseFilesMatchOfficialSource": 41,
+  "buildScriptUnchanged": true,
+  "licenseBytesUnchanged": true,
+  "defaultStdOnly": true,
+  "changedPackages": [
+    "serde_json"
+  ],
+  "before": "1.0.151",
+  "after": "1.0.154",
+  "newChecksum": "e7e9cc8b1b85264074fbcc02a88680c4096b1e47df8f739dceb03bf482f04bd6",
+  "allOtherPackagesChecksumsAndEdgesUnchanged": true,
+  "lockedPackageCount": 47,
+  "base64Retained": "0.22.1",
+  "newOptionalFoldhashExcluded": true,
+  "noApplicationSourceOrManifestChange": true
+}
