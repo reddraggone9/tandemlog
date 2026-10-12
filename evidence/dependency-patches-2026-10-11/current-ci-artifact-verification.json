@@ -1,0 +1,66 @@
+{
+  "source": "77b0c5fa71c58c39eeaf8c9045be00a3246dbcc4",
+  "run_id": 38159861434,
+  "artifacts": [
+    {
+      "platform": "android",
+      "artifact_id": 11710485446,
+      "zip_bytes": 80762818,
+      "zip_sha256": "137e9109c0aaa867734c6c710d431950f6145b6ec62d1fb719803def96d6d180",
+      "crc": "pass",
+      "filenames": [
+        "android-SHA256SUMS.txt",
+        "android-signature.txt",
+        "tandemlog-android-test-only.apk"
+      ],
+      "internal_checksums": [
+        {
+          "filename": "tandemlog-android-test-only.apk",
+          "sha256": "771cdd5df1ffee1bc8cb0259294605a069a15bad7b6b29b15a58afbc7ecda17f",
+          "bytes": 165281235
+        }
+      ]
+    },
+    {
+      "platform": "windows",
+      "artifact_id": 11710380360,
+      "zip_bytes": 26248491,
+      "zip_sha256": "0be1891ec811f5d674fe3e85ff5862473223f09028892dd37d0ae3d61af090ce",
+      "crc": "pass",
+      "filenames": [
+        "tandemlog-windows-x64-unsigned-portable.zip",
+        "windows-install-smoke.json",
+        "tandemlog-windows-x64-unsigned-setup.exe",
+        "windows-portable-provenance.json",
+        "windows-portable-SHA256SUMS.txt",
+        "windows-SHA256SUMS.txt"
+      ],
+      "internal_checksums": [
+        {
+          "filename": "tandemlog-windows-x64-unsigned-portable.zip",
+          "sha256": "f2f63252cad461769da4e0993b3e0347375693fd61383b976c2d25c1f309d72a",
+          "bytes": 14418654
+        },
+        {
+          "filename": "tandemlog-windows-x64-unsigned-setup.exe",
+          "sha256": "c2701c3a9d725186160402dab219a1533dd3d4b82b7a1a78789aea69413af8b0",
+          "bytes": 12396324
+        }
+      ]
+    }
+  ],
+  "windows_unit_report": {
+    "artifact_id": 11710100488,
+    "zip_bytes": 58120,
+    "zip_sha256": "2c3d10ea4bef1c7bf6a203a272c5dd4a0d94345d7425a52ba024da9d01eea4bf",
+    "filenames": [
+      "windows-unit-tests.json"
+    ],
+    "crc": "pass",
+    "success": 1014,
+    "skipped": 2,
+    "failures": 0,
+    "done_success": true
+  },
+  "boundary": "CI test-only Android/debug and unsigned Windows artifacts; no installation or release acceptance claimed"
+}

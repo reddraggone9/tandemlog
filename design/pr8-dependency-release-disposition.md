@@ -19,3 +19,7 @@ There is a concrete pipeline blocker: `.github/workflows/android-candidate.yml` 
 The stable maintenance candidate requires its own full matrix, owner signing, exact originals, applicable Android/desktop/provider/startup acceptance, actual stable-range notes/editorial review and current quota/authorization. PR CI and accepted RC68 binaries cannot stand in for different stable source. Parent coordinates publication. No live synced data is touched.
 
 [Structured disposition and metadata](../evidence/pr8-dependency-disposition-2026-10-11/final-disposition.json) preserve exact inputs, qualification and remaining gates.
+
+## RC3 published; proposal refreshed to RC70 — 2026-10-12
+
+RC3 publication acceptance is now complete. PR8 is being refreshed with published RC70 editor source and reviewed main notes at `b9474a575bba7bae70ed55eac7f8d80020ca8859`. Prior54e4ac CI remains accepted historical evidence; current-head full CI is required before reporting merge readiness. [RC70 integration receipts](../evidence/dependency-patches-2026-10-11/rc70-integration/) record exact preservation and affected local checks. Keep draft and report readiness before merging. The dependency-only stable boundary and maintenance-admission blocker above remain unchanged; no policy broadening or stable release from preview main is authorized.
