@@ -1,0 +1,31 @@
+{
+  "atUtc": "2026-10-12T19:03:24.616601+00:00",
+  "productionPolicySha256": "c0d84fd0884411e5cc2977352918d9f6487ac78cc94b47783859140727e3ee04",
+  "testOnlyChange": "Exact loopback HTTPS aliases added to endpoint switch; no filter or lifecycle changes; dedicated fixture certificate truststore, no external TLS bypass",
+  "gradleVersion": "9.4.1",
+  "ownerCredentialsUsed": false,
+  "results": [
+    {
+      "case": "protected-central-success",
+      "scope": "central-success",
+      "protected": true,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 2,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "90fae74c95432612c1b439b5d287dd05b012dbc7d8228755b1a075de0f0beecf"
+    },
+    {
+      "case": "protected-google-plugin-success",
+      "scope": "google-plugin-success",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": false,
+      "logSha256": "abf45306ab77fb00420a89381892f1f65c18a8427a54bb5535828e414d87116d"
+    }
+  ]
+}

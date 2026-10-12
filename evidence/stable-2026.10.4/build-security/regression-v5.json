@@ -1,0 +1,53 @@
+{
+  "atUtc": "2026-10-12T19:08:36.462678+00:00",
+  "productionPolicySha256": "8fdcce17f00b4d932e8921dc8cacdf2e1dac925135ef58e4ac540e0d949c5153",
+  "testOnlyChange": "Exact loopback HTTPS aliases added to endpoint switch; no filter or lifecycle changes; dedicated fixture certificate truststore, no external TLS bypass",
+  "gradleVersion": "9.4.1",
+  "ownerCredentialsUsed": false,
+  "results": [
+    {
+      "case": "protected-central-success",
+      "scope": "central-success",
+      "protected": true,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 2,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "90fae74c95432612c1b439b5d287dd05b012dbc7d8228755b1a075de0f0beecf"
+    },
+    {
+      "case": "protected-google-plugin-success",
+      "scope": "google-plugin-success",
+      "protected": true,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 5,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "c8496f09f91ad4f250547069d37de9d97f79a3f625616a14883387305cd099bb"
+    },
+    {
+      "case": "protected-settings-plugin",
+      "scope": "settings-plugin",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "3a3b64ecd56d4e8ea4984928116f35a369a88ebd1e0feb683598ce3803e9410c"
+    },
+    {
+      "case": "protected-project",
+      "scope": "project",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "661b5d102451be075c516d61f8f845fc2f7b237d1641cca74b71b3ea1aca1120"
+    }
+  ]
+}

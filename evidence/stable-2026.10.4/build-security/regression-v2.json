@@ -1,0 +1,75 @@
+{
+  "atUtc": "2026-10-12T19:00:43.444942+00:00",
+  "productionPolicySha256": "7c79a681a260ab59bc0ac313ffd770e67d2aa44baf46f5886ef197154bfd667d",
+  "testOnlyChange": "Exact loopback HTTPS aliases added to endpoint switch; no filter or lifecycle changes; dedicated fixture certificate truststore, no external TLS bypass",
+  "gradleVersion": "9.4.1",
+  "ownerCredentialsUsed": false,
+  "results": [
+    {
+      "case": "protected-central-success",
+      "scope": "central-success",
+      "protected": true,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 2,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "90fae74c95432612c1b439b5d287dd05b012dbc7d8228755b1a075de0f0beecf"
+    },
+    {
+      "case": "baseline-settings-plugin",
+      "scope": "settings-plugin",
+      "protected": false,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 5,
+      "failedTlsConnections": 3,
+      "passed": true,
+      "logSha256": "3c1f90ba49191108162e9d64e8c2f0f7d361cc0645ff304240390fe4cf5c127b"
+    },
+    {
+      "case": "protected-settings-plugin",
+      "scope": "settings-plugin",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "b7810acefe5692f796330cf4ae4b06a26215b71de5d15ef08ba6d20e602f6699"
+    },
+    {
+      "case": "baseline-project-plugin",
+      "scope": "project-plugin",
+      "protected": false,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 5,
+      "failedTlsConnections": 3,
+      "passed": true,
+      "logSha256": "83edfceb093fa65fdc9d5c99d49fce1eb6bce50a89c9aa7d37af5b304ef3ee37"
+    },
+    {
+      "case": "protected-project-plugin",
+      "scope": "project-plugin",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "923ca1c55eeebfbff95a92f29ba59154a9b67dbbc46a58f1e9eee8a8d64b1908"
+    },
+    {
+      "case": "protected-late-added",
+      "scope": "late-added",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "08e14ddcb6af7204dcce712973daf2894c04173959e58dbb603d4ffe37704577"
+    }
+  ]
+}

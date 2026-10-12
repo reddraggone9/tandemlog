@@ -1,0 +1,21 @@
+{
+  "atUtc": "2026-10-12T19:18:39.416526+00:00",
+  "result": "independent source/integration/editorial ACCEPT for commit and full CI qualification",
+  "reviewedBindings": {
+    "tool/gradle-repositories.init.gradle": "8fdcce17f00b4d932e8921dc8cacdf2e1dac925135ef58e4ac540e0d949c5153",
+    "tool/gradle_repository_policy.py": "08b36daa11a635d16efbf9e22ee5e2af0fbb9b115710158b87612036c706600b",
+    "tool/test_gradle_repository_policy.py": "e7b5b6e21550cdd7021b2f16d3e5eb313a7272c48aebfae9cd0b612c25fe19ca",
+    "design/stable-notes.md": "03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f"
+  },
+  "remainingGates": [
+    "full final-source hosted checks",
+    "fresh original signed candidate artifacts",
+    "exact stable native synthetic upgrades",
+    "fresh publication quota",
+    "public exact-byte and stableLatest verification"
+  ],
+  "noNewUserFacingBehaviorBeyondAcceptedRC3": true,
+  "toolchainPinsUnchanged": true,
+  "privateFoodDataIncluded": false,
+  "authorization": "Lee explicitly accepted the current RC3 plus audited dependency updates as a full stable release and separately approved a bounded build-security mitigation before signing; no live cutover included"
+}

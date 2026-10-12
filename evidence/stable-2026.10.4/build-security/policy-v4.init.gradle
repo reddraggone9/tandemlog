@@ -1,0 +1,103 @@
+import org.gradle.api.GradleException
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+import org.gradle.api.artifacts.DependencyResolutionListener
+import org.gradle.api.artifacts.ResolvableDependencies
+
+// No external init-script classpath: enforce before any settings/plugin lookup.
+def googleGroups = 'com\\.android(\\..*)?|androidx(\\..*)?|com\\.google\\.(android|firebase|gms)(\\..*)?|com\\.google\\.testing\\.platform(\\..*)?'
+def portalGroups = 'org\\.gradle\\.kotlin(\\..*)?'
+def flutterGroups = 'io\\.flutter(\\..*)?'
+def guardedRepositories = Collections.synchronizedMap(new IdentityHashMap())
+// Gradle 9.4.1 copies protected plugin repositories into this internal wrapper.
+// Accept only a wrapper whose delegate was already protected before settings.
+def originalRepository = { repo ->
+    if (repo.class.name == 'org.gradle.plugin.use.internal.PluginArtifactRepository') {
+        def field = repo.class.getDeclaredField('delegate')
+        field.accessible = true
+        def original = field.get(repo)
+        if (!guardedRepositories.containsKey(original)) {
+            throw new GradleException('Tandemlog repository policy rejects unguarded plugin repository')
+        }
+        return original
+    }
+    return repo
+}
+def roleFor = { repo ->
+    if (!(repo instanceof MavenArtifactRepository)) {
+        throw new GradleException("Tandemlog repository policy rejects repository type: ${repo.class.simpleName}")
+    }
+    def endpoint = repo.url.toString().replaceAll('/+$', '')
+    switch (endpoint) {
+        case 'https://dl.google.com/dl/android/maven2': return 'google'
+        case 'https://repo.maven.apache.org/maven2': return 'central'
+        case 'https://plugins.gradle.org/m2': return 'portal'
+        case 'https://storage.googleapis.com/download.flutter.io': return 'flutter'
+        default: throw new GradleException('Tandemlog repository policy rejects unapproved endpoint')
+    }
+}
+def protect = { handler ->
+    handler.all { repo ->
+        def original = originalRepository(repo)
+        def role = roleFor(original)
+        synchronized (guardedRepositories) {
+            if (guardedRepositories.containsKey(original) && guardedRepositories.get(original) != original.url) {
+                throw new GradleException('Tandemlog repository policy rejects changed endpoint')
+            }
+            guardedRepositories.put(original, original.url)
+        }
+        if (original.allowInsecureProtocol || !original.artifactUrls.empty) {
+            throw new GradleException('Tandemlog repository policy requires HTTPS')
+        }
+        repo.content { content ->
+            switch (role) {
+                case 'google':
+                    content.includeGroupByRegex(googleGroups)
+                    content.excludeGroupByRegex('(?!(?:' + googleGroups + ')$).*')
+                    break
+                case 'portal':
+                    content.includeGroupByRegex(portalGroups)
+                    content.excludeGroupByRegex('(?!(?:' + portalGroups + ')$).*')
+                    break
+                case 'flutter':
+                    content.includeGroupByRegex(flutterGroups)
+                    content.excludeGroupByRegex('(?!(?:' + flutterGroups + ')$).*')
+                    break
+                case 'central':
+                    content.excludeGroupByRegex(googleGroups)
+                    content.excludeGroupByRegex(portalGroups)
+                    content.excludeGroupByRegex(flutterGroups)
+                    break
+            }
+        }
+    }
+}
+// Covers settings/plugin, buildscript and detached resolution, including a URL
+// changed after a repository was added. Init scripts also run in included builds.
+gradle.addListener(new DependencyResolutionListener() {
+    void beforeResolve(ResolvableDependencies dependencies) {
+        synchronized (guardedRepositories) {
+            guardedRepositories.each { repo, endpoint ->
+                if (repo.url != endpoint || repo.allowInsecureProtocol || !repo.artifactUrls.empty) {
+                    throw new GradleException('Tandemlog repository policy rejects changed endpoint')
+                }
+                roleFor(repo)
+            }
+        }
+    }
+    void afterResolve(ResolvableDependencies dependencies) {}
+})
+gradle.beforeSettings { settings ->
+    protect(settings.pluginManagement.repositories)
+    // Explicit handlers prevent Gradle's implicit unfiltered Portal default.
+    if (settings.pluginManagement.repositories.empty) {
+        settings.pluginManagement.repositories.google()
+        settings.pluginManagement.repositories.mavenCentral()
+        settings.pluginManagement.repositories.gradlePluginPortal()
+    }
+    protect(settings.dependencyResolutionManagement.repositories)
+    protect(settings.buildscript.repositories)
+}
+gradle.beforeProject { project ->
+    protect(project.repositories)
+    protect(project.buildscript.repositories)
+}

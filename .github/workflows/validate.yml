@@ -161,6 +161,11 @@ jobs:
       - uses: ./.github/actions/setup-text-engine
         with:
           platform: android
+      - name: Install reviewed Gradle repository policy before resolution
+        shell: bash
+        run: |
+          echo "GRADLE_USER_HOME=$RUNNER_TEMP/tandemlog-gradle" >> "$GITHUB_ENV"
+          GRADLE_USER_HOME="$RUNNER_TEMP/tandemlog-gradle" python3 tool/gradle_repository_policy.py install
       - run: flutter pub get --enforce-lockfile
       # The standard Ubuntu runner image includes this exact build-tools version.
       - run: test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"

@@ -1,0 +1,65 @@
+{
+  "atUtc": "2026-10-12T18:42:30.546515+00:00",
+  "baseMain": "5d3ff16ca81121a38bd073fc83e8875aa2506701",
+  "acceptedRC3Source": "4e07948e3d8fe857f9460f41f5356f0f7ba64e60",
+  "preparedVersion": "2026.10.4+71",
+  "status": "HOLD_SIGNING_AND_PUBLICATION_PENDING_EXPLICIT_SECURITY_DECISION",
+  "pushed": false,
+  "candidateDispatched": false,
+  "published": false,
+  "gradleVersion": "9.4.1",
+  "gradleDistributionSha256": "708d2c6ecc97ca9a11838ef64a6c2301151b8dd10387e22dc1a12c30557cab5b",
+  "affectedAdvisories": [
+    "GHSA-mvvg-497x-hmj8",
+    "GHSA-xwqc-3h47-hg64",
+    "GHSA-j5m7-59rp-24f5"
+  ],
+  "ossFixedVersions": [
+    "9.8.1",
+    "8.14.6"
+  ],
+  "daemonControls": {
+    "freshSingleTenantStandardGitHubHostedVM": true,
+    "trustedMainSigningOnly": true,
+    "signingScriptSetsOrgGradleDaemonFalse": true,
+    "noDaemonIsNotClaimedAsCompleteMitigation": true
+  },
+  "repositoryFallback": {
+    "pluginRepositories": [
+      "google",
+      "mavenCentral",
+      "gradlePluginPortal"
+    ],
+    "projectRepositories": [
+      "google",
+      "mavenCentral",
+      "https://storage.googleapis.com/download.flutter.io (pinned Flutter plugin)"
+    ],
+    "strictExclusiveContentFiltering": false,
+    "trackedGradleDependencyVerificationMetadata": false,
+    "requiresEarlierRepositorySSLDisruptionAndControlOfLaterRepository": true,
+    "unmitigated": true,
+    "signingSecretsPresentDuringResolution": true,
+    "exploitationEvidence": "none supplied; read-only configuration review is not a compromise determination"
+  },
+  "independentReview": "rc70_independent_review agrees with material hold; exact source and notes review continuing",
+  "sourceConfigSha256": {
+    "android/settings.gradle.kts": "f36ce862e73b9afe72900a0d7d75e34d8eaf6f414f80732d14f9dd28e12008af",
+    "android/build.gradle.kts": "6a26dba2cb8dfba1e74f540b0d17a89d96c1301d3c3bfda14348bed257fddcba",
+    "android/gradle.properties": "0f82b18017fba6bb5ce3aa4b2d1a00c9382fc8aae7b1d9326e44b18abd66d80b",
+    "android/gradle/wrapper/gradle-wrapper.properties": "5fae3ec3252de35dfb3b676fb1f915827aac6d8b9f059783551ea8a31ec8170c",
+    ".github/workflows/android-candidate.yml": "d028b2011913366294e98a3c3e6b2d32f1d288ab84d70bba5a6664b92c819755",
+    "tool/build_android_release.sh": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6"
+  },
+  "notesSha256": "03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f",
+  "compatibilityValidationPending": "Application refuses pre-existing uninitialized shared-text history; stable10.3 Settings preparation path needs synthetic upgrade validation before release",
+  "privateDataTouched": false,
+  "liveCutoverAuthorized": false,
+  "sources": [
+    "https://github.com/gradle/gradle/security/advisories/GHSA-mvvg-497x-hmj8",
+    "https://github.com/gradle/gradle/security/advisories/GHSA-xwqc-3h47-hg64",
+    "https://github.com/gradle/gradle/security/advisories/GHSA-j5m7-59rp-24f5"
+  ],
+  "editorialReviewCompletedAtUtc": "2026-10-12T18:43:20.662502+00:00",
+  "editorialReview": "Independent actual-notes review accepted semantics; applied version spacing and removed dependency QA assurance wording; synthetic old-workspace preparation and exact stable-native checks remain pending"
+}

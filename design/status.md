@@ -1,6 +1,14 @@
-# Current status — 2026-10-11
+# Current status — 2026-10-12
 
-## RC3/build68 replacement after reviewed native fixture corrections
+## Stable2026.10.4/build71 preparation
+
+Lee accepted RC3 and explicitly authorized combining it with the audited dependency updates in a full stable release. RC3/build70 source4e07948e3d8fe857f9460f41f5356f0f7ba64e60 was published from accepted signed candidate38194932872; all native qualifications remain attributed to their exact original builds. Audited PR8 and PR9 are merged at main5d3ff16ca81121a38bd073fc83e8875aa2506701, whose three hosted checks passed.
+
+Stable metadata/build71 and reviewed notes are prepared. A newly assessed Gradle9.4.1 TLS-fallback advisory blocked signing. Lee then approved auditing and validating a bounded mitigation. [Strict repository routing](decisions/0020-build-dependency-repository-routing.md) retains all toolchain pins and passes controlled source-bound TLS/positive tests with independent review. Full final-source CI, signed candidate, exact native stable upgrade and publication gates remain pending. No stable release or live Food cutover has occurred.
+
+Existing initialized histories retain their supported upgrade path. Older uninitialized workspaces require the stable2026.10.3 Settings setup action before upgrade; synthetic preparation and native upgrade validation remain pending. Private Food inventory and evidence remain external. [Build-security qualification](../evidence/stable-2026.10.4/build-security/README.md) contains only synthetic public-safe checks.
+
+## Historical RC3/build68 replacement after reviewed native fixture corrections
 
 Build66 candidate38165025596/sourcee6e26a1 is terminal FAILED: Windows tooling hits a synthetic SQLite connection cleanup error after1027 unit passes/two skips, Rust4 and107contracts; Linux completes155native passes/3 failures, without a deadline failure. The explicit-close fixture fix passes actual same-source automatic Windows CI. Build67 candidate38166126728/source3ae00be is terminal CANCELLED by root because both navigation-theme readiness failures and Retained whole-selection geometry are confirmed shared source; its preflight passes and all downstream jobs are cancelled. No eligible signed APK exists from either run.
 

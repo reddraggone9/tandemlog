@@ -1,8 +1,9 @@
 # Tandemlog
 
-Shared household tasks for Android, Windows and Linux. Work offline and keep your devices in sync through a folder you choose.
+Shared household tasks and food inventory for Android, Windows and Linux. Work offline and keep your devices in sync through a folder you choose.
 
 - Capture tasks quickly, one at a time or several together.
+- Track food containers, expiration dates, remaining contents and locations.
 - Organize tasks with tags, dates, times and recurring schedules.
 - Keep smaller steps in inline checklists with item notes and ordering.
 - Edit task titles and notes collaboratively across devices.
@@ -11,7 +12,7 @@ Shared household tasks for Android, Windows and Linux. Work offline and keep you
 
 ## Sync your way
 
-Sync between devices using tools like Syncthing or Dropbox. Each device writes its own log in the synced folder, avoiding file sync conflicts. Tandemlog combines those logs so every device sees the same data.
+Sync between devices using tools like Syncthing or Dropbox. Each device records its own changes. Tandemlog combines them as files arrive through the synced folder.
 
 ## Get started
 

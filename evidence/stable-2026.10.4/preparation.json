@@ -1,0 +1,94 @@
+{
+  "atUtc": "2026-10-12T18:33:39.956017+00:00",
+  "baseMain": "5d3ff16ca81121a38bd073fc83e8875aa2506701",
+  "acceptedRC3Source": "4e07948e3d8fe857f9460f41f5356f0f7ba64e60",
+  "version": "2026.10.4+71",
+  "successfulSignedBuildFloor": 70,
+  "recentSuccessfulCandidates": [
+    {
+      "run": 38194932872,
+      "source": "4e07948e3d8fe857f9460f41f5356f0f7ba64e60",
+      "version": "2026.10.4-rc.3",
+      "build": 70
+    },
+    {
+      "run": 38169726969,
+      "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "version": "2026.10.4-rc.3",
+      "build": 68
+    },
+    {
+      "run": 38133887765,
+      "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+      "version": "2026.10.4-rc.2",
+      "build": 64
+    },
+    {
+      "run": 38121211371,
+      "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+      "version": "2026.10.4-rc.2",
+      "build": 62
+    },
+    {
+      "run": 38085381679,
+      "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+      "version": "2026.10.4-rc.1",
+      "build": 60
+    },
+    {
+      "run": 38076112442,
+      "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+      "version": "2026.10.4-rc.1",
+      "build": 59
+    },
+    {
+      "run": 38064595888,
+      "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+      "version": "2026.10.4-rc.1",
+      "build": 58
+    },
+    {
+      "run": 38027666368,
+      "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+      "version": "2026.10.4-rc.1",
+      "build": 57
+    },
+    {
+      "run": 37995721678,
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "version": "2026.10.3",
+      "build": 56
+    },
+    {
+      "run": 37987187103,
+      "source": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "version": "2026.10.3",
+      "build": 54
+    },
+    {
+      "run": 37960853538,
+      "source": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+      "version": "2026.10.2",
+      "build": 53
+    },
+    {
+      "run": 37945597400,
+      "source": "74afbe294065f462b742b4570d4095e690e54b04",
+      "version": "2026.10.2-rc.7",
+      "build": 52
+    }
+  ],
+  "authorization": "Lee explicitly accepted the current RC3 and audited dependency updates for the full stable release on2026-10-12; no live Food cutover included",
+  "noNewApplicationBehaviorBeyondAcceptedRC3": true,
+  "base64Remains": "0.22.1",
+  "manualWindowsGUIWaiverRetained": true,
+  "oldUninitializedWorkspacePreparationPathNeedsSyntheticValidation": true,
+  "notesSha256": "03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f",
+  "publicationNotYetPerformed": true,
+  "securityAssessment": "build-security/qualification.json",
+  "editorialReviewCompletedAtUtc": "2026-10-12T18:43:20.662588+00:00",
+  "editorialReview": "Independent actual-notes review accepted semantics; applied version spacing and removed dependency QA assurance wording; synthetic old-workspace preparation and exact stable-native checks remain pending",
+  "boundedMitigationAuthorized": true,
+  "selectedMitigation": "strict disjoint repository routing; toolchain unchanged",
+  "independentReview": "Final source, integration and notes accepted for commit/CI qualification; candidate/native/publication pending"
+}

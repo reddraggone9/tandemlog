@@ -2,7 +2,7 @@
 
 ## Current source of truth
 
-Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; the approved food capability is in phased implementation and remains a separate module.
+Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is implemented as a separate module and accepted in RC3/build70. Stable2026.10.4 preparation is in progress.
 
 1. [Status, commands and limitations](status.md)
 2. [Product and milestone](product-behavior.md)
@@ -19,10 +19,11 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Builds and releases](releases.md): CI gates, test installation and signing limitations.
 - [Dependency inventory and review](dependencies.md): resolved versions, native/build provenance and bounded update PRs.
+- [Android repository routing](decisions/0020-build-dependency-repository-routing.md): reviewed TLS-fallback mitigation and remaining trusted-host/toolchain boundary.
 
 ## Current milestone and supporting research
 
-- [Food field editing and Full defaults](decisions/0019-food-field-editing-and-contents-defaults.md): approved suggestions/multiple filters/exact-container Brand/Location bulk editing, conservative expanded-row cleanup and removal of RC-only unspecified contents; native acceptance in progress.
+- [Food field editing and Full defaults](decisions/0019-food-field-editing-and-contents-defaults.md): approved suggestions/multiple filters/exact-container Brand/Location bulk editing, conservative expanded-row cleanup and removal of RC-only unspecified contents; accepted RC3/build70 native evidence retains its original attribution.
 
 
 - [Food import contract v1](food-import-contract.md): bounded reviewed staging, explicit official commit and exact-byte retry; private extraction/data remain external.

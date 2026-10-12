@@ -1,0 +1,26 @@
+{
+  "versions": [
+    {
+      "version": "9.4.1",
+      "commit": "2d6327017519d23b96af35865dc997fcb544fb40",
+      "sourceArchiveSha256": "1412351bafec04eb38e7f234a2d200ef102ad4f6b4df88ba04a0bf8f001a066f",
+      "sourceArchiveBytes": 52746570,
+      "distributionSha256": "708d2c6ecc97ca9a11838ef64a6c2301151b8dd10387e22dc1a12c30557cab5b",
+      "distributionBytes": 238160795,
+      "distributionFiles": 22762,
+      "commitSignatureValid": true
+    },
+    {
+      "version": "9.8.1",
+      "commit": "39daf39feb60a18b1b6ddccde53366522fef516f",
+      "sourceArchiveSha256": "91eb33b06e7cbf2dd09b0fa67fca3b45cae0a42de7215696475e1b5e8a860454",
+      "sourceArchiveBytes": 63515499,
+      "distributionSha256": "5ceda8d2425eb2af196dec31b6fc1f38af2fb638fd621f86fa685805f2262224",
+      "distributionBytes": 264641377,
+      "distributionFiles": 23178,
+      "commitSignatureValid": true
+    }
+  ],
+  "gradle981Executed": false,
+  "selection": "Retain audited existing9.4.1 runtime and close TLS fallback using strict disjoint repository routing;9.8.1 full-source inventory and scoped security-source comparison were evaluated, not a completed audit of every bundled dependency"
+}

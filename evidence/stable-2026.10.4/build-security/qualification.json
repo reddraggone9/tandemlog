@@ -1,0 +1,13 @@
+{
+  "atUtc": "2026-10-12T19:10:46.848942+00:00",
+  "baseMain": "5d3ff16ca81121a38bd073fc83e8875aa2506701",
+  "version": "2026.10.4+71",
+  "selectedMitigation": "strict disjoint repository routing on existing toolchain",
+  "productionPolicySha256": "8fdcce17f00b4d932e8921dc8cacdf2e1dac925135ef58e4ac540e0d949c5153",
+  "v4Passed": 21,
+  "v5FinalSourcePassed": 4,
+  "installerTestsPassed": 4,
+  "noOwnerCredentialsInLocalQualification": true,
+  "fullCandidateAndNativeGatesPending": true,
+  "explicitGradleHomeAndNoJvmHomeOverrideRequired": true
+}

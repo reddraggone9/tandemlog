@@ -8,6 +8,7 @@ for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS 
   fi
 done
 python3 tool/android_release.py preflight
+python3 tool/gradle_repository_policy.py verify
 umask 077
 signing_dir="$RUNNER_TEMP/tandemlog-signing"
 mkdir "$signing_dir"

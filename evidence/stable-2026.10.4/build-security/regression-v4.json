@@ -1,0 +1,240 @@
+{
+  "atUtc": "2026-10-12T19:06:26.201943+00:00",
+  "productionPolicySha256": "1bff978f41c06f529e7357e4b8954f75d2f89bac10c254ab12eb322c82b12438",
+  "testOnlyChange": "Exact loopback HTTPS aliases added to endpoint switch; no filter or lifecycle changes; dedicated fixture certificate truststore, no external TLS bypass",
+  "gradleVersion": "9.4.1",
+  "ownerCredentialsUsed": false,
+  "results": [
+    {
+      "case": "protected-central-success",
+      "scope": "central-success",
+      "protected": true,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 2,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "90fae74c95432612c1b439b5d287dd05b012dbc7d8228755b1a075de0f0beecf"
+    },
+    {
+      "case": "protected-google-plugin-success",
+      "scope": "google-plugin-success",
+      "protected": true,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 5,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "c8496f09f91ad4f250547069d37de9d97f79a3f625616a14883387305cd099bb"
+    },
+    {
+      "case": "baseline-settings-plugin",
+      "scope": "settings-plugin",
+      "protected": false,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 5,
+      "failedTlsConnections": 3,
+      "passed": true,
+      "logSha256": "3c1f90ba49191108162e9d64e8c2f0f7d361cc0645ff304240390fe4cf5c127b"
+    },
+    {
+      "case": "protected-settings-plugin",
+      "scope": "settings-plugin",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "b9502b68cc84fed417ffa0819ccedacd5f8274c8fe0c0bd58b3de69a08b35b28"
+    },
+    {
+      "case": "baseline-project-plugin",
+      "scope": "project-plugin",
+      "protected": false,
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "laterRepositoryRequests": 5,
+      "failedTlsConnections": 3,
+      "passed": true,
+      "logSha256": "83edfceb093fa65fdc9d5c99d49fce1eb6bce50a89c9aa7d37af5b304ef3ee37"
+    },
+    {
+      "case": "protected-project-plugin",
+      "scope": "project-plugin",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "c445373946708415a889e0e2292f14cd4b921782e72d15114156eded14030064"
+    },
+    {
+      "case": "protected-late-added",
+      "scope": "late-added",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "4b4fedcc6af446b488333499c2c196c370f4c072d6d247aef234b7c4cbcf4595"
+    },
+    {
+      "case": "protected-project",
+      "scope": "project",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "70684fc58b63914b7233072994bcc324fd191d896b50bb38ed6c8e76a23c4a3a"
+    },
+    {
+      "case": "protected-settings-repositories",
+      "scope": "settings-repositories",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "38a78c9e4fb3c606f0c4ada478402eee31908c13765228c30039315813f506e0"
+    },
+    {
+      "case": "protected-settings-buildscript",
+      "scope": "settings-buildscript",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "adc230b61f01548f32642f9d5c87e7dbcf4dea02fef0843547349fc90e1b2a93"
+    },
+    {
+      "case": "protected-project-buildscript",
+      "scope": "project-buildscript",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "74727a28b4723cbb1c7a987b8a8fe7fca7d64d856065cb6434214071644d53a7"
+    },
+    {
+      "case": "protected-detached",
+      "scope": "detached",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "6395857c198c51f2915625a6e64986db108a4668ea3a9bbc8b05ee5061c02955"
+    },
+    {
+      "case": "protected-included",
+      "scope": "included",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "d47cddc4d1badaaef2260ce018093df34bd20ba33888f95ef70af748eeeea684"
+    },
+    {
+      "case": "protected-late-url",
+      "scope": "late-url",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "9fa289425c6a617525093b795f64b1c295feabf90548213c78f978d1e97f1446"
+    },
+    {
+      "case": "protected-unknown",
+      "scope": "unknown",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "9e44d7cd0a18d2eb3cc43b8d68043d2e05c758b9899b5f5f9f821ecf7407c171"
+    },
+    {
+      "case": "protected-late-content-widening",
+      "scope": "late-content-widening",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 1,
+      "passed": true,
+      "logSha256": "077f0e0574a936b320967d906cfd3d3f573af79c15f15fa895464606b6a8a239"
+    },
+    {
+      "case": "protected-late-artifact-urls",
+      "scope": "late-artifact-urls",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "966ed1e843525578caf3b059d393dcbfafb5214e5c8b8a3aa05cfedd40e1706b"
+    },
+    {
+      "case": "protected-artifact-urls",
+      "scope": "artifact-urls",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "aa575d761f7cd211314b97e7052dcc8e287a1e510f09d3083fef498f58ba5c0e"
+    },
+    {
+      "case": "protected-readd-url",
+      "scope": "readd-url",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "f301c4818b88e6ff100ea8df613e5ec606c39279f336abd949666d718a94b81b"
+    },
+    {
+      "case": "protected-insecure-flag",
+      "scope": "insecure-flag",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "334f05ad1e533070dd15376ee479fc9b825ce8dcf0a83f9a1f931bea89a9b3b2"
+    },
+    {
+      "case": "protected-flat-directory",
+      "scope": "flat-directory",
+      "protected": true,
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "laterRepositoryRequests": 0,
+      "failedTlsConnections": 0,
+      "passed": true,
+      "logSha256": "519fa10cdc68dc43b0015f8c3ce3dc6d45ab3bb590f92d6a964a6356cd847f77"
+    }
+  ]
+}
