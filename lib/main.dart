@@ -67,12 +67,14 @@ class TandemlogApp extends StatefulWidget {
     this.timeSourceFactory,
     this.folderFactory,
     this.sectionNavigation,
+    this.textEngineFactory,
   });
   final LogFolder Function(String)? folderFactory;
   final String? profilePath;
   final FolderActions? folderActions;
   final ViewTimeSource Function(void Function())? timeSourceFactory;
   final AndroidSectionNavigation? sectionNavigation;
+  final NativeTextEngine Function()? textEngineFactory;
   @override
   State<TandemlogApp> createState() => _TandemlogAppState();
 }
@@ -130,6 +132,7 @@ class _TandemlogAppState extends State<TandemlogApp> {
         timeSourceFactory: widget.timeSourceFactory,
         folderFactory: widget.folderFactory,
         sectionNavigation: widget.sectionNavigation,
+        textEngineFactory: widget.textEngineFactory,
       ),
     ),
   );
@@ -144,6 +147,7 @@ class TasksPage extends StatefulWidget {
     this.timeSourceFactory,
     this.folderFactory,
     this.sectionNavigation,
+    this.textEngineFactory,
   });
   final LogFolder Function(String)? folderFactory;
   final String? profilePath;
@@ -151,6 +155,7 @@ class TasksPage extends StatefulWidget {
   final FolderActions folderActions;
   final ViewTimeSource Function(void Function())? timeSourceFactory;
   final AndroidSectionNavigation? sectionNavigation;
+  final NativeTextEngine Function()? textEngineFactory;
   @override
   State<TasksPage> createState() => _TasksPageState();
 }
@@ -438,7 +443,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       privateRoot!,
       profileDatabase: profileDatabase,
       writerIdentity: settings!.writer,
-      textEngine: textEngine ??= NativeTextEngine(),
+      textEngine: textEngine ??=
+          widget.textEngineFactory?.call() ?? NativeTextEngine(),
       initializeNewWorkspaceText: true,
       onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
     );

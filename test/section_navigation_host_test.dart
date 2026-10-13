@@ -16,7 +16,13 @@ import 'package:tandemlog/storage/local_profile_migration.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:uuid/uuid.dart';
+import 'package:tandemlog/text/native_text_engine.dart';
 import '../integration_test/native_text_fixtures.dart';
+
+late String nativeHostLibraryPath;
+
+NativeTextEngine createHostTextEngine() =>
+    NativeTextEngine(libraryPath: nativeHostLibraryPath);
 
 class HeldPicker extends FolderActions {
   final picked = Completer<String?>();
@@ -92,6 +98,7 @@ fixture({bool selectUser = true, AppSection section = AppSection.tasks}) async {
       seed = await openNativeFixtureStore(
         LocalLogFolder(data.path),
         '${root.path}/seed',
+        nativeLibraryPath: nativeHostLibraryPath,
       );
   await seed.command(user, 'user.created', {'name': 'Synthetic section user'});
   await seed.createNativeFixtureTask(task, {
@@ -120,6 +127,16 @@ Future<Map<String, List<int>>> canonical(LocalLogFolder folder) async => {
 };
 
 void main() {
+  final configured = Platform.environment['TANDEMLOG_TEXT_LIBRARY'];
+  if (configured == null ||
+      configured.isEmpty ||
+      !File(configured).existsSync()) {
+    throw StateError(
+      'section_navigation_host_test requires TANDEMLOG_TEXT_LIBRARY to name '
+      'the real native test library built by CI.',
+    );
+  }
+  nativeHostLibraryPath = File(configured).absolute.path;
   const channel = MethodChannel('tandemlog/sections-host-test');
   Future<void> native(WidgetTester tester, int id, String section) async {
     final done = Completer<void>();
@@ -167,6 +184,7 @@ void main() {
             );
         await tester.pumpWidget(
           TandemlogApp(
+            textEngineFactory: createHostTextEngine,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -203,6 +221,7 @@ void main() {
             .setMockMethodCallHandler(channel, (_) async => null);
         await tester.pumpWidget(
           TandemlogApp(
+            textEngineFactory: createHostTextEngine,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -229,6 +248,7 @@ void main() {
       try {
         await tester.pumpWidget(
           TandemlogApp(
+            textEngineFactory: createHostTextEngine,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -286,6 +306,7 @@ void main() {
         try {
           await tester.pumpWidget(
             TandemlogApp(
+              textEngineFactory: createHostTextEngine,
               profilePath: data.profile,
               folderActions: picker,
               sectionNavigation: AndroidSectionNavigation(channel: channel),
@@ -328,6 +349,7 @@ void main() {
     try {
       await tester.pumpWidget(
         TandemlogApp(
+          textEngineFactory: createHostTextEngine,
           profilePath: data.profile,
           folderFactory: (_) => folder,
           sectionNavigation: AndroidSectionNavigation(channel: channel),
@@ -377,6 +399,7 @@ void main() {
       ))!;
       await tester.pumpWidget(
         TandemlogApp(
+          textEngineFactory: createHostTextEngine,
           profilePath: first.profile,
           folderActions: picker,
           folderFactory: (location) =>
@@ -437,6 +460,7 @@ void main() {
         final before = (await tester.runAsync(() => canonical(data.folder)))!;
         await tester.pumpWidget(
           TandemlogApp(
+            textEngineFactory: createHostTextEngine,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -498,6 +522,7 @@ void main() {
             ))!;
             await tester.pumpWidget(
               TandemlogApp(
+                textEngineFactory: createHostTextEngine,
                 profilePath: data.profile,
                 sectionNavigation: AndroidSectionNavigation(channel: channel),
               ),
@@ -641,6 +666,7 @@ void main() {
           final before = (await tester.runAsync(() => canonical(data.folder)))!;
           await tester.pumpWidget(
             TandemlogApp(
+              textEngineFactory: createHostTextEngine,
               profilePath: data.profile,
               sectionNavigation: AndroidSectionNavigation(channel: channel),
             ),

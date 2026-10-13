@@ -16,8 +16,9 @@ Future<TaskStore> openNativeFixtureStore(
   String privatePath, {
   DateTime Function()? now,
   bool initializeNewWorkspaceText = true,
+  String? nativeLibraryPath,
 }) async {
-  final engine = NativeTextEngine();
+  final engine = NativeTextEngine(libraryPath: nativeLibraryPath);
   addTearDown(engine.dispose);
   return TaskStore.open(
     folder,
