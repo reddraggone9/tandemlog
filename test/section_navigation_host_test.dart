@@ -8,6 +8,8 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/platform/android_section_navigation.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
+import 'package:tandemlog/platform/view_time_source.dart';
+import 'package:sqlite3/sqlite3.dart' show Database;
 import 'package:tandemlog/presentation/section_menu.dart';
 import 'package:tandemlog/presentation/checklist_panel.dart';
 import 'package:tandemlog/presentation/checklist_item_editor.dart';
@@ -21,8 +23,53 @@ import '../integration_test/native_text_fixtures.dart';
 
 late String nativeHostLibraryPath;
 
-NativeTextEngine createHostTextEngine() =>
-    NativeTextEngine(libraryPath: nativeHostLibraryPath);
+NativeTextEngine createHostTextEngine() => ObservedNativeEngine();
+
+// Observe successful disposal without replacing any native operation.
+class ObservedNativeEngine extends NativeTextEngine {
+  ObservedNativeEngine() : super(libraryPath: nativeHostLibraryPath);
+  bool disposedSuccessfully = false;
+  @override
+  void dispose() {
+    super.dispose();
+    disposedSuccessfully = true;
+  }
+}
+
+ViewTimeSource createHostTimeSource(void Function() changed) => ViewTimeSource(
+  onChanged: changed,
+  loadZone: () async => 'UTC',
+  now: () => DateTime.utc(2026, 10, 12, 12),
+);
+
+typedef HostResources = ({Database database, ObservedNativeEngine engine});
+
+HostResources hostResources(WidgetTester tester) {
+  final host = tester.state(find.byType(TasksPage)) as dynamic;
+  final profile = host.profileDatabase as LocalProfileDatabase;
+  final connection = profile.database;
+  expect(connection.select('SELECT 1').single.values.single, 1);
+  return (
+    database: connection,
+    engine: host.textEngine as ObservedNativeEngine,
+  );
+}
+
+Future<void> waitForHostShutdown(
+  WidgetTester tester,
+  HostResources resources,
+) => ready(tester, () {
+  if (!resources.engine.disposedSuccessfully) return false;
+  try {
+    resources.database.select('SELECT 1');
+    return false;
+  } on StateError catch (error) {
+    // The profile getter also throws for poisoning. Probe the captured owned
+    // connection itself, without opening or closing a separate handle.
+    if (error.message != 'This database has already been closed') rethrow;
+    return true;
+  }
+}, settle: false);
 
 class HeldPicker extends FolderActions {
   final picked = Completer<String?>();
@@ -161,11 +208,10 @@ void main() {
         .setMockMethodCallHandler(channel, null),
   );
   Future<void> cleanup(WidgetTester tester, Directory root) async {
+    final resources = hostResources(tester);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 50)),
-    );
+    await waitForHostShutdown(tester, resources);
     await tester.runAsync(() => root.delete(recursive: true));
   }
 
@@ -185,6 +231,7 @@ void main() {
         await tester.pumpWidget(
           TandemlogApp(
             textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -204,24 +251,16 @@ void main() {
           tester,
           () => find.text('Synthetic section task').evaluate().isNotEmpty,
         );
-        final host = tester.state(find.byType(TasksPage)) as dynamic;
-        final LocalProfileDatabase database = host.profileDatabase;
+        final resources = hostResources(tester);
         await tester.pumpWidget(const SizedBox.shrink());
-        // Disposal awaits pending preferences, importer and native handles.
-        // A fixed sleep can reopen before the real installation lease closes.
-        await ready(tester, () {
-          try {
-            database.database;
-            return false;
-          } on StateError {
-            return true;
-          }
-        });
+        // Reopen only after the actual native owner and connection close.
+        await waitForHostShutdown(tester, resources);
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(channel, (_) async => null);
         await tester.pumpWidget(
           TandemlogApp(
             textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -249,6 +288,7 @@ void main() {
         await tester.pumpWidget(
           TandemlogApp(
             textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -307,6 +347,7 @@ void main() {
           await tester.pumpWidget(
             TandemlogApp(
               textEngineFactory: createHostTextEngine,
+              timeSourceFactory: createHostTimeSource,
               profilePath: data.profile,
               folderActions: picker,
               sectionNavigation: AndroidSectionNavigation(channel: channel),
@@ -350,6 +391,7 @@ void main() {
       await tester.pumpWidget(
         TandemlogApp(
           textEngineFactory: createHostTextEngine,
+          timeSourceFactory: createHostTimeSource,
           profilePath: data.profile,
           folderFactory: (_) => folder,
           sectionNavigation: AndroidSectionNavigation(channel: channel),
@@ -400,6 +442,7 @@ void main() {
       await tester.pumpWidget(
         TandemlogApp(
           textEngineFactory: createHostTextEngine,
+          timeSourceFactory: createHostTimeSource,
           profilePath: first.profile,
           folderActions: picker,
           folderFactory: (location) =>
@@ -461,6 +504,7 @@ void main() {
         await tester.pumpWidget(
           TandemlogApp(
             textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
             profilePath: data.profile,
             sectionNavigation: AndroidSectionNavigation(channel: channel),
           ),
@@ -523,6 +567,7 @@ void main() {
             await tester.pumpWidget(
               TandemlogApp(
                 textEngineFactory: createHostTextEngine,
+                timeSourceFactory: createHostTimeSource,
                 profilePath: data.profile,
                 sectionNavigation: AndroidSectionNavigation(channel: channel),
               ),
@@ -667,6 +712,7 @@ void main() {
           await tester.pumpWidget(
             TandemlogApp(
               textEngineFactory: createHostTextEngine,
+              timeSourceFactory: createHostTimeSource,
               profilePath: data.profile,
               sectionNavigation: AndroidSectionNavigation(channel: channel),
             ),
