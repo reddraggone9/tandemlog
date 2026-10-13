@@ -1,4 +1,5 @@
 import '../test/support/toolbar_button.dart';
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -207,7 +208,13 @@ void registerFoodAccountWorkflowTests() {
             expect(await _records(fixture.folder.delegate), before);
 
             await _chooseAccount(tester, 'Manage users');
+            final host = tester.state(find.byType(TasksPage)) as dynamic;
+            await waitForUi(
+              tester,
+              () => host.user == null && host.busy == false,
+            );
             expect(readProfileSettings(tester)['user'], isNull);
+            expect(readProfileSettings(tester)['lastSection'], 'tasks');
             expect(find.byType(FoodInventoryPage), findsNothing);
             expect(find.text('Synthetic Alex'), findsOneWidget);
             expect(find.text('Synthetic Blair'), findsOneWidget);
@@ -218,9 +225,17 @@ void registerFoodAccountWorkflowTests() {
             await tester.tap(find.text('Synthetic Alex'));
             await waitForUi(
               tester,
+              () =>
+                  host.user == fixture.alex &&
+                  host.busy == false &&
+                  host.sectionWork == null,
+            );
+            await waitForUi(
+              tester,
               () => find.text('Synthetic Alex task').evaluate().isNotEmpty,
             );
             expect(readProfileSettings(tester)['user'], fixture.alex);
+            expect(readProfileSettings(tester)['lastSection'], 'tasks');
             expect(find.byType(FoodInventoryPage), findsNothing);
             expect(await _records(fixture.folder.delegate), before);
             expect(tester.takeException(), isNull);

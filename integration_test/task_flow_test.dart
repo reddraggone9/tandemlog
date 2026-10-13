@@ -3613,6 +3613,7 @@ void main() {
       await fill('Maximum days', '3');
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
+      await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
       expect(find.byType(AlertDialog), findsNothing);
       expect(find.text('Second arrival'), findsOneWidget);
       expect(tester.widget<TextField>(capture).controller!.value, draft);

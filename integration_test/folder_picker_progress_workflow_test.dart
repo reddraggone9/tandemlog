@@ -267,6 +267,13 @@ void registerFolderPickerProgressTests() {
           b.entered = Completer<void>();
           await choose();
           await switchSection(tester, food: false);
+          await _waitFor(
+            tester,
+            () => find.byKey(ValueKey('task-body-$task')).evaluate().isNotEmpty,
+          );
+          expect(state.choosingFolder, true);
+          expect(state.busy, false);
+          expect(find.byType(LinearProgressIndicator), findsNothing);
           a.hold = Completer<void>();
           a.entered = Completer<void>();
           await tester.tap(find.byKey(ValueKey('task-body-$task')));

@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' show AppExitResponse;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/semantics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+
 import 'application/undo_history.dart';
 import 'application/food_undo_history.dart';
 import 'application/task_text_session.dart';
@@ -166,7 +168,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool foodVisible = false;
   AndroidSectionNavigation? sectionNavigation;
   int sectionRevision = 0;
-  ({bool food, int revision})? requestedSection;
+  ({bool food, int revision, bool waitForFolderChoice})? requestedSection;
   Future<void>? sectionWork;
   String? foodError, sharedSafetyError;
   final foodPageKey = GlobalKey<FoodInventoryPageState>();
@@ -406,6 +408,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         requestedSection = (
           food: settings!.lastSection == AppSection.food,
           revision: ++sectionRevision,
+          waitForFolderChoice: true,
         );
       }
       if (settings!.folder != null) await _open(settings!.folder!);
@@ -526,12 +529,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _switchModule(bool food) async {
     sectionNavigation?.manualNavigation();
-    _requestSection(food);
+    _requestSection(food, waitForFolderChoice: false);
     await sectionWork;
   }
 
-  void _requestSection(bool food) {
-    requestedSection = (food: food, revision: ++sectionRevision);
+  void _requestSection(bool food, {bool waitForFolderChoice = true}) {
+    requestedSection = (
+      food: food,
+      revision: ++sectionRevision,
+      waitForFolderChoice: waitForFolderChoice,
+    );
     unawaited(_drainSectionRequests());
   }
 
@@ -547,7 +554,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool get _sectionReady =>
       mounted &&
       !busy &&
-      !choosingFolder &&
       !openingChecklistEditor &&
       !closingEditor &&
       !checklistEditorClosing &&
@@ -562,10 +568,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       user != null &&
       sharedSafetyError == null;
 
+  bool get _sectionRequestReady =>
+      _sectionReady &&
+      requestedSection != null &&
+      (!choosingFolder || !requestedSection!.waitForFolderChoice);
+
   Future<void> _drainSectionRequests() {
     final running = sectionWork;
     if (running != null) return running;
-    if (!_sectionReady || requestedSection == null) return Future<void>.value();
+    if (!_sectionRequestReady) return Future<void>.value();
     final completion = Completer<void>();
     sectionWork = completion.future;
     unawaited(_runSectionRequests(completion));
@@ -574,7 +585,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _runSectionRequests(Completer<void> completion) async {
     try {
-      while (_sectionReady && requestedSection != null) {
+      while (_sectionRequestReady) {
         final origin = store;
         if (requestedSection!.food != foodVisible) {
           if (!await _closeEditor() || !await _closeFoodEditor()) {
@@ -583,7 +594,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             break;
           }
         }
-        if (!mounted || !_sectionReady) {
+        if (!mounted || !_sectionRequestReady) {
           break;
         }
         if (!identical(store, origin)) {
@@ -982,14 +993,32 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await preferences.save();
   }
 
-  Future<void> _selectUser(String? selected) async {
+  Future<void> _selectUser(String? selected, {int? tasksRevision}) async {
     if (!await _closeEditor()) return;
     _clearSelection();
+    // Manage users explicitly visits Tasks setup after draft guards succeed.
+    // A later shortcut may still wait for the next user selection.
+    final destinationRevision = selected == null
+        ? tasksRevision ?? ++sectionRevision
+        : null;
+    if (destinationRevision != null && tasksRevision == null) {
+      sectionNavigation?.manualNavigation();
+    }
+    if (selected == null) {
+      // Finish any earlier section preference write before changing its shared
+      // settings object. The admitted action is busy, so new requests wait.
+      await sectionWork;
+      if (!mounted) return;
+    }
     final previous = settings!.user;
     settings!.folder = store!.folder.location;
     settings!.user = selected;
     try {
-      await settings!.save();
+      if (selected == null) {
+        await settings!.saveSection(AppSection.tasks);
+      } else {
+        await settings!.save();
+      }
     } catch (_) {
       settings!.user = previous;
       rethrow;
@@ -997,8 +1026,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!mounted) return;
     rows = store!.rows;
     user = selected;
-    if (selected == null && foodVisible) {
-      if (requestedSection == null) _requestSection(true);
+    if (destinationRevision != null) {
+      if (requestedSection != null &&
+          requestedSection!.revision <= destinationRevision) {
+        requestedSection = null;
+      }
       foodVisible = false;
     }
   }
@@ -4797,7 +4829,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               !canSwitch()) {
             return;
           }
-          await _act(() => _selectUser(value == 'new' ? null : value));
+          final tasksRevision = value == 'new' ? ++sectionRevision : null;
+          if (tasksRevision != null) sectionNavigation?.manualNavigation();
+          await _act(
+            () => _selectUser(
+              value == 'new' ? null : value,
+              tasksRevision: tasksRevision,
+            ),
+          );
         }
       },
       itemBuilder: (_) => [

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,6 +20,7 @@ import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:uuid/uuid.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
+
 import '../integration_test/native_text_fixtures.dart';
 
 late String nativeHostLibraryPath;
@@ -215,6 +217,386 @@ void main() {
     await tester.runAsync(() => root.delete(recursive: true));
   }
 
+  testWidgets(
+    'failed Manage users save preserves the earlier Food preference write',
+    (tester) async {
+      final data = (await tester.runAsync(() => fixture()))!;
+      final gate = Completer<void>();
+      try {
+        final before = (await tester.runAsync(() => canonical(data.folder)))!;
+        await tester.pumpWidget(
+          TandemlogApp(
+            textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
+            profilePath: data.profile,
+            sectionNavigation: AndroidSectionNavigation(channel: channel),
+          ),
+        );
+        await ready(
+          tester,
+          () => find.text('Synthetic section task').evaluate().isNotEmpty,
+        );
+        final host = tester.state(find.byType(TasksPage)) as dynamic;
+        final profile = host.profileDatabase as LocalProfileDatabase;
+        profile.database.execute(
+          "CREATE TEMP TRIGGER fail_manage BEFORE UPDATE ON protected_settings WHEN json_extract(CAST(NEW.raw AS TEXT), '\$.user') IS NULL BEGIN SELECT RAISE(FAIL, 'Synthetic Manage save failure'); END",
+        );
+        final held = profile.serialize(() => gate.future);
+        tester.widget<SectionMenu>(find.byType(SectionMenu)).onSelected!(true);
+        await ready(
+          tester,
+          () => host.foodVisible == true && host.sectionWork != null,
+          settle: false,
+        );
+        // Isolate a pending preference write from importer synchronization.
+        host.syncing = null;
+        tester
+            .widget<PopupMenuButton<String>>(
+              find.byKey(const ValueKey('identity-menu')),
+            )
+            .onSelected!('new');
+        await ready(tester, () => host.busy == true, settle: false);
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 10)),
+        );
+        await tester.pump();
+        expect(host.settings.user, data.user);
+        gate.complete();
+        await ready(
+          tester,
+          () =>
+              host.busy == false &&
+              host.sectionWork == null &&
+              host.error != null,
+        );
+        await held;
+        expect(host.user, data.user);
+        expect(host.settings.user, data.user);
+        expect(host.foodVisible, isTrue);
+        expect(host.settings.lastSection, AppSection.food);
+        final raw = LocalSettings.protectedValues(profile);
+        expect(raw['user'], data.user);
+        expect(raw['lastSection'], 'food');
+        expect(await tester.runAsync(() => canonical(data.folder)), before);
+        profile.database.execute('DROP TRIGGER fail_manage');
+        expect(tester.takeException(), isNull);
+      } finally {
+        if (!gate.isCompleted) gate.complete();
+        await cleanup(tester, data.root);
+      }
+    },
+  );
+  for (final newerShortcut in [false, true]) {
+    testWidgets(
+      'Manage users visits Tasks and ${newerShortcut ? 'preserves a newer Food shortcut' : 'stays in Tasks after selection'}',
+      (tester) async {
+        final data = (await tester.runAsync(
+          () => fixture(section: AppSection.food),
+        ))!;
+        final gate = Completer<void>();
+        try {
+          final before = (await tester.runAsync(() => canonical(data.folder)))!;
+          await tester.pumpWidget(
+            TandemlogApp(
+              textEngineFactory: createHostTextEngine,
+              timeSourceFactory: createHostTimeSource,
+              profilePath: data.profile,
+              sectionNavigation: AndroidSectionNavigation(channel: channel),
+            ),
+          );
+          await ready(
+            tester,
+            () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
+          );
+          final host = tester.state(find.byType(TasksPage)) as dynamic;
+          if (newerShortcut) host.syncing = gate.future;
+          tester
+              .widget<PopupMenuButton<String>>(
+                find.byKey(const ValueKey('identity-menu')),
+              )
+              .onSelected!('new');
+          if (newerShortcut) {
+            await ready(tester, () => host.busy == true, settle: false);
+            await native(tester, 1, 'food');
+            host.syncing = null;
+          }
+          gate.complete();
+          await ready(tester, () => host.user == null && host.busy == false);
+          expect(find.byType(FoodInventoryPage), findsNothing);
+          expect(host.settings.lastSection, AppSection.tasks);
+          await tester.tap(find.text('Synthetic section user'));
+          await ready(
+            tester,
+            () =>
+                host.user == data.user &&
+                host.busy == false &&
+                host.sectionWork == null,
+          );
+          expect(host.foodVisible, newerShortcut);
+          expect(
+            host.settings.lastSection,
+            newerShortcut ? AppSection.food : AppSection.tasks,
+          );
+          expect(await tester.runAsync(() => canonical(data.folder)), before);
+          expect(tester.takeException(), isNull);
+        } finally {
+          if (!gate.isCompleted) gate.complete();
+          await cleanup(tester, data.root);
+        }
+      },
+    );
+  }
+  for (final discard in [false, true]) {
+    testWidgets(
+      'Manage users draft ${discard ? 'Discard' : 'Keep editing'} admits navigation after a Food shortcut',
+      (tester) async {
+        final data = (await tester.runAsync(
+          () => fixture(section: AppSection.food),
+        ))!;
+        try {
+          final before = (await tester.runAsync(() => canonical(data.folder)))!;
+          await tester.pumpWidget(
+            TandemlogApp(
+              textEngineFactory: createHostTextEngine,
+              timeSourceFactory: createHostTimeSource,
+              profilePath: data.profile,
+              sectionNavigation: AndroidSectionNavigation(channel: channel),
+            ),
+          );
+          await ready(
+            tester,
+            () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
+          );
+          final host = tester.state(find.byType(TasksPage)) as dynamic;
+          await tester.tap(find.byTooltip('Add food'));
+          await tester.pumpAndSettle();
+          final name = find.widgetWithText(TextField, 'Food name');
+          await tester.enterText(name, 'Synthetic decision draft');
+          tester
+              .widget<PopupMenuButton<String>>(
+                find.byKey(const ValueKey('identity-menu')),
+              )
+              .onSelected!('new');
+          await ready(
+            tester,
+            () => find.text('Discard food changes?').evaluate().isNotEmpty,
+          );
+          await native(tester, 1, 'food');
+          expect(find.text('Discard food changes?'), findsOneWidget);
+          await tester.tap(find.text(discard ? 'Discard' : 'Keep editing'));
+          if (discard) {
+            await ready(
+              tester,
+              () =>
+                  host.user == null &&
+                  host.busy == false &&
+                  host.sectionWork == null,
+            );
+            expect(host.foodVisible, isFalse);
+            expect(host.settings.lastSection, AppSection.tasks);
+            await tester.tap(find.text('Synthetic section user'));
+            await ready(
+              tester,
+              () =>
+                  host.user == data.user &&
+                  host.busy == false &&
+                  host.sectionWork == null,
+            );
+            expect(host.foodVisible, isFalse);
+            expect(host.settings.lastSection, AppSection.tasks);
+          } else {
+            await tester.pumpAndSettle();
+            expect(host.user, data.user);
+            expect(host.foodVisible, isTrue);
+            expect(host.settings.lastSection, AppSection.food);
+            expect(
+              tester.widget<TextField>(name).controller!.text,
+              'Synthetic decision draft',
+            );
+          }
+          expect(await tester.runAsync(() => canonical(data.folder)), before);
+          expect(tester.takeException(), isNull);
+        } finally {
+          await cleanup(tester, data.root);
+        }
+      },
+    );
+  }
+  testWidgets(
+    'cancelled Manage users preserves Food draft and section preference',
+    (tester) async {
+      final data = (await tester.runAsync(
+        () => fixture(section: AppSection.food),
+      ))!;
+      try {
+        final before = (await tester.runAsync(() => canonical(data.folder)))!;
+        await tester.pumpWidget(
+          TandemlogApp(
+            textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
+            profilePath: data.profile,
+            sectionNavigation: AndroidSectionNavigation(channel: channel),
+          ),
+        );
+        await ready(
+          tester,
+          () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
+        );
+        final host = tester.state(find.byType(TasksPage)) as dynamic;
+        await tester.tap(find.byTooltip('Add food'));
+        await tester.pumpAndSettle();
+        final name = find.widgetWithText(TextField, 'Food name');
+        await tester.enterText(name, 'Synthetic preserved Food draft');
+        tester
+            .widget<PopupMenuButton<String>>(
+              find.byKey(const ValueKey('identity-menu')),
+            )
+            .onSelected!('new');
+        await ready(
+          tester,
+          () => find.text('Discard food changes?').evaluate().isNotEmpty,
+        );
+        await tester.tap(find.text('Keep editing'));
+        await tester.pumpAndSettle();
+        expect(host.user, data.user);
+        expect(host.foodVisible, isTrue);
+        expect(host.settings.lastSection, AppSection.food);
+        expect(
+          tester.widget<TextField>(name).controller!.text,
+          'Synthetic preserved Food draft',
+        );
+        expect(await tester.runAsync(() => canonical(data.folder)), before);
+        expect(tester.takeException(), isNull);
+      } finally {
+        await cleanup(tester, data.root);
+      }
+    },
+  );
+  testWidgets(
+    'newer native request retains picker deferral after a manual draft guard',
+    (tester) async {
+      final data = (await tester.runAsync(
+        () => fixture(section: AppSection.food),
+      ))!;
+      final picker = HeldPicker();
+      try {
+        final before = (await tester.runAsync(() => canonical(data.folder)))!;
+        await tester.pumpWidget(
+          TandemlogApp(
+            textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
+            profilePath: data.profile,
+            folderActions: picker,
+            sectionNavigation: AndroidSectionNavigation(channel: channel),
+          ),
+        );
+        await ready(
+          tester,
+          () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
+        );
+        final host = tester.state(find.byType(TasksPage)) as dynamic;
+        await tester.tap(find.byKey(const ValueKey('identity-menu')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Settings'));
+        await ready(
+          tester,
+          () => find.text('Use a different folder').evaluate().isNotEmpty,
+        );
+        await tester.ensureVisible(find.text('Use a different folder'));
+        await tester.tap(find.text('Use a different folder'));
+        await ready(tester, () => picker.started);
+        await tester.tap(find.byTooltip('Add food'));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.widgetWithText(TextField, 'Food name'),
+          'Synthetic guarded draft',
+        );
+        tester.widget<SectionMenu>(find.byType(SectionMenu)).onSelected!(false);
+        await ready(
+          tester,
+          () => find.text('Discard food changes?').evaluate().isNotEmpty,
+        );
+        await native(tester, 1, 'tasks');
+        await tester.tap(find.text('Discard'));
+        await ready(tester, () => host.sectionWork == null);
+        expect(host.choosingFolder, isTrue);
+        expect(host.foodVisible, isTrue);
+        expect(host.settings.lastSection, AppSection.food);
+        picker.picked.complete(null);
+        await ready(
+          tester,
+          () => host.foodVisible == false && host.sectionWork == null,
+        );
+        expect(host.settings.lastSection, AppSection.tasks);
+        expect(await tester.runAsync(() => canonical(data.folder)), before);
+        expect(tester.takeException(), isNull);
+      } finally {
+        if (!picker.picked.isCompleted) picker.picked.complete(null);
+        await cleanup(tester, data.root);
+      }
+    },
+  );
+  testWidgets(
+    'manual Tasks remains available while picker waits; native Food defers',
+    (tester) async {
+      final data = (await tester.runAsync(
+        () => fixture(section: AppSection.food),
+      ))!;
+      final picker = HeldPicker();
+      try {
+        final before = (await tester.runAsync(() => canonical(data.folder)))!;
+        await tester.pumpWidget(
+          TandemlogApp(
+            textEngineFactory: createHostTextEngine,
+            timeSourceFactory: createHostTimeSource,
+            profilePath: data.profile,
+            folderActions: picker,
+            sectionNavigation: AndroidSectionNavigation(channel: channel),
+          ),
+        );
+        await ready(
+          tester,
+          () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
+        );
+        final host = tester.state(find.byType(TasksPage)) as dynamic;
+        await tester.tap(find.byKey(const ValueKey('identity-menu')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Settings'));
+        await ready(
+          tester,
+          () => find.text('Use a different folder').evaluate().isNotEmpty,
+        );
+        await tester.ensureVisible(find.text('Use a different folder'));
+        await tester.tap(find.text('Use a different folder'));
+        await ready(tester, () => picker.started);
+        tester.widget<SectionMenu>(find.byType(SectionMenu)).onSelected!(false);
+        await ready(
+          tester,
+          () =>
+              find.text('Synthetic section task').evaluate().isNotEmpty &&
+              host.sectionWork == null,
+        );
+        expect(host.choosingFolder, isTrue);
+        expect(host.busy, isFalse);
+        expect(find.byType(LinearProgressIndicator), findsNothing);
+        expect(host.settings.lastSection, AppSection.tasks);
+        await native(tester, 1, 'food');
+        expect(find.byType(FoodInventoryPage), findsNothing);
+        expect(host.settings.lastSection, AppSection.tasks);
+        picker.picked.complete(null);
+        await ready(
+          tester,
+          () => host.foodVisible == true && host.sectionWork == null,
+        );
+        expect(host.settings.lastSection, AppSection.food);
+        expect(await tester.runAsync(() => canonical(data.folder)), before);
+        expect(tester.takeException(), isNull);
+      } finally {
+        if (!picker.picked.isCompleted) picker.picked.complete(null);
+        await cleanup(tester, data.root);
+      }
+    },
+  );
   testWidgets(
     'remembered Food and native Food wait for user setup; manual Tasks persists on reopen',
     (tester) async {

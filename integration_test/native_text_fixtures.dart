@@ -125,25 +125,80 @@ Future<void> captureNativeFixtureUi(
   ]);
   expect(found.exitCode, 0);
   final window = (found.stdout as String).trim().split('\n').last;
-  await Process.run('xdotool', ['windowmove', window, '0', '0']);
-  await Process.run('xdotool', [
-    'windowsize',
-    window,
-    tester.view.physicalSize.width.round().toString(),
-    tester.view.physicalSize.height.round().toString(),
-  ]);
-  if (waitingForConsent) {
-    await tester.pump(const Duration(milliseconds: 300));
-  } else {
-    await tester.pumpAndSettle();
+  Future<Map<String, String>> windowGeometry() async {
+    final result = await Process.run('xdotool', [
+      'getwindowgeometry',
+      '--shell',
+      window,
+    ]);
+    expect(result.exitCode, 0);
+    final geometry = {
+      for (final match in RegExp(
+        r'^(X|Y|WIDTH|HEIGHT)=(-?\d+)$',
+        multiLine: true,
+      ).allMatches(result.stdout as String))
+        match.group(1)!: match.group(2)!,
+    };
+    expect(geometry.length, 4);
+    expect(int.parse(geometry['WIDTH']!), greaterThan(0));
+    expect(int.parse(geometry['HEIGHT']!), greaterThan(0));
+    return geometry;
   }
-  await tester.runAsync(
-    () => Future<void>.delayed(const Duration(milliseconds: 200)),
-  );
-  final captured = await Process.run('import', [
-    '-window',
-    window,
-    '$directory/$name.png',
-  ]);
-  expect(captured.exitCode, 0);
+
+  final before = await windowGeometry();
+  try {
+    final moved = await Process.run('xdotool', [
+      'windowmove',
+      window,
+      '0',
+      '0',
+    ]);
+    expect(moved.exitCode, 0);
+    final resized = await Process.run('xdotool', [
+      'windowsize',
+      window,
+      tester.view.physicalSize.width.round().toString(),
+      tester.view.physicalSize.height.round().toString(),
+    ]);
+    expect(resized.exitCode, 0);
+    if (waitingForConsent) {
+      await tester.pump(const Duration(milliseconds: 300));
+    } else {
+      await tester.pumpAndSettle();
+    }
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
+    final captured = await Process.run('import', [
+      '-window',
+      window,
+      '$directory/$name.png',
+    ]);
+    expect(captured.exitCode, 0);
+  } finally {
+    final resized = await Process.run('xdotool', [
+      'windowsize',
+      window,
+      before['WIDTH']!,
+      before['HEIGHT']!,
+    ]);
+    expect(resized.exitCode, 0);
+    final moved = await Process.run('xdotool', [
+      'windowmove',
+      window,
+      before['X']!,
+      before['Y']!,
+    ]);
+    expect(moved.exitCode, 0);
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
+    if (waitingForConsent) {
+      await tester.pump(const Duration(milliseconds: 300));
+    } else {
+      await tester.pumpAndSettle();
+    }
+    final after = await windowGeometry();
+    expect(after, before);
+  }
 }
