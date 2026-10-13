@@ -1,0 +1,59 @@
+{
+  "atUtc": "2026-10-13T10:07:45.630402+00:00",
+  "source": "3a119905c6feaea4a3e2d9b4ef0544621fb3fcc4",
+  "version": "2026.10.5-rc.1+75",
+  "tag": "v2026.10.5-rc.1",
+  "releaseId": 411534915,
+  "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5-rc.1",
+  "publishedAt": "2026-10-13T10:06:02Z",
+  "prerelease": true,
+  "draft": false,
+  "publicationRunId": 38380975046,
+  "candidateRunId": 38352762992,
+  "originalArtifactsPromotedWithoutRebuild": true,
+  "unauthenticatedPublicBytesVerified": true,
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.5-rc.1-android.apk",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5-rc.1/tandemlog-2026.10.5-rc.1-android.apk",
+      "sha256": "e56269f7196aa3eb9b9b14109aae48f9aa8ce460bb0301c321faf1c52d3c6cef",
+      "bytes": 67134785,
+      "downloadedWithoutAuthentication": true,
+      "matchesOriginalAcceptedArtifact": true
+    },
+    {
+      "name": "tandemlog-2026.10.5-rc.1-linux-x64.flatpak",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5-rc.1/tandemlog-2026.10.5-rc.1-linux-x64.flatpak",
+      "sha256": "8cab1207924e0a1886f8735c6ec1bb5855b576dd96017768e94ed695dfea137d",
+      "bytes": 9245176,
+      "downloadedWithoutAuthentication": true,
+      "matchesOriginalAcceptedArtifact": true
+    },
+    {
+      "name": "tandemlog-2026.10.5-rc.1-windows-x64-setup.exe",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5-rc.1/tandemlog-2026.10.5-rc.1-windows-x64-setup.exe",
+      "sha256": "6d5a58e786d142b259051efb1fef50141718ab579872974c2aba7c2103cf6238",
+      "bytes": 12389200,
+      "downloadedWithoutAuthentication": true,
+      "matchesOriginalAcceptedArtifact": true
+    }
+  ],
+  "ownerCertificateSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "publicApkCertificateVerified": true,
+  "publicApkVersionCode": 75,
+  "publicApkNonDebuggable": true,
+  "publicApkAbis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64"
+  ],
+  "publicTagCommitVerified": "3a119905c6feaea4a3e2d9b4ef0544621fb3fcc4",
+  "reviewedNotesSha256": "226a6a23272c64da7440b6c45c0e08b360d89067756fe565d624591f486cca6f",
+  "publicNotesExactlyReviewedText": true,
+  "latestStableUnchanged": {
+    "id": 411009405,
+    "tag_name": "v2026.10.4",
+    "prerelease": false,
+    "draft": false
+  }
+}
