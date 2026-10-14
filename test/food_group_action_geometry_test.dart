@@ -60,6 +60,21 @@ Future<void> verifyFoodGroupActionGeometry(
     ),
   );
   await tester.pumpAndSettle();
+  await tester.enterText(
+    find.byKey(const ValueKey('food-search')),
+    'Geometry beans',
+  );
+  await tester.pumpAndSettle();
+  expect(
+    find.text('Geometry beans'),
+    findsNWidgets(2),
+    reason:
+        'The exact name appears in Search and the row; target the row explicitly',
+  );
+  final groupName = find.descendant(
+    of: find.byType(Card),
+    matching: find.text('Geometry beans'),
+  );
   final remove = find.byTooltip('Remove one Geometry beans container');
   final menu = find.byTooltip('Actions for Geometry beans');
   final date = find.text('2026-10-15');
@@ -87,10 +102,7 @@ Future<void> verifyFoodGroupActionGeometry(
       (item.value, item.enabled),
   ];
   Future<void> secondaryMenu(String name) async {
-    await tester.tap(
-      find.text('Geometry beans'),
-      buttons: kSecondaryMouseButton,
-    );
+    await tester.tap(groupName, buttons: kSecondaryMouseButton);
     await tester.pumpAndSettle();
     expect(menuActions(), [('add-another', true), ('remove', true)]);
     for (final item in find.byType(PopupMenuItem<String>).evaluate()) {
@@ -145,7 +157,7 @@ Future<void> verifyFoodGroupActionGeometry(
       initialLines,
       reason: 'opening a menu does not change expiration wrapping',
     );
-    final row = find.text('Geometry beans');
+    final row = groupName;
     if (input == null) {
       await tester.tap(row);
     } else {

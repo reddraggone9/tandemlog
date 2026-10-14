@@ -590,7 +590,12 @@ Future<void> _edit(
   Map<String, String> fields,
 ) async {
   await _reachActions(tester, name);
-  await _tap(tester, find.text(name));
+  final row = find.ancestor(
+    of: find.byTooltip('Remove one $name container'),
+    matching: find.byType(Card),
+  );
+  expect(row, findsOneWidget, reason: 'Edit the one observed active group');
+  await _tap(tester, find.descendant(of: row, matching: find.text(name)));
   for (final entry in fields.entries) {
     final field = entry.key == 'Retention reason'
         ? find.byWidgetPredicate(

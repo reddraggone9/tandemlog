@@ -233,10 +233,27 @@ void registerFoodAddAnotherTests() {
           );
           final after = await records();
           expect(after.length, eventsBefore.length + 1);
-          expect(after.last.operation.action, FoodAction.add);
-          expect(after.last.operation.targets, [added.id]);
-          expect(after.last.operation.observedDeletes, isEmpty);
-          expect(after.last.operation.observedEdits, isEmpty);
+          final beforeIds = eventsBefore.map((record) => record.id).toSet();
+          final authored = after
+              .where((record) => !beforeIds.contains(record.id))
+              .toList();
+          expect(
+            authored,
+            hasLength(1),
+            reason: 'One Add, independent of writer/file ordering',
+          );
+          for (final old in eventsBefore) {
+            expect(
+              after.singleWhere((record) => record.id == old.id).encode(),
+              old.encode(),
+              reason: 'Existing canonical records retain exact encoded bytes',
+            );
+          }
+          final addition = authored.single;
+          expect(addition.operation.action, FoodAction.add);
+          expect(addition.operation.targets, [added.id]);
+          expect(addition.operation.observedDeletes, isEmpty);
+          expect(addition.operation.observedEdits, isEmpty);
           expect(search.value, searchValue);
           await pixels.capture(
             tester,
@@ -251,7 +268,18 @@ void registerFoodAddAnotherTests() {
             () => page().state.containers.length == 1,
           );
           expect(page().state.containers.single.toJson(), sourceBefore);
-          expect((await records()).length, eventsBefore.length + 2);
+          final undoneRecords = await records();
+          expect(undoneRecords.length, eventsBefore.length + 2);
+          final inverse = undoneRecords
+              .where(
+                (record) =>
+                    !beforeIds.contains(record.id) && record.id != addition.id,
+              )
+              .toList();
+          expect(inverse, hasLength(1));
+          expect(inverse.single.operation.action, FoodAction.undo);
+          expect(inverse.single.operation.targets, [added.id]);
+          expect(inverse.single.operation.retracts, addition.id);
           expect(tester.takeException(), isNull);
         } finally {
           await tester.pumpWidget(const SizedBox.shrink());
