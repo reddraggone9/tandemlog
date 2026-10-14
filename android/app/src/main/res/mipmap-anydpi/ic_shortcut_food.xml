@@ -5,6 +5,6 @@
         android:pathData="M24,0 H104 Q128,0 128,24 V104 Q128,128 104,128 H24 Q0,128 0,104 V24 Q0,0 24,0 Z" />
     <!-- Material kitchen_outlined: the same fridge glyph used by Food's section action. -->
     <group android:scaleX="3.5" android:scaleY="3.5" android:translateX="22" android:translateY="22">
-        <path android:fillColor="#FFFFFF" android:pathData="M8 5h2v3H8zm0 7h2v5H8zm10-9.99L6 2a2 2 0 00-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.11-.9-1.99-2-1.99zM18 20H6v-9.02h12V20zm0-11H6V4h12v5z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M8 5h2v3H8zm0 7h2v5H8zm10-9.99L6 2a2 2 0 0 0 -2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.11-.9-1.99-2-1.99zM18 20H6v-9.02h12V20zm0-11H6V4h12v5z" />
     </group>
 </vector>
