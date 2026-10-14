@@ -1,6 +1,6 @@
 # Food whole-container rows
 
-Status: accepted by Lee on 2026-10-14; implementation under acceptance. This supersedes the expanded/contents interface in ADR 0019, without changing canonical history.
+Status: accepted by Lee on 2026-10-14; implementation and exact-candidate native acceptance complete at `fe3f7ca36b50772abfaded7238a02f38d8fe9c73`. RC-only publication pending. This supersedes the expanded/contents interface in ADR 0019, without changing canonical history.
 
 ## Context and decision
 
@@ -24,4 +24,4 @@ This is presentation and command targeting only. Do not rewrite, normalize, impo
 
 ## Revisit trigger
 
-Revisit quantity workflows only after a concrete everyday need and new product approval. Revisit launcher refresh for a launcher that demonstrably fails to update an existing pinned copy. Native Android narrow and Linux desktop checks, both themes/enlarged text, gesture independence, one/many Remove/Restore/Undo and byte preservation are acceptance work, not assumed results.
+Revisit quantity workflows only after a concrete everyday need and new product approval. Revisit launcher refresh for a launcher that demonstrably fails to update an existing pinned copy. Native Android narrow and Linux desktop checks, both themes/enlarged text, gesture independence, one/many Remove/Restore/Undo and byte preservation passed for that exact candidate; private evidence retains viewport/IME, historical Recents and Windows GUI coverage qualifications.

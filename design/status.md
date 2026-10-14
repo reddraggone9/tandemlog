@@ -1,8 +1,10 @@
 # Current status — 2026-10-14
 
-## Approved flat Food follow-up, under acceptance
+## Accepted whole-container Food RC.2/build76, publication pending
 
-The isolated follow-up implements [ADR 0022](decisions/0022-food-whole-container-rows.md): flat physical-container rows, direct whole-group editing, no Remaining contents/expansion/count/split controls, dedicated Remove one/Restore one and matching observed-group menus. Add another retains blank expiration/count one and cancellation isolation. Food Android shortcuts use the existing fridge glyph with fixed-ID pinned updates; Tasks/app identity stays unchanged. No production operation, canonical conversion or dependency change is included. Independent review found a stale popup owner gap; workspace-bound row state and regressions address it. Analyzer, affected/aggregate tests and native acceptance are being completed. No publication or promotion is authorized in this pass; published RC75 and stable Latest remain unchanged.
+[ADR 0022](decisions/0022-food-whole-container-rows.md) is implemented and independently accepted at `fe3f7ca36b50772abfaded7238a02f38d8fe9c73`. [Candidate 38645229999](https://github.com/reddraggone9/tandemlog/actions/runs/38645229999) and [push CI 38645228787](https://github.com/reddraggone9/tandemlog/actions/runs/38645228787) pass all jobs: 1,068 app tests, 165 native integration tests, analyzer and installed desktop lifecycle checks. Actual Linux GTK and exact signed Android 75-to-76 upgrade acceptance cover whole-group editing, Add another cancellation, one/many Remove/Restore/Undo, themed/enlarged layouts, launcher icon refresh and protected navigation. Original synthetic canonical bytes, full replayed projections and existing local settings identity remain intact. Detailed native fixtures, captures and profile evidence remain private.
+
+RC-only publication is authorized under Lee's standing permission after completed gates. Promotion must consume exact candidate artifacts; accepted APK SHA-256 is `1b1ed2a36bfe480c434b220b597c0c0ad394dc165e703d7724e09ec8689ac9ec`. Stable2026.10.4 remains Latest. The manual Windows GUI waiver remains qualified by fresh hosted installer lifecycle coverage. Historical empty force-stop Recents cards remain visible; actual warm shortcuts reuse the same live activity. No production operation, dependency change or stable promotion is included. Base64 stays pinned to0.22.1. Device settings were restored and temporary native processes stopped.
 
 ## Published experimental 2026.10.5-rc.1/build75
 
