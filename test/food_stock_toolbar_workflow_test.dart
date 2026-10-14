@@ -99,7 +99,6 @@ Future<void> verifyFoodStockToolbarWorkflow(
         onAdd: (_, _) => writes++,
         onRemove: (_) => writes++,
         onRestore: (_) => writes++,
-        onContents: (_, _) => writes++,
         onDetails: (_, _, _) => writes++,
       ),
     ),
@@ -168,7 +167,7 @@ Future<void> verifyFoodStockToolbarWorkflow(
     await tester.pumpAndSettle();
     expect(find.text(name), findsOneWidget);
   }
-  expect(find.byTooltip('Restore Food deleted containers'), findsOneWidget);
+  expect(find.byTooltip('Restore one Food deleted container'), findsOneWidget);
   expect(find.text('Inbox'), findsNothing);
   await capture?.call('all-food-search');
 

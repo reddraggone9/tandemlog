@@ -54,7 +54,6 @@ Future<void> verifyFoodAddAnother(
         onAdd: (details, count) => added.add((details, count)),
         onRemove: (_) => other.add('remove'),
         onRestore: (_) => other.add('restore'),
-        onContents: (_, _) => other.add('contents'),
         onDetails: (_, _, _) => other.add('details'),
       ),
     ),
@@ -74,19 +73,12 @@ Future<void> verifyFoodAddAnother(
         buttons: kSecondaryMouseButton,
       );
     } else {
-      if (find
-          .byTooltip('Inspect Template beans containers')
-          .evaluate()
-          .isNotEmpty) {
-        await tester.tap(find.byTooltip('Inspect Template beans containers'));
-        await tester.pumpAndSettle();
-      }
       await tester.tap(find.byTooltip('Actions for Template beans'));
     }
     await tester.pumpAndSettle();
     final action = find.widgetWithText(PopupMenuItem<String>, 'Add another…');
     expect(action, findsOneWidget);
-    if (deleted) expect(find.byType(PopupMenuItem<String>), findsOneWidget);
+    if (deleted) expect(find.byType(PopupMenuItem<String>), findsNWidgets(2));
     expect(added, isEmpty);
     await tester.tap(action);
     await tester.pumpAndSettle();
@@ -192,7 +184,6 @@ void main() {
           onAdd: (_, _) {},
           onRemove: (_) {},
           onRestore: (_) {},
-          onContents: (_, _) {},
           onDetails: (_, _, _) {},
         ),
       ),

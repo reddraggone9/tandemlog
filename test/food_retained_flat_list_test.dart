@@ -97,7 +97,6 @@ Future<void> verifyFlatRetained(
             onAdd: (_, _) => commands.add('add'),
             onRemove: (_) => commands.add('remove'),
             onRestore: (_) => commands.add('restore'),
-            onContents: (_, _) => commands.add('contents'),
             onDetails: (_, _, _) => commands.add('details'),
           );
         },
@@ -200,15 +199,10 @@ Future<void> verifyFlatRetained(
     lessThan(contentPositions[2]),
     reason: 'different reasons interleave by expiry',
   );
-  await reach(find.byTooltip('Inspect Early retained beans containers'));
-  await tester.tap(find.byTooltip('Inspect Early retained beans containers'));
-  await tester.pumpAndSettle();
-  expect(
-    find.byTooltip('Collapse Early retained beans containers'),
-    findsOneWidget,
-  );
+  await reach(find.byTooltip('Actions for Early retained beans'));
   expect(find.byTooltip('Actions for Early retained beans'), findsOneWidget);
-  await capture?.call('flat-retained-expanded');
+  expect(find.byType(ExpansionTile), findsNothing);
+  await capture?.call('flat-retained-row-actions');
   expect(
     food
         .view(FoodView.retained)

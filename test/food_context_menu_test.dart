@@ -53,7 +53,6 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
             onAdd: (_, _) => other.add('add'),
             onRemove: removals.add,
             onRestore: (_) => other.add('restore'),
-            onContents: (_, _) => other.add('contents'),
             onDetails: (_, _, _) => other.add('details'),
           );
         },
@@ -81,35 +80,48 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
 
   for (final name in ['Active beans', 'Retained beans']) {
     await open(name);
-    expect(actions(), [
-      ('add-another', true),
-      ('edit', true),
-      ('remove', true),
-    ]);
+    expect(actions(), [('add-another', true), ('remove', true)]);
     expect(removals, isEmpty);
     expect(other, isEmpty);
     await dismiss();
   }
   await open('Deleted beans');
-  expect(actions(), [('add-another', true)]);
+  expect(actions(), [('add-another', true), ('restore', true)]);
   await dismiss();
+  // PopupMenuButton awaits its route then reads its current widget callback.
+  // A workspace change must dispose that state even if canonical rows match.
+  await tester.tap(find.byTooltip('Actions for Active beans'));
+  await tester.pumpAndSettle();
+  update(() => workspace = Object());
+  await tester.pumpAndSettle();
+  await tester.tap(find.widgetWithText(PopupMenuItem<String>, 'Add another…'));
+  await tester.pumpAndSettle();
+  expect(find.byType(AlertDialog), findsNothing);
+  expect(other, isEmpty);
+  for (final control in [
+    find.text('Active beans'),
+    find.byTooltip('Remove one Active beans container'),
+  ]) {
+    final gesture = await tester.startGesture(tester.getCenter(control));
+    update(() => workspace = Object());
+    await tester.pumpAndSettle();
+    await gesture.up();
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(removals, isEmpty);
+    expect(other, isEmpty);
+  }
   update(() => pending = true);
   await tester.pumpAndSettle();
   await open('Active beans');
-  expect(actions(), [
-    ('add-another', false),
-    ('edit', false),
-    ('remove', true),
-  ]);
+  expect(actions(), [('add-another', false), ('remove', true)]);
   await dismiss();
   update(() => pending = false);
   await tester.pumpAndSettle();
   await open('Active beans');
   update(() => workspace = Object());
   await tester.pumpAndSettle();
-  await tester.tap(
-    find.widgetWithText(PopupMenuItem<String>, 'Edit group details'),
-  );
+  await tester.tap(find.widgetWithText(PopupMenuItem<String>, 'Add another…'));
   await tester.pumpAndSettle();
   expect(find.byType(AlertDialog), findsNothing);
   expect(other, isEmpty);

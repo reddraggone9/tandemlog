@@ -42,13 +42,16 @@ List<FoodOperation> fixture() => [
 Future<void> keyboardActivate(WidgetTester tester, Finder control) async {
   await tester.ensureVisible(control);
   await tester.pumpAndSettle();
-  final icon = find.descendant(of: control, matching: find.byType(Icon));
-  final focus = Focus.of(tester.element(icon.first));
+  final focus = Focus.of(tester.element(control));
   for (var i = 0; i < 20 && !focus.hasPrimaryFocus; i++) {
     await tester.sendKeyEvent(LogicalKeyboardKey.tab);
     await tester.pumpAndSettle();
   }
-  expect(focus.hasPrimaryFocus, isTrue, reason: 'Real Tab reaches Inspect');
+  expect(
+    focus.hasPrimaryFocus,
+    isTrue,
+    reason: 'Real Tab reaches the editable row',
+  );
   await tester.sendKeyEvent(LogicalKeyboardKey.enter);
   await tester.pumpAndSettle();
 }
@@ -56,7 +59,7 @@ Future<void> keyboardActivate(WidgetTester tester, Finder control) async {
 void main() {
   for (final brightness in Brightness.values) {
     for (final scale in [1.0, 2.0]) {
-      testWidgets('latest Full conflict retains warning and Inspect '
+      testWidgets('legacy contents conflict survives flat row editing '
           '${brightness.name} ${scale}x', (tester) async {
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(390, 850);
@@ -86,57 +89,23 @@ void main() {
               onAdd: (_, _) => commands.add('add'),
               onRemove: (_) => commands.add('remove'),
               onRestore: (_) => commands.add('restore'),
-              onContents: (_, _) => commands.add('contents'),
               onDetails: (_, _, _) => commands.add('details'),
             ),
           ),
         );
         await tester.pumpAndSettle();
-        final warning = find.textContaining('contents need review');
-        expect(
-          warning.hitTestable(),
-          findsOneWidget,
-          reason: 'Full latest value cannot hide an unresolved conflict',
-        );
-        expect(find.byTooltip('Remove one Rice container'), findsNothing);
-        expect(find.text('1 full'), findsNothing);
-        await keyboardActivate(
-          tester,
-          find.byTooltip('Inspect Rice containers'),
-        );
-        expect(warning, findsOneWidget);
+        expect(find.textContaining('contents need review'), findsNothing);
+        expect(find.byTooltip('Remove one Rice container'), findsOneWidget);
+        expect(find.text('Full'), findsNothing);
+        expect(find.text('Remaining contents'), findsNothing);
         expect(find.text('500 g · Freezer'), findsOneWidget);
-        expect(
-          find.byKey(
-            const ValueKey(
-              'food-container-contents:00000000-0000-4000-8000-000000000001',
-            ),
-          ),
-          findsOneWidget,
-        );
-        expect(
-          find.text('Observed alternatives: ½ remaining / Full'),
-          findsOneWidget,
-        );
-        expect(
-          find.text(
-            'Contents changed on another device. '
-            'Choose contents to resolve.',
-          ),
-          findsOneWidget,
-        );
-        expect(
-          find.byTooltip('Edit Rice contents, container 1 of 1'),
-          findsOneWidget,
-        );
-        final remove = tester.widget<TextButton>(
-          find.widgetWithText(TextButton, 'Remove selected (0)'),
-        );
-        expect(
-          remove.onPressed,
-          isNull,
-          reason: 'Inspect alone never selects a physical container',
-        );
+        await keyboardActivate(tester, find.text('Rice'));
+        expect(find.text('Edit 1 container'), findsOneWidget);
+        expect(find.text('Remaining contents'), findsNothing);
+        await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+        await tester.pumpAndSettle();
+        expect(state.active.single.contentsConflict, isTrue);
+        expect(state.active.single.contentsEdits, hasLength(2));
         expect(commands, isEmpty);
         expect(state.containers.map((e) => e.toJson()).toList(), before);
         expect(tester.takeException(), isNull);

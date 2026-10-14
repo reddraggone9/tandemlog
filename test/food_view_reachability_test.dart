@@ -126,7 +126,6 @@ Future<void> verifyFoodViewReachability(
                     commandCount++;
                     restoredId = item.id;
                   },
-                  onContents: (_, _) => commandCount++,
                   onDetails: (_, _, _) => commandCount++,
                 ),
               ),
@@ -300,9 +299,9 @@ Future<void> verifyFoodViewReachability(
     expect(find.byType(ExpansionTile), findsNothing);
   }
   if (mode == FoodView.inbox) {
-    await swipeTo(find.byTooltip('Inspect Synthetic undated beans containers'));
+    await swipeTo(find.byTooltip('Actions for Synthetic undated beans'));
   }
-  final inspect = find.byTooltip('Inspect $name containers');
+  final inspect = find.byTooltip('Actions for $name');
   await swipeTo(inspect);
   expect(tester.getSize(inspect).height, greaterThanOrEqualTo(48));
   expect(tester.getSize(inspect).width, greaterThanOrEqualTo(48));
@@ -325,9 +324,8 @@ Future<void> verifyFoodViewReachability(
     await capture?.call('$prefix-saved-name-and-expiration-reached');
     await swipeTo(inspect, backwards: true);
   }
-  await tap(inspect);
   if (mode == FoodView.deleted) {
-    final restore = find.byTooltip('Restore $name, container 1 of 1');
+    final restore = find.byTooltip('Restore one $name container');
     await swipeTo(restore);
     await capture?.call('$prefix-restore-reached');
     expect(commandCount, 0, reason: 'Browsing and scrolling must not write');
@@ -338,7 +336,7 @@ Future<void> verifyFoodViewReachability(
     final actions = find.byTooltip('Actions for $name');
     await swipeTo(actions);
     await tap(actions);
-    expect(find.text('Edit group details').hitTestable(), findsOneWidget);
+    expect(find.text('Add another…').hitTestable(), findsOneWidget);
     await capture?.call('$prefix-actions-reached');
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
@@ -378,7 +376,7 @@ Future<void> verifyFoodViewReachability(
     FocusManager.instance.primaryFocus?.unfocus();
     tester.view.viewInsets = const FakeViewPadding();
     await tester.pumpAndSettle();
-    await swipeTo(find.byTooltip('Collapse $name containers'));
+    await swipeTo(find.byTooltip('Actions for $name'));
     expect(commandCount, 0);
     expect(tester.takeException(), isNull);
   }

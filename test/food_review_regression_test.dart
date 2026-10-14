@@ -38,11 +38,8 @@ Future<void> editReviewBeans(WidgetTester tester) async {
     ),
   );
   await tester.pumpAndSettle();
-  await tester.tap(find.byTooltip('Inspect Review beans containers'));
   await tester.pumpAndSettle();
-  await tester.tap(find.byTooltip('Actions for Review beans'));
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('Edit group details'));
+  await tester.tap(find.text('Review beans'));
   await tester.pumpAndSettle();
 }
 

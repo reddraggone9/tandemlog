@@ -7,6 +7,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/food/food_record.dart';
+import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:uuid/uuid.dart';
@@ -79,6 +81,33 @@ void registerFoodAddAnotherTests() {
         await seed.createTasks({
           const Uuid().v4(): 'Independent synthetic task',
         }, user);
+        final legacyProfile = await LocalProfileDatabase.open(
+          '${root.path}/legacy-seed',
+        );
+        final legacyFood = await FoodStore.open(
+          folder,
+          profile: legacyProfile,
+          installationWriter: const Uuid().v4(),
+          space: seed.space,
+        );
+        await legacyFood.add(
+          const FoodDetails(
+            name: 'Synthetic repurchase beans',
+            brand: 'Synthetic brand',
+            size: '500 g',
+            location: 'Pantry',
+            expiry: '2026-10-15',
+            retention: 'Reference',
+            estimated: true,
+          ),
+          1,
+        );
+        await legacyFood.changeContents(
+          legacyFood.state.containers.single,
+          const Contents.fraction(1, 3),
+        );
+        await legacyFood.close();
+        await legacyProfile.close();
         await seed.close();
         await File('${profile.path}/settings.json').writeAsString(
           jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
@@ -112,23 +141,7 @@ void registerFoodAddAnotherTests() {
             () => find.text('Independent synthetic task').evaluate().isNotEmpty,
           );
           await switchSection(tester, food: true);
-          await page().onAdd(
-            const FoodDetails(
-              name: 'Synthetic repurchase beans',
-              brand: 'Synthetic brand',
-              size: '500 g',
-              location: 'Pantry',
-              expiry: '2026-10-15',
-              retention: 'Reference',
-              estimated: true,
-            ),
-            1,
-          );
-          await tester.pumpAndSettle();
           var source = page().state.containers.single;
-          await page().onContents(source, const Contents.fraction(1, 3));
-          await tester.pumpAndSettle();
-          source = page().state.containers.single;
           if (deleted) {
             await page().onRemove([source.id]);
             await tester.pumpAndSettle();

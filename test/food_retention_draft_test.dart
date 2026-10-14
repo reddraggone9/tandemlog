@@ -15,7 +15,6 @@ void main() {
           onAdd: (details, _) => added = details,
           onRemove: (_) {},
           onRestore: (_) {},
-          onContents: (_, _) {},
           onDetails: (_, _, _) {},
         ),
       ),
@@ -65,7 +64,6 @@ void main() {
           onAdd: (_, _) {},
           onRemove: (_) {},
           onRestore: (_) {},
-          onContents: (_, _) {},
           onDetails: (_, details, changed) {
             saved = details;
             fields = changed;
@@ -75,13 +73,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     await chooseFoodView(tester, 'Retained');
-    await tester.tap(
-      find.byTooltip('Inspect Synthetic retained beans containers'),
-    );
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Actions for Synthetic retained beans'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Edit group details'));
+    await tester.tap(find.text('Synthetic retained beans'));
     await tester.pumpAndSettle();
     expect(tester.widget<TagInput>(find.byType(TagInput)).selected, {
       'Emergency',

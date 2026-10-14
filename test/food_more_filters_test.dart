@@ -54,7 +54,6 @@ void main() {
             onAdd: (_, _) => writes++,
             onRemove: (_) => writes++,
             onRestore: (_) => writes++,
-            onContents: (_, _) => writes++,
             onDetails: (_, _, _) => writes++,
           ),
         ),

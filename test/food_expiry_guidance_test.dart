@@ -213,11 +213,8 @@ Future<void> verifyExpiryGuidanceWorkflow(
   FoodInventoryPage page() => tester.widget(find.byType(FoodInventoryPage));
   expect(page().state.active.single.details.expiry, '2027-06-01');
   final savedId = page().state.active.single.id;
-  await tap(find.byTooltip('Inspect Test beans containers'));
   await tester.pumpAndSettle();
-  await tap(find.byTooltip('Actions for Test beans'));
-  await tester.pumpAndSettle();
-  await tap(find.text('Edit group details'));
+  await tap(find.text('Test beans'));
   await tester.pumpAndSettle();
   await Scrollable.ensureVisible(tester.element(expiry), alignment: 0.15);
   await tester.pumpAndSettle();
@@ -229,9 +226,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tap(find.text('Discard'));
   await tester.pumpAndSettle();
   expect(page().state.active.single.details.expiry, '2027-06-01');
-  await tap(find.byTooltip('Actions for Test beans'));
-  await tester.pumpAndSettle();
-  await tap(find.text('Edit group details'));
+  await tap(find.text('Test beans'));
   await tester.pumpAndSettle();
   await type(expiry, '');
   await tap(find.widgetWithText(FilledButton, 'Save'));

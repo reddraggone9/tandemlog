@@ -24,7 +24,6 @@ class FoodInventoryPage extends StatefulWidget {
     required this.onRemove,
     required this.onRestore,
     this.onRestoreBatch,
-    required this.onContents,
     required this.onDetails,
     this.onUndo,
     this.undoLabel = 'Undo',
@@ -51,7 +50,6 @@ class FoodInventoryPage extends StatefulWidget {
   final FutureOr<void> Function(List<String>) onRemove;
   final FutureOr<void> Function(FoodContainer) onRestore;
   final FutureOr<void> Function(List<FoodContainer>)? onRestoreBatch;
-  final FutureOr<void> Function(FoodContainer, Contents) onContents;
   final FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)
   onDetails;
   final FutureOr<void> Function()? onUndo;
@@ -68,7 +66,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   FoodView view = FoodView.inventory;
   final search = TextEditingController();
   Set<String> reasons = {}, brands = {}, locations = {};
-  final expanded = <String>{}, selected = <String>{}, bulkSelected = <String>{};
+  final bulkSelected = <String>{};
   bool selecting = false;
 
   void _clearBulkSelection() {
@@ -81,8 +79,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.workspaceIdentity != widget.workspaceIdentity) {
       _clearBulkSelection();
-      selected.clear();
-      expanded.clear();
     }
   }
 
@@ -575,10 +571,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     }
   }
 
-  String _groupMenuIdentity(FoodGroup group) =>
-      '${group.containers.first.deleted ? 'deleted' : 'active'}:'
-      '${group.details.displayGroupKey}:'
-      '${group.containers.map((e) => e.id).join(',')}';
+  String _groupMenuIdentity(FoodGroup group) => jsonEncode([
+    group.containers.first.deleted,
+    group.details.displayGroupKey,
+    for (final item in group.containers)
+      [item.id, item.deletions.toList()..sort()],
+  ]);
 
   bool _canUseGroupMenu(FoodGroup observed, Object? workspace) =>
       mounted &&
@@ -595,19 +593,20 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       value: 'add-another',
       child: const Text('Add another…'),
     ),
-    if (!group.containers.first.deleted) ...[
+    if (group.containers.first.deleted) ...[
       PopupMenuItem<String>(
-        enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
-        value: 'edit',
-        child: const Text('Edit group details'),
+        value: 'restore',
+        child: Text(
+          'Restore ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
+        ),
       ),
+    ] else
       PopupMenuItem<String>(
         value: 'remove',
         child: Text(
           'Remove ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
         ),
       ),
-    ],
   ];
 
   Future<void> _showGroupMenu(
@@ -634,35 +633,68 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final removeCommand = widget.onRemove,
         restoreCommand = widget.onRestore,
         restoreBatchCommand = widget.onRestoreBatch,
-        contentsCommand = widget.onContents,
         detailsCommand = widget.onDetails;
     final details = group.details, deleted = group.containers.first.deleted;
     final key = '${deleted ? 'deleted' : 'active'}:${details.displayGroupKey}';
-    final opened = expanded.contains(key);
-    final singleKnownFull =
-        group.containers.length == 1 &&
-        group.containers.single.contents.full &&
-        !group.contentsConflict;
+    final identity = _groupMenuIdentity(group);
+    final countLabel =
+        '${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}';
     final metadata = [
       if (details.size.isNotEmpty) details.size,
       if (details.location.isNotEmpty) details.location,
     ];
     final workspace = widget.workspaceIdentity;
     final addCommand = widget.onAdd;
+    final pending = widget.hasPendingSave?.call() ?? widget.savePending;
+    void toggleSelection() {
+      if (!_canUseGroupMenu(group, workspace)) return;
+      setState(() {
+        final ids = group.containers.map((e) => e.id);
+        if (ids.every(bulkSelected.contains)) {
+          bulkSelected.removeAll(ids);
+        } else {
+          bulkSelected.addAll(ids);
+        }
+      });
+    }
+
+    void editGroup() {
+      if (deleted || pending || !_canUseGroupMenu(group, workspace)) return;
+      if (selecting) {
+        toggleSelection();
+      } else {
+        _edit(group: group, detailsCommand: detailsCommand);
+      }
+    }
+
+    void restoreGroup() {
+      if (!_canUseGroupMenu(group, workspace)) return;
+      _invoke(() async {
+        if (restoreBatchCommand != null) {
+          await restoreBatchCommand(group.containers);
+        } else {
+          for (final item in group.containers) {
+            await restoreCommand(item);
+          }
+        }
+      });
+    }
+
     void selectAction(String action) {
       if (!_canUseGroupMenu(group, workspace)) return;
       if (action == 'add-another' &&
           !(widget.hasPendingSave?.call() ?? widget.savePending)) {
         _edit(template: group.details, addCommand: addCommand);
       }
-      if (action == 'edit' &&
-          !(widget.hasPendingSave?.call() ?? widget.savePending)) {
-        _edit(group: group, detailsCommand: detailsCommand);
-      }
       if (action == 'remove') _confirmRemove(group, removeCommand);
+      if (action == 'restore') restoreGroup();
     }
 
+    final editable = !deleted && !widget.busy && !pending;
     return GestureDetector(
+      // Replacing gesture state also binds pointer-down to the observed IDs and
+      // deletion tokens. A peer arrival must not retarget pointer-up actions.
+      key: ValueKey((workspace, identity)),
       behavior: HitTestBehavior.opaque,
       onSecondaryTapUp: widget.busy
           ? null
@@ -673,42 +705,47 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         color: deleted
             ? Theme.of(context).colorScheme.surfaceContainerLow
             : null,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (selecting && !deleted)
-                    Checkbox(
-                      key: ValueKey('food-group-selection:$key'),
-                      semanticLabel:
-                          'Select ${group.containers.length} ${details.name} containers',
-                      tristate: true,
-                      value:
-                          group.containers.every(
+        child: InkWell(
+          onTap: editable ? editGroup : null,
+          excludeFromSemantics: true,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (selecting && !deleted)
+                  Checkbox(
+                    key: ValueKey('food-group-selection:$key'),
+                    semanticLabel:
+                        'Select ${group.containers.length} ${details.name} containers',
+                    tristate: true,
+                    value:
+                        group.containers.every(
+                          (e) => bulkSelected.contains(e.id),
+                        )
+                        ? true
+                        : group.containers.any(
                             (e) => bulkSelected.contains(e.id),
                           )
-                          ? true
-                          : group.containers.any(
-                              (e) => bulkSelected.contains(e.id),
-                            )
-                          ? null
-                          : false,
-                      onChanged: widget.busy
-                          ? null
-                          : (_) => setState(() {
-                              final ids = group.containers.map((e) => e.id);
-                              if (ids.every(bulkSelected.contains)) {
-                                bulkSelected.removeAll(ids);
-                              } else {
-                                bulkSelected.addAll(ids);
-                              }
-                            }),
-                    ),
-                  Expanded(
+                        ? null
+                        : false,
+                    onChanged: widget.busy ? null : (_) => toggleSelection(),
+                  ),
+                Expanded(
+                  child: Semantics(
+                    button: !deleted,
+                    enabled: deleted ? null : editable,
+                    label: [
+                      if (!deleted) selecting ? 'Select' : 'Edit',
+                      details.name,
+                      countLabel,
+                      details.expiry ?? 'Needs expiration',
+                      if (details.brand.isNotEmpty) details.brand,
+                      if (details.retention.isNotEmpty) details.retention,
+                      ...metadata,
+                    ].join(', '),
+                    onTap: editable ? editGroup : null,
+                    excludeSemantics: true,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -730,9 +767,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                         : null,
                                   ),
                             ),
-                            if (opened || !singleKnownFull)
+                            if (group.containers.length > 1)
                               Text(
-                                group.summary,
+                                countLabel,
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: Theme.of(
@@ -747,9 +784,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Text(
-                              details.expiry == null
-                                  ? 'Needs expiration'
-                                  : details.expiry!,
+                              details.expiry ?? 'Needs expiration',
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w600,
@@ -760,19 +795,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                     ),
                                   ),
                             ),
-                            if (details.brand.isNotEmpty)
+                            for (final value in [
+                              details.brand,
+                              details.retention,
+                            ].where((value) => value.isNotEmpty))
                               Text(
-                                details.brand,
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                    ),
-                              ),
-                            if (details.retention.isNotEmpty)
-                              Text(
-                                details.retention,
+                                value,
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: Theme.of(
@@ -782,186 +810,72 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                               ),
                           ],
                         ),
+                        if (metadata.isNotEmpty)
+                          Text(
+                            metadata.join(' · '),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
                       ],
                     ),
                   ),
-                  if (!deleted && group.quickRemoveTarget != null)
-                    IconButton(
-                      tooltip: 'Remove one ${details.name} container',
-                      visualDensity: VisualDensity.standard,
-                      constraints: const BoxConstraints(
-                        minWidth: 48,
-                        minHeight: 48,
-                      ),
-                      onPressed: widget.busy
-                          ? null
-                          : () => _invoke(
-                              () => removeCommand([group.quickRemoveTarget!]),
-                            ),
-                      icon: const Icon(Icons.remove_circle_outline),
-                    ),
-                  if (deleted)
-                    IconButton(
-                      tooltip: 'Restore ${details.name} containers',
-                      visualDensity: VisualDensity.standard,
-                      constraints: const BoxConstraints(
-                        minWidth: 48,
-                        minHeight: 48,
-                      ),
-                      onPressed: widget.busy
-                          ? null
-                          : () => _invoke(() async {
-                              if (restoreBatchCommand != null) {
-                                await restoreBatchCommand(group.containers);
-                              } else {
-                                for (final item in group.containers) {
-                                  await restoreCommand(item);
-                                }
-                              }
-                            }),
-                      icon: const Icon(Icons.restore),
-                    ),
+                ),
+                if (!deleted)
                   IconButton(
-                    tooltip:
-                        '${opened ? 'Collapse' : 'Inspect'} ${details.name} containers',
+                    tooltip: 'Remove one ${details.name} container',
                     visualDensity: VisualDensity.standard,
                     constraints: const BoxConstraints(
                       minWidth: 48,
                       minHeight: 48,
                     ),
-                    onPressed: () => setState(() {
-                      if (!expanded.add(key)) expanded.remove(key);
-                    }),
-                    icon: Icon(opened ? Icons.expand_less : Icons.expand_more),
+                    onPressed: widget.busy
+                        ? null
+                        : () {
+                            if (_canUseGroupMenu(group, workspace)) {
+                              _invoke(
+                                () =>
+                                    removeCommand([group.containers.first.id]),
+                              );
+                            }
+                          },
+                    icon: const Icon(Icons.remove_circle_outline),
                   ),
-                ],
-              ),
-              if (opened) ...[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        metadata.join(' · '),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
+                if (deleted)
+                  IconButton(
+                    tooltip: 'Restore one ${details.name} container',
+                    visualDensity: VisualDensity.standard,
+                    constraints: const BoxConstraints(
+                      minWidth: 48,
+                      minHeight: 48,
                     ),
-                    SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: PopupMenuButton<String>(
-                        // The native popup reads its current widget callback
-                        // on selection. Replace its state when observed members
-                        // change so an old menu cannot include unseen arrivals.
-                        key: ValueKey(
-                          'food-actions:$key:${group.containers.map((e) => e.id).join(',')}',
-                        ),
-                        tooltip: 'Actions for ${details.name}',
-                        enabled: !widget.busy,
-                        onSelected: selectAction,
-                        itemBuilder: (_) => _groupMenuItems(group),
-                      ),
-                    ),
-                  ],
+                    onPressed: widget.busy
+                        ? null
+                        : () {
+                            if (_canUseGroupMenu(group, workspace)) {
+                              _invoke(
+                                () => restoreCommand(group.containers.first),
+                              );
+                            }
+                          },
+                    icon: const Icon(Icons.restore),
+                  ),
+                SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: PopupMenuButton<String>(
+                    key: ValueKey('food-actions:$identity'),
+                    tooltip: 'Actions for ${details.name}',
+                    enabled: !widget.busy,
+                    onSelected: selectAction,
+                    itemBuilder: (_) => _groupMenuItems(group),
+                  ),
                 ),
-                if (group.contentsConflict)
-                  const Text(
-                    'Contents changed on another device. Choose contents to resolve.',
-                  ),
-                const Divider(height: 1),
-                for (final (index, item) in group.containers.indexed)
-                  Row(
-                    children: [
-                      if (!deleted)
-                        Checkbox(
-                          key: ValueKey('food-container-selection:${item.id}'),
-                          semanticLabel:
-                              '${details.name}, ${item.contents.label}, container ${index + 1} of ${group.containers.length}',
-                          value: (selecting ? bulkSelected : selected).contains(
-                            item.id,
-                          ),
-                          onChanged: widget.busy
-                              ? null
-                              : (value) => setState(() {
-                                  if (value == true) {
-                                    (selecting ? bulkSelected : selected).add(
-                                      item.id,
-                                    );
-                                  } else {
-                                    (selecting ? bulkSelected : selected)
-                                        .remove(item.id);
-                                  }
-                                }),
-                        ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.contents.label,
-                              key: ValueKey(
-                                'food-container-contents:${item.id}',
-                              ),
-                            ),
-                            if (item.contentsConflict)
-                              Text(
-                                'Observed alternatives: ${item.contentsEdits.values.map((e) => e.label).toSet().join(' / ')}',
-                              ),
-                          ],
-                        ),
-                      ),
-                      if (!deleted)
-                        IconButton(
-                          key: ValueKey('food-container-edit:${item.id}'),
-                          tooltip:
-                              'Edit ${details.name} contents, container ${index + 1} of ${group.containers.length}',
-                          onPressed: widget.busy
-                              ? null
-                              : () => _contents(item, contentsCommand),
-                          icon: const Icon(Icons.edit_outlined),
-                        ),
-                      if (deleted)
-                        IconButton(
-                          key: ValueKey('food-container-restore:${item.id}'),
-                          tooltip:
-                              'Restore ${details.name}, container ${index + 1} of ${group.containers.length}',
-                          onPressed: widget.busy
-                              ? null
-                              : () => _invoke(() => restoreCommand(item)),
-                          icon: const Icon(Icons.restore),
-                        ),
-                    ],
-                  ),
-                if (!deleted && !selecting)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton.icon(
-                      onPressed:
-                          widget.busy ||
-                              !group.containers.any(
-                                (e) => selected.contains(e.id),
-                              )
-                          ? null
-                          : () => _invoke(() async {
-                              final targets = group.containers
-                                  .where((e) => selected.contains(e.id))
-                                  .map((e) => e.id)
-                                  .toList();
-                              await removeCommand(targets);
-                              if (mounted) {
-                                setState(() => selected.removeAll(targets));
-                              }
-                            }),
-                      icon: const Icon(Icons.remove_circle_outline),
-                      label: Text(
-                        'Remove selected (${group.containers.where((e) => selected.contains(e.id)).length})',
-                      ),
-                    ),
-                  ),
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -982,9 +896,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           title: Text(
             'Remove ${targets.length} ${group.details.name} ${targets.length == 1 ? 'container' : 'containers'}?',
           ),
-          content: Text(
-            '${group.summary}. Only these observed containers will be removed. You can restore them from Deleted.',
-          ),
+          content: Text('You can restore these containers from Deleted.'),
           actions: [
             TextButton(
               onPressed: () => answer(false),
@@ -1000,39 +912,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     );
     if (accepted == true && _canUseGroupMenu(group, workspace)) {
       await _invoke(() => remove(targets));
-    }
-  }
-
-  Future<void> _contents(
-    FoodContainer item,
-    FutureOr<void> Function(FoodContainer, Contents) changeContents,
-  ) async {
-    final value = await showDialog<Contents>(
-      context: context,
-      builder: (context) {
-        final answer = _answerOnce<Contents>(context);
-        return SimpleDialog(
-          title: const Text('Remaining contents'),
-          children: [
-            for (final choice in [
-              const Contents.fraction(1, 1),
-              const Contents.fraction(1, 2),
-              const Contents.fraction(1, 3),
-              const Contents.fraction(1, 4),
-            ])
-              SimpleDialogOption(
-                onPressed: () => answer(choice),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(choice.label),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-    if (value != null && mounted) {
-      await _invoke(() => changeContents(item, value));
     }
   }
 

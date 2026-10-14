@@ -30,11 +30,7 @@ Future<void> _enterText(WidgetTester tester, Finder field, String value) async {
 }
 
 Future<void> openFoodGroupEditor(WidgetTester tester, String name) async {
-  if (find.byTooltip('Inspect $name containers').evaluate().isNotEmpty) {
-    await _tap(tester, find.byTooltip('Inspect $name containers'));
-  }
-  await _tap(tester, find.byTooltip('Actions for $name'));
-  await _tap(tester, find.text('Edit group details'));
+  await _tap(tester, find.text(name));
 }
 
 Future<void> _mount(
@@ -57,7 +53,6 @@ Future<void> _mount(
         onDetails: onEdit,
         onRemove: (_) {},
         onRestore: (_) {},
-        onContents: (_, _) {},
       ),
     ),
   );

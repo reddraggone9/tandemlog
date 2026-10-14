@@ -45,14 +45,20 @@ void main() {
             onRemove: (_) {},
             onRestore: singles.add,
             onRestoreBatch: (items) => batches.add(items),
-            onContents: (_, _) {},
             onDetails: (_, _, _) {},
           ),
         ),
       );
       await tester.pumpAndSettle();
       await chooseFoodView(tester, 'Deleted');
-      await tester.tap(find.byTooltip('Restore Batch beans containers'));
+      await tester.tap(find.byTooltip('Actions for Batch beans'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.widgetWithText(
+          PopupMenuItem<String>,
+          'Restore ${food.deleted.length} containers',
+        ),
+      );
       await tester.pumpAndSettle();
       expect(batches, hasLength(1));
       expect(
@@ -64,15 +70,8 @@ void main() {
         food.deleted.map((e) => e.id).toSet(),
       );
       expect(singles, isEmpty);
-      await tester.tap(find.byTooltip('Inspect Batch beans containers'));
-      await tester.pumpAndSettle();
       final item = food.view(FoodView.deleted).single.containers.first;
-      await tester.ensureVisible(
-        find.byKey(ValueKey('food-container-restore:${item.id}')),
-      );
-      await tester.tap(
-        find.byKey(ValueKey('food-container-restore:${item.id}')),
-      );
+      await tester.tap(find.byTooltip('Restore one Batch beans container'));
       await tester.pumpAndSettle();
       expect(singles, [item]);
       expect(batches, hasLength(1));
@@ -100,7 +99,6 @@ void main() {
                 onAdd: (_, _) {},
                 onRemove: (_) {},
                 onRestore: singles.add,
-                onContents: (_, _) {},
                 onDetails: (_, _, _) {},
               );
             },
@@ -109,7 +107,14 @@ void main() {
       );
       await tester.pumpAndSettle();
       await chooseFoodView(tester, 'Deleted');
-      await tester.tap(find.byTooltip('Restore Batch beans containers'));
+      await tester.tap(find.byTooltip('Actions for Batch beans'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.widgetWithText(
+          PopupMenuItem<String>,
+          'Restore ${food.deleted.length} containers',
+        ),
+      );
       await tester.pumpAndSettle();
       expect(
         singles,
@@ -124,7 +129,7 @@ void main() {
               find.byWidgetPredicate(
                 (w) =>
                     w is IconButton &&
-                    w.tooltip == 'Restore Batch beans containers',
+                    w.tooltip == 'Restore one Batch beans container',
               ),
             )
             .onPressed,

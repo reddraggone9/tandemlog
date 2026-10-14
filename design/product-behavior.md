@@ -4,7 +4,7 @@
 
 Approved for the next RC after stable 2026.10.4; implementation remains under acceptance. Each device remembers its last successfully visited Tasks/Food section. Unknown or missing preferences default to Tasks. Cancelled editor guards do not change the remembered section. Android Tasks/Food launcher shortcuts override that preference for an explicit launch and wait for workspace and user setup. Fresh newer requests take precedence; Recents and activity restoration do not replay an old shortcut.
 
-Food keeps Stock/Retained/Deleted choices. **More filters…** contains Brand and Location and, only in Retained mode, **Retention reason** with **All reasons** when empty. Search bypasses those filters. Add and Add another omit retention; Edit retains it. Secondary Food metadata and checklist notes use existing secondary colors. All supported packages share the existing green-square white-checkmark identity. [Accepted rationale and alternatives](decisions/0021-local-sections-and-launcher-shortcuts.md).
+Food keeps Stock/Retained/Deleted choices. **More filters…** contains Brand and Location and, only in Retained mode, **Retention reason** with **All reasons** when empty. Search bypasses those filters. Add and Add another omit retention; Edit retains it. Secondary Food metadata and checklist notes use existing secondary colors. All supported packages share the existing green-square white-checkmark app identity. The Food Android shortcut uses the existing fridge glyph; Tasks keeps the checkmark. [Accepted rationale and alternatives](decisions/0021-local-sections-and-launcher-shortcuts.md).
 
 
 The approved second capability is [food inventory](decisions/0014-food-inventory.md).
@@ -247,15 +247,15 @@ edits preserve existing hidden values without rewriting history. See the
 
 Brand and Location remain optional free text. Suggestions come from exact nonblank existing values, including Deleted, and do not create a separate catalog. Each filter accepts multiple values: OR within a field, AND between Brand and Location; an empty field means any. Search pauses all saved filters and clearing it restores them.
 
-Filter → Select matching active containers captures physical IDs currently visible under those rules. Deleted, hidden containers and later arrivals do not join the selection. Group and inspected-row checkboxes allow partial selection. The search slot shows the selected count, Clear Selection and Edit. The bulk editor contains only Brand and Location; each has an explicit Apply control and Clear action. Unapplied mixed values and every other field stay untouched. One Save is one Undo action. Changing view/filter/search or workspace clears selection; an open editor retains its captured targets and refuses a workspace change or newly hidden/deleted target. Cancel and unchanged Save author no records. Exact pending-save retry remains owned by the host.
+Filter → Select matching active containers captures physical IDs currently visible under those rules. Deleted, hidden containers and later arrivals do not join the selection. Group checkboxes allow selection of observed whole groups. The search slot shows the selected count, Clear Selection and Edit. The bulk editor contains only Brand and Location; each has an explicit Apply control and Clear action. Unapplied mixed values and every other field stay untouched. One Save is one Undo action. Changing view/filter/search or workspace clears selection; an open editor retains its captured targets and refuses a workspace change or newly hidden/deleted target. Cancel and unchanged Save author no records. Exact pending-save retry remains owned by the host.
 
-Expanded food keeps its existing Inspect, quick-remove and lower overflow locations with full touch targets. The duplicate count and opaque visible container prefixes are removed; remaining contents stays visible and each per-container action has a distinct accessible ordinal. Reduced separator spacing preserves inline expansion. A different details view is deferred.
+Food uses flat whole-container rows. Row tap/click/keyboard activation edits the entire observed active or retained group. The dedicated button removes one container, or restores one in Deleted. The ellipsis and desktop secondary click share Add another plus Remove/Restore of the entire observed group. There are no expandable groups, contents controls, split-group editor or edit-count interface. Size and Location remain visible in secondary metadata. [ADR 0022](decisions/0022-food-whole-container-rows.md) records the accepted scope, symmetric quantities and compatibility boundary.
 
-Full (`1/1`) is the default for new/imported containers even when nominal size is blank. Partial fractions and measured amounts remain supported; the RC-only all-null unspecified contents state is rejected rather than rewritten. Any required fresh throwaway trial is a separate locally coordinated path and identity, preserving old receipts and established Tasks history.
+Historical fractions, measured amounts and conflicts remain readable with their original meaning, IDs and bytes; they are not UI choices or rewritten as full containers. New/imported containers retain the existing internal Full default. Existing all-null rejection rules remain. Development uses separate synthetic/trial folders and profiles.
 
 Standalone Tasks and Food share a centered 1450px content limit and existing
 padding. Task side-panel/modal breakpoints and outer width stay unchanged.
-Desktop secondary click opens the same Food group actions as the lower expanded
+Desktop secondary click opens the same Food group actions as the row
 ellipsis. Add another… opens a normal prefilled Add draft from active, retained
 or deleted search results: copied name/Brand/size/Location, blank focused
 expiration and retention, count 1. Submission uses normal validation and creates
@@ -271,6 +271,6 @@ Cancel, same-folder selection, errors and stale results preserve prior state.
 
 Retained shows one flat expiration-sorted list with each row’s retention reason.
 The existing reason input and autocomplete filter items directly. Physical
-container grouping still includes the reason, and Inspect remains expandable.
+container grouping still includes the reason; rows remain flat.
 Search bypasses saved filters and includes Deleted; clearing Search restores
 the selected reasons.

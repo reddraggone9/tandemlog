@@ -111,26 +111,40 @@ void registerFoodUndoStackWorkflowTests() {
       states.add(_snapshot(tester));
       _expectUndo(tester, contains('editing'));
 
-      await _inspect(tester, 'Synthetic undo rice');
       final first = _named(tester, 'Synthetic undo rice').first;
+      final historicalContents = {
+        for (final item in _named(tester, 'Synthetic undo rice'))
+          item.id: item.contents.toJson(),
+      };
       await _tap(
         tester,
-        find.byKey(ValueKey('food-container-edit:${first.id}')),
-      );
-      await _tap(
-        tester,
-        find.widgetWithText(SimpleDialogOption, '½ remaining'),
+        find.byTooltip('Remove one Synthetic undo rice container'),
       );
       await _idle(tester);
       expect(
         _named(
           tester,
           'Synthetic undo rice',
-        ).singleWhere((item) => item.id == first.id).contents.toJson(),
-        const Contents.fraction(1, 2).toJson(),
+        ).where((e) => e.deleted).map((e) => e.id),
+        [first.id],
       );
       states.add(_snapshot(tester));
-      _expectUndo(tester, contains('contents'));
+      _expectUndo(tester, contains('removing'));
+      await _tap(
+        tester,
+        find.byTooltip('Restore one Synthetic undo rice container'),
+      );
+      await _idle(tester);
+      expect(
+        _named(tester, 'Synthetic undo rice').every((e) => !e.deleted),
+        isTrue,
+      );
+      expect({
+        for (final item in _named(tester, 'Synthetic undo rice'))
+          item.id: item.contents.toJson(),
+      }, historicalContents);
+      states.add(_snapshot(tester));
+      _expectUndo(tester, contains('restoring'));
 
       await _tap(tester, find.byTooltip('Actions for Synthetic undo rice'));
       await _tap(tester, find.text('Remove 2 containers'));
@@ -146,10 +160,8 @@ void registerFoodUndoStackWorkflowTests() {
       await tester.enterText(find.byKey(const ValueKey('food-search')), '');
       await tester.pumpAndSettle();
       await selectFoodView(tester, FoodView.deleted);
-      await _tap(
-        tester,
-        find.byTooltip('Restore Synthetic undo rice containers'),
-      );
+      await _tap(tester, find.byTooltip('Actions for Synthetic undo rice'));
+      await _tap(tester, find.text('Restore 2 containers'));
       await _idle(tester);
       expect(
         _named(tester, 'Synthetic undo rice').every((e) => !e.deleted),
@@ -567,9 +579,9 @@ Future<void> _add(WidgetTester tester, String name, {int count = 1}) async {
   await _idle(tester);
 }
 
-Future<void> _inspect(WidgetTester tester, String name) async {
-  final inspect = find.byTooltip('Inspect $name containers');
-  if (inspect.evaluate().isNotEmpty) await _tap(tester, inspect);
+Future<void> _reachActions(WidgetTester tester, String name) async {
+  await tester.ensureVisible(find.byTooltip('Actions for $name'));
+  await tester.pumpAndSettle();
 }
 
 Future<void> _edit(
@@ -577,9 +589,8 @@ Future<void> _edit(
   String name,
   Map<String, String> fields,
 ) async {
-  await _inspect(tester, name);
-  await _tap(tester, find.byTooltip('Actions for $name'));
-  await _tap(tester, find.text('Edit group details'));
+  await _reachActions(tester, name);
+  await _tap(tester, find.text(name));
   for (final entry in fields.entries) {
     final field = entry.key == 'Retention reason'
         ? find.byWidgetPredicate(

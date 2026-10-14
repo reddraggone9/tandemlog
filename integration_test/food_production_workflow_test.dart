@@ -470,7 +470,7 @@ void registerFoodProductionTests() {
         await tester.tap(find.widgetWithText(FilledButton, 'Add'));
         await flows.waitForUi(
           tester,
-          () => find.text('2 full').evaluate().isNotEmpty,
+          () => find.text('2 containers').evaluate().isNotEmpty,
         );
         await tester.pumpAndSettle();
         await pixels.capture(tester, 'production-wide-warmup-not-evidence');
@@ -490,13 +490,8 @@ void registerFoodProductionTests() {
               1,
         );
         expect(find.text('1 full'), findsNothing);
-        await tester.tap(find.byTooltip('Inspect Synthetic Rice containers'));
-        await tester.pumpAndSettle();
-        expect(find.text('1 full'), findsOneWidget);
-        expect(find.text('Full'), findsOneWidget);
-        await tester.tap(find.byTooltip('Collapse Synthetic Rice containers'));
-        await tester.pumpAndSettle();
-        expect(find.text('1 full'), findsNothing);
+        expect(find.text('Full'), findsNothing);
+        expect(find.byTooltip('Actions for Synthetic Rice'), findsOneWidget);
         await selectFoodView(tester, FoodView.deleted);
         await tester.pumpAndSettle();
         expect(find.text('Synthetic Rice'), findsOneWidget);
@@ -519,13 +514,13 @@ void registerFoodProductionTests() {
           findsOneWidget,
         );
         expect(
-          find.byTooltip('Restore Synthetic Rice containers'),
+          find.byTooltip('Restore one Synthetic Rice container'),
           findsOneWidget,
         );
         await pixels.capture(tester, 'production-all-food-search-separated');
         await pixels.tap(
           tester,
-          find.byTooltip('Restore Synthetic Rice containers'),
+          find.byTooltip('Restore one Synthetic Rice container'),
         );
         await flows.waitForUi(tester, () => currentFood().active.length == 2);
         await tester.pumpAndSettle();
@@ -585,14 +580,16 @@ void registerFoodProductionTests() {
         await selectFoodView(tester, FoodView.deleted);
         await tester.pumpAndSettle();
         expect(find.text('Synthetic Rice'), findsOneWidget);
-        await tester.tap(find.byTooltip('Restore Synthetic Rice containers'));
+        await tester.tap(
+          find.byTooltip('Restore one Synthetic Rice container'),
+        );
         await flows.waitForUi(
           tester,
           () => find.text('No deleted containers').evaluate().isNotEmpty,
         );
         await selectFoodView(tester, FoodView.inventory);
         await tester.pumpAndSettle();
-        expect(find.text('2 full'), findsOneWidget);
+        expect(find.text('2 containers'), findsOneWidget);
         await switchSection(tester, food: false);
         await tester.pumpAndSettle();
         expect(find.text('Preserved synthetic task'), findsOneWidget);

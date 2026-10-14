@@ -203,7 +203,6 @@ Future<void> verifyExpirationDeprecationWorkflow(
             onAdd: (details, count) => added = details,
             onRemove: (_) {},
             onRestore: (_) {},
-            onContents: (_, _) {},
             onDetails: (items, details, fields) {
               changedFields = fields;
               setState(
@@ -230,13 +229,10 @@ Future<void> verifyExpirationDeprecationWorkflow(
   expect(find.textContaining('Certainty'), findsNothing);
   expect(find.textContaining('Estimated'), findsNothing);
   await capture?.call('collapsed');
-  await tap(find.byTooltip('Inspect Legacy beans containers'));
   await tester.pumpAndSettle();
   expect(find.textContaining('Certainty'), findsNothing);
   await capture?.call('inspect');
-  await tap(find.byTooltip('Actions for Legacy beans'));
-  await tester.pumpAndSettle();
-  await tap(find.text('Edit group details'));
+  await tap(find.text('Legacy beans'));
   await tester.pumpAndSettle();
   expect(
     find.widgetWithText(

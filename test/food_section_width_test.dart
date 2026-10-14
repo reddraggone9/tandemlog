@@ -53,7 +53,6 @@ void main() {
                     onAdd: (_, _) => commands++,
                     onRemove: (_) => commands++,
                     onRestore: (_) => commands++,
-                    onContents: (_, _) => commands++,
                     onDetails: (_, _, _) => commands++,
                   ),
                 ),

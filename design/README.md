@@ -23,6 +23,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Food whole-container rows](decisions/0022-food-whole-container-rows.md): accepted flat editing, symmetric Remove one/Restore one buttons and group menus; supersedes older expanded contents UI. Native acceptance remains pending.
+
 - [Local section memory and Android launcher shortcuts](decisions/0021-local-sections-and-launcher-shortcuts.md): released in experimental 2026.10.5-rc.1/build75, with Food filter/retention/presentation refinements and shared icons; [publication receipts](../evidence/prerelease-2026.10.5-rc.1/publication/README.md) retain source/artifact binding and acceptance qualifications.
 
 - [Food field editing and Full defaults](decisions/0019-food-field-editing-and-contents-defaults.md): approved suggestions/multiple filters/exact-container Brand/Location bulk editing, conservative expanded-row cleanup and removal of RC-only unspecified contents; accepted RC3/build70 native evidence retains its original attribution.

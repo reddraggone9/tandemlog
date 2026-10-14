@@ -74,7 +74,6 @@ Future<void> verifyFoodBulkDetails(
             onAdd: (_, _) {},
             onRemove: (_) {},
             onRestore: (_) {},
-            onContents: (_, _) {},
             onDetails: (items, details, fields) => writes.add((
               ids: items.map((e) => e.id).toList(),
               details: details,

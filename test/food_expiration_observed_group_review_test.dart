@@ -38,7 +38,6 @@ Future<void> _mount(
             onAdd: (_, _) {},
             onRemove: remove,
             onRestore: (_) {},
-            onContents: (_, _) {},
             onDetails: edit,
           ),
         ),
@@ -57,7 +56,7 @@ Future<void> _tap(WidgetTester tester, Finder target) async {
 
 void main() {
   testWidgets(
-    'mixed legacy group remains inspected after first representative is removed',
+    'flat legacy group retains remaining identities after first container removal',
     (tester) async {
       final operations = ValueNotifier([
         _add(1, null),
@@ -83,43 +82,21 @@ void main() {
         },
         edit: (_, _, _) async {},
       );
-      await _tap(tester, find.byTooltip('Inspect Legacy lentils containers'));
-      expect(
-        find.byTooltip('Collapse Legacy lentils containers'),
-        findsOneWidget,
-      );
       await _tap(tester, find.byTooltip('Remove one Legacy lentils container'));
       expect(removed, [_container(1)]);
+      expect(find.text('2 containers'), findsOneWidget);
       expect(
-        find.byTooltip('Collapse Legacy lentils containers'),
+        find.byTooltip('Remove one Legacy lentils container'),
         findsOneWidget,
       );
+      expect(projectFood(operations.value).active.map((c) => c.id).toList(), [
+        _container(2),
+        _container(3),
+      ]);
       expect(
-        find.byKey(
-          const ValueKey(
-            'food-container-contents:00000000-0000-4000-8000-000000000002',
-          ),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(
-          const ValueKey(
-            'food-container-contents:00000000-0000-4000-8000-000000000003',
-          ),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(
-          const ValueKey(
-            'food-container-contents:00000000-0000-4000-8000-000000000001',
-          ),
-        ),
-        findsNothing,
-      );
-      expect(
-        projectFood(operations.value).active.map((e) => e.details.estimated),
+        projectFood(
+          operations.value,
+        ).active.map((c) => c.details.estimated).toList(),
         [false, true],
       );
       expect(tester.takeException(), isNull);
@@ -157,9 +134,7 @@ void main() {
           ];
         },
       );
-      await _tap(tester, find.byTooltip('Inspect Legacy lentils containers'));
-      await _tap(tester, find.byTooltip('Actions for Legacy lentils'));
-      await _tap(tester, find.text('Edit group details'));
+      await _tap(tester, find.text('Legacy lentils'));
       operations.value = [...operations.value, _add(4, true)];
       await tester.pumpAndSettle();
       await tester.enterText(

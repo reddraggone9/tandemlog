@@ -10,93 +10,92 @@ import '../tool/food_preview.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets(
-    'synthetic native food inspect/remove/restore and Inbox workflow',
-    (tester) async {
-      tester.view.devicePixelRatio = 1;
-      tester.view.physicalSize = const Size(1200, 850);
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      await tester.pumpWidget(const FoodPreviewApp());
-      await tester.pumpAndSettle();
-      await capture(tester, 'initial-warmup-not-evidence');
-      tester.view.physicalSize = const Size(390, 850);
-      await tester.pumpAndSettle();
-      await capture(tester, 'narrow-stock');
-      await startRecording(tester);
-      expect(find.byTooltip('Remove one Rice container'), findsNothing);
-      await tap(tester, find.byTooltip('Inspect Rice containers'));
-      await tester.pumpAndSettle();
-      await capture(tester, 'narrow-inspect');
-      final partial = find.byWidgetPredicate(
-        (w) =>
-            w is Checkbox && w.semanticLabel?.endsWith('⅓ remaining') == true,
-      );
-      await tester.ensureVisible(partial);
-      await tap(tester, partial);
-      await tester.pumpAndSettle();
-      final remove = find.widgetWithText(TextButton, 'Remove selected (1)');
-      await tester.ensureVisible(remove);
-      await capture(tester, 'narrow-selected-partial');
-      await tap(tester, remove);
-      await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))
-            .state
-            .active
-            .where((e) => e.details.name == 'Rice'),
-        hasLength(7),
-      );
-      await selectFoodView(
-        tester,
-        FoodView.deleted,
-        input: (target) => tap(tester, target),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('1 container ⅓ full'), findsOneWidget);
-      await capture(tester, 'narrow-deleted');
-      await tap(tester, find.byTooltip('Restore Rice containers'));
-      await tester.pumpAndSettle();
-      expect(find.text('No deleted containers'), findsOneWidget);
-      await selectFoodView(
-        tester,
-        FoodView.retained,
-        input: (target) => tap(tester, target),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byType(ExpansionTile), findsNothing);
-      expect(find.text('Chocolate').hitTestable(), findsOneWidget);
-      expect(find.widgetWithText(Card, 'Birthday baking'), findsOneWidget);
-      await capture(tester, 'narrow-retained-flat');
-      await selectFoodView(
-        tester,
-        FoodView.inventory,
-        input: (target) => tap(tester, target),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Lentils'), findsOneWidget);
-      await capture(tester, 'narrow-inbox');
-      await tap(tester, find.byTooltip('Add food'));
-      await tester.pumpAndSettle();
-      await capture(tester, 'narrow-editor');
-      await tap(tester, find.widgetWithText(TextButton, 'Cancel'));
-      await tester.pumpAndSettle();
-      await selectFoodView(
-        tester,
-        FoodView.inventory,
-        input: (target) => tap(tester, target),
-      );
-      await tester.pumpAndSettle();
-      tester.view.physicalSize = const Size(1200, 850);
-      await tester.pumpAndSettle();
-      await capture(tester, 'wide-stock-after-restore');
-      await tap(tester, find.byTooltip('Collapse Rice containers'));
-      await tester.pumpAndSettle();
-      await capture(tester, 'wide-stock');
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('synthetic native flat food remove/restore and Inbox workflow', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1200, 850);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(const FoodPreviewApp());
+    await tester.pumpAndSettle();
+    await capture(tester, 'initial-warmup-not-evidence');
+    tester.view.physicalSize = const Size(390, 850);
+    await tester.pumpAndSettle();
+    await capture(tester, 'narrow-stock');
+    await startRecording(tester);
+    final initial = tester
+        .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))
+        .state;
+    final riceBefore = initial.active
+        .where((e) => e.details.name == 'Rice')
+        .toList();
+    final removedId = initial.groups
+        .singleWhere((g) => g.details.name == 'Rice')
+        .containers
+        .first
+        .id;
+    expect(find.text('8 containers'), findsOneWidget);
+    expect(find.text('Remaining contents'), findsNothing);
+    await tap(tester, find.byTooltip('Remove one Rice container'));
+    await tester.pumpAndSettle();
+    final after = tester
+        .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))
+        .state;
+    expect(after.active.where((e) => e.details.name == 'Rice'), hasLength(7));
+    expect(after.deleted.single.id, removedId);
+    expect(
+      after.containers.map((e) => e.contents.toJson()).toList(),
+      initial.containers.map((e) => e.contents.toJson()).toList(),
+    );
+    expect(riceBefore, hasLength(8));
+    await capture(tester, 'narrow-removed-one');
+    await selectFoodView(
+      tester,
+      FoodView.deleted,
+      input: (target) => tap(tester, target),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Rice'), findsOneWidget);
+    await capture(tester, 'narrow-deleted');
+    await tap(tester, find.byTooltip('Restore one Rice container'));
+    await tester.pumpAndSettle();
+    expect(find.text('No deleted containers'), findsOneWidget);
+    await selectFoodView(
+      tester,
+      FoodView.retained,
+      input: (target) => tap(tester, target),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(ExpansionTile), findsNothing);
+    expect(find.text('Chocolate').hitTestable(), findsOneWidget);
+    expect(find.widgetWithText(Card, 'Birthday baking'), findsOneWidget);
+    await capture(tester, 'narrow-retained-flat');
+    await selectFoodView(
+      tester,
+      FoodView.inventory,
+      input: (target) => tap(tester, target),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Lentils'), findsOneWidget);
+    await capture(tester, 'narrow-inbox');
+    await tap(tester, find.byTooltip('Add food'));
+    await tester.pumpAndSettle();
+    await capture(tester, 'narrow-editor');
+    await tap(tester, find.widgetWithText(TextButton, 'Cancel'));
+    await tester.pumpAndSettle();
+    await selectFoodView(
+      tester,
+      FoodView.inventory,
+      input: (target) => tap(tester, target),
+    );
+    await tester.pumpAndSettle();
+    tester.view.physicalSize = const Size(1200, 850);
+    await tester.pumpAndSettle();
+    await capture(tester, 'wide-stock-after-restore');
+    await capture(tester, 'wide-stock');
+    expect(tester.takeException(), isNull);
+  });
 }
 
 Future<void> capture(WidgetTester tester, String name) async {

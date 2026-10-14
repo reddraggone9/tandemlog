@@ -78,16 +78,19 @@ Future<void> verifyFoodValueAutocomplete(
         onAdd: (details, _) => saved = details,
         onRemove: (_) {},
         onRestore: (_) {},
-        onContents: (_, _) {},
         onDetails: (_, _, _) {},
       ),
     ),
   );
   await tester.pumpAndSettle();
   await tap(find.byTooltip('Add food'));
+  Finder option(String value) => find.descendant(
+    of: find.byType(ListView),
+    matching: find.widgetWithText(InkWell, value),
+  );
   await enter('Brand', 'cM');
   expect(
-    find.widgetWithText(InkWell, 'Acme'),
+    option('Acme'),
     findsOneWidget,
     reason: 'case-insensitive substring match, duplicates removed',
   );
@@ -97,22 +100,22 @@ Future<void> verifyFoodValueAutocomplete(
   await tester.pumpAndSettle();
   expect(tester.widget<TextField>(field('Brand')).controller!.text, 'Acme');
   await enter('Location', 'pan');
-  expect(find.widgetWithText(InkWell, 'Pantry'), findsOneWidget);
+  expect(option('Pantry'), findsOneWidget);
   await capture?.call('location-options');
-  await tap(find.widgetWithText(InkWell, 'Pantry'));
+  await tap(option('Pantry'));
   expect(
     tester.widget<TextField>(field('Location')).controller!.text,
     'Pantry',
   );
   await enter('Brand', 'historic');
   expect(
-    find.widgetWithText(InkWell, 'Historical brand'),
+    option('Historical brand'),
     findsOneWidget,
     reason: 'existing deleted entries remain suggestion sources',
   );
   await tester.sendKeyEvent(LogicalKeyboardKey.escape);
   await tester.pumpAndSettle();
-  expect(find.widgetWithText(InkWell, 'Historical brand'), findsNothing);
+  expect(option('Historical brand'), findsNothing);
   expect(
     find.byType(AlertDialog),
     findsOneWidget,

@@ -54,7 +54,7 @@ Future<void> activateWithKeyboard(
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets(
-    'Inspect exposes metadata and secondary actions with keyboard and Back',
+    'Flat rows expose metadata, keyboard editing and independent menus with Back',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
@@ -83,38 +83,25 @@ void main() {
               .containers
               .map((e) => e.toJson())
               .toList();
-          final metadata = find.text('500 g · Freezer');
-          expect(metadata, findsNothing);
-          expect(find.byTooltip('Actions for Oat milk'), findsNothing);
-          await activateWithKeyboard(
-            tester,
-            find.byTooltip('Inspect Oat milk containers'),
+          final row = find.text('Oat milk');
+          final card = find.ancestor(of: row, matching: find.byType(Card));
+          final metadata = find.descendant(
+            of: card,
+            matching: find.text('500 g · Freezer'),
           );
-          await tester.ensureVisible(
-            find.ancestor(of: metadata, matching: find.byType(Card)).first,
-          );
-          await tester.pumpAndSettle();
           expect(metadata.hitTestable(), findsOneWidget);
-          expect(
-            find.byKey(
-              const ValueKey(
-                'food-container-contents:00000000-0000-4000-8000-000000000001',
-              ),
-            ),
-            findsOneWidget,
-          );
-          await pixels.capture(tester, name);
+          expect(find.text('Remaining contents'), findsNothing);
           final actions = find.byTooltip('Actions for Oat milk');
           await activateWithKeyboard(tester, actions);
-          expect(find.text('Edit group details').hitTestable(), findsOneWidget);
+          expect(find.text('Add another…').hitTestable(), findsOneWidget);
           expect(find.text('Remove 1 container').hitTestable(), findsOneWidget);
+          expect(find.text('Edit group details'), findsNothing);
           await pixels.capture(tester, '$name-actions');
           await tester.sendKeyEvent(LogicalKeyboardKey.escape);
           await tester.pumpAndSettle();
-          expect(find.text('Edit group details'), findsNothing);
-          expect(metadata, findsOneWidget);
-          await activateWithKeyboard(tester, actions);
-          await activateWithKeyboard(tester, find.text('Edit group details'));
+          expect(metadata.hitTestable(), findsOneWidget);
+          await activateWithKeyboard(tester, row, backwards: true);
+          expect(find.text('Edit 1 container'), findsOneWidget);
           final size = find.widgetWithText(TextField, 'Container size');
           final location = find.widgetWithText(TextField, 'Location');
           expect(tester.widget<TextField>(size).controller!.text, '500 g');
@@ -129,14 +116,8 @@ void main() {
           await tester.binding.handlePopRoute();
           await tester.pumpAndSettle();
           expect(find.byType(AlertDialog), findsNothing);
-          expect(metadata, findsOneWidget);
-          await activateWithKeyboard(
-            tester,
-            find.byTooltip('Collapse Oat milk containers'),
-            backwards: true,
-          );
-          expect(metadata, findsNothing);
-          expect(find.byTooltip('Actions for Oat milk'), findsNothing);
+          expect(metadata.hitTestable(), findsOneWidget);
+          expect(actions, findsOneWidget);
           final state = tester
               .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))
               .state;

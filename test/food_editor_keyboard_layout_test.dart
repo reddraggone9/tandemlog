@@ -178,9 +178,7 @@ Future<void> verifyFoodEditorKeyboardLayout(
   if (editingCount == 0) {
     await tap(find.byTooltip('Add food'));
   } else {
-    await tap(find.byTooltip('Inspect $foodName containers'));
-    await tap(find.byTooltip('Actions for $foodName'));
-    await tap(find.text('Edit group details'));
+    await tap(find.text(foodName));
   }
   expectActions();
   await capture?.call('$prefix-open-no-ime');

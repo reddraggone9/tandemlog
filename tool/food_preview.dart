@@ -160,17 +160,6 @@ class _FoodPreviewAppState extends State<FoodPreviewApp> {
           ], observedDeletes: item.deletions.toList()),
         );
       }),
-      onContents: (item, contents) => setState(() {
-        undo.clear();
-        operations.add(
-          _operation(
-            FoodAction.edit,
-            [item.id],
-            contents: contents,
-            observedEdits: item.contentsEdits.keys.toList(),
-          ),
-        );
-      }),
       onDetails: (items, details, fields) => setState(() {
         undo.clear();
         for (final batch in _batches(items.map((e) => e.id).toList())) {

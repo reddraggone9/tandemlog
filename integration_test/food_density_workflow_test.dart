@@ -48,7 +48,7 @@ List<FoodOperation> densityFixture() {
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets(
-    'dense collapsed rows preserve targets in both themes and enlarged text',
+    'dense flat rows preserve targets in both themes and enlarged text',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
@@ -87,7 +87,7 @@ void main() {
                   (r) => r.top >= viewport.top && r.bottom <= viewport.bottom,
                 )
                 .toList();
-            final inspect = find.byTooltip('Inspect Oat milk containers');
+            final inspect = find.byTooltip('Actions for Oat milk');
             expect(tester.getSize(inspect).width, greaterThanOrEqualTo(48));
             expect(tester.getSize(inspect).height, greaterThanOrEqualTo(48));
             expect(tester.takeException(), isNull);

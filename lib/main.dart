@@ -929,14 +929,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 }, verb: 'removing'),
             onRestore: (item) => restoreItems([item]),
             onRestoreBatch: restoreItems,
-            onContents: (item, contents) => _foodCommand(
-              origin,
-              'contents:${item.id}:${contents.toJson()}',
-              (store) async {
-                await store.changeContents(item, contents);
-              },
-              verb: 'changing contents of',
-            ),
             onDetails: (items, details, fields) => _foodCommand(
               origin,
               'details:${items.map((e) => e.id).join(',')}:${details.groupKey}:${fields.join(',')}',

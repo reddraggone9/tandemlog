@@ -8,7 +8,7 @@ import 'food_expiry_guidance_test.dart' show selectFoodView;
 void main() {
   final summaries = <String, (List<Contents>, String?)>{
     'single known full': ([const Contents.fraction(1, 1)], null),
-    'single partial': ([const Contents.fraction(1, 3)], '1 container ⅓ full'),
+    'single partial': ([const Contents.fraction(1, 3)], null),
     'multiple full': (
       [const Contents.fraction(1, 1), const Contents.fraction(1, 1)],
       '2 full',
@@ -19,8 +19,8 @@ void main() {
     ),
   };
   for (final entry in summaries.entries) {
-    testWidgets('collapsed summary preserves ${entry.key}', (tester) async {
-      final (contents, expected) = entry.value;
+    testWidgets('physical count preserves legacy ${entry.key}', (tester) async {
+      final contents = entry.value.$1;
       final operations = List.generate(
         contents.length,
         (i) => FoodOperation(
@@ -45,15 +45,16 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Rice'), findsOneWidget);
       expect(find.text('Sample Foods'), findsOneWidget);
-      if (expected == null) {
-        expect(find.text('1 full'), findsNothing);
-        await tester.tap(find.byTooltip('Inspect Rice containers'));
-        await tester.pumpAndSettle();
-        expect(find.text('1 lb · Freezer'), findsOneWidget);
-        expect(find.text('Full'), findsOneWidget);
+      if (contents.length == 1) {
+        expect(find.text('1 container'), findsNothing);
       } else {
-        expect(find.text(expected), findsOneWidget);
+        expect(find.text('${contents.length} containers'), findsOneWidget);
       }
+      expect(find.text('1 lb · Freezer'), findsOneWidget);
+      expect(find.text('Full'), findsNothing);
+      expect(find.text('Remaining contents'), findsNothing);
+      expect(find.byTooltip('Remove one Rice container'), findsOneWidget);
+      expect(operations.map((op) => op.contents).toList(), contents);
       expect(tester.takeException(), isNull);
     });
   }
@@ -84,10 +85,18 @@ void main() {
         tester.view.devicePixelRatio = 1;
         await tester.pumpWidget(FoodPreviewApp(key: ValueKey(width)));
         await tester.pumpAndSettle();
-        expect(find.text('7 full + 1 container ⅓ full'), findsOneWidget);
-        await tester.tap(find.byTooltip('Inspect Rice containers'));
+        expect(find.text('8 containers'), findsOneWidget);
         await tester.pumpAndSettle();
-        expect(find.text('1 lb'), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.ancestor(
+              of: find.text('Rice'),
+              matching: find.byType(Card),
+            ),
+            matching: find.text('1 lb'),
+          ),
+          findsOneWidget,
+        );
         expect(tester.takeException(), isNull);
       }
       addTearDown(tester.view.resetPhysicalSize);
@@ -111,14 +120,14 @@ void main() {
     expect(find.text('Oat milk'), findsNothing);
     await selectFoodView(tester, FoodView.inventory);
     await tester.pumpAndSettle();
-    expect(find.text('2 full'), findsOneWidget);
+    expect(find.text('2 containers'), findsOneWidget);
   });
   testWidgets(
-    'partial containers require inspection; search includes retained stock',
+    'legacy partial containers support quick removal; search includes retained stock',
     (tester) async {
       await tester.pumpWidget(const FoodPreviewApp());
       await tester.pumpAndSettle();
-      expect(find.byTooltip('Remove one Rice container'), findsNothing);
+      expect(find.byTooltip('Remove one Rice container'), findsOneWidget);
       await tester.enterText(
         find.byKey(const ValueKey('food-search')),
         'birthday',

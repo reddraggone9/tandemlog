@@ -62,21 +62,25 @@ internal class SectionShortcuts(private val activity: Activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) return
         val manager = activity.getSystemService(ShortcutManager::class.java) ?: return
         try {
-            manager.dynamicShortcuts = listOf(
-                shortcut("tandemlog_tasks", "Tasks", "com.reddraggone9.tandemlog.OPEN_TASKS", 0),
-                shortcut("tandemlog_food", "Food", "com.reddraggone9.tandemlog.OPEN_FOOD", 1),
+            val shortcuts = listOf(
+                shortcut("tandemlog_tasks", "Tasks", "com.reddraggone9.tandemlog.OPEN_TASKS", 0, R.mipmap.ic_launcher),
+                shortcut("tandemlog_food", "Food", "com.reddraggone9.tandemlog.OPEN_FOOD", 1, R.mipmap.ic_shortcut_food),
             )
+            // Stable IDs also refresh copies already pinned by a launcher,
+            // including a pinned shortcut no longer in its dynamic list.
+            manager.updateShortcuts(shortcuts)
+            manager.dynamicShortcuts = shortcuts
         } catch (failure: RuntimeException) {
             Log.w("Tandemlog", "Launcher shortcuts unavailable", failure)
         }
     }
 
     @android.annotation.TargetApi(25)
-    private fun shortcut(id: String, label: String, action: String, rank: Int) =
+    private fun shortcut(id: String, label: String, action: String, rank: Int, icon: Int) =
         ShortcutInfo.Builder(activity, id)
             .setShortLabel(label)
             .setRank(rank)
-            .setIcon(Icon.createWithResource(activity, R.mipmap.ic_launcher))
+            .setIcon(Icon.createWithResource(activity, icon))
             .setIntent(Intent(activity, MainActivity::class.java).apply {
                 this.action = action
                 flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP

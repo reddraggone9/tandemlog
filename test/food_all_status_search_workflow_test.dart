@@ -127,7 +127,6 @@ Future<void> verifyFoodAllStatusSearch(
             userName: 'Synthetic household',
             now: () => DateTime(2026, 10, 11),
             onAdd: (_, _) {},
-            onContents: (_, _) {},
             onDetails: (_, _, _) {},
             onRemove: (ids) => command(operation(FoodAction.remove, ids)),
             onRestore: (container) => command(
@@ -175,7 +174,6 @@ Future<void> verifyFoodAllStatusSearch(
   await capture?.call('mixed-active');
   // An incoming projection can remove a preceding row while a group's actions
   // menu is open. Its pending callback must not inherit a different row's data.
-  await tap(find.byTooltip('Inspect Food shared containers'));
   await tester.pumpAndSettle();
   await tap(find.byTooltip('Actions for Food shared'));
   await tester.pumpAndSettle();
@@ -231,8 +229,6 @@ Future<void> verifyFoodAllStatusSearch(
     ),
   );
   await tester.pumpAndSettle();
-  await _reach(tester, find.byTooltip('Collapse Food shared containers'));
-  await tap(find.byTooltip('Collapse Food shared containers'));
   await tester.pumpAndSettle();
   await _reach(tester, find.byKey(const ValueKey('food-deleted-heading')));
   final heading = find.byKey(const ValueKey('food-deleted-heading'));
@@ -257,9 +253,9 @@ Future<void> verifyFoodAllStatusSearch(
   );
   semantics.dispose();
   await capture?.call('deleted-pinned');
-  await _reach(tester, find.byTooltip('Restore Food shared containers'));
+  await _reach(tester, find.byTooltip('Restore one Food shared container'));
   final deletedCard = find.ancestor(
-    of: find.byTooltip('Restore Food shared containers'),
+    of: find.byTooltip('Restore one Food shared container'),
     matching: find.byType(Card),
   );
   expect(
@@ -276,7 +272,7 @@ Future<void> verifyFoodAllStatusSearch(
     reason: 'search/navigation never restores or removes food',
   );
   await capture?.call('deleted-restore');
-  await tap(find.byTooltip('Restore Food shared containers'));
+  await tap(find.byTooltip('Restore one Food shared container'));
   await tester.pumpAndSettle();
   expect(
     projectFood(events).active.where((c) => c.details.name == 'Food shared'),
@@ -299,7 +295,7 @@ Future<void> verifyFoodAllStatusSearch(
     projectFood(events).active.where((c) => c.details.name == 'Food shared'),
     isEmpty,
   );
-  await _reach(tester, find.byTooltip('Restore Food shared containers'));
+  await _reach(tester, find.byTooltip('Restore one Food shared container'));
   await tap(find.byKey(const ValueKey('undo-food-action')));
   await tester.pumpAndSettle();
   expect(

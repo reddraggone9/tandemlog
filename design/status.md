@@ -1,4 +1,8 @@
-# Current status — 2026-10-13
+# Current status — 2026-10-14
+
+## Approved flat Food follow-up, under acceptance
+
+The isolated follow-up implements [ADR 0022](decisions/0022-food-whole-container-rows.md): flat physical-container rows, direct whole-group editing, no Remaining contents/expansion/count/split controls, dedicated Remove one/Restore one and matching observed-group menus. Add another retains blank expiration/count one and cancellation isolation. Food Android shortcuts use the existing fridge glyph with fixed-ID pinned updates; Tasks/app identity stays unchanged. No production operation, canonical conversion or dependency change is included. Independent review found a stale popup owner gap; workspace-bound row state and regressions address it. Analyzer, affected/aggregate tests and native acceptance are being completed. No publication or promotion is authorized in this pass; published RC75 and stable Latest remain unchanged.
 
 ## Published experimental 2026.10.5-rc.1/build75
 
