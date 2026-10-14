@@ -1,6 +1,6 @@
 # Food whole-container rows
 
-Status: accepted by Lee on 2026-10-14; implementation and exact-candidate native acceptance complete at `fe3f7ca36b50772abfaded7238a02f38d8fe9c73`. RC-only publication pending. This supersedes the expanded/contents interface in ADR 0019, without changing canonical history.
+Status: accepted by Lee on 2026-10-14; implementation and exact-candidate native acceptance complete at `fe3f7ca36b50772abfaded7238a02f38d8fe9c73`. Published experimentally as [2026.10.5-rc.2/build76](../../evidence/prerelease-2026.10.5-rc.2/publication/README.md); stable Latest is unchanged. This supersedes the expanded/contents interface in ADR 0019, without changing canonical history.
 
 ## Context and decision
 
