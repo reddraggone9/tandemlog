@@ -1,7 +1,1 @@
-- Each device remembers the last Tasks or Food section you visited. Android adds Tasks and Food launcher shortcuts, with a fridge icon for Food.
-- Food rows are flat: tap a row to edit the whole container group. The Remaining contents interface is removed; Remove and Restore offer matching one-container buttons and whole-group menu actions.
-- Food’s More filters… includes retention reasons in Retained mode alongside Brand and Location. Retention reason is removed from Add and Add another and remains available in Edit.
-- Tasks and Food share compact rows with subtle dividers and consistent hover, press and keyboard-focus feedback. Task body press feedback spans the full main row.
-- Dragging between the same visible tasks gives one insertion marker and the same saved position, including when other tasks are hidden. Drops that leave the visible order unchanged do nothing.
-- Food metadata and checklist notes use softer secondary colors. Android, Windows and Linux share the green-square, white-checkmark app icon.
-- Fixed repeated answers in Tasks and checklist Unsaved changes dialogs closing the wrong screen.
+- Add, Add another, and Edit food beside the inventory on wide windows.

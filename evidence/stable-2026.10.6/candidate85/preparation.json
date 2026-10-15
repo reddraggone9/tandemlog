@@ -1,0 +1,15 @@
+{
+  "acceptedRcSource": "09d631ce073a4fd42e42c9baafd2a79ac3364845",
+  "reviewedDocsParent": "5f43700d0ea85975394cccfc22e992af631aa170",
+  "version": "2026.10.6+85",
+  "onlyProductionMetadataChanged": [
+    "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml",
+    "pubspec.yaml"
+  ],
+  "unchangedTrackedNonDocumentationFiles": 636,
+  "unchangedSourceManifestSha256": "bef8997e4678d2e3f2b28d9cd46c5b376bb72d8783c5172e4549eaba5251b237",
+  "stableNotesSha256": "b9140813d5b64c75b15495711d1b8d83f302f7ca414e12790c68d0f915a67187",
+  "fullStableCandidateAndExactArtifactAcceptancePending": true,
+  "parentAcceptanceHandoffBeforePublication": true,
+  "publicationPerformed": false
+}
