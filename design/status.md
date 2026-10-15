@@ -1,10 +1,10 @@
 # Current status — 2026-10-15
 
-## Prepared shared-row RC.3/build79, full candidate acceptance pending
+## Published shared-row2026.10.5-rc.3/build79
 
 [ADR0023](decisions/0023-shared-list-row-surfaces.md) implements the approved shared compact surfaces and stable equivalent-position drag indicator. Build77 failed strict Flatpak version metadata; build78 corrected that metadata but exposed two body context-menu regressions and inactive-key geometry during native autoscroll. All three reproduced against unchanged78 and pass after the narrow79 correction. The lifecycle unit test has a controlled unsafe RED and exact restored GREEN; five drag-boundary and five Task body/control cases also pass. [Candidate preparation](../evidence/prerelease-2026.10.5-rc.3/README.md) preserves attribution and remaining gates.
 
-Source/test and actual unchanged short notes have independent review. Full hosted79 validation, exact owner-signed Android upgrade acceptance and final native/artifact review remain pending. Existing Windows GUI and Android API30 qualifications remain; no production operation, dependency change or stable promotion is part of this scope.
+[RC3 is published](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5-rc.3) from exact accepted `f6407a0eb7f288fee7f7fb5f573227d442141f9c`. Candidate38682978068 and push38682977846 pass every job; Linux1073 unit/170 native, Windows1070/two skips and85 tooling checks pass. Exact owner-signed Android76-to79 upgrade, native LinuxGTK79, original artifacts, preservation and independent final/editorial reviews are accepted. [Promotion38691768854](https://github.com/reddraggone9/tandemlog/actions/runs/38691768854) copied the three originals without rebuilding. [Public receipts](../evidence/prerelease-2026.10.5-rc.3/publication/README.md) verify anonymous installer bytes, APK signer/version/build79/ABIs, notes/tag/source and unchanged28 prior releases/assets/tag refs. Existing Windows GUI/API30 qualifications remain; stable2026.10.4 stays Latest. No production operation, dependency change or stable promotion is part of this scope.
 
 ## Published whole-container Food2026.10.5-rc.2/build76
 

@@ -1,6 +1,6 @@
 # Shared Tasks and Food row surfaces
 
-Status: accepted by Lee for the following experimental RC on 2026-10-15; native acceptance pending.
+Status: accepted by Lee on 2026-10-15 and published experimentally as [2026.10.5-rc.3/build79](../../evidence/prerelease-2026.10.5-rc.3/publication/README.md) after native acceptance; stable Latest is unchanged.
 
 ## Context and decision
 

@@ -23,7 +23,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Shared Tasks/Food row surfaces](decisions/0023-shared-list-row-surfaces.md): accepted compact flat surfaces, consistent feedback and canonical drag insertion paint for the following experimental RC; native acceptance pending.
+- [Shared Tasks/Food row surfaces](decisions/0023-shared-list-row-surfaces.md): compact flat surfaces, consistent feedback and canonical drag insertion paint, published experimentally as [2026.10.5-rc.3/build79](../evidence/prerelease-2026.10.5-rc.3/publication/README.md) after exact-source native acceptance.
 
 - [Food whole-container rows](decisions/0022-food-whole-container-rows.md): accepted flat editing, symmetric Remove one/Restore one buttons and group menus; supersedes older expanded contents UI. Published experimentally as [2026.10.5-rc.2/build76](../evidence/prerelease-2026.10.5-rc.2/publication/README.md) after exact-candidate native acceptance.
 

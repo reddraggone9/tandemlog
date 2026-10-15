@@ -1,0 +1,75 @@
+{
+  "atUtc": "2026-10-15T06:21:43.081699+00:00",
+  "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5-rc.3",
+  "releaseId": 413478436,
+  "publishedAt": "2026-10-15T06:20:27Z",
+  "tag": "v2026.10.5-rc.3",
+  "tagObject": {
+    "sha": "f6407a0eb7f288fee7f7fb5f573227d442141f9c",
+    "type": "commit",
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/git/commits/f6407a0eb7f288fee7f7fb5f573227d442141f9c"
+  },
+  "candidateSource": "f6407a0eb7f288fee7f7fb5f573227d442141f9c",
+  "candidateRun": 38682978068,
+  "promotionRun": 38691768854,
+  "dispatchCommit": "f6407a0eb7f288fee7f7fb5f573227d442141f9c",
+  "prerelease": true,
+  "draft": false,
+  "latestFalseVerifiedThroughStableLatest": true,
+  "latestStable": "v2026.10.4",
+  "latestStableReleaseId": 411009405,
+  "notesSha256": "74cf472bb38eb6b1c8e1774df605a87e10962bfde0a3200ad2c542dd582dcde0",
+  "exactReviewedNotesMatched": true,
+  "onlyThreeVersionedInstallers": true,
+  "publicAssets": {
+    "tandemlog-2026.10.5-rc.3-android.apk": {
+      "assetId": 642900705,
+      "bytes": 67136597,
+      "sha256": "f43a98634474c773838690d66aafbbb5b272047b6428d1cd43c54717bbc95bca",
+      "apiDigestMatched": true,
+      "anonymousDownload": true,
+      "finalHTTPSHost": "release-assets.githubusercontent.com",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5-rc.3/tandemlog-2026.10.5-rc.3-android.apk"
+    },
+    "tandemlog-2026.10.5-rc.3-linux-x64.flatpak": {
+      "assetId": 642900709,
+      "bytes": 9214120,
+      "sha256": "4cbd9e824c6385cf92eed0616f4f4c481c479f8d560793dd1d390af98d90a160",
+      "apiDigestMatched": true,
+      "anonymousDownload": true,
+      "finalHTTPSHost": "release-assets.githubusercontent.com",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5-rc.3/tandemlog-2026.10.5-rc.3-linux-x64.flatpak"
+    },
+    "tandemlog-2026.10.5-rc.3-windows-x64-setup.exe": {
+      "assetId": 642900704,
+      "bytes": 12388386,
+      "sha256": "2c28531d0260aef1272c17c37237eae85c589e2fc76ca72cfee7197a541d4d8c",
+      "apiDigestMatched": true,
+      "anonymousDownload": true,
+      "finalHTTPSHost": "release-assets.githubusercontent.com",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5-rc.3/tandemlog-2026.10.5-rc.3-windows-x64-setup.exe"
+    }
+  },
+  "publicApk": {
+    "ownerCertificateSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "singlePinnedOwnerSignerVerified": true,
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.5-rc.3",
+    "versionCode": 79,
+    "nonDebuggable": true,
+    "ABIs": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "nativePayloadHashesMatched": true,
+    "noticesMatched": true,
+    "permissionsEqualToAcceptedApk": true
+  },
+  "priorReleasesAndAssetsUnchanged": 28,
+  "priorTagObjectsUnchanged": 28,
+  "noRebuild": true,
+  "noStablePromotion": true,
+  "noProductionOperation": true,
+  "base64PinUnchanged": "0.22.1"
+}

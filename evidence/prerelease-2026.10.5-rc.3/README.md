@@ -4,7 +4,7 @@ Build78 candidate[38677237513](https://github.com/reddraggone9/tandemlog/actions
 
 [Build79 correction](build79/correction.json) records unchanged-source native reproduction of all three failures, explicit guarded context-menu forwarding and safe attached geometry reads. The same-frame lifecycle test fails with the unsafe lookup and passes after the exact guard is restored. All three native failures, five insertion-boundary cases, five body/control cases and row feedback tests pass. Menu cases additionally require one route, unchanged selection, no editor and no canonical append; existing assertions remain intact. Pinned formatting and nonprivileged host analysis pass. Independent source/test review accepts the narrow correction.
 
-Full hosted79 validation, exact signed Android acceptance, refreshed affected native interactions and final artifact/readiness review remain required. Earlier row-style visual evidence retains its original source/platform attribution; it does not establish exact79 APK acceptance. Release notes are unchanged, base64 remains0.22.1 and no durable format or event meaning changes. Stable2026.10.4 is not promoted by this work.
+Full hosted79 validation, exact signed Android acceptance, refreshed affected native interactions and independent final artifact/readiness review are complete. [Public publication receipts](publication/README.md) record experimentalRC3 promotion and all three verified original installers. Earlier row-style visual evidence retains its original source/platform attribution; it does not establish exact79 APK acceptance. Release notes are unchanged, base64 remains0.22.1 and no durable format or event meaning changes. Stable2026.10.4 is not promoted by this work.
 
 # Build78 metadata correction
 
