@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+/// Slivers can retain inactive keyed elements until the frame is finalized.
+/// Read only attached, laid-out geometry without requiring an active element.
+RenderBox? attachedTaskDropBox(BuildContext? context) {
+  if (context is! Element || !context.mounted) return null;
+  final object = context.renderObject;
+  return object is RenderBox && object.attached && object.hasSize
+      ? object
+      : null;
+}
+
 /// Paint after child surfaces and after layout, without adding a hit target.
 class TaskDropIndicatorPainter extends CustomPainter {
   TaskDropIndicatorPainter({

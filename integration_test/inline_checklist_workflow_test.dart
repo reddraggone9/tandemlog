@@ -11,6 +11,7 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/presentation/checklist_panel.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
+import 'package:tandemlog/presentation/task_actions_menu.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
@@ -403,6 +404,11 @@ void registerInlineChecklistWorkflowTests() {
       );
       final dynamic state = tester.state(find.byType(TasksPage));
       for (final invocation in ['button', 'right click', 'keyboard']) {
+        final beforeMenu = {
+          for (final file in await folder.list())
+            file.name: base64Encode(await folder.read(file.name)),
+        };
+        final beforeSelection = Set<String>.from(state.selectedTasks as Set);
         if (invocation == 'button') {
           await _tap(tester, _key('task-menu-$parent'));
         } else if (invocation == 'right click') {
@@ -419,6 +425,21 @@ void registerInlineChecklistWorkflowTests() {
         }
         expect(find.text('Add checklist'), findsOneWidget);
         expect(find.text('Delete task'), findsOneWidget);
+        expect(
+          find.byType(TaskActionsMenuEntry, skipOffstage: false),
+          findsOneWidget,
+          reason: '$invocation opens exactly one menu route.',
+        );
+        expect(state.selectedTasks, beforeSelection);
+        expect(find.byType(TaskEditor), findsNothing);
+        expect(
+          {
+            for (final file in await folder.list())
+              file.name: base64Encode(await folder.read(file.name)),
+          },
+          beforeMenu,
+          reason: '$invocation appends no command.',
+        );
         final item = (await peer.addChecklistItem(
           parent,
           'Incoming item',

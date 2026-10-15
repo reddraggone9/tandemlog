@@ -3127,7 +3127,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         _stopDragScroll();
         return;
       }
-      final box = taskViewport.currentContext?.findRenderObject() as RenderBox?;
+      final box = attachedTaskDropBox(taskViewport.currentContext);
       if (box == null || dragPointer == null) return;
       final y = box.globalToLocal(dragPointer!).dy;
       const edge = 72.0;
@@ -3150,7 +3150,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   bool _pointerOverGroupHeading(Offset pointer) {
     for (final key in groupHeadingKeys.values) {
-      final box = key.currentContext?.findRenderObject() as RenderBox?;
+      final box = attachedTaskDropBox(key.currentContext);
       if (box != null &&
           box.attached &&
           box.hasSize &&
@@ -3165,8 +3165,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     String source,
     Offset pointer,
   ) {
-    final viewport =
-        taskViewport.currentContext?.findRenderObject() as RenderBox?;
+    final viewport = attachedTaskDropBox(taskViewport.currentContext);
     if (viewport == null ||
         _pointerOverGroupHeading(pointer) ||
         !(Offset.zero & viewport.size).contains(
@@ -3176,7 +3175,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     for (final entry in dropKeys.entries) {
       if (entry.key == source) continue;
-      final box = entry.value.currentContext?.findRenderObject() as RenderBox?;
+      final box = attachedTaskDropBox(entry.value.currentContext);
       if (box == null || !box.attached || !box.hasSize) continue;
       final local = box.globalToLocal(pointer);
       if ((Offset.zero & box.size).contains(local)) {
@@ -3207,9 +3206,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
     if (insertion == null) return null;
     RenderBox? boxFor(String id) =>
-        dropKeys[id]?.currentContext?.findRenderObject() as RenderBox?;
-    final viewport =
-        taskViewport.currentContext?.findRenderObject() as RenderBox?;
+        attachedTaskDropBox(dropKeys[id]?.currentContext);
+    final viewport = attachedTaskDropBox(taskViewport.currentContext);
     if (viewport == null || !viewport.attached || !viewport.hasSize) {
       return null;
     }
@@ -3243,7 +3241,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           onWillAcceptWithDetails: (details) =>
               _canDropTask(details.data, task['id']),
           onMove: (details) {
-            final box = context.findRenderObject() as RenderBox;
+            final box = attachedTaskDropBox(context);
+            if (box == null) return;
             final next =
                 box.globalToLocal(details.offset).dy >= box.size.height / 2;
             if (next != after) updateHover(() => after = next);
@@ -3252,7 +3251,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           // scroll away while the pointer remains stationary at an edge.
           onAcceptWithDetails: (_) {},
           builder: (context, candidates, rejected) {
-            final box = context.findRenderObject() as RenderBox?;
+            final box = attachedTaskDropBox(context);
             final localPointer =
                 dragPointer == null || box == null || !box.hasSize
                 ? null
@@ -5336,6 +5335,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                             'task-body-${task['id']}',
                                           ),
                                           canRequestFocus: false,
+                                          onSecondaryTapUp: busy
+                                              ? null
+                                              : (details) => _showTaskMenu(
+                                                  origin,
+                                                  task,
+                                                  position:
+                                                      details.globalPosition,
+                                                ),
                                           overlayColor: listRowInkOverlay(
                                             Theme.of(context).colorScheme,
                                           ),

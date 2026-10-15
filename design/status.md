@@ -1,4 +1,10 @@
-# Current status — 2026-10-14
+# Current status — 2026-10-15
+
+## Prepared shared-row RC.3/build79, full candidate acceptance pending
+
+[ADR0023](decisions/0023-shared-list-row-surfaces.md) implements the approved shared compact surfaces and stable equivalent-position drag indicator. Build77 failed strict Flatpak version metadata; build78 corrected that metadata but exposed two body context-menu regressions and inactive-key geometry during native autoscroll. All three reproduced against unchanged78 and pass after the narrow79 correction. The lifecycle unit test has a controlled unsafe RED and exact restored GREEN; five drag-boundary and five Task body/control cases also pass. [Candidate preparation](../evidence/prerelease-2026.10.5-rc.3/README.md) preserves attribution and remaining gates.
+
+Source/test and actual unchanged short notes have independent review. Full hosted79 validation, exact owner-signed Android upgrade acceptance and final native/artifact review remain pending. Existing Windows GUI and Android API30 qualifications remain; no production operation, dependency change or stable promotion is part of this scope.
 
 ## Published whole-container Food2026.10.5-rc.2/build76
 

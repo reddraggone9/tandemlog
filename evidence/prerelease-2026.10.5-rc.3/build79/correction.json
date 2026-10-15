@@ -1,0 +1,67 @@
+{
+  "atUtc": "2026-10-15T04:40:47.624750+00:00",
+  "version": "2026.10.5-rc.3+79",
+  "base": "a0385deb1ed8a8dfacf071e96e38cebc4a625371",
+  "rejectedCandidate78": 38677237513,
+  "rejectedPushCI78": 38677237355,
+  "pushNative78": {
+    "passed": 167,
+    "failed": 3
+  },
+  "failures": [
+    "Two existing native body right-click menu cases found no menu.",
+    "Insertion painter queried an inactive keyed row while selected-block drag autoscrolled."
+  ],
+  "nativeReproductionUnchangedSource78": {
+    "failed": 3,
+    "logSha256": "0ea55dbbf4128cd25ff7f71d2cfa637aec8d85b540c1b00f27ba7eaf720af171"
+  },
+  "correction": [
+    "Explicit body secondary-pointer forwarding retains existing menu guards and outer handler.",
+    "Mounted public-element geometry lookup accepts only attached laid-out RenderBoxes."
+  ],
+  "newSameFrameRegression": {
+    "controlledUnsafeRed": {
+      "phase": "geometry-unsafe-red",
+      "exitCode": 1,
+      "atUtc": "2026-10-15T04:36:35.736379+00:00",
+      "logSha256": "39389bdaabc0ee32755ae5ca7cdba2a16389ec75c0378482ade522fec48c6f8a"
+    },
+    "restoredGuardGreen": {
+      "phase": "geometry-unit-green",
+      "exitCode": 0,
+      "atUtc": "2026-10-15T04:36:37.554329+00:00",
+      "logSha256": "a74f3301fca1977732829957cce1489ce7cf926b0eb8595bde4f3241ac62a953"
+    }
+  },
+  "affectedPassCounts": {
+    "geometry-unit-green": 1,
+    "native-three-green": 3,
+    "native-boundaries-green": 5,
+    "native-body-green": 5,
+    "row-surface-unit-green": 4
+  },
+  "requiredPinnedFormatterPasses": true,
+  "nonPrivilegedHostAnalyzerPassed": true,
+  "productionAndTestsSha256": {
+    "lib/main.dart": "e0dacf71294b6afd0b4c4830819a76ea4e0618a8d84a2661e2b474e094a7a2c4",
+    "lib/presentation/task_drop_indicator.dart": "355b6ee293243fa93f5ad7b7130880b7d0d539c17ed54d1924e0f42a660ddb76",
+    "test/task_drop_geometry_test.dart": "4a487ca680845edf74e7168759c51c4bda5fe80d95d7e91c9c4032790363d0bd",
+    "integration_test/inline_checklist_workflow_test.dart": "ffbbd268de8044a5f960653ab5b4b4eb982ba44cb40743e098debcf4735612da"
+  },
+  "releaseNotesSha256": "74cf472bb38eb6b1c8e1774df605a87e10962bfde0a3200ad2c542dd582dcde0",
+  "noAssertionRemoved": true,
+  "sourceAndTestReview": "independent ACCEPT",
+  "signed78APKProduced": false,
+  "SDKRetry78Performed": false,
+  "dependencyOrCanonicalMeaningChange": false,
+  "fullCandidate79AndExactSignedAndroidAcceptance": "pending",
+  "metadataAndActualReleaseNotesReview": "separate independent ACCEPT; notes unchanged",
+  "hostTools": {
+    "run": 85,
+    "passed": 85,
+    "skipped": 0,
+    "pinnedDartAvailable": true,
+    "logSha256": "efc7ef074e7789280523167e8bbc800a786c31c90892c7abfb1b95e86e4f8dc2"
+  }
+}

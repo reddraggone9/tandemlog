@@ -1,4 +1,12 @@
-# RC3/build78 — corrected candidate preparation
+# RC3/build79 — corrected native interactions
+
+Build78 candidate[38677237513](https://github.com/reddraggone9/tandemlog/actions/runs/38677237513) is rejected. Formatting, analyzer, application tests, frozen contracts and host-tool checks passed, but native push CI reported167 passes/3 failures: two body right-click menu cases and an inactive keyed-row geometry lookup during autoscroll. The signing job was skipped; there is no eligible78 APK. Its separate Android SDK download failure occurred before application compilation. No retry or release bypass was used.
+
+[Build79 correction](build79/correction.json) records unchanged-source native reproduction of all three failures, explicit guarded context-menu forwarding and safe attached geometry reads. The same-frame lifecycle test fails with the unsafe lookup and passes after the exact guard is restored. All three native failures, five insertion-boundary cases, five body/control cases and row feedback tests pass. Menu cases additionally require one route, unchanged selection, no editor and no canonical append; existing assertions remain intact. Pinned formatting and nonprivileged host analysis pass. Independent source/test review accepts the narrow correction.
+
+Full hosted79 validation, exact signed Android acceptance, refreshed affected native interactions and final artifact/readiness review remain required. Earlier row-style visual evidence retains its original source/platform attribution; it does not establish exact79 APK acceptance. Release notes are unchanged, base64 remains0.22.1 and no durable format or event meaning changes. Stable2026.10.4 is not promoted by this work.
+
+# Build78 metadata correction
 
 Build77 candidate[38676004651](https://github.com/reddraggone9/tandemlog/actions/runs/38676004651) at0402947 passed Linux formatting/analysis, Linux/Windows application tests, frozen native contracts and Android debug payload gates, but failed the unchanged strict tooling check: the Flatpak catalog still declaredrc.2. The signing job was skipped; build77 is ineligible for publication. [Build78 correction](build78/correction.json) updates the catalog to2026.10.5-rc.3 dated2026-10-15 and advances the monotonic build to78. No production Dart, tests, dependencies, workflow or release-note change is part of this correction.
 
