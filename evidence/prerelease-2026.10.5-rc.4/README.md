@@ -1,4 +1,8 @@
-# Task row feedback and visible drops — RC.4/build80 candidate preparation
+# Task row feedback and visible drops — published RC.4/build80
+
+[Publication receipts](publication/README.md) bind exact source `3118b6122a4c70e5db4e2e0c68822bbcf8e3e583`, signed candidate38750707077 and promotion38765033863 to the three original accepted installers. Hosted gates, qualified LinuxGTK/API30 exact-artifact acceptance, preservation/replay, demonstrations, independent review and parent publication authorization completed. Anonymous public bytes/signature/version/notes/tag and unchanged stable Latest/all29 prior releases verify. Private data-bearing diagnostics remain external. Existing platform qualifications remain explicit in the receipt.
+
+## Historical candidate preparation before acceptance
 
 Lee approved extending Task body press paint across its enclosing main row and resolving drag destinations from eligible visible neighbors. The body keeps its existing hit area and independent controls; expanded checklist panels and dividers remain outside its ink bounds. ADR0023 records the public Flutter rectangle hook and layout-neutral paint proxy.
 

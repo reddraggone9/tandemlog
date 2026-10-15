@@ -23,7 +23,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Visible task drop gaps](decisions/0024-visible-task-drop-gaps.md): accepted RC.4 rule for shared visible destinations, no-op writes and fresh inferred-neighbor guards; candidate acceptance pending.
+- [Visible task drop gaps](decisions/0024-visible-task-drop-gaps.md): accepted rule for shared visible destinations, no-op writes and fresh inferred-neighbor guards; published experimentally as [2026.10.5-rc.4/build80](../evidence/prerelease-2026.10.5-rc.4/publication/README.md) after exact-source native acceptance.
 
 - [Shared Tasks/Food row surfaces](decisions/0023-shared-list-row-surfaces.md): compact flat surfaces, consistent feedback and canonical drag insertion paint, published experimentally as [2026.10.5-rc.3/build79](../evidence/prerelease-2026.10.5-rc.3/publication/README.md) after exact-source native acceptance.
 

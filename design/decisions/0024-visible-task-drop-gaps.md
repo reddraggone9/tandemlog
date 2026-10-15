@@ -1,6 +1,6 @@
 # Visible task drop gaps
 
-Status: accepted by Lee on 2026-10-15; implemented for RC.4/build80, release acceptance pending.
+Status: accepted by Lee on 2026-10-15; published experimentally in [2026.10.5-rc.4/build80](../../evidence/prerelease-2026.10.5-rc.4/publication/README.md) after exact-source native acceptance.
 
 ## Context and decision
 
