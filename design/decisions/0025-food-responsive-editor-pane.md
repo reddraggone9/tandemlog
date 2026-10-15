@@ -1,8 +1,7 @@
 # 0025 - Responsive Food editor pane
 
-Status: approved by Lee on 2026-10-15; implemented and corrected through build84.
-[Candidate/native gates](../../evidence/prerelease-2026.10.6-rc.1/README.md) pass with qualified independent final acceptance. Parent handoff is required before publication;
-stable promotion needs separate approval.
+Status: approved by Lee on 2026-10-15 and published experimentally as
+[2026.10.6-rc.1/build84](../../evidence/prerelease-2026.10.6-rc.1/publication/README.md) after qualified native acceptance, parent publication authorization and independent public-byte verification. Stable promotion needs separate approval.
 
 ## Context and decision
 

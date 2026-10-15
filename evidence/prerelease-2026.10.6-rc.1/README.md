@@ -1,11 +1,11 @@
-# Responsive Food editor - 2026.10.6-rc.1/build84 acceptance
+# Responsive Food editor - 2026.10.6-rc.1/build84 published experimental
 
 Wide Food Edit, Add and Add another now share the Tasks 900 px/420 px geometry;
 narrow editing remains a guarded dialog and bulk Brand/Location remains modal.
 [ADR0025](../../design/decisions/0025-food-responsive-editor-pane.md) records the
 approved lifecycle and compatibility boundaries.
 
-[Acceptance](acceptance.json) binds application source
+[Prepublication acceptance](acceptance.json) binds application source
 `09d631ce073a4fd42e42c9baafd2a79ac3364845`, the five successful
 [signed-candidate jobs](https://github.com/reddraggone9/tandemlog/actions/runs/38806622314),
 the three successful [push jobs](https://github.com/reddraggone9/tandemlog/actions/runs/38806622781)
@@ -36,10 +36,7 @@ distinct. No physical ARM/API36/general16KiB runtime or physical-tablet claim is
 made. Original device settings are restored; temporary native processes are
 stopped and the SDK test link removed. No new OOM occurred within the bounded lab.
 
-Parent handoff is required before publication. No publication or stable promotion
-is claimed; stable2026.10.5/build81 remains Latest. Dependencies, Base64, durable
-v3 meanings and production data are unchanged. Release notes retain only the
-user-visible Food pane change.
+[Publication receipts](publication/README.md) record parent-authorized promotion38819962767 and independently reviewed anonymous original installer bytes, APK identity, notes/tag/source and all31 prior releases/assets/tag objects unchanged. Stable2026.10.5/build81 remains Latest; no stable promotion occurred. The timestamped acceptance.json preserves the prepublication handoff state. Dependencies, Base64, durable v3 meanings and production data are unchanged. Release notes retain only the user-visible Food pane change.
 
 ## Preparation history
 

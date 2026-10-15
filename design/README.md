@@ -25,7 +25,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Responsive Food editor pane](decisions/0025-food-responsive-editor-pane.md): approved wide Edit/Add/Add another and guarded narrow dialogs; [build84 acceptance](../evidence/prerelease-2026.10.6-rc.1/README.md) has completed native and artifact gates; independent final review accepts the qualified evidence and parent publication handoff remains required. Stable2026.10.5 stays Latest.
+- [Responsive Food editor pane](decisions/0025-food-responsive-editor-pane.md): approved wide Edit/Add/Add another and guarded narrow dialogs; [2026.10.6-rc.1/build84](../evidence/prerelease-2026.10.6-rc.1/publication/README.md) is published experimentally after native acceptance, parent authorization and independent public-byte verification. Stable2026.10.5 stays Latest.
 
 - [Visible task drop gaps](decisions/0024-visible-task-drop-gaps.md): accepted rule for shared visible destinations, no-op writes and fresh inferred-neighbor guards; published experimentally as [2026.10.5-rc.4/build80](../evidence/prerelease-2026.10.5-rc.4/publication/README.md) after exact-source native acceptance.
 
