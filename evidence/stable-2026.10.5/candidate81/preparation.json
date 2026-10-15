@@ -1,0 +1,14 @@
+{
+  "acceptedRcSource": "3118b6122a4c70e5db4e2e0c68822bbcf8e3e583",
+  "reviewedDocsParent": "3966c02c631c21acd6f9a2f90e6766ea38148dd0",
+  "version": "2026.10.5+81",
+  "onlyProductionMetadataChanged": [
+    "pubspec.yaml",
+    "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml"
+  ],
+  "unchangedApplicationTestNativePlatformDependencyAndWorkflowFiles": 451,
+  "unchangedSourceManifestSha256": "cb71bd61894125d400b4479e0297193df5b235aa8b1da8253b024a2681542e10",
+  "stableNotesSha256": "9c3572ec2153cbbde6a8316b87092d1b078734522fe1371d40c8edd282477e0a",
+  "fullStableCandidateAndExactArtifactAcceptancePending": true,
+  "publicationPerformed": false
+}
