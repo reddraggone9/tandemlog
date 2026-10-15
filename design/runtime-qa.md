@@ -1,3 +1,7 @@
+# Shared rows — replacement build78 candidate
+
+The unchanged strict catalog-version test made build77 candidate38676004651 ineligible before signing. [Correction receipt](../evidence/prerelease-2026.10.5-rc.3/build78/correction.json) updates actual Flatpak release metadata and advances the build to78. Production Dart, tests, notes and dependencies remain unchanged. Build77 formatting/analysis and application/native contract gates passed; complete replacement hosted gates and exact signed Android78 acceptance remain pending. Existing native77 UI evidence keeps its original attribution.
+
 # Shared row surfaces — 2026.10.5-rc.3/build77 preparation
 
 [Current preparation](../evidence/prerelease-2026.10.5-rc.3/README.md) records the approved presentation scope,97 focused widget passes and5 final native Linux drag passes, including equivalent destinations at100/200% text, hidden global anchors, group-heading/bucket rejection and an attached cached offscreen anchor. The guard-removal red and exact-source green qualify the offscreen correction. Independent source/test and actual-note editorial review accept the snapshot. Full hosted/exact-artifact/native visual acceptance remains pending; earlier receipts below retain their original source/build attribution.

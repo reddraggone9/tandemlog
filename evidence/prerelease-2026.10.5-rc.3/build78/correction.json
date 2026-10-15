@@ -1,0 +1,25 @@
+{
+  "version": "2026.10.5-rc.3+78",
+  "base": "0402947db44c4a364e0bdf33a6e87509f0b2ddc9",
+  "reason": "Build77 failed the unchanged strict tooling check because Flatpak AppStream release metadata still named rc.2.",
+  "fix": "Catalog now names rc.3 dated2026-10-15; monotonic build78.",
+  "tooling": {
+    "passed": 84,
+    "failed": 0,
+    "logSha256": "4af7ccd3301624973dcd81707ccaf03ab75ae817e8e19b891ee66fa823d8afbb",
+    "run": 85,
+    "skipped": 1,
+    "skipReason": "Host PATH lacks the pinned Dart executable; resolved-text capability check remains required in hosted CI."
+  },
+  "failedCandidate": 38676004651,
+  "failedPushCI": 38676004938,
+  "productionDartUnchanged": true,
+  "releaseNotesUnchanged": true,
+  "signed77APKProduced": false,
+  "atUtc": "2026-10-15T03:35:03.345943+00:00",
+  "metadataFocused": {
+    "passed": 10,
+    "failed": 0,
+    "logSha256": "1ff8ea9c7d917f53c1536534b5e1cd9585933234d9df2835cd4d9ae1cddcda93"
+  }
+}
