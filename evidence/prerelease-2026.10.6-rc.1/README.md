@@ -1,21 +1,55 @@
-# Responsive Food editor - 2026.10.6-rc.1/build84 preparation
+# Responsive Food editor - 2026.10.6-rc.1/build84 acceptance
 
-Approved wide Edit/Add/Add another uses the Tasks 900 px/420 px policy inside the
-existing outer cap, retaining one keyed draft through narrow dialogs. Bulk
-Brand/Location stays modal. [ADR0025](../../design/decisions/0025-food-responsive-editor-pane.md)
-records lifecycle, alternatives, accessibility and compatibility boundaries.
+Wide Food Edit, Add and Add another now share the Tasks 900 px/420 px geometry;
+narrow editing remains a guarded dialog and bulk Brand/Location remains modal.
+[ADR0025](../../design/decisions/0025-food-responsive-editor-pane.md) records the
+approved lifecycle and compatibility boundaries.
 
-Focused and native-library host tests cover navigation/auxiliary routes, repeated
-callbacks, resize/caret/composition/focus, Add another, retry, independent controls
-and enlarged short layouts. Full local/hosted, exact-artifact and native release
-acceptance remain pending. Private profiles/diagnostics/media stay outside Git/CI.
-Stable2026.10.5 remains Latest. No publication/stable promotion claimed.
-Base64 and all dependencies remain unchanged.
+[Acceptance](acceptance.json) binds application source
+`09d631ce073a4fd42e42c9baafd2a79ac3364845`, the five successful
+[signed-candidate jobs](https://github.com/reddraggone9/tandemlog/actions/runs/38806622314),
+the three successful [push jobs](https://github.com/reddraggone9/tandemlog/actions/runs/38806622781)
+and the original installer hashes. Formatting, analysis, 1122 native-backed unit
+tests, 85 tooling checks, 40 affected checks, 14 actual GTK pane cases and the
+unchanged 12-variant native keyboard matrix pass. Hosted full native integration,
+desktop installed lifecycles and owner-signed APK static checks pass.
 
-Build82 passed local formatting of all311 Dart files, analysis, all1121 native-backed unit tests and all85 tooling checks. Independent source/editorial review accepted that implementation and scoped notes. Build83 passes formatting, clean analysis, all27 affected pane/host/autocomplete checks and all85 tooling checks. Independent review accepts the test boundary correction; full hosted and exact-native acceptance remain pending. The complete native aggregate remains pending; full hosted, exact-artifact and native release acceptance remain pending. Initial lab-configuration failures are retained privately and are excluded from acceptance claims.
+Actual exact-source Linux GTK and original Android 81-to84 in-place upgrade cover
+responsive drafts, dirty navigation, calendar/focus/keyboard recovery, Add/Edit/
+Add another Save and Undo, both themes and 200% text. Synthetic canonical byte
+prefixes, exact planned events, full read-only replay/captured-cache comparisons,
+settings identity/raw JSON and Android SAF grants pass. Native Android uses API30
+x86_64 at 320dp phone width and simulated 960dp wide width. Five desktop task
+captures are intentional new records; task creation Undo remains unsupported.
 
-Build83 replaces the held build82 candidate after a native test assumed mobile selection behavior when a calendar returned focus on desktop. Matched no-resize current/stable controls establish the existing platform default. Exact draft/controller/focus/composition checks across responsive resizing remain; the calendar assertion now distinguishes resize preservation from its later focus-restoration policy. Application source and release notes are unchanged. Full replacement hosted and exact-artifact/native acceptance are pending.
+Original Android phone/wide recordings visibly include touch indicators and
+completed Save/Undo flows. The desktop pointer recording demonstrates draft,
+resize and guard interactions; separate native captures/receipts demonstrate
+desktop Save/Undo. The initial partial Android recording is not a completed-flow
+demonstration. Raw synthetic profiles, diagnostics and media stay private.
 
-Build84 corrects an embedded-editor inset ownership regression found in the native narrow keyboard matrix: mouse activation of an invalid Save/Add ended field focus and stopped the page reserving the still-open keyboard. A matched current-fails/stable-passes control establishes the regression. An active embedded editor now reserves keyboard space independently of text focus, while auxiliary routes retain their own inset ownership. A dedicated mouse-input regression keeps exact no-write/draft/error/action-bound checks; the original native keyboard matrix remains unchanged. Renewed full local/hosted, native and exact-artifact acceptance are pending. Release notes remain unchanged.
+Source/architecture/regression/notes, desktop and original-artifact independent
+reviews accept the scoped change. Final independent Android preservation/media
+review accepts the completed evidence. Manual Windows GUI retains its existing waiver with fresh hosted
+installer lifecycle coverage. Linux manual GTK and hosted Flatpak coverage are
+distinct. No physical ARM/API36/general16KiB runtime or physical-tablet claim is
+made. Original device settings are restored; temporary native processes are
+stopped and the SDK test link removed. No new OOM occurred within the bounded lab.
 
-Build84 passes all311 Dart files through formatting, clean analysis, all1122 native-backed unit tests, all85 tooling checks and all40 affected component/host/keyboard checks. Actual native GTK passes all14 pane cases plus the unchanged12-variant narrow keyboard matrix. Independent source/regression/editorial review accepts the one-condition correction. Complete hosted native, original-artifact and manual release acceptance remain pending; partial/cancelled earlier runs are not claimed as complete passes.
+Parent handoff is required before publication. No publication or stable promotion
+is claimed; stable2026.10.5/build81 remains Latest. Dependencies, Base64, durable
+v3 meanings and production data are unchanged. Release notes retain only the
+user-visible Food pane change.
+
+## Preparation history
+
+[Preparation](preparation.json) preserves build82/83 and build84 local attribution.
+Build82/83 candidates were superseded and are excluded from final acceptance.
+A calendar assertion was corrected only after matched unchanged-stable and
+current controls established existing desktop selection policy; exact draft,
+controller, focus and composition resize assertions remain. Build84 then fixed
+a reproduced embedded-editor inset ownership regression: an active editor
+reserves keyboard space independently of field focus while auxiliary routes
+retain their own inset ownership. A new real mouse regression passes and the
+original keyboard matrix is unchanged. Earlier partial/cancelled runs and private
+lab/harness failures remain retained, separate from completed accepted checks.

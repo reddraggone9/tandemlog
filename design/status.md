@@ -1,6 +1,6 @@
-# Responsive Food pane - 2026.10.6-rc.1/build84 acceptance pending
+# Responsive Food pane - 2026.10.6-rc.1/build84 native gates complete
 
-Approved wide Food Edit/Add/Add another retains narrow dialogs and modal bulk editing. [ADR0025](decisions/0025-food-responsive-editor-pane.md) records draft ownership and compatibility boundaries. [Candidate preparation](../evidence/prerelease-2026.10.6-rc.1/README.md) tracks checks/native/exact-artifact review. Parent handoff is required before publication. Stable2026.10.5 remains Latest.
+Approved wide Food Edit/Add/Add another and guarded narrow dialogs pass local, hosted, original-artifact and actual LinuxGTK/Android acceptance. [Evidence](../evidence/prerelease-2026.10.6-rc.1/README.md) records exact source/runs/hashes, preservation, media and runtime qualifications. Independent final Android/media review accepts the qualified evidence; parent publication handoff remains required; stable2026.10.5/build81 remains Latest. [ADR0025](decisions/0025-food-responsive-editor-pane.md) retains the approved boundaries.
 
 # Stable 2026.10.5/build 81 - published Latest
 

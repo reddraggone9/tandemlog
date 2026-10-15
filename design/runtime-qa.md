@@ -1,6 +1,6 @@
-# Responsive Food pane - build84 acceptance pending
+# Responsive Food pane - build84 native gates complete
 
-Exercise wide/narrow editing, active text/composition/dropdown/calendar resizing, repeated callbacks, queued navigation, retry and independent row controls. Inspect both themes, 200% text, short windows and keyboard focus; compare cancellation bytes and expected save/Undo events. Exact artifacts, desktop pointer/Android touch demonstrations and independent review remain required. [Preparation](../evidence/prerelease-2026.10.6-rc.1/README.md). Historical entries retain their original source/build attribution.
+[Acceptance](../evidence/prerelease-2026.10.6-rc.1/acceptance.json) records actual LinuxGTK and exact original Android81-to84 responsive editing, keyboard/calendar/guard recovery, Save/Undo, themes/200% text, byte preservation and read-only replay. Completed Android recordings visibly include touch indicators; the desktop pointer clip covers draft/resize/guards with separate captures/receipts for Save/Undo. Device settings are restored, temporary native processes stopped and SDK test link removed. Independent final Android/media review accepts the qualified evidence; parent publication handoff remains required. Windows manual-GUI waiver, LinuxGTK versus hosted Flatpak and API30 x86_64 qualifications remain explicit. Historical entries retain their original source/build attribution.
 
 # Stable 2026.10.5/build 81 - exact artifacts accepted and published
 

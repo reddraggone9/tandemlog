@@ -1,0 +1,104 @@
+{
+  "atUtc": "2026-10-15T22:45:18.117147+00:00",
+  "source": "09d631ce073a4fd42e42c9baafd2a79ac3364845",
+  "base": "8ef398533ae34b57f28d3377c9adc77d69d6c7a9",
+  "version": "2026.10.6-rc.1+84",
+  "candidateRun": 38806622314,
+  "candidateUrl": "https://github.com/reddraggone9/tandemlog/actions/runs/38806622314",
+  "pushRun": 38806622781,
+  "pushUrl": "https://github.com/reddraggone9/tandemlog/actions/runs/38806622781",
+  "allFiveCandidateAndThreePushJobsSucceeded": true,
+  "localChecks": {
+    "formattedDartFiles": 311,
+    "analyzer": "clean",
+    "nativeBackedUnitTests": 1122,
+    "toolingChecks": 85,
+    "affectedChecks": 40,
+    "actualGtkPaneCases": 14,
+    "unchangedNativeKeyboardVariants": 12
+  },
+  "originalArtifacts": {
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12394509,
+      "sha256": "33cf5fb400a9c0913e93528a5eb0c2ff18a3a71689b94d62cf64ddc8c1e187b9"
+    },
+    "tandemlog-linux-x64.flatpak": {
+      "bytes": 9253976,
+      "sha256": "3355e4edae864de462e6e9e0247afae968344f4d6e2ab6de5a106cb51b88efff"
+    },
+    "tandemlog-android.apk": {
+      "bytes": 67136593,
+      "sha256": "2b0c43198ebb8df92ceff5dbb3f26f0c8f048a4a938f13da4d1b5d52042b94a5"
+    }
+  },
+  "optionalPortableQaSha256": "eae499c3bfd4c3cf24e2c4149cdcb1b70f089b6c144a85470c9301ead6928fe2",
+  "noRebuildPerformed": true,
+  "androidStatic": {
+    "officialOwnerSignatureAndExactMetadata": "accepted",
+    "versionCode": 84,
+    "threeAbisAndNativePayloadChecks": "accepted",
+    "permissionsMatchStable81": true
+  },
+  "nativeDesktop": {
+    "platform": "Linux GTK AOT, exact candidate application source",
+    "responsiveEditingAndDirtyNavigation": "accepted",
+    "bothThemesAnd200PercentText": "accepted",
+    "taskCaptureInterruptedEditIncomingFoodPeerAndUserSwitch": "accepted",
+    "readOnlyColdReplayAndCapturedNativeCacheComparison": "accepted",
+    "originalCanonicalBytesAndExplicitFoodUndoRecords": "accepted",
+    "fivePlannedNewTasks": "accepted; task creation Undo is existing unsupported behavior"
+  },
+  "nativeAndroid": {
+    "platform": "Android 11 / API 30 / x86_64 emulator",
+    "exactOriginal81To84InPlaceUpgrade": true,
+    "phone": "480x960 pixels at density 240; 320dp width",
+    "wide": "960x1000 pixels at density 160; 960dp simulated width",
+    "addEditAndAddAnotherSaveUndo": "accepted",
+    "calendarResizeAndDirtyShortcutDraftFocusGboard": "accepted",
+    "coldWarmPinnedDestinationsAndLiveRecentsReuse": "accepted",
+    "bothThemesAnd200PercentText": "accepted",
+    "cancelAndInvalidInputCanonicalFilesByteExact": true,
+    "onlyExpectedSixFoodActions": [
+      "add",
+      "undo",
+      "edit",
+      "undo",
+      "add",
+      "undo"
+    ],
+    "fullFoodAndTaskReplayAndCapturedCacheComparison": "accepted",
+    "settingsIdentityRawJsonAndSafGrantsPreserved": true
+  },
+  "media": {
+    "actualAndroidTouchIndicatorsVisuallyVerified": true,
+    "completedAndroidClips": "phone Add/error recovery/Undo; wide Edit/Undo and Add another/Undo",
+    "desktopPointerClip": "draft typing, resize and discard guard; completed Save/Undo supported by separate native captures and canonical receipts",
+    "initialAndroidClip": "partial typing/composition only; excluded from completed Save/Undo demonstration",
+    "rawProfilesCapturesAndVideos": "private; excluded from Git and CI artifacts"
+  },
+  "independentReviews": {
+    "sourceArchitectureRegressionAndActualNotes": "ACCEPT",
+    "originalArtifactsAndDesktopNativeReplay": "ACCEPT",
+    "finalAndroidPreservationAndMedia": "qualified ACCEPT"
+  },
+  "qualifications": [
+    "Manual Windows GUI waiver remains; fresh hosted Windows installer lifecycle and portable provenance passed.",
+    "Manual Linux UI uses exact-source GTK AOT; hosted Flatpak install/replace/uninstall/reinstall is separate coverage.",
+    "Android runtime coverage is API 30 x86_64; no physical ARM, API 36 or general 16 KiB runtime claim.",
+    "Wide Android metrics are simulated; no physical tablet claim."
+  ],
+  "cleanup": {
+    "originalDeviceSettingsRestored": true,
+    "desktopAppDisplayRecorderAndAndroidEmulatorAdbStopped": true,
+    "temporarySdkTestSymlinkRemoved": true,
+    "nativeLabLimit": "6 GiB, 2 CPUs, zero swap, one emulator",
+    "newOomEvents": false
+  },
+  "canonicalFormatDependenciesAndBase64Unchanged": true,
+  "productionUntouched": true,
+  "notesSha256": "89feef67da44d044bdb985443343afb47d1e34309764da91e0fc0b3c1293aa2e",
+  "readyForParentPublicationReview": true,
+  "parentHandoffRequiredBeforePublication": true,
+  "publicationPerformed": false,
+  "stableLatest": "2026.10.5+81"
+}

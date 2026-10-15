@@ -15,7 +15,7 @@
     "inheritedFromSource": "52714aa1192da661ed5db066d005d9574371ff61",
     "inheritedFromBuild": 82
   },
-  "fullHostedAndExactNativeAcceptance": "pending",
+  "fullHostedAndExactNativeAcceptance": "passed; final independent review accepted; parent publication handoff required",
   "parentHandoffBeforePublication": true,
   "publicationRequested": false,
   "notesSha256": "89feef67da44d044bdb985443343afb47d1e34309764da91e0fc0b3c1293aa2e",
@@ -40,6 +40,8 @@
     "nativePaneTestsPassed": 14,
     "nativeKeyboardVariantsPassed": 12,
     "independentSourceAndEditorialReview": "ACCEPT",
-    "completeHostedNativeAndExactArtifactAcceptance": "pending"
-  }
+    "completeHostedNativeAndExactArtifactAcceptance": "passed"
+  },
+  "finalAcceptance": "acceptance.json",
+  "preparationHistoryNote": "Earlier pending results retain their original build/time attribution; acceptance.json records final build84 results."
 }
