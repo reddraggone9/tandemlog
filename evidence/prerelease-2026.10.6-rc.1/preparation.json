@@ -1,6 +1,6 @@
 {
-  "atUtc": "2026-10-15T20:41:18.815238+00:00",
-  "version": "2026.10.6-rc.1+83",
+  "atUtc": "2026-10-15T21:01:15.625596+00:00",
+  "version": "2026.10.6-rc.1+84",
   "base": "8ef398533ae34b57f28d3377c9adc77d69d6c7a9",
   "scope": "Responsive Food Edit, Add and Add another; narrow and bulk modal behavior retained",
   "persistenceOrDependencyChanged": false,
@@ -19,8 +19,8 @@
   "parentHandoffBeforePublication": true,
   "publicationRequested": false,
   "notesSha256": "89feef67da44d044bdb985443343afb47d1e34309764da91e0fc0b3c1293aa2e",
-  "build": 83,
-  "supersedesBuild": 82,
+  "build": 84,
+  "supersedesBuild": 83,
   "fixtureCorrection": "Preserve exact draft checks during resize and assert existing platform selection policy after calendar focus restoration; reproduced without resize in current and unchanged stable editor.",
   "replacementLocalAcceptance": {
     "formattedDartFiles": 311,
@@ -28,6 +28,18 @@
     "affectedTestsPassed": 27,
     "toolingTestsPassed": 85,
     "independentTestBoundaryReview": "ACCEPT",
-    "fullHostedAndExactNativeAcceptance": "pending"
+    "fullHostedAndExactNativeAcceptance": "pending",
+    "fromBuild": 83
+  },
+  "currentBuild84Acceptance": {
+    "formattedDartFiles": 311,
+    "analyzer": "clean",
+    "allUnitTestsPassed": 1122,
+    "affectedChecksPassed": 40,
+    "toolingTestsPassed": 85,
+    "nativePaneTestsPassed": 14,
+    "nativeKeyboardVariantsPassed": 12,
+    "independentSourceAndEditorialReview": "ACCEPT",
+    "completeHostedNativeAndExactArtifactAcceptance": "pending"
   }
 }

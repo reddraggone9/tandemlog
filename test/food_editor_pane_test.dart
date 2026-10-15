@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -109,6 +110,59 @@ Future<void> openPaneFilters(WidgetTester tester) async {
 void main() => registerFoodEditorPaneTests();
 
 void registerFoodEditorPaneTests() {
+  testWidgets(
+    'narrow editor stays above keyboard after pointer action ends field focus',
+    (tester) async {
+      var writes = 0;
+      await mountFoodPane(
+        tester,
+        width: 320,
+        height: 640,
+        onAdd: (_, _) => writes++,
+      );
+      tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+      tester.view.padding = const FakeViewPadding(top: 24);
+      tester.view.viewPadding = const FakeViewPadding(top: 24, bottom: 24);
+      addTearDown(tester.view.resetViewInsets);
+      addTearDown(tester.view.resetPadding);
+      addTearDown(tester.view.resetViewPadding);
+      await tester.pumpAndSettle();
+      await openPaneAdd(tester);
+      await tester.enterText(foodField('Food name'), 'Synthetic beans');
+      await tester.ensureVisible(foodField('Expiration'));
+      await tester.enterText(foodField('Expiration'), '2027-02-30');
+      await tester.pumpAndSettle();
+      final add = find.widgetWithText(FilledButton, 'Add');
+      await tester.tap(add, kind: PointerDeviceKind.mouse);
+      await tester.pumpAndSettle();
+      expect(find.text('Invalid food expiration.'), findsOneWidget);
+      expect(writes, 0);
+      expect(controller(tester, 'Food name').text, 'Synthetic beans');
+      expect(controller(tester, 'Expiration').text, '2027-02-30');
+      // Desktop mouse activation outside the field ends its input focus.
+      // The still-open keyboard must keep reserving space for the editor.
+      final expiry = tester.widget<EditableText>(
+        find.descendant(
+          of: foodField('Expiration'),
+          matching: find.byType(EditableText),
+        ),
+      );
+      expect(expiry.focusNode.hasFocus, isFalse);
+      expect(tester.view.viewInsets.bottom, 280);
+      final error = find.text('Invalid food expiration.');
+      await Scrollable.ensureVisible(tester.element(error), alignment: 1);
+      await tester.pumpAndSettle();
+      expect(error.hitTestable(), findsOneWidget);
+      expect(tester.getRect(error).bottom, lessThanOrEqualTo(360));
+      for (final action in [find.widgetWithText(TextButton, 'Cancel'), add]) {
+        expect(action.hitTestable(), findsOneWidget);
+        expect(tester.getRect(action).bottom, lessThanOrEqualTo(360));
+      }
+      expect(tester.takeException(), isNull);
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.linux),
+  );
+
   testWidgets(
     'wide Edit and Add share Tasks pane geometry without moving outer edges',
     (tester) async {

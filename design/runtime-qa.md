@@ -1,4 +1,4 @@
-# Responsive Food pane - build83 acceptance pending
+# Responsive Food pane - build84 acceptance pending
 
 Exercise wide/narrow editing, active text/composition/dropdown/calendar resizing, repeated callbacks, queued navigation, retry and independent row controls. Inspect both themes, 200% text, short windows and keyboard focus; compare cancellation bytes and expected save/Undo events. Exact artifacts, desktop pointer/Android touch demonstrations and independent review remain required. [Preparation](../evidence/prerelease-2026.10.6-rc.1/README.md). Historical entries retain their original source/build attribution.
 

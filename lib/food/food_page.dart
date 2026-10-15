@@ -183,10 +183,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         ),
       ),
       child: Scaffold(
-        // Modals own their insets. A closing keyboard without an active input
-        // must not compress the page while its route becomes current again.
+        // Embedded editors reserve keyboard space even when pointer actions
+        // end field focus. Auxiliary routes still reserve their own insets.
         resizeToAvoidBottomInset:
-            (ModalRoute.isCurrentOf(context) ?? true) && _textHasFocus,
+            (ModalRoute.isCurrentOf(context) ?? true) &&
+            (_editorBuilder != null || _textHasFocus),
         body: Actions(
           actions: {
             if (_editorBuilder != null)
