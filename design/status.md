@@ -1,4 +1,4 @@
-# Responsive Food pane - 2026.10.6-rc.1/build82 acceptance pending
+# Responsive Food pane - 2026.10.6-rc.1/build83 acceptance pending
 
 Approved wide Food Edit/Add/Add another retains narrow dialogs and modal bulk editing. [ADR0025](decisions/0025-food-responsive-editor-pane.md) records draft ownership and compatibility boundaries. [Candidate preparation](../evidence/prerelease-2026.10.6-rc.1/README.md) tracks checks/native/exact-artifact review. Parent handoff is required before publication. Stable2026.10.5 remains Latest.
 

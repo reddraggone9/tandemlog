@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -173,12 +174,49 @@ void registerFoodEditorPaneTests() {
       await tester.tap(find.byTooltip('Choose Expiration'));
       await tester.pumpAndSettle();
       expect(find.byType(DatePickerDialog), findsOneWidget);
+      final calendarDraft = name.value;
+      expect(calendarDraft, draft.copyWith(composing: TextRange.empty));
       tester.view.physicalSize = const Size(650, 900);
       await tester.pumpAndSettle();
+      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(controller(tester, 'Food name'), same(name));
+      expect(name.value, calendarDraft);
       await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
       expect(controller(tester, 'Expiration').text, isNotEmpty);
-      expect(name.value, draft.copyWith(composing: TextRange.empty));
+      expect(controller(tester, 'Food name'), same(name));
+      final field = tester.widget<EditableText>(
+        find.descendant(
+          of: foodField('Food name'),
+          matching: find.byType(EditableText),
+        ),
+      );
+      expect(field.focusNode.hasFocus, isTrue);
+      // Calendar pop restores focus. Flutter's existing desktop/web policy
+      // selects all on that focus transition; resizing itself preserves the
+      // exact value above, including while the calendar remains open.
+      final selectsAllOnFocus =
+          kIsWeb ||
+          switch (defaultTargetPlatform) {
+            TargetPlatform.linux ||
+            TargetPlatform.macOS ||
+            TargetPlatform.windows => true,
+            TargetPlatform.android ||
+            TargetPlatform.iOS ||
+            TargetPlatform.fuchsia => false,
+          };
+      expect(field.selectAllOnFocus, selectsAllOnFocus);
+      expect(
+        name.value,
+        calendarDraft.copyWith(
+          selection: selectsAllOnFocus
+              ? TextSelection(
+                  baseOffset: 0,
+                  extentOffset: calendarDraft.text.length,
+                )
+              : calendarDraft.selection,
+        ),
+      );
       expect(tester.takeException(), isNull);
     },
   );

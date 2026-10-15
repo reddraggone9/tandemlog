@@ -1,6 +1,6 @@
 {
-  "atUtc": "2026-10-15T20:19:39.621491+00:00",
-  "version": "2026.10.6-rc.1+82",
+  "atUtc": "2026-10-15T20:41:18.815238+00:00",
+  "version": "2026.10.6-rc.1+83",
   "base": "8ef398533ae34b57f28d3377c9adc77d69d6c7a9",
   "scope": "Responsive Food Edit, Add and Add another; narrow and bulk modal behavior retained",
   "persistenceOrDependencyChanged": false,
@@ -11,10 +11,23 @@
     "unitTestsPassed": 1121,
     "toolingTestsPassed": 85,
     "independentSourceAndEditorialReview": "ACCEPT",
-    "completeNativeAggregate": "running; not yet accepted"
+    "completeNativeAggregate": "pending replacement candidate; earlier partial run is not a full pass",
+    "inheritedFromSource": "52714aa1192da661ed5db066d005d9574371ff61",
+    "inheritedFromBuild": 82
   },
   "fullHostedAndExactNativeAcceptance": "pending",
   "parentHandoffBeforePublication": true,
   "publicationRequested": false,
-  "notesSha256": "89feef67da44d044bdb985443343afb47d1e34309764da91e0fc0b3c1293aa2e"
+  "notesSha256": "89feef67da44d044bdb985443343afb47d1e34309764da91e0fc0b3c1293aa2e",
+  "build": 83,
+  "supersedesBuild": 82,
+  "fixtureCorrection": "Preserve exact draft checks during resize and assert existing platform selection policy after calendar focus restoration; reproduced without resize in current and unchanged stable editor.",
+  "replacementLocalAcceptance": {
+    "formattedDartFiles": 311,
+    "analyzer": "clean",
+    "affectedTestsPassed": 27,
+    "toolingTestsPassed": 85,
+    "independentTestBoundaryReview": "ACCEPT",
+    "fullHostedAndExactNativeAcceptance": "pending"
+  }
 }
