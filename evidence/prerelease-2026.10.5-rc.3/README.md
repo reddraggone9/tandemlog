@@ -1,0 +1,9 @@
+# Following RC preparation — 2026.10.5-rc.3/build77
+
+Lee approved shared compact flat Tasks/Food surfaces and a stable task insertion line for equivalent actual destinations. [ADR0023](../../design/decisions/0023-shared-list-row-surfaces.md) records scope and alternatives. Matched native1280/390px baseline captures found identical Tasks/Food search bounds, so search alignment is unchanged.
+
+[Preparation receipt](preparation.json) binds reviewed source/test/notes hashes,97 focused widget passes, five final native drag cases, the separately passing Task body/control and Food action geometry checks, and their qualifications. The reported equivalent-position defect was reproduced before implementation: identical saved order painted lines3px apart. Exact raster/order/Undo tests now pass at100/200% text, while hidden global anchors remain distinct. A second controlled native red removes only the offscreen visibility guard in a disposable lab; the visible marker fails, then exact restored source passes all five cases. Group headings/foreign buckets reject insertion and invalid-drop canonical bytes remain unchanged. Cached-row observations include actual attached offscreen render geometry during the drag; default offstage-skipping finders cannot observe those children.
+
+Independent source/test and separate release-note editorial reviews accept these changes. Existing row action/focus owners remain responsible for domain interactions. No dependency or durable canonical format/meaning change is part of this release. User reference screenshots, private profiles, raw captures and logs remain outside the repository.
+
+Full hosted gates, further native visuals/keyboard/demos, exact owner-signed Android acceptance and final artifact/publication review remain pending. Linux GTK visual evidence does not claim Windows manual GUI acceptance; the existing Windows waiver remains qualified. This preparation receipt does not authorize stable promotion.

@@ -592,7 +592,11 @@ Future<void> _edit(
   await _reachActions(tester, name);
   final row = find.ancestor(
     of: find.byTooltip('Remove one $name container'),
-    matching: find.byType(Card),
+    matching: find.byWidgetPredicate(
+      (w) =>
+          w.key is ValueKey<String> &&
+          (w.key as ValueKey<String>).value.startsWith('food-group:'),
+    ),
   );
   expect(row, findsOneWidget, reason: 'Edit the one observed active group');
   await _tap(tester, find.descendant(of: row, matching: find.text(name)));

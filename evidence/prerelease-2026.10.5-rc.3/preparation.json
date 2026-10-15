@@ -1,0 +1,81 @@
+{
+  "version": "2026.10.5-rc.3+77",
+  "base": "0ca5edb2d19c1cd0e9c85535b0bc1d13e6c7af60",
+  "preparedAtUtc": "2026-10-15T03:21:28.685384+00:00",
+  "scope": "Shared flat row surfaces and canonical task insertion feedback",
+  "sourceHashes": {
+    "lib/main.dart": "0fc1330a98ebded694ab31b20c0a38d03dd821fd5af09e02a20550598e67edcc",
+    "lib/food/food_page.dart": "f9f375949f7249a8bf6d8e6adebbc8c8eb09f6e654704dfda6cd3761d67c285a",
+    "lib/presentation/list_row_surface.dart": "321dd0ecf365bb5401fc9e7482475ae1be70764b2c30ac02faded3ea0d5dc4f9",
+    "lib/presentation/task_drop_indicator.dart": "d4d02c3793ad311b18ce20cf7259eded514da5e9e140022f3207c694ef02ae5c",
+    "integration_test/task_drag_boundary_test.dart": "f9a890d9498d0ab187ab0aa83f59e6ce2f36521b8eb5a5ce1733a94f6bafeabd",
+    "test/list_row_surface_test.dart": "793aae5d1c9eb6119a341145e4e1f6f855bf5b24adb54b05efa0fb9577eb0cba",
+    "design/prerelease-notes.md": "74cf472bb38eb6b1c8e1774df605a87e10962bfde0a3200ad2c542dd582dcde0"
+  },
+  "focusedWidgets": {
+    "passed": 97,
+    "failed": 0,
+    "logSha256": "2330aba4f346684ff2cb2167344ac74f48daa76115e2a30d7db85b36ebfa0074"
+  },
+  "dragNative": {
+    "platform": "Linux GTK Flutter debug, native X11",
+    "passed": 5,
+    "failed": 0,
+    "scenarios": [
+      "equivalent approaches1x",
+      "equivalent approaches2x",
+      "hidden global insertion anchors",
+      "group heading and foreign bucket",
+      "attached cached offscreen anchor"
+    ],
+    "reviewedSourceRestored": true,
+    "redAndGreen": [
+      {
+        "phase": "cached-guard-red",
+        "exitCode": 1,
+        "atUtc": "2026-10-15T03:19:03.385945+00:00",
+        "reviewedMainSha256": "0fc1330a98ebded694ab31b20c0a38d03dd821fd5af09e02a20550598e67edcc",
+        "logSha256": "12d0573fca55289389819c4eb98d93ff83b50a8fcb28a93bba8531219bfd6c4b"
+      },
+      {
+        "phase": "drag-final-green",
+        "exitCode": 0,
+        "atUtc": "2026-10-15T03:19:53.681482+00:00",
+        "reviewedMainSha256": "0fc1330a98ebded694ab31b20c0a38d03dd821fd5af09e02a20550598e67edcc",
+        "logSha256": "457ae757c0f8236fe813f978353c8306ac17e54df5bc52418eed048dd19951bc"
+      }
+    ]
+  },
+  "otherAffectedNative": {
+    "taskBodyAndIndependentControls": {
+      "passed": 5,
+      "failed": 0
+    },
+    "foodActionGeometry": {
+      "passed": 1,
+      "themeWidthScaleScenarios": 6,
+      "failed": 0
+    },
+    "logSha256": "0d82b20887fc7103d41dca39269a7f89b08e71c2fd54ab659318299ef7c72f32",
+    "qualification": "That run also contained two initially invalid new edge fixtures, corrected and passed in the separate final5-case drag run."
+  },
+  "review": {
+    "independentSourceAndTests": "accepted",
+    "separateActualReleaseNotes": "accepted",
+    "notesSha256": "74cf472bb38eb6b1c8e1774df605a87e10962bfde0a3200ad2c542dd582dcde0",
+    "publicMedia": "not required; prose explains these changes"
+  },
+  "pending": [
+    "Full hosted candidate gates",
+    "Native themed visual/keyboard/demo review",
+    "Exact signed Android candidate acceptance",
+    "Final artifact/installer review",
+    "Fresh publication quota and prerelease promotion"
+  ],
+  "qualifications": [
+    "Linux GUI acceptance does not establish Windows GUI; existing manual Windows GUI waiver remains.",
+    "Cached pointer cancellation checks feedback cleanup; the explicit no-write snapshot covers foreign-bucket rejection."
+  ],
+  "privateReferenceImagesIncluded": false,
+  "dependencyOrCanonicalMeaningChange": false
+}

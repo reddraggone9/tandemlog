@@ -1,3 +1,7 @@
+# Shared row surfaces — 2026.10.5-rc.3/build77 preparation
+
+[Current preparation](../evidence/prerelease-2026.10.5-rc.3/README.md) records the approved presentation scope,97 focused widget passes and5 final native Linux drag passes, including equivalent destinations at100/200% text, hidden global anchors, group-heading/bucket rejection and an attached cached offscreen anchor. The guard-removal red and exact-source green qualify the offscreen correction. Independent source/test and actual-note editorial review accept the snapshot. Full hosted/exact-artifact/native visual acceptance remains pending; earlier receipts below retain their original source/build attribution.
+
 # Following 2026.10.5-rc.1/build72 native gates
 
 The following RC is under acceptance. Earlier native receipts retain their original source/build attribution. Widget evidence covers coalesced/repeated guard answers, late dismissed callbacks, setup/picker/recovery queues, successful/failed direct saves, retained reason filtering and keyboard/layout regressions; it does not replace native launcher or installed icon acceptance.

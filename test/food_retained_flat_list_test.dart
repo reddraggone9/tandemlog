@@ -138,7 +138,14 @@ Future<void> verifyFlatRetained(
     final title = find.text(pair.$1);
     await reach(title);
     contentPositions.add(tester.getRect(title).top + position().pixels);
-    final card = find.ancestor(of: title, matching: find.byType(Card));
+    final card = find.ancestor(
+      of: title,
+      matching: find.byWidgetPredicate(
+        (w) =>
+            w.key is ValueKey<String> &&
+            (w.key as ValueKey<String>).value.startsWith('food-group:'),
+      ),
+    );
     final reason = find.descendant(of: card, matching: find.text(pair.$2));
     expect(reason, findsOneWidget);
     expect(

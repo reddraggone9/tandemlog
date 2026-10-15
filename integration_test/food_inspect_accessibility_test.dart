@@ -84,7 +84,14 @@ void main() {
               .map((e) => e.toJson())
               .toList();
           final row = find.text('Oat milk');
-          final card = find.ancestor(of: row, matching: find.byType(Card));
+          final card = find.ancestor(
+            of: row,
+            matching: find.byWidgetPredicate(
+              (w) =>
+                  w.key is ValueKey<String> &&
+                  (w.key as ValueKey<String>).value.startsWith('food-group:'),
+            ),
+          );
           final metadata = find.descendant(
             of: card,
             matching: find.text('500 g · Freezer'),

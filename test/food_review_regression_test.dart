@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -143,7 +144,7 @@ void main() {
     await selectFoodView(tester, FoodView.retained);
     await tester.pumpAndSettle();
     expect(find.byType(ExpansionTile), findsNothing);
-    expect(find.widgetWithText(Card, 'Review trip'), findsOneWidget);
+    expect(find.widgetWithText(ListRowSurface, 'Review trip'), findsOneWidget);
     expect(find.text('Review beans'), findsOneWidget);
   });
   testWidgets('repeated dialog Cancel callback cannot pop food page', (

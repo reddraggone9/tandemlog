@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
@@ -165,7 +166,11 @@ Future<void> verifyFoodAllStatusSearch(
   await _reach(tester, find.byTooltip('Remove one Food shared container'));
   final activeCard = find.ancestor(
     of: find.byTooltip('Remove one Food shared container'),
-    matching: find.byType(Card),
+    matching: find.byWidgetPredicate(
+      (w) =>
+          w.key is ValueKey<String> &&
+          (w.key as ValueKey<String>).value.startsWith('food-group:'),
+    ),
   );
   expect(
     find.descendant(of: activeCard, matching: find.byIcon(Icons.restore)),
@@ -256,7 +261,11 @@ Future<void> verifyFoodAllStatusSearch(
   await _reach(tester, find.byTooltip('Restore one Food shared container'));
   final deletedCard = find.ancestor(
     of: find.byTooltip('Restore one Food shared container'),
-    matching: find.byType(Card),
+    matching: find.byWidgetPredicate(
+      (w) =>
+          w.key is ValueKey<String> &&
+          (w.key as ValueKey<String>).value.startsWith('food-group:'),
+    ),
   );
   expect(
     find.descendant(
@@ -265,7 +274,7 @@ Future<void> verifyFoodAllStatusSearch(
     ),
     findsNothing,
   );
-  expect(tester.widget<Card>(deletedCard).color, isNotNull);
+  expect(tester.widget<ListRowSurface>(deletedCard).color, isNotNull);
   expect(
     history,
     isEmpty,
@@ -304,11 +313,11 @@ Future<void> verifyFoodAllStatusSearch(
   );
 
   await _query(tester, 'Food early', input: input);
-  expect(find.widgetWithText(Card, 'Food early'), findsOneWidget);
+  expect(find.widgetWithText(ListRowSurface, 'Food early'), findsOneWidget);
   expect(find.byKey(const ValueKey('food-deleted-heading')), findsNothing);
   await chooseFoodView(tester, 'Deleted', input: input);
   expect(
-    find.widgetWithText(Card, 'Food early'),
+    find.widgetWithText(ListRowSurface, 'Food early'),
     findsOneWidget,
     reason: 'saved Deleted filter cannot narrow search',
   );
@@ -330,11 +339,17 @@ Future<void> verifyFoodAllStatusSearch(
   expect(find.text('Food early'), findsNothing);
   await chooseFoodView(tester, 'Retained', input: input);
   expect(find.byType(ExpansionTile), findsNothing);
-  expect(find.widgetWithText(Card, 'Food retained undated'), findsOneWidget);
+  expect(
+    find.widgetWithText(ListRowSurface, 'Food retained undated'),
+    findsOneWidget,
+  );
   await _query(tester, 'Food early', input: input);
   await _query(tester, '', input: input);
   expect(find.byType(ExpansionTile), findsNothing);
-  expect(find.widgetWithText(Card, 'Food retained undated'), findsOneWidget);
+  expect(
+    find.widgetWithText(ListRowSurface, 'Food retained undated'),
+    findsOneWidget,
+  );
   expect(find.text('Food early'), findsNothing);
   expect(find.text('Search food'), findsOneWidget);
   expect(tester.takeException(), isNull);

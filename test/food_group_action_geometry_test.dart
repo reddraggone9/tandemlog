@@ -72,7 +72,11 @@ Future<void> verifyFoodGroupActionGeometry(
         'The exact name appears in Search and the row; target the row explicitly',
   );
   final groupName = find.descendant(
-    of: find.byType(Card),
+    of: find.byWidgetPredicate(
+      (w) =>
+          w.key is ValueKey<String> &&
+          (w.key as ValueKey<String>).value.startsWith('food-group:'),
+    ),
     matching: find.text('Geometry beans'),
   );
   final remove = find.byTooltip('Remove one Geometry beans container');

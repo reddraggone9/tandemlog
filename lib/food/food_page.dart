@@ -8,6 +8,7 @@ import '../presentation/free_text_autocomplete.dart';
 import '../presentation/sticky_task_group.dart';
 import '../presentation/task_toolbar.dart';
 import '../presentation/section_content.dart';
+import '../presentation/list_row_surface.dart';
 import '../presentation/task_entry_area.dart';
 import '../presentation/toolbar_action.dart';
 import '../presentation/civil_date_input.dart';
@@ -68,6 +69,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Set<String> reasons = {}, brands = {}, locations = {};
   final bulkSelected = <String>{};
   bool selecting = false;
+  Object? _focusedGroup;
 
   void _clearBulkSelection() {
     selecting = false;
@@ -79,6 +81,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.workspaceIdentity != widget.workspaceIdentity) {
       _clearBulkSelection();
+      _focusedGroup = null;
     }
   }
 
@@ -180,180 +183,209 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           child: Center(
             child: ConstrainedBox(
               constraints: sectionContentConstraints,
-              child: Column(
-                children: [
-                  FoodInventoryToolbar(
-                    sectionMenu: widget.sectionMenu,
-                    settings: widget.settings,
-                    userName: widget.userName,
-                    identityMenu: widget.identityMenu,
-                    filter: _filterControl,
-                    undoLabel: widget.undoLabel,
-                    onUndo: widget.busy || widget.onUndo == null
-                        ? null
-                        : () => _invoke(undoCommand!),
-                    onAdd: widget.busy || pending
-                        ? null
-                        : () => _edit(addCommand: addCommand),
-                  ),
-                  ?widget.progress,
-                  Expanded(
-                    // Controls and guidance yield space to rows and focused
-                    // inputs at large text sizes, instead of exhausting it.
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: Column(
-                            children: [
-                              TaskEntryArea(
-                                selecting: selecting,
-                                captureVisible: true,
-                                selectionCount: bulkSelected.length,
-                                maximumSelectionCount: visibleIds.length,
-                                onClear: () => setState(_clearBulkSelection),
-                                onEdit:
-                                    widget.busy ||
-                                        pending ||
-                                        bulkSelected.isEmpty
-                                    ? null
-                                    : () => _edit(
-                                        bulkTargets: [
-                                          for (final item in _visibleActive())
-                                            if (bulkSelected.contains(item.id))
-                                              item,
-                                        ],
-                                      ),
-                                capture: TextField(
-                                  key: const ValueKey('food-search'),
-                                  controller: search,
-                                  onChanged: (_) =>
-                                      setState(_clearBulkSelection),
-                                  decoration: InputDecoration(
-                                    labelText: 'Search food',
-                                    prefixIcon: const Icon(Icons.search),
-                                    suffixIcon: search.text.isEmpty
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final rowInset = constraints.maxWidth < 600 ? 0.0 : 16.0;
+                  return Column(
+                    children: [
+                      FoodInventoryToolbar(
+                        sectionMenu: widget.sectionMenu,
+                        settings: widget.settings,
+                        userName: widget.userName,
+                        identityMenu: widget.identityMenu,
+                        filter: _filterControl,
+                        undoLabel: widget.undoLabel,
+                        onUndo: widget.busy || widget.onUndo == null
+                            ? null
+                            : () => _invoke(undoCommand!),
+                        onAdd: widget.busy || pending
+                            ? null
+                            : () => _edit(addCommand: addCommand),
+                      ),
+                      ?widget.progress,
+                      Expanded(
+                        // Controls and guidance yield space to rows and focused
+                        // inputs at large text sizes, instead of exhausting it.
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: Column(
+                                children: [
+                                  TaskEntryArea(
+                                    selecting: selecting,
+                                    captureVisible: true,
+                                    selectionCount: bulkSelected.length,
+                                    maximumSelectionCount: visibleIds.length,
+                                    onClear: () =>
+                                        setState(_clearBulkSelection),
+                                    onEdit:
+                                        widget.busy ||
+                                            pending ||
+                                            bulkSelected.isEmpty
                                         ? null
-                                        : IconButton(
-                                            tooltip: 'Clear food search',
-                                            onPressed: () => setState(() {
-                                              search.clear();
-                                              _clearBulkSelection();
-                                            }),
-                                            icon: const Icon(Icons.close),
+                                        : () => _edit(
+                                            bulkTargets: [
+                                              for (final item
+                                                  in _visibleActive())
+                                                if (bulkSelected.contains(
+                                                  item.id,
+                                                ))
+                                                  item,
+                                            ],
                                           ),
+                                    capture: TextField(
+                                      key: const ValueKey('food-search'),
+                                      controller: search,
+                                      onChanged: (_) =>
+                                          setState(_clearBulkSelection),
+                                      decoration: InputDecoration(
+                                        labelText: 'Search food',
+                                        prefixIcon: const Icon(Icons.search),
+                                        suffixIcon: search.text.isEmpty
+                                            ? null
+                                            : IconButton(
+                                                tooltip: 'Clear food search',
+                                                onPressed: () => setState(() {
+                                                  search.clear();
+                                                  _clearBulkSelection();
+                                                }),
+                                                icon: const Icon(Icons.close),
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.error != null ||
+                                      _actionError != null)
+                                    Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Text(
+                                        widget.error ?? _actionError!,
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.error,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            if (inboxGroups.isNotEmpty) ...[
+                              const SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Inbox',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'Add an expiration date to move food out of Inbox.',
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              if (widget.error != null || _actionError != null)
-                                Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Text(
-                                    widget.error ?? _actionError!,
-                                    style: TextStyle(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
+                              SliverPadding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: rowInset,
+                                ),
+                                sliver: SliverList.builder(
+                                  itemCount: inboxGroups.length,
+                                  itemBuilder: (_, index) =>
+                                      _group(inboxGroups[index]),
+                                ),
+                              ),
+                              if (groups.isNotEmpty)
+                                const SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                                    child: Text(
+                                      'Stock',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                 ),
                             ],
-                          ),
-                        ),
-                        if (inboxGroups.isNotEmpty) ...[
-                          const SliverToBoxAdapter(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Inbox',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Add an expiration date to move food out of Inbox.',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SliverPadding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            sliver: SliverList.builder(
-                              itemCount: inboxGroups.length,
-                              itemBuilder: (_, index) =>
-                                  _group(inboxGroups[index]),
-                            ),
-                          ),
-                          if (groups.isNotEmpty)
-                            const SliverToBoxAdapter(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
-                                child: Text(
-                                  'Stock',
-                                  style: TextStyle(fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
-                        ],
-                        if (groups.isEmpty &&
-                            inboxGroups.isEmpty &&
-                            deletedGroups.isEmpty)
-                          SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: Center(
-                              child: Text(
-                                querying
-                                    ? 'No matching food'
-                                    : switch (view) {
-                                        FoodView.inventory =>
-                                          'No food in stock',
-                                        FoodView.inbox =>
-                                          'Everything has an expiration date',
-                                        FoodView.retained => 'No retained food',
-                                        FoodView.deleted =>
-                                          'No deleted containers',
-                                      },
-                              ),
-                            ),
-                          )
-                        else if (groups.isNotEmpty)
-                          SliverPadding(
-                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-                            sliver: SliverList.builder(
-                              itemCount: groups.length,
-                              itemBuilder: (_, index) => _group(groups[index]),
-                            ),
-                          ),
-                        if (deletedGroups.isNotEmpty)
-                          SliverPadding(
-                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-                            sliver: SliverMainAxisGroup(
-                              slivers: [
-                                const SliverPadding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4),
-                                  sliver: StickyTaskGroupHeading(
-                                    title: 'Deleted',
-                                    headingKey: ValueKey(
-                                      'food-deleted-heading',
-                                    ),
+                            if (groups.isEmpty &&
+                                inboxGroups.isEmpty &&
+                                deletedGroups.isEmpty)
+                              SliverFillRemaining(
+                                hasScrollBody: false,
+                                child: Center(
+                                  child: Text(
+                                    querying
+                                        ? 'No matching food'
+                                        : switch (view) {
+                                            FoodView.inventory =>
+                                              'No food in stock',
+                                            FoodView.inbox =>
+                                              'Everything has an expiration date',
+                                            FoodView.retained =>
+                                              'No retained food',
+                                            FoodView.deleted =>
+                                              'No deleted containers',
+                                          },
                                   ),
                                 ),
-                                SliverList.builder(
-                                  itemCount: deletedGroups.length,
+                              )
+                            else if (groups.isNotEmpty)
+                              SliverPadding(
+                                padding: EdgeInsets.fromLTRB(
+                                  rowInset,
+                                  0,
+                                  rowInset,
+                                  16,
+                                ),
+                                sliver: SliverList.builder(
+                                  itemCount: groups.length,
                                   itemBuilder: (_, index) =>
-                                      _group(deletedGroups[index]),
+                                      _group(groups[index]),
                                 ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
+                              ),
+                            if (deletedGroups.isNotEmpty)
+                              SliverPadding(
+                                padding: EdgeInsets.fromLTRB(
+                                  rowInset,
+                                  0,
+                                  rowInset,
+                                  16,
+                                ),
+                                sliver: SliverMainAxisGroup(
+                                  slivers: [
+                                    SliverPadding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: rowInset == 0 ? 16 : 0,
+                                      ),
+                                      sliver: const StickyTaskGroupHeading(
+                                        title: 'Deleted',
+                                        headingKey: ValueKey(
+                                          'food-deleted-heading',
+                                        ),
+                                      ),
+                                    ),
+                                    SliverList.builder(
+                                      itemCount: deletedGroups.length,
+                                      itemBuilder: (_, index) =>
+                                          _group(deletedGroups[index]),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -700,12 +732,31 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           ? null
           : (details) =>
                 _showGroupMenu(group, details.globalPosition, selectAction),
-      child: Card(
+      child: ListRowSurface(
         key: ValueKey('food-group:$key'),
-        color: deleted
+        color:
+            selecting &&
+                !deleted &&
+                group.containers.every((e) => bulkSelected.contains(e.id))
+            ? Theme.of(context).colorScheme.primaryContainer
+            : deleted
             ? Theme.of(context).colorScheme.surfaceContainerLow
             : null,
+        focused: _focusedGroup == (workspace, identity),
+        interactive: editable,
         child: InkWell(
+          overlayColor: listRowInkOverlay(Theme.of(context).colorScheme),
+          splashFactory: InkRipple.splashFactory,
+          onFocusChange: (focused) {
+            if (!mounted) return;
+            setState(() {
+              if (focused) {
+                _focusedGroup = (workspace, identity);
+              } else if (_focusedGroup == (workspace, identity)) {
+                _focusedGroup = null;
+              }
+            });
+          },
           onTap: editable ? editGroup : null,
           excludeFromSemantics: true,
           child: Padding(

@@ -310,7 +310,14 @@ Future<void> verifyFoodViewReachability(
     final savedName = find.text(name);
     await swipeTo(savedName);
     final card = find
-        .ancestor(of: savedName, matching: find.byType(Card))
+        .ancestor(
+          of: savedName,
+          matching: find.byWidgetPredicate(
+            (w) =>
+                w.key is ValueKey<String> &&
+                (w.key as ValueKey<String>).value.startsWith('food-group:'),
+          ),
+        )
         .first;
     final needsExpiration = find.descendant(
       of: card,

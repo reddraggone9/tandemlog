@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:convert';
@@ -504,7 +505,10 @@ void registerFoodProductionTests() {
         FoodState currentFood() => tester
             .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))
             .state;
-        expect(find.widgetWithText(Card, 'Synthetic Rice'), findsNWidgets(2));
+        expect(
+          find.widgetWithText(ListRowSurface, 'Synthetic Rice'),
+          findsNWidgets(2),
+        );
         expect(
           find.byKey(const ValueKey('food-deleted-heading')),
           findsOneWidget,
@@ -524,7 +528,10 @@ void registerFoodProductionTests() {
         );
         await flows.waitForUi(tester, () => currentFood().active.length == 2);
         await tester.pumpAndSettle();
-        expect(find.widgetWithText(Card, 'Synthetic Rice'), findsOneWidget);
+        expect(
+          find.widgetWithText(ListRowSurface, 'Synthetic Rice'),
+          findsOneWidget,
+        );
         expect(
           find.byKey(const ValueKey('food-deleted-heading')),
           findsNothing,
@@ -535,7 +542,10 @@ void registerFoodProductionTests() {
         );
         await flows.waitForUi(tester, () => currentFood().deleted.length == 1);
         await tester.pumpAndSettle();
-        expect(find.widgetWithText(Card, 'Synthetic Rice'), findsNWidgets(2));
+        expect(
+          find.widgetWithText(ListRowSurface, 'Synthetic Rice'),
+          findsNWidgets(2),
+        );
         await pixels.tap(
           tester,
           find.byTooltip('Remove one Synthetic Rice container'),
@@ -546,19 +556,25 @@ void registerFoodProductionTests() {
           find.byTooltip('Remove one Synthetic Rice container'),
           findsNothing,
         );
-        expect(find.widgetWithText(Card, 'Synthetic Rice'), findsOneWidget);
+        expect(
+          find.widgetWithText(ListRowSurface, 'Synthetic Rice'),
+          findsOneWidget,
+        );
         await pixels.tap(
           tester,
           find.byKey(const ValueKey('undo-food-action')),
         );
         await flows.waitForUi(tester, () => currentFood().active.length == 1);
         await tester.pumpAndSettle();
-        expect(find.widgetWithText(Card, 'Synthetic Rice'), findsNWidgets(2));
+        expect(
+          find.widgetWithText(ListRowSurface, 'Synthetic Rice'),
+          findsNWidgets(2),
+        );
         await pixels.capture(tester, 'production-all-food-search-after-undo');
         await pixels.tap(tester, find.byTooltip('Clear food search'));
         await tester.pumpAndSettle();
         expect(
-          find.widgetWithText(Card, 'Synthetic Rice'),
+          find.widgetWithText(ListRowSurface, 'Synthetic Rice'),
           findsOneWidget,
           reason: 'clearing restores saved Deleted view',
         );

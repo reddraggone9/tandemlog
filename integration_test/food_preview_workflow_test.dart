@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -69,7 +70,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(ExpansionTile), findsNothing);
     expect(find.text('Chocolate').hitTestable(), findsOneWidget);
-    expect(find.widgetWithText(Card, 'Birthday baking'), findsOneWidget);
+    expect(
+      find.widgetWithText(ListRowSurface, 'Birthday baking'),
+      findsOneWidget,
+    );
     await capture(tester, 'narrow-retained-flat');
     await selectFoodView(
       tester,

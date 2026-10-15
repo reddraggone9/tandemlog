@@ -1,5 +1,4 @@
-Food rows are now flat: tap a row to edit the whole container group. The Remaining contents interface has been removed.
+# 2026.10.5-rc.3
 
-Remove and Restore now offer matching one-container buttons and whole-group menu actions.
-
-Android's Food launcher shortcut now uses a fridge icon to distinguish it from Tasks.
+- Tasks and Food now share compact, flat rows with subtle dividers and consistent hover, press and keyboard-focus feedback.
+- Dragging a task to the same position from either side now shows one steady insertion line.

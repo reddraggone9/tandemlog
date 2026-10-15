@@ -25,6 +25,8 @@ import 'presentation/task_toolbar.dart';
 import 'presentation/toolbar_action.dart';
 import 'presentation/section_menu.dart';
 import 'presentation/section_content.dart';
+import 'presentation/list_row_surface.dart';
+import 'presentation/task_drop_indicator.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
@@ -3002,6 +3004,27 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
+  // Use the exact global insertion anchor for both commit and feedback. Hidden
+  // filtered tasks remain in this order; visible adjacency is not equivalence.
+  ({String? before})? _taskInsertionBefore(
+    String target,
+    bool after,
+    Set<String> moving,
+  ) {
+    final global = rows
+        .where((row) => row['kind'] == 'task' && !moving.contains(row['id']))
+        .toList();
+    final index = global.indexWhere((row) => row['id'] == target);
+    if (index < 0) return null;
+    return (
+      before: !after
+          ? target
+          : index + 1 < global.length
+          ? global[index + 1]['id'] as String
+          : null,
+    );
+  }
+
   Future<void> _dropTask(String source, String target, bool after) async {
     // Capture the session before Draggable ends it; await any in-flight import,
     // then recheck the projection before writing a relative-order event.
@@ -3028,19 +3051,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         );
         return;
       }
-      final global = rows
-          .where(
-            (row) =>
-                row['kind'] == 'task' && !drag.selected.contains(row['id']),
-          )
-          .toList();
-      final index = global.indexWhere((row) => row['id'] == target);
-      if (index < 0) return;
-      final before = !after
-          ? target
-          : index + 1 < global.length
-          ? global[index + 1]['id'] as String
-          : null;
+      final insertion = _taskInsertionBefore(target, after, drag.selected);
+      if (insertion == null) return;
+      final before = insertion.before;
       if (drag.selected.length == 1) {
         await _moveBeforeGuarded(
           source,
@@ -3101,11 +3114,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   void _stopDragScroll() {
     dragScrollTimer?.cancel();
     dragScrollTimer = null;
+    final hadPointer = dragPointer != null;
     dragPointer = null;
+    if (hadPointer) dragScrollTick.value++;
   }
 
   void _updateDragScroll(Offset pointer) {
     dragPointer = pointer;
+    dragScrollTick.value++;
     dragScrollTimer ??= Timer.periodic(const Duration(milliseconds: 16), (_) {
       if (!_dragIsCurrent() || !taskScroll.hasClients) {
         _stopDragScroll();
@@ -3145,7 +3161,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     return false;
   }
 
-  void _dropAtPointer(String source, Offset pointer) {
+  ({String target, bool after})? _dropTargetAtPointer(
+    String source,
+    Offset pointer,
+  ) {
     final viewport =
         taskViewport.currentContext?.findRenderObject() as RenderBox?;
     if (viewport == null ||
@@ -3153,8 +3172,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         !(Offset.zero & viewport.size).contains(
           viewport.globalToLocal(pointer),
         )) {
-      _cancelDrag();
-      return;
+      return null;
     }
     for (final entry in dropKeys.entries) {
       if (entry.key == source) continue;
@@ -3162,11 +3180,57 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (box == null || !box.attached || !box.hasSize) continue;
       final local = box.globalToLocal(pointer);
       if ((Offset.zero & box.size).contains(local)) {
-        _dropTask(source, entry.key, local.dy >= box.size.height / 2);
-        return;
+        return (target: entry.key, after: local.dy >= box.size.height / 2);
       }
     }
-    _cancelDrag();
+    return null;
+  }
+
+  void _dropAtPointer(String source, Offset pointer) {
+    final target = _dropTargetAtPointer(source, pointer);
+    if (target == null) {
+      _cancelDrag();
+    } else {
+      _dropTask(source, target.target, target.after);
+    }
+  }
+
+  Rect? _taskInsertionRect() {
+    final drag = taskDrag, pointer = dragPointer;
+    if (drag == null || pointer == null || !_dragIsCurrent()) return null;
+    final target = _dropTargetAtPointer(drag.id, pointer);
+    if (target == null || !_canDropTask(drag.id, target.target)) return null;
+    final insertion = _taskInsertionBefore(
+      target.target,
+      target.after,
+      drag.selected,
+    );
+    if (insertion == null) return null;
+    RenderBox? boxFor(String id) =>
+        dropKeys[id]?.currentContext?.findRenderObject() as RenderBox?;
+    final viewport =
+        taskViewport.currentContext?.findRenderObject() as RenderBox?;
+    if (viewport == null || !viewport.attached || !viewport.hasSize) {
+      return null;
+    }
+    var anchor = insertion.before == null ? null : boxFor(insertion.before!);
+    final candidateTop = anchor != null && anchor.attached && anchor.hasSize
+        ? viewport.globalToLocal(anchor.localToGlobal(Offset.zero))
+        : null;
+    final canonicalTop =
+        candidateTop != null &&
+        candidateTop.dy >= 0 &&
+        candidateTop.dy + 2 <= viewport.size.height &&
+        _canDropTask(drag.id, insertion.before!);
+    if (!canonicalTop) anchor = boxFor(target.target);
+    if (anchor == null || !anchor.attached || !anchor.hasSize) return null;
+    // A visible legal next anchor owns the line, from either approach. Hidden
+    // anchors and group boundaries keep the original target's own edge.
+    final top = canonicalTop || !target.after;
+    final origin = viewport.globalToLocal(
+      anchor.localToGlobal(Offset(0, top ? 0 : anchor.size.height - 2)),
+    );
+    return Rect.fromLTWH(origin.dx, origin.dy, anchor.size.width, 2);
   }
 
   Widget _reorderableTask(Map<String, dynamic> task, Widget tile) {
@@ -3214,6 +3278,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     ? 'Cannot reorder here: different group, date or time, or the list changed.'
                     : null,
                 child: DecoratedBox(
+                  position: DecorationPosition.foreground,
                   decoration: BoxDecoration(
                     color: invalid
                         ? Theme.of(
@@ -3225,28 +3290,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                             color: Theme.of(context).colorScheme.error,
                             width: 2,
                           )
-                        : !(dragPointer != null
-                              ? hovering
-                              : candidates.isNotEmpty)
-                        ? null
-                        : Border(
-                            top: after
-                                ? BorderSide.none
-                                : BorderSide(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    width: 2,
-                                  ),
-                            bottom: after
-                                ? BorderSide(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    width: 2,
-                                  )
-                                : BorderSide.none,
-                          ),
+                        : null,
                   ),
                   child: Material(type: MaterialType.transparency, child: tile),
                 ),
@@ -5217,17 +5261,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   }
                                   return KeyEventResult.ignored;
                                 },
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color:
-                                          rowFocus[task['id']]!.hasPrimaryFocus
-                                          ? Theme.of(
-                                              context,
-                                            ).colorScheme.outline
-                                          : Colors.transparent,
-                                    ),
-                                  ),
+                                child: ListRowSurface(
+                                  divider: false,
+                                  interactive: !busy,
+                                  focused: rowFocus[task['id']]!.hasFocus,
                                   child: ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     minVerticalPadding: 0,
@@ -5294,11 +5331,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                           CrossAxisAlignment.stretch,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        GestureDetector(
+                                        InkWell(
                                           key: ValueKey(
                                             'task-body-${task['id']}',
                                           ),
-                                          behavior: HitTestBehavior.opaque,
+                                          canRequestFocus: false,
+                                          overlayColor: listRowInkOverlay(
+                                            Theme.of(context).colorScheme,
+                                          ),
+                                          splashFactory:
+                                              InkRipple.splashFactory,
                                           onTap: busy
                                               ? null
                                               : () => _selectTask(
@@ -5557,7 +5599,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                             );
                           },
                         ),
-                        const Divider(height: 1),
+                        const ListRowDivider(),
                       ],
                     ],
                   ),
@@ -5571,7 +5613,28 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     return Column(
       children: [
         _entryArea(),
-        Expanded(child: list),
+        Expanded(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              list,
+              IgnorePointer(
+                child: ExcludeSemantics(
+                  child: ClipRect(
+                    child: CustomPaint(
+                      key: const ValueKey('task-insertion-boundary'),
+                      painter: TaskDropIndicatorPainter(
+                        boundary: _taskInsertionRect,
+                        color: Theme.of(context).colorScheme.primary,
+                        repaint: Listenable.merge([dragScrollTick, taskScroll]),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

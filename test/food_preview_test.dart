@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'support/toolbar_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -66,7 +67,10 @@ void main() {
       await selectFoodView(tester, FoodView.retained);
       await tester.pumpAndSettle();
       expect(find.byType(ExpansionTile), findsNothing);
-      expect(find.widgetWithText(Card, 'Birthday baking'), findsOneWidget);
+      expect(
+        find.widgetWithText(ListRowSurface, 'Birthday baking'),
+        findsOneWidget,
+      );
       expect(find.text('Chocolate').hitTestable(), findsOneWidget);
       await tester.enterText(
         find.byKey(const ValueKey('food-search')),
@@ -91,7 +95,11 @@ void main() {
           find.descendant(
             of: find.ancestor(
               of: find.text('Rice'),
-              matching: find.byType(Card),
+              matching: find.byWidgetPredicate(
+                (w) =>
+                    w.key is ValueKey<String> &&
+                    (w.key as ValueKey<String>).value.startsWith('food-group:'),
+              ),
             ),
             matching: find.text('1 lb'),
           ),

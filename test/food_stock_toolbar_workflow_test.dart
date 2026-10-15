@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
@@ -131,7 +132,7 @@ Future<void> verifyFoodStockToolbarWorkflow(
   await tester.ensureVisible(find.text('Food retained undated'));
   expect(
     find.descendant(
-      of: find.widgetWithText(Card, 'Food retained undated'),
+      of: find.widgetWithText(ListRowSurface, 'Food retained undated'),
       matching: find.text('Emergency'),
     ),
     findsOneWidget,

@@ -78,7 +78,13 @@ void main() {
             await pixels.capture(tester, name);
             final viewport = tester.getRect(find.byType(CustomScrollView));
             final cards = find
-                .byType(Card)
+                .byWidgetPredicate(
+                  (w) =>
+                      w.key is ValueKey<String> &&
+                      (w.key as ValueKey<String>).value.startsWith(
+                        'food-group:',
+                      ),
+                )
                 .evaluate()
                 .map((e) => tester.getRect(find.byWidget(e.widget)))
                 .toList();

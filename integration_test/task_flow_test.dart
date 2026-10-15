@@ -67,6 +67,7 @@ import 'tag_input_workflow_test.dart' show registerTagInputWorkflowTests;
 import 'food_expiration_deprecation_workflow_test.dart'
     show registerFoodExpirationDeprecationTests;
 import 'task_body_hit_test.dart' show registerTaskBodyHitTests;
+import 'task_drag_boundary_test.dart' show registerTaskDragBoundaryTests;
 import 'food_production_workflow_test.dart' show registerFoodProductionTests;
 import 'section_navigation_workflow_test.dart'
     show registerSectionNavigationTests;
@@ -292,6 +293,7 @@ void main() {
   registerFoodProductionTests();
   registerSectionNavigationTests();
   registerTaskBodyHitTests();
+  registerTaskDragBoundaryTests();
   registerFoodExpiryGuidanceTests();
   registerFoodExpirationDeprecationTests();
   registerFoodEditorKeyboardTests();
