@@ -1,3 +1,7 @@
+# Task row feedback and visible drops — RC.4/build80 acceptance pending
+
+Focused/native checks distinguish main-row ink from the separate checklist panel, require active press feedback and protect independent controls. Continuous short-window mouse coverage measures one shared boundary through autoscroll and sticky headings and verifies identical saved results/Undo with hidden completed, assignee and tag-filtered rows. Native no-op cases compare every canonical byte and retain prior Undo; a clock-only inferred-neighbor regression exercises the write guard. See [candidate evidence](../evidence/prerelease-2026.10.5-rc.4/README.md) for source-qualified results and remaining hosted, exact signed Android and demo gates. Earlier receipts below retain their own attribution.
+
 # Shared rows — replacement build78 candidate
 
 The unchanged strict catalog-version test made build77 candidate38676004651 ineligible before signing. [Correction receipt](../evidence/prerelease-2026.10.5-rc.3/build78/correction.json) updates actual Flatpak release metadata and advances the build to78. Production Dart, tests, notes and dependencies remain unchanged. Build77 formatting/analysis and application/native contract gates passed; complete replacement hosted gates and exact signed Android78 acceptance remain pending. Existing native77 UI evidence keeps its original attribution.

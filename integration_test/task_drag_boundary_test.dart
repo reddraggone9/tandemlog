@@ -214,14 +214,7 @@ void registerTaskDragBoundaryTests() {
             expect(
               current,
               hidden
-                  ? [
-                      ids[0],
-                      if (!afterUpper) hiddenId,
-                      ids[3],
-                      if (afterUpper) hiddenId,
-                      ids[1],
-                      ids[2],
-                    ]
+                  ? [ids[0], hiddenId, ids[3], ids[1], ids[2]]
                   : [ids[0], ids[3], ids[1], ids[2]],
             );
             await tester.tap(find.byKey(const ValueKey('undo-task-action')));
@@ -240,14 +233,14 @@ void registerTaskDragBoundaryTests() {
           if (hidden) {
             expect(
               orders[0],
-              isNot(orders[1]),
-              reason:
-                  'Hidden tasks remain part of the actual global insertion order.',
+              orders[1],
+              reason: 'Both halves resolve before the same later visible task.',
             );
             expect(
-              (lines[0] - lines[1]).abs(),
-              greaterThan(.5),
-              reason: 'Do not collapse different hidden insertion anchors.',
+              lines[0],
+              closeTo(lines[1], 0.01),
+              reason:
+                  'One visible gap paints one boundary and saves one destination.',
             );
           } else {
             expect(orders[0], orders[1]);
@@ -321,9 +314,9 @@ void _registerDragBoundaryEdgeTests() {
             upper = const Uuid().v4(),
             lower = const Uuid().v4(),
             source = const Uuid().v4();
-        final initial = cached
-            ? [source, upper, lower]
-            : [upper, lower, source];
+        // Source starts before upper so this is a real visible move. With
+        // [upper, foreign lower, source], dropping after upper is now a no-op.
+        final initial = [source, upper, lower];
         final peer = await openNativeFixtureStore(
           LocalLogFolder(data.path),
           '${root.path}/peer',

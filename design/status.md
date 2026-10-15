@@ -1,3 +1,7 @@
+# Task row feedback and visible drops RC.4/build80 — candidate acceptance pending
+
+The approved Task body ink refinement and visible-gap insertion rule are implemented. [ADR0023](decisions/0023-shared-list-row-surfaces.md), [ADR0024](decisions/0024-visible-task-drop-gaps.md) and [candidate evidence](../evidence/prerelease-2026.10.5-rc.4/README.md) describe shared paint bounds, consistent inferred destinations, no-op writes and fresh projection guards. Full hosted/exact-artifact/native acceptance and parent handoff are pending. Stable2026.10.4 remains Latest.
+
 # Current status — 2026-10-15
 
 ## Published shared-row2026.10.5-rc.3/build79

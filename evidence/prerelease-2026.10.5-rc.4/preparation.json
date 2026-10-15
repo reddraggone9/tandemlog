@@ -1,0 +1,55 @@
+{
+  "atUtc": "2026-10-15T14:21:43.663528+00:00",
+  "version": "2026.10.5-rc.4+80",
+  "base": "647b329a4a14a4ae50563b42fa366487800f560b",
+  "scope": "Task main-body ink and approved visible-neighbor relative insertion",
+  "dragImplementationChanged": true,
+  "persistenceOrDependencyChanged": false,
+  "applicationSourcesSha256": {
+    "lib/main.dart": "3b8a231c19046c78dde804c3c6ce45e2dc810b58b76f1497bc7d2179d7ebfbed",
+    "lib/presentation/list_row_surface.dart": "25f55010e8638077902ee638d1bbf04c5c4f18557fac5c00af726d0ec657f698",
+    "lib/domain/visible_task_move.dart": "a74548466fef592e60a620358eee12a138cd29533f8fb111b941e355b39436b1"
+  },
+  "localAcceptance": {
+    "analyzer": "clean",
+    "fullUnitRun": {
+      "result": "one existing replay timing budget failed under shared 2-CPU lab load; all other cases passed, zero skips",
+      "finalSummary": [
+        "06:49 +1097 -1: Some tests failed."
+      ],
+      "logSha256": "c76eba76291ebfc1dd387366c3f07ac9822a6daa02f8c350f0df21af3cdbb0d8"
+    },
+    "unchangedBudgetIsolatedMs": 1340,
+    "fullNativeLocalPartialRun": {
+      "atUtc": "2026-10-15T14:10:59.883232+00:00",
+      "reason": "Use affected native aggregate locally and complete full suite in required signed-candidate CI; preserve partial full-suite run",
+      "nativeFailuresObserved": [],
+      "lastNativeProgress": "07:03 +31: actual section toolbar parity dark",
+      "unchangedFoodReplayBudgetMs": 1340,
+      "logSha256AtStop": "8b18ff62c0d8f20da45d888bdf93414c3c09a7f1616594c592c3983878a95f99",
+      "fullNativePassClaimed": false
+    },
+    "affectedNativeAggregate": {
+      "passSummaries": [
+        "00:01 +30: All tests passed!",
+        "04:27 +27: All tests passed!"
+      ],
+      "logSha256": "c566dfad78c7f2629f72f0d633ebdc573580ffebdbf800347a0e204d40b1d35e",
+      "exitCode": 0
+    },
+    "focusedPassed": 30,
+    "focusedLogSha256": "6d389833a46e293fa338190704b5219f2c4eb556fd37cb01b9338972af5ab4fc",
+    "oldMainControlFailedNativeRegressions": 3,
+    "oldMainControlLogSha256": "2274f4d1bfb1e10d1596b4aefe74df0533998db04ce07c75901b84637642414a",
+    "exactSourceRestored": true,
+    "formatterFiles": 306,
+    "hostToolsPassed": 85,
+    "hostToolsSkipped": 0,
+    "hostToolsLogSha256": "0b3f531a8ab51bf97d61030dffdaeffcb9df2c78252b8ff532cd57d8b0428017"
+  },
+  "independentReview": "implementation and editorial/privacy ACCEPT; exact candidate acceptance pending",
+  "notesSha256": "bdecaa0f1571c706267f8b35688aca4132e0c7309acb7ce5393c222dfed0d324",
+  "fullHostedAndExactSignedNativeAcceptance": "pending",
+  "publicationRequested": false,
+  "privateUserDataCommittedOrUploaded": false
+}

@@ -1,4 +1,4 @@
-# 2026.10.5-rc.3
+# 2026.10.5-rc.4
 
-- Tasks and Food now share compact, flat rows with subtle dividers and consistent hover, press and keyboard-focus feedback.
-- Dragging a task to the same position from either side now shows one steady insertion line.
+- Task body press feedback now spans the full main row.
+- Dragging between the same visible tasks now gives one insertion marker and the same saved position, including when other tasks are hidden. Drops that leave the visible order unchanged do nothing.

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:flutter/rendering.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
 import 'native_text_fixtures.dart';
@@ -19,6 +22,124 @@ void main() {
 }
 
 void registerTaskBodyHitTests() {
+  for (final sample in [
+    (320.0, 1.0, false),
+    (1200.0, 1.0, false),
+    (320.0, 2.0, true),
+    (1200.0, 1.0, true),
+  ]) {
+    testWidgets(
+      'Task body ink spans main row ${sample.$1} x${sample.$2} expanded:${sample.$3}',
+      (tester) async {
+        await _withInbox(tester, sample.$1, sample.$2, (data, ids) async {
+          final before = await _records(data);
+          final id = ids.first;
+          if (sample.$3) {
+            await tester.tap(find.byKey(ValueKey('checklist-disclosure-$id')));
+            await tester.pumpAndSettle();
+            expect(
+              find.byKey(ValueKey('inline-checklist-$id')),
+              findsOneWidget,
+            );
+          }
+          final row = tester.getRect(
+            find
+                .ancestor(
+                  of: find.byKey(ValueKey('task-body-$id')),
+                  matching: find.byType(ListTile),
+                )
+                .first,
+          );
+          final body = tester.getRect(find.byKey(ValueKey('task-body-$id')));
+          final points = [
+            Offset(row.left + 3, row.top + 3),
+            Offset(row.right - 3, row.top + 3),
+            sample.$3
+                ? tester.getTopLeft(
+                        find.byKey(ValueKey('inline-checklist-$id')),
+                      ) +
+                      const Offset(3, 6)
+                : Offset(row.left + 3, row.bottom + 3),
+            body.center,
+          ];
+          expect(points.first.dx, lessThan(body.left));
+          expect(points[1].dx, greaterThan(body.right));
+          final ink = tester.widget<InkWell>(
+            find.byKey(ValueKey('task-body-$id')),
+          );
+          final box = tester.renderObject<RenderBox>(
+            find.byKey(ValueKey('task-body-$id')),
+          );
+          debugPrint(
+            'BODY_INK_BOUNDS=${ink.runtimeType} ${ink.getRectCallback(box)?.call()}',
+          );
+          final baseline = await _pixels(tester, points);
+          final press = await tester.startGesture(body.center);
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 120));
+          await tester.pump(const Duration(milliseconds: 80));
+          final pressed = await _pixels(tester, points);
+          debugPrint('BODY_INK_PIXELS baseline=$baseline pressed=$pressed');
+          expect(
+            pressed[3],
+            isNot(baseline[3]),
+            reason: 'The sampled native frame contains active body feedback.',
+          );
+          await _captureBodyInkFrame(
+            tester,
+            'task-body-ink-${sample.$1.toInt()}-${sample.$2}x-expanded-${sample.$3}',
+          );
+          expect(
+            pressed[0],
+            isNot(baseline[0]),
+            reason: 'Body feedback reaches the main row leading edge.',
+          );
+          expect(
+            pressed[1],
+            isNot(baseline[1]),
+            reason: 'Body feedback reaches the main row trailing edge.',
+          );
+          expect(
+            pressed[2],
+            baseline[2],
+            reason:
+                'Body ink stays outside the divider/checklist below the main row.',
+          );
+          await press.up();
+          await tester.pumpAndSettle();
+          expect(find.byType(TaskEditor), findsOneWidget);
+          await tester.tap(find.text('Cancel'));
+          await tester.pumpAndSettle();
+          expect(await _records(data), before);
+        }, checklist: sample.$3);
+      },
+    );
+  }
+  testWidgets(
+    'stationary Task drag handle click and long press do not open or select',
+    (tester) async {
+      await _withInbox(tester, 390, 1, (data, ids) async {
+        final before = await _records(data);
+        final handle = find.descendant(
+          of: find.byKey(ValueKey('task-row-${ids.first}')),
+          matching: find.byType(Draggable<String>),
+        );
+        await tester.tap(handle);
+        await tester.pumpAndSettle();
+        expect(find.byType(TaskEditor), findsNothing);
+        expect(find.text('1 selected'), findsNothing);
+        final hold = await tester.startGesture(tester.getCenter(handle));
+        await tester.pump(
+          kLongPressTimeout + const Duration(milliseconds: 100),
+        );
+        await hold.up();
+        await tester.pumpAndSettle();
+        expect(find.byType(TaskEditor), findsNothing);
+        expect(find.text('1 selected'), findsNothing);
+        expect(await _records(data), before);
+      });
+    },
+  );
   for (final sample in [
     (320.0, 1.0),
     (390.0, 1.0),
@@ -146,7 +267,14 @@ void registerTaskBodyHitTests() {
 }
 
 Offset _blankMiddle(WidgetTester tester, String id) {
-  final row = tester.getRect(find.byKey(ValueKey('task-row-$id')));
+  final row = tester.getRect(
+    find
+        .ancestor(
+          of: find.byKey(ValueKey('task-body-$id')),
+          matching: find.byType(ListTile),
+        )
+        .first,
+  );
   final title = tester.getRect(find.byKey(ValueKey('task-title-$id')));
   final menu = tester.getRect(find.byKey(ValueKey('task-menu-$id')));
   final body = tester.getRect(find.byKey(ValueKey('task-body-$id')));
@@ -174,8 +302,9 @@ Future<void> _withInbox(
   WidgetTester tester,
   double width,
   double scale,
-  Future<void> Function(Directory data, List<String> ids) inspect,
-) async {
+  Future<void> Function(Directory data, List<String> ids) inspect, {
+  bool checklist = false,
+}) async {
   final root = await Directory.systemTemp.createTemp(
     'task-body-hit-synthetic-',
   );
@@ -196,6 +325,9 @@ Future<void> _withInbox(
         'assignee': user,
       });
     }
+    if (checklist) {
+      await seed.addChecklistItem(ids.first, 'Synthetic inline note');
+    }
     await seed.close();
     await File('${profile.path}/settings.json').writeAsString(
       jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
@@ -203,7 +335,12 @@ Future<void> _withInbox(
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = Size(width, 850);
     tester.platformDispatcher.textScaleFactorTestValue = scale;
-    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+    await tester.pumpWidget(
+      RepaintBoundary(
+        key: const ValueKey('body-ink-scene'),
+        child: TandemlogApp(profilePath: profile.path),
+      ),
+    );
     await waitForUi(
       tester,
       () => find.byKey(ValueKey('task-row-${ids.first}')).evaluate().isNotEmpty,
@@ -220,4 +357,46 @@ Future<void> _withInbox(
     tester.platformDispatcher.clearTextScaleFactorTestValue();
     await root.delete(recursive: true);
   }
+}
+
+Future<List<int>> _pixels(WidgetTester tester, List<Offset> points) async {
+  final scene = tester.renderObject<RenderRepaintBoundary>(
+    find.byKey(const ValueKey('body-ink-scene')),
+  );
+  return (await tester.runAsync(() async {
+    final image = await scene.toImage(pixelRatio: 1);
+    try {
+      final data = (await image.toByteData(
+        format: ui.ImageByteFormat.rawRgba,
+      ))!;
+      return [
+        for (final point in points)
+          data.getUint32(
+            (point.dy.floor() * image.width + point.dx.floor()) * 4,
+          ),
+      ];
+    } finally {
+      image.dispose();
+    }
+  }))!;
+}
+
+Future<void> _captureBodyInkFrame(WidgetTester tester, String name) async {
+  final directory = Platform.environment['TANDEMLOG_NATIVE_QA_SCREENSHOTS'];
+  if (directory == null) return;
+  final scene = tester.renderObject<RenderRepaintBoundary>(
+    find.byKey(const ValueKey('body-ink-scene')),
+  );
+  await tester.runAsync(() async {
+    final image = await scene.toImage(pixelRatio: 1);
+    try {
+      await Directory(directory).create(recursive: true);
+      final bytes = (await image.toByteData(format: ui.ImageByteFormat.png))!;
+      await File(
+        '$directory/$name.png',
+      ).writeAsBytes(bytes.buffer.asUint8List());
+    } finally {
+      image.dispose();
+    }
+  });
 }

@@ -17,6 +17,7 @@ import 'application/text_save_command.dart';
 import 'application/checklist_completion_command.dart';
 import 'text/native_text_engine.dart';
 import 'text/native_text_licenses.dart';
+import 'domain/visible_task_move.dart';
 import 'domain/event.dart' show LogEvent;
 import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
@@ -2890,7 +2891,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
-  bool Function() _moveCommitGuard(String source, String target) {
+  bool Function() _moveCommitGuard(
+    String source,
+    String target, {
+    bool Function(List<TaskViewEntry>, List<Map<String, dynamic>>)?
+    permitsProjection,
+  }) {
     final origin = store,
         revision = viewRevision,
         completed =
@@ -2926,8 +2932,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       try {
         // Evaluate the actual current wall clock at the serialized write boundary;
         // a delayed timer callback must not authorize an expired sort bucket.
+        final currentRows = origin.rows;
         final current = projectTaskView(
-          origin.rows,
+          currentRows,
           timeSource.readTime(),
           assignee: everyone ? null : selected,
           includeUpcoming: upcoming,
@@ -2946,7 +2953,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             (from.task['completed'] == true) == completed &&
             (to.task['completed'] == true) == completed &&
             from.sharesOrderBucket(expected) &&
-            to.sharesOrderBucket(expected);
+            to.sharesOrderBucket(expected) &&
+            (permitsProjection?.call(visible, currentRows) ?? true);
       } catch (_) {
         return false;
       }
@@ -3004,24 +3012,36 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
-  // Use the exact global insertion anchor for both commit and feedback. Hidden
-  // filtered tasks remain in this order; visible adjacency is not equivalence.
-  ({String? before})? _taskInsertionBefore(
+  VisibleTaskMovePlan? _taskDropPlan(
     String target,
     bool after,
-    Set<String> moving,
-  ) {
-    final global = rows
-        .where((row) => row['kind'] == 'task' && !moving.contains(row['id']))
-        .toList();
-    final index = global.indexWhere((row) => row['id'] == target);
-    if (index < 0) return null;
-    return (
-      before: !after
-          ? target
-          : index + 1 < global.length
-          ? global[index + 1]['id'] as String
-          : null,
+    Set<String> moving, {
+    List<TaskViewEntry>? entries,
+    List<Map<String, dynamic>>? taskRows,
+  }) {
+    final visible = entries ?? visibleEntries;
+    final to = visible.where((entry) => entry.task['id'] == target).firstOrNull;
+    if (to == null ||
+        !moving.every((id) {
+          final from = visible
+              .where((entry) => entry.task['id'] == id)
+              .firstOrNull;
+          return from != null && from.sharesOrderBucket(to);
+        })) {
+      return null;
+    }
+    return resolveVisibleTaskMove(
+      globalOrder: (taskRows ?? rows)
+          .where((row) => row['kind'] == 'task')
+          .map((row) => row['id'] as String)
+          .toList(),
+      visibleOrder: visible
+          .where((entry) => entry.sharesOrderBucket(to))
+          .map((entry) => entry.task['id'] as String)
+          .toList(),
+      moving: moving,
+      target: target,
+      after: after,
     );
   }
 
@@ -3051,16 +3071,46 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         );
         return;
       }
-      final insertion = _taskInsertionBefore(target, after, drag.selected);
+      void staleMove() => ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('The task list changed. Try moving the task again.'),
+        ),
+      );
+      if (store!.taskSnapshot != drag.snapshot) {
+        staleMove();
+        return;
+      }
+      final insertion = _taskDropPlan(target, after, drag.selected);
       if (insertion == null) return;
+      bool sameGap(
+        List<TaskViewEntry> entries,
+        List<Map<String, dynamic>> currentRows,
+      ) {
+        final fresh = _taskDropPlan(
+          target,
+          after,
+          drag.selected,
+          entries: entries,
+          taskRows: currentRows,
+        );
+        return fresh != null && insertion.sameGap(fresh);
+      }
+
+      final guard = _moveCommitGuard(
+        source,
+        target,
+        permitsProjection: sameGap,
+      );
+      // Even no-op drops must belong to the current projection. Preserve both
+      // canonical bytes and existing Undo history when visible order is unchanged.
+      if (!guard()) {
+        staleMove();
+        return;
+      }
+      if (insertion.noOp) return;
       final before = insertion.before;
       if (drag.selected.length == 1) {
-        await _moveBeforeGuarded(
-          source,
-          before,
-          drag.snapshot,
-          _moveCommitGuard(source, target),
-        );
+        await _moveBeforeGuarded(source, before, drag.snapshot, guard);
       } else {
         final ids = drag.selected.toList();
         final contextGuard = _bulkGuard(ids);
@@ -3069,8 +3119,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             .first;
         bool canCommit() {
           if (!contextGuard()) return false;
+          final currentRows = store!.rows;
           final view = projectTaskView(
-            store!.rows,
+            currentRows,
             timeSource.readTime(),
             assignee: all ? null : user,
             includeUpcoming: showUpcoming,
@@ -3080,12 +3131,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           final entries = searching
               ? [...view.open, ...view.completed]
               : (showCompleted ? view.completed : view.open);
-          return [...ids, target].every((id) {
-            final entry = entries
-                .where((entry) => entry.task['id'] == id)
-                .firstOrNull;
-            return entry != null && entry.sharesOrderBucket(expected);
-          });
+          return sameGap(entries, currentRows) &&
+              [...ids, target].every((id) {
+                final entry = entries
+                    .where((entry) => entry.task['id'] == id)
+                    .firstOrNull;
+                return entry != null && entry.sharesOrderBucket(expected);
+              });
         }
 
         final origin = store!;
@@ -3199,32 +3251,32 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (drag == null || pointer == null || !_dragIsCurrent()) return null;
     final target = _dropTargetAtPointer(drag.id, pointer);
     if (target == null || !_canDropTask(drag.id, target.target)) return null;
-    final insertion = _taskInsertionBefore(
-      target.target,
-      target.after,
-      drag.selected,
-    );
-    if (insertion == null) return null;
+    final plan = _taskDropPlan(target.target, target.after, drag.selected);
+    if (plan == null) return null;
+    final before = plan.visibleBefore;
     RenderBox? boxFor(String id) =>
         attachedTaskDropBox(dropKeys[id]?.currentContext);
     final viewport = attachedTaskDropBox(taskViewport.currentContext);
     if (viewport == null || !viewport.attached || !viewport.hasSize) {
       return null;
     }
-    var anchor = insertion.before == null ? null : boxFor(insertion.before!);
+    var anchor = before == null ? null : boxFor(before);
     final candidateTop = anchor != null && anchor.attached && anchor.hasSize
         ? viewport.globalToLocal(anchor.localToGlobal(Offset.zero))
         : null;
-    final canonicalTop =
+    final visibleTop =
         candidateTop != null &&
         candidateTop.dy >= 0 &&
         candidateTop.dy + 2 <= viewport.size.height &&
-        _canDropTask(drag.id, insertion.before!);
-    if (!canonicalTop) anchor = boxFor(target.target);
+        _canDropTask(drag.id, before!);
+    if (!visibleTop) {
+      final earlier = plan.visibleAfter;
+      anchor = earlier == null ? null : boxFor(earlier);
+    }
     if (anchor == null || !anchor.attached || !anchor.hasSize) return null;
-    // A visible legal next anchor owns the line, from either approach. Hidden
-    // anchors and group boundaries keep the original target's own edge.
-    final top = canonicalTop || !target.after;
+    // The visible edge comes from the same plan as the saved destination.
+    // Hidden global successors at bucket end never become paint anchors.
+    final top = visibleTop;
     final origin = viewport.globalToLocal(
       anchor.localToGlobal(Offset(0, top ? 0 : anchor.size.height - 2)),
     );
@@ -5330,7 +5382,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                           CrossAxisAlignment.stretch,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        InkWell(
+                                        ListRowBodyInkWell(
                                           key: ValueKey(
                                             'task-body-${task['id']}',
                                           ),
