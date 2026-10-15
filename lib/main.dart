@@ -19,6 +19,7 @@ import 'text/native_text_engine.dart';
 import 'text/native_text_licenses.dart';
 import 'domain/visible_task_move.dart';
 import 'domain/event.dart' show LogEvent;
+import 'presentation/editor_surface.dart';
 import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
 import 'presentation/task_entry_area.dart';
@@ -2805,29 +2806,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 }
               },
             );
-      if (panel) {
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: list),
-            const VerticalDivider(width: 1),
-            SizedBox(width: 420, child: editor),
-          ],
-        );
-      }
-      return Stack(
-        children: [
-          list,
-          ModalBarrier(color: Colors.black54, dismissible: false),
-          // The surrounding Scaffold already resized this body above the IME.
-          // An embedded Dialog must not subtract the keyboard inset again.
-          MediaQuery.removeViewInsets(
-            context: context,
-            removeBottom: true,
-            child: Center(child: editor),
-          ),
-        ],
-      );
+      return EditorSurface(list: list, editor: editor, panel: panel);
     },
   );
 

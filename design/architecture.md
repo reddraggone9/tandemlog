@@ -18,6 +18,13 @@ Inject time, IDs, storage and platform services at boundaries. Commands produce 
 
 RC4 extracts single/bulk editor draft ownership into `presentation/task_editor.dart`; host navigation owns editor-session identity and dirty-close routing. Shared `presentation/tag_input.dart` owns focus and anchored suggestion geometry; its host owns selected values and query drafts. `presentation/tag_filter_picker.dart` is the thin Filter policy wrapper. `domain/bulk_task_edit.dart` describes explicit functional patches and per-task results, while `TaskStore` serializes validation/durable writes. UI passes target/context guards, never writes SQL/logs. Per-task partial durability is explicit; do not hide it behind an apparent multi-task transaction. Main still combines workspace/filter/selection/drag orchestration; extract a focused controller when concrete duplication or another workflow warrants it, rather than a generic framework during this candidate.
 
+Food's page owns one keyed session and captured command/target origin.
+FoodEditor owns controllers, validation, one-shot Save and coalesced close through
+responsive reparenting. EditorSurface shares only geometry and modal containment.
+Host editorDone observes input disposal. Auxiliary-route readiness and revision
+guards protect navigation without new persistence or routing authority in the
+form. [ADR0025](decisions/0025-food-responsive-editor-pane.md).
+
 The text integration released in stable2026.10.2 adds `application/task_text_session.dart`
 for captured private drafts and `application/text_save_command.dart` for exact
 canonical receipt/commit orchestration. `storage/text_cache.dart` validates and

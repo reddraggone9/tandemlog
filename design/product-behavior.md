@@ -1,8 +1,8 @@
 # Product behavior and milestones
 
-## Following RC: local sections and Food refinements
+## Released local sections and Food refinements
 
-Approved for the next RC after stable 2026.10.4; implementation remains under acceptance. Each device remembers its last successfully visited Tasks/Food section. Unknown or missing preferences default to Tasks. Cancelled editor guards do not change the remembered section. Android Tasks/Food launcher shortcuts override that preference for an explicit launch and wait for workspace and user setup. Fresh newer requests take precedence; Recents and activity restoration do not replay an old shortcut.
+Released in stable 2026.10.5. Each device remembers its last successfully visited Tasks/Food section. Unknown or missing preferences default to Tasks. Cancelled editor guards do not change the remembered section. Android Tasks/Food launcher shortcuts override that preference for an explicit launch and wait for workspace and user setup. Fresh newer requests take precedence; Recents and activity restoration do not replay an old shortcut.
 
 Food keeps Stock/Retained/Deleted choices. **More filters…** contains Brand and Location and, only in Retained mode, **Retention reason** with **All reasons** when empty. Search bypasses those filters. Add and Add another omit retention; Edit retains it. Secondary Food metadata and checklist notes use existing secondary colors. All supported packages share the existing green-square white-checkmark app identity. The Food Android shortcut uses the existing fridge glyph; Tasks keeps the checkmark. [Accepted rationale and alternatives](decisions/0021-local-sections-and-launcher-shortcuts.md).
 
@@ -24,6 +24,16 @@ requires fresh native and release gates. Manual Food Add/detail editing requires
 expiration using the shared Tasks date input/picker; undated records remain
 readable, Cancel retains them and unrelated fieldwise edits preserve untouched
 dates. Other descriptive fields remain optional without optional label suffixes.
+
+## Responsive Food editing
+
+Food Edit, Add and Add another use a side pane at section widths of at least
+900 px and guarded dialogs below that width. Opening retains the outer content
+cap and toolbar edges; inventory uses the remaining width. Resizing retains one
+draft, caret/composition and focus. Row/section/workspace changes resolve it first.
+Add another copies descriptive fields with count 1, blank focused expiration and
+blank retention. Bulk Brand/Location stays modal; row Remove/Restore stays
+separate from draft editing. [Rationale](decisions/0025-food-responsive-editor-pane.md).
 
 ## Accepted direction
 

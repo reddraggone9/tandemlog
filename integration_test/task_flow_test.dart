@@ -94,6 +94,8 @@ import 'food_undo_stack_workflow_test.dart'
 import 'folder_picker_progress_workflow_test.dart'
     show registerFolderPickerProgressTests;
 import 'food_add_another_workflow_test.dart' show registerFoodAddAnotherTests;
+import 'food_editor_pane_workflow_test.dart'
+    show registerFoodEditorPaneWorkflowTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -313,6 +315,7 @@ void main() {
   registerTaskEditorErrorKeyboardTests();
   registerTaskEditorResizeTests();
   registerFoodAddAnotherTests();
+  registerFoodEditorPaneWorkflowTests();
   registerFoodBulkDetailsHostUndoReviewTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,

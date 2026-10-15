@@ -1,0 +1,20 @@
+{
+  "atUtc": "2026-10-15T20:19:39.621491+00:00",
+  "version": "2026.10.6-rc.1+82",
+  "base": "8ef398533ae34b57f28d3377c9adc77d69d6c7a9",
+  "scope": "Responsive Food Edit, Add and Add another; narrow and bulk modal behavior retained",
+  "persistenceOrDependencyChanged": false,
+  "lastSuccessfulSignedCandidate": 38782112182,
+  "localAcceptance": {
+    "formattedDartFiles": 311,
+    "analyzer": "clean",
+    "unitTestsPassed": 1121,
+    "toolingTestsPassed": 85,
+    "independentSourceAndEditorialReview": "ACCEPT",
+    "completeNativeAggregate": "running; not yet accepted"
+  },
+  "fullHostedAndExactNativeAcceptance": "pending",
+  "parentHandoffBeforePublication": true,
+  "publicationRequested": false,
+  "notesSha256": "89feef67da44d044bdb985443343afb47d1e34309764da91e0fc0b3c1293aa2e"
+}

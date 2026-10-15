@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/food_editor.dart';
+import 'package:tandemlog/presentation/editor_surface.dart';
 import 'package:tandemlog/food/inventory.dart';
 
 const _writer = '00000000-0000-4000-8000-000000000050';
@@ -113,13 +115,23 @@ Future<void> verifyFoodValueAutocomplete(
     findsOneWidget,
     reason: 'existing deleted entries remain suggestion sources',
   );
+  final brandDraft = tester.widget<TextField>(field('Brand')).controller!.value;
   await tester.sendKeyEvent(LogicalKeyboardKey.escape);
   await tester.pumpAndSettle();
   expect(option('Historical brand'), findsNothing);
   expect(
-    find.byType(AlertDialog),
+    find.byType(FoodEditor),
     findsOneWidget,
     reason: 'Escape only closes the suggestion popup',
+  );
+  final panel =
+      tester.view.physicalSize.width / tester.view.devicePixelRatio >=
+      EditorSurface.breakpoint;
+  expect(tester.widget<FoodEditor>(find.byType(FoodEditor)).panel, panel);
+  expect(find.byType(AlertDialog), panel ? findsNothing : findsOneWidget);
+  expect(
+    tester.widget<TextField>(field('Brand')).controller!.value,
+    brandDraft,
   );
   await enter('Brand', 'A new custom brand');
   await enter('Location', 'A new custom shelf');

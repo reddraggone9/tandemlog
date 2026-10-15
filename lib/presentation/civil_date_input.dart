@@ -19,6 +19,7 @@ class CivilDateInput extends StatelessWidget {
     this.errorText,
     this.compactDecoration = true,
     this.isOwnerMounted,
+    this.onPickerChanged,
   });
 
   final TextEditingController controller;
@@ -34,6 +35,9 @@ class CivilDateInput extends StatelessWidget {
   /// Controller-owner lifetime when responsive layout can replace this field.
   /// The owner must retain the controller until it is no longer mounted.
   final bool Function()? isOwnerMounted;
+
+  /// Lets a draft defer navigation until its calendar has finished.
+  final ValueChanged<bool>? onPickerChanged;
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -63,21 +67,26 @@ class CivilDateInput extends StatelessWidget {
             ? null
             : () async {
                 final parsed = DateTime.tryParse(controller.text);
-                final chosen = await showDatePicker(
-                  context: context,
-                  initialDate:
-                      parsed != null &&
-                          parsed.year >= 1900 &&
-                          parsed.year <= 9999
-                      ? parsed
-                      : DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime(9999),
-                  builder: _readableCalendarDays,
-                );
-                if (chosen != null &&
-                    (isOwnerMounted?.call() ?? context.mounted)) {
-                  controller.text = formatCivilDate(chosen);
+                onPickerChanged?.call(true);
+                try {
+                  final chosen = await showDatePicker(
+                    context: context,
+                    initialDate:
+                        parsed != null &&
+                            parsed.year >= 1900 &&
+                            parsed.year <= 9999
+                        ? parsed
+                        : DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(9999),
+                    builder: _readableCalendarDays,
+                  );
+                  if (chosen != null &&
+                      (isOwnerMounted?.call() ?? context.mounted)) {
+                    controller.text = formatCivilDate(chosen);
+                  }
+                } finally {
+                  onPickerChanged?.call(false);
                 }
               },
       ),
