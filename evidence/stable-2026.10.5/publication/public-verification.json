@@ -1,0 +1,57 @@
+{
+  "atUtc": "2026-10-15T19:20:24.121747+00:00",
+  "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5",
+  "releaseId": 414183466,
+  "version": "2026.10.5+81",
+  "tag": "v2026.10.5",
+  "candidateSource": "bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d",
+  "candidateRun": 38782112182,
+  "promotionRun": 38792894635,
+  "publishedAt": "2026-10-15T19:19:31Z",
+  "prerelease": false,
+  "draft": false,
+  "stableLatest": "v2026.10.5",
+  "priorStableLatestPreservedId": 411009405,
+  "priorReleasesAssetsAndTagObjectsUnchanged": 30,
+  "notesSha256": "9c3572ec2153cbbde6a8316b87092d1b078734522fe1371d40c8edd282477e0a",
+  "publicAssets": {
+    "tandemlog-2026.10.5-android.apk": {
+      "assetId": 644904659,
+      "bytes": 67136589,
+      "sha256": "255ebe1fddfea2521acad4263e830ca2c547422ae16fdfd5b5950e5d9b0cbebe",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5/tandemlog-2026.10.5-android.apk",
+      "anonymousDownloadVerified": true
+    },
+    "tandemlog-2026.10.5-linux-x64.flatpak": {
+      "assetId": 644904658,
+      "bytes": 9250056,
+      "sha256": "0d7ae4720cb14bdbdfbaaea3c5369626d598f2531618a2ee6cb9815021d406d0",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5/tandemlog-2026.10.5-linux-x64.flatpak",
+      "anonymousDownloadVerified": true
+    },
+    "tandemlog-2026.10.5-windows-x64-setup.exe": {
+      "assetId": 644904657,
+      "bytes": 12391664,
+      "sha256": "8952112a80ae0e00ca71e9354421e971c905c544c767517daf9b8bdee74df753",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.5/tandemlog-2026.10.5-windows-x64-setup.exe",
+      "anonymousDownloadVerified": true
+    }
+  },
+  "publicApk": {
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.5",
+    "versionCode": 81,
+    "ownerCertificateSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "singleOwnerSignerVerified": true,
+    "nonDebuggable": true,
+    "threeABIsVerified": true,
+    "nativePayloadVerified": true,
+    "metadataMatchedAcceptedSourceAndHash": true,
+    "permissionsUnchanged": true
+  },
+  "anonymousReleaseLatestAndTagVerified": true,
+  "stablePubspecAndAppStreamMetadataVerified": true,
+  "anonymousDownloadsMatchOriginalAcceptedBytes": true,
+  "onlyThreeVersionedInstallersPublished": true,
+  "noRebuildProductionOrDependencyOperation": true
+}

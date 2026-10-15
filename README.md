@@ -3,7 +3,7 @@
 Shared household tasks and food inventory for Android, Windows and Linux. Work offline and keep your devices in sync through a folder you choose.
 
 - Capture tasks quickly, one at a time or several together.
-- Track food containers, expiration dates, remaining contents and locations.
+- Track food containers, expiration dates and locations.
 - Organize tasks with tags, dates, times and recurring schedules.
 - Keep smaller steps in inline checklists with item notes and ordering.
 - Edit task titles and notes collaboratively across devices.

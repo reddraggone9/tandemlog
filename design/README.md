@@ -2,6 +2,8 @@
 
 ## Current source of truth
 
+Stable 2026.10.5/build 81 is published as [Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5) with the accepted RC1-RC4 scope. [Publication receipts](../evidence/stable-2026.10.5/publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, candidate 38782112182, promotion 38792894635 and anonymous public bytes. Existing native coverage qualifications remain explicit.
+
 Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is released as a separate module in stable2026.10.4/build71; [publication receipts](../evidence/stable-2026.10.4/publication/README.md) record exact native acceptance and public verification.
 
 1. [Status, commands and limitations](status.md)

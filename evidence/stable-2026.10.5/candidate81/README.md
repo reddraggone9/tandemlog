@@ -1,4 +1,8 @@
-# Stable2026.10.5/build81 candidate preparation
+# Stable 2026.10.5/build 81 - accepted and published
+
+[Publication receipts](../publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, candidate 38782112182 and promotion 38792894635 to the three original accepted installers. All required hosted gates, qualified LinuxGTK/API 30 exact-artifact/native acceptance, preservation/replay, actual demonstrations, independent review, fresh quota and parent publication authorization completed. Anonymous public bytes/signature/stable version/notes/tag/Latest and unchanged 30 prior releases/assets/tag refs verify. Original settings restored and temporary native processes stopped. Private data-bearing diagnostics and media remain external; platform qualifications remain explicit in the publication receipt.
+
+## Historical candidate preparation before acceptance
 
 Lee accepted experimental RC.4/build80 and explicitly authorized stable publication. Scope is the accepted RC1–RC4 feature set at `3118b6122a4c70e5db4e2e0c68822bbcf8e3e583` plus reviewed documentation receipts at `3966c02c631c21acd6f9a2f90e6766ea38148dd0`. Current main has no intervening executable change. The stable candidate changes only display/build metadata to2026.10.5+81, matching stable Flatpak metadata and reviewed stable notes. Application source, tests, native payload source, dependencies, platform adapters, signing pin, permissions and durable v3 meanings remain unchanged from accepted RC.4. No Food wide side-pane work is included.
 
