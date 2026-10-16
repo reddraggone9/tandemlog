@@ -1,10 +1,10 @@
 # Design map
 
-Current stable2026.10.6/build85: [exact candidate/native acceptance](../evidence/stable-2026.10.6/candidate85/README.md); qualified final independent review accepts; parent publication handoff remains required. Stable2026.10.5 stays Latest.
+Current stable2026.10.6/build85 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.6) after exact native acceptance and independently reviewed [public-byte verification](../evidence/stable-2026.10.6/publication/README.md).
 
 ## Current source of truth
 
-Stable 2026.10.5/build 81 is published as [Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5) with the accepted RC1-RC4 scope. [Publication receipts](../evidence/stable-2026.10.5/publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, candidate 38782112182, promotion 38792894635 and anonymous public bytes. Existing native coverage qualifications remain explicit.
+Previous stable 2026.10.5/build81 remains [available](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5) with the accepted RC1-RC4 scope. [Publication receipts](../evidence/stable-2026.10.5/publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, candidate 38782112182, promotion 38792894635 and anonymous public bytes. Existing native coverage qualifications remain explicit.
 
 Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is released as a separate module in stable2026.10.4/build71; [publication receipts](../evidence/stable-2026.10.4/publication/README.md) record exact native acceptance and public verification.
 
@@ -27,7 +27,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Responsive Food editor pane](decisions/0025-food-responsive-editor-pane.md): approved wide Edit/Add/Add another and guarded narrow dialogs; [2026.10.6-rc.1/build84](../evidence/prerelease-2026.10.6-rc.1/publication/README.md) is published experimentally after native acceptance, parent authorization and independent public-byte verification. Stable2026.10.5 stays Latest.
+- [Responsive Food editor pane](decisions/0025-food-responsive-editor-pane.md): approved wide Edit/Add/Add another and guarded narrow dialogs; [stable2026.10.6/build85](../evidence/stable-2026.10.6/publication/README.md) is published Latest after exact native acceptance, authorized promotion and independent public-byte verification. [RC.1/build84](../evidence/prerelease-2026.10.6-rc.1/publication/README.md) remains available.
 
 - [Visible task drop gaps](decisions/0024-visible-task-drop-gaps.md): accepted rule for shared visible destinations, no-op writes and fresh inferred-neighbor guards; published experimentally as [2026.10.5-rc.4/build80](../evidence/prerelease-2026.10.5-rc.4/publication/README.md) after exact-source native acceptance.
 

@@ -1,7 +1,7 @@
 # 0025 - Responsive Food editor pane
 
-Status: approved by Lee on 2026-10-15 and published experimentally as
-[2026.10.6-rc.1/build84](../../evidence/prerelease-2026.10.6-rc.1/publication/README.md) after qualified native acceptance, parent publication authorization and independent public-byte verification. Stable promotion needs separate approval.
+Status: approved by Lee on 2026-10-15 and published as
+[stable2026.10.6/build85](../../evidence/stable-2026.10.6/publication/README.md), Latest, after qualified exact native acceptance, authorized stable promotion and independent public-byte verification. [Experimental RC.1/build84](../../evidence/prerelease-2026.10.6-rc.1/publication/README.md) remains available.
 
 ## Context and decision
 

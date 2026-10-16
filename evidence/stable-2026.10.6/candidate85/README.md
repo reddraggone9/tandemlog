@@ -1,4 +1,4 @@
-# Stable2026.10.6/build85 acceptance handoff preparation
+# Stable2026.10.6/build85 accepted and published
 
 Lee accepted RC.1/build84 and authorized this stable update. [Acceptance](acceptance.json)
 binds stable source `1a00c8de432407d4e58d7278ac90d62f1cdbace4`, accepted application source `09d631ce073a4fd42e42c9baafd2a79ac3364845`,
@@ -37,8 +37,6 @@ with fresh hosted lifecycle/portable checks. Android is Android11/API30 x86_64,
 physical-tablet claim is made. Historical force-stopped Recents cards may remain;
 live returns are bound to the preceding activity/task/PID.
 
-Final independent review accepts the qualified evidence; a fresh-quota parent
-handoff precedes publication.
-Stable2026.10.5/build81 remains Latest; no stable85 release has been published here.
+[Publication receipts](../publication/README.md) record authorized promotion38837831145, stable2026.10.6 as Latest, independently reviewed anonymous original bytes, APK identity, exact notes/tag/source and preservation of all32 prior releases/assets and every prior tag ref. Final independent review accepted the qualified evidence before publication; timestamped acceptance/preparation receipts retain their prepublication state.
 Earlier RC receipts retain their exact source/build attribution. No held dependency,
 Base64 update, signing/access policy change or unrelated feature is included.

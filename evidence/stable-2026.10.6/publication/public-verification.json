@@ -1,0 +1,65 @@
+{
+  "atUtc": "2026-10-16T01:58:18.174114+00:00",
+  "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.6",
+  "releaseId": 414452831,
+  "version": "2026.10.6+85",
+  "tag": "v2026.10.6",
+  "candidateSource": "1a00c8de432407d4e58d7278ac90d62f1cdbace4",
+  "candidateRun": 38825977292,
+  "dispatchCommit": "6c8f19a7a62062cbce248112a5b4c2664d51ed3a",
+  "promotionRun": 38837831145,
+  "publishedAt": "2026-10-16T01:57:18Z",
+  "prerelease": false,
+  "draft": false,
+  "stableLatest": "v2026.10.6",
+  "latestStableReleaseId": 414452831,
+  "priorStableLatestPreservedId": 414183466,
+  "priorReleasesAssetsAndTagObjectsUnchanged": 32,
+  "priorTagRefsPreserved": 32,
+  "stablePubspecAndAppStreamMetadataVerified": true,
+  "notesSha256": "b9140813d5b64c75b15495711d1b8d83f302f7ca414e12790c68d0f915a67187",
+  "exactReviewedNotesMatched": true,
+  "publicAssets": {
+    "tandemlog-2026.10.6-android.apk": {
+      "assetId": 645816197,
+      "bytes": 67136585,
+      "sha256": "1b14b9840783865fe12ec481d821ebfb4a4c2df197514774a9d842faff3afb57",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.6/tandemlog-2026.10.6-android.apk",
+      "anonymousDownloadVerified": true,
+      "apiDigestMatched": true
+    },
+    "tandemlog-2026.10.6-linux-x64.flatpak": {
+      "assetId": 645816188,
+      "bytes": 9252952,
+      "sha256": "7b30070a9257068e810f69576840553ac902dff64827ba2528279f5ab133f5ea",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.6/tandemlog-2026.10.6-linux-x64.flatpak",
+      "anonymousDownloadVerified": true,
+      "apiDigestMatched": true
+    },
+    "tandemlog-2026.10.6-windows-x64-setup.exe": {
+      "assetId": 645816198,
+      "bytes": 12393683,
+      "sha256": "17d8c77c38343f5eeaf88890da73c2e40003a26e27e8172504d31f7a3da9c5c5",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.6/tandemlog-2026.10.6-windows-x64-setup.exe",
+      "anonymousDownloadVerified": true,
+      "apiDigestMatched": true
+    }
+  },
+  "publicApk": {
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.6",
+    "versionCode": 85,
+    "ownerCertificateSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "singleOwnerSignerVerified": true,
+    "nonDebuggable": true,
+    "threeABIsVerified": true,
+    "nativePayloadVerified": true,
+    "noticesMatched": true,
+    "metadataMatchedAcceptedSourceAndHash": true,
+    "permissionsUnchanged": true
+  },
+  "anonymousReleaseLatestTagAndPriorInventoryVerified": true,
+  "anonymousDownloadsMatchOriginalAcceptedBytes": true,
+  "onlyThreeVersionedInstallersPublished": true,
+  "noRebuildProductionOrDependencyOperation": true
+}
