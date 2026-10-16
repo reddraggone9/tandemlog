@@ -9,7 +9,12 @@
   "unchangedTrackedNonDocumentationFiles": 636,
   "unchangedSourceManifestSha256": "bef8997e4678d2e3f2b28d9cd46c5b376bb72d8783c5172e4549eaba5251b237",
   "stableNotesSha256": "b9140813d5b64c75b15495711d1b8d83f302f7ca414e12790c68d0f915a67187",
-  "fullStableCandidateAndExactArtifactAcceptancePending": true,
+  "fullStableCandidateAndExactArtifactAcceptancePending": false,
   "parentAcceptanceHandoffBeforePublication": true,
-  "publicationPerformed": false
+  "publicationPerformed": false,
+  "finalIndependentReviewPending": false,
+  "candidateSource": "1a00c8de432407d4e58d7278ac90d62f1cdbace4",
+  "candidateRun": 38825977292,
+  "pushRun": 38825971226,
+  "fullStableCandidateAndExactArtifactAcceptance": "passed; qualified final independent review accepted; parent publication handoff required"
 }

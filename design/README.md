@@ -1,5 +1,7 @@
 # Design map
 
+Current stable2026.10.6/build85: [exact candidate/native acceptance](../evidence/stable-2026.10.6/candidate85/README.md); qualified final independent review accepts; parent publication handoff remains required. Stable2026.10.5 stays Latest.
+
 ## Current source of truth
 
 Stable 2026.10.5/build 81 is published as [Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5) with the accepted RC1-RC4 scope. [Publication receipts](../evidence/stable-2026.10.5/publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, candidate 38782112182, promotion 38792894635 and anonymous public bytes. Existing native coverage qualifications remain explicit.

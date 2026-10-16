@@ -1,0 +1,61 @@
+{
+  "atUtc": "2026-10-16T01:19:32.142578+00:00",
+  "version": "2026.10.6+85",
+  "source": "1a00c8de432407d4e58d7278ac90d62f1cdbace4",
+  "acceptedRcSource": "09d631ce073a4fd42e42c9baafd2a79ac3364845",
+  "candidateRun": 38825977292,
+  "pushRun": 38825971226,
+  "allFiveCandidateAndThreePushJobsSuccessful": true,
+  "unchangedTrackedNonDocumentationFiles": 636,
+  "canonicalUnchangedSourceMapSha256": "bef8997e4678d2e3f2b28d9cd46c5b376bb72d8783c5172e4549eaba5251b237",
+  "stableNotesSha256": "b9140813d5b64c75b15495711d1b8d83f302f7ca414e12790c68d0f915a67187",
+  "originalInstallers": {
+    "tandemlog-android.apk": {
+      "bytes": 67136585,
+      "sha256": "1b14b9840783865fe12ec481d821ebfb4a4c2df197514774a9d842faff3afb57"
+    },
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12393683,
+      "sha256": "17d8c77c38343f5eeaf88890da73c2e40003a26e27e8172504d31f7a3da9c5c5"
+    },
+    "tandemlog-linux-x64.flatpak": {
+      "bytes": 9252952,
+      "sha256": "7b30070a9257068e810f69576840553ac902dff64827ba2528279f5ab133f5ea"
+    }
+  },
+  "originalArtifactsSignerVersionPayloadAndInstalledLifecyclesAccepted": true,
+  "nativeAcceptance": {
+    "desktop": "Exact-source Linux GTK AOT; isolated retained RC84 synthetic profile in place; Add/Edit/Another Save/Undo, guard/resize, light/dark200%; exact canonical prefixes, Task fields/order, settings writer/raw and full Food replay preserved",
+    "android": "Exact original owner-signed stable85 APK installed -r over retained published84; same synthetic profile, writer, raw settings, SAF grants and workspace; actual cold/warm pinned shortcuts, protected drafts, Recents, phone/wide Food Save/Undo, Gboard, light/dark200%; six exact intended Food records, unchanged Task history and full replayed final projection"
+  },
+  "mediaQualification": {
+    "desktop": "180s native pointer video covers drafts/resize/error, completed Add Save/Undo and Edit Save; Edit Undo/Another proven by separate captures and canonical replay",
+    "android": "Original native phone/wide recordings retain Android metadata track; independent visual review accepts actual Show taps and the specifically completed Save/Undo workflows"
+  },
+  "qualifications": [
+    "Manual Linux UI is GTK AOT; installed Flatpak lifecycle coverage is separate hosted evidence",
+    "Existing manual Windows GUI waiver; fresh hosted installer lifecycle and portable provenance",
+    "Android11/API30 x86_64 phone320dp and simulated960dp wide; no physical ARM/API36/general16KiB runtime or physical tablet claim",
+    "Historical force-stopped Recents cards may remain; actual live return identity is verified separately"
+  ],
+  "cleanup": {
+    "nativeProcessesStopped": true,
+    "deviceSettingsRestored": true,
+    "temporarySdkTestLinkAbsent": true,
+    "limits": "6GiB/2CPUs/zero swap/one emulator"
+  },
+  "independentReviews": {
+    "sourceArchitectureAndActualNotes": "ACCEPT",
+    "desktopNativePreservationAndQualifiedMedia": "ACCEPT",
+    "finalAndroidArtifactsMediaAndPrivacy": "qualified ACCEPT"
+  },
+  "rawProfilesCanonicalSnapshotsAndMediaRemainPrivate": true,
+  "parentAcceptanceHandoffBeforePublication": true,
+  "readyForParentPublicationReview": true,
+  "publicationPerformed": false,
+  "productionOrDependencyOperationPerformed": false,
+  "rootReadmeReview": {
+    "sha256": "390469f5641c0cb0d4a06f1ffa1cc06b321e0ea35884b14aaa2852d57b938d26",
+    "outcome": "Existing task/Food overview, chosen-folder sync explanation and stable/preview/installation links remain accurate; the Food pane improves existing editing and does not require overview changes"
+  }
+}

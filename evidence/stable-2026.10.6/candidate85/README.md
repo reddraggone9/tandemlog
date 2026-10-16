@@ -1,24 +1,44 @@
-# Stable 2026.10.6/build85 candidate preparation
+# Stable2026.10.6/build85 acceptance handoff preparation
 
-Lee accepted experimental RC.1/build84 and explicitly authorized stable release
-on2026-10-15. Accepted application source is `09d631ce073a4fd42e42c9baafd2a79ac3364845`; reviewed publication receipts
-at `5f43700d0ea85975394cccfc22e992af631aa170` contain no intervening executable change. This candidate changes
-only official version/build metadata to2026.10.6+85, matching stable Flatpak
-metadata, stable notes and release evidence. Application source, tests, native
-payload source, dependencies, platform adapters, signing pin, permissions and
-durable v3 meanings remain unchanged from accepted RC.1.
+Lee accepted RC.1/build84 and authorized this stable update. [Acceptance](acceptance.json)
+binds stable source `1a00c8de432407d4e58d7278ac90d62f1cdbace4`, accepted application source `09d631ce073a4fd42e42c9baafd2a79ac3364845`,
+[candidate38825977292](https://github.com/reddraggone9/tandemlog/actions/runs/38825977292)
+and [push38825971226](https://github.com/reddraggone9/tandemlog/actions/runs/38825971226).
+All five candidate and three push jobs pass; exact original Android/Windows/Flatpak
+artifacts, owner signer, official version/build85, native payloads, checksums and
+hosted installed desktop lifecycles verify. No rebuild supplies promotion artifacts.
+All636 tracked non-documentation files other than official version/Flatpak metadata
+match accepted RC84. Dependencies, signing pin, permissions and durable v3 meanings
+are unchanged. Stable notes describe the visible Food pane change only.
 
-Full signed-candidate/push CI, original artifact/source/version/signer/lifecycle
-verification, exact retained Android84-to85 upgrade and affected native workflows,
-canonical-byte/projection/settings/SAF preservation, source-qualified desktop
-acceptance and independent review remain required. Return an acceptance handoff
-with fresh quota before publication; this preparation does not publish a release.
-Stable2026.10.5/build81 remains Latest. Earlier RC acceptance keeps its original
-source/build attribution. Windows manual-GUI waiver, manual LinuxGTK AOT versus
-hosted installed Flatpak and Android11/API30 x86_64/simulated-wide qualifications
-remain explicit; no physical ARM/API36/general16KiB runtime claim is made.
+Fresh exact-source LinuxGTK AOT and exact original Android84-to85 in-place upgrade
+acceptance cover Add/Edit/Add another Save/Undo, protected drafts and resizing,
+phone/wide layouts, both themes and200% text. Android adds actual cold/warm pinned
+destinations, cancelled-destination memory, Gboard and live Recents identity.
+Canonical original prefixes, exact intended six Food actions and Undo targets,
+unchanged Task history/native fields/order, full final Food projection, raw local
+settings/writer and persisted SAF identity/modes/time verify. Existing synthetic
+profiles are retained in place; production is untouched.
 
-Use isolated synthetic trials under6GiB/2CPU/zero-swap/one-emulator limits; restore
-settings, remove temporary test links and stop temporary processes after acceptance
-or blockers. Profiles, canonical snapshots and raw media stay private. No production
-operation, held dependency/Base64 upgrade or unrelated feature work is included.
+Actual desktop pointer video shows draft resize/error, completed Add Save/Undo and
+Edit Save. Edit Undo/Add another use separate settled captures and canonical proof;
+the video's busy tail is not called completed Edit Undo. Original Android phone/wide recordings
+retain their metadata track; final independent visual review accepts actual Show taps
+and the specifically completed Save/Undo workflows.
+Independent source/architecture/actual notes, desktop, Android, artifact, media
+and privacy reviews accept the qualified evidence. Raw profiles, snapshots and media
+stay private. Native settings are restored, temporary processes stopped and SDK test
+link absent under6GiB/2CPU/zero-swap/one-emulator bounds.
+
+Qualifications remain explicit: manual Linux UI is GTK AOT with separate hosted
+installed Flatpak lifecycle coverage; Windows retains the existing manual-GUI waiver
+with fresh hosted lifecycle/portable checks. Android is Android11/API30 x86_64,
+320dp phone and simulated960dp wide. No physical ARM/API36/general16KiB runtime or
+physical-tablet claim is made. Historical force-stopped Recents cards may remain;
+live returns are bound to the preceding activity/task/PID.
+
+Final independent review accepts the qualified evidence; a fresh-quota parent
+handoff precedes publication.
+Stable2026.10.5/build81 remains Latest; no stable85 release has been published here.
+Earlier RC receipts retain their exact source/build attribution. No held dependency,
+Base64 update, signing/access policy change or unrelated feature is included.
