@@ -1556,7 +1556,7 @@ void main() {
       tester
           .widget<FilledButton>(find.widgetWithText(FilledButton, 'Continue'))
           .onPressed,
-      isNull,
+      isNotNull,
     );
     await tester.enterText(find.byType(TextField), 'Lee');
     final manifest = File('${profile.path}/shared-data/tandemlog-space.json');
@@ -1666,131 +1666,191 @@ void main() {
       await File(
         '${profile.path}/settings.json',
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
-      // The production mobile capture branch, hosted by native Linux here.
-      // Real Gboard acceptance must also pass on the exact Android APK.
-      await tester.pumpWidget(
-        TandemlogApp(
-          profilePath: profile.path,
-          folderActions: TestFolders(android: true),
-        ),
-      );
-      await waitForUi(
-        tester,
-        () => find.byTooltip('Add tasks').evaluate().isNotEmpty,
-      );
-      await openCaptureForTest(tester);
-      final input = find.widgetWithText(TextField, 'What needs doing?');
-      final controller = tester.widget<TextField>(input).controller!;
-      Future<void> composing(String text) async {
-        await tester.tap(input);
-        await tester.pumpAndSettle();
-        tester.testTextInput.updateEditingValue(
-          TextEditingValue(
-            text: text,
-            selection: TextSelection.collapsed(offset: text.length),
-            composing: TextRange(start: 0, end: text.length),
+      final previousPlatform = debugDefaultTargetPlatformOverride;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      try {
+        // The production mobile capture branch, hosted by native Linux here.
+        // Real Gboard acceptance must also pass on the exact Android APK.
+        await tester.pumpWidget(
+          TandemlogApp(
+            profilePath: profile.path,
+            folderActions: TestFolders(android: true),
           ),
         );
+        await waitForUi(
+          tester,
+          () => find.byTooltip('Add tasks').evaluate().isNotEmpty,
+        );
+        await openCaptureForTest(tester);
+        final input = find.widgetWithText(TextField, 'What needs doing?');
+        expect(
+          Theme.of(tester.element(input)).platform,
+          TargetPlatform.android,
+        );
+        final controller = tester.widget<TextField>(input).controller!;
+        Future<void> composing(String text) async {
+          await tester.tap(input);
+          await tester.pumpAndSettle();
+          tester.testTextInput.updateEditingValue(
+            TextEditingValue(
+              text: text,
+              selection: TextSelection.collapsed(offset: text.length),
+              composing: TextRange(start: 0, end: text.length),
+            ),
+          );
+          await tester.pumpAndSettle();
+        }
+
+        Future<List<String>> titles() async {
+          await writer.refresh();
+          return writer.rows
+              .where((row) => row['kind'] == 'task')
+              .map((row) => row['title'] as String)
+              .toList();
+        }
+
+        await composing('Compose');
+        expect(controller.value.composing.isCollapsed, isFalse);
+        await tester.tap(find.byTooltip('Add tasks'));
         await tester.pumpAndSettle();
+        expect(await titles(), ['Compose']);
+        expect(controller.text, isEmpty);
+        expect(controller.value.composing.isValid, isFalse);
+        expect(tester.widget<TextField>(input).focusNode!.hasFocus, isTrue);
+
+        await composing('買い物');
+        final candidate = controller.value;
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(controller.value, candidate);
+        expect(await titles(), ['Compose']);
+        // Multiple deliberate callbacks in one frame cannot start two writes.
+        final addButton = tester.widget<FilledButton>(
+          find.byKey(const ValueKey('capture-add')),
+        );
+        final add = addButton.onPressed!;
+        add();
+        add();
+        await tester.pumpAndSettle();
+        expect((await titles()).where((title) => title == '買い物').length, 1);
+        expect(controller.text, isEmpty);
+
+        // A mobile newline action only edits the buffer. Explicit Add submits
+        // all nonblank lines, including a composition ending after pasted text.
+        await composing('Line one\nLine two\n  ');
+        await tester.testTextInput.receiveAction(TextInputAction.newline);
+        await tester.pumpAndSettle();
+        expect(controller.text, 'Line one\nLine two\n  ');
+        expect((await titles()).length, 2);
+        await tester.tap(find.byTooltip('Add tasks'));
+        await tester.pumpAndSettle();
+        expect((await titles()).toSet(), {
+          'Compose',
+          '買い物',
+          'Line one',
+          'Line two',
+        });
+
+        await composing('IME submit');
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pumpAndSettle();
+        expect(
+          (await titles()).where((title) => title == 'IME submit').length,
+          1,
+        );
+
+        await composing(' ' * 3);
+        await tester.tap(find.byTooltip('Add tasks'));
+        await tester.pumpAndSettle();
+        expect(controller.text, ' ' * 3);
+        expect((await titles()).length, 5);
+        await composing('x' * 501);
+        await tester.tap(find.byTooltip('Add tasks'));
+        await tester.pumpAndSettle();
+        expect(controller.text, 'x' * 501);
+        expect(
+          find.text('Keep each task title to 500 characters or fewer.'),
+          findsOneWidget,
+        );
+        expect((await titles()).length, 5);
+
+        // Failed canonical ingestion never consumes the accepted visible draft;
+        // retry after recovery commits that same pending ID exactly once.
+        await composing('Retry composition');
+        final corrected = controller.value;
+        final primary = find.byKey(const ValueKey('capture-add'));
+        final beforeReview = {
+          for (final entry in await LocalLogFolder(folder.path).list())
+            entry.name: await LocalLogFolder(folder.path).read(entry.name),
+        };
+        expect(
+          find.descendant(of: primary, matching: find.text('Review errors')),
+          findsOneWidget,
+        );
+        await tester.tap(primary);
+        await tester.pumpAndSettle();
+        expect(
+          controller.value,
+          corrected,
+          reason:
+              'Review cannot finalize or submit a corrected composing draft',
+        );
+        expect(
+          find.descendant(of: primary, matching: find.text('Add')),
+          findsOneWidget,
+        );
+        expect(
+          await LocalLogFolder(folder.path).list(),
+          hasLength(beforeReview.length),
+        );
+        for (final entry in beforeReview.entries) {
+          expect(
+            await LocalLogFolder(folder.path).read(entry.key),
+            entry.value,
+          );
+        }
+        expect((await titles()).length, 5);
+        final broken = File('${folder.path}/${const Uuid().v4()}.jsonl');
+        await broken.writeAsString('{"version":999}\n', flush: true);
+        await tester.tap(find.byTooltip('Add tasks'));
+        await tester.pumpAndSettle();
+        expect(controller.text, 'Retry composition');
+        expect(controller.value.composing.isValid, isFalse);
+        final dynamic host = tester.state(find.byType(TasksPage));
+        final pending = (host.pendingCapture as Iterable).toList();
+        expect(pending, hasLength(1));
+        final dynamic reserved = pending.single;
+        final reservedId = reserved.id as String;
+        expect(reserved.title, 'Retry composition');
+        expect(
+          find.descendant(of: primary, matching: find.text('Retry Add')),
+          findsOneWidget,
+        );
+        await broken.delete();
+        await tester.tap(find.byTooltip('Add tasks'));
+        await tester.pumpAndSettle();
+        expect(
+          (await titles())
+              .where((title) => title == 'Retry composition')
+              .length,
+          1,
+        );
+        expect(controller.text, isEmpty);
+        expect(host.pendingCapture, isEmpty);
+        expect(
+          writer.rows.singleWhere(
+            (row) => row['title'] == 'Retry composition',
+          )['id'],
+          reservedId,
+        );
+        expect(tester.takeException(), isNull);
+      } finally {
+        debugDefaultTargetPlatformOverride = previousPlatform;
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpAndSettle();
+        await writer.close();
+        await root.delete(recursive: true);
       }
-
-      Future<List<String>> titles() async {
-        await writer.refresh();
-        return writer.rows
-            .where((row) => row['kind'] == 'task')
-            .map((row) => row['title'] as String)
-            .toList();
-      }
-
-      await composing('Compose');
-      expect(controller.value.composing.isCollapsed, isFalse);
-      await tester.tap(find.byTooltip('Add tasks'));
-      await tester.pumpAndSettle();
-      expect(await titles(), ['Compose']);
-      expect(controller.text, isEmpty);
-      expect(controller.value.composing.isValid, isFalse);
-      expect(tester.widget<TextField>(input).focusNode!.hasFocus, isTrue);
-
-      await composing('買い物');
-      final candidate = controller.value;
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-      await tester.pumpAndSettle();
-      expect(controller.value, candidate);
-      expect(await titles(), ['Compose']);
-      // Multiple deliberate callbacks in one frame cannot start two writes.
-      final addButton = tester.widget(
-        find.byKey(const ValueKey('capture-add')),
-      );
-      final add = addButton is IconButton
-          ? addButton.onPressed!
-          : (addButton as TextButton).onPressed!;
-      add();
-      add();
-      await tester.pumpAndSettle();
-      expect((await titles()).where((title) => title == '買い物').length, 1);
-      expect(controller.text, isEmpty);
-
-      // A mobile newline action only edits the buffer. Explicit Add submits
-      // all nonblank lines, including a composition ending after pasted text.
-      await composing('Line one\nLine two\n  ');
-      await tester.testTextInput.receiveAction(TextInputAction.newline);
-      await tester.pumpAndSettle();
-      expect(controller.text, 'Line one\nLine two\n  ');
-      expect((await titles()).length, 2);
-      await tester.tap(find.byTooltip('Add tasks'));
-      await tester.pumpAndSettle();
-      expect((await titles()).toSet(), {
-        'Compose',
-        '買い物',
-        'Line one',
-        'Line two',
-      });
-
-      await composing('IME submit');
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
-      expect(
-        (await titles()).where((title) => title == 'IME submit').length,
-        1,
-      );
-
-      await composing(' ' * 3);
-      await tester.tap(find.byTooltip('Add tasks'));
-      await tester.pumpAndSettle();
-      expect(controller.text, ' ' * 3);
-      expect((await titles()).length, 5);
-      await composing('x' * 501);
-      await tester.tap(find.byTooltip('Add tasks'));
-      await tester.pumpAndSettle();
-      expect(controller.text, 'x' * 501);
-      expect(
-        find.text('Keep each task title under 500 characters.'),
-        findsOneWidget,
-      );
-      expect((await titles()).length, 5);
-
-      // Failed canonical ingestion never consumes the accepted visible draft;
-      // retry after recovery commits that same pending ID exactly once.
-      await composing('Retry composition');
-      final broken = File('${folder.path}/${const Uuid().v4()}.jsonl');
-      await broken.writeAsString('{"version":999}\n', flush: true);
-      await tester.tap(find.byTooltip('Add tasks'));
-      await tester.pumpAndSettle();
-      expect(controller.text, 'Retry composition');
-      expect(controller.value.composing.isValid, isFalse);
-      await broken.delete();
-      await tester.tap(find.byTooltip('Add tasks'));
-      await tester.pumpAndSettle();
-      expect(
-        (await titles()).where((title) => title == 'Retry composition').length,
-        1,
-      );
-      expect(controller.text, isEmpty);
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
-      await writer.close();
-      await root.delete(recursive: true);
     },
   );
 
@@ -2780,12 +2840,9 @@ void main() {
       await tester.tap(find.text('Monthly review'));
       await tester.pumpAndSettle();
       Future<void> fill(String label, String value) async {
-        if (label.startsWith('This occurrence') &&
-            find.widgetWithText(TextField, label).evaluate().isEmpty) {
-          await tester.tap(find.text('Edit existing override'));
-          await tester.pumpAndSettle();
-        }
-        final field = label == 'Start time'
+        final field = label == 'This occurrence time'
+            ? find.byKey(const ValueKey('scheduledTime'))
+            : label == 'Start time'
             ? find.byKey(const ValueKey('startTime'))
             : label == 'Due time'
             ? find.byKey(const ValueKey('dueTime'))
@@ -3168,6 +3225,10 @@ void main() {
       'Different time',
       schedule: {'dueDate': '2026-10-02', 'dueTime': '10:00'},
     );
+    final originalCanonical = {
+      await for (final entry in folder.list())
+        if (entry is File) entry.path: await entry.readAsBytes(),
+    };
     await File(
       '${profile.path}/settings.json',
     ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
@@ -3184,6 +3245,23 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await writer.refresh();
+    final migratedSchedule =
+        writer.rows.firstWhere(
+              (row) => row['id'] == ids['Dated peer'],
+            )['schedule']
+            as Map;
+    expect(migratedSchedule['dueDate'], '2026-10-02');
+    expect(migratedSchedule['scheduledDate'], isNull);
+    expect(migratedSchedule['scheduledTime'], isNull);
+    expect(migratedSchedule['dueMinDays'], 1);
+    for (final entry in originalCanonical.entries) {
+      expect(
+        await File(entry.key).readAsBytes(),
+        entry.value,
+        reason: 'Occurrence conversion must append without rewriting history.',
+      );
+    }
     Finder target(String title) =>
         find.byKey(ValueKey('task-drop-${ids[title]}'));
     Finder handle(String title) => find.descendant(
@@ -3314,20 +3392,23 @@ void main() {
     await tester.pumpAndSettle();
     // Existing schedule starts expanded.
     await tester.pumpAndSettle();
-    const warning = 'Existing occurrence override is preserved.';
+    final due = find.byKey(const ValueKey('dueDate'));
+    final occurrence = find.byKey(const ValueKey('scheduledDate'));
     final repeat = find.widgetWithText(TextField, 'Repeat');
+    expect(tester.widget<TextField>(due).controller!.text, '2026-10-02');
+    expect(occurrence, findsNothing);
     await tester.ensureVisible(repeat);
     await tester.pumpAndSettle();
-    expect(find.text(warning), findsOneWidget);
     await tester.enterText(repeat, 'every week');
     await tester.pumpAndSettle();
-    expect(
-      find.textContaining('base due date and repeat cadence remain'),
-      findsOneWidget,
-    );
+    expect(occurrence, findsOneWidget);
+    expect(tester.widget<TextField>(occurrence).enabled, isTrue);
+    expect(tester.widget<TextField>(occurrence).controller!.text, isEmpty);
+    expect(tester.widget<TextField>(due).controller!.text, '2026-10-02');
     await tester.enterText(repeat, '');
     await tester.pumpAndSettle();
-    expect(find.text(warning), findsOneWidget);
+    expect(occurrence, findsNothing);
+    expect(tester.widget<TextField>(due).controller!.text, '2026-10-02');
     await tester.tap(find.text('Save changes'));
     await tester.pumpAndSettle();
     await writer.refresh();
@@ -3336,7 +3417,10 @@ void main() {
               (row) => row['id'] == ids['Dated peer'],
             )['schedule']
             as Map;
-    expect(schedule['scheduledDate'], '2026-10-02');
+    expect(schedule['dueDate'], '2026-10-02');
+    expect(schedule['scheduledDate'], isNull);
+    expect(schedule['scheduledTime'], isNull);
+    expect(schedule['dueMinDays'], 1);
     expect(schedule['recurrence'], isNull);
     expect(find.text('Hidden future'), findsNothing);
     await openCaptureForTest(tester);

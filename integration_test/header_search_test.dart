@@ -88,10 +88,52 @@ void registerHeaderSearchTests() {
           expect(tester.getRect(toolbar), headerBefore);
           expect(tester.getRect(undo), undoBefore);
           final add = find.byKey(const ValueKey('capture-add'));
+          expect(tester.widget(add), isA<FilledButton>());
+          expect(tester.widget<FilledButton>(add).onPressed, isNotNull);
           expect(
-            tester.widget(add),
-            variant.width == 1200 ? isA<TextButton>() : isA<IconButton>(),
+            find.descendant(of: add, matching: find.text('Add')),
+            findsOneWidget,
           );
+          expect(add.hitTestable(), findsOneWidget);
+          expect(tester.getSize(add).width, greaterThanOrEqualTo(48));
+          final actionTheme = Theme.of(tester.element(add));
+          // Material adjusts both padded touch targets and shrink-wrap visual
+          // bounds by the resolved platform density (compact on native GTK).
+          final minimumActionHeight =
+              (actionTheme.materialTapTargetSize == MaterialTapTargetSize.padded
+                  ? 48.0
+                  : 40.0) +
+              actionTheme.visualDensity.baseSizeAdjustment.dy;
+          expect(
+            tester.getSize(add).height,
+            greaterThanOrEqualTo(minimumActionHeight),
+          );
+          final addBounds = tester.getRect(add);
+          final addElement = tester.element(add);
+          await tester.tap(add);
+          await tester.pumpAndSettle();
+          expect(
+            find.descendant(of: add, matching: find.text('Review errors')),
+            findsOneWidget,
+          );
+          expect(tester.element(add), same(addElement));
+          expect(
+            tester.getRect(add),
+            addBounds,
+            reason: 'Review retains the actual action position and footprint',
+          );
+          expect(add.hitTestable(), findsOneWidget);
+          expect(tester.widget<TextField>(capture).focusNode!.hasFocus, isTrue);
+          expect(
+            tester.widget<TextField>(capture).decoration!.errorText,
+            'Enter at least one task title.',
+          );
+          expect(tester.getRect(toolbar), headerBefore);
+          expect(tester.getRect(undo), undoBefore);
+          for (final entry in canonical.entries) {
+            expect(await File(entry.key).readAsBytes(), entry.value);
+          }
+          expect(await folder.list().length, canonical.length);
           expect(find.byIcon(Icons.arrow_upward), findsNothing);
           await tester.enterText(capture, 'Discarded capture draft');
           final controller = tester.widget<TextField>(capture).controller!;

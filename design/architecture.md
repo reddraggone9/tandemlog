@@ -123,3 +123,7 @@ The RC-only unspecified contents branch is removed. Numeric fraction/amount enco
 ## Following RC section adapter
 
 The Android bridge emits only validated constant section destinations and monotonically sequenced delivery IDs. The existing application host owns readiness, coalescing, editor guards and successful LocalSettings persistence. Native shortcut publication and restored-intent suppression stay in the Android adapter; domain, canonical replay and sync remain independent. [ADR 0021](decisions/0021-local-sections-and-launcher-shortcuts.md) records the accepted boundary and alternatives.
+
+## Shared form presentation
+
+`presentation/form_validation.dart` owns structured field issues, reveal state, input anchors and stable review/submit/retry intent. Individual forms still own their domain validation, controllers, explicit bulk masks, captured commands and lifecycle guards. `domain/occurrence_due_migration.dart` proposes pure conversions; TaskStore owns fresh-snapshot guarded append and the application chooses the safe admission boundary. [ADR 0026](decisions/0026-field-help-validation-and-occurrence-due.md).

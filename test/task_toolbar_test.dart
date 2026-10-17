@@ -31,12 +31,6 @@ void main() {
                             compact: compact,
                             onSelected: (_) {},
                           ),
-                          checklistMenu: IconButton(
-                            key: const ValueKey('checklist-display'),
-                            tooltip: 'Checklist display',
-                            onPressed: () {},
-                            icon: const Icon(Icons.unfold_more),
-                          ),
                           userName: name,
                           count: '165 open',
                           countLabels: const ['165 open', '10000 completed'],
@@ -100,6 +94,10 @@ void main() {
                     'width=$width scale=$scale search=$searching theme=$brightness',
               );
               expect(find.text('Tandemlog'), findsNothing);
+              expect(find.byIcon(Icons.unfold_more), findsNothing);
+              expect(find.byIcon(Icons.unfold_less), findsNothing);
+              expect(find.byTooltip('Expand shown checklists'), findsNothing);
+              expect(find.byTooltip('Collapse shown checklists'), findsNothing);
               final section = tester.getRect(
                 find.byKey(const ValueKey('section-menu')),
               );

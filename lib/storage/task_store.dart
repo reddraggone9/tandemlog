@@ -12,6 +12,7 @@ import '../domain/bulk_task_edit.dart';
 export '../domain/bulk_task_edit.dart';
 import '../application/task_clock.dart';
 import '../domain/schedule.dart' hide validateSchedule;
+import '../domain/occurrence_due_migration.dart';
 import 'log_folder.dart';
 import 'profile_lock.dart';
 import 'writer_guard.dart';
@@ -124,6 +125,22 @@ class _NativeUndoField {
   final String context, allocation;
   final int actor;
   final NativeTextDocument document;
+}
+
+/// Results of append-only compatibility edits. Conflicts remain ordinary tasks.
+class OccurrenceDueMigrationResult {
+  const OccurrenceDueMigrationResult(
+    this.migrated,
+    this.conflicts,
+    this.error, {
+    required this.changed,
+  });
+  final int migrated;
+
+  /// Refresh or guarded append may have changed the rows, even with zero conversions.
+  final bool changed;
+  final Map<String, String> conflicts;
+  final Object? error;
 }
 
 /// Owns durable log ingestion and one disposable SQLite materialization.
@@ -3984,6 +4001,64 @@ class TaskStore {
       onPrepared: onPrepared,
     ),
   );
+
+  /// A presentation upgrade, explicitly invoked by the application after open
+  /// and external refresh. Replay itself is read-only. Each edit refreshes and
+  /// checks the observed task snapshot through the normal v3 writer gate.
+  /// Existing-Due rows are never changed. Concurrent older offline edits retain
+  /// the protocol's existing last-writer ordering, not a new conditional merge.
+  Future<OccurrenceDueMigrationResult> migrateOccurrenceDates({
+    bool Function()? canCommit,
+  }) => _serialize(() async {
+    var changed = await _refresh();
+    final conflicts = <String, String>{};
+    var migrated = 0;
+    Object? failure;
+    final ids = [
+      for (final task in rows)
+        if (planOccurrenceDueMigration(task) != null) task['id'] as String,
+    ];
+    for (final id in ids) {
+      if (canCommit?.call() == false) break;
+      // A preceding append may have admitted a newly synced task edit.
+      changed = await _refresh() || changed;
+      final current = rows.where((row) => row['id'] == id).firstOrNull;
+      if (current == null) continue;
+      final plan = planOccurrenceDueMigration(current);
+      if (plan == null) continue;
+      if (plan.conflict != null) {
+        conflicts[id] = plan.conflict!;
+        continue;
+      }
+      try {
+        await _command(
+          id,
+          'task.edited',
+          {'schedule': plan.afterSchedule!.toJson()},
+          expectedTaskSnapshot: taskSnapshot,
+          canCommit: canCommit,
+        );
+        migrated++;
+        changed = true;
+      } on StaleTaskSnapshot {
+        changed = true;
+        // Do not append a stale plan. A later external refresh can replan it.
+        continue;
+      } catch (error) {
+        changed = true;
+        // Stop after a provider/writer failure; normal recovery must acknowledge
+        // any prepared append before a new operation can be admitted.
+        failure = error;
+        break;
+      }
+    }
+    return OccurrenceDueMigrationResult(
+      migrated,
+      Map.unmodifiable(conflicts),
+      failure,
+      changed: changed,
+    );
+  });
 
   Future<LogEvent> edit(
     String entity,

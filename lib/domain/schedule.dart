@@ -3,6 +3,11 @@ import 'wall_time.dart';
 const unchangedRecurrenceMessage =
     'The next occurrence would have the same dates. Complete this task later or edit its schedule.';
 
+class ScheduleValidationException extends FormatException {
+  const ScheduleValidationException(super.message, this.fields);
+  final List<String> fields;
+}
+
 /// Civil task dates. These values are not device-local DateTime instants.
 ///
 /// Recurrence semantics match the observed Obsidian Tasks 7.20.0 subset:
@@ -54,25 +59,39 @@ class TaskSchedule {
         (dueMaxDays != null &&
             (dueMaxDays < 0 || dueMaxDays > maxRelativeDays)) ||
         (dueMinDays != null && dueMaxDays != null && dueMinDays > dueMaxDays)) {
-      throw const FormatException(
+      throw const ScheduleValidationException(
         'Sort-date bounds must be 0–365000 days, with minimum no greater than maximum.',
+        ['dueMinDays', 'dueMaxDays'],
       );
     }
-    for (final date in [startDate, scheduledDate, dueDate]) {
-      if (date != null) parseCivilDate(date);
+    for (final (field, date) in [
+      ('startDate', startDate),
+      ('scheduledDate', scheduledDate),
+      ('dueDate', dueDate),
+    ]) {
+      if (date != null) {
+        try {
+          parseCivilDate(date);
+        } on FormatException catch (error) {
+          throw ScheduleValidationException(error.message, [field]);
+        }
+      }
     }
-    for (final (label, date, time) in [
-      ('Start', startDate, startTime),
-      ('Scheduled', scheduledDate, scheduledTime),
-      ('Due', dueDate, dueTime),
+    for (final (field, label, date, time) in [
+      ('start', 'Start', startDate, startTime),
+      ('scheduled', 'This occurrence', scheduledDate, scheduledTime),
+      ('due', 'Due', dueDate, dueTime),
     ]) {
       if (time != null &&
           !RegExp(r'^(?:[01]\d|2[0-3]):[0-5]\d$').hasMatch(time)) {
-        throw FormatException('$label time must be HH:mm.');
+        throw ScheduleValidationException('$label time must be HH:mm.', [
+          '${field}Time',
+        ]);
       }
       if (time != null && date == null) {
-        throw FormatException(
+        throw ScheduleValidationException(
           'Choose a ${label.toLowerCase()} date before adding a time.',
+          ['${field}Time', '${field}Date'],
         );
       }
     }
@@ -80,7 +99,10 @@ class TaskSchedule {
       try {
         timeZoneLocation(timeZone);
       } catch (_) {
-        throw const FormatException('Unknown time zone identifier.');
+        throw const ScheduleValidationException(
+          'Unknown time zone identifier.',
+          ['timeZone'],
+        );
       }
     }
     if (startDate != null && dueDate != null) {
@@ -109,15 +131,23 @@ class TaskSchedule {
               '00:00',
             );
       if (dueTime == null ? !start.isBefore(due) : start.isAfter(due)) {
-        throw const FormatException(
+        throw const ScheduleValidationException(
           'Start must be on or before the due date and time.',
+          ['startDate', 'startTime', 'dueDate', 'dueTime'],
         );
       }
     }
     if (recurrence != null) {
-      _Rule.parse(recurrence);
+      try {
+        _Rule.parse(recurrence);
+      } on FormatException catch (error) {
+        throw ScheduleValidationException(error.message, ['recurrence']);
+      }
       if (dueDate == null && scheduledDate == null && startDate == null) {
-        throw const FormatException('Repeating tasks need a reference date.');
+        throw const ScheduleValidationException(
+          'Choose a Start, Due or This occurrence date for Repeat.',
+          ['recurrence', 'startDate', 'dueDate', 'scheduledDate'],
+        );
       }
     }
     return TaskSchedule._(

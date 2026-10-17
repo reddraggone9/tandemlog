@@ -32,6 +32,8 @@ FoodState paneFoods() => projectFood([
     ),
 ]);
 
+Finder get foodAction => find.byKey(const ValueKey('food-save-action'));
+
 Finder foodField(String label) => find.byWidgetPredicate(
   (w) => w is TextField && w.decoration?.labelText == label,
 );
@@ -111,7 +113,7 @@ void main() => registerFoodEditorPaneTests();
 
 void registerFoodEditorPaneTests() {
   testWidgets(
-    'narrow editor stays above keyboard after pointer action ends field focus',
+    'narrow editor stays above keyboard after Review and after field focus ends',
     (tester) async {
       var writes = 0;
       await mountFoodPane(
@@ -132,21 +134,30 @@ void registerFoodEditorPaneTests() {
       await tester.ensureVisible(foodField('Expiration'));
       await tester.enterText(foodField('Expiration'), '2027-02-30');
       await tester.pumpAndSettle();
-      final add = find.widgetWithText(FilledButton, 'Add');
+      final add = foodAction;
+      final actionElement = tester.element(add);
       await tester.tap(add, kind: PointerDeviceKind.mouse);
       await tester.pumpAndSettle();
       expect(find.text('Invalid food expiration.'), findsOneWidget);
       expect(writes, 0);
       expect(controller(tester, 'Food name').text, 'Synthetic beans');
       expect(controller(tester, 'Expiration').text, '2027-02-30');
-      // Desktop mouse activation outside the field ends its input focus.
-      // The still-open keyboard must keep reserving space for the editor.
+      expect(identical(tester.element(foodAction), actionElement), isTrue);
+      expect(
+        find.descendant(of: foodAction, matching: find.text('Review errors')),
+        findsOneWidget,
+      );
+      // Review focuses the first invalid input. Independently exercise the
+      // original unfocused-field/still-open-IME geometry boundary as well.
       final expiry = tester.widget<EditableText>(
         find.descendant(
           of: foodField('Expiration'),
           matching: find.byType(EditableText),
         ),
       );
+      expect(expiry.focusNode.hasFocus, isTrue);
+      expiry.focusNode.unfocus();
+      await tester.pumpAndSettle();
       expect(expiry.focusNode.hasFocus, isFalse);
       expect(tester.view.viewInsets.bottom, 280);
       final error = find.text('Invalid food expiration.');
@@ -355,9 +366,7 @@ void registerFoodEditorPaneTests() {
       await openPaneAdd(tester);
       await tester.enterText(foodField('Food name'), 'Held beans');
       await tester.enterText(foodField('Expiration'), '2026-10-20');
-      final save = tester
-          .widget<FilledButton>(find.widgetWithText(FilledButton, 'Add'))
-          .onPressed!;
+      final save = tester.widget<FilledButton>(foodAction).onPressed!;
       save();
       save();
       await tester.pump();
@@ -365,12 +374,7 @@ void registerFoodEditorPaneTests() {
       expect(key.currentState!.closeBusy, isTrue);
       expect(await key.currentState!.requestCloseEditor(), isFalse);
       expect(tester.widget<TextField>(foodField('Food name')).enabled, isFalse);
-      expect(
-        tester
-            .widget<FilledButton>(find.widgetWithText(FilledButton, 'Add'))
-            .onPressed,
-        isNull,
-      );
+      expect(tester.widget<FilledButton>(foodAction).onPressed, isNull);
       held.complete();
       await tester.pumpAndSettle();
       save();
@@ -440,9 +444,7 @@ void registerFoodEditorPaneTests() {
       await openPaneAdd(tester);
       await tester.enterText(foodField('Food name'), 'Overlay save beans');
       await tester.enterText(foodField('Expiration'), '2026-10-20');
-      final save = tester
-          .widget<FilledButton>(find.widgetWithText(FilledButton, 'Add'))
-          .onPressed!;
+      final save = tester.widget<FilledButton>(foodAction).onPressed!;
       await openPaneFilters(tester);
       save();
       await tester.pumpAndSettle();
@@ -608,27 +610,43 @@ void registerFoodEditorPaneTests() {
     testWidgets(
       'short 200 percent ${brightness.name} pane keeps errors and actions reachable',
       (tester) async {
+        var writes = 0;
         await mountFoodPane(
           tester,
+          onAdd: (_, _) => writes++,
           width: 1000,
           height: 480,
           scale: 2,
           brightness: brightness,
         );
         await openPaneAdd(tester);
-        await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+        await tester.tap(foodAction);
         await tester.pumpAndSettle();
         await tester.ensureVisible(find.text('Expiration is required.'));
         await tester.pumpAndSettle();
         expect(find.text('Expiration is required.'), findsOneWidget);
+        expect(writes, 0);
+        expect(
+          find.descendant(of: foodAction, matching: find.text('Review errors')),
+          findsOneWidget,
+        );
+        expect(
+          tester
+              .widget<EditableText>(
+                find.descendant(
+                  of: foodField('Food name'),
+                  matching: find.byType(EditableText),
+                ),
+              )
+              .focusNode
+              .hasFocus,
+          isTrue,
+        );
         expect(
           tester.getRect(find.widgetWithText(TextButton, 'Cancel')).bottom,
           lessThanOrEqualTo(480),
         );
-        expect(
-          tester.getRect(find.widgetWithText(FilledButton, 'Add')).bottom,
-          lessThanOrEqualTo(480),
-        );
+        expect(tester.getRect(foodAction).bottom, lessThanOrEqualTo(480));
         expect(tester.takeException(), isNull);
       },
     );

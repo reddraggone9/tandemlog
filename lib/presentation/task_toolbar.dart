@@ -10,7 +10,6 @@ class TaskToolbar extends StatelessWidget {
   final Widget Function(bool compact)? filter;
   final Widget undo;
   final Widget Function(bool compact)? undoAction;
-  final Widget? checklistMenu;
   final Widget Function(bool compact)? inputModeAction;
   final String sectionName;
   final IconData sectionIcon;
@@ -26,7 +25,6 @@ class TaskToolbar extends StatelessWidget {
     this.count,
     this.countLabels = const [],
     this.filter,
-    this.checklistMenu,
     this.sectionMenu,
   });
 
@@ -101,8 +99,7 @@ class TaskToolbar extends StatelessWidget {
                       measure('Search', theme.textTheme.labelLarge).width,
                     ) +
                     64) +
-          filterWidth +
-          (checklistMenu == null ? 0 : 48);
+          filterWidth;
       final actionsWidth = closedActionsWidth;
       // Keep the whole switch target, counts and actions comfortable. The
       // current section name yields when enlarged text consumes that space.
@@ -226,7 +223,6 @@ class TaskToolbar extends StatelessWidget {
             ),
           undoAction?.call(compact) ?? undo,
           if (filter != null) filter!(compact),
-          ?checklistMenu,
           identityMenu(identity),
         ],
       );

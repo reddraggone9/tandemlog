@@ -26,6 +26,7 @@ class TagInput extends StatefulWidget {
     this.queryKey = const ValueKey('tag-search'),
     this.queryErrorText,
     this.onSubmitQuery,
+    this.canSubmitQuery,
     this.clearQueryOnSelection = false,
     required this.onDropdownChanged,
   });
@@ -46,7 +47,7 @@ class TagInput extends StatefulWidget {
       emptyLabel,
       noMatchesLabel;
   final Key queryKey;
-  final bool Function()? onSubmitQuery;
+  final bool Function()? onSubmitQuery, canSubmitQuery;
   final ValueChanged<bool> onDropdownChanged;
 
   @override
@@ -86,7 +87,9 @@ class TagInputState extends State<TagInput> with WidgetsBindingObserver {
       ? 'Add tags'
       : 'Add #$_normalizedQuery';
   bool get _canCreate =>
-      widget.enabled && !_composing && widget.queryErrorText == null;
+      widget.enabled &&
+      !_composing &&
+      (widget.canSubmitQuery?.call() ?? widget.queryErrorText == null);
 
   bool get dropdownOpen => _open;
   bool get hasQuery => _query.text.isNotEmpty;
@@ -479,6 +482,7 @@ class TagInputState extends State<TagInput> with WidgetsBindingObserver {
               : null,
           contentPadding: widget.label == null ? EdgeInsets.zero : null,
           errorText: widget.queryErrorText,
+          errorMaxLines: 3,
         ),
         // A chip collection plus a query has no single editable baseline.
         // Use InputDecorator's height fallback rather than chip/tooltip baselines.

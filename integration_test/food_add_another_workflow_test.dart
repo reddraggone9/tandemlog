@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/food_editor.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/food_store.dart';
@@ -202,10 +203,61 @@ void registerFoodAddAnotherTests() {
           await tester.pumpAndSettle();
           expect(find.text('Expiration is required.'), findsOneWidget);
           expect(await canonical(), before);
+          final editor = tester.state<FoodEditorState>(find.byType(FoodEditor));
+          final template = editor.widget.template;
+          final action = find.byKey(const ValueKey('food-save-action'));
+          expect(
+            find.descendant(of: action, matching: find.text('Review errors')),
+            findsOneWidget,
+          );
           final expiry = find.byKey(const ValueKey('food-expiration'));
           await pixels.tap(tester, expiry);
           await tester.enterText(expiry, '2026-12-10');
-          await pixels.tap(tester, find.widgetWithText(FilledButton, 'Add'));
+          await tester.pumpAndSettle();
+          final corrected = {
+            for (final c in [
+              editor.name,
+              editor.brand,
+              editor.expiry,
+              editor.size,
+              editor.location,
+              editor.count,
+              editor.retentionQuery,
+            ])
+              c: c.value,
+          };
+          expect(
+            tester.widget<TextField>(expiry).decoration!.errorText,
+            isNull,
+          );
+          expect(
+            find.descendant(of: action, matching: find.text('Review errors')),
+            findsOneWidget,
+          );
+          await pixels.tap(tester, action);
+          await tester.pumpAndSettle();
+          expect(
+            tester.state<FoodEditorState>(find.byType(FoodEditor)),
+            same(editor),
+          );
+          expect(editor.widget.template, same(template));
+          for (final entry in corrected.entries) {
+            expect(entry.key.value, entry.value);
+          }
+          expect(editor.count.text, '1');
+          expect(editor.retention, isEmpty);
+          expect(editor.estimated, isNull);
+          expect(page().state.containers.single.toJson(), sourceBefore);
+          expect(
+            await canonical(),
+            before,
+            reason: 'Corrected Review cannot allocate or append an Add',
+          );
+          expect(
+            find.descendant(of: action, matching: find.text('Add')),
+            findsOneWidget,
+          );
+          await pixels.tap(tester, action);
           await flows.waitForUi(
             tester,
             () => page().state.containers.length == 2,

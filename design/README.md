@@ -27,6 +27,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Field help, form validation and occurrence Due conversion](decisions/0026-field-help-validation-and-occurrence-due.md): accepted implementation in progress, with native acceptance still pending; draft-only dependent clearing was explicitly accepted on October 17. No release authorized.
+
 - [Responsive Food editor pane](decisions/0025-food-responsive-editor-pane.md): approved wide Edit/Add/Add another and guarded narrow dialogs; [stable2026.10.6/build85](../evidence/stable-2026.10.6/publication/README.md) is published Latest after exact native acceptance, authorized promotion and independent public-byte verification. [RC.1/build84](../evidence/prerelease-2026.10.6-rc.1/publication/README.md) remains available.
 
 - [Visible task drop gaps](decisions/0024-visible-task-drop-gaps.md): accepted rule for shared visible destinations, no-op writes and fresh inferred-neighbor guards; published experimentally as [2026.10.5-rc.4/build80](../evidence/prerelease-2026.10.5-rc.4/publication/README.md) after exact-source native acceptance.

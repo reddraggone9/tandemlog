@@ -30,6 +30,38 @@ class _FailingPicker extends FolderActions {
   Future<bool> canOpen(String location) async => false;
 }
 
+Finder _primaryAction() => find.descendant(
+  of: find.byKey(const ValueKey('task-save-action')),
+  matching: find.byType(FilledButton),
+);
+
+String _primaryLabel(WidgetTester tester) => tester
+    .widget<Text>(
+      find.descendant(of: _primaryAction(), matching: find.byType(Text)),
+    )
+    .data!;
+
+void _expectTitleIssueVisible(WidgetTester tester, Finder title) {
+  const message = 'Finish entering the title before saving.';
+  expect(tester.widget<TextField>(title).decoration!.errorText, message);
+  final paragraph = tester.renderObject<RenderParagraph>(
+    find.descendant(of: find.text(message), matching: find.byType(RichText)),
+  );
+  expect(paragraph.didExceedMaxLines, isFalse);
+  final viewport = RenderAbstractViewport.of(paragraph) as RenderBox;
+  Rect paintedRect(RenderBox box) => MatrixUtils.transformRect(
+    box.getTransformTo(null),
+    Offset.zero & box.size,
+  );
+  final clip = paintedRect(viewport), error = paintedRect(paragraph);
+  expect(error.top, greaterThanOrEqualTo(clip.top));
+  expect(error.bottom, lessThanOrEqualTo(clip.bottom));
+  final editable = tester.widget<EditableText>(
+    find.descendant(of: title, matching: find.byType(EditableText)),
+  );
+  expect(editable.focusNode.hasFocus, isTrue);
+}
+
 void registerTaskEditorErrorKeyboardTests() {
   for (final configuration in [
     ('light', true),
@@ -178,23 +210,47 @@ void registerTaskEditorErrorKeyboardTests() {
           await tester.pumpAndSettle();
           expect(controller.value, composingDraft);
           expect(state.editingText, same(textSession));
+          final primary = _primaryAction();
+          expect(tester.widget<FilledButton>(primary).onPressed, isNotNull);
+          await tester.ensureVisible(primary);
+          await tester.pumpAndSettle();
+          expect(primary.hitTestable(), findsOneWidget);
+          await tester.tap(primary);
+          await tester.pumpAndSettle();
+          expect(_primaryLabel(tester), 'Review errors');
+          expect(find.widgetWithText(FilledButton, 'Retry Save'), findsNothing);
+          _expectTitleIssueVisible(tester, title);
+          expect(controller.value, composingDraft);
+          expect(state.editingText, same(textSession));
+          expect(state.textSaveCommand, same(saveCommand));
+          expect(tester.view.viewInsets.bottom, 280);
           expect(
-            tester
-                .widget<FilledButton>(
-                  find.widgetWithText(FilledButton, 'Save changes'),
-                )
-                .onPressed,
-            isNull,
-            reason: 'Layout changes must retain the composition guard',
+            await canonical(),
+            before,
+            reason: 'Review must never admit a composing title',
           );
           controller.value = controller.value.copyWith(
             composing: TextRange.empty,
           );
           await tester.pumpAndSettle();
           final committedDraft = controller.value;
+          expect(_primaryLabel(tester), 'Review errors');
+          await tester.ensureVisible(primary);
+          await tester.pumpAndSettle();
+          await tester.tap(primary);
+          await tester.pumpAndSettle();
+          expect(_primaryLabel(tester), 'Save changes');
+          expect(controller.value, committedDraft);
+          expect(state.editingText, same(textSession));
+          expect(state.textSaveCommand, same(saveCommand));
+          expect(
+            await canonical(),
+            before,
+            reason: 'Corrected Review must not turn into Save on that gesture',
+          );
           for (final label in ['Delete', 'Cancel', 'Save changes']) {
             final button = label == 'Save changes'
-                ? find.widgetWithText(FilledButton, label)
+                ? primary
                 : find.widgetWithText(TextButton, label);
             await tester.ensureVisible(button);
             await tester.pumpAndSettle();
@@ -412,17 +468,27 @@ void registerTaskEditorResizeTests() {
           expect(state.textSaveCommand, same(saveCommand));
           expect(state.choosingFolder, false);
           expect(state.busy, false);
+          final primary = _primaryAction();
+          expect(tester.widget<FilledButton>(primary).onPressed, isNotNull);
+          await tester.ensureVisible(primary);
+          await tester.pumpAndSettle();
+          expect(primary.hitTestable(), findsOneWidget);
+          await tester.tap(primary);
+          await tester.pumpAndSettle();
+          expect(_primaryLabel(tester), 'Review errors');
+          expect(find.widgetWithText(FilledButton, 'Retry Save'), findsNothing);
+          _expectTitleIssueVisible(tester, title);
+          expect(controller.value, value);
+          expect(state.editingText, same(textSession));
+          expect(state.textSaveCommand, same(saveCommand));
+          expect(tester.view.viewInsets.bottom, 280);
           expect(
-            tester
-                .widget<FilledButton>(
-                  find.widgetWithText(FilledButton, 'Save changes'),
-                )
-                .onPressed,
-            isNull,
+            canonical(),
+            before,
+            reason:
+                'Review after responsive reparenting cannot save composition',
           );
           await tester.ensureVisible(title);
-          await tester.pumpAndSettle();
-          await tester.tap(title);
           await tester.pumpAndSettle();
           // Responsive reparenting keeps TaskEditorState and its controller,
           // but may rebuild the nested EditableText. Resolve the live render
@@ -457,9 +523,9 @@ void registerTaskEditorResizeTests() {
             tester,
             'task-editor-$appearance-wide-narrow-title-ime',
           );
-          for (final label in ['Delete', 'Cancel', 'Save changes']) {
-            final button = label == 'Save changes'
-                ? find.widgetWithText(FilledButton, label)
+          for (final label in ['Delete', 'Cancel', 'Review errors']) {
+            final button = label == 'Review errors'
+                ? primary
                 : find.widgetWithText(TextButton, label);
             await tester.ensureVisible(button);
             await tester.pumpAndSettle();
@@ -471,6 +537,10 @@ void registerTaskEditorResizeTests() {
             tester,
             'task-editor-$appearance-wide-narrow-actions-ime',
           );
+          expect(controller.value, value);
+          expect(state.editingText, same(textSession));
+          expect(state.textSaveCommand, same(saveCommand));
+          expect(_primaryLabel(tester), 'Review errors');
           expect(canonical(), before);
           expect(tester.takeException(), isNull);
         } finally {
