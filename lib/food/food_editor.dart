@@ -654,6 +654,8 @@ class FoodEditorState extends State<FoodEditor> {
                   queryController: retentionQuery,
                   onDropdownChanged: (_) {},
                   allowCreate: true,
+                  canSubmitQuery: () =>
+                      retentionQuery.text.trim().length <= 200,
                   clearQueryOnSelection: true,
                   queryLabel: 'Retention reason',
                   hint: 'Retention reason',
@@ -740,6 +742,7 @@ class FoodEditorState extends State<FoodEditor> {
             ),
           )
         : AlertDialog(
+            alignment: Alignment.bottomCenter,
             scrollable: true,
             insetPadding: const EdgeInsets.all(16),
             titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

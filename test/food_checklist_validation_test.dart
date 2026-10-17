@@ -93,6 +93,103 @@ Future<void> _checklist(
 }
 
 void main() {
+  for (final food in [true, false]) {
+    for (final scale in [1.0, 2.0]) {
+      testWidgets(
+        '${food ? 'Food' : 'Checklist'} modal keeps whole action rect through review and correction at ${scale}x',
+        (tester) async {
+          tester.view.devicePixelRatio = 1;
+          tester.view.physicalSize = const Size(420, 900);
+          addTearDown(tester.view.resetDevicePixelRatio);
+          addTearDown(tester.view.resetPhysicalSize);
+          var writes = 0;
+          if (food) {
+            await pane.mountFoodPane(
+              tester,
+              width: 420,
+              height: 900,
+              scale: scale,
+              onAdd: (_, _) => writes++,
+            );
+            await pane.openPaneAdd(tester);
+          } else {
+            await _checklist(
+              tester,
+              scale: scale,
+              save: (_, _) async {
+                writes++;
+              },
+            );
+          }
+          final actionElement = tester.element(_action);
+          final initialRect = tester.getRect(_action);
+          expect(_action.hitTestable(), findsOneWidget);
+          expect(_actionWidget(tester).validation.reviewRequired, isFalse);
+          await _activate(tester);
+          expect(writes, 0);
+          expect(identical(tester.element(_action), actionElement), isTrue);
+          expect(
+            tester.getRect(_action),
+            initialRect,
+            reason: 'Showing local errors must not move or resize the action',
+          );
+          expect(
+            find.descendant(of: _action, matching: find.text('Review errors')),
+            findsOneWidget,
+          );
+          final title = food
+              ? _field('Food name')
+              : find.byKey(const Key('checklist-item-title'));
+          expect(
+            tester.widget<TextField>(title).decoration!.errorText,
+            isNotNull,
+          );
+          expect(
+            tester
+                .widget<EditableText>(
+                  find.descendant(
+                    of: title,
+                    matching: find.byType(EditableText),
+                  ),
+                )
+                .focusNode
+                .hasFocus,
+            isTrue,
+          );
+          await tester.enterText(title, 'Synthetic corrected title');
+          if (food) {
+            await tester.ensureVisible(_field('Expiration'));
+            await tester.enterText(_field('Expiration'), '2026-10-20');
+          }
+          await tester.pumpAndSettle();
+          expect(writes, 0);
+          expect(
+            tester.getRect(_action),
+            initialRect,
+            reason:
+                'Correcting revealed errors must keep the same action bounds',
+          );
+          FocusManager.instance.primaryFocus?.unfocus();
+          await tester.pumpAndSettle();
+          expect(tester.widget<TextField>(title).decoration!.errorText, isNull);
+          expect(
+            find.descendant(
+              of: _action,
+              matching: find.text(food ? 'Add' : 'Save item'),
+            ),
+            findsOneWidget,
+          );
+          expect(tester.getRect(_action), initialRect);
+          expect(_action.hitTestable(), findsOneWidget);
+          expect(writes, 0);
+          await _activate(tester);
+          expect(writes, 1);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+
   testWidgets(
     'Food pristine Add is enabled; review reveals/focuses first field without writing',
     (tester) async {

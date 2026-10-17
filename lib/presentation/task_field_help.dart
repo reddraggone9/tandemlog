@@ -73,6 +73,18 @@ Future<void> showTaskFieldHelp(BuildContext context) async {
       ownerRoute?.isCurrent == true &&
       previousFocus?.context != null) {
     previousFocus!.requestFocus();
+    await WidgetsBinding.instance.endOfFrame;
+    final focusedContext = previousFocus.context;
+    if (context.mounted &&
+        ownerRoute?.isCurrent == true &&
+        previousFocus.hasFocus &&
+        focusedContext != null &&
+        focusedContext.mounted) {
+      await Scrollable.ensureVisible(
+        focusedContext,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    }
   }
 }
 

@@ -4609,7 +4609,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   );
   Widget _users(List<Map<String, dynamic>> users) =>
       users.isEmpty || pendingUserId != null
-      ? Center(
+      ? Align(
+          alignment: Alignment.bottomCenter,
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(32),
             child: ConstrainedBox(
@@ -4650,16 +4651,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  if (error != null)
-                    Semantics(
-                      liveRegion: true,
-                      child: Text(
-                        error!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    ),
+                  if (error != null) _formFailureNotice(error!),
                   ValidationActionButton(
                     validation: setupValidation,
                     enabled: ModalRoute.isCurrentOf(context) ?? true,
@@ -5053,6 +5045,25 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
+  Widget _formFailureNotice(String message) => ConstrainedBox(
+    constraints: BoxConstraints(
+      maxHeight:
+          ((MediaQuery.sizeOf(context).height -
+                      MediaQuery.viewInsetsOf(context).bottom) *
+                  .2)
+              .clamp(40.0, 120.0),
+    ),
+    child: SingleChildScrollView(
+      child: Semantics(
+        liveRegion: true,
+        child: Text(
+          message,
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
+      ),
+    ),
+  );
+
   Widget _captureField() => Focus(
     onKeyEvent: (_, event) {
       final enter =
@@ -5102,6 +5113,24 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Tooltip(
+              message: 'Add tasks',
+              child: ValidationActionButton(
+                buttonKey: const ValueKey('capture-add'),
+                validation: captureValidation,
+                enabled: ModalRoute.isCurrentOf(context) ?? true,
+                label: 'Add',
+                busyLabel: 'Adding…',
+                busy: busy,
+                retry: pendingCapture.isNotEmpty,
+                retryLabel: 'Retry Add',
+                onSubmit: _submitCaptureButton,
+              ),
+            ),
+          ),
+          if (captureFailure && error != null) _formFailureNotice(error!),
           captureValidation.field(
             'capture',
             TextField(
@@ -5125,31 +5154,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     : 'Enter to add · Shift+Enter for another task',
               ),
               onSubmitted: (_) => _capture(),
-            ),
-          ),
-          if (captureFailure && error != null)
-            Semantics(
-              liveRegion: true,
-              child: Text(
-                error!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Tooltip(
-              message: 'Add tasks',
-              child: ValidationActionButton(
-                buttonKey: const ValueKey('capture-add'),
-                validation: captureValidation,
-                enabled: ModalRoute.isCurrentOf(context) ?? true,
-                label: 'Add',
-                busyLabel: 'Adding…',
-                busy: busy,
-                retry: pendingCapture.isNotEmpty,
-                retryLabel: 'Retry Add',
-                onSubmit: _submitCaptureButton,
-              ),
             ),
           ),
         ],

@@ -108,6 +108,9 @@ void main() {
         await tester.tap(input('dueMinDays'));
         await tester.pumpAndSettle();
         final focus = tester.widget<TextField>(input('dueMinDays')).focusNode!;
+        await tester.ensureVisible(find.byTooltip('Task field help'));
+        await tester.pumpAndSettle();
+        expect(find.byTooltip('Task field help').hitTestable(), findsOneWidget);
         await tester.tap(find.byTooltip('Task field help'));
         await tester.pumpAndSettle();
         for (final term in [
@@ -136,6 +139,7 @@ void main() {
         await tester.tap(find.widgetWithText(TextButton, 'Done'));
         await tester.pumpAndSettle();
         expect(focus.hasFocus, isTrue);
+        expect(input('dueMinDays').hitTestable(), findsOneWidget);
         expect(
           tester.widget<TextField>(input('dueMinDays')).controller!.text,
           '0',

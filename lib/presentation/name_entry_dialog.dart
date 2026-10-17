@@ -66,6 +66,7 @@ class _NameEntryDialogState extends State<NameEntryDialog> {
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: validation,
     builder: (context, _) => AlertDialog(
+      alignment: Alignment.bottomCenter,
       title: Text(widget.title),
       scrollable: true,
       content: validation.field(

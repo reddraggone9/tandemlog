@@ -982,6 +982,8 @@ class _EditorBodyState extends State<_EditorBody> {
             clearQueryOnSelection: true,
             enabled: !editingFrozen,
             queryErrorText: formValidation.errorFor(key),
+            // Create admission is independent of whether an error is revealed.
+            canSubmitQuery: () => tagError(key) == null,
             onSubmitQuery: () => submitTagQuery(key),
             onChanged: (value) => setTags(key, value),
             onDropdownChanged: (_) {},
@@ -1253,7 +1255,7 @@ class _EditorBodyState extends State<_EditorBody> {
                   3 * lineHeight(styles.labelLarge) +
                   96;
       notesMaxHeight = (availableHeight * .4).clamp(100.0, 360.0);
-      failureMaxHeight = availableHeight * .4;
+      failureMaxHeight = (availableHeight * .2).clamp(40.0, 120.0);
       // Match the dialog's vertical insets and action padding. Flexible notice
       // space below also accommodates buttons that wrap with enlarged text.
       final failureBodyReserve = modalActionsInContent
@@ -1284,6 +1286,7 @@ class _EditorBodyState extends State<_EditorBody> {
         if (planOccurrenceDueMigration(task)?.conflict != null) task,
     ];
     final content = Form(
+      key: const ValueKey('task-editor-fields'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -1446,7 +1449,7 @@ class _EditorBodyState extends State<_EditorBody> {
       retry: widget.textSession?.hasPendingReceipt == true,
       onSubmit: submit,
     );
-    final actionButtons = bulk && failure != null && modalActionsInContent
+    final actionButtons = failure != null && modalActionsInContent
         // Give failed bulk actions the full footer width. A fixed Delete
         // column otherwise wraps Save into an extra line and squeezes the
         // readable notice at enlarged phone text.
@@ -1492,11 +1495,11 @@ class _EditorBodyState extends State<_EditorBody> {
         actionButtons,
       ],
     );
-    final pinBulkFailure = bulk && !widget.panel;
-    // A rejected bulk Save must keep its feedback beside the retry/close
-    // actions, even when the clean editor uses scrolling actions for space.
+    final pinModalFailure = !widget.panel;
+    // A rejected Save keeps feedback beside retry/close actions, even when
+    // the clean editor uses scrolling actions for a small keyboard viewport.
     final actionsInContent =
-        modalActionsInContent && !(pinBulkFailure && failure != null);
+        modalActionsInContent && !(pinModalFailure && failure != null);
     Widget failureNotice(String message) => Semantics(
       liveRegion: true,
       child: Text(
@@ -1505,6 +1508,11 @@ class _EditorBodyState extends State<_EditorBody> {
           color: Theme.of(context).colorScheme.error,
         ),
       ),
+    );
+    Widget boundedFailureNotice(String message) => ConstrainedBox(
+      key: const ValueKey('task-save-failure'),
+      constraints: BoxConstraints(maxHeight: failureMaxHeight),
+      child: SingleChildScrollView(child: failureNotice(message)),
     );
     final heading = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1546,22 +1554,30 @@ class _EditorBodyState extends State<_EditorBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  heading,
-                  const SizedBox(height: 16),
                   Expanded(
                     child: SingleChildScrollView(
                       controller: scroll,
                       padding: const EdgeInsets.only(top: 6),
-                      child: content,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Header and fields share the remaining viewport;
+                          // recovery actions stay reachable at enlarged text.
+                          heading,
+                          const SizedBox(height: 16),
+                          content,
+                        ],
+                      ),
                     ),
                   ),
-                  if (failure != null) failureNotice(failure!),
+                  if (failure != null) boundedFailureNotice(failure!),
                   actions,
                 ],
               ),
             ),
           )
         : AlertDialog(
+            alignment: Alignment.bottomCenter,
             // Title and form share the bounded scroll area, keeping fields
             // reachable above the keyboard even with enlarged phone text.
             scrollable: true,
@@ -1580,7 +1596,7 @@ class _EditorBodyState extends State<_EditorBody> {
                 children: [
                   content,
                   if (actionsInContent) ...[
-                    if (failure != null) failureNotice(failure!),
+                    if (failure != null) boundedFailureNotice(failure!),
                     actions,
                   ],
                 ],
@@ -1589,7 +1605,7 @@ class _EditorBodyState extends State<_EditorBody> {
             actions: actionsInContent
                 ? const []
                 : [
-                    if (pinBulkFailure && failure != null)
+                    if (pinModalFailure && failure != null)
                       ConstrainedBox(
                         constraints: BoxConstraints(
                           maxHeight: modalActionsMaxHeight,
@@ -1602,7 +1618,11 @@ class _EditorBodyState extends State<_EditorBody> {
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 8),
                                 child: ConstrainedBox(
-                                  key: const ValueKey('bulk-save-failure'),
+                                  key: ValueKey(
+                                    bulk
+                                        ? 'bulk-save-failure'
+                                        : 'task-save-failure',
+                                  ),
                                   // Long provider errors and enlarged text must leave
                                   // the actions reachable above a small keyboard viewport.
                                   constraints: BoxConstraints(
@@ -1622,7 +1642,7 @@ class _EditorBodyState extends State<_EditorBody> {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (failure != null) failureNotice(failure!),
+                          if (failure != null) boundedFailureNotice(failure!),
                           actions,
                         ],
                       ),

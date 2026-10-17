@@ -276,6 +276,7 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
         if (!didPop) _close();
       },
       child: Dialog(
+        alignment: Alignment.bottomCenter,
         insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 480, maxHeight: visibleHeight),

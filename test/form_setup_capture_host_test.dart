@@ -51,6 +51,9 @@ void main() {
         () => host.canonical(store.folder),
       ))!;
       expect(tester.widget<TextField>(name).decoration!.errorText, isNull);
+      final setupActionRect = tester.getRect(
+        find.widgetWithText(FilledButton, 'Continue'),
+      );
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
       expect(
@@ -58,6 +61,11 @@ void main() {
         'Enter your name.',
       );
       expect(tester.widget<TextField>(name).focusNode!.hasFocus, isTrue);
+      expect(
+        tester.getRect(find.widgetWithText(FilledButton, 'Review errors')),
+        setupActionRect,
+        reason: 'Revealing setup errors must not move the action',
+      );
       expect(
         (await tester.runAsync(() => host.canonical(store.folder)))!,
         prefix,
@@ -106,11 +114,19 @@ void main() {
         () => host.canonical(store.folder),
       ))!;
       expect(tester.widget<TextField>(capture).decoration!.errorText, isNull);
+      final captureActionRect = tester.getRect(
+        find.byKey(const ValueKey('capture-add')),
+      );
       await tester.tap(find.byKey(const ValueKey('capture-add')));
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(capture).decoration!.errorText,
         'Enter at least one task title.',
+      );
+      expect(
+        tester.getRect(find.byKey(const ValueKey('capture-add'))),
+        captureActionRect,
+        reason: 'Capture Review errors stays at the original action position',
       );
       expect(
         (await tester.runAsync(() => host.canonical(store.folder)))!,
@@ -173,11 +189,19 @@ void main() {
       await tester.pumpAndSettle();
       final input = find.byType(TextField);
       expect(tester.widget<TextField>(input).decoration!.errorText, isNull);
+      final actionRect = tester.getRect(
+        find.widgetWithText(FilledButton, 'Create user'),
+      );
       await tester.tap(find.widgetWithText(FilledButton, 'Create user'));
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(input).decoration!.errorText,
         'Enter a name.',
+      );
+      expect(
+        tester.getRect(find.widgetWithText(FilledButton, 'Review errors')),
+        actionRect,
+        reason: 'Revealing a name error must not move the action',
       );
       expect(result, isNull);
       final controller = tester.widget<TextField>(input).controller!;
