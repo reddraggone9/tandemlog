@@ -190,7 +190,10 @@ class _EditorBodyState extends State<_EditorBody> {
     setState(() => helpOpen = true);
     widget.onCloseReadinessChanged?.call();
     try {
-      await showTaskFieldHelp(context);
+      await showTaskFieldHelp(
+        context,
+        restoreFocus: formValidation.lastInputFocus,
+      );
     } finally {
       if (mounted) {
         setState(() => helpOpen = false);

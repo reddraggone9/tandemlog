@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
-Future<void> showTaskFieldHelp(BuildContext context) async {
-  final previousFocus = FocusManager.instance.primaryFocus;
+Future<void> showTaskFieldHelp(
+  BuildContext context, {
+  FocusNode? restoreFocus,
+}) async {
+  final previousFocus = restoreFocus ?? FocusManager.instance.primaryFocus;
   final ownerRoute = ModalRoute.of(context);
   var answered = false;
   await showDialog<void>(

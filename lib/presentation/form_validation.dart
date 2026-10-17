@@ -39,6 +39,39 @@ class FormValidation extends ChangeNotifier {
 
   bool get reviewRequired => _reviewRequired;
 
+  FocusNode? _lastInputFocus;
+
+  /// Mouse activation can focus Help before its callback. Remember only an
+  /// attached input still owned by one of this form's current field anchors.
+  FocusNode? get lastInputFocus {
+    final focus = _lastInputFocus;
+    if (focus?.context?.mounted != true || !focus!.canRequestFocus) return null;
+    return _anchors.values.any(
+          (anchor) => identical(
+            _editableAt(anchor.currentContext)?.widget.focusNode,
+            focus,
+          ),
+        )
+        ? focus
+        : null;
+  }
+
+  EditableTextState? _editableAt(BuildContext? context) {
+    if (context == null || !context.mounted) return null;
+    EditableTextState? editable;
+    void findInput(Element element) {
+      if (editable != null) return;
+      if (element is StatefulElement && element.state is EditableTextState) {
+        editable = element.state as EditableTextState;
+      } else {
+        element.visitChildElements(findInput);
+      }
+    }
+
+    context.visitChildElements(findInput);
+    return editable;
+  }
+
   String? errorFor(String field) {
     if (!_revealed.contains(field)) return null;
     for (final issue in _issues) {
@@ -90,6 +123,12 @@ class FormValidation extends ChangeNotifier {
       canRequestFocus: false,
       skipTraversal: true,
       onFocusChange: (focused) {
+        if (focused) {
+          final input = _editableAt(_anchors[name]?.currentContext);
+          if (input?.widget.focusNode.hasFocus == true) {
+            _lastInputFocus = input!.widget.focusNode;
+          }
+        }
         // Focus notifications can arrive while the form is building/disposed.
         if (!focused) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -122,18 +161,7 @@ class FormValidation extends ChangeNotifier {
     if (_disposed) return false;
     final context = _anchors[first.field]?.currentContext;
     if (context == null || !context.mounted) return false;
-    EditableTextState? editable;
-    void findInput(Element element) {
-      if (editable != null) return;
-      if (element is StatefulElement && element.state is EditableTextState) {
-        editable = element.state as EditableTextState;
-      } else {
-        element.visitChildElements(findInput);
-      }
-    }
-
-    context.visitChildElements(findInput);
-    editable?.widget.focusNode.requestFocus();
+    _editableAt(context)?.widget.focusNode.requestFocus();
     await WidgetsBinding.instance.endOfFrame;
     if (_disposed || !context.mounted) return false;
     await Scrollable.ensureVisible(
@@ -155,6 +183,7 @@ class FormValidation extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _lastInputFocus = null;
     super.dispose();
   }
 }

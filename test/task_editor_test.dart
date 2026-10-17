@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
@@ -108,10 +109,22 @@ void main() {
         await tester.tap(input('dueMinDays'));
         await tester.pumpAndSettle();
         final focus = tester.widget<TextField>(input('dueMinDays')).focusNode!;
+        expect(focus.hasFocus, isTrue);
+        expect(FocusManager.instance.primaryFocus, same(focus));
         await tester.ensureVisible(find.byTooltip('Task field help'));
         await tester.pumpAndSettle();
         expect(find.byTooltip('Task field help').hitTestable(), findsOneWidget);
-        await tester.tap(find.byTooltip('Task field help'));
+        expect(
+          focus.hasFocus,
+          isTrue,
+          reason:
+              'Scrolling the Help control into view must preserve input focus',
+        );
+        expect(FocusManager.instance.primaryFocus, same(focus));
+        await tester.tap(
+          find.byTooltip('Task field help'),
+          kind: PointerDeviceKind.mouse,
+        );
         await tester.pumpAndSettle();
         for (final term in [
           'Start',
@@ -136,7 +149,10 @@ void main() {
           find.widgetWithText(TextButton, 'Done').hitTestable(),
           findsOneWidget,
         );
-        await tester.tap(find.widgetWithText(TextButton, 'Done'));
+        await tester.tap(
+          find.widgetWithText(TextButton, 'Done'),
+          kind: PointerDeviceKind.mouse,
+        );
         await tester.pumpAndSettle();
         expect(focus.hasFocus, isTrue);
         expect(input('dueMinDays').hitTestable(), findsOneWidget);
@@ -146,6 +162,10 @@ void main() {
         );
         expect(tester.takeException(), isNull);
       },
+      variant: TargetPlatformVariant({
+        TargetPlatform.android,
+        TargetPlatform.linux,
+      }),
     );
   }
   testWidgets(
