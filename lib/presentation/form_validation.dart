@@ -190,7 +190,8 @@ class FormValidation extends ChangeNotifier {
     await Scrollable.ensureVisible(
       context,
       duration: const Duration(milliseconds: 180),
-      // Deliberate Review must also return to an earlier, still-focused field.
+      // Retain bottom alignment while also returning to an earlier field.
+      alignment: 1.0,
       alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
     );
     return false;

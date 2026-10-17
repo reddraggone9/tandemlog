@@ -186,6 +186,25 @@ void main() {
           expect(errorRect.bottom, lessThanOrEqualTo(clipRect.bottom));
           expect(inputRect.top, greaterThanOrEqualTo(clipRect.top));
           expect(inputRect.bottom, lessThanOrEqualTo(clipRect.bottom));
+          // The floating label paints above the field's layout box. Checking
+          // only the InputDecorator misses a clipped first line at scroll top.
+          final timeLabel = tester.renderObject<RenderParagraph>(
+            find.descendant(
+              of: find.descendant(of: dueTime, matching: find.text('Time')),
+              matching: find.byType(RichText),
+            ),
+          );
+          final labelRect = globalRect(timeLabel);
+          expect(timeLabel.didExceedMaxLines, isFalse);
+          expect(
+            labelRect.top,
+            greaterThanOrEqualTo(clipRect.top),
+            reason:
+                'The actual painted floating Time label must clear the scroll clip',
+          );
+          expect(labelRect.bottom, lessThanOrEqualTo(clipRect.bottom));
+          expect(labelRect.left, greaterThanOrEqualTo(clipRect.left));
+          expect(labelRect.right, lessThanOrEqualTo(clipRect.right));
           expect(clipRect.bottom, lessThanOrEqualTo(640 - keyboard));
           expect(find.text('Review errors'), findsOneWidget);
           expect(tester.takeException(), isNull);
