@@ -79,8 +79,6 @@ void main() {
                             users: const [
                               {'id': 'a', 'name': 'Synthetic user'},
                             ],
-                            selectionCount: 1,
-                            onClearSelection: () async {},
                             onClose: () {
                               closes++;
                             },

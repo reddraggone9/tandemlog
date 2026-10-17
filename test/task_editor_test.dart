@@ -1436,10 +1436,10 @@ void main() {
   });
 
   testWidgets(
-    'guard Save validation and write failure retain draft and selection',
+    'guard Save validation and write failure retain draft and guarded Cancel',
     (tester) async {
       final key = GlobalKey<TaskEditorState>();
-      var calls = 0, clears = 0;
+      var calls = 0, closed = 0;
       final pending = Completer<void>();
       await mount(
         tester,
@@ -1447,12 +1447,8 @@ void main() {
           key: key,
           panel: true,
           task: task(),
-          selectionCount: 1,
-          onClearSelection: () async {
-            clears++;
-          },
-          onClose: () {},
-          save: (_, a, r) {
+          onClose: () => closed++,
+          save: (_, added, removed) {
             calls++;
             return pending.future;
           },
@@ -1465,7 +1461,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(await invalid, false);
       expect(calls, 0);
-      expect(find.text('1 selected'), findsOneWidget);
+      expect(closed, 0);
       await edit(tester, 'title', 'Failed draft');
       final failing = key.currentState!.canClose();
       await tester.pumpAndSettle();
@@ -1474,7 +1470,10 @@ void main() {
       expect(
         tester
             .widget<TextButton>(
-              find.widgetWithText(TextButton, 'Clear Selection'),
+              find.descendant(
+                of: find.byType(TaskEditor),
+                matching: find.widgetWithText(TextButton, 'Cancel'),
+              ),
             )
             .onPressed,
         isNull,
@@ -1485,11 +1484,21 @@ void main() {
       expect(await failing, false);
       expect(find.text('Failed draft'), findsOneWidget);
       expect(find.textContaining('Storage failure'), findsOneWidget);
-      expect(find.text('1 selected'), findsOneWidget);
-      expect(clears, 0);
-      await tester.tap(find.text('Clear Selection'));
-      await tester.pump();
-      expect(clears, 1);
+      expect(closed, 0);
+      expect(find.text('Clear Selection'), findsNothing);
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+      await tester.pumpAndSettle();
+      expect(find.text('Unsaved changes'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
+      await tester.pumpAndSettle();
+      expect(closed, 0);
+      expect(find.text('Failed draft'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Discard'));
+      await tester.pumpAndSettle();
+      expect(closed, 1);
+      expect(calls, 1);
     },
   );
   testWidgets(
@@ -1498,7 +1507,7 @@ void main() {
       final key = GlobalKey<BulkTaskEditorState>();
       final source = task({'dueDate': '2026-10-05'});
       BulkTaskEdit? saved;
-      var closed = 0, clears = 0;
+      var closed = 0;
       await mount(
         tester,
         BulkTaskEditor(
@@ -1508,20 +1517,13 @@ void main() {
             source,
             task({'dueDate': '2026-10-06'}),
           ],
-          selectionCount: 2,
-          onClearSelection: () async {
-            clears++;
-          },
-          onClose: () {
-            closed++;
-          },
+          onClose: () => closed++,
           onSave: (edit) async {
             saved = edit;
           },
         ),
       );
-      await tester.tap(find.text('Clear Selection'));
-      expect(clears, 1);
+      expect(find.text('Clear Selection'), findsNothing);
       await edit(tester, 'startDate', '2026-10-04');
       source['schedule'] = {'dueDate': '2026-10-01'};
       final closing = key.currentState!.canClose();
@@ -1535,7 +1537,9 @@ void main() {
       expect(find.text('Edit 2 tasks'), findsOneWidget);
     },
   );
-  testWidgets('selection header wraps at narrow large text', (tester) async {
+  testWidgets('pane header retains accessible Help at narrow large text', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(360, 900));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
@@ -1546,89 +1550,71 @@ void main() {
             body: TaskEditor(
               panel: true,
               task: task(),
-              selectionCount: 1,
-              onClearSelection: () async {},
-              save: (_, a, r) async {},
+              save: (_, _, _) async {},
             ),
           ),
         ),
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('1 selected'), findsOneWidget);
-    expect(find.text('Clear Selection'), findsOneWidget);
+    expect(find.text('1 selected'), findsNothing);
+    expect(find.byTooltip('Task field help'), findsOneWidget);
+    expect(find.text('Clear Selection'), findsNothing);
     expect(tester.takeException(), isNull);
   });
-  testWidgets(
-    'bulk header is compact, wraps accessibly, and Clear retains dirty guard',
-    (tester) async {
-      final key = GlobalKey<BulkTaskEditorState>();
-      var cleared = false;
-      Future<void> clear() async {
-        if (await key.currentState!.canClose()) cleared = true;
-      }
-
-      await mount(
-        tester,
-        BulkTaskEditor(
-          key: key,
-          panel: true,
-          tasks: [task(), task()],
-          selectionCount: 2,
-          onClearSelection: clear,
-          onSave: (_) async {},
-          onClose: () {},
-        ),
-      );
-      final title = find.text('Edit 2 tasks');
-      final action = find.text('Clear Selection');
-      expect(find.text('2 selected'), findsNothing);
-      expect(find.textContaining('Only checked schedule'), findsNothing);
-      expect(
-        tester.getCenter(title).dy,
-        closeTo(tester.getCenter(action).dy, 1),
-      );
-      expect(
-        tester.getRect(action).left,
-        greaterThan(tester.getRect(title).right),
-      );
-      await edit(tester, 'addTags', 'draft');
-      await tester.tap(action);
-      await tester.pumpAndSettle();
-      expect(find.text('Unsaved changes'), findsOneWidget);
-      await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
-      await tester.pumpAndSettle();
-      expect(cleared, false);
-      expect(
-        tester.widget<TextField>(input('addTags')).controller!.text,
-        'draft',
-      );
-      await tester.binding.setSurfaceSize(const Size(360, 900));
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MediaQuery(
-            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
-            child: Scaffold(
-              body: BulkTaskEditor(
-                panel: true,
-                tasks: [task(), task()],
-                selectionCount: 2,
-                onClearSelection: () async {},
-                onSave: (_) async {},
-              ),
+  testWidgets('bulk header is compact and footer Cancel retains dirty guard', (
+    tester,
+  ) async {
+    var closed = 0;
+    await mount(
+      tester,
+      BulkTaskEditor(
+        panel: true,
+        tasks: [task(), task()],
+        onSave: (_) async {},
+        onClose: () => closed++,
+      ),
+    );
+    final title = find.text('Edit 2 tasks');
+    final help = find.byTooltip('Task field help');
+    expect(find.text('2 selected'), findsNothing);
+    expect(find.text('Clear Selection'), findsNothing);
+    expect(find.textContaining('Only checked schedule'), findsNothing);
+    expect(tester.getCenter(title).dy, closeTo(tester.getCenter(help).dy, 1));
+    await edit(tester, 'addTags', 'draft');
+    await tester.ensureVisible(find.widgetWithText(TextButton, 'Cancel'));
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+    await tester.pumpAndSettle();
+    expect(find.text('Unsaved changes'), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
+    await tester.pumpAndSettle();
+    expect(closed, 0);
+    expect(
+      tester.widget<TextField>(input('addTags')).controller!.text,
+      'draft',
+    );
+    await tester.binding.setSurfaceSize(const Size(360, 900));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: Scaffold(
+            body: BulkTaskEditor(
+              panel: true,
+              tasks: [task(), task()],
+              onSave: (_) async {},
             ),
           ),
         ),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        tester.getRect(action).top,
-        greaterThanOrEqualTo(tester.getRect(title).bottom),
-      );
-      expect(tester.getRect(action).right, lessThanOrEqualTo(340));
-      expect(tester.takeException(), isNull);
-    },
-  );
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(help);
+    expect(tester.getRect(help).right, lessThanOrEqualTo(340));
+    expect(help.hitTestable(), findsOneWidget);
+    expect(find.text('Clear Selection'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
   for (final bulk in [false, true]) {
     testWidgets(
       '${bulk ? 'Bulk' : 'Single'} Task help owns close readiness and stale Done cannot close the editor',

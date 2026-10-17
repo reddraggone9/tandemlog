@@ -25,8 +25,6 @@ class TaskEditor extends StatefulWidget {
     this.onClose,
     this.onCloseReadinessChanged,
     this.contextNotice,
-    this.selectionCount,
-    this.onClearSelection,
     this.users = const [],
     this.tagInventory = const [],
     this.panel = false,
@@ -43,8 +41,6 @@ class TaskEditor extends StatefulWidget {
   final Future<void> Function()? onDelete;
   final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
-  final int? selectionCount;
-  final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
   final List<String> tagInventory;
@@ -67,8 +63,6 @@ class TaskEditorState extends State<TaskEditor> {
     onClose: widget.onClose,
     onCloseReadinessChanged: widget.onCloseReadinessChanged,
     contextNotice: widget.contextNotice,
-    selectionCount: widget.selectionCount,
-    onClearSelection: widget.onClearSelection,
     onDelete: widget.onDelete,
     saveSingle: widget.save,
     textSession: widget.textSession,
@@ -86,8 +80,6 @@ class BulkTaskEditor extends StatefulWidget {
     this.onClose,
     this.onCloseReadinessChanged,
     this.contextNotice,
-    this.selectionCount,
-    this.onClearSelection,
     this.users = const [],
     this.tagInventory = const [],
     this.panel = false,
@@ -97,8 +89,6 @@ class BulkTaskEditor extends StatefulWidget {
   final Future<void> Function()? onDelete;
   final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
-  final int? selectionCount;
-  final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
   final List<String> tagInventory;
@@ -121,8 +111,6 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     onClose: widget.onClose,
     onCloseReadinessChanged: widget.onCloseReadinessChanged,
     contextNotice: widget.contextNotice,
-    selectionCount: widget.selectionCount,
-    onClearSelection: widget.onClearSelection,
     onDelete: widget.onDelete,
     saveBulk: widget.onSave,
   );
@@ -138,8 +126,6 @@ class _EditorBody extends StatefulWidget {
     this.onClose,
     this.onCloseReadinessChanged,
     this.contextNotice,
-    this.selectionCount,
-    this.onClearSelection,
     this.onDelete,
     this.saveSingle,
     this.saveBulk,
@@ -155,8 +141,6 @@ class _EditorBody extends StatefulWidget {
   final List<String> tagInventory;
   final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
-  final int? selectionCount;
-  final Future<void> Function()? onClearSelection;
   final Future<void> Function()? onDelete;
   final Future<void> Function(Map<String, dynamic>, List<String>, List<String>)?
   saveSingle;
@@ -1546,16 +1530,6 @@ class _EditorBodyState extends State<_EditorBody> {
               icon: const Icon(Icons.help_outline),
               onPressed: busy || helpOpen ? null : openHelp,
             ),
-            if (!bulk && widget.selectionCount != null)
-              Text(
-                '${widget.selectionCount} selected',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            if (widget.onClearSelection != null)
-              TextButton(
-                onPressed: editingFrozen ? null : widget.onClearSelection,
-                child: const Text('Clear Selection'),
-              ),
           ],
         ),
         if (widget.contextNotice != null) widget.contextNotice!,

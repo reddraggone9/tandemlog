@@ -2689,10 +2689,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               disableTextFields: editingText == null,
               users: users,
               panel: panel,
-              selectionCount: selectedTasks.isEmpty
-                  ? null
-                  : selectedTasks.length,
-              onClearSelection: _clearTaskSelection,
               onClose: () {
                 editingText?.cancel();
                 if (editingText != null) {
@@ -2822,10 +2818,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               tagInventory: _tagInventory(),
               users: users,
               panel: panel,
-              selectionCount: selectedTasks.isEmpty
-                  ? null
-                  : selectedTasks.length,
-              onClearSelection: _clearTaskSelection,
               onClose: () {
                 setState(() {
                   editingBulk = null;

@@ -239,10 +239,33 @@ Future<void> selectTask(
   await tester.pumpAndSettle();
 }
 
-Finder clearSelection() =>
-    find.byKey(const ValueKey('clear-selected-tasks')).evaluate().isNotEmpty
-    ? find.byKey(const ValueKey('clear-selected-tasks'))
-    : find.text('Clear Selection');
+Finder clearSelection() {
+  final editor = find.byWidgetPredicate(
+    (widget) => widget is TaskEditor || widget is BulkTaskEditor,
+  );
+  if (editor.evaluate().isNotEmpty) {
+    return find.descendant(
+      of: editor,
+      matching: find.widgetWithText(TextButton, 'Cancel'),
+    );
+  }
+  return find.byKey(const ValueKey('clear-selected-tasks'));
+}
+
+bool taskSelected(WidgetTester tester, String id) => tester
+    .widget<Semantics>(
+      find
+          .ancestor(
+            of: find.byKey(ValueKey('task-body-$id')),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Semantics && widget.properties.selected != null,
+            ),
+          )
+          .first,
+    )
+    .properties
+    .selected!;
 Finder selectionSummary(int count) => find.text(
   find.byType(BulkTaskEditor).evaluate().isNotEmpty
       ? 'Edit $count tasks'
@@ -856,13 +879,13 @@ void main() {
 
       expect(find.byKey(const ValueKey('select-tasks')), findsNothing);
       await selectTask(tester, ids['Review household supplies']!);
-      expect(find.text('1 selected'), findsOneWidget);
+      expect(taskSelected(tester, ids['Review household supplies']!), isTrue);
       await selectTask(tester, ids['Read planning notes']!, control: false);
       expect(find.byType(BulkTaskEditor), findsOneWidget);
       expect(selectionSummary(2), findsOneWidget);
       await selectTask(tester, ids['Read planning notes']!, control: false);
       expect(find.byType(TaskEditor), findsOneWidget);
-      expect(find.text('1 selected'), findsOneWidget);
+      expect(taskSelected(tester, ids['Review household supplies']!), isTrue);
       await selectTask(tester, ids['Arrange reference shelf']!, control: false);
       expect(
         tester.widget<TextField>(titleField).controller!.text,

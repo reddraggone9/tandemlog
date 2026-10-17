@@ -12,6 +12,7 @@ import 'package:tandemlog/presentation/sticky_task_group.dart';
 import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
+import '../test/task_editor_header_test.dart' show exerciseHelpWithKeyboard;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -261,6 +262,18 @@ void registerHeaderSelectionTests() {
           await tester.longPress(body(0));
           await tester.pumpAndSettle();
           expect(find.byType(TaskEditor), findsOneWidget);
+          expect(find.text('1 selected'), findsNothing);
+          expect(find.text('Clear Selection'), findsNothing);
+          final help = find.byTooltip('Task field help');
+          expect(help.hitTestable(), findsOneWidget);
+          expect(tester.getSize(help).width, greaterThanOrEqualTo(48));
+          expect(tester.getSize(help).height, greaterThanOrEqualTo(48));
+          if (variant.scale == 1) {
+            expect(
+              tester.getCenter(help).dy,
+              closeTo(tester.getCenter(find.text('Edit task')).dy, 1),
+            );
+          }
           expect(
             tester.getRect(find.byKey(const ValueKey('task-header'))),
             wideHeader,
@@ -281,6 +294,170 @@ void registerHeaderSelectionTests() {
           tester.view.resetPhysicalSize();
           tester.view.resetDevicePixelRatio();
           tester.platformDispatcher.clearTextScaleFactorTestValue();
+          await writer.close();
+          await root.delete(recursive: true);
+        }
+      },
+    );
+  }
+  for (final bulk in [false, true]) {
+    testWidgets(
+      '${bulk ? 'bulk' : 'single'} header cleanup preserves guarded Cancel, Escape and narrow Clear',
+      (tester) async {
+        final root = await Directory.systemTemp.createTemp('header-cleanup-');
+        final folder = await Directory('${root.path}/shared').create();
+        final profile = await Directory('${root.path}/profile').create();
+        final writer = await openNativeFixtureStore(
+          LocalLogFolder(folder.path),
+          '${root.path}/writer',
+        );
+        final user = const Uuid().v4();
+        final ids = [const Uuid().v4(), const Uuid().v4()];
+        try {
+          await writer.command(user, 'user.created', {
+            'name': 'Header trial user',
+          });
+          for (var i = 0; i < ids.length; i++) {
+            await writer.createNativeFixtureTask(ids[i], {
+              'title': 'Header trial ${i + 1}',
+              'description': '',
+              'assignee': user,
+              'schedule': <String, dynamic>{},
+              'tags': <String>[],
+            });
+          }
+          await File('${profile.path}/settings.json').writeAsString(
+            jsonEncode({
+              'folder': folder.path,
+              'user': user,
+              'appearance': 'dark',
+            }),
+          );
+          tester.view.devicePixelRatio = 1;
+          tester.view.physicalSize = const Size(1200, 820);
+          await tester.pumpWidget(
+            TandemlogApp(
+              profilePath: profile.path,
+              folderActions: flows.TestFolders(android: true),
+              timeSourceFactory: (changed) => ViewTimeSource(
+                onChanged: changed,
+                now: () => DateTime.utc(2026, 10, 17, 12),
+                loadZone: () async => 'UTC',
+              ),
+            ),
+          );
+          Finder body(int i) => find.byKey(ValueKey('task-body-${ids[i]}'));
+          await flows.waitForUi(tester, () => body(0).evaluate().isNotEmpty);
+          Future<Map<String, String>> contents() async => {
+            await for (final entry in folder.list())
+              if (entry is File)
+                entry.path: base64Encode(await entry.readAsBytes()),
+          };
+          bool selected(int i) => tester
+              .widget<Semantics>(
+                find
+                    .ancestor(
+                      of: body(i),
+                      matching: find.byWidgetPredicate(
+                        (widget) =>
+                            widget is Semantics &&
+                            widget.properties.selected != null,
+                      ),
+                    )
+                    .first,
+              )
+              .properties
+              .selected!;
+          final before = await contents();
+          if (bulk) {
+            await tester.longPress(body(0));
+            await tester.pumpAndSettle();
+            await tester.tap(body(1));
+          } else {
+            await tester.tap(body(0));
+          }
+          await tester.pumpAndSettle();
+          expect(
+            find.text(bulk ? 'Edit 2 tasks' : 'Edit task'),
+            findsOneWidget,
+          );
+          expect(find.text('Clear Selection'), findsNothing);
+          expect(find.textContaining(' selected'), findsNothing);
+          expect(selected(0), isTrue);
+          expect(selected(1), bulk);
+          final input = find.byKey(ValueKey(bulk ? 'addTags' : 'title'));
+          await tester.ensureVisible(input);
+          await tester.enterText(input, 'Retained host draft');
+          final controller = tester.widget<TextField>(input).controller!;
+          // Desktop single-line inputs select all on keyboard focus. Start
+          // the bulk tag query with that platform selection; the multiline
+          // single-task title also checks restoration of a partial range.
+          controller.selection = bulk
+              ? TextSelection(
+                  baseOffset: 0,
+                  extentOffset: controller.text.length,
+                )
+              : const TextSelection(baseOffset: 2, extentOffset: 7);
+          final draft = controller.value;
+          await exerciseHelpWithKeyboard(tester, input);
+          if (bulk) {
+            // Help restores the tag query, including its suggestions overlay.
+            // Escape dismisses those suggestions before the footer is reached.
+            await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+            await tester.pumpAndSettle();
+            expect(find.text('Unsaved changes'), findsNothing);
+            expect(controller.value, draft);
+          }
+          final cancel = find.widgetWithText(TextButton, 'Cancel');
+          await tester.ensureVisible(cancel);
+          Focus.of(tester.element(find.text('Cancel'))).requestFocus();
+          await tester.pumpAndSettle();
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pumpAndSettle();
+          expect(find.text('Unsaved changes'), findsOneWidget);
+          await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
+          await tester.pumpAndSettle();
+          expect(tester.widget<TextField>(input).controller!.value, draft);
+          expect(selected(0), isTrue);
+          expect(selected(1), bulk);
+          expect(await contents(), before);
+          // Leave the active tag query before testing the app-level Escape
+          // action: Escape inside its suggestions first dismisses that input.
+          await tester.ensureVisible(cancel);
+          Focus.of(tester.element(find.text('Cancel'))).requestFocus();
+          await tester.pumpAndSettle();
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pumpAndSettle();
+          expect(find.text('Unsaved changes'), findsOneWidget);
+          await tester.tap(find.text('Discard'));
+          await tester.pumpAndSettle();
+          expect(find.byType(TaskEditor), findsNothing);
+          expect(find.byType(BulkTaskEditor), findsNothing);
+          expect(selected(0), isFalse);
+          expect(selected(1), isFalse);
+          tester.view.physicalSize = const Size(390, 820);
+          await tester.pumpAndSettle();
+          await tester.longPress(body(0));
+          await tester.pumpAndSettle();
+          expect(find.text('1 selected'), findsOneWidget);
+          expect(find.byType(TaskEditor), findsNothing);
+          final clear = find.byKey(const ValueKey('clear-selected-tasks'));
+          expect(clear.hitTestable(), findsOneWidget);
+          await tester.tap(clear);
+          await tester.pumpAndSettle();
+          expect(find.text('1 selected'), findsNothing);
+          expect(
+            find.byKey(const ValueKey('compact-selection-actions')),
+            findsNothing,
+          );
+          expect(selected(0), isFalse);
+          expect(await contents(), before);
+          expect(tester.takeException(), isNull);
+        } finally {
+          await tester.pumpWidget(const SizedBox());
+          await tester.pumpAndSettle();
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
           await writer.close();
           await root.delete(recursive: true);
         }
