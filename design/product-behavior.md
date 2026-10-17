@@ -206,8 +206,9 @@ area. Items have independent Save/Cancel editing, within-parent reorder and
 confirmed Delete with session Undo. Parent and item drafts remain independent.
 
 Add checklist opens an empty expanded block and focuses bottom Add item; it
-writes no canonical record until an item is saved. Expand/collapse shown
-checklists acts on the current filtered view. Expansion is a local workspace
+writes no canonical record until an item is saved. Parent disclosures expand or
+collapse independently; there is no global checklist control in the Tasks toolbar.
+Expansion is a local workspace
 preference in the existing cache metadata; losing the cache resets it.
 Unfinished items trigger a warn-but-allow parent completion dialog; incoming
 changes renew consent before bytes are prepared. The operation stays guarded

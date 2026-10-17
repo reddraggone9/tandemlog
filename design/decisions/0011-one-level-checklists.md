@@ -45,11 +45,10 @@ block and focuses bottom
 Add item, without creating a draft or canonical event. Deletion resolves private
 drafts and confirms the named parent, preserving existing receipt and Undo rules.
 
-The toolbar is an immediate next-action toggle: if any currently shown checklist
-is expanded, collapse shown checklists; when all are closed, expand them. Its
-icon and accessible tooltip say Expand shown checklists or Collapse shown
-checklists. It follows filters, individual disclosures and incoming item changes;
-hidden parents retain their local state. Sparse expanded-ID
+Each parent disclosure expands or collapses only that task. The global toolbar
+expand/collapse control is removed in every responsive layout, as accepted on
+2026-10-17. Filters and incoming item changes preserve other parents' local
+expansion state. Sparse expanded-ID
 entries live in the existing workspace SQLite metadata table; collapse removes
 them, no new settings file/schema/version is introduced, and cache loss resets
 the preference. Broader local-storage consolidation is queued for the next full

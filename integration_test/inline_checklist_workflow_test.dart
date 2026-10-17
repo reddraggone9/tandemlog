@@ -66,7 +66,7 @@ void main() {
 
 void registerInlineChecklistWorkflowTests() {
   testWidgets(
-    'checklist toggle acts directly on shown parents and follows live state',
+    'per-task checklist disclosure stays independent across filters and live updates',
     (tester) async {
       final root = await Directory.systemTemp.createTemp(
         'inline-display-toggle-',
@@ -118,52 +118,54 @@ void registerInlineChecklistWorkflowTests() {
           for (final file in await folder.list())
             file.name: base64Encode(await folder.read(file.name)),
         };
-        void action(String next, IconData icon) {
-          expect(find.byTooltip('$next shown checklists'), findsOneWidget);
-          expect(
-            find.descendant(
-              of: _key('checklist-display-toggle'),
-              matching: find.byIcon(icon),
-            ),
-            findsOneWidget,
-          );
-          expect(
-            tester.getSize(_key('checklist-display-toggle')).width,
-            greaterThanOrEqualTo(48),
-          );
+        void noGlobalControl() {
+          expect(_key('checklist-display-toggle'), findsNothing);
+          expect(find.byTooltip('Expand shown checklists'), findsNothing);
+          expect(find.byTooltip('Collapse shown checklists'), findsNothing);
         }
 
-        action('Expand', Icons.unfold_more);
+        for (final (width, height, scale) in [
+          (390.0, 850.0, 1.0),
+          (1200.0, 850.0, 1.0),
+          (420.0, 900.0, 2.0),
+        ]) {
+          tester.view.physicalSize = Size(width, height);
+          tester.platformDispatcher.textScaleFactorTestValue = scale;
+          await tester.pumpAndSettle();
+          noGlobalControl();
+          expect(_key('checklist-disclosure-$first'), findsOneWidget);
+          expect(_key('checklist-disclosure-$second'), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        }
+        tester.view.physicalSize = const Size(390, 850);
+        tester.platformDispatcher.textScaleFactorTestValue = 1;
+        await tester.pumpAndSettle();
         await _tap(tester, _key('checklist-disclosure-$first'));
-        expect(find.byType(ChecklistPanel), findsOneWidget);
-        action('Collapse', Icons.unfold_less);
-        await _tap(tester, _key('checklist-display-toggle'));
-        expect(find.byType(ChecklistPanel), findsNothing);
-        expect(find.byType(PopupMenuItem<bool>), findsNothing);
-        action('Expand', Icons.unfold_more);
-        await _tap(tester, _key('checklist-display-toggle'));
+        expect(_key('checklist-check-$firstItem'), findsOneWidget);
+        expect(_key('checklist-check-$secondItem'), findsNothing);
+        await _tap(tester, _key('checklist-disclosure-$second'));
         expect(find.byType(ChecklistPanel), findsNWidgets(2));
-        action('Collapse', Icons.unfold_less);
         await _tap(tester, _key('checklist-disclosure-$first'));
-        action('Collapse', Icons.unfold_less);
+        expect(_key('checklist-check-$firstItem'), findsNothing);
+        expect(_key('checklist-check-$secondItem'), findsOneWidget);
         await flows.filterChoice(tester, '#visible');
         expect(_key('task-row-$second'), findsNothing);
-        action('Expand', Icons.unfold_more);
-        await _tap(tester, _key('checklist-display-toggle'));
-        expect(find.byType(ChecklistPanel), findsOneWidget);
-        action('Collapse', Icons.unfold_less);
-        await _tap(tester, _key('checklist-display-toggle'));
+        noGlobalControl();
+        await _tap(tester, _key('checklist-disclosure-$first'));
+        expect(_key('checklist-check-$firstItem'), findsOneWidget);
+        await _tap(tester, _key('checklist-disclosure-$first'));
         expect(find.byType(ChecklistPanel), findsNothing);
         await flows.filterChoice(tester, 'All tags');
         expect(
           _key('checklist-check-$secondItem'),
           findsOneWidget,
-          reason: 'Hidden expansion is untouched.',
+          reason:
+              'Changing the first parent and filters preserves the second expansion.',
         );
         expect(_key('checklist-check-$firstItem'), findsNothing);
-        action('Collapse', Icons.unfold_less);
-        await _tap(tester, _key('checklist-display-toggle'));
+        await _tap(tester, _key('checklist-disclosure-$second'));
         expect(find.byType(ChecklistPanel), findsNothing);
+        noGlobalControl();
         expect({
           for (final file in await folder.list())
             file.name: base64Encode(await folder.read(file.name)),
@@ -182,18 +184,19 @@ void registerInlineChecklistWorkflowTests() {
           tester,
           () => (state.store as TaskStore).checklistItems(first).isNotEmpty,
         );
-        action('Expand', Icons.unfold_more);
-        await _tap(tester, _key('checklist-display-toggle'));
-        action('Collapse', Icons.unfold_less);
+        noGlobalControl();
+        await _tap(tester, _key('checklist-disclosure-$first'));
+        noGlobalControl();
         expect(find.byType(ChecklistPanel), findsOneWidget);
         expect(tester.takeException(), isNull);
-        await captureNativeFixtureUi(tester, 'direct-toggle-narrow');
+        await captureNativeFixtureUi(tester, 'per-task-disclosure-narrow');
       } finally {
         await tester.pumpWidget(const SizedBox.shrink());
         await tester.pump(const Duration(milliseconds: 300));
         await peer.close();
         tester.view.resetDevicePixelRatio();
         tester.view.resetPhysicalSize();
+        tester.platformDispatcher.clearTextScaleFactorTestValue();
       }
     },
   );
@@ -832,11 +835,16 @@ void registerInlineChecklistWorkflowTests() {
             for (final file in await folder.list())
               file.name: base64Encode(await folder.read(file.name)),
           };
-          await _tap(tester, _key('checklist-display-toggle'));
-          expect(find.text('Collapse shown checklists'), findsNothing);
-          expect(find.byType(ChecklistPanel), findsNothing);
-          await _tap(tester, _key('checklist-display-toggle'));
-          expect(find.text('Expand shown checklists'), findsNothing);
+          expect(_key('checklist-display-toggle'), findsNothing);
+          await _tap(tester, _key('checklist-disclosure-$parent'));
+          expect(_key('checklist-check-$water'), findsNothing);
+          expect(
+            find.byType(ChecklistPanel),
+            findsOneWidget,
+            reason: 'The independently open second parent stays expanded.',
+          );
+          await _tap(tester, _key('checklist-disclosure-$parent'));
+          expect(_key('checklist-check-$water'), findsOneWidget);
           expect(find.byType(ChecklistPanel), findsNWidgets(2));
           expect({
             for (final file in await folder.list())

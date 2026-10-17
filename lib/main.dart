@@ -3522,40 +3522,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
-  Widget? _checklistDisplayToggle() {
-    final origin = store;
-    if (origin == null) return null;
-    Set<String> shown({required bool expanded}) => {
-      for (final entry in visibleEntries)
-        if (expanded
-            ? expandedChecklists.contains(entry.task['id'])
-            : _checklistItems(entry.task).isNotEmpty)
-          entry.task['id'] as String,
-    };
-    final expandedShown = shown(expanded: true);
-    if (shown(expanded: false).isEmpty && expandedShown.isEmpty) return null;
-    final collapse = expandedShown.isNotEmpty;
-    return IconButton(
-      key: const ValueKey('checklist-display-toggle'),
-      tooltip: '${collapse ? 'Collapse' : 'Expand'} shown checklists',
-      constraints: const BoxConstraints.tightFor(width: 48, height: 48),
-      visualDensity: VisualDensity.standard,
-      icon: Icon(collapse ? Icons.unfold_less : Icons.unfold_more),
-      onPressed: busy
-          ? null
-          : () {
-              if (busy || !identical(store, origin)) return;
-              final currentExpanded = shown(expanded: true);
-              final expand = currentExpanded.isEmpty;
-              _setChecklistExpansion(
-                origin,
-                expand ? shown(expanded: false) : currentExpanded,
-                expand,
-              );
-            },
-    );
-  }
-
   Future<void> _showTaskMenu(
     TaskStore origin,
     Map<String, dynamic> task, {
@@ -4314,7 +4280,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       if (!foodVisible && sharedSafetyError == null)
                         TaskToolbar(
                           sectionMenu: store == null ? null : _sectionMenu,
-                          checklistMenu: _checklistDisplayToggle(),
                           userName:
                               users
                                       .where((entry) => entry['id'] == user)
