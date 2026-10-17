@@ -3383,13 +3383,19 @@ void main() {
       before,
       reason: 'Every selected task must share the target key.',
     );
-    await tester.tap(clearSelection());
-    await tester.pumpAndSettle();
-
+    // The rejected-drag snackbar covers the footer Cancel control. Dismiss
+    // the already-checked feedback before closing the selection, rather than
+    // tapping through it as the former header Clear control allowed.
     ScaffoldMessenger.of(
       tester.element(find.byType(Scaffold)),
     ).clearSnackBars();
     await tester.pumpAndSettle();
+    expect(clearSelection().hitTestable(), findsOneWidget);
+    await tester.tap(clearSelection());
+    await tester.pumpAndSettle();
+    expect(find.byType(BulkTaskEditor), findsNothing);
+    expect(taskSelected(tester, ids['Dated']!), isFalse);
+    expect(taskSelected(tester, ids['Third']!), isFalse);
     await drag('Second', 'First', invalidate: true);
     expect(
       find.text('The task list changed. Try dragging again.'),
