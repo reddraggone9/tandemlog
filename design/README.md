@@ -27,7 +27,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Field help, form validation and occurrence Due conversion](decisions/0026-field-help-validation-and-occurrence-due.md): accepted implementation in progress, with native acceptance still pending; draft-only dependent clearing was explicitly accepted on October 17. No release authorized.
+- [Field help, form validation and occurrence Due conversion](decisions/0026-field-help-validation-and-occurrence-due.md): reviewed implementation passes full source CI; versioned RC candidate and exact signed native acceptance remain pending. Draft-only dependent clearing was explicitly accepted on October 17. See [candidate preparation](../evidence/prerelease-2026.10.7-rc.1/candidate86/README.md).
 
 - [Responsive Food editor pane](decisions/0025-food-responsive-editor-pane.md): approved wide Edit/Add/Add another and guarded narrow dialogs; [stable2026.10.6/build85](../evidence/stable-2026.10.6/publication/README.md) is published Latest after exact native acceptance, authorized promotion and independent public-byte verification. [RC.1/build84](../evidence/prerelease-2026.10.6-rc.1/publication/README.md) remains available.
 

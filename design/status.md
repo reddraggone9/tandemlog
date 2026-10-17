@@ -1,3 +1,11 @@
+# Field help and validation — 2026.10.7-rc.1/build86 candidate pending
+
+[Preparation](../evidence/prerelease-2026.10.7-rc.1/candidate86/README.md) binds
+reviewed implementation and complete source CI. Versioned signed-candidate,
+original-artifact, native stable85-to86 upgrade, preservation/replay and independent
+acceptance gates remain required before the authorized RC-only publication.
+Stable2026.10.6/build85 remains Latest. No stable, production or dependency change.
+
 # Stable2026.10.6/build85 - published Latest
 
 [Stable2026.10.6](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.6) is Latest from accepted source `1a00c8de432407d4e58d7278ac90d62f1cdbace4`. Candidate38825977292, push38825971226 and [promotion38837831145](https://github.com/reddraggone9/tandemlog/actions/runs/38837831145) pass all required jobs. [Public receipts](../evidence/stable-2026.10.6/publication/README.md) verify the three exact original installers through anonymous downloads, owner APK identity/build85/native payload, reviewed notes/tag/source/Latest and all32 prior releases/assets plus every prior tag ref preserved. Exact native acceptance and independent final source/artifact/media/editorial/privacy reviews preceded authorized publication; independent public-byte review accepts. Original settings restored, temporary processes stopped and SDK test link absent. Windows manual-GUI waiver, Android API30 x86_64/simulated-wide and manual GTK versus hosted Flatpak qualifications remain explicit. No production or dependency operation occurred. Historical entries below retain their publication-time attribution.

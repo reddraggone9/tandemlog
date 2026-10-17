@@ -1,0 +1,13 @@
+{
+  "reviewedImplementationSource": "d4e239a729ce997deb9174fe010d14bdd0726346",
+  "fullSourceCiRun": 39057409284,
+  "fullSourceCiPassed": true,
+  "version": "2026.10.7-rc.1+86",
+  "successfulAndPublishedBuildFloor": 85,
+  "notesSha256": "40f54dc02dcc7a9d1beddeb49ea32524c61f5b62441dae3cd0d67144ec8a59aa",
+  "allCandidateAndExactArtifactNativeGatesPending": true,
+  "readyRcPublicationStandingApprovalVerifiedPrivately": true,
+  "publicationPerformed": false,
+  "stablePromotionAuthorized": false,
+  "dependenciesAndBase64Unchanged": true
+}

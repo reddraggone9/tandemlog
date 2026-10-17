@@ -1,6 +1,6 @@
 # Field help, form validation and occurrence Due conversion
 
-Status: accepted by Lee on 2026-10-17; implementation and native acceptance in progress. No release is authorized by this decision.
+Status: accepted by Lee on 2026-10-17; reviewed implementation passes full source CI. Versioned RC and exact signed native acceptance remain pending. Separate standing ready-RC publication authorization applies only after all release gates; this decision does not authorize stable promotion.
 
 ## Context
 
