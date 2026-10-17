@@ -5,13 +5,129 @@ import 'package:tandemlog/platform/android_section_navigation.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/name_entry_dialog.dart';
 import 'section_navigation_host_test.dart' as host;
+import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
 
 void main() {
   host.nativeHostLibraryPath = Platform.environment['TANDEMLOG_TEXT_LIBRARY']!;
+  setUpAll(loadSdkRoboto);
+  testWidgets(
+    'capture floating label clears fixed action through review at420px200percent',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(420, 900);
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(() {
+        tester.view.resetDevicePixelRatio();
+        tester.view.resetPhysicalSize();
+        tester.platformDispatcher.clearTextScaleFactorTestValue();
+      });
+      final data = (await tester.runAsync(() => host.fixture()))!;
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: data.profile,
+          textEngineFactory: host.createHostTextEngine,
+          timeSourceFactory: host.createHostTimeSource,
+        ),
+      );
+      await host.ready(
+        tester,
+        () => find.text('Synthetic section task').evaluate().isNotEmpty,
+      );
+      final resources = host.hostResources(tester);
+      try {
+        final prefix = (await tester.runAsync(
+          () => host.canonical(data.folder),
+        ))!;
+        await tester.tap(find.byKey(const ValueKey('open-capture')));
+        await tester.pumpAndSettle();
+        final capture = find.widgetWithText(TextField, 'What needs doing?');
+        final action = find.byKey(const ValueKey('capture-add'));
+        expect(tester.widget<FilledButton>(action).onPressed, isNotNull);
+        expect(tester.widget<TextField>(capture).decoration!.errorText, isNull);
+        final actionElement = tester.element(action);
+        final neutralRect = tester.getRect(action);
+        Rect paintedLabelRect() {
+          final label = find.descendant(
+            of: capture,
+            matching: find.text('What needs doing?'),
+          );
+          expect(label, findsOneWidget);
+          final paragraph = tester.renderObject<RenderParagraph>(
+            find.descendant(of: label, matching: find.byType(RichText)),
+          );
+          expect(paragraph.text.toPlainText(), 'What needs doing?');
+          return MatrixUtils.transformRect(
+            paragraph.getTransformTo(null),
+            Offset.zero & paragraph.size,
+          );
+        }
+
+        void expectSeparateLabel() {
+          expect(
+            paintedLabelRect().top,
+            greaterThanOrEqualTo(tester.getRect(action).bottom + 4),
+            reason:
+                'The painted floating label needs a visible gap below the action',
+          );
+        }
+
+        expectSeparateLabel();
+        await tester.tap(action);
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<TextField>(capture).decoration!.errorText,
+          'Enter at least one task title.',
+        );
+        final editable = tester.widget<EditableText>(
+          find.descendant(of: capture, matching: find.byType(EditableText)),
+        );
+        expect(editable.focusNode.hasFocus, isTrue);
+        expect(identical(tester.element(action), actionElement), isTrue);
+        expect(tester.getRect(action), neutralRect);
+        expectSeparateLabel();
+        expect(
+          (await tester.runAsync(() => host.canonical(data.folder)))!,
+          prefix,
+        );
+        await tester.enterText(capture, 'Synthetic corrected capture');
+        await tester.pumpAndSettle();
+        expect(tester.getRect(action), neutralRect);
+        expectSeparateLabel();
+        expect(
+          find.descendant(of: action, matching: find.text('Review errors')),
+          findsOneWidget,
+        );
+        await tester.tap(action);
+        await tester.pumpAndSettle();
+        expect(tester.widget<TextField>(capture).decoration!.errorText, isNull);
+        expect(
+          find.descendant(of: action, matching: find.text('Add')),
+          findsOneWidget,
+        );
+        expect(tester.getRect(action), neutralRect);
+        expectSeparateLabel();
+        expect(
+          (await tester.runAsync(() => host.canonical(data.folder)))!,
+          prefix,
+          reason: 'Review of the corrected capture cannot create a task',
+        );
+        expect(
+          tester.widget<TextField>(capture).controller!.text,
+          'Synthetic corrected capture',
+        );
+        expect(tester.takeException(), isNull);
+      } finally {
+        await tester.pumpWidget(const SizedBox());
+        await host.waitForHostShutdown(tester, resources);
+        await tester.runAsync(() => data.root.delete(recursive: true));
+      }
+    },
+  );
   testWidgets(
     'setup and capture reveal local errors without appending and save valid input once',
     (tester) async {

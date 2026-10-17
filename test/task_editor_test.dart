@@ -156,6 +156,25 @@ void main() {
         await tester.pumpAndSettle();
         expect(focus.hasFocus, isTrue);
         expect(input('dueMinDays').hitTestable(), findsOneWidget);
+        final inputRect = tester.getRect(input('dueMinDays'));
+        final viewportRect = tester.getRect(
+          find
+              .ancestor(
+                of: input('dueMinDays'),
+                matching: find.byType(SingleChildScrollView),
+              )
+              .first,
+        );
+        expect(
+          inputRect.top,
+          greaterThanOrEqualTo(viewportRect.top),
+          reason: 'Help must restore the whole input, not only its caret',
+        );
+        expect(
+          inputRect.bottom,
+          lessThanOrEqualTo(viewportRect.bottom),
+          reason: 'The restored input border must clear the fixed footer',
+        );
         expect(
           tester.widget<TextField>(input('dueMinDays')).controller!.text,
           '0',

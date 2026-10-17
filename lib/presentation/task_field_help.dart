@@ -83,8 +83,16 @@ Future<void> showTaskFieldHelp(
         previousFocus.hasFocus &&
         focusedContext != null &&
         focusedContext.mounted) {
+      BuildContext revealContext = focusedContext;
+      focusedContext.visitAncestorElements((element) {
+        if (element.widget is InputDecorator) {
+          revealContext = element;
+          return false;
+        }
+        return true;
+      });
       await Scrollable.ensureVisible(
-        focusedContext,
+        revealContext,
         alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
       );
     }
