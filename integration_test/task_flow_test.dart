@@ -1556,7 +1556,7 @@ void main() {
       tester
           .widget<FilledButton>(find.widgetWithText(FilledButton, 'Continue'))
           .onPressed,
-      isNull,
+      isNotNull,
     );
     await tester.enterText(find.byType(TextField), 'Lee');
     final manifest = File('${profile.path}/shared-data/tandemlog-space.json');

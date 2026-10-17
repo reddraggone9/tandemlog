@@ -63,6 +63,7 @@ Future<void> verifyFoodAddAnother(
   await tester.enterText(search, 'Template beans');
   await tester.pumpAndSettle();
   final searchValue = tester.widget<TextField>(search).controller!.value;
+  final saveAction = find.byKey(const ValueKey('food-save-action'));
   Finder field(String label) => find.widgetWithText(TextField, label);
   Future<void> open({bool secondary = true}) async {
     if (secondary) {
@@ -137,20 +138,33 @@ Future<void> verifyFoodAddAnother(
   expect(find.text('Add food'), findsNothing);
   expect(added, isEmpty);
   await open();
-  await tester.ensureVisible(find.widgetWithText(FilledButton, 'Add'));
-  await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+  await tester.ensureVisible(saveAction);
+  await tester.tap(saveAction);
   await tester.pumpAndSettle();
   expect(find.text('Expiration is required.'), findsOneWidget);
   expect(added, isEmpty);
   await tester.ensureVisible(field('Expiration'));
   await tester.tap(field('Expiration'));
   await tester.enterText(field('Expiration'), '2026-99-99');
-  await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+  await tester.tap(saveAction);
   await tester.pumpAndSettle();
   expect(added, isEmpty);
   await tester.tap(field('Expiration'));
   await tester.enterText(field('Expiration'), '2026-12-10');
-  await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+  expect(
+    find.descendant(of: saveAction, matching: find.text('Review errors')),
+    findsOneWidget,
+  );
+  await tester.tap(saveAction);
+  await tester.pumpAndSettle();
+  expect(added, isEmpty, reason: 'Review of a corrected draft cannot Add');
+  expect(other, isEmpty);
+  expect(state.containers.map((e) => e.toJson()).toList(), before);
+  expect(
+    find.descendant(of: saveAction, matching: find.text('Add')),
+    findsOneWidget,
+  );
+  await tester.tap(saveAction);
   await tester.pumpAndSettle();
   expect(added, hasLength(1));
   expect(added.single.$2, 1);

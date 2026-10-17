@@ -135,6 +135,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
     expect(tester.widget<TextField>(target).controller!.text, value);
   }
 
+  final action = find.byKey(const ValueKey('food-save-action'));
   final name = '${brightness.name}-${textScale.toInt()}x';
   await tester.pumpWidget(
     FoodPreviewApp(
@@ -168,7 +169,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
     isTrue,
   );
   expectUntruncatedGuidance(tester);
-  await tap(find.widgetWithText(FilledButton, 'Add'));
+  await tap(action);
   await tester.pumpAndSettle();
   expect(find.text('Expiration is required.'), findsOneWidget);
   expect(
@@ -185,7 +186,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tester.pumpAndSettle();
   expectUntruncatedGuidance(tester);
   await capture?.call('$name-add-focused');
-  await tap(find.widgetWithText(FilledButton, 'Add'));
+  await tap(action);
   await tester.pumpAndSettle();
   final error = find.text('Invalid food expiration.');
   expect(error, findsOneWidget);
@@ -208,9 +209,24 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tester.pumpAndSettle();
   await type(expiry, '2027-06-01');
   await tester.pumpAndSettle();
-  await tap(find.widgetWithText(FilledButton, 'Add'));
+  expect(
+    find.descendant(of: action, matching: find.text('Review errors')),
+    findsOneWidget,
+  );
+  await tap(action);
   await tester.pumpAndSettle();
   FoodInventoryPage page() => tester.widget(find.byType(FoodInventoryPage));
+  expect(
+    page().state.active,
+    isEmpty,
+    reason: 'Review cannot become Add after the date is corrected',
+  );
+  expect(
+    find.descendant(of: action, matching: find.text('Add')),
+    findsOneWidget,
+  );
+  await tap(action);
+  await tester.pumpAndSettle();
   expect(page().state.active.single.details.expiry, '2027-06-01');
   final savedId = page().state.active.single.id;
   await tester.pumpAndSettle();
@@ -229,7 +245,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tap(find.text('Test beans'));
   await tester.pumpAndSettle();
   await type(expiry, '');
-  await tap(find.widgetWithText(FilledButton, 'Save'));
+  await tap(action);
   await tester.pumpAndSettle();
   expect(find.text('Expiration is required.'), findsOneWidget);
   expect(page().state.active.single.details.expiry, '2027-06-01');
@@ -237,7 +253,19 @@ Future<void> verifyExpiryGuidanceWorkflow(
   expect(tester.widget<TextField>(expiry).controller!.text, isEmpty);
   await capture?.call('$name-blank-edit-rejected');
   await type(expiry, '2027-07-09');
-  await tap(find.widgetWithText(FilledButton, 'Save'));
+  expect(
+    find.descendant(of: action, matching: find.text('Review errors')),
+    findsOneWidget,
+  );
+  await tap(action);
+  await tester.pumpAndSettle();
+  expect(page().state.active.single.details.expiry, '2027-06-01');
+  expect(page().state.active.single.id, savedId);
+  expect(
+    find.descendant(of: action, matching: find.text('Save')),
+    findsOneWidget,
+  );
+  await tap(action);
   await tester.pumpAndSettle();
   expect(page().state.active.single.details.expiry, '2027-07-09');
   expect(page().state.active.single.id, savedId);

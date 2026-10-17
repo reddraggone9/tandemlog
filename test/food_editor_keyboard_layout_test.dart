@@ -74,6 +74,7 @@ Future<void> verifyFoodEditorKeyboardLayout(
     await tester.pumpAndSettle();
   }
 
+  final action = find.byKey(const ValueKey('food-save-action'));
   Finder field(String label) => find.widgetWithText(TextField, label);
   Finder editable(Finder target) =>
       find.descendant(of: target, matching: find.byType(EditableText));
@@ -114,10 +115,7 @@ Future<void> verifyFoodEditorKeyboardLayout(
   }
 
   void expectActions() {
-    for (final target in [
-      find.widgetWithText(TextButton, 'Cancel'),
-      find.widgetWithText(FilledButton, editingCount == 0 ? 'Add' : 'Save'),
-    ]) {
+    for (final target in [find.widgetWithText(TextButton, 'Cancel'), action]) {
       expect(target.hitTestable(), findsOneWidget);
       final rect = tester.getRect(target);
       final availableBottom = 640 - tester.view.viewInsets.bottom;
@@ -229,14 +227,22 @@ Future<void> verifyFoodEditorKeyboardLayout(
   expectFocusedLineVisible('Expiration');
   await focus('Expiration');
   expect(draft.text, '2027-02-30');
-  await tap(
-    find.widgetWithText(FilledButton, editingCount == 0 ? 'Add' : 'Save'),
-    reveal: false,
-  );
+  await tap(action, reveal: false);
   expect(state(), before, reason: 'Invalid calendar date must not mutate Food');
   expect(draft.text, '2027-02-30');
   final error = find.text('Invalid food expiration.');
   expect(error, findsOneWidget);
+  expect(
+    find.descendant(of: action, matching: find.text('Review errors')),
+    findsOneWidget,
+  );
+  expect(
+    tester
+        .widget<EditableText>(editable(field('Expiration')))
+        .focusNode
+        .hasFocus,
+    isTrue,
+  );
   await Scrollable.ensureVisible(tester.element(error), alignment: 1);
   await tester.pumpAndSettle();
   expect(error.hitTestable(), findsOneWidget);
@@ -276,10 +282,25 @@ Future<void> verifyFoodEditorKeyboardLayout(
   await focus('Expiration');
   await tester.enterText(field('Expiration'), '2027-07-09');
   await tester.pumpAndSettle();
-  await tap(
-    find.widgetWithText(FilledButton, editingCount == 0 ? 'Add' : 'Save'),
-    reveal: false,
-  );
+  if (find
+      .descendant(of: action, matching: find.text('Review errors'))
+      .evaluate()
+      .isNotEmpty) {
+    await tap(action, reveal: false);
+    expect(
+      state(),
+      before,
+      reason: 'A deliberate Review gesture cannot become Save after correction',
+    );
+    expect(
+      find.descendant(
+        of: action,
+        matching: find.text(editingCount == 0 ? 'Add' : 'Save'),
+      ),
+      findsOneWidget,
+    );
+  }
+  await tap(action, reveal: false);
   expect(find.byType(AlertDialog), findsNothing);
   expect(page().state.active, hasLength(editingCount == 0 ? 1 : editingCount));
   expect(

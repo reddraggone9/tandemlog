@@ -1,15 +1,20 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show setEquals;
+
 import 'tag_input.dart';
 import 'civil_date_input.dart';
 import '../domain/schedule.dart';
+import '../domain/occurrence_due_migration.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
 import 'failure_message.dart';
 import '../application/task_text_session.dart';
 import 'title_line_formatter.dart';
 import 'unsaved_draft_dialog.dart';
+import 'form_validation.dart';
+import 'task_field_help.dart';
 
 class TaskEditor extends StatefulWidget {
   const TaskEditor({
@@ -49,7 +54,7 @@ class TaskEditor extends StatefulWidget {
 
 class TaskEditorState extends State<TaskEditor> {
   final GlobalKey<_EditorBodyState> _body = GlobalKey();
-  bool get closeBusy => _body.currentState?.busy ?? true;
+  bool get closeBusy => _body.currentState?.closeBusy ?? true;
   Future<bool> canClose() async => await _body.currentState?.canClose() ?? true;
   Future<bool> confirmDiscard() => canClose();
   @override
@@ -103,7 +108,7 @@ class BulkTaskEditor extends StatefulWidget {
 
 class BulkTaskEditorState extends State<BulkTaskEditor> {
   final GlobalKey<_EditorBodyState> _body = GlobalKey();
-  bool get closeBusy => _body.currentState?.busy ?? true;
+  bool get closeBusy => _body.currentState?.closeBusy ?? true;
   Future<bool> canClose() async => await _body.currentState?.canClose() ?? true;
   Future<bool> confirmDiscard() => canClose();
   @override
@@ -172,16 +177,183 @@ class _EditorBodyState extends State<_EditorBody> {
   bool applyAssignee = false, modalActionsInContent = false;
   double? modalViewportHeight;
   Future<bool>? closeRequest;
+  bool helpOpen = false;
+  bool get closeBusy => busy || helpOpen;
+
+  Future<void> openHelp() async {
+    if (!mounted ||
+        busy ||
+        helpOpen ||
+        !(ModalRoute.isCurrentOf(context) ?? true)) {
+      return;
+    }
+    setState(() => helpOpen = true);
+    widget.onCloseReadinessChanged?.call();
+    try {
+      await showTaskFieldHelp(context);
+    } finally {
+      if (mounted) {
+        setState(() => helpOpen = false);
+        widget.onCloseReadinessChanged?.call();
+      }
+    }
+  }
+
   double notesMaxHeight = 360,
       scheduleWidth = 480,
       failureMaxHeight = 144,
       modalActionsMaxHeight = 312;
   final textFocus = {
-    'title': FocusNode(),
-    'description': FocusNode(),
-    'startTime': FocusNode(),
-    'dueTime': FocusNode(),
+    for (final field in [...TaskSchedule.keys, 'title', 'description'])
+      field: FocusNode(),
   };
+  late final FormValidation formValidation;
+  String? lastEditedField;
+  final settledPrerequisites = <String, String>{};
+  final removedPrerequisites = <String>{};
+  Map<String, TextEditingValue>? occurrenceBeforeRemoval;
+  Set<String>? occurrenceApplyBeforeRemoval;
+  bool changingDependentOccurrence = false, dependentEditedAfterRemoval = false;
+  String? occurrencePrerequisiteNotice;
+
+  bool prerequisiteValid(String key, String text) {
+    if (text.isEmpty) return false;
+    try {
+      if (key == 'dueDate') {
+        TaskSchedule(dueDate: text);
+      } else {
+        TaskSchedule(dueDate: '2000-01-01', recurrence: text);
+      }
+      return true;
+    } on FormatException {
+      return false;
+    }
+  }
+
+  bool get occurrenceEditingAllowed =>
+      occurrenceBeforeRemoval == null &&
+      originals.every((task) {
+        if (planOccurrenceDueMigration(task)?.conflict != null) return true;
+        final before = scheduleOf(task);
+        return ['dueDate', 'recurrence'].every(
+          (key) => prerequisiteValid(
+            key,
+            !bulk || applied.contains(key)
+                ? controllers[key]!.text.trim()
+                : (before[key] as String? ?? ''),
+          ),
+        );
+      });
+
+  void clearOccurrenceOverride() {
+    if (!mounted || editingFrozen) return;
+    changingDependentOccurrence = true;
+    try {
+      for (final key in ['scheduledDate', 'scheduledTime']) {
+        controllers[key]!.clear();
+        touched.add(key);
+        if (bulk) applied.add(key);
+      }
+      if (occurrenceBeforeRemoval != null) dependentEditedAfterRemoval = true;
+    } finally {
+      changingDependentOccurrence = false;
+    }
+    formValidation.blur('scheduledDate');
+    setState(() {});
+  }
+
+  void settleOccurrencePrerequisites([String? field]) {
+    if (!mounted || editingFrozen || changingDependentOccurrence) return;
+    if (field != null && !const {'dueDate', 'recurrence'}.contains(field)) {
+      return;
+    }
+    for (final key in ['dueDate', 'recurrence']) {
+      if (field != null && key != field) continue;
+      final value = controllers[key]!.value;
+      if (value.composing.isValid && !value.composing.isCollapsed) continue;
+      final text = value.text.trim();
+      if (bulk && !applied.contains(key)) {
+        removedPrerequisites.remove(key);
+      } else if (text.isEmpty &&
+          (bulk || settledPrerequisites[key]?.isNotEmpty == true)) {
+        removedPrerequisites.add(key);
+      } else if (prerequisiteValid(key, text)) {
+        removedPrerequisites.remove(key);
+      }
+      settledPrerequisites[key] = text;
+    }
+    const keys = ['scheduledDate', 'scheduledTime'];
+    if (keys.any((key) {
+      final range = controllers[key]!.value.composing;
+      return range.isValid && !range.isCollapsed;
+    })) {
+      return;
+    }
+    if (removedPrerequisites.isNotEmpty && occurrenceBeforeRemoval == null) {
+      final hasOccurrence = keys.any(
+        (key) =>
+            controllers[key]!.text.trim().isNotEmpty ||
+            (bulk &&
+                !applied.contains(key) &&
+                originals.any((task) => scheduleOf(task)[key] != null)),
+      );
+      if (!hasOccurrence) return;
+      dependentEditedAfterRemoval = false;
+      occurrenceBeforeRemoval = {
+        for (final key in keys) key: controllers[key]!.value,
+      };
+      occurrenceApplyBeforeRemoval = applied.intersection(keys.toSet());
+      changingDependentOccurrence = true;
+      try {
+        for (final key in keys) {
+          controllers[key]!.clear();
+          if (bulk) applied.add(key);
+        }
+      } finally {
+        changingDependentOccurrence = false;
+      }
+      occurrencePrerequisiteNotice =
+          'This occurrence cleared for this draft because Due or Repeat was removed. Save to apply; Cancel keeps the saved values.';
+      formValidation.draftDependenciesChanged();
+      setState(() {});
+    } else if (removedPrerequisites.isEmpty &&
+        occurrenceBeforeRemoval != null) {
+      final preserveChangedDraft = dependentEditedAfterRemoval;
+      changingDependentOccurrence = true;
+      try {
+        if (!preserveChangedDraft) {
+          for (final entry in occurrenceBeforeRemoval!.entries) {
+            controllers[entry.key]!.value = entry.value;
+          }
+          if (bulk) {
+            applied.removeAll(keys);
+            applied.addAll(occurrenceApplyBeforeRemoval!);
+          }
+        }
+      } finally {
+        changingDependentOccurrence = false;
+      }
+      dependentEditedAfterRemoval = false;
+      occurrenceBeforeRemoval = null;
+      occurrenceApplyBeforeRemoval = null;
+      occurrencePrerequisiteNotice = preserveChangedDraft
+          ? 'Removal cancelled; your changed This occurrence draft was kept.'
+          : 'Removal cancelled; This occurrence restored for this draft.';
+      formValidation.draftDependenciesChanged();
+      setState(() {});
+    }
+  }
+
+  ({
+    Map<String, dynamic> fields,
+    List<String> add,
+    List<String> remove,
+    Map<String, dynamic> schedule,
+    String? assignee,
+    Set<String> tags,
+  })?
+  singleAttempt;
+
   (BoxConstraints, Size, EdgeInsets, double, bool)? textViewport;
 
   void revealFocusedCaret() {
@@ -218,7 +390,11 @@ class _EditorBodyState extends State<_EditorBody> {
           : <String>{};
       final query = tagQueries[key] = TextEditingController();
       query.addListener(() {
-        if (mounted) setState(() => touched.add(key));
+        if (mounted) {
+          lastEditedField = key;
+          formValidation.changed(key);
+          setState(() => touched.add(key));
+        }
       });
     }
     for (final key in [...TaskSchedule.keys, 'title', 'description']) {
@@ -240,6 +416,17 @@ class _EditorBodyState extends State<_EditorBody> {
       var previousText = controller.text;
       var previousComposing = controller.value.composing;
       controller.addListener(() {
+        if (changingDependentOccurrence) {
+          previousText = controller.text;
+          previousComposing = controller.value.composing;
+          return;
+        }
+        if (key.startsWith('scheduled') &&
+            occurrenceBeforeRemoval != null &&
+            (controller.text != previousText ||
+                controller.value.composing != previousComposing)) {
+          dependentEditedAfterRemoval = true;
+        }
         // Focus/caret changes notify too. They must not apply a blank mixed
         // schedule field or mark an otherwise untouched draft as dirty.
         if (widget.textSession != null &&
@@ -257,16 +444,19 @@ class _EditorBodyState extends State<_EditorBody> {
         final compositionChanged =
             previousComposing != controller.value.composing;
         previousComposing = controller.value.composing;
+        if (compositionChanged) formValidation.changed(key);
         if (controller.text == previousText) {
           if (key == 'title' && compositionChanged && mounted) setState(() {});
           return;
         }
         previousText = controller.text;
         if (mounted) {
+          lastEditedField = key;
           setState(() {
             touched.add(key);
             if (bulk && TaskSchedule.keys.contains(key)) applied.add(key);
           });
+          formValidation.changed(key);
         }
       });
     }
@@ -275,10 +465,31 @@ class _EditorBodyState extends State<_EditorBody> {
       assignee = null;
       mixed.add('assignee');
     }
+    for (final key in ['dueDate', 'recurrence']) {
+      settledPrerequisites[key] = controllers[key]!.text.trim();
+    }
+    formValidation =
+        FormValidation(
+          validate: () => validationIssues,
+          beforeBlur: settleOccurrencePrerequisites,
+          beforeReview: settleOccurrencePrerequisites,
+          isComposing: (field) {
+            final value = (controllers[field] ?? tagQueries[field])?.value;
+            return value != null &&
+                value.composing.isValid &&
+                !value.composing.isCollapsed;
+          },
+          beforeReveal: (issue) {
+            if (issue.field.startsWith('scheduled')) showOverride = true;
+          },
+        )..addListener(() {
+          if (mounted) setState(() {});
+        });
   }
 
   @override
   void dispose() {
+    formValidation.dispose();
     for (final c in tagQueries.values) {
       c.dispose();
     }
@@ -375,7 +586,10 @@ class _EditorBodyState extends State<_EditorBody> {
 
   bool submitTagQuery(String key) {
     if (editingFrozen || tagError(key) != null) {
-      if (mounted) setState(() => touched.add(key));
+      if (mounted) {
+        formValidation.blur(key);
+        setState(() => touched.add(key));
+      }
       return false;
     }
     final selected = tags(key).toSet();
@@ -388,37 +602,103 @@ class _EditorBodyState extends State<_EditorBody> {
     for (final key in TaskSchedule.keys)
       if (!bulk || applied.contains(key)) key: value(key),
   };
-  String? get validation {
-    try {
-      if (!bulk &&
-          controllers['title']!.text != originals.first['title'] &&
-          controllers['title']!.value.composing.isValid &&
-          !controllers['title']!.value.composing.isCollapsed) {
-        return 'Finish entering the title before saving.';
+  List<FieldIssue> get validationIssues {
+    final issues = <FieldIssue>[];
+    if (!bulk) {
+      final title = controllers['title']!;
+      if (title.text != originals.first['title'] &&
+          title.value.composing.isValid &&
+          !title.value.composing.isCollapsed) {
+        issues.add(
+          const FieldIssue('title', 'Finish entering the title before saving.'),
+        );
+      } else if (title.text.trim().isEmpty) {
+        issues.add(const FieldIssue('title', 'Enter a task title.'));
+      } else if (title.text.trim().length > 500) {
+        issues.add(
+          const FieldIssue('title', 'Title must be 500 characters or fewer.'),
+        );
       }
-      if (!bulk && controllers['title']!.text.trim().isEmpty) {
-        return 'Enter a task title.';
+      final notes = controllers['description']!;
+      if (notes.value.composing.isValid && !notes.value.composing.isCollapsed) {
+        issues.add(
+          const FieldIssue(
+            'description',
+            'Finish entering Notes before saving.',
+          ),
+        );
+      } else if (notes.text.length > 10000) {
+        issues.add(
+          const FieldIssue(
+            'description',
+            'Notes must be 10000 characters or fewer.',
+          ),
+        );
       }
-      if (!bulk && controllers['title']!.text.trim().length > 500) {
-        return 'Title must be 500 characters or fewer.';
-      }
-      if (!bulk && controllers['description']!.text.length > 10000) {
-        return 'Notes must be 10000 characters or fewer.';
-      }
-      if (bulk) {
-        final edit = draft;
-        for (final task in originals) {
-          TaskSchedule.fromJson({...scheduleOf(task), ...edit.schedulePatch});
-          edit.fieldsFor({...task, 'tagRefs': task['tagRefs'] ?? {}});
-        }
-      } else {
-        TaskSchedule.fromJson(patch);
-        tags('tags');
-      }
-      return null;
-    } catch (e) {
-      return e is FormatException ? e.message.toString() : e.toString();
     }
+    final parsed = <String, dynamic>{};
+    var parseFailed = false;
+    for (final key in TaskSchedule.keys) {
+      if (bulk && !applied.contains(key)) continue;
+      final composing = controllers[key]!.value.composing;
+      if (composing.isValid && !composing.isCollapsed) {
+        issues.add(
+          FieldIssue(key, 'Finish entering this field before saving.'),
+        );
+        parseFailed = true;
+        continue;
+      }
+      try {
+        parsed[key] = value(key);
+      } on FormatException catch (error) {
+        issues.add(FieldIssue(key, error.message));
+        parseFailed = true;
+      }
+    }
+    if (!parseFailed) {
+      for (final task in bulk ? originals : [originals.first]) {
+        try {
+          TaskSchedule.fromJson(
+            bulk ? {...scheduleOf(task), ...parsed} : parsed,
+          );
+        } on ScheduleValidationException catch (error) {
+          final fields = error.fields;
+          final primary = fields.contains(lastEditedField)
+              ? lastEditedField!
+              : fields.first;
+          issues.add(
+            FieldIssue(
+              primary,
+              error.message,
+              relatedFields: fields.where((key) => key != primary).toList(),
+            ),
+          );
+          break;
+        }
+      }
+    }
+    if (!occurrenceEditingAllowed &&
+        ['scheduledDate', 'scheduledTime'].any(
+          (key) =>
+              (!bulk || applied.contains(key)) &&
+              controllers[key]!.text.trim().isNotEmpty &&
+              originals.any(
+                (task) =>
+                    scheduleOf(task)[key] != controllers[key]!.text.trim(),
+              ),
+        )) {
+      issues.add(
+        const FieldIssue(
+          'scheduledDate',
+          'Set Due and Repeat to edit This occurrence.',
+        ),
+      );
+    }
+    for (final key in bulk ? ['addTags', 'removeTags'] : ['tags']) {
+      final error = tagError(key);
+      if (error != null) issues.add(FieldIssue(key, error));
+    }
+    return issues;
   }
 
   BulkTaskEdit get draft => BulkTaskEdit(
@@ -455,6 +735,7 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<bool> canClose() {
+    if (helpOpen) return Future.value(false);
     final activeTagComposition = (bulk ? ['addTags', 'removeTags'] : ['tags'])
         .any((key) {
           final composing = tagQueries[key]!.value.composing;
@@ -495,36 +776,42 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<bool> commit({required bool closeAfter}) async {
-    if (busy) return false;
+    if (!mounted || busy) return false;
+    final retry = widget.textSession?.hasPendingReceipt == true;
     setState(() => attempted = true);
-    if (validation != null) return false;
-    final committedTags = {
-      for (final key in bulk ? ['addTags', 'removeTags'] : ['tags'])
-        key: tags(key).toSet(),
-    };
-    if (!bulk && controllers['title']!.text != originals.first['title']) {
-      // Focus loss can finalize composition through the controller without
-      // running input formatters. Normalize only this changed, committed title.
-      final title = controllers['title']!;
-      title.value = TitleLineFormatter().formatEditUpdate(
-        TextEditingValue.empty,
-        title.value,
-      );
+    final submissionRevision = formValidation.submissionRevision;
+    if (!retry && !await formValidation.reviewAndReveal()) return false;
+    if (!retry && submissionRevision != formValidation.submissionRevision) {
+      return false;
     }
+    if (!mounted || busy) return false;
     setState(() {
       busy = true;
       failure = null;
     });
     try {
+      final committedTags = retry
+          ? <String, Set<String>>{'tags': singleAttempt!.tags}
+          : {
+              for (final key in bulk ? ['addTags', 'removeTags'] : ['tags'])
+                key: tags(key).toSet(),
+            };
       if (bulk) {
         await widget.saveBulk!(draft);
       } else {
-        final first = originals.first,
-            parsed = TaskSchedule.fromJson(patch).toJson();
-        final originalTags = Set<String>.from(first['tags'] as List? ?? []),
-            desired = tags('tags').toSet();
-        await widget.saveSingle!(
-          {
+        if (!retry) {
+          final first = originals.first;
+          if (controllers['title']!.text != first['title']) {
+            final title = controllers['title']!;
+            title.value = TitleLineFormatter().formatEditUpdate(
+              TextEditingValue.empty,
+              title.value,
+            );
+          }
+          final parsed = TaskSchedule.fromJson(patch).toJson();
+          final originalTags = Set<String>.from(first['tags'] as List? ?? []);
+          final desired = committedTags['tags']!;
+          final fields = <String, dynamic>{
             if (widget.textSession == null &&
                 !widget.disableTextFields &&
                 controllers['title']!.text != first['title'])
@@ -534,15 +821,28 @@ class _EditorBodyState extends State<_EditorBody> {
                 controllers['description']!.text != first['description'])
               'description': controllers['description']!.text,
             if (assignee != first['assignee']) 'assignee': assignee,
-            if (parsed.entries.any((e) => scheduleOf(first)[e.key] != e.value))
+            if (parsed.entries.any(
+              (entry) => scheduleOf(first)[entry.key] != entry.value,
+            ))
               'schedule': parsed,
-          },
-          desired.difference(originalTags).toList(),
-          originalTags.difference(desired).toList(),
-        );
+          };
+          singleAttempt = (
+            fields: Map<String, dynamic>.unmodifiable({
+              ...fields,
+              if (fields.containsKey('schedule'))
+                'schedule': Map<String, dynamic>.unmodifiable(parsed),
+            }),
+            add: List.unmodifiable(desired.difference(originalTags)),
+            remove: List.unmodifiable(originalTags.difference(desired)),
+            schedule: Map.unmodifiable(parsed),
+            assignee: assignee,
+            tags: Set.unmodifiable(desired),
+          );
+        }
+        final attempt = singleAttempt!;
+        await widget.saveSingle!(attempt.fields, attempt.add, attempt.remove);
       }
       if (!mounted) return false;
-      // Keep pending chips/query intact until the durable save is acknowledged.
       if (widget.textSession?.hasPendingReceipt != true) {
         for (final entry in committedTags.entries) {
           tagSelections[entry.key] = entry.value;
@@ -564,26 +864,41 @@ class _EditorBodyState extends State<_EditorBody> {
             );
           }
         }
-      }
-      if (widget.textSession != null && !widget.textSession!.frozen) {
-        final saved = originals.first;
+        final attempt = singleAttempt!, saved = originals.first;
         saved['title'] = controllers['title']!.text;
         saved['description'] = controllers['description']!.text;
-        saved['assignee'] = assignee;
-        saved['tags'] = tags('tags');
-        saved['schedule'] = TaskSchedule.fromJson(patch).toJson();
+        saved['assignee'] = attempt.assignee;
+        saved['tags'] = attempt.tags.toList();
+        saved['schedule'] = attempt.schedule;
+        assignee = attempt.assignee;
+        for (final entry in attempt.schedule.entries) {
+          controllers[entry.key]!.text = entry.value?.toString() ?? '';
+        }
         touched.clear();
       }
+      singleAttempt = null;
+      if (widget.textSession?.hasPendingReceipt != true) {
+        occurrenceBeforeRemoval = null;
+        dependentEditedAfterRemoval = false;
+        occurrenceApplyBeforeRemoval = null;
+        removedPrerequisites.clear();
+        occurrencePrerequisiteNotice = null;
+        for (final key in ['dueDate', 'recurrence']) {
+          settledPrerequisites[key] = controllers[key]!.text.trim();
+        }
+      }
+      formValidation.reset();
       if (closeAfter) {
         finish();
       } else {
         setState(() => busy = false);
       }
       return true;
-    } catch (e) {
+    } catch (error) {
+      if (widget.textSession?.hasPendingReceipt != true) singleAttempt = null;
       if (mounted) {
         setState(() {
-          failure = failureMessage(e);
+          failure = failureMessage(error);
           busy = false;
         });
       }
@@ -645,35 +960,44 @@ class _EditorBodyState extends State<_EditorBody> {
     bool withApplyControl = true,
   }) {
     if (const {'tags', 'addTags', 'removeTags'}.contains(key)) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: TagInput(
-          tags: availableTags,
-          selected: tagSelections[key]!,
-          queryController: tagQueries[key]!,
-          queryKey: ValueKey(key),
-          label: label,
-          queryLabel: label,
-          chipContext: label,
-          clearLabel: 'Clear $label',
-          expandLabel: 'Expand $label options',
-          collapseLabel: 'Collapse $label options',
-          hint: key == 'removeTags' ? 'Find existing tags' : 'Find or add tags',
-          allowCreate: key != 'removeTags',
-          clearQueryOnSelection: true,
-          enabled: !editingFrozen,
-          queryErrorText: tagError(key),
-          onSubmitQuery: () => submitTagQuery(key),
-          onChanged: (value) => setTags(key, value),
-          onDropdownChanged: (_) {},
+      return formValidation.field(
+        key,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: TagInput(
+            tags: availableTags,
+            selected: tagSelections[key]!,
+            queryController: tagQueries[key]!,
+            queryKey: ValueKey(key),
+            label: label,
+            queryLabel: label,
+            chipContext: label,
+            clearLabel: 'Clear $label',
+            expandLabel: 'Expand $label options',
+            collapseLabel: 'Collapse $label options',
+            hint: key == 'removeTags'
+                ? 'Find existing tags'
+                : 'Find or add tags',
+            allowCreate: key != 'removeTags',
+            clearQueryOnSelection: true,
+            enabled: !editingFrozen,
+            queryErrorText: formValidation.errorFor(key),
+            onSubmitQuery: () => submitTagQuery(key),
+            onChanged: (value) => setTags(key, value),
+            onDropdownChanged: (_) {},
+          ),
         ),
       );
     }
+    final occurrenceLocked =
+        key.startsWith('scheduled') && !occurrenceEditingAllowed;
     final dateTimeField = const {
       'startDate',
       'startTime',
       'dueDate',
       'dueTime',
+      'scheduledDate',
+      'scheduledTime',
     }.contains(key);
     final input = key.endsWith('Date')
         ? CivilDateInput(
@@ -682,8 +1006,9 @@ class _EditorBodyState extends State<_EditorBody> {
             controller: controllers[key]!,
             focusNode: textFocus[key],
             label: label,
-            enabled: !editingFrozen,
+            enabled: !editingFrozen && !occurrenceLocked,
             compactDecoration: dateTimeField,
+            errorText: formValidation.errorFor(key),
             hint: mixed.contains(key)
                 ? 'Mixed — unchanged unless applied'
                 : hint,
@@ -694,6 +1019,7 @@ class _EditorBodyState extends State<_EditorBody> {
             focusNode: textFocus[key],
             enabled:
                 !editingFrozen &&
+                !occurrenceLocked &&
                 !(widget.disableTextFields &&
                     {'title', 'description'}.contains(key)) &&
                 !(widget.textSession?.frozen == true &&
@@ -705,6 +1031,8 @@ class _EditorBodyState extends State<_EditorBody> {
             textInputAction: key == 'title' ? TextInputAction.next : null,
             decoration: InputDecoration(
               labelText: label,
+              errorText: formValidation.errorFor(key),
+              errorMaxLines: 8,
               border: dateTimeField
                   ? const OutlineInputBorder(gapPadding: 2)
                   : null,
@@ -715,7 +1043,11 @@ class _EditorBodyState extends State<_EditorBody> {
                   ? const EdgeInsets.fromLTRB(4, 16, 0, 16)
                   : null,
               suffixIcon:
-                  (key == 'startTime' || key == 'dueTime') &&
+                  const {
+                        'startTime',
+                        'dueTime',
+                        'scheduledTime',
+                      }.contains(key) &&
                       controllers[key]!.text.isNotEmpty
                   ? IconButton(
                       tooltip: 'Clear ${clearLabel ?? label}',
@@ -726,7 +1058,7 @@ class _EditorBodyState extends State<_EditorBody> {
                         minHeight: 48,
                       ),
                       icon: const Icon(Icons.close),
-                      onPressed: editingFrozen
+                      onPressed: editingFrozen || occurrenceLocked
                           ? null
                           : () {
                               textFocus[key]?.unfocus();
@@ -750,26 +1082,29 @@ class _EditorBodyState extends State<_EditorBody> {
                   : hint,
             ),
           );
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: bulk && withApplyControl && TaskSchedule.keys.contains(key)
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                scheduleApply(
-                  key,
-                  clearLabel ?? label,
-                  fullTarget: dateTimeField,
-                ),
-                Expanded(child: input),
-              ],
-            )
-          : key == 'description'
-          ? ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: notesMaxHeight),
-              child: input,
-            )
-          : input,
+    return formValidation.field(
+      key,
+      Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: bulk && withApplyControl && TaskSchedule.keys.contains(key)
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  scheduleApply(
+                    key,
+                    clearLabel ?? label,
+                    fullTarget: dateTimeField,
+                  ),
+                  Expanded(child: input),
+                ],
+              )
+            : key == 'description'
+            ? ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: notesMaxHeight),
+                child: input,
+              )
+            : input,
+      ),
     );
   }
 
@@ -780,7 +1115,9 @@ class _EditorBodyState extends State<_EditorBody> {
         materialTapTargetSize: fullTarget ? MaterialTapTargetSize.padded : null,
         key: ValueKey('${key}Apply'),
         value: applied.contains(key),
-        onChanged: editingFrozen
+        onChanged:
+            editingFrozen ||
+                (key.startsWith('scheduled') && occurrenceBeforeRemoval != null)
             ? null
             : (value) => setState(() {
                 if (value!) {
@@ -788,6 +1125,7 @@ class _EditorBodyState extends State<_EditorBody> {
                 } else {
                   applied.remove(key);
                 }
+                formValidation.blur(key);
               }),
       );
 
@@ -941,9 +1279,10 @@ class _EditorBodyState extends State<_EditorBody> {
               !applied.contains(key) &&
               originals.any((task) => scheduleOf(task)[key] != null)),
     );
-    final error = (attempted || touched.isNotEmpty || applied.isNotEmpty)
-        ? validation
-        : null;
+    final migrationConflicts = [
+      for (final task in originals)
+        if (planOccurrenceDueMigration(task)?.conflict != null) task,
+    ];
     final content = Form(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -967,40 +1306,51 @@ class _EditorBodyState extends State<_EditorBody> {
           dateTimeRow('start', 'Start'),
           dateTimeRow('due', 'Due'),
           field('recurrence', 'Repeat', hint: 'every week when done'),
-          if (repeating)
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8),
+          if (migrationConflicts.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
               child: Text(
-                'This occurrence changes the planned date; the base due date and repeat cadence remain.',
+                'This occurrence could not be moved to Due without making the schedule invalid. '
+                'Review Start, Due and This occurrence below. All existing values are preserved.',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
-          if (!repeating && overrides) ...[
-            const Text('Existing occurrence override is preserved.'),
+
+          if (!occurrenceEditingAllowed &&
+              overrides &&
+              migrationConflicts.isEmpty)
+            const Text(
+              'Set Due and Repeat to edit This occurrence. Existing values are preserved.',
+            ),
+          if (overrides) ...[
+            if (!repeating)
+              const Text('Existing occurrence override is preserved.'),
             Wrap(
               spacing: 8,
               runSpacing: 4,
               children: [
+                if (!repeating)
+                  TextButton(
+                    onPressed: editingFrozen || !occurrenceEditingAllowed
+                        ? null
+                        : () => setState(() => showOverride = !showOverride),
+                    child: const Text('Edit existing override'),
+                  ),
                 TextButton(
-                  onPressed: editingFrozen
-                      ? null
-                      : () => setState(() => showOverride = !showOverride),
-                  child: const Text('Edit existing override'),
-                ),
-                TextButton(
-                  onPressed: editingFrozen
-                      ? null
-                      : () {
-                          controllers['scheduledDate']!.clear();
-                          controllers['scheduledTime']!.clear();
-                        },
+                  onPressed: editingFrozen ? null : clearOccurrenceOverride,
                   child: const Text('Clear override'),
                 ),
               ],
             ),
           ],
-          if (repeating || showOverride) ...[
-            field('scheduledDate', 'This occurrence date', hint: 'YYYY-MM-DD'),
-            field('scheduledTime', 'This occurrence time', hint: 'HH:mm'),
+          if (occurrenceEditingAllowed ||
+              overrides ||
+              occurrenceBeforeRemoval != null ||
+              showOverride ||
+              migrationConflicts.isNotEmpty) ...[
+            dateTimeRow('scheduled', 'This occurrence'),
           ],
           field(
             'timeZone',
@@ -1008,10 +1358,7 @@ class _EditorBodyState extends State<_EditorBody> {
             hint: 'Blank: Local; UTC; America/Chicago',
           ),
           const Text('Sort-date bounds'),
-          const Text(
-            'Days from today; affects listing order, not the deadline.',
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           field('dueMinDays', 'Minimum days', hint: 'No bound'),
           field('dueMaxDays', 'Maximum days', hint: 'No bound'),
           if (!bulk)
@@ -1090,17 +1437,16 @@ class _EditorBodyState extends State<_EditorBody> {
       onPressed: editingFrozen ? null : close,
       child: const Text('Cancel'),
     );
-    final saveAction = FilledButton(
-      onPressed: busy || error != null ? null : submit,
-      child: Text(
-        busy
-            ? 'Saving…'
-            : widget.textSession?.hasPendingReceipt == true
-            ? 'Retry Save'
-            : 'Save changes',
-      ),
+    final saveAction = ValidationActionButton(
+      key: const ValueKey('task-save-action'),
+      validation: formValidation,
+      enabled: ModalRoute.isCurrentOf(context) ?? true,
+      label: 'Save changes',
+      busy: busy,
+      retry: widget.textSession?.hasPendingReceipt == true,
+      onSubmit: submit,
     );
-    final actions = bulk && failure != null && modalActionsInContent
+    final actionButtons = bulk && failure != null && modalActionsInContent
         // Give failed bulk actions the full footer width. A fixed Delete
         // column otherwise wraps Save into an extra line and squeezes the
         // readable notice at enlarged phone text.
@@ -1123,6 +1469,29 @@ class _EditorBodyState extends State<_EditorBody> {
               ),
             ],
           );
+    final actions = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (occurrencePrerequisiteNotice != null)
+          ConstrainedBox(
+            key: const ValueKey('occurrence-prerequisite-notice'),
+            constraints: BoxConstraints(maxHeight: failureMaxHeight * .5),
+            child: SingleChildScrollView(
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  occurrencePrerequisiteNotice!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        actionButtons,
+      ],
+    );
     final pinBulkFailure = bulk && !widget.panel;
     // A rejected bulk Save must keep its feedback beside the retry/close
     // actions, even when the clean editor uses scrolling actions for space.
@@ -1149,6 +1518,12 @@ class _EditorBodyState extends State<_EditorBody> {
               bulk ? 'Edit ${originals.length} tasks' : 'Edit task',
               style: Theme.of(context).textTheme.titleLarge,
             ),
+            IconButton(
+              tooltip: 'Task field help',
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              icon: const Icon(Icons.help_outline),
+              onPressed: busy || helpOpen ? null : openHelp,
+            ),
             if (!bulk && widget.selectionCount != null)
               Text(
                 '${widget.selectionCount} selected',
@@ -1161,18 +1536,6 @@ class _EditorBodyState extends State<_EditorBody> {
               ),
           ],
         ),
-        for (final message in [
-          if (!(bulk ? ['addTags', 'removeTags'] : ['tags']).any(
-            (key) => error != null && tagError(key) == error,
-          ))
-            error,
-          if (!pinBulkFailure) failure,
-        ])
-          if (message != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: failureNotice(message),
-            ),
         if (widget.contextNotice != null) widget.contextNotice!,
       ],
     );
@@ -1192,6 +1555,7 @@ class _EditorBodyState extends State<_EditorBody> {
                       child: content,
                     ),
                   ),
+                  if (failure != null) failureNotice(failure!),
                   actions,
                 ],
               ),
@@ -1213,7 +1577,13 @@ class _EditorBodyState extends State<_EditorBody> {
               width: 480,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [content, if (actionsInContent) actions],
+                children: [
+                  content,
+                  if (actionsInContent) ...[
+                    if (failure != null) failureNotice(failure!),
+                    actions,
+                  ],
+                ],
               ),
             ),
             actions: actionsInContent
@@ -1249,7 +1619,13 @@ class _EditorBodyState extends State<_EditorBody> {
                         ),
                       )
                     else
-                      actions,
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (failure != null) failureNotice(failure!),
+                          actions,
+                        ],
+                      ),
                   ],
           );
     final boundedEditor = widget.panel

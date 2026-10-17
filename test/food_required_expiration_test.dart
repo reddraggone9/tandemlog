@@ -4,6 +4,8 @@ import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/civil_date_input.dart';
 
+Finder get _foodAction => find.byKey(const ValueKey('food-save-action'));
+
 const _writer = '00000000-0000-4000-8000-000000000092';
 
 Future<void> _tap(WidgetTester tester, Finder finder) async {
@@ -99,7 +101,7 @@ void registerFoodRequiredExpirationTests() {
         find.widgetWithText(TextField, 'Food name'),
         'New beans',
       );
-      await _tap(tester, find.widgetWithText(FilledButton, 'Add'));
+      await _tap(tester, _foodAction);
       expect(additions, isEmpty);
       expect(find.text('Expiration is required.'), findsOneWidget);
       expect(find.textContaining('(optional)'), findsNothing);
@@ -108,14 +110,28 @@ void registerFoodRequiredExpirationTests() {
         find.widgetWithText(TextField, 'Expiration'),
         '2026-02-30',
       );
-      await _tap(tester, find.widgetWithText(FilledButton, 'Add'));
+      await _tap(tester, _foodAction);
       expect(additions, isEmpty);
       await _enterText(
         tester,
         find.widgetWithText(TextField, 'Expiration'),
         '2026-10-14',
       );
-      await _tap(tester, find.widgetWithText(FilledButton, 'Add'));
+      expect(
+        find.descendant(of: _foodAction, matching: find.text('Review errors')),
+        findsOneWidget,
+      );
+      await _tap(tester, _foodAction);
+      expect(
+        additions,
+        isEmpty,
+        reason: 'Review of corrected input cannot Add',
+      );
+      expect(
+        find.descendant(of: _foodAction, matching: find.text('Add')),
+        findsOneWidget,
+      );
+      await _tap(tester, _foodAction);
       expect(additions.single.expiry, '2026-10-14');
       expect(additions.single.brand, '');
       expect(additions.single.location, '');
@@ -144,7 +160,7 @@ void registerFoodRequiredExpirationTests() {
     );
     await openFoodGroupEditor(tester, 'Synthetic beans');
     await _enterText(tester, find.widgetWithText(TextField, 'Expiration'), '');
-    await _tap(tester, find.widgetWithText(FilledButton, 'Save'));
+    await _tap(tester, _foodAction);
     expect(writes, 0);
     expect(find.text('Expiration is required.'), findsOneWidget);
     expect(projectFood(operations).active.single.details.expiry, '2026-10-14');
@@ -153,7 +169,17 @@ void registerFoodRequiredExpirationTests() {
       find.widgetWithText(TextField, 'Expiration'),
       '2026-10-18',
     );
-    await _tap(tester, find.widgetWithText(FilledButton, 'Save'));
+    expect(
+      find.descendant(of: _foodAction, matching: find.text('Review errors')),
+      findsOneWidget,
+    );
+    await _tap(tester, _foodAction);
+    expect(writes, 0, reason: 'Review of corrected input cannot Save');
+    expect(
+      find.descendant(of: _foodAction, matching: find.text('Save')),
+      findsOneWidget,
+    );
+    await _tap(tester, _foodAction);
     expect(writes, 1);
     expect(edited!.expiry, '2026-10-18');
     expect(fields, ['expiry']);
@@ -182,7 +208,7 @@ void registerFoodRequiredExpirationTests() {
       expect(writes, 0);
       expect(projectFood(operations).active.single.details.expiry, isNull);
       await openFoodGroupEditor(tester, 'Synthetic beans');
-      await _tap(tester, find.widgetWithText(FilledButton, 'Save'));
+      await _tap(tester, _foodAction);
       expect(writes, 0);
       expect(find.text('Expiration is required.'), findsOneWidget);
       await _enterText(
@@ -190,7 +216,17 @@ void registerFoodRequiredExpirationTests() {
         find.widgetWithText(TextField, 'Expiration'),
         '2026-10-20',
       );
-      await _tap(tester, find.widgetWithText(FilledButton, 'Save'));
+      expect(
+        find.descendant(of: _foodAction, matching: find.text('Review errors')),
+        findsOneWidget,
+      );
+      await _tap(tester, _foodAction);
+      expect(writes, 0, reason: 'Review of corrected input cannot Save');
+      expect(
+        find.descendant(of: _foodAction, matching: find.text('Save')),
+        findsOneWidget,
+      );
+      await _tap(tester, _foodAction);
       expect(writes, 1);
       expect(edited!.expiry, '2026-10-20');
       await tester.pumpWidget(const SizedBox.shrink());
@@ -241,7 +277,7 @@ void registerFoodRequiredExpirationTests() {
         find.widgetWithText(TextField, 'Brand'),
         'Brand A',
       );
-      await _tap(tester, find.widgetWithText(FilledButton, 'Save'));
+      await _tap(tester, _foodAction);
       expect(fields, ['brand']);
       expect(
         projectFood(applied!).active.map((e) => e.details.expiry).toSet(),

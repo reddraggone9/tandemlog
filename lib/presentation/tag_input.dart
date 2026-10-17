@@ -479,6 +479,7 @@ class TagInputState extends State<TagInput> with WidgetsBindingObserver {
               : null,
           contentPadding: widget.label == null ? EdgeInsets.zero : null,
           errorText: widget.queryErrorText,
+          errorMaxLines: 3,
         ),
         // A chip collection plus a query has no single editable baseline.
         // Use InputDecorator's height fallback rather than chip/tooltip baselines.

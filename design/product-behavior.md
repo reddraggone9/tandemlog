@@ -288,3 +288,7 @@ The existing reason input and autocomplete filter items directly. Physical
 container grouping still includes the reason; rows remain flat.
 Search bypasses saved filters and includes Deleted; clearing Search restores
 the selected reasons.
+
+## Form feedback and scheduling guidance
+
+The accepted [field help and validation decision](decisions/0026-field-help-validation-and-occurrence-due.md) applies neutral fresh actions, local blur/review errors and stable Review errors behavior across Task/Food/checklist/setup/user/capture forms. Task field guidance is in one scrollable help surface. This occurrence shares the responsive date/optional-Time pattern. The same decision records the approved existing-occurrence-to-Due conversion, conflict preservation and accepted prerequisite-removal interaction; this work is not yet released.

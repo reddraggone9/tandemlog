@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../application/task_text_session.dart';
 import 'failure_message.dart';
+import 'form_validation.dart';
 import 'title_line_formatter.dart';
 import 'unsaved_draft_dialog.dart';
 
@@ -29,11 +30,10 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
   final _titleField = GlobalKey(), _notesField = GlobalKey();
   final _notesScroll = ScrollController();
   late String _savedTitle, _savedNotes;
-  bool _busy = false,
-      _attempted = false,
-      _allowPop = false,
-      _refreshing = false;
+  bool _busy = false, _allowPop = false, _refreshing = false;
   String? _failure;
+  late final FormValidation _formValidation;
+  String? _attemptTitle, _attemptNotes;
   Future<bool>? _closeRequest;
   Object? _geometry;
   bool get _pending =>
@@ -58,6 +58,13 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
         '';
     _title = TextEditingController(text: _savedTitle);
     _notes = TextEditingController(text: _savedNotes);
+    _formValidation = FormValidation(
+      validate: _issues,
+      isComposing: (field) {
+        final value = (field == 'title' ? _title : _notes).value;
+        return value.composing.isValid && !value.composing.isCollapsed;
+      },
+    )..addListener(_validationChanged);
     _listen(_title, 'title');
     _listen(_notes, 'description');
   }
@@ -79,23 +86,44 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
           composing: value.composing.isValid && !value.composing.isCollapsed,
         );
       }
+      _formValidation.changed(field);
       if (mounted) setState(() {});
     });
   }
 
-  String? get _validation {
-    if (_title.value.composing.isValid && !_title.value.composing.isCollapsed ||
-        _notes.value.composing.isValid && !_notes.value.composing.isCollapsed) {
-      return 'Finish entering text before saving.';
+  void _validationChanged() {
+    if (mounted) setState(() {});
+  }
+
+  List<FieldIssue> _issues() {
+    final issues = <FieldIssue>[];
+    for (final (field, controller) in [
+      ('title', _title),
+      ('description', _notes),
+    ]) {
+      final value = controller.value;
+      if (value.composing.isValid && !value.composing.isCollapsed) {
+        issues.add(FieldIssue(field, 'Finish entering text before saving.'));
+      } else if (field == 'title') {
+        if (value.text.trim().isEmpty) {
+          issues.add(
+            const FieldIssue('title', 'Enter a checklist item title.'),
+          );
+        } else if (value.text.trim().length > 500) {
+          issues.add(
+            const FieldIssue('title', 'Title must be 500 characters or fewer.'),
+          );
+        }
+      } else if (value.text.length > 10000) {
+        issues.add(
+          const FieldIssue(
+            'description',
+            'Notes must be 10000 characters or fewer.',
+          ),
+        );
+      }
     }
-    if (_title.text.trim().isEmpty) return 'Enter a checklist item title.';
-    if (_title.text.trim().length > 500) {
-      return 'Title must be 500 characters or fewer.';
-    }
-    if (_notes.text.length > 10000) {
-      return 'Notes must be 10000 characters or fewer.';
-    }
-    return null;
+    return issues;
   }
 
   /// Resolves a private draft without closing the host route or owning a session.
@@ -129,11 +157,11 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
   }
 
   Future<bool> _commit({required bool closeAfter}) async {
-    if (_busy) return false;
+    if (!mounted || _busy) return false;
     // A prepared receipt retries the captured intent. Do not normalize again.
     if (!_pending && widget.textSession?.frozen != true) {
-      setState(() => _attempted = true);
-      if (_validation != null) return false;
+      if (!await _formValidation.reviewAndReveal()) return false;
+      if (!mounted || _busy) return false;
       if (_title.text != _savedTitle) {
         _title.value = TitleLineFormatter().formatEditUpdate(
           TextEditingValue.empty,
@@ -141,12 +169,19 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
         );
       }
     }
+    if (!_pending && widget.textSession?.frozen != true) {
+      _attemptTitle = _title.text.trim();
+      _attemptNotes = _notes.text;
+    }
     setState(() {
       _busy = true;
       _failure = null;
     });
     try {
-      await widget.save(_title.text.trim(), _notes.text);
+      await widget.save(
+        _attemptTitle ?? _title.text.trim(),
+        _attemptNotes ?? _notes.text,
+      );
       if (!mounted) return false;
       final session = widget.textSession;
       if (session != null && !session.frozen) {
@@ -181,7 +216,6 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
       _savedNotes = _notes.text;
       setState(() {
         _busy = false;
-        _attempted = false;
       });
       if (closeAfter) _finish();
       return true;
@@ -245,89 +279,115 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
         insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 480, maxHeight: visibleHeight),
-          child: SingleChildScrollView(
+          child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  widget.item == null
-                      ? 'Add checklist item'
-                      : 'Edit checklist item',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 16),
-                KeyedSubtree(
-                  key: _titleField,
-                  child: TextField(
-                    key: const Key('checklist-item-title'),
-                    controller: _title,
-                    focusNode: _titleFocus,
-                    enabled: !_frozen,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    minLines: 1,
-                    maxLines: 2,
-                    inputFormatters: [TitleLineFormatter()],
-                    decoration: const InputDecoration(
-                      label: Text(
-                        'Title',
-                        semanticsLabel: 'Checklist item title',
-                      ),
-                    ),
-                    onSubmitted: (_) => _notesFocus.requestFocus(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: notesHeight),
-                  child: KeyedSubtree(
-                    key: _notesField,
-                    child: TextField(
-                      key: const Key('checklist-item-notes'),
-                      controller: _notes,
-                      focusNode: _notesFocus,
-                      scrollController: _notesScroll,
-                      enabled: !_frozen,
-                      keyboardType: TextInputType.multiline,
-                      minLines: 3,
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                        label: Text(
-                          'Notes (optional)',
-                          semanticsLabel: 'Checklist item notes (optional)',
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          widget.item == null
+                              ? 'Add checklist item'
+                              : 'Edit checklist item',
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        alignLabelWithHint: true,
-                      ),
+                        const SizedBox(height: 16),
+                        _formValidation.field(
+                          'title',
+                          KeyedSubtree(
+                            key: _titleField,
+                            child: TextField(
+                              key: const Key('checklist-item-title'),
+                              controller: _title,
+                              focusNode: _titleFocus,
+                              enabled: !_frozen,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.next,
+                              minLines: 1,
+                              maxLines: 2,
+                              inputFormatters: [TitleLineFormatter()],
+                              decoration: InputDecoration(
+                                errorText: _formValidation.errorFor('title'),
+                                errorMaxLines: 3,
+                                label: const Text(
+                                  'Title',
+                                  semanticsLabel: 'Checklist item title',
+                                ),
+                              ),
+                              onSubmitted: (_) => _notesFocus.requestFocus(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _formValidation.field(
+                          'description',
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxHeight: notesHeight),
+                            child: KeyedSubtree(
+                              key: _notesField,
+                              child: TextField(
+                                key: const Key('checklist-item-notes'),
+                                controller: _notes,
+                                focusNode: _notesFocus,
+                                scrollController: _notesScroll,
+                                enabled: !_frozen,
+                                keyboardType: TextInputType.multiline,
+                                minLines: 3,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                  errorText: _formValidation.errorFor(
+                                    'description',
+                                  ),
+                                  errorMaxLines: 3,
+                                  label: const Text(
+                                    'Notes (optional)',
+                                    semanticsLabel:
+                                        'Checklist item notes (optional)',
+                                  ),
+                                  alignLabelWithHint: true,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                if (_attempted && _validation != null)
+                if (_failure != null || _pending)
                   Padding(
                     padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      _validation!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: (visibleHeight * .22).clamp(40.0, 120.0),
                       ),
-                    ),
-                  ),
-                if (_failure != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      _failure!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
+                      child: SingleChildScrollView(
+                        child: Semantics(
+                          liveRegion: true,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (_failure != null)
+                                Text(
+                                  _failure!,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                              if (_pending)
+                                const Text(
+                                  'Save is pending. Retry to finish saving this item.',
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                if (_pending)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 12),
-                    child: Text(
-                      'Save is pending. Retry to finish saving this item.',
                     ),
                   ),
                 const SizedBox(height: 16),
@@ -341,14 +401,16 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
                       onPressed: _closeBlocked ? null : _close,
                       child: const Text('Cancel'),
                     ),
-                    FilledButton(
-                      key: const Key('checklist-item-save'),
-                      onPressed: _busy ? null : () => _commit(closeAfter: true),
-                      child: Text(
-                        _pending || widget.textSession?.frozen == true
-                            ? 'Retry Save'
-                            : 'Save item',
-                      ),
+                    ValidationActionButton(
+                      buttonKey: const Key('checklist-item-save'),
+                      validation: _formValidation,
+                      busy: _busy,
+                      enabled: ModalRoute.isCurrentOf(context) ?? true,
+                      retry: _pending || widget.textSession?.frozen == true,
+                      label: 'Save item',
+                      onSubmit: () async {
+                        await _commit(closeAfter: true);
+                      },
                     ),
                   ],
                 ),
@@ -362,6 +424,7 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
 
   @override
   void dispose() {
+    _formValidation.dispose();
     _title.dispose();
     _notes.dispose();
     _titleFocus.dispose();

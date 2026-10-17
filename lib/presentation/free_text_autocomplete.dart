@@ -9,13 +9,14 @@ class FreeTextAutocomplete extends StatefulWidget {
     required this.values,
     this.enabled = true,
     this.hint,
+    this.errorText,
     this.onChanged,
   });
   final TextEditingController controller;
   final String label;
   final List<String> values;
   final bool enabled;
-  final String? hint;
+  final String? hint, errorText;
   final ValueChanged<String>? onChanged;
   @override
   State<FreeTextAutocomplete> createState() => _FreeTextAutocompleteState();
@@ -48,6 +49,8 @@ class _FreeTextAutocompleteState extends State<FreeTextAutocomplete> {
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
+        errorText: widget.errorText,
+        errorMaxLines: 3,
       ),
       onChanged: widget.onChanged,
       onSubmitted: (_) => submit(),

@@ -1,0 +1,31 @@
+# Field help, form validation and occurrence Due conversion
+
+Status: accepted by Lee on 2026-10-17; implementation and native acceptance in progress. No release is authorized by this decision.
+
+## Context
+
+The Task editor explained scheduling with terms absent from its controls. This occurrence used separate full-width fields, unlike Start/Due. Invalid input could disable Save while its explanation had scrolled out of view. Food, checklist, setup and capture used different validation policies.
+
+## Decision
+
+Pair This occurrence date and optional Time with the existing responsive date/time row. Preserve field identity, focus, selection/composition, explicit midnight, date-only precision and independent bulk masks. Stack at the existing measured narrow/large-text boundary and retain 48px controls.
+
+Provide one accessible Task field help button beside the editor heading. Its scrollable guide uses Start, Due, Repeat, This occurrence and Sort-date bounds; remove superseded inline paragraphs. Closing help owns only its current dialog route and restores the previous editor focus.
+
+Forms start with neutral Add/Save/Continue and no red pristine errors. Reveal field-local explanations on blur or deliberate validation. Known-invalid forms show Review errors in the same stable button footprint; it reveals and focuses the first erroneous input and explanation. Keep the settled label during partial typing/composition. Review never writes, even if validity changes during its pointer gesture. Correct input restores the normal action after blur/review. Explicit commit gates still validate before commands. Busy actions are one-shot. Operational/partial-save failures stay beside actions; retries keep immutable captured intent and bypass reparsing frozen drafts. Shared presentation state does not replace domain validation or host ownership guards.
+
+Copy existing This occurrence date/time into an absent Due and clear the occurrence fields using ordinary append-only v3 task.edited schedule edits. Preserve existing Due and all unrelated task fields. Lee explicitly accepts the Start-only recurrence-anchor consequence: retaining the copied Due can change later cadence compared with the old fallback after the override cleared. Never change canonical parsers, historical payload meanings, UUIDs, clocks, hashes or prior bytes. Reopen/replay itself remains read-only; the application explicitly invokes the guarded compatibility command after shared workspace admission and safe external refresh. A row with Due is already converted. Refresh/revalidate snapshots before append. Existing v3 whole-schedule last-writer ordering still applies to unseen older offline clients; this adds no conditional merge protocol.
+
+If conversion would put Due before Start (or another existing admission constraint fails), preserve every field and keep an editable, visible field-local resolution. Do not silently move Start, create an invalid Due, discard the override or stop the entire workspace from opening.
+
+Future This occurrence editing requires both Due and Repeat. Lee accepted on 2026-10-17 that intentionally removing Due or Repeat clears This occurrence in that draft, with a brief notice before Save; Cancel preserves saved values. Settle removal on blur, explicit bulk application or deliberate validation, not while typing a replacement or composing. Re-adding a valid prerequisite or unapplying the bulk removal before Save restores the backed-up occurrence draft and its prior bulk masks unless that dependent draft changed in the meantime. A Save gesture that first changes dependent fields is review-only so the notice is visible before a subsequent Save; existing canonical v3 Undo restores the full acknowledged schedule. Original conversion conflicts retain editable resolution even without the usual prerequisites.
+
+## Alternatives and consequences
+
+A separate link beside disabled Save would retain the old interaction but leave inconsistent app-wide feedback. Eager red errors and label swaps on each keystroke were rejected because partial/IME input is normal. One fixed button preserves pointer, keyboard and layout identity. Per-field structured issue keys avoid parsing English to navigate.
+
+A parser-level conversion, rewritten logs or direct production database updates would change historical meaning or bypass writer safety; they are excluded. Conflicts are per-task, not global startup failures. Automatic conversion is observable normal history and remains readable by existing v3 clients.
+
+## Verification and revisit
+
+Require focused IME/reflow/field-focus/action-race/frozen-retry/bulk/partial-save tests; exact prefix, sync, repeated-run and cold-replay proofs; independent source review; actual native desktop and Android light/dark/narrow/large-text visual acceptance and input-visible videos. Keep private fixtures and raw evidence out of Git. Revisit if additional real form policies diverge or a future protocol offers conditional schedule operations. Current native acceptance remains pending.

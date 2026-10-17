@@ -36,6 +36,8 @@ import 'presentation/view_clock.dart';
 import 'presentation/task_metadata.dart';
 import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
+import 'presentation/form_validation.dart';
+import 'presentation/name_entry_dialog.dart';
 import 'presentation/checklist_panel.dart';
 import 'presentation/checklist_disclosure_ink_border.dart';
 import 'presentation/task_actions_menu.dart';
@@ -175,6 +177,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   ({bool food, int revision, bool waitForFolderChoice})? requestedSection;
   Future<void>? sectionWork;
   String? foodError, sharedSafetyError;
+  String? occurrenceMigrationError;
   final foodPageKey = GlobalKey<FoodInventoryPageState>();
   final foodUndoHistory = FoodUndoHistory();
   ({
@@ -247,6 +250,48 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool settingsLoaded = false;
   final firstName = TextEditingController();
   final firstNameFocus = FocusNode();
+  late final setupValidation = FormValidation(
+    validate: () {
+      final name = (pendingUserName ?? firstName.text).trim();
+      return [
+        if (pendingUserName == null &&
+            firstName.value.composing.isValid &&
+            !firstName.value.composing.isCollapsed)
+          const FieldIssue(
+            'name',
+            'Finish entering your name before continuing.',
+          )
+        else if (name.isEmpty)
+          const FieldIssue('name', 'Enter your name.')
+        else if (name.length > 100)
+          const FieldIssue('name', 'Name must be 100 characters or fewer.'),
+      ];
+    },
+    isComposing: (_) =>
+        firstName.value.composing.isValid &&
+        !firstName.value.composing.isCollapsed,
+  );
+  late final captureValidation = FormValidation(
+    validate: () {
+      if (pendingCapture.isNotEmpty) return [];
+      final titles = capture.text
+          .split('\n')
+          .map((line) => line.trim())
+          .where((line) => line.isNotEmpty);
+      return [
+        if (titles.isEmpty)
+          const FieldIssue('capture', 'Enter at least one task title.')
+        else if (titles.any((title) => title.length > 500))
+          const FieldIssue(
+            'capture',
+            'Keep each task title to 500 characters or fewer.',
+          ),
+      ];
+    },
+    isComposing: (_) =>
+        capture.value.composing.isValid && !capture.value.composing.isCollapsed,
+  );
+
   String? pendingUserId;
   List<Map<String, dynamic>> rows = [];
   final capture = TextEditingController();
@@ -324,9 +369,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
+  void _formValidationChanged() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
+    setupValidation.addListener(_formValidationChanged);
+    captureValidation.addListener(_formValidationChanged);
+    firstName.addListener(() => setupValidation.changed('name'));
+    capture.addListener(() => captureValidation.changed('capture'));
     FocusManager.instance.addListener(_focusChanged);
     WidgetsBinding.instance.addObserver(this);
     sectionNavigation =
@@ -486,6 +539,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         await opened.close();
         return false;
       }
+      final migration = await opened.migrateOccurrenceDates(
+        canCommit: () => mounted,
+      );
+      occurrenceMigrationError = migration.error == null
+          ? null
+          : failureMessage(migration.error!);
+      if (!mounted) {
+        await openedFood?.close();
+        await opened.close();
+        return false;
+      }
+
       expanded = ChecklistExpansionStore(
         opened.db,
         tables: opened.tables,
@@ -1610,7 +1675,31 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     syncing = () async {
       try {
         final previousClockWarning = origin.clockWarning;
-        final changed = await origin.refresh();
+        final previousMigrationError = occurrenceMigrationError;
+        var changed = await origin.refresh();
+        if (editingTask == null &&
+            editingBulk == null &&
+            !openingChecklistEditor &&
+            checklistEditorDone == null &&
+            pendingCapture.isEmpty) {
+          final migration = await origin.migrateOccurrenceDates(
+            canCommit: () =>
+                mounted &&
+                identical(store, origin) &&
+                !busy &&
+                editingTask == null &&
+                editingBulk == null &&
+                !openingChecklistEditor &&
+                checklistEditorDone == null &&
+                pendingCapture.isEmpty &&
+                foreground &&
+                sharedSafetyError == null,
+          );
+          changed = changed || migration.changed;
+          occurrenceMigrationError = migration.error == null
+              ? null
+              : failureMessage(migration.error!);
+        }
         undoHistory.reconcile(origin.confirmedOperations);
         final clockWarningChanged = previousClockWarning != origin.clockWarning;
         final reconcileCapture = captureFailure && pendingCapture.isNotEmpty;
@@ -1628,6 +1717,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (mounted &&
             identical(store, origin) &&
             (changed ||
+                previousMigrationError != occurrenceMigrationError ||
                 clockWarningChanged ||
                 errorFromRefresh ||
                 reconcileCapture)) {
@@ -1896,7 +1986,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         pendingCapture.clear();
         showCompleted = false;
         capture.clear();
+        captureValidation.reset();
         firstName.clear();
+        setupValidation.reset();
         pendingUserId = null;
         pendingUserName = null;
       });
@@ -1920,7 +2012,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final origin = store, owner = profileDatabase;
     final capturedPendingId = pendingUserId,
         capturedPendingName = pendingUserName;
-    if (busy || name.isEmpty || user != null || origin == null) return;
+    if (busy || user != null || origin == null) return;
+    if (pendingUserName == null && !await setupValidation.reviewAndReveal()) {
+      return;
+    }
+    if (!mounted || busy || user != null || !identical(store, origin)) return;
     // Continue is the existing setup retry for the retained name. Revalidate
     // both modules before admitting that explicit intent after a shared stop.
     if (sharedSafetyError != null) {
@@ -1950,6 +2046,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       pendingUserId = null;
       pendingUserName = null;
       firstName.clear();
+      setupValidation.reset();
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && user == null) firstNameFocus.requestFocus();
@@ -1966,41 +2063,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     });
   }
 
-  Future<String?> _textDialog(String title, {required String label}) async {
-    final input = TextEditingController();
-    final result = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
-        content: TextField(
-          controller: input,
-          autofocus: true,
-          maxLength: 100,
-          decoration: InputDecoration(labelText: label),
-          onSubmitted: (v) {
-            if (v.trim().isNotEmpty) Navigator.pop(ctx, v.trim());
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              if (input.text.trim().isNotEmpty) {
-                Navigator.pop(ctx, input.text.trim());
-              }
-            },
-            child: const Text('Create user'),
-          ),
-        ],
-      ),
-    );
-    // Controllers referenced by a closing dialog are disposed after its transition.
-    Future<void>.delayed(const Duration(seconds: 1), input.dispose);
-    return result;
-  }
+  Future<String?> _textDialog(String title, {required String label}) =>
+      showDialog<String>(
+        context: context,
+        builder: (_) => NameEntryDialog(title: title, label: label),
+      );
 
   void _submitCaptureButton() {
     if (busy) return;
@@ -2024,16 +2091,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             !capture.value.composing.isCollapsed)) {
       return;
     }
-    final titles = capture.text
+    final capturedText = capture.text;
+    if (pendingCapture.isEmpty && !await captureValidation.reviewAndReveal()) {
+      return;
+    }
+    if (!mounted ||
+        busy ||
+        (pendingCapture.isEmpty && capture.text != capturedText)) {
+      return;
+    }
+    final titles = capturedText
         .split('\n')
         .map((s) => s.trim())
         .where((s) => s.isNotEmpty)
         .toList();
-    if (titles.isEmpty) return;
-    if (titles.any((s) => s.length > 500)) {
-      setState(() => error = 'Keep each task title under 500 characters.');
-      return;
-    }
     if (pendingCapture.isEmpty) {
       pendingCapture = titles
           .map((title) => (id: const Uuid().v4(), title: title))
@@ -2057,6 +2128,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
     });
     captureFailure = pendingCapture.isNotEmpty;
+    if (pendingCapture.isEmpty) captureValidation.reset();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && captureMode && !foodVisible && user != null && !busy) {
         captureFocus.requestFocus();
@@ -4151,6 +4223,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     bodyFocusScope.dispose();
     capture.dispose();
     captureFocus.dispose();
+    setupValidation.dispose();
+    captureValidation.dispose();
     firstName.dispose();
     firstNameFocus.dispose();
     unawaited(_shutdown(foodPageKey.currentState?.editorDone));
@@ -4284,6 +4358,25 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           (sharedSafetyError == null || keepSetupInputs) &&
                           !_taskModalOpen)
                         _actionErrorNotice(),
+                      if (!foodVisible && occurrenceMigrationError != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Text(
+                                'Some This occurrence dates could not be moved to Due. ${occurrenceMigrationError!}',
+                              ),
+                              TextButton(
+                                onPressed: busy ? null : _refresh,
+                                child: const Text('Retry conversion'),
+                              ),
+                            ],
+                          ),
+                        ),
                       if (!foodVisible && store?.clockWarning != null)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
@@ -4534,29 +4627,47 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     'Your name identifies your tasks. Everyone sharing this folder can see and edit them.',
                   ),
                   const SizedBox(height: 24),
-                  TextField(
-                    controller: firstName,
-                    focusNode: firstNameFocus,
-                    readOnly: pendingUserName != null,
-                    autofocus: true,
-                    enabled: !busy,
-                    maxLength: 100,
-                    textInputAction: TextInputAction.done,
-                    decoration: InputDecoration(
-                      labelText: 'Your name',
-                      helperText: pendingUserName == null
-                          ? null
-                          : 'Continue to finish saving this name.',
+                  setupValidation.field(
+                    'name',
+                    TextField(
+                      controller: firstName,
+                      focusNode: firstNameFocus,
+                      readOnly: pendingUserName != null,
+                      autofocus: true,
+                      enabled: !busy,
+                      maxLength: 100,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        labelText: 'Your name',
+                        errorText: setupValidation.errorFor('name'),
+                        errorMaxLines: 3,
+                        helperText: pendingUserName == null
+                            ? null
+                            : 'Continue to finish saving this name.',
+                      ),
+                      onChanged: (_) => setState(() {}),
+                      onSubmitted: (_) => _createFirstUser(),
                     ),
-                    onChanged: (_) => setState(() {}),
-                    onSubmitted: (_) => _createFirstUser(),
                   ),
                   const SizedBox(height: 16),
-                  FilledButton(
-                    onPressed: busy || firstName.text.trim().isEmpty
-                        ? null
-                        : _createFirstUser,
-                    child: const Text('Continue'),
+                  if (error != null)
+                    Semantics(
+                      liveRegion: true,
+                      child: Text(
+                        error!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ValidationActionButton(
+                    validation: setupValidation,
+                    enabled: ModalRoute.isCurrentOf(context) ?? true,
+                    label: 'Continue',
+                    busy: busy,
+                    retry: pendingUserName != null,
+                    retryLabel: 'Continue',
+                    onSubmit: _createFirstUser,
                   ),
                 ],
               ),
@@ -4620,6 +4731,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (captureMode != nextCapture) {
         if (captureMode) {
           capture.clear();
+          captureValidation.reset();
           if (error == 'Keep each task title under 500 characters.') {
             error = null;
           }
@@ -4986,50 +5098,61 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return KeyEventResult.ignored;
     },
     child: LayoutBuilder(
-      builder: (context, constraints) => TextField(
-        controller: capture,
-        focusNode: captureFocus,
-        readOnly: pendingCapture.isNotEmpty,
-        keyboardType: TextInputType.multiline,
-        textInputAction: TextInputAction.newline,
-        minLines: 1,
-        maxLines: 4,
-        enabled: !busy,
-        decoration: InputDecoration(
-          labelText: 'What needs doing?',
-          hintText: 'One task per line',
-          helperText: captureFailure && pendingCapture.isNotEmpty
-              ? 'Retry to check these tasks before editing.'
-              : widget.folderActions.requiresPicker
-              ? null
-              : 'Enter to add · Shift+Enter for another task',
-          suffixIcon:
-              constraints.maxWidth <
-                  480 * (MediaQuery.textScalerOf(context).scale(14) / 14)
-              ? IconButton(
-                  key: const ValueKey('capture-add'),
-                  tooltip: 'Add tasks',
-                  onPressed: busy ? null : _submitCaptureButton,
-                  icon: const Icon(Icons.add),
-                )
-              : Tooltip(
-                  message: 'Add tasks',
-                  child: TextButton.icon(
-                    key: const ValueKey('capture-add'),
-                    style: TextButton.styleFrom(
-                      minimumSize: const Size(72, 48),
-                      visualDensity: VisualDensity.standard,
-                    ),
-                    onPressed: busy ? null : _submitCaptureButton,
-                    icon: const Icon(Icons.add),
-                    label: Semantics(
-                      label: 'Add tasks',
-                      child: const ExcludeSemantics(child: Text('Add')),
-                    ),
-                  ),
-                ),
-        ),
-        onSubmitted: (_) => _capture(),
+      builder: (context, constraints) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          captureValidation.field(
+            'capture',
+            TextField(
+              controller: capture,
+              focusNode: captureFocus,
+              readOnly: pendingCapture.isNotEmpty,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              minLines: 1,
+              maxLines: 4,
+              enabled: !busy,
+              decoration: InputDecoration(
+                labelText: 'What needs doing?',
+                hintText: 'One task per line',
+                errorText: captureValidation.errorFor('capture'),
+                errorMaxLines: 3,
+                helperText: captureFailure && pendingCapture.isNotEmpty
+                    ? 'Retry to check these tasks before editing.'
+                    : widget.folderActions.requiresPicker
+                    ? null
+                    : 'Enter to add · Shift+Enter for another task',
+              ),
+              onSubmitted: (_) => _capture(),
+            ),
+          ),
+          if (captureFailure && error != null)
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Tooltip(
+              message: 'Add tasks',
+              child: ValidationActionButton(
+                buttonKey: const ValueKey('capture-add'),
+                validation: captureValidation,
+                enabled: ModalRoute.isCurrentOf(context) ?? true,
+                label: 'Add',
+                busyLabel: 'Adding…',
+                busy: busy,
+                retry: pendingCapture.isNotEmpty,
+                retryLabel: 'Retry Add',
+                onSubmit: _submitCaptureButton,
+              ),
+            ),
+          ),
+        ],
       ),
     ),
   );
