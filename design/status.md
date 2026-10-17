@@ -1,10 +1,18 @@
-# Field help and validation — 2026.10.7-rc.1/build86 candidate pending
+# Field help and validation - 2026.10.7-rc.1/build86 published experimental
 
-[Preparation](../evidence/prerelease-2026.10.7-rc.1/candidate86/README.md) binds
-reviewed implementation and complete source CI. Versioned signed-candidate,
-original-artifact, native stable85-to86 upgrade, preservation/replay and independent
-acceptance gates remain required before the authorized RC-only publication.
-Stable2026.10.6/build85 remains Latest. No stable, production or dependency change.
+[RC.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.1) is published from exact accepted source `ad79bda0abc9ad5a72ec3dc92da29f1cb8f3c586`.
+Signed candidate 39061411870, push 39061383511 and
+[promotion 39068954432](https://github.com/reddraggone9/tandemlog/actions/runs/39068954432)
+passed all required jobs. [Candidate acceptance](../evidence/prerelease-2026.10.7-rc.1/candidate86/README.md)
+records exact native stable85-to86 upgrade, affected desktop/Android workflows,
+canonical/settings/text-state preservation, read-only replay, actual demonstrations
+and independent review. [Public receipts](../evidence/prerelease-2026.10.7-rc.1/publication/README.md)
+verify anonymous original installer bytes, owner APK identity/build 86/native
+payload, reviewed notes/tag/source and all 33 prior releases/assets/tag refs unchanged.
+Stable2026.10.6/build 85 remains Latest. Settings restored, temporary native processes
+stopped and SDK test link absent. Windows manual-GUI waiver, API30 x86_64 and
+GTK-versus-hosted-Flatpak qualifications remain explicit. No stable promotion,
+production operation or dependency change occurred.
 
 # Stable2026.10.6/build85 - published Latest
 

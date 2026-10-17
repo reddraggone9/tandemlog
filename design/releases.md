@@ -227,3 +227,19 @@ fixtures remain separate; no live-data operation or stable promotion occurred.
 ## Published stable 2026.10.6/build85
 
 [Stable2026.10.6](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.6) published 2026-10-16T01:57:18Z and is Latest from accepted source `1a00c8de432407d4e58d7278ac90d62f1cdbace4`, candidate38825977292 and [promotion38837831145](https://github.com/reddraggone9/tandemlog/actions/runs/38837831145). Reviewed docs dispatch `6c8f19a7a62062cbce248112a5b4c2664d51ed3a` supplied unchanged notes SHA-256 `b9140813d5b64c75b15495711d1b8d83f302f7ca414e12790c68d0f915a67187`. Existing gates reused the three original installers without rebuilding. [Public receipts](../evidence/stable-2026.10.6/publication/README.md) verify actual anonymous bytes, owner APK identity/build85/ABIs/native payload, reviewed notes/tag/source/Latest and all32 prior release/asset identities plus every prior tag ref unchanged. Fresh exact LinuxGTK and Android84-to85 acceptance, preservation/replay, demonstrations, independent final reviews and authorized fresh-quota publication completed. Existing WindowsGUI/API30/simulated-wide and manual GTK versus hosted Flatpak qualifications remain explicit. No production operation, dependency update or unrelated feature work accompanied publication.
+
+
+## Published experimental2026.10.7-rc.1/build86
+
+[RC.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.1) published 2026-10-17T20:58:52Z from accepted source
+`ad79bda0abc9ad5a72ec3dc92da29f1cb8f3c586`. Signed candidate 39061411870, push 39061383511 and
+[promotion 39068954432](https://github.com/reddraggone9/tandemlog/actions/runs/39068954432)
+passed every required job and reused the three original accepted installers without
+rebuilding. Reviewed notes SHA256 `40f54dc02dcc7a9d1beddeb49ea32524c61f5b62441dae3cd0d67144ec8a59aa` match public copy.
+[Public receipts](../evidence/prerelease-2026.10.7-rc.1/publication/README.md) verify
+actual anonymous bytes, public owner APK identity/build 86/native payload, source,
+tag and all 33 prior releases/assets/tag refs preserved. Stable2026.10.6 stays Latest.
+Exact LinuxGTK/Android85-to86 native acceptance, preservation/read-only replay,
+visible-input demos and independent final/editorial review preceded fresh-quota
+publication. Existing WindowsGUI-waiver/API30x86_64/manualGTK-versus-hostedFlatpak
+qualifications remain. No stable promotion, production or dependency operation.
