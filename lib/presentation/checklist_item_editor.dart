@@ -36,6 +36,7 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
   String? _attemptTitle, _attemptNotes;
   Future<bool>? _closeRequest;
   Object? _geometry;
+  double? _formViewportHeight;
   bool get _pending =>
       widget.hasPendingReceipt?.call() == true ||
       widget.textSession?.hasPendingReceipt == true;
@@ -240,6 +241,16 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
         : null;
     final controller = _titleFocus.hasFocus ? _title : _notes;
     if (key?.currentContext == null || !controller.selection.isValid) return;
+    if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
+    final field = _titleFocus.hasFocus ? 'title' : 'description';
+    if (_formValidation.errorFor(field) != null) {
+      // A caret alone can fit while the explanation is behind the fixed footer.
+      Scrollable.ensureVisible(
+        key!.currentContext!,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+      return;
+    }
     void visit(Element element) {
       if (element is StatefulElement && element.state is EditableTextState) {
         (element.state as EditableTextState).bringIntoView(
@@ -263,11 +274,14 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
         if (mounted) _revealCaret();
       });
     }
+    final keyboardVisible = media.viewInsets.bottom > 0;
+    final verticalInset = keyboardVisible ? 8.0 : 24.0;
+    final verticalPadding = keyboardVisible ? 12.0 : 20.0;
     final visibleHeight =
         (media.size.height -
                 media.viewInsets.bottom -
                 media.viewPadding.vertical -
-                48)
+                2 * verticalInset)
             .clamp(120.0, 800.0);
     final notesHeight = (visibleHeight * .30).clamp(90.0, 280.0);
     return PopScope(
@@ -277,87 +291,110 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
       },
       child: Dialog(
         alignment: Alignment.bottomCenter,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: verticalInset,
+        ),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 480, maxHeight: visibleHeight),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: verticalPadding,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Flexible(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          widget.item == null
-                              ? 'Add checklist item'
-                              : 'Edit checklist item',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 16),
-                        _formValidation.field(
-                          'title',
-                          KeyedSubtree(
-                            key: _titleField,
-                            child: TextField(
-                              key: const Key('checklist-item-title'),
-                              controller: _title,
-                              focusNode: _titleFocus,
-                              enabled: !_frozen,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              minLines: 1,
-                              maxLines: 2,
-                              inputFormatters: [TitleLineFormatter()],
-                              decoration: InputDecoration(
-                                errorText: _formValidation.errorFor('title'),
-                                errorMaxLines: 3,
-                                label: const Text(
-                                  'Title',
-                                  semanticsLabel: 'Checklist item title',
-                                ),
-                              ),
-                              onSubmitted: (_) => _notesFocus.requestFocus(),
-                            ),
+                  child: NotificationListener<ScrollMetricsNotification>(
+                    onNotification: (notification) {
+                      if (notification.depth != 0) return false;
+                      final height = notification.metrics.viewportDimension;
+                      if (height != _formViewportHeight) {
+                        _formViewportHeight = height;
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted && _formViewportHeight == height) {
+                            _revealCaret();
+                          }
+                        });
+                      }
+                      return false;
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            widget.item == null
+                                ? 'Add checklist item'
+                                : 'Edit checklist item',
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        _formValidation.field(
-                          'description',
-                          ConstrainedBox(
-                            constraints: BoxConstraints(maxHeight: notesHeight),
-                            child: KeyedSubtree(
-                              key: _notesField,
+                          const SizedBox(height: 16),
+                          _formValidation.field(
+                            'title',
+                            KeyedSubtree(
+                              key: _titleField,
                               child: TextField(
-                                key: const Key('checklist-item-notes'),
-                                controller: _notes,
-                                focusNode: _notesFocus,
-                                scrollController: _notesScroll,
+                                key: const Key('checklist-item-title'),
+                                controller: _title,
+                                focusNode: _titleFocus,
                                 enabled: !_frozen,
-                                keyboardType: TextInputType.multiline,
-                                minLines: 3,
-                                maxLines: null,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                minLines: 1,
+                                maxLines: 2,
+                                inputFormatters: [TitleLineFormatter()],
                                 decoration: InputDecoration(
-                                  errorText: _formValidation.errorFor(
-                                    'description',
-                                  ),
+                                  errorText: _formValidation.errorFor('title'),
                                   errorMaxLines: 3,
                                   label: const Text(
-                                    'Notes (optional)',
-                                    semanticsLabel:
-                                        'Checklist item notes (optional)',
+                                    'Title',
+                                    semanticsLabel: 'Checklist item title',
                                   ),
-                                  alignLabelWithHint: true,
+                                ),
+                                onSubmitted: (_) => _notesFocus.requestFocus(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _formValidation.field(
+                            'description',
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: notesHeight,
+                              ),
+                              child: KeyedSubtree(
+                                key: _notesField,
+                                child: TextField(
+                                  key: const Key('checklist-item-notes'),
+                                  controller: _notes,
+                                  focusNode: _notesFocus,
+                                  scrollController: _notesScroll,
+                                  enabled: !_frozen,
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 3,
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                    errorText: _formValidation.errorFor(
+                                      'description',
+                                    ),
+                                    errorMaxLines: 3,
+                                    label: const Text(
+                                      'Notes (optional)',
+                                      semanticsLabel:
+                                          'Checklist item notes (optional)',
+                                    ),
+                                    alignLabelWithHint: true,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

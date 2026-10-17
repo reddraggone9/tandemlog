@@ -72,7 +72,30 @@ class FormValidation extends ChangeNotifier {
     return editable;
   }
 
-  String? errorFor(String field) {
+  Object? _primaryPointerOwner;
+  Map<String, String?>? _pointerErrors;
+
+  // A blur can settle validation before a held primary gesture is released.
+  // Preserve painted error heights until activation, so the target cannot move.
+  void _holdPointerErrors(Object owner) {
+    if (_disposed || _primaryPointerOwner != null) return;
+    _pointerErrors = {
+      for (final field in _anchors.keys) field: _currentErrorFor(field),
+    };
+    _primaryPointerOwner = owner;
+  }
+
+  void _releasePointerErrors(Object owner, {bool notify = true}) {
+    if (_disposed || !identical(_primaryPointerOwner, owner)) return;
+    _primaryPointerOwner = null;
+    _pointerErrors = null;
+    if (notify) notifyListeners();
+  }
+
+  String? errorFor(String field) =>
+      _pointerErrors != null ? _pointerErrors![field] : _currentErrorFor(field);
+
+  String? _currentErrorFor(String field) {
     if (!_revealed.contains(field)) return null;
     for (final issue in _issues) {
       if (issue.field == field) return issue.message;
@@ -184,6 +207,8 @@ class FormValidation extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     _lastInputFocus = null;
+    _primaryPointerOwner = null;
+    _pointerErrors = null;
     super.dispose();
   }
 }
@@ -217,6 +242,9 @@ class _ValidationActionButtonState extends State<ValidationActionButton> {
   FormActionIntent? _pressedIntent;
   int? _pressedRevision;
   bool _activating = false;
+  int? _primaryPointer;
+  int _pointerGeneration = 0;
+  FormValidation? _pressedValidation;
   FormActionIntent get _intent => widget.retry
       ? FormActionIntent.retry
       : widget.validation.reviewRequired
@@ -225,29 +253,58 @@ class _ValidationActionButtonState extends State<ValidationActionButton> {
 
   Future<void> _activate() async {
     if (!mounted || _activating || widget.busy || !widget.enabled) return;
-    _activating = true;
+    final validation = _pressedValidation ?? widget.validation;
     final intent = _pressedIntent ?? _intent;
-    final revision = _pressedRevision ?? widget.validation.submissionRevision;
+    final revision = _pressedRevision ?? validation.submissionRevision;
+    final submit = widget.onSubmit;
     _pressedIntent = null;
     _pressedRevision = null;
+    _pressedValidation = null;
+    if (!identical(widget.validation, validation)) {
+      validation._releasePointerErrors(this);
+      return;
+    }
+    _activating = true;
+    validation._releasePointerErrors(this, notify: false);
     try {
       if (intent == FormActionIntent.retry) {
-        await widget.onSubmit();
+        await submit();
         return;
       }
-      final valid = await widget.validation.reviewAndReveal();
+      final valid = await validation.reviewAndReveal();
       if (!mounted ||
           widget.busy ||
           !widget.enabled ||
-          revision != widget.validation.submissionRevision ||
+          !identical(widget.validation, validation) ||
+          revision != validation.submissionRevision ||
           intent == FormActionIntent.review ||
           !valid) {
         return;
       }
-      await widget.onSubmit();
+      await submit();
     } finally {
       _activating = false;
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant ValidationActionButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.validation, widget.validation)) {
+      // Keep the pressed controller identity until pointer-up rejects it.
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => oldWidget.validation._releasePointerErrors(this),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    final validation = widget.validation;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => validation._releasePointerErrors(this),
+    );
+    super.dispose();
   }
 
   @override
@@ -255,18 +312,39 @@ class _ValidationActionButtonState extends State<ValidationActionButton> {
     listenable: widget.validation,
     builder: (context, _) => Listener(
       onPointerDown: (event) {
-        if (event.buttons == 1) {
+        if (event.buttons == 1 &&
+            _primaryPointer == null &&
+            !widget.busy &&
+            widget.enabled) {
+          _primaryPointer = event.pointer;
+          _pointerGeneration++;
+          _pressedValidation = widget.validation;
+          widget.validation._holdPointerErrors(this);
           _pressedIntent = _intent;
           _pressedRevision = widget.validation.submissionRevision;
         }
       },
-      onPointerUp: (_) => WidgetsBinding.instance.addPostFrameCallback((_) {
+      onPointerUp: (event) {
+        if (event.pointer != _primaryPointer) return;
+        _primaryPointer = null;
+        final validation = _pressedValidation ?? widget.validation;
+        final generation = _pointerGeneration;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_pointerGeneration != generation) return;
+          _pressedIntent = null;
+          _pressedRevision = null;
+          _pressedValidation = null;
+          validation._releasePointerErrors(this);
+        });
+      },
+      onPointerCancel: (event) {
+        if (event.pointer != _primaryPointer) return;
+        _primaryPointer = null;
+        final validation = _pressedValidation ?? widget.validation;
         _pressedIntent = null;
         _pressedRevision = null;
-      }),
-      onPointerCancel: (_) {
-        _pressedIntent = null;
-        _pressedRevision = null;
+        _pressedValidation = null;
+        validation._releasePointerErrors(this);
       },
       child: FilledButton(
         key: widget.buttonKey,
