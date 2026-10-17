@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -67,17 +68,44 @@ void registerFieldLayoutTests() {
         final minimum = find.byKey(const ValueKey('dueMinDays'));
         await tester.ensureVisible(minimum);
         await tester.pumpAndSettle();
-        final explanation = find.text(
-          'Days from today; affects listing order, not the deadline.',
+        expect(
+          find.text(
+            'Days from today; affects listing order, not the deadline.',
+          ),
+          findsNothing,
         );
+        final heading = find.text('Sort-date bounds');
+        expect(heading, findsOneWidget);
         final label = find.descendant(
           of: minimum,
           matching: find.text('Minimum days'),
         );
-        expect(
-          tester.getRect(label).top - tester.getRect(explanation).bottom,
-          greaterThanOrEqualTo(8),
+        Rect paintedRect(RenderBox box) => MatrixUtils.transformRect(
+          box.getTransformTo(null),
+          Offset.zero & box.size,
         );
+        final headingRect = paintedRect(
+          tester.renderObject<RenderParagraph>(
+            find.descendant(of: heading, matching: find.byType(RichText)),
+          ),
+        );
+        final labelRect = paintedRect(
+          tester.renderObject<RenderParagraph>(
+            find.descendant(of: label, matching: find.byType(RichText)),
+          ),
+        );
+        final outlineRect = paintedRect(
+          tester.renderObject<RenderBox>(
+            find.descendant(of: minimum, matching: find.byType(InputDecorator)),
+          ),
+        );
+        expect(
+          labelRect.top - headingRect.bottom,
+          greaterThanOrEqualTo(8),
+          reason:
+              'The painted floating label must remain separate from its current section heading',
+        );
+        expect(outlineRect.top - headingRect.bottom, greaterThanOrEqualTo(12));
         expect(tester.widget<TextField>(minimum).controller!.text, '0');
         final suffix =
             '${variant.width.toInt()}-${variant.theme}-${variant.scale.toInt() * 100}';

@@ -500,4 +500,98 @@ void main() {
       replacement.dispose();
     },
   );
+  testWidgets(
+    'reset discards an already queued old blur but later real blur validates',
+    (tester) async {
+      final input = TextEditingController(text: 'good');
+      final focus = FocusNode();
+      var saves = 0;
+      final validation = FormValidation(
+        validate: () => input.text == 'good'
+            ? []
+            : [const FieldIssue('name', 'Enter a valid name.')],
+      );
+      input.addListener(() => validation.changed('name'));
+      try {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: ListenableBuilder(
+                listenable: validation,
+                builder: (context, _) => Column(
+                  children: [
+                    validation.field(
+                      'name',
+                      TextField(
+                        controller: input,
+                        focusNode: focus,
+                        decoration: InputDecoration(
+                          errorText: validation.errorFor('name'),
+                        ),
+                      ),
+                    ),
+                    ValidationActionButton(
+                      buttonKey: const ValueKey('reset-save'),
+                      validation: validation,
+                      label: 'Save',
+                      onSubmit: () {
+                        saves++;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        focus.requestFocus();
+        await tester.pumpAndSettle();
+        expect(focus.hasFocus, isTrue);
+        input.clear();
+        focus.unfocus();
+        // Deliver the real Focus notification now. Its form blur callback is
+        // queued for post-frame, exactly when a successful save resets the form.
+        FocusManager.instance.applyFocusChangesIfNeeded();
+        expect(focus.hasFocus, isFalse);
+        validation.reset();
+        await tester.pumpAndSettle();
+        expect(input.text, isEmpty);
+        expect(
+          validation.reviewRequired,
+          isFalse,
+          reason:
+              'A completed prior interaction cannot dirty a freshly reset form',
+        );
+        expect(validation.errorFor('name'), isNull);
+        expect(find.text('Enter a valid name.'), findsNothing);
+        expect(find.text('Save'), findsOneWidget);
+        expect(saves, 0);
+
+        await tester.tap(find.byType(TextField));
+        await tester.enterText(find.byType(TextField), 'next invalid draft');
+        await tester.pumpAndSettle();
+        expect(validation.errorFor('name'), isNull);
+        focus.unfocus();
+        await tester.pumpAndSettle();
+        expect(
+          validation.reviewRequired,
+          isTrue,
+          reason: 'Reset must not suppress a later user interaction',
+        );
+        expect(validation.errorFor('name'), 'Enter a valid name.');
+        expect(find.text('Review errors'), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('reset-save')));
+        await tester.pumpAndSettle();
+        expect(focus.hasFocus, isTrue);
+        expect(input.text, 'next invalid draft');
+        expect(saves, 0);
+        expect(tester.takeException(), isNull);
+      } finally {
+        await tester.pumpWidget(const SizedBox());
+        validation.dispose();
+        input.dispose();
+        focus.dispose();
+      }
+    },
+  );
 }

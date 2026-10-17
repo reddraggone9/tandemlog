@@ -5096,7 +5096,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             ),
           ),
           const SizedBox(height: 16),
-          if (captureFailure && error != null) _formFailureNotice(error!),
           captureValidation.field(
             'capture',
             TextField(

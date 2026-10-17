@@ -1258,7 +1258,16 @@ class _EditorBodyState extends State<_EditorBody> {
                   3 * lineHeight(styles.labelLarge) +
                   96;
       notesMaxHeight = (availableHeight * .4).clamp(100.0, 360.0);
-      failureMaxHeight = (availableHeight * .2).clamp(40.0, 120.0);
+      final proportionalFailureHeight = (availableHeight * .2).clamp(
+        40.0,
+        120.0,
+      );
+      final twoWarningLines = 2 * lineHeight(styles.bodyMedium);
+      // A wrapped recovery instruction needs two readable lines. The flexible
+      // footer still preserves the field and action space reserved below.
+      failureMaxHeight = proportionalFailureHeight < twoWarningLines
+          ? twoWarningLines
+          : proportionalFailureHeight;
       // Match the dialog's vertical insets and action padding. Flexible notice
       // space below also accommodates buttons that wrap with enlarged text.
       final failureBodyReserve = modalActionsInContent
@@ -1364,7 +1373,9 @@ class _EditorBodyState extends State<_EditorBody> {
             hint: 'Blank: Local; UTC; America/Chicago',
           ),
           const Text('Sort-date bounds'),
-          const SizedBox(height: 12),
+          // Floating labels paint above their outlines; reserve their scaled
+          // half-line as well as the visible gap from this heading.
+          SizedBox(height: 8 + MediaQuery.textScalerOf(context).scale(6)),
           field('dueMinDays', 'Minimum days', hint: 'No bound'),
           field('dueMaxDays', 'Maximum days', hint: 'No bound'),
           if (!bulk)

@@ -36,6 +36,7 @@ class FormValidation extends ChangeNotifier {
   final _anchors = <String, GlobalKey>{};
   List<FieldIssue> _issues = const [];
   bool _reviewRequired = false, _reviewedAll = false, _disposed = false;
+  int _resetGeneration = 0;
 
   bool get reviewRequired => _reviewRequired;
 
@@ -154,8 +155,11 @@ class FormValidation extends ChangeNotifier {
         }
         // Focus notifications can arrive while the form is building/disposed.
         if (!focused) {
+          final generation = _resetGeneration;
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!_disposed && _anchors[name]?.currentContext != null) {
+            if (!_disposed &&
+                generation == _resetGeneration &&
+                _anchors[name]?.currentContext != null) {
               blur(name);
             }
           });
@@ -198,6 +202,9 @@ class FormValidation extends ChangeNotifier {
   }
 
   void reset() {
+    // A successful command starts a fresh draft; its old focus-loss callback
+    // must not publish an empty-field error after this reset.
+    _resetGeneration++;
     _revealed.clear();
     _issues = const [];
     _reviewRequired = false;
