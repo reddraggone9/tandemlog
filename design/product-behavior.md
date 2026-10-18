@@ -128,6 +128,16 @@ New desktop setup names the canonical folder `shared-data` under the existing ap
 
 The explicit capture control uses a plus icon: **+ Add** when the entry has room at the current text scale, and plus-only on narrow layouts. Its accessible name is **Add tasks**. Keyboard submission, multiline splitting, composing-input handling and failure/retry behavior are unchanged.
 
+Quick capture treats an empty or whitespace-only draft as ready for input.
+Its embedded right-hand **+** (or **+ Add** when it fits) stays inactive,
+with no empty-field error or Review errors action. Keyboard submission is a
+quiet no-op that preserves the draft and focus. A nonempty overlong title
+receives a local error from the suffix action; corrected input can be added
+directly. Frozen pending capture retains its enabled exact **Retry Add** action
+and accessible retry name. First-user setup and Add user likewise keep
+Continue/Create user inactive for blank names, preserving name-length/IME
+validation and pending setup recovery.
+
 ## Completed tasks and capture grouping
 
 The Open/Completed choice in Filter defaults to Open. Completed tasks use the same rows with checked checkboxes; unchecking reopens the task. Task title/notes remain editable in either view, and assignee filtering applies to both. The active Search/Add input remains available in Open and Completed; changing filter choices preserves the same active input buffer. Toolbar Undo persists through snackbar expiry within the session; completed history remains independently accessible.
@@ -316,4 +326,4 @@ the selected reasons.
 
 ## Form feedback and scheduling guidance
 
-The accepted [field help and validation decision](decisions/0026-field-help-validation-and-occurrence-due.md) applies neutral fresh actions, local blur/review errors and stable Review errors behavior across Task/Food/checklist/setup/user/capture forms. Task field guidance is in one scrollable help surface. This occurrence shares the responsive date/optional-Time pattern. The same decision records the approved existing-occurrence-to-Due conversion, conflict preservation and accepted prerequisite-removal interaction; this work is not yet released.
+The accepted [field help and validation decision](decisions/0026-field-help-validation-and-occurrence-due.md) applies neutral fresh actions, local blur/review errors and stable Review errors behavior across Task/Food/checklist/setup/user forms, with the approved simple-input exceptions above. Task field guidance is in one scrollable help surface. This occurrence shares the responsive date/optional-Time pattern. The same decision records the approved existing-occurrence-to-Due conversion, conflict preservation and accepted prerequisite-removal interaction; this work is not yet released.

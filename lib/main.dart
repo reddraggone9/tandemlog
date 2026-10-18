@@ -263,8 +263,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             'name',
             'Finish entering your name before continuing.',
           )
-        else if (name.isEmpty)
-          const FieldIssue('name', 'Enter your name.')
         else if (name.length > 100)
           const FieldIssue('name', 'Name must be 100 characters or fewer.'),
       ];
@@ -281,9 +279,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           .map((line) => line.trim())
           .where((line) => line.isNotEmpty);
       return [
-        if (titles.isEmpty)
-          const FieldIssue('capture', 'Enter at least one task title.')
-        else if (titles.any((title) => title.length > 500))
+        if (titles.any((title) => title.length > 500))
           const FieldIssue(
             'capture',
             'Keep each task title to 500 characters or fewer.',
@@ -380,8 +376,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     super.initState();
     setupValidation.addListener(_formValidationChanged);
     captureValidation.addListener(_formValidationChanged);
-    firstName.addListener(() => setupValidation.changed('name'));
-    capture.addListener(() => captureValidation.changed('capture'));
+    firstName.addListener(() {
+      if (pendingUserName == null && firstName.text.trim().isEmpty) {
+        setupValidation.reset();
+      } else {
+        setupValidation.changed('name');
+      }
+    });
+    capture.addListener(() {
+      if (pendingCapture.isEmpty && capture.text.trim().isEmpty) {
+        captureValidation.reset();
+      } else {
+        captureValidation.changed('capture');
+      }
+    });
     FocusManager.instance.addListener(_focusChanged);
     WidgetsBinding.instance.addObserver(this);
     sectionNavigation =
@@ -2122,7 +2130,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final origin = store, owner = profileDatabase;
     final capturedPendingId = pendingUserId,
         capturedPendingName = pendingUserName;
-    if (busy || user != null || origin == null) return;
+    if (busy ||
+        user != null ||
+        origin == null ||
+        (pendingUserName == null && name.isEmpty)) {
+      return;
+    }
     if (pendingUserName == null && !await setupValidation.reviewAndReveal()) {
       return;
     }
@@ -2202,6 +2215,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return;
     }
     final capturedText = capture.text;
+    // An empty quick-capture draft is an ordinary ready state. This guard also
+    // covers keyboard/IME submission without reserving IDs or losing focus.
+    if (pendingCapture.isEmpty && capturedText.trim().isEmpty) return;
     if (pendingCapture.isEmpty && !await captureValidation.reviewAndReveal()) {
       return;
     }
@@ -4709,25 +4725,42 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       decoration: InputDecoration(
                         labelText: 'Your name',
                         errorText: setupValidation.errorFor('name'),
-                        errorMaxLines: 3,
+                        errorMaxLines: 6,
+                        counterText: setupValidation.errorFor('name') == null
+                            ? null
+                            : '',
                         helperText: pendingUserName == null
                             ? null
                             : 'Continue to finish saving this name.',
                       ),
+                      onEditingComplete: () {
+                        if (pendingUserName == null &&
+                            firstName.text.trim().isEmpty) {
+                          return;
+                        }
+                        firstName.clearComposing();
+                        firstNameFocus.unfocus();
+                      },
                       onChanged: (_) => setState(() {}),
                       onSubmitted: (_) => _createFirstUser(),
                     ),
                   ),
                   const SizedBox(height: 16),
                   if (error != null) _formFailureNotice(error!),
-                  ValidationActionButton(
-                    validation: setupValidation,
-                    enabled: ModalRoute.isCurrentOf(context) ?? true,
-                    label: 'Continue',
-                    busy: busy,
-                    retry: pendingUserName != null,
-                    retryLabel: 'Continue',
-                    onSubmit: _createFirstUser,
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: firstName,
+                    builder: (context, draft, _) => ValidationActionButton(
+                      validation: setupValidation,
+                      enabled:
+                          (ModalRoute.isCurrentOf(context) ?? true) &&
+                          (pendingUserName != null ||
+                              draft.text.trim().isNotEmpty),
+                      label: 'Continue',
+                      busy: busy,
+                      retry: pendingUserName != null,
+                      retryLabel: 'Continue',
+                      onSubmit: _createFirstUser,
+                    ),
                   ),
                 ],
               ),
@@ -5177,18 +5210,40 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return KeyEventResult.ignored;
     },
     child: LayoutBuilder(
-      builder: (context, constraints) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Tooltip(
-              message: 'Add tasks',
-              child: ValidationActionButton(
+      builder: (context, constraints) => captureValidation.field(
+        'capture',
+        TextField(
+          controller: capture,
+          focusNode: captureFocus,
+          readOnly: pendingCapture.isNotEmpty,
+          keyboardType: TextInputType.multiline,
+          textInputAction: TextInputAction.newline,
+          minLines: 1,
+          maxLines: 4,
+          enabled: !busy,
+          decoration: InputDecoration(
+            labelText: 'What needs doing?',
+            hintText: 'One task per line',
+            errorText: captureValidation.errorFor('capture'),
+            errorMaxLines: 3,
+            helperText: captureFailure && pendingCapture.isNotEmpty
+                ? 'Retry to check these tasks before editing.'
+                : widget.folderActions.requiresPicker
+                ? null
+                : 'Enter to add · Shift+Enter for another task',
+            suffixIcon: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: capture,
+              builder: (context, draft, _) => ValidationActionButton(
                 buttonKey: const ValueKey('capture-add'),
                 validation: captureValidation,
-                enabled: ModalRoute.isCurrentOf(context) ?? true,
+                embedded: true,
+                compact:
+                    constraints.maxWidth <
+                    480 * (MediaQuery.textScalerOf(context).scale(14) / 14),
+                tooltip: 'Add tasks',
+                enabled:
+                    (ModalRoute.isCurrentOf(context) ?? true) &&
+                    (pendingCapture.isNotEmpty || draft.text.trim().isNotEmpty),
                 label: 'Add',
                 busyLabel: 'Adding…',
                 busy: busy,
@@ -5198,33 +5253,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          captureValidation.field(
-            'capture',
-            TextField(
-              controller: capture,
-              focusNode: captureFocus,
-              readOnly: pendingCapture.isNotEmpty,
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              minLines: 1,
-              maxLines: 4,
-              enabled: !busy,
-              decoration: InputDecoration(
-                labelText: 'What needs doing?',
-                hintText: 'One task per line',
-                errorText: captureValidation.errorFor('capture'),
-                errorMaxLines: 3,
-                helperText: captureFailure && pendingCapture.isNotEmpty
-                    ? 'Retry to check these tasks before editing.'
-                    : widget.folderActions.requiresPicker
-                    ? null
-                    : 'Enter to add · Shift+Enter for another task',
-              ),
-              onSubmitted: (_) => _capture(),
-            ),
-          ),
-        ],
+          onEditingComplete: () {
+            if (pendingCapture.isEmpty && capture.text.trim().isEmpty) return;
+            capture.clearComposing();
+            captureFocus.unfocus();
+          },
+          onSubmitted: (_) => _capture(),
+        ),
       ),
     ),
   );

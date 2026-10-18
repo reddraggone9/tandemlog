@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'form_validation.dart';
+import 'focused_dialog_viewport.dart';
 
 class DeviceNameChange {
   const DeviceNameChange(this.name);
@@ -32,25 +33,7 @@ class _DeviceNameDialogState extends State<DeviceNameDialog> {
   );
   final _focus = FocusNode();
   final _field = GlobalKey();
-  Object? _geometry;
-  double? _viewportHeight;
-  bool _revealQueued = false;
   bool answered = false;
-
-  // Keyboard arrival and the dialog's inset animation can shrink the scroll
-  // viewport after autofocus has already revealed the caret.
-  void _queueReveal() {
-    if (_revealQueued) return;
-    _revealQueued = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _revealQueued = false;
-      if (!canAnswer || !_focus.hasFocus) return;
-      final anchor = _field.currentContext;
-      if (anchor != null) {
-        Scrollable.ensureVisible(anchor, alignment: 1);
-      }
-    });
-  }
 
   bool get composing =>
       controller.value.composing.isValid &&
@@ -87,29 +70,13 @@ class _DeviceNameDialogState extends State<DeviceNameDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.of(context);
-    final geometry = (media.size, media.viewInsets, media.textScaler.scale(14));
-    if (geometry != _geometry) {
-      _geometry = geometry;
-      _queueReveal();
-    }
-    return NotificationListener<ScrollMetricsNotification>(
-      onNotification: (notification) {
-        if (notification.depth == 0 &&
-            notification.metrics.axis == Axis.vertical &&
-            notification.metrics.viewportDimension != _viewportHeight) {
-          _viewportHeight = notification.metrics.viewportDimension;
-          _queueReveal();
-        }
-        return false;
-      },
-      child: ListenableBuilder(
+    return FocusedDialogViewport(
+      focusNode: _focus,
+      fieldKey: _field,
+      builder: (context, insetPadding) => ListenableBuilder(
         listenable: validation,
         builder: (context, _) => AlertDialog(
-          insetPadding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: media.viewInsets.bottom > 0 ? 8 : 24,
-          ),
+          insetPadding: insetPadding,
           alignment: Alignment.bottomCenter,
           scrollable: true,
           title: const Text('Device name'),

@@ -1,3 +1,5 @@
+import '../test/support/toolbar_button.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -88,11 +90,28 @@ void registerHeaderSearchTests() {
           expect(tester.getRect(toolbar), headerBefore);
           expect(tester.getRect(undo), undoBefore);
           final add = find.byKey(const ValueKey('capture-add'));
-          expect(tester.widget(add), isA<FilledButton>());
-          expect(tester.widget<FilledButton>(add).onPressed, isNotNull);
           expect(
-            find.descendant(of: add, matching: find.text('Add')),
+            tester.widget(add),
+            anyOf(isA<IconButton>(), isA<TextButton>()),
+          );
+          expect(toolbarButton(tester, add).onPressed, isNull);
+          expect(toolbarButton(tester, add).tooltip, 'Add tasks');
+          expect(
+            find.descendant(of: add, matching: find.byIcon(Icons.add)),
             findsOneWidget,
+          );
+          expect(
+            tester.widget<TextField>(capture).decoration!.suffixIcon,
+            isNotNull,
+          );
+          final captureBounds = tester.getRect(capture);
+          final suffixBounds = tester.getRect(add);
+          expect(captureBounds.contains(suffixBounds.topLeft), isTrue);
+          expect(
+            captureBounds.contains(
+              suffixBounds.bottomRight - const Offset(.01, .01),
+            ),
+            isTrue,
           );
           expect(add.hitTestable(), findsOneWidget);
           expect(tester.getSize(add).width, greaterThanOrEqualTo(48));
@@ -110,23 +129,23 @@ void registerHeaderSearchTests() {
           );
           final addBounds = tester.getRect(add);
           final addElement = tester.element(add);
-          await tester.tap(add);
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
           await tester.pumpAndSettle();
           expect(
             find.descendant(of: add, matching: find.text('Review errors')),
-            findsOneWidget,
+            findsNothing,
           );
           expect(tester.element(add), same(addElement));
           expect(
             tester.getRect(add),
             addBounds,
-            reason: 'Review retains the actual action position and footprint',
+            reason: 'Empty Enter retains the action position and footprint',
           );
           expect(add.hitTestable(), findsOneWidget);
           expect(tester.widget<TextField>(capture).focusNode!.hasFocus, isTrue);
           expect(
             tester.widget<TextField>(capture).decoration!.errorText,
-            'Enter at least one task title.',
+            isNull,
           );
           expect(tester.getRect(toolbar), headerBefore);
           expect(tester.getRect(undo), undoBefore);

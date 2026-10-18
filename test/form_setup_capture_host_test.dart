@@ -5,18 +5,18 @@ import 'package:tandemlog/platform/android_section_navigation.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/name_entry_dialog.dart';
 import 'section_navigation_host_test.dart' as host;
 import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
+import 'support/toolbar_button.dart';
 
 void main() {
   host.nativeHostLibraryPath = Platform.environment['TANDEMLOG_TEXT_LIBRARY']!;
   setUpAll(loadSdkRoboto);
   testWidgets(
-    'capture floating label clears fixed action through review at420px200percent',
+    'capture keeps embedded action through held-pointer length validation at420px200percent',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(420, 900);
@@ -40,86 +40,74 @@ void main() {
       );
       final resources = host.hostResources(tester);
       try {
-        final prefix = (await tester.runAsync(
+        final before = (await tester.runAsync(
           () => host.canonical(data.folder),
         ))!;
         await tester.tap(find.byKey(const ValueKey('open-capture')));
         await tester.pumpAndSettle();
-        final capture = find.widgetWithText(TextField, 'What needs doing?');
+        final field = find.widgetWithText(TextField, 'What needs doing?');
         final action = find.byKey(const ValueKey('capture-add'));
-        expect(tester.widget<FilledButton>(action).onPressed, isNotNull);
-        expect(tester.widget<TextField>(capture).decoration!.errorText, isNull);
-        final actionElement = tester.element(action);
-        final neutralRect = tester.getRect(action);
-        Rect paintedLabelRect() {
-          final label = find.descendant(
-            of: capture,
-            matching: find.text('What needs doing?'),
-          );
-          expect(label, findsOneWidget);
-          final paragraph = tester.renderObject<RenderParagraph>(
-            find.descendant(of: label, matching: find.byType(RichText)),
-          );
-          expect(paragraph.text.toPlainText(), 'What needs doing?');
-          return MatrixUtils.transformRect(
-            paragraph.getTransformTo(null),
-            Offset.zero & paragraph.size,
-          );
+        expect(
+          tester.widget<TextField>(field).decoration!.suffixIcon,
+          isNotNull,
+        );
+        expect(tester.widget(action), isA<IconButton>());
+        expect(toolbarButton(tester, action).onPressed, isNull);
+        expect(toolbarButton(tester, action).tooltip, 'Add tasks');
+        void embedded() {
+          final input = tester.getRect(field), button = tester.getRect(action);
+          expect(button.left, greaterThanOrEqualTo(input.left));
+          expect(button.right, lessThanOrEqualTo(input.right));
+          expect(button.top, greaterThanOrEqualTo(input.top));
+          expect(button.bottom, lessThanOrEqualTo(input.bottom));
+          expect(button.width, greaterThanOrEqualTo(48));
+          expect(button.height, greaterThanOrEqualTo(48));
         }
 
-        void expectSeparateLabel() {
-          expect(
-            paintedLabelRect().top,
-            greaterThanOrEqualTo(tester.getRect(action).bottom + 4),
-            reason:
-                'The painted floating label needs a visible gap below the action',
-          );
-        }
-
-        expectSeparateLabel();
-        await tester.tap(action);
+        embedded();
+        await tester.enterText(field, 'x' * 501);
+        await tester.pumpAndSettle();
+        final rect = tester.getRect(action), element = tester.element(action);
+        final gesture = await tester.startGesture(rect.center);
+        tester.widget<TextField>(field).focusNode!.unfocus();
+        // Settle the scheduled blur without turning the press into the icon's
+        // intentional long-press tooltip gesture.
+        await tester.pump(const Duration(milliseconds: 16));
+        await tester.pump(const Duration(milliseconds: 16));
+        expect(
+          tester.widget<TextField>(field).decoration!.errorText,
+          isNull,
+          reason:
+              'Held primary gesture freezes painted errors until activation',
+        );
+        expect(tester.getRect(action), rect);
+        await gesture.up();
         await tester.pumpAndSettle();
         expect(
-          tester.widget<TextField>(capture).decoration!.errorText,
-          'Enter at least one task title.',
+          tester.widget<TextField>(field).decoration!.errorText,
+          'Keep each task title to 500 characters or fewer.',
         );
-        final editable = tester.widget<EditableText>(
-          find.descendant(of: capture, matching: find.byType(EditableText)),
-        );
-        expect(editable.focusNode.hasFocus, isTrue);
-        expect(identical(tester.element(action), actionElement), isTrue);
-        expect(tester.getRect(action), neutralRect);
-        expectSeparateLabel();
+        expect(tester.getRect(action), rect);
+        expect(tester.element(action), same(element));
+        embedded();
+        expect(find.text('Review errors'), findsNothing);
         expect(
           (await tester.runAsync(() => host.canonical(data.folder)))!,
-          prefix,
+          before,
         );
-        await tester.enterText(capture, 'Synthetic corrected capture');
+        await tester.enterText(field, 'Synthetic corrected capture');
         await tester.pumpAndSettle();
-        expect(tester.getRect(action), neutralRect);
-        expectSeparateLabel();
-        expect(
-          find.descendant(of: action, matching: find.text('Review errors')),
-          findsOneWidget,
-        );
+        expect(tester.widget<TextField>(field).decoration!.errorText, isNull);
+        expect(toolbarButton(tester, action).onPressed, isNotNull);
         await tester.tap(action);
-        await tester.pumpAndSettle();
-        expect(tester.widget<TextField>(capture).decoration!.errorText, isNull);
-        expect(
-          find.descendant(of: action, matching: find.text('Add')),
-          findsOneWidget,
+        await host.ready(
+          tester,
+          () =>
+              find.text('Synthetic corrected capture').evaluate().isNotEmpty &&
+              tester.widget<TextField>(field).controller!.text.isEmpty,
         );
-        expect(tester.getRect(action), neutralRect);
-        expectSeparateLabel();
-        expect(
-          (await tester.runAsync(() => host.canonical(data.folder)))!,
-          prefix,
-          reason: 'Review of the corrected capture cannot create a task',
-        );
-        expect(
-          tester.widget<TextField>(capture).controller!.text,
-          'Synthetic corrected capture',
-        );
+        expect(toolbarButton(tester, action).onPressed, isNull);
+        expect(tester.widget<TextField>(field).focusNode!.hasFocus, isTrue);
         expect(tester.takeException(), isNull);
       } finally {
         await tester.pumpWidget(const SizedBox());
@@ -170,11 +158,36 @@ void main() {
       final setupActionRect = tester.getRect(
         find.widgetWithText(FilledButton, 'Continue'),
       );
+      for (final blank in ['', '  \t  ']) {
+        await tester.enterText(name, blank);
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<FilledButton>(
+                find.widgetWithText(FilledButton, 'Continue'),
+              )
+              .onPressed,
+          isNull,
+        );
+        tester.widget<TextField>(name).onSubmitted!(blank);
+        await tester.pumpAndSettle();
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pumpAndSettle();
+        expect(tester.widget<TextField>(name).decoration!.errorText, isNull);
+        expect(tester.widget<TextField>(name).focusNode!.hasFocus, isTrue);
+        expect(find.text('Review errors'), findsNothing);
+        expect(
+          (await tester.runAsync(() => host.canonical(store.folder)))!,
+          prefix,
+        );
+      }
+      tester.widget<TextField>(name).controller!.text = 'x' * 101;
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(name).decoration!.errorText,
-        'Enter your name.',
+        'Name must be 100 characters or fewer.',
       );
       expect(tester.widget<TextField>(name).focusNode!.hasFocus, isTrue);
       expect(
@@ -233,12 +246,17 @@ void main() {
       final captureActionRect = tester.getRect(
         find.byKey(const ValueKey('capture-add')),
       );
-      await tester.tap(find.byKey(const ValueKey('capture-add')));
-      await tester.pumpAndSettle();
       expect(
-        tester.widget<TextField>(capture).decoration!.errorText,
-        'Enter at least one task title.',
+        toolbarButton(
+          tester,
+          find.byKey(const ValueKey('capture-add')),
+        ).onPressed,
+        isNull,
       );
+      tester.widget<TextField>(capture).onSubmitted!('');
+      await tester.pumpAndSettle();
+      expect(tester.widget<TextField>(capture).decoration!.errorText, isNull);
+      expect(find.text('Review errors'), findsNothing);
       expect(
         tester.getRect(find.byKey(const ValueKey('capture-add'))),
         captureActionRect,
@@ -250,12 +268,7 @@ void main() {
       );
       await tester.enterText(capture, 'Synthetic task A\nSynthetic task B');
       await tester.pump();
-      await tester.tap(find.text('Review errors'));
-      await tester.pumpAndSettle();
-      expect(
-        (await tester.runAsync(() => host.canonical(store.folder)))!,
-        beforeCapture,
-      );
+      expect(find.text('Review errors'), findsNothing);
       await tester.tap(find.byKey(const ValueKey('capture-add')));
       await host.ready(
         tester,
@@ -278,7 +291,7 @@ void main() {
   );
 
   testWidgets(
-    'new-user dialog is neutral, reveals empty-name error, retains text and guards repeated submit',
+    'new-user dialog treats blank as inactive, validates length and guards repeated submit',
     (tester) async {
       String? result;
       await tester.pumpWidget(
@@ -308,11 +321,41 @@ void main() {
       final actionRect = tester.getRect(
         find.widgetWithText(FilledButton, 'Create user'),
       );
+      for (final blank in ['', '  \t  ']) {
+        await tester.enterText(input, blank);
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<FilledButton>(
+                find.widgetWithText(FilledButton, 'Create user'),
+              )
+              .onPressed,
+          isNull,
+        );
+        tester.widget<TextField>(input).onSubmitted!(blank);
+        await tester.pumpAndSettle();
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pumpAndSettle();
+        expect(tester.widget<TextField>(input).decoration!.errorText, isNull);
+        expect(
+          tester
+              .widget<EditableText>(
+                find.descendant(of: input, matching: find.byType(EditableText)),
+              )
+              .focusNode
+              .hasFocus,
+          isTrue,
+        );
+        expect(find.text('Review errors'), findsNothing);
+        expect(result, isNull);
+      }
+      tester.widget<TextField>(input).controller!.text = 'x' * 101;
+      await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(FilledButton, 'Create user'));
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(input).decoration!.errorText,
-        'Enter a name.',
+        'Name must be 100 characters or fewer.',
       );
       expect(
         tester.getRect(find.widgetWithText(FilledButton, 'Review errors')),

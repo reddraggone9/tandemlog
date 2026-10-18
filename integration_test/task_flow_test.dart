@@ -1582,8 +1582,18 @@ void main() {
       tester
           .widget<FilledButton>(find.widgetWithText(FilledButton, 'Continue'))
           .onPressed,
-      isNotNull,
+      isNull,
     );
+    final blankName = tester.widget<TextField>(find.byType(TextField));
+    blankName.onSubmitted!('   ');
+    await tester.pumpAndSettle();
+    expect(blankName.controller!.text, '   ');
+    expect(blankName.focusNode!.hasFocus, isTrue);
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).decoration!.errorText,
+      isNull,
+    );
+    expect(find.text('Review errors'), findsNothing);
     await tester.enterText(find.byType(TextField), 'Lee');
     final manifest = File('${profile.path}/shared-data/tandemlog-space.json');
     final originalManifest = await manifest.readAsString();
@@ -1751,10 +1761,10 @@ void main() {
         expect(controller.value, candidate);
         expect(await titles(), ['Compose']);
         // Multiple deliberate callbacks in one frame cannot start two writes.
-        final addButton = tester.widget<FilledButton>(
+        final add = toolbarButton(
+          tester,
           find.byKey(const ValueKey('capture-add')),
-        );
-        final add = addButton.onPressed!;
+        ).onPressed!;
         add();
         add();
         await tester.pumpAndSettle();
@@ -1805,40 +1815,12 @@ void main() {
         await composing('Retry composition');
         final corrected = controller.value;
         final primary = find.byKey(const ValueKey('capture-add'));
-        final beforeReview = {
-          for (final entry in await LocalLogFolder(folder.path).list())
-            entry.name: await LocalLogFolder(folder.path).read(entry.name),
-        };
-        expect(
-          find.descendant(of: primary, matching: find.text('Review errors')),
-          findsOneWidget,
-        );
-        await tester.tap(primary);
-        await tester.pumpAndSettle();
-        expect(
-          controller.value,
-          corrected,
-          reason:
-              'Review cannot finalize or submit a corrected composing draft',
-        );
-        expect(
-          find.descendant(of: primary, matching: find.text('Add')),
-          findsOneWidget,
-        );
-        expect(
-          await LocalLogFolder(folder.path).list(),
-          hasLength(beforeReview.length),
-        );
-        for (final entry in beforeReview.entries) {
-          expect(
-            await LocalLogFolder(folder.path).read(entry.key),
-            entry.value,
-          );
-        }
+        expect(find.text('Review errors'), findsNothing);
+        expect(controller.value, corrected);
         expect((await titles()).length, 5);
         final broken = File('${folder.path}/${const Uuid().v4()}.jsonl');
         await broken.writeAsString('{"version":999}\n', flush: true);
-        await tester.tap(find.byTooltip('Add tasks'));
+        await tester.tap(primary);
         await tester.pumpAndSettle();
         expect(controller.text, 'Retry composition');
         expect(controller.value.composing.isValid, isFalse);
@@ -1848,12 +1830,9 @@ void main() {
         final dynamic reserved = pending.single;
         final reservedId = reserved.id as String;
         expect(reserved.title, 'Retry composition');
-        expect(
-          find.descendant(of: primary, matching: find.text('Retry Add')),
-          findsOneWidget,
-        );
+        expect(find.byTooltip('Retry Add'), findsOneWidget);
         await broken.delete();
-        await tester.tap(find.byTooltip('Add tasks'));
+        await tester.tap(primary);
         await tester.pumpAndSettle();
         expect(
           (await titles())

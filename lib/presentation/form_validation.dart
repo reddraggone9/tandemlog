@@ -235,6 +235,9 @@ class ValidationActionButton extends StatefulWidget {
     this.busy = false,
     this.retry = false,
     this.enabled = true,
+    this.embedded = false,
+    this.compact = false,
+    this.tooltip,
     this.busyLabel = 'Saving…',
     this.retryLabel = 'Retry Save',
   });
@@ -243,6 +246,10 @@ class ValidationActionButton extends StatefulWidget {
   final String label, busyLabel, retryLabel;
   final FutureOr<void> Function() onSubmit;
   final bool busy, retry, enabled;
+  // Quick capture keeps its original suffix action and validates that one input
+  // directly. Other forms retain the explicit Review errors step.
+  final bool embedded, compact;
+  final String? tooltip;
   @override
   State<ValidationActionButton> createState() => _ValidationActionButtonState();
 }
@@ -256,7 +263,7 @@ class _ValidationActionButtonState extends State<ValidationActionButton> {
   FormValidation? _pressedValidation;
   FormActionIntent get _intent => widget.retry
       ? FormActionIntent.retry
-      : widget.validation.reviewRequired
+      : !widget.embedded && widget.validation.reviewRequired
       ? FormActionIntent.review
       : FormActionIntent.submit;
 
@@ -316,6 +323,45 @@ class _ValidationActionButtonState extends State<ValidationActionButton> {
     super.dispose();
   }
 
+  Widget _embeddedButton(BuildContext context) {
+    final enabled = !widget.busy && widget.enabled;
+    final label = widget.busy
+        ? widget.busyLabel
+        : widget.retry
+        ? widget.retryLabel
+        : widget.label;
+    final tooltip = widget.retry || widget.busy
+        ? label
+        : widget.tooltip ?? label;
+    final icon = Icon(widget.retry ? Icons.refresh : Icons.add);
+    if (widget.compact) {
+      return IconButton(
+        key: widget.buttonKey,
+        tooltip: tooltip,
+        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+        visualDensity: VisualDensity.standard,
+        onPressed: enabled ? _activate : null,
+        icon: icon,
+      );
+    }
+    return Tooltip(
+      message: tooltip,
+      child: TextButton.icon(
+        key: widget.buttonKey,
+        style: TextButton.styleFrom(
+          minimumSize: const Size(72, 48),
+          visualDensity: VisualDensity.standard,
+        ),
+        onPressed: enabled ? _activate : null,
+        icon: icon,
+        label: Semantics(
+          label: tooltip,
+          child: ExcludeSemantics(child: Text(label)),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: widget.validation,
@@ -355,45 +401,47 @@ class _ValidationActionButtonState extends State<ValidationActionButton> {
         _pressedValidation = null;
         validation._releasePointerErrors(this);
       },
-      child: FilledButton(
-        key: widget.buttonKey,
-        onPressed: widget.busy || !widget.enabled ? null : _activate,
-        child: Builder(
-          builder: (context) => Stack(
-            alignment: Alignment.center,
-            children: [
-              for (final label in {
-                widget.label,
-                'Review errors',
-                widget.retryLabel,
-                widget.busyLabel,
-              })
-                ExcludeSemantics(
-                  child: Opacity(
-                    opacity: 0,
-                    child: RichText(
-                      text: TextSpan(
-                        text: label,
-                        style: DefaultTextStyle.of(context).style,
+      child: widget.embedded
+          ? _embeddedButton(context)
+          : FilledButton(
+              key: widget.buttonKey,
+              onPressed: widget.busy || !widget.enabled ? null : _activate,
+              child: Builder(
+                builder: (context) => Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    for (final label in {
+                      widget.label,
+                      'Review errors',
+                      widget.retryLabel,
+                      widget.busyLabel,
+                    })
+                      ExcludeSemantics(
+                        child: Opacity(
+                          opacity: 0,
+                          child: RichText(
+                            text: TextSpan(
+                              text: label,
+                              style: DefaultTextStyle.of(context).style,
+                            ),
+                            textScaler: MediaQuery.textScalerOf(context),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
-                      textScaler: MediaQuery.textScalerOf(context),
-                      textAlign: TextAlign.center,
+                    Text(
+                      widget.busy
+                          ? widget.busyLabel
+                          : switch (_intent) {
+                              FormActionIntent.retry => widget.retryLabel,
+                              FormActionIntent.review => 'Review errors',
+                              FormActionIntent.submit => widget.label,
+                            },
                     ),
-                  ),
+                  ],
                 ),
-              Text(
-                widget.busy
-                    ? widget.busyLabel
-                    : switch (_intent) {
-                        FormActionIntent.retry => widget.retryLabel,
-                        FormActionIntent.review => 'Review errors',
-                        FormActionIntent.submit => widget.label,
-                      },
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     ),
   );
 }

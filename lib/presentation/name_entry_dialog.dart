@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'form_validation.dart';
+import 'focused_dialog_viewport.dart';
 
 class NameEntryDialog extends StatefulWidget {
   const NameEntryDialog({super.key, required this.title, required this.label});
@@ -10,6 +11,8 @@ class NameEntryDialog extends StatefulWidget {
 
 class _NameEntryDialogState extends State<NameEntryDialog> {
   final input = TextEditingController();
+  final _focus = FocusNode();
+  final _field = GlobalKey();
   late final validation = FormValidation(
     validate: () {
       final name = input.text.trim();
@@ -19,8 +22,6 @@ class _NameEntryDialogState extends State<NameEntryDialog> {
             'name',
             'Finish entering your name before creating this user.',
           )
-        else if (name.isEmpty)
-          const FieldIssue('name', 'Enter a name.')
         else if (name.length > 100)
           const FieldIssue('name', 'Name must be 100 characters or fewer.'),
       ];
@@ -32,19 +33,29 @@ class _NameEntryDialogState extends State<NameEntryDialog> {
   @override
   void initState() {
     super.initState();
-    input.addListener(() => validation.changed('name'));
+    input.addListener(() {
+      if (input.text.trim().isEmpty) {
+        validation.reset();
+      } else {
+        validation.changed('name');
+      }
+    });
   }
 
   Future<void> submit() async {
-    if (closing ||
+    if (closing) return;
+    final name = input.text.trim();
+    if (name.isEmpty ||
         !await validation.reviewAndReveal() ||
         !mounted ||
         closing ||
-        ModalRoute.of(context)?.isCurrent != true) {
+        ModalRoute.of(context)?.isCurrent != true ||
+        input.text.trim() != name ||
+        (input.value.composing.isValid && !input.value.composing.isCollapsed)) {
       return;
     }
     closing = true;
-    Navigator.pop(context, input.text.trim());
+    Navigator.pop(context, name);
   }
 
   void cancel() {
@@ -57,41 +68,67 @@ class _NameEntryDialogState extends State<NameEntryDialog> {
 
   @override
   void dispose() {
+    _focus.dispose();
     validation.dispose();
     input.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: validation,
-    builder: (context, _) => AlertDialog(
-      alignment: Alignment.bottomCenter,
-      title: Text(widget.title),
-      scrollable: true,
-      content: validation.field(
-        'name',
-        TextField(
-          controller: input,
-          autofocus: true,
-          maxLength: 100,
-          decoration: InputDecoration(
-            labelText: widget.label,
-            errorText: validation.errorFor('name'),
-            errorMaxLines: 3,
+  Widget build(BuildContext context) => FocusedDialogViewport(
+    focusNode: _focus,
+    fieldKey: _field,
+    builder: (context, insetPadding) => ListenableBuilder(
+      listenable: validation,
+      builder: (context, _) => AlertDialog(
+        insetPadding: insetPadding,
+        alignment: Alignment.bottomCenter,
+        title: Text(widget.title),
+        scrollable: true,
+        content: SizedBox(
+          width: 400,
+          child: validation.field(
+            'name',
+            KeyedSubtree(
+              key: _field,
+              child: TextField(
+                focusNode: _focus,
+                controller: input,
+                autofocus: true,
+                maxLength: 100,
+                decoration: InputDecoration(
+                  labelText: widget.label,
+                  errorText: validation.errorFor('name'),
+                  errorMaxLines: 6,
+                  counterText: validation.errorFor('name') == null ? null : '',
+                ),
+                textInputAction: TextInputAction.done,
+                onEditingComplete: () {
+                  if (input.text.trim().isEmpty) return;
+                  input.clearComposing();
+                  _focus.unfocus();
+                },
+                onSubmitted: (_) => submit(),
+              ),
+            ),
           ),
-          onSubmitted: (_) => submit(),
         ),
+        actions: [
+          TextButton(onPressed: cancel, child: const Text('Cancel')),
+          ValueListenableBuilder<TextEditingValue>(
+            valueListenable: input,
+            builder: (context, draft, _) => ValidationActionButton(
+              validation: validation,
+              enabled:
+                  !closing &&
+                  (ModalRoute.isCurrentOf(context) ?? true) &&
+                  draft.text.trim().isNotEmpty,
+              label: 'Create user',
+              onSubmit: submit,
+            ),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(onPressed: cancel, child: const Text('Cancel')),
-        ValidationActionButton(
-          validation: validation,
-          enabled: !closing && (ModalRoute.isCurrentOf(context) ?? true),
-          label: 'Create user',
-          onSubmit: submit,
-        ),
-      ],
     ),
   );
 }
