@@ -75,9 +75,18 @@ class UnifiedTrial {
       ),
     );
     final nonce = const Uuid().v4();
-    final root = await Directory.systemTemp.createTemp(
-      'tandemlog-unified-trial-$nonce-',
-    );
+    // Windows can spell system temp through a DOS alias. Retain the physical
+    // direct child so later ownership checks compare the same directory identity.
+    final temp = Directory(await Directory.systemTemp.resolveSymbolicLinks());
+    final created = await temp.createTemp('tandemlog-unified-trial-$nonce-');
+    if (await FileSystemEntity.type(created.path, followLinks: false) !=
+        FileSystemEntityType.directory) {
+      throw FormatFailure('Linked trial root is unsafe.');
+    }
+    final root = Directory(await created.resolveSymbolicLinks());
+    if (root.parent.path != temp.path) {
+      throw FormatFailure('Trial root is not a direct system-temp child.');
+    }
     await createFileDurable(
       File('${root.path}/trial.json'),
       utf8.encode(canonicalDataJson({'v': 1, 'nonce': nonce, 'space': space})),
@@ -112,7 +121,13 @@ class UnifiedTrial {
   }
 
   static Future<UnifiedTrial> resume(String rootPath) async {
-    final root = Directory(rootPath).absolute;
+    final supplied = Directory(rootPath).absolute;
+    // Reject a final-root link before resolving aliases in the temp parent.
+    if (await FileSystemEntity.type(supplied.path, followLinks: false) !=
+        FileSystemEntityType.directory) {
+      throw FormatFailure('Linked trial root is unsafe.');
+    }
+    final root = Directory(await supplied.resolveSymbolicLinks());
     final temp = await Directory.systemTemp.resolveSymbolicLinks();
     if (root.parent.path != temp ||
         !root.uri.pathSegments

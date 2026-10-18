@@ -902,11 +902,15 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w600,
-                                    color: foodExpiryColor(
-                                      details.expiry,
-                                      _expirationClock.today,
-                                      Theme.of(context).colorScheme,
-                                    ),
+                                    color: deleted
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant
+                                        : foodExpiryColor(
+                                            details.expiry,
+                                            _expirationClock.today,
+                                            Theme.of(context).colorScheme,
+                                          ),
                                   ),
                             ),
                             for (final value in [

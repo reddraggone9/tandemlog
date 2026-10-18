@@ -230,7 +230,22 @@ void main() {
         throwsA(isA<FormatFailure>()),
       );
       final t = await create();
+      final nested = await Directory('${t.root.path}/nested').create();
+      await expectLater(
+        UnifiedTrial.resume(nested.path),
+        throwsA(isA<FormatFailure>()),
+      );
       if (!Platform.isWindows) {
+        final rootLink = Link('${t.root.path}-root-link');
+        await rootLink.create(t.root.path);
+        try {
+          await expectLater(
+            UnifiedTrial.resume(rootLink.path),
+            throwsA(isA<FormatFailure>()),
+          );
+        } finally {
+          await rootLink.delete();
+        }
         final link = Link('${t.root.path}/escape');
         await link.create(Directory.systemTemp.path);
         await expectLater(
@@ -240,6 +255,62 @@ void main() {
         await link.delete();
       }
     },
+  );
+
+  test(
+    'created and resumed roots use canonical system-temp identity',
+    () async {
+      final t = await create();
+      expect(t.root.path, await t.root.resolveSymbolicLinks());
+      expect(
+        t.root.parent.path,
+        await Directory.systemTemp.resolveSymbolicLinks(),
+      );
+      final p = await t.openParticipant(fixture.owner);
+      await p.close();
+      final spelling = t.root.path.replaceAll(r'\', '/');
+      await t.close();
+      trial = await UnifiedTrial.resume(spelling);
+      await trial!.acknowledgeInput(fixture.owner);
+    },
+  );
+
+  test(
+    'a system-temp parent alias preserves direct-root ownership and resume',
+    () async {
+      final temp = Directory(await Directory.systemTemp.resolveSymbolicLinks());
+      final holder = await temp.createTemp('tandemlog-temp-alias-');
+      final alias = Link('${holder.path}/temp');
+      await alias.create(temp.path);
+      try {
+        await IOOverrides.runZoned(() async {
+          final t = await create();
+          final p = await t.openParticipant(fixture.owner);
+          await p.close();
+          expect(t.root.path, await t.root.resolveSymbolicLinks());
+          expect(t.root.parent.path, temp.path);
+          final basename = t.root.uri.pathSegments
+              .where((s) => s.isNotEmpty)
+              .last;
+          await t.close();
+          trial = await UnifiedTrial.resume('${alias.path}/$basename');
+          await trial!.acknowledgeInput(fixture.owner);
+        }, getSystemTempDirectory: () => Directory(alias.path));
+      } finally {
+        final t = trial;
+        if (t != null) {
+          await t.close();
+          final physical = Directory(await t.root.resolveSymbolicLinks());
+          expect(physical.parent.path, temp.path);
+          await physical.delete(recursive: true);
+          trial = null;
+        }
+        await alias.delete();
+        await holder.delete();
+      }
+    },
+    skip:
+        Platform.isWindows, // Creating a link requires host-specific privilege.
   );
 
   test('open participant profile cannot attest quiescence', () async {

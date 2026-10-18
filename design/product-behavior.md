@@ -39,7 +39,9 @@ recency and visibly distinguished with explicit Restore actions. Equal active
 and deleted descriptions remain separate groups. Searching never restores food.
 Clearing search returns to the chosen view and reasons unchanged. The account
 menu retains app-wide user switching and Settings. Expiration date text uses
-local-calendar red/orange/yellow urgency thresholds with theme-readable tones.
+local-calendar red/orange/yellow urgency thresholds with theme-readable tones for
+active and retained food. Deleted rows use neutral secondary date text in Deleted
+and all-status search; Restore returns them to the normal urgency colors.
 [Accepted Food refinement](decisions/0017-food-stock-and-toolbar-refinements.md)
 requires fresh native and release gates. Manual Food Add/detail editing requires
 expiration using the shared Tasks date input/picker; undated records remain
