@@ -122,6 +122,7 @@ void registerInboxFlowTests() {
       await flows.openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.enterText(capture, 'Raw reference');
+      await flows.waitForCaptureAction(tester);
       await tester.tap(find.byKey(const ValueKey('capture-add')));
       await flows.waitForUi(
         tester,
@@ -226,6 +227,7 @@ void registerInboxFlowTests() {
         final capture = find.widgetWithText(TextField, 'What needs doing?');
         await tester.enterText(capture, 'New pending');
         folder.fault = 'prefix';
+        await flows.waitForCaptureAction(tester);
         await tester.tap(find.byKey(const ValueKey('capture-add')));
         await flows.waitForUi(tester, () => folder.delayedSuffix != null);
         await tester.pumpAndSettle(const Duration(milliseconds: 100));

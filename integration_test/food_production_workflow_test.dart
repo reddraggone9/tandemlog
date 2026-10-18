@@ -386,6 +386,7 @@ void registerFoodProductionTests() {
           find.widgetWithText(TextField, 'What needs doing?'),
           'Added while Food unavailable',
         );
+        await flows.waitForCaptureAction(tester);
         await tester.tap(find.byTooltip('Add tasks'));
         await flows.waitForUi(
           tester,

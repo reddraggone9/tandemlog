@@ -287,6 +287,22 @@ Future<void> waitForUi(WidgetTester tester, bool Function() ready) async {
   await tester.pumpAndSettle();
 }
 
+/// Synthetic text updates schedule the frame that enables the suffix action.
+Future<void> waitForCaptureAction(WidgetTester tester) async {
+  final action = find.byKey(const ValueKey('capture-add'));
+  final renderedEnabled =
+      action.evaluate().isNotEmpty &&
+      toolbarButton(tester, action).onPressed != null;
+  debugPrint('CAPTURE_RENDERED_ENABLED_BEFORE_WAIT=$renderedEnabled');
+  await waitForUi(
+    tester,
+    () =>
+        action.evaluate().isNotEmpty &&
+        toolbarButton(tester, action).onPressed != null,
+  );
+  expect(action.hitTestable(), findsOneWidget);
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   registerStickyTaskGroupTests();
@@ -1412,6 +1428,7 @@ void main() {
       expect(find.text('No open tasks'), findsOneWidget);
       await openCaptureForTest(tester);
       await tester.enterText(find.byType(TextField), 'Pick up groceries');
+      await waitForCaptureAction(tester);
       await tester.tap(find.byTooltip('Add tasks'));
       await tester.pumpAndSettle();
       expect(find.text('Pick up groceries'), findsOneWidget);

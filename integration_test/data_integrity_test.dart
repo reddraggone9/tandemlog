@@ -111,6 +111,7 @@ void registerDataIntegrityTests() {
         await flows.openCaptureForTest(tester);
         final capture = find.widgetWithText(TextField, 'What needs doing?');
         await tester.enterText(capture, 'Captured reference');
+        await flows.waitForCaptureAction(tester);
         await tester.tap(find.byKey(const ValueKey('capture-add')));
         await flows.waitForUi(
           tester,

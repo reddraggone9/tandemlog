@@ -85,6 +85,7 @@ void registerTextWorkflowTests() {
           find.widgetWithText(TextField, 'One task per line'),
           'Fresh initialized task',
         );
+        await flows.waitForCaptureAction(tester);
         await tester.tap(find.byKey(const ValueKey('capture-add')));
         await flows.waitForUi(
           tester,
@@ -229,6 +230,7 @@ void registerTextWorkflowTests() {
         await flows.openCaptureForTest(tester);
         final capture = find.widgetWithText(TextField, 'One task per line');
         await tester.enterText(capture, 'Shared draft');
+        await flows.waitForCaptureAction(tester);
         await tester.tap(find.byKey(const ValueKey('capture-add')));
         await flows.waitForUi(
           tester,

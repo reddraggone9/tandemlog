@@ -11,7 +11,7 @@ import 'package:tandemlog/storage/log_folder.dart';
 import 'package:uuid/uuid.dart';
 
 import 'native_text_fixtures.dart';
-import 'task_flow_test.dart' show filterChoice, waitForUi;
+import 'task_flow_test.dart' show filterChoice, waitForUi, waitForCaptureAction;
 import 'food_production_workflow_test.dart' show switchSection;
 import 'food_preview_workflow_test.dart' as pixels;
 
@@ -143,10 +143,14 @@ void registerTaskInputModeTests() {
           expect(capture.hitTestable(), findsOneWidget);
           expect(find.text('Reference task'), findsNothing);
           await tester.enterText(capture, 'Captured one\nCaptured two');
+          await waitForCaptureAction(tester);
           await pixels.tap(tester, find.byKey(const ValueKey('capture-add')));
           await waitForUi(
             tester,
-            () => state.pendingCapture.isEmpty && !state.busy,
+            () =>
+                state.capture.text.isEmpty &&
+                state.pendingCapture.isEmpty &&
+                !state.busy,
           );
           expect(capture, findsOneWidget);
           expect(state.capture.text, isEmpty);
@@ -155,7 +159,10 @@ void registerTaskInputModeTests() {
           await tester.sendKeyEvent(LogicalKeyboardKey.enter);
           await waitForUi(
             tester,
-            () => state.pendingCapture.isEmpty && !state.busy,
+            () =>
+                state.capture.text.isEmpty &&
+                state.pendingCapture.isEmpty &&
+                !state.busy,
           );
           expect(capture, findsOneWidget);
           final titles = (state.store.rows as List)

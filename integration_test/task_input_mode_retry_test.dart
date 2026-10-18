@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 
 import '../test/batch_storage_test.dart' show CountingFolder;
 import 'native_text_fixtures.dart';
-import 'task_flow_test.dart' show waitForUi;
+import 'task_flow_test.dart' show waitForUi, waitForCaptureAction;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +30,7 @@ void registerTaskInputModeRetryTests() {
           const draft = 'New pending\nSecond pending';
           await tester.enterText(capture, draft);
           folder.fault = fault;
+          await waitForCaptureAction(tester);
           await tester.tap(find.byKey(const ValueKey('capture-add')));
           await waitForUi(tester, () => folder.delayedSuffix != null);
           await tester.pumpAndSettle();
@@ -141,6 +142,7 @@ void registerTaskInputModeRetryTests() {
       final capture = await _openCapture(tester);
       await tester.enterText(capture, 'Busy capture');
       folder.holdNextAppend();
+      await waitForCaptureAction(tester);
       await tester.tap(find.byKey(const ValueKey('capture-add')));
       // The ordinary waitForUi helper settles animations after readiness.
       // This deliberately held save keeps its progress indicator animating.
