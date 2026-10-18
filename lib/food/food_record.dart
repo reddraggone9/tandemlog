@@ -7,6 +7,7 @@ import 'inventory.dart';
 
 const foodRecordHashDomain = 'tandemlog:food-record:v1\n';
 const foodUndoRecordHashDomain = 'tandemlog:food-record:v2\n';
+const unifiedFoodRecordHashDomain = 'tandemlog:food-record:v3\n';
 const foodWriterName = 'tandemlog:food:v1';
 const maximumFoodRecordBytes = 256 * 1024;
 
@@ -34,6 +35,7 @@ class FoodRecord {
     required this.clock,
     required this.operation,
     required this.previousHash,
+    this.unified = false,
     Map<String, String> createdWith = const {},
   }) : createdWith = Map.unmodifiable(createdWith) {
     if (!isCanonicalId(space) ||
@@ -43,7 +45,9 @@ class FoodRecord {
         clock.value.isNegative ||
         clock.value > EventClock.maximum ||
         !isEventHash(previousHash) ||
-        (sequence == 1 && previousHash != eventGenesisHash(space, writer)) ||
+        (!unified &&
+            sequence == 1 &&
+            previousHash != eventGenesisHash(space, writer)) ||
         operation.id != '$writer:$sequence' ||
         operation.order != clock.value.toInt()) {
       throw const FormatException(
@@ -51,6 +55,11 @@ class FoodRecord {
       );
     }
     operation.validate();
+    if (!unified && operation.undoOwner != null) {
+      throw const FormatException(
+        'Legacy Food cannot claim unified ownership.',
+      );
+    }
     if (operation.action == FoodAction.add) {
       if (this.createdWith.isNotEmpty) {
         throw const FormatException(
@@ -73,7 +82,11 @@ class FoodRecord {
     hash = sha256
         .convert(
           utf8.encode(
-            '${version == 1 ? foodRecordHashDomain : foodUndoRecordHashDomain}${canonicalDataJson(_body())}',
+            '${version == 3
+                ? unifiedFoodRecordHashDomain
+                : version == 1
+                ? foodRecordHashDomain
+                : foodUndoRecordHashDomain}${canonicalDataJson(_body())}',
           ),
         )
         .toString();
@@ -81,6 +94,7 @@ class FoodRecord {
       throw const FormatException('Food record is too large.');
     }
   }
+  final bool unified;
   final String space, writer, previousHash;
   final int sequence;
   final EventClock clock;
@@ -88,7 +102,11 @@ class FoodRecord {
   final Map<String, String> createdWith;
   late final String hash;
   String get id => '$writer:$sequence';
-  int get version => operation.action == FoodAction.undo ? 2 : 1;
+  int get version => unified
+      ? 3
+      : operation.action == FoodAction.undo
+      ? 2
+      : 1;
 
   Map<String, dynamic> _body() {
     final payload = operation.toJson()
@@ -130,7 +148,7 @@ class FoodRecord {
       };
       if (j.length != keys.length ||
           !j.keys.every(keys.contains) ||
-          (j['v'] != 1 && j['v'] != 2) ||
+          (j['v'] != 1 && j['v'] != 2 && j['v'] != 3) ||
           j['module'] != 'food' ||
           j['clock'] is! String ||
           (j['clock'] as String).length > 19) {
@@ -138,13 +156,15 @@ class FoodRecord {
       }
       final clock = EventClock.fromJson(j['clock']);
       final payload = j['operation'] as Map<String, dynamic>;
-      if ((j['v'] == 2) != (payload['action'] == FoodAction.undo.name)) {
+      if (j['v'] != 3 &&
+          (j['v'] == 2) != (payload['action'] == FoodAction.undo.name)) {
         throw const FormatException('Unsupported Food operation version.');
       }
       if (payload.containsKey('id') || payload.containsKey('order')) {
         throw const FormatException('Food payload cannot override identity.');
       }
       final record = FoodRecord(
+        unified: j['v'] == 3,
         space: j['space'] as String,
         writer: j['writer'] as String,
         sequence: j['seq'] as int,
@@ -156,7 +176,7 @@ class FoodRecord {
           ...payload,
           'id': '${j['writer']}:${j['seq']}',
           'order': clock.toJson(),
-        }),
+        }, unified: j['v'] == 3),
       );
       if (j['hash'] != record.hash || raw != record.encode()) {
         throw const FormatException(

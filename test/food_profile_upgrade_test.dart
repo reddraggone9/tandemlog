@@ -16,6 +16,13 @@ const releasedSchema2 = [
   "CREATE TABLE migration_cleanup (path TEXT PRIMARY KEY, kind TEXT NOT NULL, hash TEXT NOT NULL, state TEXT NOT NULL CHECK(state IN ('ready','deleting','deleted')))",
 ];
 
+const releasedFoodSchema3 = [
+  'CREATE TABLE protected_food_intents (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, id TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,writer,sequence), UNIQUE(space,id))',
+  'CREATE TABLE protected_food_heads (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(space,writer))',
+  'CREATE TABLE protected_food_locations (location TEXT PRIMARY KEY, space TEXT NOT NULL)',
+  'CREATE TABLE protected_food_import_witnesses (space TEXT PRIMARY KEY NOT NULL, version INTEGER NOT NULL CHECK(version=1))',
+];
+
 void main() {
   late Directory root;
   LocalProfileDatabase? profile;
@@ -83,7 +90,7 @@ void main() {
       writeReleasedProfile();
       profile = await LocalProfileDatabase.open(root.path);
       final db = profile!.database;
-      expect(db.select('PRAGMA user_version').single.values.single, 3);
+      expect(db.select('PRAGMA user_version').single.values.single, 4);
       expect(
         db.select('SELECT raw FROM protected_writer_guards').single['raw'],
         utf8.encode('synthetic guard bytes'),
@@ -117,12 +124,84 @@ void main() {
         'protected_food_heads',
         'protected_food_locations',
         'protected_food_import_witnesses',
+        'protected_app_workspaces',
+        'protected_app_heads',
+        'protected_app_outbox',
+        'protected_app_migrations',
       ]) {
         expect(db.select('SELECT * FROM $table'), isEmpty);
       }
     },
   );
-  test('weakened released authority prevents any schema3 creation', () async {
+  test(
+    'released schema3 retains exact Food authority while adding app tables',
+    () async {
+      writeReleasedProfile();
+      final old = sqlite3.open('${root.path}/local.sqlite');
+      for (final sql in releasedFoodSchema3) {
+        old.execute(sql);
+      }
+      old.execute("UPDATE profile_metadata SET value='3' WHERE key='schema'");
+      old.execute('PRAGMA user_version=3');
+      final receipt = utf8.encode('exact prepared Food bytes');
+      old.execute('INSERT INTO protected_food_intents VALUES (?,?,?,?,?)', [
+        'space',
+        'writer',
+        17,
+        'writer:17',
+        receipt,
+      ]);
+      old.execute('INSERT INTO protected_food_heads VALUES (?,?,?,?)', [
+        'space',
+        'writer',
+        16,
+        List.filled(64, 'a').join(),
+      ]);
+      old.execute('INSERT INTO protected_food_locations VALUES (?,?)', [
+        'location',
+        'space',
+      ]);
+      old.execute('INSERT INTO protected_food_import_witnesses VALUES (?,1)', [
+        'space',
+      ]);
+      old.close();
+      profile = await LocalProfileDatabase.open(root.path);
+      final db = profile!.database;
+      expect(db.select('PRAGMA user_version').single.values.single, 4);
+      expect(
+        db.select('SELECT raw FROM protected_food_intents').single['raw'],
+        receipt,
+      );
+      expect(
+        db
+            .select('SELECT sequence,hash FROM protected_food_heads')
+            .single
+            .values
+            .toList(),
+        [16, List.filled(64, 'a').join()],
+      );
+      expect(
+        db.select('SELECT space FROM protected_food_locations').single['space'],
+        'space',
+      );
+      expect(
+        db
+            .select('SELECT version FROM protected_food_import_witnesses')
+            .single['version'],
+        1,
+      );
+      for (final table in [
+        'protected_app_workspaces',
+        'protected_app_heads',
+        'protected_app_outbox',
+        'protected_app_migrations',
+      ]) {
+        expect(db.select('SELECT * FROM $table'), isEmpty);
+      }
+    },
+  );
+
+  test('weakened released authority prevents any new schema creation', () async {
     writeReleasedProfile();
     final damaged = sqlite3.open('${root.path}/local.sqlite');
     damaged.execute('DROP TABLE protected_writer_guards');

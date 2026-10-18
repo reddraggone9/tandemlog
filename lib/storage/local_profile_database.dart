@@ -20,9 +20,17 @@ class LocalProfileDatabase {
   static const fileName = 'local.sqlite';
   static const _applicationId =
       0x544c4442; // TLDB; local, not canonical format.
-  static const schemaVersion = 3;
+  static const schemaVersion = 4;
   static const _version = schemaVersion;
   static const _schema = {
+    'protected_app_workspaces':
+        'CREATE TABLE protected_app_workspaces (space TEXT PRIMARY KEY, epoch TEXT NOT NULL, manifest TEXT NOT NULL, observed TEXT NOT NULL)',
+    'protected_app_heads':
+        'CREATE TABLE protected_app_heads (space TEXT NOT NULL, epoch TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, hash TEXT NOT NULL, bytes INTEGER NOT NULL, digest TEXT NOT NULL, published INTEGER NOT NULL, PRIMARY KEY(space,epoch,writer))',
+    'protected_app_outbox':
+        'CREATE TABLE protected_app_outbox (space TEXT NOT NULL, epoch TEXT NOT NULL, writer TEXT NOT NULL, base_sequence INTEGER NOT NULL, base_hash TEXT NOT NULL, base_bytes INTEGER NOT NULL, base_digest TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,epoch,writer))',
+    'protected_app_migrations':
+        'CREATE TABLE protected_app_migrations (space TEXT NOT NULL, epoch TEXT NOT NULL, plan BLOB NOT NULL, state TEXT NOT NULL, PRIMARY KEY(space,epoch))',
     'profile_metadata':
         'CREATE TABLE profile_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
     'protected_writer_guards':
@@ -47,6 +55,10 @@ class LocalProfileDatabase {
         'CREATE TABLE protected_food_import_witnesses (space TEXT PRIMARY KEY NOT NULL, version INTEGER NOT NULL CHECK(version=1))',
   };
   static const _introduced = {
+    'protected_app_workspaces': 4,
+    'protected_app_heads': 4,
+    'protected_app_outbox': 4,
+    'protected_app_migrations': 4,
     'protected_cache_imports': 2,
     'migration_cleanup': 2,
     'protected_food_intents': 3,
@@ -86,6 +98,20 @@ class LocalProfileDatabase {
   }
 
   void releaseWorkspace(String key) => _workspaces.remove(key);
+
+  /// Drain accepted work and release a handle even after SQL rollback poisoning.
+  /// Cleanup must not access the database or enqueue another profile operation.
+  Future<void> closeWorkspace(String key, void Function() cleanup) {
+    final result = _queue.then((_) {
+      try {
+        cleanup();
+      } finally {
+        releaseWorkspace(key);
+      }
+    });
+    _queue = result.then<void>((_) {}, onError: (Object _, StackTrace _) {});
+    return result;
+  }
 
   /// One owner serializes short transactions. Do not dispose this connection
   /// from a workspace handle or hold transactions across provider I/O.
@@ -151,7 +177,7 @@ class LocalProfileDatabase {
         );
         db.execute('PRAGMA application_id=$_applicationId');
         db.execute('PRAGMA user_version=$_version');
-      } else if ((version == 1 || version == 2) &&
+      } else if ((version == 1 || version == 2 || version == 3) &&
           application == _applicationId) {
         // Only an exact known schema may advance. Never
         // rebuild missing authority tables as an empty new installation.

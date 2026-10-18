@@ -1,5 +1,43 @@
 # Storage and sync contract
 
+## Isolated v4 app-wide history trial
+
+Implementation is authorized for disposable synthetic workspaces; it is not a
+production conversion or released format. [ADR 0027](decisions/0027-unified-writer-history.md)
+owns this boundary. Released v3 bytes and semantics remain readable.
+
+The v4 manifest seals every original Task/Food source and a deterministic
+conversion epoch. Each installation has one complete .applog: exact historical
+semantic records plus future app-wide sequence, clock, hash chain, transaction
+frame and observed frontiers. Outer positions never replace original semantic
+IDs, hashes, clocks, Undo references or native text lineage. Unknown required
+data stops both projections. Physical observations are protected even when a
+complete transaction waits for missing semantic prerequisites.
+
+One coordinator serializes both stores on the existing profile queue. Schema4
+adds protected epoch/writer inventory, heads, one exact common outbox and a
+migration journal in local.sqlite. Reservation precedes native receipt binding;
+recovery appends only the exact missing reserved suffix. Readback precedes
+retirement. Both projections stage within the admission transaction and publish
+memory after commit. Rebuild retains all protected authority and canonical bytes.
+
+Original conversion owners remain fixed. A new installation begins its own
+standalone writer.joined header, then uses its distinct immutable UUID. Previously
+observed writer files cannot disappear. Optional writer.named events carry only
+a display label; duplicate labels never merge ownership. Inputs are bounded to
+32MiB per app file, 256MiB per workspace and 4MiB per record. Refresh rereads and
+hashes actual provider bytes; a bounded successful Task-validation cache skips
+replaying native Tasks for unchanged semantic bytes.
+
+UnifiedTrial creates or resumes only its owned direct system-temp directory,
+rejects links, stores exact source backups/output recipes and acknowledgements
+in its protected journal, and keeps ready=false until every participant has
+validated the exact output against retained local authority. Late legacy writes
+block activation and cleanup. Crash recovery resumes exact prefixes and phase
+intents. Only this synthetic capability may retire its own copied old source
+files. The host has no production migration or cleanup action.
+
+
 Approved foundation: canonical per-device JSON logs and one SQLite cache. [Protocol v3](schema.md) describes the implemented subset and [recovery](recovery.md) its limits. This document explains the larger contract.
 
 

@@ -38,6 +38,7 @@ import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
 import 'presentation/form_validation.dart';
 import 'presentation/name_entry_dialog.dart';
+import 'presentation/device_name_dialog.dart';
 import 'presentation/checklist_panel.dart';
 import 'presentation/checklist_disclosure_ink_border.dart';
 import 'presentation/task_actions_menu.dart';
@@ -54,6 +55,7 @@ import 'storage/local_durability.dart';
 import 'storage/local_profile_database.dart';
 import 'storage/local_profile_migration.dart';
 import 'storage/task_store.dart';
+import 'storage/unified_history.dart';
 import 'storage/checklist_expansion_store.dart';
 import 'food/food_page.dart';
 import 'food/food_store.dart';
@@ -498,18 +500,52 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         (Platform.isAndroid
             ? AndroidLogFolder(location)
             : LocalLogFolder(location));
-    final opened = await TaskStore.open(
-      folder,
-      privateRoot!,
-      profileDatabase: profileDatabase,
-      writerIdentity: settings!.writer,
-      textEngine: textEngine ??=
-          widget.textEngineFactory?.call() ?? NativeTextEngine(),
-      initializeNewWorkspaceText: true,
-      onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
-    );
+    UnifiedHistory? unified;
+    late TaskStore opened;
+    try {
+      final names = await folder.list();
+      final hasManifest = names.any((f) => f.name == 'tandemlog-space.json');
+      final isUnified =
+          hasManifest &&
+          folder is BoundedLogFolder &&
+          (jsonDecode(
+                    utf8.decode(
+                      await (folder as BoundedLogFolder).readBounded(
+                        'tandemlog-space.json',
+                        1024 * 1024,
+                      ),
+                    ),
+                  )
+                  as Map)['v'] ==
+              4;
+      final engine = textEngine ??=
+          widget.textEngineFactory?.call() ?? NativeTextEngine();
+      if (isUnified) {
+        unified = await UnifiedHistory.open(
+          folder,
+          profile: profileDatabase!,
+          writer: settings!.writer,
+          textEngine: engine,
+        );
+        opened = await TaskStore.openUnified(unified);
+      } else {
+        opened = await TaskStore.open(
+          folder,
+          privateRoot!,
+          profileDatabase: profileDatabase,
+          writerIdentity: settings!.writer,
+          textEngine: engine,
+          initializeNewWorkspaceText: true,
+          onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
+        );
+      }
+    } catch (_) {
+      await unified?.close();
+      rethrow;
+    }
     if (!mounted) {
       await opened.close();
+      await unified?.close();
       return false;
     }
     Set<String> expanded;
@@ -522,13 +558,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             'This folder cannot enforce safe Food reads. Tasks remain available.',
           );
         }
-        openedFood = await FoodStore.open(
-          folder,
-          profile: profileDatabase!,
-          installationWriter: settings!.writer,
-          space: opened.space,
-        );
+        openedFood = unified != null
+            ? await FoodStore.openUnified(unified)
+            : await FoodStore.open(
+                folder,
+                profile: profileDatabase!,
+                installationWriter: settings!.writer,
+                space: opened.space,
+              );
       } on FoodHistoryFailure catch (failure) {
+        if (unified != null) rethrow;
         // FoodStore has already revalidated shared profile/workspace identity.
         // Recheck Tasks before publishing a module-degraded workspace.
         await opened.refresh();
@@ -537,6 +576,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (!mounted) {
         await openedFood?.close();
         await opened.close();
+        await unified?.close();
         return false;
       }
       final migration = await opened.migrateOccurrenceDates(
@@ -548,6 +588,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (!mounted) {
         await openedFood?.close();
         await opened.close();
+        await unified?.close();
         return false;
       }
 
@@ -559,6 +600,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     } catch (_) {
       await openedFood?.close();
       await opened.close();
+      await unified?.close();
       rethrow;
     }
     store = opened;
@@ -566,7 +608,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     foodError = openedFoodError;
     expandedChecklists = expanded;
     rows = store!.rows;
-    if (store!.pendingTextOperations.isNotEmpty) {
+    if (_hasPendingOperation(store!)) {
       error =
           'An earlier saved operation needs confirmation. Retry to finish it.';
       errorFromRefresh = true;
@@ -865,12 +907,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             'This folder cannot enforce safe Food reads. Tasks remain available.',
           );
         }
-        opened = await FoodStore.open(
-          expected.folder,
-          profile: profileDatabase!,
-          installationWriter: settings!.writer,
-          space: expected.space,
-        );
+        opened = expected.unified != null
+            ? await FoodStore.openUnified(expected.unified!)
+            : await FoodStore.open(
+                expected.folder,
+                profile: profileDatabase!,
+                installationWriter: settings!.writer,
+                space: expected.space,
+              );
         if (!mounted || !identical(store, expected)) {
           await opened.close();
           return;
@@ -1195,6 +1239,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         }
                       : null,
                 ),
+                if (store?.unified != null) ...[
+                  const Divider(height: 32),
+                  ListTile(
+                    key: const ValueKey('device-name-setting'),
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Device name'),
+                    subtitle: Text(
+                      '${store!.unified!.snapshot.deviceName(settings!.writer) ?? 'Unnamed device'} · ${settings!.writer.substring(0, 8)}',
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    enabled:
+                        !busy &&
+                        sharedSafetyError == null &&
+                        !_hasPendingOperation(store!),
+                    onTap: () => Navigator.pop(ctx, 'device-name'),
+                  ),
+                ],
                 const Divider(height: 32),
                 const Text('Data folder'),
                 const SizedBox(height: 8),
@@ -1287,7 +1348,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       ),
     );
     if (!mounted || action == null) return;
-    if (action == 'choose') {
+    if (action == 'device-name') {
+      await _editDeviceName();
+    } else if (action == 'choose') {
       await _chooseFolder();
     } else if (action == 'open') {
       await _act(() => widget.folderActions.open(location!));
@@ -1300,6 +1363,26 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     } else {
       await _setAppearance(Appearance.values.byName(action));
     }
+  }
+
+  Future<void> _editDeviceName() async {
+    final origin = store, history = store?.unified;
+    if (origin == null ||
+        history == null ||
+        busy ||
+        sharedSafetyError != null) {
+      return;
+    }
+    final change = await showDialog<DeviceNameChange>(
+      context: context,
+      builder: (_) =>
+          DeviceNameDialog(name: history.snapshot.deviceName(history.writer)),
+    );
+    if (change == null || !mounted || !identical(store, origin)) return;
+    await _act(() async {
+      if (!mounted || !identical(store, origin)) return;
+      await history.renameDevice(change.name);
+    });
   }
 
   Future<void> _checkDataIntegrity() async {
@@ -1412,10 +1495,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          error = failureMessage(e);
-          errorFromRefresh = false;
-        });
+        final sharedFailure = store?.unified?.safetyFailure;
+        if (sharedFailure != null) {
+          _stopForSharedSafety(sharedFailure);
+        } else {
+          setState(() {
+            error = failureMessage(e);
+            errorFromRefresh = false;
+          });
+        }
       }
     } finally {
       completion.complete();
@@ -1723,7 +1811,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 reconcileCapture)) {
           setState(() {
             rows = origin.rows;
-            if (origin.pendingTextOperations.isNotEmpty) {
+            if (_hasPendingOperation(origin)) {
               error =
                   'An earlier saved operation needs confirmation. Retry to finish it.';
               errorFromRefresh = true;
@@ -1736,14 +1824,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
       } catch (e) {
         if (mounted && identical(store, origin)) {
+          if (origin.unified != null) {
+            _stopForSharedSafety(e);
+            return;
+          }
           setState(() {
             error = failureMessage(e);
             errorFromRefresh = true;
           });
         }
       }
-      // Task and food admission are independent. A failed food refresh cannot
-      // roll back valid task history or publish a partial food snapshot.
+      // Unified projections share admission. Released v3 keeps its independent
+      // Food failure behavior.
       if (foodOrigin != null) {
         try {
           await foodOrigin.refresh();
@@ -1765,6 +1857,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     syncing = null;
   }
 
+  bool _hasPendingOperation(TaskStore origin) =>
+      origin.unified?.hasPending ?? origin.pendingTextOperations.isNotEmpty;
+
   Future<void> _retryFolderRead() async {
     final origin = store;
     if (origin == null || busy) return;
@@ -1772,11 +1867,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await _retrySharedRead();
       return;
     }
-    if (origin.pendingTextOperations.isEmpty) {
+    if (!_hasPendingOperation(origin)) {
       await _refresh();
       return;
     }
     await _act(() async {
+      if (origin.unified != null) {
+        await origin.unified!.recoverPrepared();
+        return;
+      }
       for (final receipt in origin.pendingTextOperations) {
         await origin.retryTextOperation(receipt);
       }
@@ -1809,7 +1908,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           LocalSettings.protectedValues(owner)['writer'] != writer ||
           (foodOrigin != null &&
               (foodOrigin.space != space ||
-                  foodOrigin.writer != foodWriter(writer)))) {
+                  foodOrigin.writer !=
+                      (origin.unified != null
+                          ? writer
+                          : foodWriter(writer))))) {
         throw StateError(
           'The workspace identity changed. Preserve the profile before recovery.',
         );
@@ -1821,7 +1923,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       checkOrigin();
       // This is admission only: no canonical append, pending-operation retry,
       // settings reload, owner reset, or editor close occurs during recovery.
-      if (await origin.writerGuard.load(space, writer) == null) {
+      if (origin.unified == null &&
+          await origin.writerGuard.load(space, writer) == null) {
         throw StateError(
           'The task writer has lost its safety reservation. Preserve the profile before recovery.',
         );
@@ -1838,12 +1941,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               'This folder cannot enforce safe Food reads. Tasks remain available.',
             );
           }
-          openedFood = await FoodStore.open(
-            origin.folder,
-            profile: owner,
-            installationWriter: writer,
-            space: space,
-          );
+          openedFood = origin.unified != null
+              ? await FoodStore.openUnified(origin.unified!)
+              : await FoodStore.open(
+                  origin.folder,
+                  profile: owner,
+                  installationWriter: writer,
+                  space: space,
+                );
         }
       } on FoodHistoryFailure catch (failure) {
         isolatedFoodError = failure.message;
@@ -1861,7 +1966,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         rows = origin.rows;
         if (!captureFailure) error = null;
         errorFromRefresh = false;
-        if (origin.pendingTextOperations.isNotEmpty) {
+        if (_hasPendingOperation(origin)) {
           error =
               'An earlier saved operation needs confirmation. Retry to finish it.';
           errorFromRefresh = true;
@@ -1962,7 +2067,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           await _saveSettings();
         } catch (_) {
           if (!identical(foodStore, previousFood)) await foodStore?.close();
-          if (!identical(store, previousStore)) await store?.close();
+          if (!identical(store, previousStore)) {
+            final failed = store;
+            await failed?.close();
+            await failed?.unified?.close();
+          }
           store = previousStore;
           foodStore = previousFood;
           foodError = previousFoodError;
@@ -1977,6 +2086,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
         await previousFood?.close();
         await previousStore?.close();
+        await previousStore?.unified?.close();
         if (!mounted) return;
         foodUndoHistory.clear();
         pendingFoodCommand = null;
@@ -4211,6 +4321,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
     await cleanup(() => foodStore?.close());
     await cleanup(() => store?.close());
+    await cleanup(() => store?.unified?.close());
     await cleanup(() => textEngine?.dispose());
     await cleanup(() => profileDatabase?.close());
     if (firstFailure != null) {

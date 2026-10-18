@@ -1,3 +1,5 @@
+import 'unified_history_workflow_test.dart'
+    show registerUnifiedHistoryWorkflowTests;
 import '../test/support/toolbar_button.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -294,6 +296,7 @@ void main() {
   registerCompletionFocusTests();
   registerCompletionConfirmationProgressTests();
   registerHeaderSelectionTests();
+  registerUnifiedHistoryWorkflowTests();
   registerHistoricalChecklistRecompletionTests();
   registerBulkFailureVisibilityTests();
   registerHeaderSearchTests();

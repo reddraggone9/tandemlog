@@ -1,5 +1,28 @@
 # Architecture
 
+## Unified writer history: isolated implementation
+
+[ADR 0027](decisions/0027-unified-writer-history.md) adds a v4 persistence
+coordinator shared by the existing TaskStore and FoodStore APIs. Pure wire,
+conversion and Food-admission rules remain separate from providers and UI.
+The coordinator validates native Task semantics through the existing engine,
+protects physical evidence and readiness, stages both derived projections in
+one profile transaction, and owns future sequence/reservation/recovery.
+There is one active append authority per installation; preserved legacy
+records do not retain separate active Task/Food writers.
+
+A read-only prospective preflight checks retained profile authority without
+binding an active epoch. The trial-only activation capability owns a synthetic
+system-temp tree and a durable phase journal; the host only opens already-active
+v4 manifests. Released v3 workspaces retain their existing adapters and behavior.
+SQL poisoning still permits ordered handle cleanup and lease release.
+
+The host shares stopped-state, retry and handle lifetime across both projections.
+Optional device naming is a small metadata command using existing form controls.
+No sync service, extra permission, identity based on labels, or production
+migration path is introduced. Full native acceptance is an outstanding gate.
+
+
 Status: accepted direction; see [ADR 0001](decisions/0001-client-and-storage.md) and [implemented schema](schema.md).
 
 ## Boundaries

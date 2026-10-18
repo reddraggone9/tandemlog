@@ -1,5 +1,26 @@
 # Product behavior and milestones
 
+## Optional device names in the isolated unified-history trial
+
+In an explicitly converted v4 trial, Settings offers **Device name** for this
+installation. It is optional, up to 80 characters, and blank clears it. Settings
+shows the immutable short ID beside the label. Equal names are allowed; a
+reinstall, replacement OS or new computer keeps a new installation identity.
+Original histories stay attributed to their original writers. Names never
+determine identity, deduplication or ownership.
+
+The dialog follows shared Review-errors, IME, stable-action and one-shot route
+rules. Tasks and Food use one shared admitted revision; an unknown required
+record stops both sections and keeps drafts. Pending commands, including a
+device-name change, retain their exact retry across restart. Shared safety Retry
+reads and validates without silently committing pending commands.
+
+[ADR 0027](decisions/0027-unified-writer-history.md) records approved scope and
+tradeoffs. Automatic production conversion, abandoned-writer adoption,
+consolidation, history browsing and a separate large-log performance project
+are deferred. Native trial acceptance remains pending.
+
+
 ## Released local sections and Food refinements
 
 Released in stable 2026.10.5. Each device remembers its last successfully visited Tasks/Food section. Unknown or missing preferences default to Tasks. Cancelled editor guards do not change the remembered section. Android Tasks/Food launcher shortcuts override that preference for an explicit launch and wait for workspace and user setup. Fresh newer requests take precedence; Recents and activity restoration do not replay an old shortcut.

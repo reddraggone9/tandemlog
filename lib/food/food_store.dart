@@ -9,7 +9,11 @@ import '../storage/local_settings.dart';
 import '../storage/log_folder.dart';
 import '../storage/profile_food_intents.dart';
 import '../storage/writer_guard.dart';
+import '../storage/unified_history.dart';
+import '../storage/unified_record.dart';
 import 'food_record.dart';
+import 'food_admission.dart';
+import 'food_import_evidence.dart';
 import 'food_import.dart';
 import 'inventory.dart';
 
@@ -29,8 +33,10 @@ class FoodStore {
     this.writer,
     this.space,
     this._lease,
-    this.now,
-  );
+    this.now, {
+    this.unified,
+  });
+  final UnifiedHistory? unified;
   final LogFolder folder;
   final LocalProfileDatabase profile;
   final String writer, space, _lease;
@@ -48,7 +54,7 @@ class FoodStore {
   bool isAdmitted(FoodRecord record) =>
       _readyIds.contains(record.id) &&
       _records.any((r) => r.id == record.id && r.hash == record.hash);
-  bool get hasPreparedAppend => _remaining.isNotEmpty;
+  bool get hasPreparedAppend => unified?.hasPending ?? _remaining.isNotEmpty;
   List<String> get pendingOperationIds => List.unmodifiable(
     _records.where((r) => !_readyIds.contains(r.id)).map((r) => r.id),
   );
@@ -58,6 +64,137 @@ class FoodStore {
       maximumTotalBytes = 32 * 1024 * 1024,
       maximumRecords = 50000,
       maximumContainers = 100000;
+
+  static Future<FoodStore> openUnified(UnifiedHistory history) async {
+    final lease = 'food:app4:${history.folder.location}';
+    history.profile.acquireWorkspace(lease);
+    final store = FoodStore._(
+      history.folder,
+      history.profile,
+      history.writer,
+      history.manifest.space,
+      lease,
+      history.now,
+      unified: history,
+    );
+    try {
+      await history.profile.serialize(() async {
+        history.attachProjectionInProfileQueue(
+          store,
+          store._stageUnifiedProjection,
+        );
+      });
+      return store;
+    } catch (_) {
+      history.profile.releaseWorkspace(lease);
+      rethrow;
+    }
+  }
+
+  void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
+    final records = snapshot.effects
+        .where((e) => e.food != null)
+        .map((e) => e.food!)
+        .toList();
+    final admission = snapshot.foodAdmission;
+    final pending = unified!.pendingRecords
+        .where((r) => r.effect.food != null)
+        .map((r) => r.effect.food!)
+        .toList();
+    return () {
+      state = admission.state;
+      _births = admission.births;
+      _readyIds = admission.readyIds;
+      _records = List.unmodifiable(records);
+      pendingReferences =
+          records.length -
+          admission.readyIds.length +
+          (snapshot.pendingEffects ? 1 : 0);
+      if (pending.isNotEmpty) lastPreparedRecords = List.unmodifiable(pending);
+    };
+  }
+
+  bool _ownsFood(String author) =>
+      author == writer || unified != null && foodWriter(writer) == author;
+
+  List<UnifiedEffectBuilder> _unifiedBuilders(List<_FoodChange> changes) {
+    String? previousEdit;
+    return [
+      for (final change in changes)
+        (seq, clock, head) {
+          final basis = <String, String>{};
+          if (change.action != FoodAction.add) {
+            for (final id in change.targets) {
+              final birth = _births[id];
+              if (birth == null || !_readyIds.contains(birth.id)) {
+                throw const FormatException(
+                  'Food target is not an admitted container.',
+                );
+              }
+              basis[id] = birth.id;
+            }
+          }
+          final record = FoodRecord(
+            unified: true,
+            space: space,
+            writer: writer,
+            sequence: seq,
+            clock: clock,
+            previousHash: head,
+            createdWith: basis,
+            operation: FoodOperation(
+              id: '$writer:$seq',
+              order: clock.value.toInt(),
+              action: change.action,
+              targets: change.targets,
+              details: change.details,
+              contents: change.contents,
+              fields: change.fields,
+              createdAt: change.action == FoodAction.add
+                  ? change.createdAt ?? now().toUtc().toIso8601String()
+                  : null,
+              observedDeletes: change.deletes,
+              observedEdits: [
+                ...change.edits,
+                if (change.observePreviousEdit)
+                  previousEdit ??
+                      (throw const FormatException(
+                        'Missing previous Food edit.',
+                      )),
+              ],
+              retracts: change.retracts,
+              undoOwner:
+                  change.action == FoodAction.undo &&
+                      change.retracts!.split(':').first != writer
+                  ? writer
+                  : null,
+            ),
+          );
+          previousEdit = record.id;
+          return UnifiedEffect('food', record.encode());
+        },
+    ];
+  }
+
+  Future<List<FoodRecord>> _unifiedCommandLocked(
+    List<_FoodChange> changes,
+    void Function(List<FoodRecord>)? stageImport,
+  ) async {
+    await _refresh();
+    if (changes.isEmpty) return [];
+    final reservation = await unified!.prepareInProfileQueue(
+      _unifiedBuilders(changes),
+      onReserved: (records) => stageImport?.call(
+        records.map((r) => r.effect.food!).toList(growable: false),
+      ),
+    );
+    final batch = List<FoodRecord>.unmodifiable(
+      reservation.records.map((r) => r.effect.food!),
+    );
+    lastPreparedRecords = batch;
+    await unified!.commitInProfileQueue();
+    return batch;
+  }
 
   static Future<FoodStore> open(
     LogFolder folder, {
@@ -115,6 +252,7 @@ class FoodStore {
     if (_closed) return Future<void>.value();
     return _closing ??= _operations.then((_) {
       _closed = true;
+      unified?.detachProjectionInProfileQueue(this);
       profile.releaseWorkspace(_lease);
     });
   }
@@ -169,6 +307,10 @@ class FoodStore {
   }
 
   Future<void> _refresh() async {
+    if (unified != null) {
+      await unified!.refreshInProfileQueue();
+      return;
+    }
     try {
       await _admitRefresh();
     } on FoodHistoryFailure {
@@ -407,7 +549,7 @@ class FoodStore {
       );
     }
     final remaining = Uint8List.fromList(expected.sublist(tail.length));
-    final _FoodAdmission admission;
+    final FoodAdmission admission;
     try {
       admission = _project(records);
     } on FormatException catch (failure) {
@@ -457,99 +599,18 @@ class FoodStore {
     }
   }
 
-  _FoodAdmission _project(List<FoodRecord> records) {
-    final byId = {for (final r in records) r.id: r};
-    final targetSets = {
-      for (final r in records) r.id: r.operation.targets.toSet(),
-    };
-    final births = <String, FoodRecord>{};
-    for (final record in records) {
-      if (record.operation.action != FoodAction.add) continue;
-      for (final id in record.operation.targets) {
-        if (births.containsKey(id)) {
-          throw const FormatException(
-            'A physical food container has different creation records.',
-          );
-        }
-        births[id] = record;
-      }
-      if (births.length > maximumContainers) {
-        throw const FormatException('Too many food containers.');
-      }
-    }
-    final dependencies = <String, List<String>>{};
-    for (final r in records) {
-      final refs = <String>{
-        ...r.createdWith.values,
-        ...r.operation.observedDeletes,
-        ...r.operation.observedEdits,
-        if (r.operation.retracts != null) r.operation.retracts!,
-      };
-      if (r.operation.action == FoodAction.undo) {
-        final basis = byId[r.operation.retracts];
-        if (basis != null &&
-            (basis.operation.action == FoodAction.undo ||
-                basis.writer != r.writer ||
-                basis.sequence >= r.sequence ||
-                basis.clock >= r.clock ||
-                basis.operation.targets.length != r.operation.targets.length ||
-                !r.operation.targets.every(targetSets[basis.id]!.contains))) {
-          throw const FormatException(
-            'Food Undo reference has wrong kind, writer, targets or clock.',
-          );
-        }
-      }
-      for (final entry in r.createdWith.entries) {
-        final basis = byId[entry.value];
-        if (basis != null &&
-            (basis.operation.action != FoodAction.add ||
-                !targetSets[basis.id]!.contains(entry.key) ||
-                basis.clock >= r.clock ||
-                births[entry.key]?.id != basis.id)) {
-          throw const FormatException('Food target creation basis is invalid.');
-        }
-      }
-      for (final (refs, kind) in [
-        (r.operation.observedDeletes, FoodAction.remove),
-        (r.operation.observedEdits, FoodAction.edit),
-      ]) {
-        for (final ref in refs) {
-          final basis = byId[ref];
-          if (basis == null) continue;
-          if (basis.operation.action != kind ||
-              basis.clock >= r.clock ||
-              !r.operation.targets.every(targetSets[basis.id]!.contains) ||
-              (kind == FoodAction.edit && basis.operation.contents == null)) {
-            throw const FormatException(
-              'Food observed reference has wrong kind, target or clock.',
-            );
-          }
-        }
-      }
-      dependencies[r.id] = refs.toList();
-    }
-    final ordered = records.toList()
-      ..sort((a, b) {
-        final clock = a.clock.compareTo(b.clock);
-        if (clock != 0) return clock;
-        final writer = a.writer.compareTo(b.writer);
-        return writer != 0 ? writer : a.sequence.compareTo(b.sequence);
-      });
-    final ready = <String>{}, operations = <FoodOperation>[];
-    for (final r in ordered) {
-      if (dependencies[r.id]!.every(ready.contains)) {
-        ready.add(r.id);
-        operations.add(r.operation);
-      }
-    }
-    return _FoodAdmission(projectFood(operations), births, ready);
-  }
+  FoodAdmission _project(List<FoodRecord> records) =>
+      admitFoodRecords(records, maximumContainers: maximumContainers);
 
   static bool _prefix(List<int> bytes, List<int> prefix) =>
       prefix.length <= bytes.length &&
       Iterable<int>.generate(prefix.length).every((i) => bytes[i] == prefix[i]);
 
   Future<void> recoverPrepared() => _queue(() async {
+    if (unified != null) {
+      await unified!.recoverPreparedInProfileQueue();
+      return;
+    }
     await _refresh();
     if (_remaining.isEmpty) return;
     await _append(_remaining);
@@ -581,6 +642,7 @@ class FoodStore {
     List<_FoodChange> changes, {
     void Function(List<FoodRecord>)? stageImport,
   }) async {
+    if (unified != null) return _unifiedCommandLocked(changes, stageImport);
     await _refresh();
     if (hasPreparedAppend || pendingReferences > 0) {
       throw const FormatException(
@@ -697,127 +759,9 @@ class FoodStore {
   // Import metadata is private local recovery evidence, never a second
   // canonical inventory. The index witnesses every retained attempt row.
   String get _importPrefix => 'food.import.v1.$space.';
-  List<Map<String, dynamic>> _importAttempts() {
-    // Bound corrupt/local inputs before SQLite materializes ledger strings.
-    final totals = profile.database.select(
-      "SELECT COUNT(*) AS n,COALESCE(SUM(length(CAST(value AS BLOB))),0) AS bytes,COALESCE(MAX(length(CAST(value AS BLOB))),0) AS largest,COALESCE(MAX(length(CAST(key AS BLOB))),0) AS keyBytes,COALESCE(SUM(CASE WHEN typeof(value)='text' THEN 0 ELSE 1 END),0) AS invalid FROM profile_metadata WHERE key LIKE ?",
-      ['$_importPrefix%'],
-    ).single;
-    if ((totals['n'] as int) > 101 ||
-        (totals['bytes'] as int) > 26 * 1024 * 1024 ||
-        (totals['largest'] as int) > 256 * 1024 ||
-        (totals['keyBytes'] as int) > 256 ||
-        totals['invalid'] != 0) {
-      throw const FormatException('Import evidence exceeds safe read limits.');
-    }
-    final rows = profile.database.select(
-      'SELECT key,value FROM profile_metadata WHERE key LIKE ?',
-      ['$_importPrefix%'],
-    );
-    final witness = profile.database.select(
-      'SELECT version FROM protected_food_import_witnesses WHERE space=?',
-      [space],
-    );
-    if ((witness.isEmpty != rows.isEmpty) ||
-        (witness.isNotEmpty && witness.single['version'] != 1)) {
-      throw const FormatException(
-        'Import initialization evidence is missing or differs.',
-      );
-    }
-    if (rows.isEmpty) return [];
-    if (rows.length > 101) {
-      throw const FormatException('Too many import attempts.');
-    }
-    final byKey = {
-      for (final row in rows) row['key'] as String: row['value'] as String,
-    };
-    final rawIndex = byKey.remove('${_importPrefix}index');
-    if (rawIndex == null || utf8.encode(rawIndex).length > 64 * 1024) {
-      throw const FormatException(
-        'Import source witness is missing or invalid.',
-      );
-    }
-    final index = jsonDecode(rawIndex);
-    if (index is! List || index.isEmpty || index.length > 100) {
-      throw const FormatException('Invalid import source witness.');
-    }
-    final result = <Map<String, dynamic>>[];
-    final namespaces = <String>{}, sources = <String>{};
-    for (final entry in index) {
-      if (entry is! Map<String, dynamic> ||
-          entry.length != 4 ||
-          !{
-            'importId',
-            'sourceSha256',
-            'planHash',
-            'writer',
-          }.every(entry.containsKey) ||
-          !isCanonicalId(entry['importId']) ||
-          !isCanonicalId(entry['writer']) ||
-          !_importHash(entry['sourceSha256']) ||
-          !_importHash(entry['planHash']) ||
-          !namespaces.add(entry['importId']) ||
-          !sources.add(entry['sourceSha256'])) {
-        throw const FormatException('Invalid import source witness.');
-      }
-      final raw = byKey.remove('${_importPrefix}attempt.${entry['importId']}');
-      if (raw == null || utf8.encode(raw).length > 256 * 1024) {
-        throw const FormatException(
-          'Import attempt evidence is missing or invalid.',
-        );
-      }
-      final attempt = jsonDecode(raw);
-      if (attempt is! Map<String, dynamic> ||
-          attempt.length != 7 ||
-          !{
-            'v',
-            'space',
-            'importId',
-            'sourceSha256',
-            'planHash',
-            'writer',
-            'records',
-          }.every(attempt.containsKey) ||
-          attempt['v'] is! int ||
-          attempt['v'] != 1 ||
-          attempt['space'] != space ||
-          entry.keys.any((key) => attempt[key] != entry[key]) ||
-          attempt['records'] is! List ||
-          (attempt['records'] as List).isEmpty ||
-          (attempt['records'] as List).length > 1000) {
-        throw const FormatException('Invalid import attempt evidence.');
-      }
-      final recordIds = <String>{};
-      int? priorSequence;
-      for (final record in attempt['records'] as List) {
-        if (record is! Map<String, dynamic> ||
-            record.length != 2 ||
-            !record.containsKey('id') ||
-            !record.containsKey('hash') ||
-            record['id'] is! String ||
-            !_importHash(record['hash'])) {
-          throw const FormatException('Invalid import record evidence.');
-        }
-        validateFoodReference(record['id']);
-        final parts = (record['id'] as String).split(':');
-        final sequence = int.parse(parts.last);
-        if (parts.first != attempt['writer'] ||
-            !recordIds.add(record['id']) ||
-            (priorSequence != null && sequence != priorSequence + 1)) {
-          throw const FormatException('Invalid import record evidence.');
-        }
-        priorSequence = sequence;
-      }
-      result.add(attempt);
-    }
-    if (byKey.isNotEmpty) {
-      throw const FormatException('Import witness omits retained attempts.');
-    }
-    return result;
-  }
+  List<Map<String, dynamic>> _importAttempts() =>
+      readFoodImportEvidence(profile, space);
 
-  static bool _importHash(Object? value) =>
-      value is String && RegExp(r'^[0-9a-f]{64}$').hasMatch(value);
   List<_FoodChange> _importChanges(FoodImportPlan plan) => [
     for (final container in plan.containers)
       _FoodChange(
@@ -834,10 +778,10 @@ class FoodStore {
     List<String> ids = const [],
   ]) => FoodImportReport(status, plan.planHash, writer, plan.targetIds, ids);
 
-  FoodImportReport _inspectImport(
+  Future<FoodImportReport> _inspectImport(
     FoodImportPlan plan,
     List<Map<String, dynamic>> attempts,
-  ) {
+  ) async {
     plan.validate();
     _checkImportWriter();
     if (plan.space != space) {
@@ -866,13 +810,19 @@ class FoodStore {
           'Import physical identity already exists without this attempt.',
         );
       }
-      _prepareChanges(_importChanges(plan));
+      if (unified != null) {
+        await unified!.validateInProfileQueue(
+          _unifiedBuilders(_importChanges(plan)),
+        );
+      } else {
+        _prepareChanges(_importChanges(plan));
+      }
       return _importReport(plan, FoodImportStatus.ready);
     }
     final attempt = matches.single;
     if (attempt['planHash'] != plan.planHash ||
         attempt['sourceSha256'] != plan.sourceSha256 ||
-        attempt['writer'] != writer) {
+        !_ownsFood(attempt['writer'] as String)) {
       throw const FormatException(
         'Import attempt source, plan or writer differs.',
       );
@@ -882,10 +832,15 @@ class FoodStore {
       throw const FormatException('Import count differs.');
     }
     final known = {for (final r in _records) r.id: r};
-    final pending = ProfileFoodIntents(profile)
-        .pending(space, writer)
-        .map((b) => FoodRecord.decode(utf8.decode(b)))
-        .toList();
+    final pending = unified == null
+        ? ProfileFoodIntents(profile)
+              .pending(space, writer)
+              .map((b) => FoodRecord.decode(utf8.decode(b)))
+              .toList()
+        : unified!.pendingRecords
+              .where((r) => r.effect.food != null)
+              .map((r) => r.effect.food!)
+              .toList();
     final pendingById = {for (final r in pending) r.id: r};
     var complete = true;
     final missing = <String>{};
@@ -896,7 +851,7 @@ class FoodStore {
       if (record == null ||
           record.hash != proof['hash'] ||
           record.space != space ||
-          record.writer != writer ||
+          record.writer != attempt['writer'] ||
           record.operation.action != FoodAction.add ||
           record.operation.targets.length != 1 ||
           record.operation.targets.single !=
@@ -923,9 +878,11 @@ class FoodStore {
         'Import recovery differs from its exact protected receipts.',
       );
     }
-    return _importReport(
-      plan,
+    return FoodImportReport(
       complete ? FoodImportStatus.committed : FoodImportStatus.pendingRecovery,
+      plan.planHash,
+      attempt['writer'] as String,
+      plan.targetIds,
       evidence.map((r) => r['id'] as String).toList(),
     );
   }
@@ -933,7 +890,7 @@ class FoodStore {
   void _checkImportWriter() {
     final installation =
         LocalSettings.protectedValues(profile)['writer'] as String;
-    if (foodWriter(installation) != writer) {
+    if ((unified == null ? foodWriter(installation) : installation) != writer) {
       throw const FormatException(
         'Import writer differs from current protected settings.',
       );
@@ -952,10 +909,14 @@ class FoodStore {
     _checkImportWriter();
     await _refresh();
     final attempts = _importAttempts();
-    final inspected = _inspectImport(plan, attempts);
+    final inspected = await _inspectImport(plan, attempts);
     if (inspected.status == FoodImportStatus.committed) return inspected;
     if (inspected.status == FoodImportStatus.pendingRecovery) {
-      await _append(_remaining);
+      if (unified != null) {
+        await unified!.recoverPreparedInProfileQueue();
+      } else {
+        await _append(_remaining);
+      }
       await _refresh();
     } else {
       await _commandLocked(
@@ -1086,7 +1047,7 @@ class FoodStore {
     await _refresh();
     final changes = <_FoodChange>[];
     for (final remove in removals) {
-      if (remove.writer != writer ||
+      if (!_ownsFood(remove.writer) ||
           remove.operation.action != FoodAction.remove ||
           !_readyIds.contains(remove.id) ||
           !_records.any((r) => r.id == remove.id && r.hash == remove.hash)) {
@@ -1118,7 +1079,7 @@ class FoodStore {
       }
       for (final original in originals) {
         if (original.space != space ||
-            original.writer != writer ||
+            !_ownsFood(original.writer) ||
             original.operation.action == FoodAction.undo ||
             !isAdmitted(original)) {
           throw const FormatException(
@@ -1181,11 +1142,4 @@ class _FoodChange {
   final List<String> deletes, edits;
   final bool observePreviousEdit;
   final String? retracts;
-}
-
-class _FoodAdmission {
-  _FoodAdmission(this.state, this.births, this.readyIds);
-  final FoodState state;
-  final Map<String, FoodRecord> births;
-  final Set<String> readyIds;
 }

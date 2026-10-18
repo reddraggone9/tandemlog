@@ -51,12 +51,50 @@ abstract class BoundedLogFolder {
   Future<Uint8List> readBounded(String name, int maximumBytes);
 }
 
-class LocalLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
+/// Replacement capability must preserve the expected current bytes or fail.
+/// This is a sole-owner local compare/check, not a distributed sync lock.
+abstract class AtomicReplaceLogFolder {
+  Future<void> replaceOwned(String name, Uint8List expected, Uint8List bytes);
+}
+
+class LocalLogFolder
+    implements
+        LogFolder,
+        RangeLogFolder,
+        BoundedLogFolder,
+        AtomicReplaceLogFolder {
   @override
   final String location;
   LocalLogFolder(this.location, {LocalDurability? durability})
     : _durability = durability ?? LocalDurability.shared;
   final LocalDurability _durability;
+  @override
+  Future<void> replaceOwned(
+    String name,
+    Uint8List expected,
+    Uint8List bytes,
+  ) async {
+    final current = await read(name);
+    if (current.length != expected.length ||
+        Iterable<int>.generate(
+          current.length,
+        ).any((i) => current[i] != expected[i])) {
+      throw FolderAccessFailure(
+        'Owned replacement source changed; recovery bytes were preserved.',
+      );
+    }
+    await _durability.writeAtomicDurable(file(name), bytes);
+    final confirmed = await read(name);
+    if (confirmed.length != bytes.length ||
+        Iterable<int>.generate(
+          bytes.length,
+        ).any((i) => confirmed[i] != bytes[i])) {
+      throw FolderAccessFailure(
+        'Owned replacement was not confirmed; recovery bytes were preserved.',
+      );
+    }
+  }
+
   File file(String name) {
     if (!RegExp(r'^[a-zA-Z0-9._-]+$').hasMatch(name)) {
       throw ArgumentError('Unsafe filename');

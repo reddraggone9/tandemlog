@@ -24,6 +24,9 @@ import 'task_tables.dart';
 import '../text/native_text_engine.dart';
 import '../text/recurring_text.dart';
 import 'text_cache.dart';
+import 'unified_history.dart';
+import 'unified_record.dart';
+import 'unified_manifest.dart' show bytesDigest;
 import '../domain/text_context.dart';
 import '../domain/text_actor.dart';
 import '../domain/historical_completion.dart';
@@ -225,6 +228,8 @@ class TaskStore {
     return manifest['id'] as String;
   }
 
+  final UnifiedHistory? unified;
+
   TaskStore._(
     this.folder,
     this._database,
@@ -236,8 +241,455 @@ class TaskStore {
     this.privatePath,
     this.profileDatabase,
     this.tables,
-    this._locationKey,
-  );
+    this._locationKey, {
+    this.unified,
+  });
+
+  /// Preflight uses the existing semantic/native validators on a scratch DB,
+  /// never durable files or a second writer. Original raw IDs/hashes are intact.
+  static List<Map<String, dynamic>> validateSemanticHistory(
+    Iterable<LogEvent> input, {
+    required String space,
+    required String writer,
+    NativeTextEngine? textEngine,
+    void Function(Set<String>)? onReady,
+  }) {
+    final events = input.toList(), db = sqlite3.openInMemory();
+    const tables = TaskTables.legacy();
+    TaskStore? store;
+    try {
+      for (final sql in _latestProjectionSchema(tables)) {
+        db.execute(sql);
+      }
+      store = TaskStore._(
+        _SemanticValidationFolder(),
+        db,
+        writer,
+        null,
+        DateTime.now,
+        _SemanticValidationGuard(),
+        textEngine,
+        '',
+        null,
+        tables,
+        null,
+      );
+      store.space = space;
+      db.execute('BEGIN IMMEDIATE');
+      store._replaySemanticEvents(events);
+      onReady?.call(store._semanticReadyIds(events));
+      return store.rows
+          .map((row) => Map<String, dynamic>.unmodifiable(row))
+          .toList();
+    } finally {
+      store?._recurringTextMemo.clear();
+      if (!db.autocommit) db.execute('ROLLBACK');
+      db.close();
+    }
+  }
+
+  static List<String> _latestProjectionSchema(TaskTables tables) => [
+    'CREATE TABLE IF NOT EXISTS ${tables.events} (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
+    'CREATE TABLE IF NOT EXISTS ${tables.views} (id TEXT PRIMARY KEY, raw TEXT NOT NULL)',
+    'CREATE TABLE IF NOT EXISTS ${tables.streams} (name TEXT PRIMARY KEY, offset INTEGER NOT NULL, hash TEXT NOT NULL, stamp TEXT NOT NULL, hash_offset INTEGER NOT NULL DEFAULT 0, range_capable INTEGER NOT NULL DEFAULT 0, chain_head TEXT, last_seq INTEGER NOT NULL DEFAULT 0, last_clock INTEGER)',
+    'CREATE TABLE IF NOT EXISTS ${tables.streamRanges} (name TEXT NOT NULL, start_offset INTEGER NOT NULL, end_offset INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(name,start_offset))',
+    'CREATE TABLE IF NOT EXISTS ${tables.textFields} (entity TEXT NOT NULL, field TEXT NOT NULL, context TEXT NOT NULL, codec TEXT NOT NULL, adapter INTEGER NOT NULL, seed_hash TEXT NOT NULL, state BLOB NOT NULL, state_hash TEXT NOT NULL, frontier TEXT NOT NULL, PRIMARY KEY(entity,field))',
+    'CREATE TABLE IF NOT EXISTS ${tables.textActors} (context TEXT NOT NULL, actor INTEGER NOT NULL, writer TEXT NOT NULL, allocation TEXT NOT NULL, PRIMARY KEY(context,actor))',
+    'CREATE TABLE IF NOT EXISTS ${tables.textOutbox} (id TEXT PRIMARY KEY, raw TEXT NOT NULL, entity TEXT NOT NULL)',
+    'CREATE TABLE IF NOT EXISTS ${tables.positions} (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
+    'CREATE TABLE IF NOT EXISTS ${tables.metadata} (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
+  ];
+
+  void _replaySemanticEvents(List<LogEvent> events) {
+    TextCache? cache;
+    try {
+      for (final e in events) {
+        if (e.space != space || e.canonicalRaw == null) {
+          throw FormatFailure('Task snapshot has invalid canonical evidence.');
+        }
+        if (_textTypes.contains(e.type) && textEngine == null) {
+          throw FormatFailure(
+            'Native text support is required before app admission.',
+          );
+        }
+        db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?)', [
+          e.id,
+          e.entity,
+          e.writer,
+          e.sequence,
+          e.clock.value.toInt(),
+          e.canonicalRaw,
+        ]);
+      }
+      final writers = events.map((e) => e.writer).toSet();
+      for (final author in writers) {
+        final ordered = events.where((e) => e.writer == author).toList()
+          ..sort((a, b) => a.sequence.compareTo(b.sequence));
+        final last = ordered.last;
+        db.execute('INSERT INTO ${tables.streams} VALUES (?,?,?,?,?,?,?,?,?)', [
+          '$author.jsonl',
+          0,
+          '',
+          '',
+          0,
+          0,
+          last.hash,
+          last.sequence,
+          last.clock.value.toInt(),
+        ]);
+      }
+      if (textEngine != null) {
+        cache = TextCache.forTransaction(
+          db,
+          textEngine!,
+          memo: _recurringTextMemo,
+          tables: tables,
+        );
+        cache.validatePackets(events);
+      }
+      _validateTextBaseline();
+      _validateUndoReferences();
+      _validateMoves();
+      _validateTagReferences();
+      _validateHistoricalCompletions();
+      _validateChecklistReferences();
+      _validateChecklistCompletions();
+      final entities = events.map((e) => e.entity).toSet();
+      for (final e in events) {
+        if (isTaskCompletion(e.type) && e.data['successor'] is Map) {
+          entities.add((e.data['successor'] as Map)['id'] as String);
+        }
+        if (e.type == 'task.completedWithChecklist') {
+          for (final item in (e.data['checklist'] as Map)['items'] as List) {
+            entities.add((item as Map)['id'] as String);
+          }
+        }
+      }
+      final resolution = textEngine == null ? null : _textResolution();
+      for (final entity in entities) {
+        final state = _projectEntity(
+          entity,
+          resolution: resolution,
+          textCache: cache,
+        );
+        if (state != null) {
+          db.execute('INSERT OR REPLACE INTO ${tables.views} VALUES (?,?)', [
+            entity,
+            jsonEncode(state),
+          ]);
+        }
+      }
+      _rebuildOrder();
+    } finally {
+      cache?.close();
+    }
+  }
+
+  Set<String> _semanticReadyIds(List<LogEvent> events) {
+    final states = {
+      for (final r in db.select('SELECT id,raw FROM ${tables.views}'))
+        r['id'] as String: jsonDecode(r['raw'] as String) as Map,
+    };
+    final births = <String, String>{};
+    for (final e in events) {
+      if (const {
+        'user.created',
+        'task.created',
+        'task.createdWithText',
+        'checklist.itemCreated',
+      }.contains(e.type)) {
+        births[e.entity] = e.id;
+      }
+      if (isTaskCompletion(e.type) && e.data['successor'] is Map) {
+        births[(e.data['successor'] as Map)['id'] as String] = e.id;
+      }
+      if (e.type == 'task.completedWithChecklist') {
+        for (final item in (e.data['checklist'] as Map)['items'] as List) {
+          births[(item as Map)['id'] as String] = e.id;
+        }
+      }
+    }
+    // Resolve derived births with the exact same seed selection used by rows.
+    for (final child in births.keys.toList()) {
+      final seeds = db.select(
+        "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+        [child],
+      );
+      if (seeds.isNotEmpty) {
+        final own = events.where((e) => e.entity == child).toList();
+        births[child] = _successorSelection(child, seeds, own).seed.id;
+      } else {
+        final copies = _itemCopySeeds(child);
+        if (copies.isNotEmpty) births[child] = copies.first.$1.id;
+      }
+    }
+    final nativePending = <String>{};
+    if (textEngine != null) {
+      for (final r in db.select('SELECT * FROM ${tables.textFields}')) {
+        if (r['adapter'] == 2) {
+          continue; // resolver already checks shared history
+        }
+        final doc = textEngine!.restoreDocument(
+          actorClientId: 2,
+          checkpoint: NativeTextCheckpoint(
+            NativeTextState.parse(base64Encode(r['state'] as Uint8List)),
+          ),
+          limits: NativeTextLimits(
+            visibleUtf16: r['field'] == 'title' ? 500 : 10000,
+          ),
+        );
+        try {
+          if (doc.read().pending) nativePending.add(r['entity'] as String);
+        } finally {
+          doc.dispose();
+        }
+      }
+    }
+    final dependencies = <String, Set<String>>{};
+    final candidates = <String>{};
+    for (final e in events) {
+      final refs = <String>{};
+      void entity(Object? value) {
+        if (value is! String) return;
+        refs.add(births[value] ?? 'missing-entity:$value');
+      }
+
+      void reference(Object? value) {
+        if (value is! String) return;
+        final parts = value.split(':');
+        refs.add(parts.take(2).join(':'));
+      }
+
+      if (e.type == 'text.baselineInitialized') {
+        if (_textBaseline?.id == e.id) candidates.add(e.id);
+      } else {
+        entity(e.entity);
+        final state = states[e.entity];
+        var ready =
+            state != null &&
+            state['textUnavailable'] == null &&
+            !nativePending.contains(e.entity);
+        if (e.type == 'task.textEdited' || e.type == 'task.textEditUndone') {
+          final hasSeed = events.any(
+            (other) =>
+                other.entity == e.entity && isNativeTextCreation(other.type),
+          );
+          if (!hasSeed && !_hasInheritedText(e.entity)) {
+            if (_textBaseline == null) {
+              ready = false;
+            } else {
+              refs.add(_textBaseline!.id);
+            }
+          }
+        }
+        if (births.entries
+            .where((entry) => entry.value == e.id)
+            .any(
+              (entry) =>
+                  states[entry.key] == null ||
+                  states[entry.key]!['textUnavailable'] != null ||
+                  nativePending.contains(entry.key),
+            )) {
+          ready = false;
+        }
+        if (ready) candidates.add(e.id);
+      }
+      if (e.type == 'task.moved' || e.type.startsWith('checklist.')) {
+        entity(e.data['before']);
+      }
+      if (e.type.startsWith('checklist.')) entity(e.data['parent']);
+      reference(e.data['operation']);
+      reference(e.data['completion']);
+      if (e.data['retainedSuccessor'] is Map) {
+        final retained = e.data['retainedSuccessor'] as Map;
+        reference(retained['completion']);
+        entity(retained['id']);
+      }
+      if (e.data['tagChanges'] is Map) {
+        for (final ref in (e.data['tagChanges'] as Map)['remove'] as List) {
+          final birthId = births[e.entity];
+          final matches = events.where(
+            (seed) =>
+                seed.id == birthId &&
+                seed.data['successor'] is Map &&
+                (((seed.data['successor'] as Map)['tags'] as List?) ?? []).any(
+                  (tag) =>
+                      '${const Uuid().v5(e.entity, 'tag:$tag')}:1:0' == ref,
+                ),
+          );
+          if (matches.isNotEmpty) {
+            refs.add(matches.single.id);
+          } else {
+            reference(ref);
+          }
+        }
+      }
+      for (final descriptor in [
+        e.type == 'text.baselineInitialized' ? e.data : null,
+        e.data['inheritance'],
+        e.data['checklist'],
+      ]) {
+        if (descriptor is! Map || descriptor['frontiers'] is! Map) continue;
+        for (final entry in (descriptor['frontiers'] as Map).entries) {
+          final seq = (entry.value as Map)['seq'] as int;
+          if (seq > 0) refs.add('${entry.key}:$seq');
+        }
+      }
+      refs.remove(e.id);
+      dependencies[e.id] = refs;
+    }
+    while (true) {
+      final blocked = candidates
+          .where((id) => !dependencies[id]!.every(candidates.contains))
+          .toList();
+      if (blocked.isEmpty) return Set.unmodifiable(candidates);
+      candidates.removeAll(blocked);
+    }
+  }
+
+  static Future<TaskStore> openUnified(UnifiedHistory history) async {
+    final key = sha256
+        .convert(
+          utf8.encode(
+            '${history.folder.location}#app4:${history.manifest.epoch}',
+          ),
+        )
+        .toString();
+    history.profile.acquireWorkspace(key);
+    TaskStore? store;
+    try {
+      return await history.profile.serialize(() async {
+        final tables = TaskTables.forLocation(key);
+        history.profile.transaction(() {
+          for (final sql in _latestProjectionSchema(tables)) {
+            history.profile.database.execute(sql);
+          }
+        });
+        store = TaskStore._(
+          history.folder,
+          history.profile.database,
+          history.writer,
+          null,
+          history.now,
+          _SemanticValidationGuard(),
+          history.textEngine,
+          history.profile.root,
+          history.profile,
+          tables,
+          key,
+          unified: history,
+        );
+        store!.space = history.manifest.space;
+        history.attachProjectionInProfileQueue(
+          store!,
+          store!._stageUnifiedProjection,
+        );
+        return store!;
+      });
+    } catch (_) {
+      if (store != null) history.detachProjectionInProfileQueue(store!);
+      history.profile.releaseWorkspace(key);
+      rethrow;
+    }
+  }
+
+  String? _unifiedTaskRevision;
+  void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
+    final events = snapshot.tasks.toList();
+    final revision = bytesDigest(
+      utf8.encode(events.map((e) => '${e.canonicalRaw!}\n').join()),
+    );
+    final oldBaseline = _textBaseline, oldBlocked = textWriteBlocked;
+    LogEvent? newBaseline = oldBaseline;
+    String? newBlocked = oldBlocked;
+    if (revision != _unifiedTaskRevision) {
+      try {
+        _textBaseline = null;
+        textWriteBlocked = null;
+        _recurringTextMemo.clear();
+        for (final table in [
+          tables.events,
+          tables.views,
+          tables.streams,
+          tables.streamRanges,
+          tables.textFields,
+          tables.textActors,
+          tables.textOutbox,
+          tables.positions,
+        ]) {
+          db.execute('DELETE FROM $table');
+        }
+        _replaySemanticEvents(events);
+        newBaseline = _textBaseline;
+        newBlocked = textWriteBlocked;
+      } finally {
+        _textBaseline = oldBaseline;
+        textWriteBlocked = oldBlocked;
+      }
+    }
+    final pending =
+        unified!.hasPending || snapshot.incomplete || snapshot.pendingEffects;
+    final acknowledged = snapshot.published[writer] ?? 0;
+    return () {
+      _textBaseline = newBaseline;
+      textWriteBlocked = newBlocked;
+      _unifiedTaskRevision = revision;
+      _writerHasPendingAppend = pending;
+      _acknowledgedOwnedSequence = acknowledged;
+      _updateClockWarning(_maximumClock(), _nowNs());
+    };
+  }
+
+  Future<List<OperationReceipt>> _appendUnifiedCommands(
+    List<(String, String, Map<String, dynamic>)> commands, {
+    bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
+  }) async {
+    _requireWriterAppendReady();
+    if (commands.isEmpty) return [];
+    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    final creations = <String, LogEvent>{};
+    final expected = unified!.snapshot.revision;
+    final reservation = await unified!.prepareInProfileQueue(
+      [
+        for (final (entity, type, data) in commands)
+          (seq, clock, head) {
+            final event = _prepareCommand(
+              entity,
+              type,
+              data,
+              seq,
+              clock,
+              previousHash: head,
+              pendingCreation: creations[entity],
+            );
+            if (type == 'task.created' || type == 'task.createdWithText') {
+              creations[entity] = event;
+            }
+            return UnifiedEffect('task', event.canonicalRaw!);
+          },
+      ],
+      expectedRevision: expected,
+      onReserved: (_) {
+        if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+      },
+    );
+    final receipts = reservation.records
+        .map((r) {
+          final e = r.effect.task!;
+          return OperationReceipt(e.id, e.canonicalRaw!, e.entity);
+        })
+        .toList(growable: false);
+    // The committed common receipt is the acceptance point. Native sessions
+    // bind it irreversibly; callback failure must retain exact recovery bytes.
+    for (final receipt in receipts) {
+      onPrepared?.call(receipt);
+    }
+    await unified!.commitInProfileQueue();
+    _requireConfirmed(receipts);
+    return receipts;
+  }
+
   static Future<TaskStore> open(
     LogFolder folder,
     String privatePath, {
@@ -645,6 +1097,82 @@ class TaskStore {
     }
   }
 
+  /// Prove conversion against every retained Task observation for this space,
+  /// including aliases/backups and current range checkpoints. This reads only
+  /// reconstructed original bytes; it never rebinds or clears old authority.
+  static Future<void> verifyConvertedHistoryObservations(
+    LocalProfileDatabase profile,
+    String space,
+    Map<String, Uint8List> originalSources,
+  ) async {
+    final proof = _ConvertedLegacyProofFolder(originalSources);
+    Future<void> verify(LegacyCacheSnapshot snapshot) async {
+      await snapshot.verifyCanonical(proof);
+      for (final raw in snapshot.outbox) {
+        final event = LogEvent.decode(raw);
+        final source = originalSources['${event.writer}.jsonl'];
+        if (source == null || !utf8.decode(source).split('\n').contains(raw)) {
+          throw FormatFailure(
+            'Resolve retained legacy native receipts before cutover.',
+          );
+        }
+      }
+    }
+
+    final db = profile.database;
+    for (final row in db.select(
+      'SELECT * FROM protected_cache_imports WHERE space=? ORDER BY path',
+      [space],
+    )) {
+      await verify(_cacheSnapshot(row));
+    }
+    for (final binding in db.select(
+      "SELECT key FROM profile_metadata WHERE value=? AND key LIKE 'workspace.%.space'",
+      [space],
+    )) {
+      final match = RegExp(
+        r'^workspace\.([0-9a-f]{64})\.space$',
+      ).firstMatch(binding['key'] as String);
+      if (match == null) {
+        throw FormatFailure('Invalid protected Task workspace binding.');
+      }
+      final location = match.group(1)!;
+      final tables = TaskTables.forLocation(location);
+      final metadata = {
+        for (final row in db.select('SELECT * FROM ${tables.metadata}'))
+          row['key'] as String: row['value'] as String,
+      };
+      if (metadata['space'] != space) {
+        throw FormatFailure('Task cache workspace binding differs at cutover.');
+      }
+      final data = {
+        'v': 1,
+        'path': 'spaces/$location/cache.sqlite',
+        'location': location,
+        'space': space,
+        'version': 16,
+        'metadata': metadata,
+        'streams': db
+            .select('SELECT * FROM ${tables.streams}')
+            .map((r) => Map<String, dynamic>.from(r))
+            .toList(),
+        'ranges': db
+            .select('SELECT * FROM ${tables.streamRanges}')
+            .map((r) => Map<String, dynamic>.from(r))
+            .toList(),
+        'events': db
+            .select('SELECT raw FROM ${tables.events}')
+            .map((r) => r['raw'] as String)
+            .toList(),
+        'outbox': db
+            .select('SELECT raw FROM ${tables.textOutbox}')
+            .map((r) => r['raw'] as String)
+            .toList(),
+      };
+      await verify(LegacyCacheSnapshot.decode(utf8.encode(jsonEncode(data))));
+    }
+  }
+
   static LegacyCacheSnapshot _cacheSnapshot(Row row) {
     final raw = row['raw'] as List<int>;
     final snapshot = LegacyCacheSnapshot.decode(raw);
@@ -815,6 +1343,7 @@ class TaskStore {
   }
 
   EventClock? _maximumClock([String? writerId]) {
+    if (unified != null && writerId == null) return unified!.maximumClock;
     final result = db.select(
       'SELECT clock FROM ${tables.events} ${writerId == null ? '' : 'WHERE writer=?'} ORDER BY clock DESC LIMIT 1',
       writerId == null ? [] : [writerId],
@@ -849,6 +1378,11 @@ class TaskStore {
   /// binding, trusted stream observations, UI state, guards and exact intents
   /// remain in place; replay is forced even for unchanged-size canonical logs.
   Future<void> rebuildCache() => _serialize(() async {
+    if (unified != null) {
+      _unifiedTaskRevision = null;
+      await _refresh();
+      return;
+    }
     if (profileDatabase == null) {
       throw StateError('Namespace rebuild requires the app-owned database.');
     }
@@ -1142,6 +1676,22 @@ class TaskStore {
   }
 
   Future<bool> _refresh({bool verify = false}) async {
+    if (unified != null) {
+      final before = _unifiedTaskRevision;
+      final snapshot = await unified!.refreshInProfileQueue();
+      if (verify) {
+        _lastHistoryVerification = HistoryVerificationReport(
+          checkedLogCount: snapshot.physical.length,
+          checkedRecordCount: snapshot.records.length,
+          checkedByteCount: snapshot.physical.values.fold(
+            0,
+            (n, b) => n + b.length,
+          ),
+          importedEventCount: snapshot.tasks.length,
+        );
+      }
+      return before != _unifiedTaskRevision;
+    }
     if (await _readSpace(folder) != space) {
       throw FormatFailure('Workspace identity changed at this location.');
     }
@@ -2299,6 +2849,14 @@ class TaskStore {
             : expectedTaskSnapshot != taskSnapshot)) {
       throw StaleTaskSnapshot();
     }
+    if (unified != null) {
+      final receipts = await _appendUnifiedCommands(
+        [(entity, type, data)],
+        canCommit: canCommit,
+        onPrepared: onPrepared,
+      );
+      return LogEvent.decode(receipts.single.raw);
+    }
     final seq =
         (db.select(
               'SELECT COALESCE(MAX(seq),0) AS n FROM ${tables.events} WHERE writer=?',
@@ -2686,6 +3244,19 @@ class TaskStore {
 
   /// Exact prepared bytes survive an unknown append outcome and process restart.
   List<OperationReceipt> get pendingTextOperations {
+    if (unified != null) {
+      return unified!.pendingRecords
+          .where(
+            (r) =>
+                r.effect.task != null &&
+                _textTypes.contains(r.effect.task!.type),
+          )
+          .map((r) {
+            final e = r.effect.task!;
+            return OperationReceipt(e.id, e.canonicalRaw!, e.entity);
+          })
+          .toList(growable: false);
+    }
     if (profileDatabase != null) {
       return ProfileTextIntents(profileDatabase!)
           .pending(space, writer)
@@ -2726,6 +3297,18 @@ class TaskStore {
       event.id,
     ]);
     if (present.isNotEmpty) {
+      _requireConfirmed([receipt]);
+      return event;
+    }
+    if (unified != null) {
+      if (!unified!.pendingRecords.any(
+        (r) => r.effect.task?.canonicalRaw == receipt.raw,
+      )) {
+        throw FormatFailure(
+          'Prepared native text receipt differs from the common app reservation.',
+        );
+      }
+      await unified!.recoverPreparedInProfileQueue();
       _requireConfirmed([receipt]);
       return event;
     }
@@ -3019,6 +3602,13 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
     bool reserveBeforeTextStaging = false,
   }) async {
+    if (unified != null) {
+      return _appendUnifiedCommands(
+        commands,
+        canCommit: canCommit,
+        onPrepared: onPrepared,
+      );
+    }
     if (commands.isEmpty) return [];
     _requireWriterAppendReady();
     final phase = Stopwatch()..start();
@@ -4506,6 +5096,7 @@ class TaskStore {
         if (profileDatabase == null) db.close();
       } finally {
         _recurringTextMemo.clear();
+        unified?.detachProjectionInProfileQueue(this);
         await lock?.close();
         if (_locationKey != null) {
           profileDatabase!.releaseWorkspace(_locationKey);
@@ -4537,4 +5128,56 @@ class _VerifiedWriterRecords {
 
 class _DiscardTextValidation implements Exception {
   const _DiscardTextValidation();
+}
+
+class _SemanticValidationFolder implements LogFolder {
+  @override
+  String get location => 'semantic-preflight';
+  @override
+  Future<List<LogFileInfo>> list() async =>
+      throw StateError('Preflight cannot read transport.');
+  @override
+  Future<Uint8List> read(String name) async =>
+      throw StateError('Preflight cannot read transport.');
+  @override
+  Future<void> append(String name, Uint8List bytes) async =>
+      throw StateError('Preflight cannot write.');
+  @override
+  Future<void> create(String name, Uint8List bytes) async =>
+      throw StateError('Preflight cannot write.');
+}
+
+class _SemanticValidationGuard implements WriterGuard {
+  @override
+  Future<WriterGuardState?> load(String space, String writer) async =>
+      throw StateError('Preflight has no writer.');
+  @override
+  Future<void> prepare(
+    String space,
+    String writer,
+    int sequence,
+    String hash,
+    List<PreparedWriterRecord> records,
+  ) async => throw StateError('Preflight has no writer.');
+  @override
+  Future<void> acknowledge(
+    String space,
+    String writer,
+    int sequence,
+    String hash,
+  ) async => throw StateError('Preflight has no writer.');
+}
+
+class _ConvertedLegacyProofFolder extends _SemanticValidationFolder {
+  _ConvertedLegacyProofFolder(Map<String, Uint8List> sources)
+    : sources = Map.unmodifiable(
+        sources.map(
+          (k, v) => MapEntry(k, Uint8List.fromList(v).asUnmodifiableView()),
+        ),
+      );
+  final Map<String, Uint8List> sources;
+  @override
+  Future<Uint8List> read(String name) async =>
+      sources[name] ??
+      (throw FormatFailure('Converted history omits a trusted legacy source.'));
 }

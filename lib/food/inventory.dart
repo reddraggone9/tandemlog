@@ -156,6 +156,7 @@ class FoodOperation {
     this.contents,
     this.createdAt,
     this.retracts,
+    this.undoOwner,
     List<String> observedDeletes = const [],
     List<String> observedEdits = const [],
     List<String>? fields,
@@ -177,6 +178,7 @@ class FoodOperation {
   final Contents? contents;
   final String? createdAt;
   final String? retracts;
+  final String? undoOwner;
   void validate() {
     _reference(id);
     if (order < 0 ||
@@ -200,11 +202,12 @@ class FoodOperation {
       }
       _reference(retracts!);
       final source = id.split(':'), target = retracts!.split(':');
-      if (source.first != target.first ||
+      if ((source.first != target.first &&
+              (undoOwner != source.first || !isCanonicalId(undoOwner))) ||
           int.parse(target.last) >= int.parse(source.last)) {
         _invalid('Undo reference');
       }
-    } else if (retracts != null) {
+    } else if (retracts != null || undoOwner != null) {
       _invalid('unexpected Undo reference');
     }
     if (fields.toSet().length != fields.length ||
@@ -272,6 +275,7 @@ class FoodOperation {
           'action': action.name,
           'targets': targets,
           'retracts': retracts,
+          if (undoOwner != null) 'owner': undoOwner,
         }
       : {
           'id': id,
@@ -285,9 +289,19 @@ class FoodOperation {
           'observedEdits': observedEdits,
           'fields': fields,
         };
-  factory FoodOperation.fromJson(Map<String, dynamic> j) {
+  factory FoodOperation.fromJson(
+    Map<String, dynamic> j, {
+    bool unified = false,
+  }) {
     if (j['action'] == FoodAction.undo.name) {
-      _keys(j, {'id', 'order', 'action', 'targets', 'retracts'});
+      _keys(j, {
+        'id',
+        'order',
+        'action',
+        'targets',
+        'retracts',
+        if (unified && j.containsKey('owner')) 'owner',
+      });
       try {
         if (j['order'] is! String ||
             !RegExp(r'^(0|[1-9][0-9]{0,18})$').hasMatch(j['order'])) {
@@ -299,6 +313,9 @@ class FoodOperation {
           action: FoodAction.undo,
           targets: _strings(j['targets']),
           retracts: _string(j['retracts']),
+          undoOwner: unified && j.containsKey('owner')
+              ? _string(j['owner'])
+              : null,
         );
         value.validate();
         return value;
@@ -502,10 +519,17 @@ class FoodState {
   }
 }
 
-FoodState projectFood(Iterable<FoodOperation> delivery) {
+FoodState projectFood(
+  Iterable<FoodOperation> delivery, {
+  Map<String, String> legacyOwners = const {},
+}) {
   final indexed = <String, FoodOperation>{};
   for (final op in delivery) {
     op.validate();
+    if (op.undoOwner != null &&
+        legacyOwners[op.retracts!.split(':').first] != op.undoOwner) {
+      _invalid('unproven legacy Undo ownership');
+    }
     final previous = indexed[op.id];
     if (previous != null &&
         canonicalDataJson(previous.toJson()) !=
