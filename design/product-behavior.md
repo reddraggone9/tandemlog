@@ -10,7 +10,8 @@ Original histories stay attributed to their original writers. Names never
 determine identity, deduplication or ownership.
 
 The dialog follows shared Review-errors, IME, stable-action and one-shot route
-rules. Tasks and Food use one shared admitted revision; an unknown required
+rules. After keyboard or viewport changes it reveals the focused input and full
+validation message, including on narrow phones at larger text sizes. Tasks and Food use one shared admitted revision; an unknown required
 record stops both sections and keeps drafts. Pending commands, including a
 device-name change, retain their exact retry across restart. Shared safety Retry
 reads and validates without silently committing pending commands.
