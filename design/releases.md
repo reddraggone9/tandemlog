@@ -243,3 +243,22 @@ Exact LinuxGTK/Android85-to86 native acceptance, preservation/read-only replay,
 visible-input demos and independent final/editorial review preceded fresh-quota
 publication. Existing WindowsGUI-waiver/API30x86_64/manualGTK-versus-hostedFlatpak
 qualifications remain. No stable promotion, production or dependency operation.
+
+## Published experimental2026.10.7-rc.2/build91
+
+[RC.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.2)
+published2026-10-18T14:49:25Z from accepted source
+`7b4ffba164207f4a029e3fda2e37c3559b436d61`, signed candidate39125969801 and
+[promotion39137679534](https://github.com/reddraggone9/tandemlog/actions/runs/39137679534).
+Reviewed docs-only dispatchc5cd0c051231e5fbb21de1fb2034b1f89477ccad supplied notes
+SHA256 `3c37114317dd5a4d2124f0df5f806be79b9da9065221f3a278a53af3e70baf1c`.
+Normal source/signer/version/closed-assets/checksum/installed-lifecycle gates
+reused the three original native-accepted installers without rebuilding.
+[Public receipts](../evidence/prerelease-2026.10.7-rc.2/publication/README.md)
+verify anonymous bytes, official owner APK identity/build91/native payload,
+exact notes/tag/source, prerelease/not-Latest and all34 prior releases/assets/tag
+refs preserved. Stable2026.10.6 remains Latest. The accepted forward-only local
+schema3-to4 upgrade prevents stable/build85 and RC.1/build86 reopening the same
+upgraded profile; existing shared v3 stays v3. Qualified native/UI/media coverage
+remains explicit. Production conversion, writer adoption and stable promotion
+remain held; no dependency adoption accompanied publication.

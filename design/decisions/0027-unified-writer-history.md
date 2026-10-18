@@ -1,6 +1,6 @@
 # ADR 0027: One app-wide writer history and optional installation names
 
-Status: implementation authorized for isolated disposable trials; not released.
+Status: published experimentally as 2026.10.7-rc.2/build91 for isolated disposable trials.
 Adoption/consolidation of abandoned writers is deferred by Lee (2026-10-18).
 
 ## Context and decision
@@ -43,10 +43,9 @@ histories remain under their original writers.
 ## Boundaries
 
 Conversion and activation are restricted to disposable workspaces in this
-milestone. No production migration, deletion or publication is authorized.
-Coordinated participant input/output acknowledgements, durable crash recovery,
-cache reread, application adapters and native workflow acceptance are required
-before this becomes an integrated candidate.
+milestone. Production migration and deletion remain unauthorized. Experimental
+publication followed accepted coordinated participant acknowledgements, durable
+crash recovery, cache reread, application adapters and exact native acceptance.
 
 Adoption, ownership transfer, retirement of old writers, a history browser and
 a large-history performance project are outside this release. Ordinary efficient
@@ -83,5 +82,10 @@ permanent installation membership list.
 The affected aggregate passes 139 tests. Full regression passes 1298 tests with
 clean analysis, and 85 tooling tests pass. Independent source/architecture/privacy
 review clears the isolated draft scope. Private checkpoints retain exact receipts
-and failures. Actual native provider/UI acceptance and candidate/release gates
-remain pending. No production migration, deletion or publication has occurred.
+and failures. Exact owner86-to91 upgrade, v3/v4 recovery, fresh setup, read-only replay and
+media/editorial acceptance subsequently passed independent review.
+[Candidate and publication receipts](../../evidence/prerelease-2026.10.7-rc.2/publication/README.md)
+retain exact artifact binding and platform/UI qualifications. The local schema3-to4
+upgrade is forward-only: stable/build85 and RC.1/build86 cannot reopen that upgraded
+profile; existing v3 shared workspaces remain v3. No production migration or
+deletion occurred; experimental publication is complete.

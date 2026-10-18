@@ -1,3 +1,23 @@
+# Unified writer trials and input refinements - 2026.10.7-rc.2/build91 published experimental
+
+[RC.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.2)
+uses accepted source `7b4ffba164207f4a029e3fda2e37c3559b436d61`.
+[Candidate acceptance](../evidence/prerelease-2026.10.7-rc.2/candidate91/README.md)
+records exact owner86-to91 upgrade, affected v3/v4 and fresh native workflows,
+preservation, read-only replay, demonstrations and independent reviews.
+[Public receipts](../evidence/prerelease-2026.10.7-rc.2/publication/README.md)
+bind signed candidate39125969801 and promotion39137679534 to anonymous original
+installer bytes, owner APK identity/build91/native payload, exact notes/tag/source
+and all34 previous releases/assets/tag refs preserved. Stable2026.10.6/build85
+remains Latest. Production conversion and stable promotion remain held.
+
+The local schema3-to4 upgrade is forward-only: stable/build85 and RC.1/build86
+cannot reopen that upgraded profile. Existing v3 shared workspaces stay v3.
+Unified v4 activation is restricted to disposable trials; writer adoption remains
+deferred. Windows manual-GUI waiver, API30/x86_64, GTK versus hosted Flatpak,
+first-user inline-footer and visible-input media qualifications remain explicit
+in the candidate receipt. Settings restored and temporary native processes stopped.
+
 # Field help and validation - 2026.10.7-rc.1/build86 published experimental
 
 [RC.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.1) is published from exact accepted source `ad79bda0abc9ad5a72ec3dc92da29f1cb8f3c586`.

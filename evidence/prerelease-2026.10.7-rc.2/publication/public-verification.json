@@ -1,0 +1,70 @@
+{
+  "atUtc": "2026-10-18T14:50:44.380766+00:00",
+  "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.2",
+  "releaseId": 416507097,
+  "publishedAt": "2026-10-18T14:49:25Z",
+  "version": "2026.10.7-rc.2+91",
+  "source": "7b4ffba164207f4a029e3fda2e37c3559b436d61",
+  "candidateRun": 39125969801,
+  "promotionRun": 39137679534,
+  "dispatchMain": "c5cd0c051231e5fbb21de1fb2034b1f89477ccad",
+  "allPromotionJobsSucceeded": true,
+  "prerelease": true,
+  "draft": false,
+  "latest": false,
+  "notesSha256": "3c37114317dd5a4d2124f0df5f806be79b9da9065221f3a278a53af3e70baf1c",
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.7-rc.2-android.apk",
+      "assetId": 653716450,
+      "size": 67955869,
+      "sha256": "9805261351553d9b5c463c338f782fc2363a3ab4cd81e963047dc1f68f2ceb81",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.7-rc.2/tandemlog-2026.10.7-rc.2-android.apk",
+      "httpStatus": 200,
+      "anonymousDownload": true,
+      "byteEqualAcceptedOriginal": true
+    },
+    {
+      "name": "tandemlog-2026.10.7-rc.2-linux-x64.flatpak",
+      "assetId": 653716452,
+      "size": 9339368,
+      "sha256": "52299b9c6e1984db40dcf17739ab74cf022cdea34fb66cca67396975b4c17cc7",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.7-rc.2/tandemlog-2026.10.7-rc.2-linux-x64.flatpak",
+      "httpStatus": 200,
+      "anonymousDownload": true,
+      "byteEqualAcceptedOriginal": true
+    },
+    {
+      "name": "tandemlog-2026.10.7-rc.2-windows-x64-setup.exe",
+      "assetId": 653716455,
+      "size": 12481908,
+      "sha256": "be237578a40c5aee4bb8bf0d964758d412b1348a7613c6052aa56684a2f18c51",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.7-rc.2/tandemlog-2026.10.7-rc.2-windows-x64-setup.exe",
+      "httpStatus": 200,
+      "anonymousDownload": true,
+      "byteEqualAcceptedOriginal": true
+    }
+  ],
+  "officialOwnerSignaturePassed": true,
+  "ownerCertificateSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "androidPackageVersionCodeAbiNondebuggablePassed": true,
+  "permissionsEqualAcceptedOriginal": true,
+  "stableLatest": "v2026.10.6",
+  "priorReleaseCount": 34,
+  "priorReleaseFullMetadataNotesAssetsUnchangedExceptDownloadCount": true,
+  "everyPriorTagRefUnchanged": true,
+  "onlyNewTagExactAcceptedSource": true,
+  "noRebuild": true,
+  "productionOperationPerformed": false,
+  "stablePromotionPerformed": false,
+  "nativePayloadAndNoticesEqualAcceptedOriginal": {
+    "atUtc": "2026-10-18T14:52:01.451206+00:00",
+    "everyOriginalTextEngineNativePayloadByteHashMatchesPublicApk": true,
+    "thirdPartyNoticesSha256": "4a869fdca16eb36a8970867f4cde5faa7df7894440c49bc6716ba82adbd13d39",
+    "nativePayloadSha256": {
+      "lib/arm64-v8a/libtandemlog_text.so": "1c3a263665da274226f628857e8da2b555a360df9feca19849b657cc4c4a1319",
+      "lib/armeabi-v7a/libtandemlog_text.so": "f9a2e208b7025e5c61a715591234d9eabf800b28b4f699b17dea7af6b92ac071",
+      "lib/x86_64/libtandemlog_text.so": "f1c05081759942597ad89a79897a03de885ad2a27cc473722aa9509529b5f57a"
+    }
+  }
+}
