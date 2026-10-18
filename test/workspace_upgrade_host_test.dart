@@ -113,9 +113,8 @@ void main() {
     // timeout, not a native performance measurement or a larger UI budget.
     final elapsed = Stopwatch()..start();
     while (!condition() && elapsed.elapsed < const Duration(seconds: 30)) {
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 10)),
-      );
+      // Yield real I/O without injecting a delay at every async completion.
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pump(const Duration(milliseconds: 30));
     }
     if (!condition()) progress(tester, action);

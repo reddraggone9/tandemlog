@@ -346,6 +346,10 @@ void registerTaskEditorErrorKeyboardTests() {
           await tester.pumpAndSettle();
           expect(find.byType(TaskEditor), findsNothing);
           expect(find.text('Unsaved changes'), findsNothing);
+          await captureNativeFixtureUi(
+            tester,
+            'task-editor-$appearance-${withError ? 'picker-error' : 'clean'}-discarded-ime',
+          );
           tester.view.resetViewInsets();
           tester.view.padding = const FakeViewPadding(top: 24, bottom: 24);
           await tester.pumpAndSettle();

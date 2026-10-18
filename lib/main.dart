@@ -5089,9 +5089,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   constraints: sectionContentConstraints,
                   child: Column(
                     children: [
+                      // Keep the optional upgrade notice out of the reduced
+                      // keyboard viewport, including an editor's close frame.
                       if (store != null &&
                           store?.unified == null &&
-                          sharedSafetyError == null)
+                          sharedSafetyError == null &&
+                          MediaQuery.viewInsetsOf(context).bottom == 0)
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Align(

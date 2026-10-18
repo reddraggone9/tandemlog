@@ -13,6 +13,11 @@ confirmation, a confirmed roster of participating installations, and one Join
 confirmation on each peer. The app performs and verifies backup, conversion and
 activation; users do not run an external converter.
 
+Keep the Settings entry available. Hide the optional in-page offer while the
+on-screen keyboard is visible, then restore it when the keyboard closes. This
+leaves room for retained diagnostics during narrow, enlarged-text editor close
+transitions without changing draft guards or upgrade consent.
+
 This supersedes ADR0027's synthetic-only runtime activation boundary. The
 synthetic helper remains restricted to its owned temporary directories.
 Implementation and release acceptance continue to use isolated synthetic data.
