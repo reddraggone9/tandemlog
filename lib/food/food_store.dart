@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
 import '../storage/local_profile_database.dart';
+import '../storage/workspace_upgrade_guard.dart';
 import '../storage/local_settings.dart';
 import '../storage/log_folder.dart';
 import '../storage/profile_food_intents.dart';
@@ -643,6 +644,11 @@ class FoodStore {
     void Function(List<FoodRecord>)? stageImport,
   }) async {
     if (unified != null) return _unifiedCommandLocked(changes, stageImport);
+    await WorkspaceUpgradeGuard.assertWritable(
+      folder: folder,
+      space: space,
+      profile: profile,
+    );
     await _refresh();
     if (hasPreparedAppend || pendingReferences > 0) {
       throw const FormatException(
@@ -655,6 +661,7 @@ class FoodStore {
     final intents = ProfileFoodIntents(profile),
         guard = SqliteWriterGuard(profile);
     profile.transaction(() {
+      WorkspaceUpgradeGuard.assertLocalWritable(profile, space);
       guard.prepareInTransaction(
         space,
         writer,

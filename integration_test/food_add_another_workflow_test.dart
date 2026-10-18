@@ -232,10 +232,8 @@ void registerFoodAddAnotherTests() {
           );
           expect(
             find.descendant(of: action, matching: find.text('Review errors')),
-            findsOneWidget,
+            findsNothing,
           );
-          await pixels.tap(tester, action);
-          await tester.pumpAndSettle();
           expect(
             tester.state<FoodEditorState>(find.byType(FoodEditor)),
             same(editor),
@@ -251,7 +249,7 @@ void registerFoodAddAnotherTests() {
           expect(
             await canonical(),
             before,
-            reason: 'Corrected Review cannot allocate or append an Add',
+            reason: 'Correction itself cannot allocate or append an Add',
           );
           expect(
             find.descendant(of: action, matching: find.text('Add')),

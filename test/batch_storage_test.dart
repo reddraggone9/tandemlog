@@ -31,7 +31,9 @@ void main() {
             final before = store.cacheTransactions;
             await operation();
             expect(folder.appends, 1);
-            expect(folder.lists, 2);
+            // Two ingestion listings plus one fresh shared-upgrade fence,
+            // independent of the number of tasks in the batch.
+            expect(folder.lists, 3);
             expect(folder.reads, 3);
             expect(store.cacheTransactions - before, 1);
           }

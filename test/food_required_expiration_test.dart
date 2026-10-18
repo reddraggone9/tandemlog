@@ -119,14 +119,9 @@ void registerFoodRequiredExpirationTests() {
       );
       expect(
         find.descendant(of: _foodAction, matching: find.text('Review errors')),
-        findsOneWidget,
+        findsNothing,
       );
-      await _tap(tester, _foodAction);
-      expect(
-        additions,
-        isEmpty,
-        reason: 'Review of corrected input cannot Add',
-      );
+      expect(additions, isEmpty, reason: 'Correction itself cannot Add');
       expect(
         find.descendant(of: _foodAction, matching: find.text('Add')),
         findsOneWidget,
@@ -171,10 +166,9 @@ void registerFoodRequiredExpirationTests() {
     );
     expect(
       find.descendant(of: _foodAction, matching: find.text('Review errors')),
-      findsOneWidget,
+      findsNothing,
     );
-    await _tap(tester, _foodAction);
-    expect(writes, 0, reason: 'Review of corrected input cannot Save');
+    expect(writes, 0, reason: 'Correction itself cannot Save');
     expect(
       find.descendant(of: _foodAction, matching: find.text('Save')),
       findsOneWidget,
@@ -218,10 +212,9 @@ void registerFoodRequiredExpirationTests() {
       );
       expect(
         find.descendant(of: _foodAction, matching: find.text('Review errors')),
-        findsOneWidget,
+        findsNothing,
       );
-      await _tap(tester, _foodAction);
-      expect(writes, 0, reason: 'Review of corrected input cannot Save');
+      expect(writes, 0, reason: 'Correction itself cannot Save');
       expect(
         find.descendant(of: _foodAction, matching: find.text('Save')),
         findsOneWidget,

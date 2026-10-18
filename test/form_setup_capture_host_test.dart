@@ -222,12 +222,11 @@ void main() {
       );
       await tester.enterText(name, 'Synthetic person');
       await tester.pump();
-      expect(find.text('Review errors'), findsOneWidget);
-      await tester.tap(find.text('Review errors'));
-      await tester.pumpAndSettle();
+      expect(find.text('Review errors'), findsNothing);
       expect(
         (await tester.runAsync(() => host.canonical(store.folder)))!,
         prefix,
+        reason: 'Committed correction must not write until Continue.',
       );
       await tester.tap(find.text('Continue'));
       await host.ready(
@@ -383,8 +382,7 @@ void main() {
       );
       await tester.enterText(input, 'Synthetic user');
       await tester.pump();
-      await tester.tap(find.text('Review errors'));
-      await tester.pumpAndSettle();
+      expect(find.text('Review errors'), findsNothing);
       expect(result, isNull);
       final submit = tester.widget<TextField>(input).onSubmitted!;
       submit('Synthetic user');

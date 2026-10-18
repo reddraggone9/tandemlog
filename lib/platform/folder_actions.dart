@@ -11,6 +11,13 @@ class FolderActions {
       ? AndroidLogFolder.pick()
       : getDirectoryPath(confirmButtonText: 'Use this folder');
 
+  /// Restore a user-selected grant to the existing workspace. Android checks
+  /// the exact tree before retaining permission; the host checks it again
+  /// before reading any workspace bytes.
+  Future<String?> restoreAccess(String expectedLocation) => requiresPicker
+      ? AndroidLogFolder.restoreAccess(expectedLocation)
+      : pick();
+
   // A SAF tree URI is not a portable filesystem path or generic launch URL.
   Future<bool> canOpen(String location) async =>
       !requiresPicker && await canLaunchUrl(Uri.directory(location));

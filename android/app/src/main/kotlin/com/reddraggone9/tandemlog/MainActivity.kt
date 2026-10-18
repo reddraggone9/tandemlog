@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.database.ContentObserver
 import android.database.Cursor
 import java.util.TimeZone
+import java.util.UUID
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.os.Handler
@@ -34,7 +35,12 @@ class MainActivity : FlutterActivity() {
     private var restoringActivity = false
     override fun onCreate(savedInstanceState: Bundle?) {
         restoringActivity = savedInstanceState != null
+        nextFolderRequestCode = (savedInstanceState?.getInt("tandemlog.folderPicker.nextRequest", 32000) ?: 32000).coerceIn(32000, 65535)
         super.onCreate(savedInstanceState)
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("tandemlog.folderPicker.nextRequest", nextFolderRequestCode)
+        super.onSaveInstanceState(outState)
     }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -77,6 +83,7 @@ class MainActivity : FlutterActivity() {
     }
     override fun cleanUpFlutterEngine(engine: FlutterEngine) {
         sectionShortcuts.close()
+        cancelFolderPicker()
         stopFolderWatch()
         folderEvents?.setMethodCallHandler(null)
         folderEvents = null
@@ -86,6 +93,7 @@ class MainActivity : FlutterActivity() {
     }
     override fun onDestroy() {
         sectionShortcuts.close()
+        cancelFolderPicker()
         stopFolderWatch()
         folderEvents?.setMethodCallHandler(null)
         folderEvents = null
@@ -98,6 +106,18 @@ class MainActivity : FlutterActivity() {
         super.onDestroy()
     }
     private var picker: MethodChannel.Result? = null
+    private var pickerExpectedTree: String? = null
+    // Distinguish late callbacks after engine cleanup/recreation from a newer
+    // picker. Saved Activity state is not profile or workspace authority.
+    private var nextFolderRequestCode = 32000
+    private var pickerRequestCode: Int? = null
+    private fun cancelFolderPicker() {
+        val pending = picker
+        picker = null
+        pickerExpectedTree = null
+        pickerRequestCode = null
+        pending?.success(null)
+    }
     private val io = Executors.newSingleThreadExecutor()
     private val main = Handler(Looper.getMainLooper())
     override fun configureFlutterEngine(engine: FlutterEngine) {
@@ -165,13 +185,33 @@ class MainActivity : FlutterActivity() {
         folderChannel = MethodChannel(engine.dartExecutor.binaryMessenger, "tandemlog/folders").also { channel -> channel.setMethodCallHandler { call, result ->
             if (call.method == "pick") {
                 if (picker != null) { result.error("busy", "Folder picker is already open", null); return@setMethodCallHandler }
+                if (nextFolderRequestCode >= 65535) {
+                    result.error("launch", "Restart the app before choosing a folder again", null)
+                    return@setMethodCallHandler
+                }
+                val expected = call.argument<String>("expectedTree")
+                if (expected != null) {
+                    val uri = Uri.parse(expected)
+                    if (uri.scheme != "content" || uri.authority.isNullOrEmpty() || !DocumentsContract.isTreeUri(uri)) {
+                        result.error("invalid_expected_tree", "Expected workspace folder is invalid", null)
+                        return@setMethodCallHandler
+                    }
+                }
                 picker = result
+                pickerExpectedTree = expected
+                val requestCode = nextFolderRequestCode++
+                pickerRequestCode = requestCode
                 try {
                     startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
-                    }, 42)
+                        if (expected != null && Build.VERSION.SDK_INT >= 26) {
+                            putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.parse(expected))
+                        }
+                    }, requestCode)
                 } catch (_: Exception) {
                     picker = null
+                    pickerExpectedTree = null
+                    pickerRequestCode = null
                     result.error("launch", "Could not open the folder picker. Try again.", null)
                 }
                 return@setMethodCallHandler
@@ -197,6 +237,27 @@ class MainActivity : FlutterActivity() {
                                 }
                                 output.toByteArray()
                             }
+                        }
+                        "checkReplacementSupport" -> {
+                            val maximum = (call.argument<Number>("maximumBytes") ?: error("Missing bound")).toInt()
+                            require(maximum in 0..CheckedReplacement.MAXIMUM_BYTES)
+                            checkReplacementSupport(tree, name!!, maximum)
+                            null
+                        }
+                        "replaceOwned" -> {
+                            val expected = call.argument<ByteArray>("expected") ?: error("Missing expected bytes")
+                            val replacement = call.argument<ByteArray>("bytes") ?: error("Missing replacement bytes")
+                            CheckedReplacement.replace(expected, replacement,
+                                read = { readReplacementTarget(tree, name!!, CheckedReplacement.MAXIMUM_BYTES) },
+                                prepare = {
+                                    checkReplacementSupport(tree, name!!, CheckedReplacement.MAXIMUM_BYTES)
+                                    probeReplacement(tree)
+                                },
+                                write = { bytes ->
+                                    val uri = child(tree, name!!) ?: throw MissingFolderFile(name)
+                                    writeReplacement(uri, bytes)
+                                })
+                            null
                         }
                         "readFrom" -> {
                             val offset = (call.argument<Number>("offset") ?: error("Missing offset")).toLong()
@@ -244,12 +305,15 @@ class MainActivity : FlutterActivity() {
                     main.post { result.success(value) }
                 } catch (e: Exception) {
                     val code = when (e) {
+                        is ReplacementFailure -> "replacement_failed"
                         is MissingFolderFile -> "missing_file"
                         is DuplicateCanonicalFile -> "duplicate_file"
                         is SecurityException -> "permission"
                         else -> "folder"
                     }
                     val details = when (e) {
+                        is ReplacementFailure -> mapOf("phase" to e.phase, "mayHaveChanged" to e.mayHaveChanged,
+                            "permissionDenied" to (e.cause is SecurityException))
                         is MissingFolderFile -> mapOf("name" to e.fileName)
                         is DuplicateCanonicalFile -> mapOf("name" to e.fileName)
                         else -> null
@@ -259,6 +323,91 @@ class MainActivity : FlutterActivity() {
             }
         } }
     }
+    private fun documentFlags(uri: Uri): Long {
+        return contentResolver.query(uri, arrayOf(DocumentsContract.Document.COLUMN_FLAGS), null, null, null)?.use { cursor ->
+            if (!cursor.moveToFirst()) throw IOException("Document unavailable")
+            val index = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_FLAGS)
+            if (index < 0 || cursor.isNull(index)) throw ReplacementFailure("unsupported", false)
+            cursor.getLong(index)
+        } ?: throw ReplacementFailure("unsupported", false)
+    }
+
+    /** Advisory only: no write descriptor or temporary file before consent. */
+    private fun checkReplacementSupport(tree: Uri, name: String, maximum: Int) {
+        val target = child(tree, name) ?: throw MissingFolderFile(name)
+        val parent = DocumentsContract.buildDocumentUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+        if ((documentFlags(target) and DocumentsContract.Document.FLAG_SUPPORTS_WRITE.toLong()) == 0L ||
+            (documentFlags(parent) and DocumentsContract.Document.FLAG_DIR_SUPPORTS_CREATE.toLong()) == 0L) {
+            throw ReplacementFailure("unsupported", false)
+        }
+        readReplacementTarget(tree, name, maximum)
+    }
+
+    private fun readReplacementTarget(tree: Uri, name: String, maximum: Int): ByteArray {
+        val uri = child(tree, name) ?: throw MissingFolderFile(name)
+        return contentResolver.openInputStream(uri)?.use { stream ->
+            val result = ByteArrayOutputStream()
+            val chunk = ByteArray(64 * 1024)
+            while (true) {
+                val count = stream.read(chunk)
+                if (count < 0) break
+                if (count == 0) throw IOException("Provider read made no progress")
+                if (result.size().toLong() + count > maximum) throw IOException("Input exceeds safe read limits")
+                result.write(chunk, 0, count)
+            }
+            result.toByteArray()
+        } ?: throw IOException("Provider returned no read stream")
+    }
+
+    /**
+     * Explicit truncation on a read/write descriptor avoids relying on provider
+     * interpretation of "w". Never turn a content URI into a filesystem path.
+     * Errors after opening are uncertain writes, including sync/close failure.
+     */
+    private fun writeReplacement(uri: Uri, bytes: ByteArray) {
+        val descriptor = contentResolver.openFileDescriptor(uri, "rw")
+            ?: throw IOException("Provider returned no replacement descriptor")
+        ParcelFileDescriptor.AutoCloseOutputStream(descriptor).use { output ->
+            val channel = output.channel
+            channel.position(0)
+            channel.truncate(0)
+            output.write(bytes)
+            output.flush()
+            if (channel.size() != bytes.size.toLong()) throw IOException("Provider did not truncate replacement")
+            output.fd.sync()
+        }
+    }
+
+    /**
+     * Only called by explicitly started, durably journalled replacement.
+     * Verify create/seek/truncate/sync/readback/delete before touching manifest.
+     * Failed probes remain as evidence; no cleanup hides a provider failure.
+     */
+    private fun probeReplacement(tree: Uri) {
+        val name = "tandemlog-upgrade-probe-" + UUID.randomUUID().toString() + ".tmp"
+        if (child(tree, name) != null) throw IOException("Probe name already exists")
+        val parent = DocumentsContract.buildDocumentUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+        val uri = DocumentsContract.createDocument(contentResolver, parent, "application/octet-stream", name)
+            ?: throw ReplacementFailure("unsupported", false)
+        if (child(tree, name) != uri) throw IOException("Provider did not preserve probe name")
+        if ((documentFlags(uri) and DocumentsContract.Document.FLAG_SUPPORTS_DELETE.toLong()) == 0L) {
+            throw ReplacementFailure("unsupported", false)
+        }
+        val longBytes = byteArrayOf(91, 17, 5, 88, 20, 31, 7, 40)
+        val shortBytes = byteArrayOf(1, 2, 3)
+        writeReplacement(uri, longBytes)
+        if (!readReplacementTarget(tree, name, longBytes.size).contentEquals(longBytes)) {
+            throw IOException("Probe write readback differs")
+        }
+        writeReplacement(uri, shortBytes)
+        if (!readReplacementTarget(tree, name, longBytes.size).contentEquals(shortBytes)) {
+            throw IOException("Probe truncation readback differs")
+        }
+        if (!DocumentsContract.deleteDocument(contentResolver, uri) || child(tree, name) != null) {
+            throw IOException("Probe cleanup was not confirmed")
+        }
+    }
+
     private fun queryChildren(tree: Uri): Cursor {
         val uri = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
         val identity = arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME)
@@ -289,7 +438,7 @@ class MainActivity : FlutterActivity() {
             // A provider can expose multiple documents with the same display
             // name. Validate the whole query before child() chooses a URI or
             // any caller opens a read/write descriptor for canonical data.
-            if ((name == "tandemlog-space.json" || name.endsWith(".jsonl")) && !canonicalNames.add(name)) {
+            if ((name == "tandemlog-space.json" || name.endsWith(".jsonl") || name.endsWith(".applog")) && !canonicalNames.add(name)) {
                 throw DuplicateCanonicalFile(name)
             }
             result.add(FolderChild(name, id, DocumentsContract.buildDocumentUriUsingTree(tree, id),
@@ -362,14 +511,29 @@ class MainActivity : FlutterActivity() {
     @Deprecated("Legacy activity result bridge")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode != 42) return
+        if (requestCode != pickerRequestCode) return
         val result = picker ?: return
+        val expected = pickerExpectedTree
         picker = null
+        pickerExpectedTree = null
+        pickerRequestCode = null
         if (resultCode != Activity.RESULT_OK || data?.data == null) { result.success(null); return }
         try {
             val uri = data.data!!
-            val flags = data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            contentResolver.takePersistableUriPermission(uri, flags)
+            // No child lookup, content read or persistent grant for a different
+            // selection. Compare the exact opaque SAF URI, never a guessed path.
+            val kept = ExpectedFolderGrant.retain(expected, uri.toString()) {
+                val accessFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                val flags = data.flags and accessFlags
+                if (expected != null && flags != accessFlags) {
+                    throw SecurityException("Read and write folder access is required")
+                }
+                contentResolver.takePersistableUriPermission(uri, flags)
+            }
+            if (!kept) {
+                result.error("folder_mismatch", "Choose the same workspace folder", null)
+                return
+            }
             result.success(uri.toString())
         } catch (e: Exception) { result.error("permission", "Cannot retain folder access: ${e.message}", null) }
     }

@@ -15,7 +15,12 @@ class AndroidLogFileInfo extends LogFileInfo {
   final int? modifiedMillis;
 }
 
-class AndroidLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
+class AndroidLogFolder
+    implements
+        LogFolder,
+        RangeLogFolder,
+        BoundedLogFolder,
+        CheckedReplaceLogFolder {
   static const channel = MethodChannel('tandemlog/folders');
   static const eventsChannel = EventChannel('tandemlog/folder-events');
   static const _watchMethods = MethodChannel('tandemlog/folder-events');
@@ -35,6 +40,32 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
     try {
       return await channel.invokeMethod<T>(method, args);
     } on PlatformException catch (failure, stack) {
+      if (failure.code == 'replacement_failed') {
+        final details = failure.details;
+        final phase = details is Map ? details['phase'] : null;
+        final mayHaveChanged =
+            details is! Map || details['mayHaveChanged'] != false;
+        final permissionDenied =
+            details is Map && details['permissionDenied'] == true;
+        final message = permissionDenied
+            ? 'Access to the data folder was denied. Choose the same folder again in Settings, then resume upgrade recovery; saved recovery bytes were preserved.'
+            : phase == 'source_changed'
+            ? 'The upgrade source changed. Saved recovery bytes were preserved.'
+            : phase == 'unsupported'
+            ? 'This folder provider cannot safely replace the workspace manifest. Choose a supported folder before upgrading.'
+            : mayHaveChanged
+            ? 'The upgrade write was not confirmed. Resume upgrade recovery; saved recovery bytes were preserved.'
+            : 'The folder could not prepare the upgrade. Check folder access, then resume; saved recovery bytes were preserved.';
+        Error.throwWithStackTrace(
+          OwnedReplacementFailure(
+            message,
+            phase: phase is String ? phase : 'unknown',
+            mayHaveChanged: mayHaveChanged,
+            cause: failure,
+          ),
+          stack,
+        );
+      }
       final String message;
       if (failure.code == 'duplicate_file') {
         final details = failure.details;
@@ -52,6 +83,8 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
       } else if (method == 'pick') {
         message = failure.code == 'busy'
             ? 'The folder picker is already open.'
+            : failure.code == 'folder_mismatch'
+            ? 'Choose the same workspace folder to restore access. Access to a different folder was not kept.'
             : failure.code == 'permission'
             ? 'Folder access could not be kept. Choose the folder again.'
             : 'Could not open the folder picker. Try again.';
@@ -71,6 +104,19 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   }
 
   static Future<String?> pick() => _invoke<String>('pick');
+
+  /// Native compares before retaining the chosen grant. The host must still
+  /// compare the returned location before reading any workspace bytes.
+  static Future<String?> restoreAccess(String expectedLocation) {
+    final uri = Uri.tryParse(expectedLocation);
+    if (uri == null || uri.scheme != 'content' || uri.authority.isEmpty) {
+      return Future.error(
+        ArgumentError.value(expectedLocation, 'expectedLocation'),
+      );
+    }
+    return _invoke<String>('pick', {'expectedTree': expectedLocation});
+  }
+
   @override
   Future<List<LogFileInfo>> list() async {
     final entries = await _invoke<List<dynamic>>('list', {'tree': location});
@@ -80,7 +126,9 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
     final canonicalNames = <String>{};
     for (final entry in entries!) {
       final name = entry['name'] as String;
-      if ((name == 'tandemlog-space.json' || name.endsWith('.jsonl')) &&
+      if ((name == 'tandemlog-space.json' ||
+              name.endsWith('.jsonl') ||
+              name.endsWith('.applog')) &&
           !canonicalNames.add(name)) {
         throw FolderAccessFailure(_duplicateFileMessage(name));
       }
@@ -185,6 +233,36 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
       'tree': location,
       'name': name,
       'offset': offset,
+    });
+  }
+
+  @override
+  Future<void> checkReplacementSupport(String name, int maximumBytes) async {
+    if (maximumBytes < 0 || maximumBytes > maximumOwnedReplacementBytes) {
+      throw ArgumentError.value(maximumBytes, 'maximumBytes');
+    }
+    await _invoke<void>('checkReplacementSupport', {
+      'tree': location,
+      'name': name,
+      'maximumBytes': maximumBytes,
+    });
+  }
+
+  @override
+  Future<void> replaceOwned(
+    String name,
+    Uint8List expected,
+    Uint8List bytes,
+  ) async {
+    if (expected.length > maximumOwnedReplacementBytes ||
+        bytes.length > maximumOwnedReplacementBytes) {
+      throw ArgumentError('Owned replacement exceeds safe byte limits.');
+    }
+    await _invoke<void>('replaceOwned', {
+      'tree': location,
+      'name': name,
+      'expected': expected,
+      'bytes': bytes,
     });
   }
 

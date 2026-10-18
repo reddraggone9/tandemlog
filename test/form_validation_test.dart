@@ -5,120 +5,115 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/form_validation.dart';
 
 void main() {
-  testWidgets(
-    'neutral, blur-local errors, stable typing intent, deliberate review',
-    (tester) async {
-      final input = TextEditingController();
-      final focus = FocusNode();
-      var saves = 0;
-      final validation = FormValidation(
-        validate: () => input.text == 'good'
-            ? []
-            : [const FieldIssue('name', 'Enter a valid name.')],
-      );
-      input.addListener(() => validation.changed('name'));
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: ListenableBuilder(
-              listenable: validation,
-              builder: (context, _) => Column(
-                children: [
-                  validation.field(
-                    'name',
-                    TextField(
-                      controller: input,
-                      focusNode: focus,
-                      decoration: InputDecoration(
-                        errorText: validation.errorFor('name'),
-                      ),
-                    ),
-                  ),
-                  ValidationActionButton(
-                    validation: validation,
-                    label: 'Save',
-                    onSubmit: () {
-                      saves++;
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-      expect(find.text('Enter a valid name.'), findsNothing);
-      expect(find.text('Save'), findsOneWidget);
-      final bounds = tester.getRect(find.byType(FilledButton));
-      await tester.tap(find.byType(TextField));
-      await tester.enterText(find.byType(TextField), 'bad');
-      await tester.pump();
-      expect(find.text('Save'), findsOneWidget);
-      focus.unfocus();
-      await tester.pumpAndSettle();
-      expect(find.text('Enter a valid name.'), findsOneWidget);
-      expect(find.text('Review errors'), findsOneWidget);
-      expect(tester.getSize(find.byType(FilledButton)), bounds.size);
-      await tester.tap(find.text('Review errors'));
-      await tester.pumpAndSettle();
-      expect(focus.hasFocus, isTrue);
-      expect(saves, 0);
-      await tester.enterText(find.byType(TextField), 'good');
-      await tester.pump();
-      expect(find.text('Enter a valid name.'), findsNothing);
-      expect(find.text('Review errors'), findsOneWidget);
-      await tester.tap(find.text('Review errors'));
-      await tester.pumpAndSettle();
-      expect(
-        saves,
-        0,
-        reason: 'Review remains review even after input becomes valid',
-      );
-      expect(find.text('Save'), findsOneWidget);
-      await tester.tap(find.text('Save'));
-      await tester.pumpAndSettle();
-      expect(saves, 1);
-      await tester.pumpWidget(const SizedBox());
-      validation.dispose();
-      input.dispose();
-      focus.dispose();
-    },
-  );
-
-  testWidgets('pointer-down review cannot save after blur restores validity', (
+  testWidgets('neutral, blur-local errors and synchronized corrected action', (
     tester,
   ) async {
-    var invalid = true, saves = 0;
+    final input = TextEditingController();
+    final focus = FocusNode();
+    var saves = 0;
     final validation = FormValidation(
-      validate: () => invalid ? [const FieldIssue('name', 'Invalid')] : [],
+      validate: () => input.text == 'good'
+          ? []
+          : [const FieldIssue('name', 'Enter a valid name.')],
     );
-    validation.blur('name');
+    input.addListener(() => validation.changed('name'));
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: ValidationActionButton(
-            validation: validation,
-            label: 'Save',
-            onSubmit: () {
-              saves++;
-            },
+          body: ListenableBuilder(
+            listenable: validation,
+            builder: (context, _) => Column(
+              children: [
+                validation.field(
+                  'name',
+                  TextField(
+                    controller: input,
+                    focusNode: focus,
+                    decoration: InputDecoration(
+                      errorText: validation.errorFor('name'),
+                    ),
+                  ),
+                ),
+                ValidationActionButton(
+                  validation: validation,
+                  label: 'Save',
+                  onSubmit: () {
+                    saves++;
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
-    final gesture = await tester.startGesture(
-      tester.getCenter(find.byType(FilledButton)),
-    );
-    invalid = false;
-    validation.blur('name');
+    expect(find.text('Enter a valid name.'), findsNothing);
+    expect(find.text('Save'), findsOneWidget);
+    final bounds = tester.getRect(find.byType(FilledButton));
+    await tester.tap(find.byType(TextField));
+    await tester.enterText(find.byType(TextField), 'bad');
     await tester.pump();
     expect(find.text('Save'), findsOneWidget);
-    await gesture.up();
+    focus.unfocus();
     await tester.pumpAndSettle();
+    expect(find.text('Enter a valid name.'), findsOneWidget);
+    expect(find.text('Review errors'), findsOneWidget);
+    expect(tester.getSize(find.byType(FilledButton)), bounds.size);
+    await tester.tap(find.text('Review errors'));
+    await tester.pumpAndSettle();
+    expect(focus.hasFocus, isTrue);
     expect(saves, 0);
+    await tester.enterText(find.byType(TextField), 'good');
+    await tester.pump();
+    expect(find.text('Enter a valid name.'), findsNothing);
+    expect(find.text('Review errors'), findsNothing);
+    expect(focus.hasFocus, isTrue);
+    expect(saves, 0, reason: 'Correction itself never submits.');
+    expect(find.text('Save'), findsOneWidget);
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(saves, 1);
     await tester.pumpWidget(const SizedBox());
     validation.dispose();
+    input.dispose();
+    focus.dispose();
   });
+
+  testWidgets(
+    'pointer-down review cannot save after change restores validity',
+    (tester) async {
+      var invalid = true, saves = 0;
+      final validation = FormValidation(
+        validate: () => invalid ? [const FieldIssue('name', 'Invalid')] : [],
+      );
+      validation.blur('name');
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ValidationActionButton(
+              validation: validation,
+              label: 'Save',
+              onSubmit: () {
+                saves++;
+              },
+            ),
+          ),
+        ),
+      );
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(FilledButton)),
+      );
+      invalid = false;
+      validation.changed('name');
+      await tester.pump();
+      expect(find.text('Save'), findsOneWidget);
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(saves, 0);
+      await tester.pumpWidget(const SizedBox());
+      validation.dispose();
+    },
+  );
 
   testWidgets('composition does not change settled action or local error', (
     tester,
@@ -139,7 +134,7 @@ void main() {
     composing = false;
     validation.changed('name');
     expect(validation.errorFor('name'), isNull);
-    expect(validation.reviewRequired, isTrue);
+    expect(validation.reviewRequired, isFalse);
     validation.blur('name');
     expect(validation.reviewRequired, isFalse);
     validation.dispose();

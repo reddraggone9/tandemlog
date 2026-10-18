@@ -104,8 +104,9 @@ class FormValidation extends ChangeNotifier {
     return null;
   }
 
-  /// Once shown, an error can clear as it is corrected. The action's intent
-  /// settles on blur/review, rather than flickering during partial input/IME.
+  /// Once shown, errors and the action reflect the same current validity.
+  /// Pristine partial input stays quiet; composition keeps its settled state.
+  /// A held primary gesture retains its captured intent in the action button.
   void changed(String field) {
     if ((!_revealed.contains(field) &&
             !_issues.any(
@@ -121,6 +122,7 @@ class FormValidation extends ChangeNotifier {
         _revealed.addAll([issue.field, ...issue.relatedFields]);
       }
     }
+    _reviewRequired = _issues.any((issue) => _revealed.any(issue.concerns));
     notifyListeners();
   }
 

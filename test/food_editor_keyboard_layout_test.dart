@@ -282,24 +282,18 @@ Future<void> verifyFoodEditorKeyboardLayout(
   await focus('Expiration');
   await tester.enterText(field('Expiration'), '2027-07-09');
   await tester.pumpAndSettle();
-  if (find
-      .descendant(of: action, matching: find.text('Review errors'))
-      .evaluate()
-      .isNotEmpty) {
-    await tap(action, reveal: false);
-    expect(
-      state(),
-      before,
-      reason: 'A deliberate Review gesture cannot become Save after correction',
-    );
-    expect(
-      find.descendant(
-        of: action,
-        matching: find.text(editingCount == 0 ? 'Add' : 'Save'),
-      ),
-      findsOneWidget,
-    );
-  }
+  expect(
+    find.descendant(of: action, matching: find.text('Review errors')),
+    findsNothing,
+  );
+  expect(state(), before, reason: 'Correction itself cannot Save.');
+  expect(
+    find.descendant(
+      of: action,
+      matching: find.text(editingCount == 0 ? 'Add' : 'Save'),
+    ),
+    findsOneWidget,
+  );
   await tap(action, reveal: false);
   expect(find.byType(AlertDialog), findsNothing);
   expect(page().state.active, hasLength(editingCount == 0 ? 1 : editingCount));

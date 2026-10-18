@@ -1,0 +1,107 @@
+name: Build separate workspace upgrade QA
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: workspace-upgrade-qa
+  cancel-in-progress: false
+jobs:
+  android-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Require reviewed main source
+        shell: bash
+        run: test "$GITHUB_REF" = refs/heads/main
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: android
+      - name: Install reviewed repository policy before resolution
+        shell: bash
+        run: |
+          echo "GRADLE_USER_HOME=$RUNNER_TEMP/tandemlog-workspace-upgrade-qa-gradle" >> "$GITHUB_ENV"
+          GRADLE_USER_HOME="$RUNNER_TEMP/tandemlog-workspace-upgrade-qa-gradle" python3 tool/gradle_repository_policy.py install
+      - run: flutter pub get --enforce-lockfile
+      - name: Prepare separate debug QA application identity in disposable checkout
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          target = 'tool/android_workspace_upgrade/main.dart'
+          package = 'com.reddraggone9.tandemlog.upgradeqa'
+          gradle = Path('android/app/build.gradle.kts')
+          original = gradle.read_text()
+          needle = 'applicationId = "com.reddraggone9.tandemlog"'
+          if original.count(needle) != 1:
+              raise SystemExit('Unexpected application identity; no build performed')
+          gradle.write_text(original.replace(needle, 'applicationId = "' + package + '"'))
+          manifest = Path('android/app/src/main/AndroidManifest.xml')
+          original_manifest = manifest.read_text()
+          label = 'android:label="Tandemlog"'
+          activity = 'android:name=".MainActivity"'
+          if original_manifest.count(label) != 1 or original_manifest.count(activity) != 1:
+              raise SystemExit('Unexpected manifest identity; no build performed')
+          manifest.write_text(original_manifest.replace(label, 'android:label="TEST ONLY Workspace Upgrade QA"')
+              .replace(activity, 'android:name="com.reddraggone9.tandemlog.MainActivity"'))
+          evidence = {
+              'sourceRevision': os.environ['GITHUB_SHA'],
+              'runId': os.environ['GITHUB_RUN_ID'],
+              'target': target,
+              'package': package,
+              'testOnly': True,
+              'debugSignedNotOwnerSigned': True,
+              'noProductionEntrypoint': True,
+              'disposableCheckoutOnlyChanges': ['applicationId', 'application label', 'fully qualified existing MainActivity'],
+              'newPermissionsOrDependencies': False,
+              'harnessSourceSha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+                  for p in sorted(Path('tool/android_workspace_upgrade').glob('*.dart'))},
+              'compiledProductionAdapterSha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+                  for p in [
+                      Path('android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt'),
+                      Path('android/app/src/main/kotlin/com/reddraggone9/tandemlog/CheckedReplacement.kt'),
+                      Path('lib/platform/log_folder.dart'),
+                      Path('lib/storage/workspace_upgrade.dart'),
+                  ]},
+              'coverageLimit': 'Build only. Native execution reports controlled interruption after real provider prefix writes; not provider-origin failure, universal SAF compatibility, power loss or process-kill acceptance.',
+          }
+          Path('qa-dist').mkdir()
+          Path('qa-dist/source-and-target.json').write_text(json.dumps(evidence, indent=2) + '\n')
+          PY
+      - name: Analyze dedicated QA target
+        run: flutter analyze tool/android_workspace_upgrade
+      - name: Build actual MainActivity and separate debug QA target
+        shell: bash
+        run: |
+          flutter build apk --debug --target tool/android_workspace_upgrade/main.dart \
+            --dart-define="WORKSPACE_UPGRADE_QA_SOURCE=$GITHUB_SHA"
+          python3 tool/gradle_repository_policy.py verify
+          python3 tool/native_build_gates.py verify_payload \
+            --platform android --payload build/app/outputs/flutter-apk/app-debug.apk
+          cp build/app/outputs/flutter-apk/app-debug.apk qa-dist/tandemlog-TEST-ONLY-workspace-upgrade-qa.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs \
+            qa-dist/tandemlog-TEST-ONLY-workspace-upgrade-qa.apk > qa-dist/debug-signature.txt
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          apk = Path('qa-dist/tandemlog-TEST-ONLY-workspace-upgrade-qa.apk')
+          evidence = Path('qa-dist/source-and-target.json')
+          record = json.loads(evidence.read_text())
+          record.update(apk=apk.name, apkBytes=apk.stat().st_size,
+                        apkSha256=hashlib.sha256(apk.read_bytes()).hexdigest())
+          evidence.write_text(json.dumps(record, indent=2) + '\n')
+          Path('qa-dist/SHA256SUMS.txt').write_text(record['apkSha256'] + '  ' + apk.name + '\n')
+          PY
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: workspace-upgrade-android-qa-only
+          path: qa-dist/*
+          retention-days: 5
+          if-no-files-found: error

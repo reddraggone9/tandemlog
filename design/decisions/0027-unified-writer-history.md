@@ -42,6 +42,8 @@ histories remain under their original writers.
 
 ## Boundaries
 
+[ADR0028](0028-app-owned-workspace-upgrade.md) subsequently authorizes an in-app upgrade flow for existing v3 folders and supersedes the synthetic-only runtime activation boundary below. Its engineering acceptance remains synthetic; production conversion, writer adoption and consolidation stay separate.
+
 Conversion and activation are restricted to disposable workspaces in this
 milestone. Production migration and deletion remain unauthorized. Experimental
 publication followed accepted coordinated participant acknowledgements, durable

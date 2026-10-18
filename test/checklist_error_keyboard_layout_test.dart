@@ -123,16 +123,34 @@ void main() {
             lessThanOrEqualTo(640 - keyboard),
           );
           expect(saved, isEmpty);
+          // Repeated invalid Review remains read-only and keeps this route.
+          await tester.tap(action);
+          await tester.pumpAndSettle();
+          expect(saved, isEmpty);
+          expect(find.byType(ChecklistItemEditor), findsOneWidget);
+          expect(error, findsOneWidget);
+          expect(editable.focusNode.hasFocus, isTrue);
+          expect(tester.getRect(action), before);
+          expect(tester.view.viewInsets.bottom, keyboard);
           await tester.enterText(title, 'Synthetic item');
           await tester.pumpAndSettle();
           expect(tester.getRect(action), before);
-          await tester.tap(action);
-          await tester.pumpAndSettle();
-          expect(saved, isEmpty, reason: 'Corrected Review cannot become Save');
+          expect(
+            saved,
+            isEmpty,
+            reason: 'Correcting a field cannot save before a fresh gesture',
+          );
+          expect(tester.widget<TextField>(title).decoration!.errorText, isNull);
           expect(
             find.descendant(of: action, matching: find.text('Save item')),
             findsOneWidget,
           );
+          expect(
+            find.descendant(of: action, matching: find.text('Review errors')),
+            findsNothing,
+          );
+          expect(find.byType(ChecklistItemEditor), findsOneWidget);
+          expect(editable.focusNode.hasFocus, isTrue);
           expect(tester.getRect(action), before);
           expect(tester.view.viewInsets.bottom, keyboard);
           expect(
@@ -142,6 +160,7 @@ void main() {
           await tester.tap(action);
           await tester.pumpAndSettle();
           expect(saved, [('Synthetic item', '')]);
+          expect(find.byType(ChecklistItemEditor), findsNothing);
           expect(tester.takeException(), isNull);
         },
       );

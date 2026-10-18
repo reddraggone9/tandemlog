@@ -1,10 +1,9 @@
 # Storage and sync contract
 
-## Isolated v4 app-wide history trial
+## V4 history and app-owned workspace upgrade
 
-Implementation is authorized for disposable synthetic workspaces; it is not a
-production conversion or released format. [ADR 0027](decisions/0027-unified-writer-history.md)
-owns this boundary. Released v3 bytes and semantics remain readable.
+RC.2 published the isolated v4 runtime. [ADR0028](decisions/0028-app-owned-workspace-upgrade.md) now authorizes the app-owned upgrade flow for existing v3 folders; implementation and synthetic native acceptance are in progress. No production conversion has occurred. [ADR 0027](decisions/0027-unified-writer-history.md)
+owns the format and installation identity; ADR0028 owns app-controlled upgrade. Released v3 bytes and semantics remain readable.
 
 The v4 manifest seals every original Task/Food source and a deterministic
 conversion epoch. Each installation has one complete .applog: exact historical
@@ -35,7 +34,7 @@ in its protected journal, and keeps ready=false until every participant has
 validated the exact output against retained local authority. Late legacy writes
 block activation and cleanup. Crash recovery resumes exact prefixes and phase
 intents. Only this synthetic capability may retire its own copied old source
-files. The host has no production migration or cleanup action.
+files. The original helper has no production cleanup action; ADR0028 adds a distinct app-owned coordinator with real-profile consent and retained source snapshots.
 
 
 Approved foundation: canonical per-device JSON logs and one SQLite cache. [Protocol v3](schema.md) describes the implemented subset and [recovery](recovery.md) its limits. This document explains the larger contract.

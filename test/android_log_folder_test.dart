@@ -37,6 +37,208 @@ void main() {
   }
 
   test(
+    'checked replacement preflight is read-only and preserves byte inputs',
+    () async {
+      final calls = <MethodCall>[];
+      messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (
+        call,
+      ) async {
+        calls.add(call);
+        return null;
+      });
+      await folder.checkReplacementSupport('tandemlog-space.json', 4096);
+      expect(calls.single.method, 'checkReplacementSupport');
+      expect(calls.single.arguments, {
+        'tree': folder.location,
+        'name': 'tandemlog-space.json',
+        'maximumBytes': 4096,
+      });
+      await folder.replaceOwned(
+        'tandemlog-space.json',
+        Uint8List.fromList([1, 2]),
+        Uint8List.fromList([3]),
+      );
+      expect(calls.last.method, 'replaceOwned');
+      expect(calls.last.arguments['expected'], [1, 2]);
+      expect(calls.last.arguments['bytes'], [3]);
+      await expectLater(
+        folder.checkReplacementSupport('tandemlog-space.json', -1),
+        throwsArgumentError,
+      );
+      await expectLater(
+        folder.checkReplacementSupport(
+          'tandemlog-space.json',
+          maximumOwnedReplacementBytes + 1,
+        ),
+        throwsArgumentError,
+      );
+      expect(calls, hasLength(2));
+    },
+  );
+
+  for (final phase in [
+    'source_changed',
+    'unsupported',
+    'prepare',
+    'write',
+    'verify',
+  ]) {
+    test('replacement $phase retains uncertainty and native cause', () async {
+      final uncertain = phase == 'write' || phase == 'verify';
+      messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (_) async {
+        throw PlatformException(
+          code: 'replacement_failed',
+          message: 'synthetic private provider detail',
+          details: {'phase': phase, 'mayHaveChanged': uncertain},
+        );
+      });
+      await expectLater(
+        folder.replaceOwned(
+          'tandemlog-space.json',
+          Uint8List.fromList([1]),
+          Uint8List.fromList([2]),
+        ),
+        throwsA(
+          isA<OwnedReplacementFailure>()
+              .having((e) => e.phase, 'phase', phase)
+              .having((e) => e.mayHaveChanged, 'uncertainty', uncertain)
+              .having((e) => e.cause, 'diagnostic', isA<PlatformException>())
+              .having(
+                (e) => e.message,
+                'provider detail',
+                isNot(contains('synthetic private')),
+              ),
+        ),
+      );
+    });
+  }
+
+  test(
+    'permission loss during replacement keeps uncertain recovery state',
+    () async {
+      messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (_) async {
+        throw PlatformException(
+          code: 'replacement_failed',
+          details: {
+            'phase': 'verify',
+            'mayHaveChanged': true,
+            'permissionDenied': true,
+          },
+        );
+      });
+      await expectLater(
+        folder.replaceOwned(
+          'tandemlog-space.json',
+          Uint8List.fromList([1]),
+          Uint8List.fromList([2]),
+        ),
+        throwsA(
+          isA<OwnedReplacementFailure>()
+              .having((e) => e.mayHaveChanged, 'uncertainty', true)
+              .having(
+                (e) => e.message,
+                'grant recovery',
+                contains('same folder'),
+              )
+              .having((e) => e.message, 'recovery', contains('resume')),
+        ),
+      );
+    },
+  );
+
+  test(
+    'unknown replacement failure conservatively retains uncertainty',
+    () async {
+      messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (_) async {
+        throw PlatformException(code: 'replacement_failed');
+      });
+      await expectLater(
+        folder.replaceOwned(
+          'tandemlog-space.json',
+          Uint8List(0),
+          Uint8List.fromList([2]),
+        ),
+        throwsA(
+          isA<OwnedReplacementFailure>().having(
+            (e) => e.mayHaveChanged,
+            'uncertainty',
+            true,
+          ),
+        ),
+      );
+    },
+  );
+
+  test('restore access preserves expected tree and cancellation', () async {
+    final calls = <MethodCall>[];
+    var selected = true;
+    messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (call) async {
+      calls.add(call);
+      return selected ? folder.location : null;
+    });
+    expect(
+      await AndroidLogFolder.restoreAccess(folder.location),
+      folder.location,
+    );
+    expect(calls.single.method, 'pick');
+    expect(calls.single.arguments, {'expectedTree': folder.location});
+    selected = false;
+    expect(await AndroidLogFolder.restoreAccess(folder.location), isNull);
+    await expectLater(
+      AndroidLogFolder.restoreAccess('/synthetic/path'),
+      throwsArgumentError,
+    );
+    expect(calls, hasLength(2));
+  });
+
+  test(
+    'restore access wrong tree stays typed and retry keeps original expected tree',
+    () async {
+      var wrong = true;
+      final calls = <MethodCall>[];
+      messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (
+        call,
+      ) async {
+        calls.add(call);
+        if (wrong) {
+          throw PlatformException(code: 'folder_mismatch');
+        }
+        return folder.location;
+      });
+      await expectLater(
+        AndroidLogFolder.restoreAccess(folder.location),
+        throwsA(
+          isA<FolderAccessFailure>()
+              .having(
+                (e) => e.message,
+                'expected selection',
+                contains('same workspace'),
+              )
+              .having((e) => e.message, 'grant', contains('was not kept'))
+              .having(
+                (e) => e.cause,
+                'native rejection',
+                isA<PlatformException>(),
+              ),
+        ),
+      );
+      wrong = false;
+      expect(
+        await AndroidLogFolder.restoreAccess(folder.location),
+        folder.location,
+      );
+      expect(
+        calls.every(
+          (call) =>
+              call.method == 'pick' &&
+              call.arguments['expectedTree'] == folder.location,
+        ),
+        true,
+      );
+    },
+  );
+
+  test(
     'range bridge returns suffix and exposes nonseekable fallback explicitly',
     () async {
       final calls = <MethodCall>[];
@@ -166,7 +368,11 @@ void main() {
     },
   );
 
-  for (final name in ['tandemlog-space.json', 'writer.jsonl']) {
+  for (final name in [
+    'tandemlog-space.json',
+    'writer.jsonl',
+    'writer.applog',
+  ]) {
     for (final repeatedIdentity in [false, true]) {
       test(
         'list rejects duplicate $name before returning observations (same identity: $repeatedIdentity)',

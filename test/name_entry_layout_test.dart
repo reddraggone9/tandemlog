@@ -19,6 +19,7 @@ void main() {
           tester.view.resetViewInsets();
           tester.platformDispatcher.clearTextScaleFactorTestValue();
         });
+        String? result;
         await tester.pumpWidget(
           MaterialApp(
             theme: ThemeData(
@@ -27,7 +28,7 @@ void main() {
             home: Builder(
               builder: (context) => Scaffold(
                 body: TextButton(
-                  onPressed: () => showDialog<String>(
+                  onPressed: () async => result = await showDialog<String>(
                     context: context,
                     builder: (_) => const NameEntryDialog(
                       title: 'Who is using Tandemlog?',
@@ -86,10 +87,13 @@ void main() {
         await tester.enterText(field, 'Corrected label');
         await tester.pumpAndSettle();
         expect(tester.getRect(action), before);
-        await tester.tap(action);
-        await tester.pumpAndSettle();
+        expect(find.text('Review errors'), findsNothing);
+        expect(
+          result,
+          isNull,
+          reason: 'Correction itself cannot create a user.',
+        );
         expect(find.byType(NameEntryDialog), findsOneWidget);
-        expect(tester.getRect(action), before);
         final corrected = tester.getRect(field);
         final correctedViewport = tester.getRect(scroll);
         expect(
@@ -101,8 +105,10 @@ void main() {
           lessThanOrEqualTo(correctedViewport.bottom + .01),
         );
         expect(tester.takeException(), isNull);
-        await tester.tap(find.text('Cancel'));
+        await tester.tap(action);
         await tester.pumpAndSettle();
+        expect(find.byType(NameEntryDialog), findsNothing);
+        expect(result, 'Corrected label');
       },
     );
   }

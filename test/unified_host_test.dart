@@ -413,11 +413,14 @@ void main() {
         find.byKey(const ValueKey('device-name-field')),
         ' ',
       );
-      if (find.text('Review errors').evaluate().isNotEmpty) {
-        await tester.tap(find.text('Review errors'));
-        await tester.pumpAndSettle();
-        expect(find.byType(DeviceNameDialog), findsOneWidget);
-      }
+      await tester.pumpAndSettle();
+      expect(find.text('Review errors'), findsNothing);
+      expect(find.byType(DeviceNameDialog), findsOneWidget);
+      expect(
+        result,
+        isNull,
+        reason: 'Correcting input cannot submit the dialog.',
+      );
       final save = tester
           .widget<FilledButton>(find.widgetWithText(FilledButton, 'Save'))
           .onPressed!;

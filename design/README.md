@@ -27,6 +27,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [App-owned workspace upgrade](decisions/0028-app-owned-workspace-upgrade.md): approved replacement for RC.2's engineering-only activation. Explicit device consent, protected snapshots, coordinated freeze and resumable SAF activation are implemented on the isolated branch; source, native and release gates remain in progress. No production conversion has occurred.
+
 - [Unified writer history and optional installation names](decisions/0027-unified-writer-history.md): implementation authorized on isolated disposable trials. Published experimentally as 2026.10.7-rc.2/build91 after exact native acceptance and independent review; [candidate and publication receipts](../evidence/prerelease-2026.10.7-rc.2/publication/README.md) retain coverage and the forward-only local-profile upgrade limit. Production conversion and adoption/consolidation remain deferred.
 
 - [Field help, form validation and occurrence Due conversion](decisions/0026-field-help-validation-and-occurrence-due.md): published experimentally as 2026.10.7-rc.1/build86 after exact native acceptance and independent review. Draft-only dependent clearing was explicitly accepted on October 17. See [candidate acceptance](../evidence/prerelease-2026.10.7-rc.1/candidate86/README.md) and [public verification](../evidence/prerelease-2026.10.7-rc.1/publication/README.md).

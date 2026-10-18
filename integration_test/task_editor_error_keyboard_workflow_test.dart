@@ -234,11 +234,6 @@ void registerTaskEditorErrorKeyboardTests() {
           );
           await tester.pumpAndSettle();
           final committedDraft = controller.value;
-          expect(_primaryLabel(tester), 'Review errors');
-          await tester.ensureVisible(primary);
-          await tester.pumpAndSettle();
-          await tester.tap(primary);
-          await tester.pumpAndSettle();
           expect(_primaryLabel(tester), 'Save changes');
           expect(controller.value, committedDraft);
           expect(state.editingText, same(textSession));
@@ -246,7 +241,7 @@ void registerTaskEditorErrorKeyboardTests() {
           expect(
             await canonical(),
             before,
-            reason: 'Corrected Review must not turn into Save on that gesture',
+            reason: 'Committing composition must not Save without an action',
           );
           for (final label in ['Delete', 'Cancel', 'Save changes']) {
             final button = label == 'Save changes'

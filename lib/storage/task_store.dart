@@ -18,6 +18,7 @@ import 'profile_lock.dart';
 import 'writer_guard.dart';
 import 'local_durability.dart';
 import 'local_profile_database.dart';
+import 'workspace_upgrade_guard.dart';
 import 'profile_text_intents.dart';
 import 'legacy_cache_import.dart';
 import 'task_tables.dart';
@@ -989,6 +990,11 @@ class TaskStore {
             'Logs exist without a workspace manifest. Restore the manifest before opening.',
           );
         }
+        await WorkspaceUpgradeGuard.assertWritable(
+          folder: folder,
+          space: '',
+          profile: profileDatabase,
+        );
         await folder.create(
           'tandemlog-space.json',
           Uint8List.fromList(
@@ -2840,6 +2846,13 @@ class TaskStore {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) async {
+    if (unified == null) {
+      await WorkspaceUpgradeGuard.assertWritable(
+        folder: folder,
+        space: space,
+        profile: profileDatabase,
+      );
+    }
     await _refresh();
     _requireWriterAppendReady();
     if (expectedTaskSnapshot != null &&
@@ -2872,6 +2885,7 @@ class TaskStore {
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
     final raw = e.canonicalRaw!;
     final receipt = OperationReceipt(e.id, raw, e.entity);
+    WorkspaceUpgradeGuard.assertLocalWritable(profileDatabase, space);
     await _stageTextReceipt(e, receipt);
     onPrepared?.call(receipt);
     await _prepareWriterAppend([receipt]);
@@ -3602,6 +3616,13 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
     bool reserveBeforeTextStaging = false,
   }) async {
+    if (unified == null) {
+      await WorkspaceUpgradeGuard.assertWritable(
+        folder: folder,
+        space: space,
+        profile: profileDatabase,
+      );
+    }
     if (unified != null) {
       return _appendUnifiedCommands(
         commands,
@@ -3649,6 +3670,7 @@ class TaskStore {
     }
     final preparedUs = phase.elapsedMicroseconds;
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    WorkspaceUpgradeGuard.assertLocalWritable(profileDatabase, space);
     for (final receipt in receipts) {
       onPrepared?.call(receipt);
     }

@@ -203,7 +203,8 @@ class UnifiedCutoverPlan {
         owners.isEmpty ||
         owners.length > 256 ||
         owners.any((o) => !isCanonicalId(o)) ||
-        !owners.containsAll(participants) ||
+        participants.isEmpty ||
+        participants.any((o) => !isCanonicalId(o)) ||
         hasUnresolvedPreparedWrites) {
       throw FormatFailure(
         'Cutover requires known owners and resolved prepared writes.',
@@ -314,6 +315,12 @@ class UnifiedCutoverPlan {
         'Missing/offline participant: coordinate or explicitly retire it.',
       );
     }
+    return prepareConversion();
+  }
+
+  /// Prospective deterministic bytes only. This does not authorize staging or
+  /// activation; callers must separately collect real participant receipts.
+  UnifiedConversion prepareConversion() {
     final epoch = const Uuid().v5(
       space,
       'tandemlog:app-cutover:v4:$sourceDigest',

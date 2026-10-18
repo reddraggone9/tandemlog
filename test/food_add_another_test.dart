@@ -151,13 +151,12 @@ Future<void> verifyFoodAddAnother(
   expect(added, isEmpty);
   await tester.tap(field('Expiration'));
   await tester.enterText(field('Expiration'), '2026-12-10');
+  await tester.pump();
   expect(
     find.descendant(of: saveAction, matching: find.text('Review errors')),
-    findsOneWidget,
+    findsNothing,
   );
-  await tester.tap(saveAction);
-  await tester.pumpAndSettle();
-  expect(added, isEmpty, reason: 'Review of a corrected draft cannot Add');
+  expect(added, isEmpty, reason: 'Correcting the draft cannot Add');
   expect(other, isEmpty);
   expect(state.containers.map((e) => e.toJson()).toList(), before);
   expect(

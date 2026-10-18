@@ -211,15 +211,13 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tester.pumpAndSettle();
   expect(
     find.descendant(of: action, matching: find.text('Review errors')),
-    findsOneWidget,
+    findsNothing,
   );
-  await tap(action);
-  await tester.pumpAndSettle();
   FoodInventoryPage page() => tester.widget(find.byType(FoodInventoryPage));
   expect(
     page().state.active,
     isEmpty,
-    reason: 'Review cannot become Add after the date is corrected',
+    reason: 'Correcting the date cannot Add',
   );
   expect(
     find.descendant(of: action, matching: find.text('Add')),
@@ -253,12 +251,11 @@ Future<void> verifyExpiryGuidanceWorkflow(
   expect(tester.widget<TextField>(expiry).controller!.text, isEmpty);
   await capture?.call('$name-blank-edit-rejected');
   await type(expiry, '2027-07-09');
+  await tester.pump();
   expect(
     find.descendant(of: action, matching: find.text('Review errors')),
-    findsOneWidget,
+    findsNothing,
   );
-  await tap(action);
-  await tester.pumpAndSettle();
   expect(page().state.active.single.details.expiry, '2027-06-01');
   expect(page().state.active.single.id, savedId);
   expect(

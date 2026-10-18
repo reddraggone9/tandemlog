@@ -19,6 +19,7 @@ void main() {
           tester.view.resetViewInsets();
           tester.platformDispatcher.clearTextScaleFactorTestValue();
         });
+        DeviceNameChange? result;
         await tester.pumpWidget(
           MaterialApp(
             theme: ThemeData(
@@ -27,11 +28,12 @@ void main() {
             home: Builder(
               builder: (context) => Scaffold(
                 body: TextButton(
-                  onPressed: () => showDialog<DeviceNameChange>(
-                    context: context,
-                    builder: (_) =>
-                        const DeviceNameDialog(name: 'Kitchen tablet'),
-                  ),
+                  onPressed: () async =>
+                      result = await showDialog<DeviceNameChange>(
+                        context: context,
+                        builder: (_) =>
+                            const DeviceNameDialog(name: 'Kitchen tablet'),
+                      ),
                   child: const Text('Open'),
                 ),
               ),
@@ -77,10 +79,9 @@ void main() {
         await tester.enterText(field, 'Corrected label');
         await tester.pumpAndSettle();
         expect(tester.getRect(action), before);
-        await tester.tap(action);
-        await tester.pumpAndSettle();
+        expect(find.text('Review errors'), findsNothing);
+        expect(result, isNull, reason: 'Correction itself cannot Save.');
         expect(find.byType(DeviceNameDialog), findsOneWidget);
-        expect(tester.getRect(action), before);
         final corrected = tester.getRect(field);
         final correctedViewport = tester.getRect(scroll);
         expect(
@@ -92,8 +93,10 @@ void main() {
           lessThanOrEqualTo(correctedViewport.bottom + .01),
         );
         expect(tester.takeException(), isNull);
-        await tester.tap(find.text('Cancel'));
+        await tester.tap(action);
         await tester.pumpAndSettle();
+        expect(find.byType(DeviceNameDialog), findsNothing);
+        expect(result?.name, 'Corrected label');
       },
     );
 
@@ -110,6 +113,7 @@ void main() {
           tester.view.resetViewInsets();
           tester.platformDispatcher.clearTextScaleFactorTestValue();
         });
+        DeviceNameChange? result;
         await tester.pumpWidget(
           MaterialApp(
             theme: ThemeData(
@@ -118,10 +122,11 @@ void main() {
             home: Builder(
               builder: (context) => Scaffold(
                 body: TextButton(
-                  onPressed: () => showDialog<DeviceNameChange>(
-                    context: context,
-                    builder: (_) => const DeviceNameDialog(name: null),
-                  ),
+                  onPressed: () async =>
+                      result = await showDialog<DeviceNameChange>(
+                        context: context,
+                        builder: (_) => const DeviceNameDialog(name: null),
+                      ),
                   child: const Text('Open'),
                 ),
               ),
@@ -153,13 +158,16 @@ void main() {
         expect(before.bottom, lessThanOrEqualTo(600));
         await tester.enterText(field, 'Corrected label');
         await tester.pumpAndSettle();
-        await tester.tap(action);
-        await tester.pumpAndSettle();
+        expect(find.text('Review errors'), findsNothing);
+        expect(result, isNull, reason: 'Correction itself cannot Save.');
         expect(find.byType(DeviceNameDialog), findsOneWidget);
         expect(tester.getRect(action), before);
+        expect(identical(tester.element(action), element), isTrue);
         expect(tester.takeException(), isNull);
-        await tester.tap(find.text('Cancel'));
+        await tester.tap(action);
         await tester.pumpAndSettle();
+        expect(find.byType(DeviceNameDialog), findsNothing);
+        expect(result?.name, 'Corrected label');
       },
     );
   }

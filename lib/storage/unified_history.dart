@@ -884,8 +884,24 @@ class UnifiedHistory {
         throw FormatFailure('Legacy writer still has reserved bytes.');
       }
       final author = row['writer'] as String;
+      // A real active installation may have opened Food without ever writing
+      // either legacy stream. Its strict genesis checkpoint is local authority,
+      // not historical ownership; do not invent a converted owner for it.
+      final emptyCurrentAuthority =
+          seq == 0 &&
+          (author == writer || author == foodWriter(writer)) &&
+          guard.hash == eventGenesisHash(m.space, author) &&
+          !m.seals.any(
+            (seal) =>
+                seal.name == '$author.jsonl' ||
+                seal.name == foodLogName(author),
+          ) &&
+          !s.effects.any(
+            (effect) => effect.historical && effect.writer == author,
+          );
       if (!m.owners.containsKey(author) &&
-          !m.owners.keys.any((o) => foodWriter(o) == author)) {
+          !m.owners.keys.any((o) => foodWriter(o) == author) &&
+          !emptyCurrentAuthority) {
         throw FormatFailure(
           'Trusted legacy writer is missing from the owner roster.',
         );
