@@ -1073,3 +1073,34 @@ A successful capture now invalidates its already queued pre-reset blur callback,
 The affected aggregate passes all 338 tests across 33 files, full analysis and unchanged formatting. The native Linux GTK regression subset passes all 27 cases, including all five bulk failure layouts, light/dark composition and resize cases, four header layouts, three field-spacing variants, Food Add another/Undo and capture recovery. The original bulk warning visibility assertions remain unchanged. Private exact source manifests, failing and passing logs and original screenshots are retained outside Git.
 
 Replacement full-source CI, versioned signed-candidate checks and exact owner-signed Android upgrade acceptance remain pending. Prior native demonstrations retain their stated source bindings; these scoped GTK checks do not claim Windows or Android device coverage.
+
+### Build97 upgrade-dialog keyboard reveal — candidate preparation
+
+Genuine Android11/API30 x86_64 finger input on signed source96 at320×640dp and
+200-percent text reproduced an empty ID field hidden after the actual keyboard
+settled. Separate genuine parent scrolling retained keyboard focus and a later
+character reached the same field. This did not waive the initial-focus defect.
+The trial's three canonical files remained exact. The closed synthetic
+investigation restored five settings exactly, but font-scale readback was1.0
+rather than its original missing value; that discrepancy remains explicit and
+the emulator and temporary processes are stopped.
+
+Four delayed-IME empty-field regressions reproduce on96 with the actual422px
+bottom inset, including the navigation bar. A whole-field reveal fails four
+populated-field controls. Additional diagnostics found a current-line glyph
+extending below the viewport even when its caret fit. Build97 reveals the current
+caret and measured visual line after the viewport changes; invalid or empty line
+selections retain the caret fallback. The final20 layout tests and32 affected
+upgrade tests pass, with unchanged original12 cases and four causal empty-field
+assertions, clean formatting and analysis. A new overly strict caret-to-inner-box
+assertion was corrected after examining the pinned SDK's pixel snapping; full
+caret containment in the outer viewport and full first-glyph containment in the
+actual editable/outer intersection remain strict, without added tolerances.
+
+Source96 canonical replay independently accepts each of12 commands and seven
+entity changes. The two later export corroborations retain their actual timing;
+unequal early exports are preserved and do not count as immediate matching pairs.
+Owner private SQLite authority, pending writes, outbox and hidden cache contents
+remain unobserved. Build97 artifacts and actual native keyboard acceptance remain
+pending; these headless checks do not establish them. Earlier GTK, Android94
+recovery and Android96 canonical evidence retain their own exact source coverage.

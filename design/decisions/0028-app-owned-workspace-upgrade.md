@@ -114,6 +114,15 @@ above the fields so enlarged text cannot be ellipsized by a single-line floating
 label. In particular, the distinction that historical IDs preserve ownership
 without adding participating devices must remain readable when expanded.
 
+With the keyboard open, reveal the focused ID field's current caret and visual
+text line after the scroll viewport changes, including the final dialog inset
+animation. Initial focus can otherwise reveal against the old viewport and leave
+an empty field off screen. A populated field can be taller than the available
+viewport, so revealing its whole bottom edge is insufficient. Use the current
+selection and measured line bounds; retain caret-only handling for an empty line.
+Ordinary offset scrolling must not repeatedly pull the reader back to the field.
+Route ownership, consent, controller values and selection remain unchanged.
+
 ## Validation and revisit
 
 Require real independent synthetic profiles, native desktop and Android SAF,

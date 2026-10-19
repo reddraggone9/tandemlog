@@ -1,21 +1,25 @@
-# App-owned workspace upgrade — RC.3/build96 preparation
+# App-owned workspace upgrade — RC.3/build97 preparation
 
-The approved guided upgrade and Food calendar validation fix are under candidate
-preparation. Build94's actual Android320dp/200% testing found that the upgrade
-dialog's fixed title squeezed its warnings below one readable line. Build95
-makes the title and warnings scroll together; actual Linux GTK testing confirmed
-the warnings and actions remain reachable in both themes at200% text.
+The approved guided upgrade and Food calendar validation fix remain under
+candidate preparation. Build96 keeps the upgrade title, warnings, installation-ID
+labels and help readable in a shared scroller. Actual Linux GTK checks confirmed
+both themes and enlarged text; signed Android checks and independent canonical
+replay accepted the solo upgrade, Food Add/Undo and five-task submission with
+their explicit observation limits.
 
-That native check also found the expanded historical-ID helper cut off the
-distinction between historical ownership and participating devices. Build96
-keeps the shared scroller and wraps both installation-ID labels and help without
-a line cap. Consent, participant choices and guarded actions are preserved.
+Actual Android320dp/200% testing then reproduced an empty installation-ID field
+whose caret remained below the viewport after the keyboard appeared. Build97
+reveals the current caret and visual text line after the dialog viewport changes
+or another ID field gains focus with the keyboard open. Ordinary scrolling
+continues to allow reading the help without moving focus or changing the draft.
 
-Build94's signed Android recovery, original-byte, Food Add/Undo, Tasks and launcher
-observations retain their original source attribution. Build95's GTK layout
-observations remain attributed to95. Build96 checks, exact candidate artifacts,
-native acceptance and independent review must pass before publication.
-Production conversion remains outside this trial.
+The four empty-field regressions fail on96 and pass on97. A whole-field reveal
+also fails four oversized-field controls; the current-line implementation passes
+all20 layout cases and32 affected upgrade tests with clean analysis. Build97's
+full checks, exact candidate artifacts, native acceptance and independent final
+review remain required before publication. Earlier94/96 native observations
+retain their original source attribution; production conversion remains outside
+this trial.
 
 # Unified writer trials and input refinements - 2026.10.7-rc.2/build91 published experimental
 

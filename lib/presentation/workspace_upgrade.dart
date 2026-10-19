@@ -31,6 +31,76 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
   late final selected = <String>{widget.writer};
   final ownerIds = TextEditingController();
   final deviceIds = TextEditingController();
+  final deviceIdsFocus = FocusNode();
+  final ownerIdsFocus = FocusNode();
+  double? _viewportExtent;
+  bool _idsRevealQueued = false;
+
+  @override
+  void initState() {
+    super.initState();
+    deviceIdsFocus.addListener(_queueFocusedIdsReveal);
+    ownerIdsFocus.addListener(_queueFocusedIdsReveal);
+  }
+
+  void _queueFocusedIdsReveal() {
+    if (!mounted ||
+        answered ||
+        _idsRevealQueued ||
+        MediaQuery.viewInsetsOf(context).bottom == 0 ||
+        (!deviceIdsFocus.hasFocus && !ownerIdsFocus.hasFocus)) {
+      return;
+    }
+    _idsRevealQueued = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _idsRevealQueued = false;
+      if (!mounted ||
+          answered ||
+          checking ||
+          ModalRoute.isCurrentOf(context) != true ||
+          MediaQuery.viewInsetsOf(context).bottom == 0) {
+        return;
+      }
+      final focus = deviceIdsFocus.hasFocus
+          ? deviceIdsFocus
+          : ownerIdsFocus.hasFocus
+          ? ownerIdsFocus
+          : null;
+      final editable = focus?.context
+          ?.findAncestorStateOfType<EditableTextState>();
+      if (editable != null && editable.mounted) {
+        final selection = editable.widget.controller.selection;
+        if (selection.isValid) {
+          editable.bringIntoView(selection.extent);
+          // The SDK's caret can be shorter than the current line's glyphs.
+          // Reveal both after adjusting the editable's own scroll position.
+          final render = editable.renderEditable;
+          var reveal = render.getLocalRectForCaret(selection.extent);
+          final line = render.getLineAtOffset(selection.extent);
+          if (line.isValid && !line.isCollapsed) {
+            for (final box in render.getBoxesForSelection(line)) {
+              reveal = reveal.expandToInclude(box.toRect());
+            }
+          }
+          render.showOnScreen(rect: reveal);
+        }
+      }
+    });
+    // Metrics notifications may arrive after a frame. Request the next layout
+    // so the queued reveal observes the resized viewport without a timer.
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
+
+  bool _handleIdsViewportMetrics(ScrollMetricsNotification notification) {
+    if (notification.depth == 0 &&
+        notification.metrics.axis == Axis.vertical &&
+        notification.metrics.viewportDimension != _viewportExtent) {
+      _viewportExtent = notification.metrics.viewportDimension;
+      _queueFocusedIdsReveal();
+    }
+    return false;
+  }
+
   bool confirmed = false, checking = false, answered = false;
   String? error;
   Set<String> get _owners => _ids(ownerIds.text);
@@ -39,6 +109,10 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
 
   @override
   void dispose() {
+    deviceIdsFocus.removeListener(_queueFocusedIdsReveal);
+    ownerIdsFocus.removeListener(_queueFocusedIdsReveal);
+    deviceIdsFocus.dispose();
+    ownerIdsFocus.dispose();
     ownerIds.dispose();
     deviceIds.dispose();
     super.dispose();
@@ -91,6 +165,7 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
   Widget _installationIdsField({
     required String fieldKey,
     required TextEditingController controller,
+    required FocusNode focusNode,
     required String label,
     required String helper,
   }) {
@@ -105,6 +180,7 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
           child: TextField(
             key: ValueKey(fieldKey),
             controller: controller,
+            focusNode: focusNode,
             enabled: !checking,
             minLines: 1,
             maxLines: 4,
@@ -125,139 +201,147 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
   @override
   Widget build(BuildContext context) {
     final ids = {...inventory.owners, widget.writer}.toList()..sort();
-    return AlertDialog(
-      scrollable: true,
-      title: const Text('Upgrade shared workspace'),
-      content: SizedBox(
-        width: 560,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Use one Tasks and Food history per device. Tandemlog keeps '
-              'the original logs and a verified recovery snapshot. Editing '
-              'pauses on participating devices until the upgrade finishes.',
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Update every device that will keep editing to this version '
-              'or newer. Let folder sync finish. Stop older apps and devices '
-              'you will not include. An offline or unseen device cannot be '
-              'verified by Tandemlog.',
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'This installation',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            SelectableText(widget.writer),
-            const SizedBox(height: 16),
-            Text(
-              'Devices participating in this upgrade',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            const Text(
-              'History below identifies past writers, not currently active '
-              'devices. Select every installation that will keep writing. '
-              'Leave retired installations unselected; their history stays.',
-            ),
-            for (final id in ids)
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: _handleIdsViewportMetrics,
+      child: AlertDialog(
+        scrollable: true,
+        title: const Text('Upgrade shared workspace'),
+        content: SizedBox(
+          width: 560,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Use one Tasks and Food history per device. Tandemlog keeps '
+                'the original logs and a verified recovery snapshot. Editing '
+                'pauses on participating devices until the upgrade finishes.',
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Update every device that will keep editing to this version '
+                'or newer. Let folder sync finish. Stop older apps and devices '
+                'you will not include. An offline or unseen device cannot be '
+                'verified by Tandemlog.',
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'This installation',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              SelectableText(widget.writer),
+              const SizedBox(height: 16),
+              Text(
+                'Devices participating in this upgrade',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const Text(
+                'History below identifies past writers, not currently active '
+                'devices. Select every installation that will keep writing. '
+                'Leave retired installations unselected; their history stays.',
+              ),
+              for (final id in ids)
+                CheckboxListTile(
+                  key: ValueKey('upgrade-participant-$id'),
+                  contentPadding: EdgeInsets.zero,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text(
+                    id == widget.writer ? 'This device' : 'Historical writer',
+                  ),
+                  subtitle: SelectableText(id),
+                  value: selected.contains(id),
+                  onChanged: checking || id == widget.writer
+                      ? null
+                      : (value) => setState(() {
+                          value! ? selected.add(id) : selected.remove(id);
+                          confirmed = false;
+                        }),
+                ),
+              const SizedBox(height: 12),
+              _installationIdsField(
+                fieldKey: 'upgrade-extra-participants',
+                controller: deviceIds,
+                focusNode: deviceIdsFocus,
+                label: 'Other participating installation IDs',
+                helper:
+                    'Optional. Find each full ID in Settings on that device.',
+              ),
+              if (inventory.unresolvedFoodNames.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Text(
+                  'Some Food history needs its original installation ID '
+                  'before it can be matched safely. Use the ID from that '
+                  'installation or a trusted profile backup.',
+                ),
+                for (final name in inventory.unresolvedFoodNames)
+                  SelectableText(name),
+              ],
+              ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                title: const Text('Historical installation IDs'),
+                children: [
+                  _installationIdsField(
+                    fieldKey: 'upgrade-known-owners',
+                    controller: ownerIds,
+                    focusNode: ownerIdsFocus,
+                    label: 'Additional historical installation IDs',
+                    helper:
+                        'These preserve ownership; they do not add participating devices.',
+                  ),
+                  TextButton(
+                    onPressed: checking ? null : _inspect,
+                    child: const Text('Check historical owners'),
+                  ),
+                ],
+              ),
               CheckboxListTile(
-                key: ValueKey('upgrade-participant-$id'),
+                key: const ValueKey('upgrade-coordination-confirmation'),
                 contentPadding: EdgeInsets.zero,
                 controlAffinity: ListTileControlAffinity.leading,
-                title: Text(
-                  id == widget.writer ? 'This device' : 'Historical writer',
+                title: const Text(
+                  'I checked all my devices: every device that will keep '
+                  'editing is included, and other or older apps are stopped.',
                 ),
-                subtitle: SelectableText(id),
-                value: selected.contains(id),
-                onChanged: checking || id == widget.writer
+                value: confirmed,
+                onChanged: checking
                     ? null
-                    : (value) => setState(() {
-                        value! ? selected.add(id) : selected.remove(id);
-                        confirmed = false;
-                      }),
+                    : (value) => setState(() => confirmed = value!),
               ),
-            const SizedBox(height: 12),
-            _installationIdsField(
-              fieldKey: 'upgrade-extra-participants',
-              controller: deviceIds,
-              label: 'Other participating installation IDs',
-              helper: 'Optional. Find each full ID in Settings on that device.',
-            ),
-            if (inventory.unresolvedFoodNames.isNotEmpty) ...[
-              const SizedBox(height: 16),
               const Text(
-                'Some Food history needs its original installation ID '
-                'before it can be matched safely. Use the ID from that '
-                'installation or a trusted profile backup.',
+                'Once conversion is staged, resume this upgrade after an '
+                'interruption. Do not reopen the upgraded workspace in an '
+                'older app. This app also upgrades its local profile; stable '
+                '2026.10.6 and RC.1 cannot reopen that profile.',
               ),
-              for (final name in inventory.unresolvedFoodNames)
-                SelectableText(name),
+              if (error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    error!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ),
+              if (checking) const LinearProgressIndicator(),
             ],
-            ExpansionTile(
-              tilePadding: EdgeInsets.zero,
-              title: const Text('Historical installation IDs'),
-              children: [
-                _installationIdsField(
-                  fieldKey: 'upgrade-known-owners',
-                  controller: ownerIds,
-                  label: 'Additional historical installation IDs',
-                  helper:
-                      'These preserve ownership; they do not add participating devices.',
-                ),
-                TextButton(
-                  onPressed: checking ? null : _inspect,
-                  child: const Text('Check historical owners'),
-                ),
-              ],
-            ),
-            CheckboxListTile(
-              key: const ValueKey('upgrade-coordination-confirmation'),
-              contentPadding: EdgeInsets.zero,
-              controlAffinity: ListTileControlAffinity.leading,
-              title: const Text(
-                'I checked all my devices: every device that will keep '
-                'editing is included, and other or older apps are stopped.',
-              ),
-              value: confirmed,
-              onChanged: checking
-                  ? null
-                  : (value) => setState(() => confirmed = value!),
-            ),
-            const Text(
-              'Once conversion is staged, resume this upgrade after an '
-              'interruption. Do not reopen the upgraded workspace in an '
-              'older app. This app also upgrades its local profile; stable '
-              '2026.10.6 and RC.1 cannot reopen that profile.',
-            ),
-            if (error != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  error!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-              ),
-            if (checking) const LinearProgressIndicator(),
-          ],
+          ),
         ),
+        actions: [
+          TextButton(
+            onPressed: checking ? null : _later,
+            child: const Text('Later'),
+          ),
+          FilledButton(
+            key: const ValueKey('begin-workspace-upgrade'),
+            onPressed:
+                confirmed && !checking && inventory.unresolvedFoodNames.isEmpty
+                ? _begin
+                : null,
+            child: const Text('Pause editing and begin'),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: checking ? null : _later,
-          child: const Text('Later'),
-        ),
-        FilledButton(
-          key: const ValueKey('begin-workspace-upgrade'),
-          onPressed:
-              confirmed && !checking && inventory.unresolvedFoodNames.isEmpty
-              ? _begin
-              : null,
-          child: const Text('Pause editing and begin'),
-        ),
-      ],
     );
   }
 }
