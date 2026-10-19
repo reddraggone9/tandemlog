@@ -1,3 +1,21 @@
+# Guided upgrade — build95 acceptance in progress
+
+Actual signed build94 Android11/API30 x86_64 testing at320x640dp and200% text
+found an unreadable upgrade-warning viewport in both themes. The build95 shared
+title/content scroll fixes that layout without reducing the requested font size.
+Focused old-source checks reproduce both200% failures while normal text passes.
+The same corrected-source regression passes all four theme/scale cases, with
+the affected dialog/host checks also passing. These headless checks do not
+replace actual candidate native visual acceptance.
+
+Build94 separately exercised real Settings grant loss and restoration to the same
+synthetic SAF tree, a waiting independent participant, pre-staging cancellation,
+a new single-device conversion, the focused Food calendar Save/Undo case, five
+Tasks, guarded launcher navigation and cold section preference. Detailed exports,
+profiles and media stay private. Its lab stopped with every original setting
+restored. Build95 exact artifacts/native acceptance remain pending; existing
+Windows manual-GUI, GTK-versus-Flatpak and API30/x86_64 qualifications still apply.
+
 # Stable2026.10.6/build85 - accepted and published
 
 [Stable candidate acceptance](../evidence/stable-2026.10.6/candidate85/README.md) records full hosted and original artifact gates plus fresh exact-source LinuxGTK and exact signed Android84-to85 in-place native acceptance. Original canonical prefixes, exact six Food records/Undo targets, full replayed final projection, Task native fields/order, settings raw/writer and SAF grants verify. Native settings restored, temporary processes stopped and SDK test link absent. Desktop video covers Add Save/Undo/Edit Save with separate Edit Undo/Another proof; final independent Android/media review accepts the qualified evidence. Manual WindowsGUI waiver, manual GTK versus hosted Flatpak and API30 x86_64/simulated-wide qualifications remain explicit. Raw evidence stays private. [Publication receipts](../evidence/stable-2026.10.6/publication/README.md) verify anonymous original installer bytes, owner APK identity, exact notes/tag/source/Latest and preserved release history after authorized promotion38837831145 and independent public-byte review. Historical entries below retain original attribution.

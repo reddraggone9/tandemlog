@@ -1,3 +1,16 @@
+# App-owned workspace upgrade — RC.3/build95 preparation
+
+The approved guided upgrade and Food calendar validation fix are under candidate
+preparation. Build94 passed all hosted gates, but actual Android320dp/200% testing
+found that the upgrade dialog's fixed title squeezed its warnings below one
+readable line. Build95 makes the title and warnings scroll together, preserving
+full text scaling, consent, participant choices and guarded actions.
+
+Build94's signed Android recovery, original-byte, Food Add/Undo, Tasks and launcher
+observations retain their original source attribution. Corrected build95 tests,
+exact candidate artifacts, native acceptance and independent review must pass
+before publication. Production conversion remains outside this trial.
+
 # Unified writer trials and input refinements - 2026.10.7-rc.2/build91 published experimental
 
 [RC.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.2)

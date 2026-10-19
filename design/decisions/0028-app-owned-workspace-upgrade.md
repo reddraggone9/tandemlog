@@ -101,6 +101,14 @@ The existing local schema3-to4 downgrade limitation remains: stable/build85 and
 RC.1/build86 cannot reopen the upgraded local profile. App upgrade and shared
 workspace format upgrade are separate operations.
 
+## Warning readability on narrow screens
+
+The upgrade dialog scrolls its title and body together while keeping actions
+reachable. Actual Android320dp/200% text testing showed that a fixed large title
+could leave less than one warning line visible. Sharing the viewport preserves
+the requested font size and complete warning text; shrinking the type or hiding
+the compatibility warning would weaken the decision the user is making.
+
 ## Validation and revisit
 
 Require real independent synthetic profiles, native desktop and Android SAF,
