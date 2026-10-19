@@ -1,19 +1,28 @@
-# Guided upgrade — build95 acceptance in progress
+# Guided upgrade — build96 acceptance in progress
 
 Actual signed build94 Android11/API30 x86_64 testing at320x640dp and200% text
 found an unreadable upgrade-warning viewport in both themes. The build95 shared
-title/content scroll fixes that layout without reducing the requested font size.
-Focused old-source checks reproduce both200% failures while normal text passes.
-The same corrected-source regression passes all four theme/scale cases, with
-the affected dialog/host checks also passing. These headless checks do not
-replace actual candidate native visual acceptance.
+title/content scroll passed the same four headless theme/scale cases and affected
+dialog/host checks. Actual build95 Linux GTK at320x640 and200% text in both
+themes confirmed its warning paragraphs and actions are reachable.
+
+The same GTK check exposed a separate ellipsis in the expanded historical-ID
+helper, hiding the participating-devices distinction. Build96 shows complete
+wrapping field labels and uncapped help. Focused same-font checks reproduce all
+eight label/help failures against95 while its four warning/guard cases pass. The corrected twelve cases pass, along with
+the24 affected dialog/host cases. A separate final twelve-case run also checks
+actual retained focus and exact entered IDs after scrolling. These headless
+checks do not replace exact candidate native acceptance, which remains pending;
+build95 evidence does not establish build96 acceptance.
 
 Build94 separately exercised real Settings grant loss and restoration to the same
 synthetic SAF tree, a waiting independent participant, pre-staging cancellation,
 a new single-device conversion, the focused Food calendar Save/Undo case, five
-Tasks, guarded launcher navigation and cold section preference. Detailed exports,
-profiles and media stay private. Its lab stopped with every original setting
-restored. Build95 exact artifacts/native acceptance remain pending; existing
+Tasks, guarded launcher navigation and cold section preference. Strict canonical
+replay and individual command/projection reviews passed with qualified evidence;
+the non-debug owner application's private SQLite was unavailable. Detailed exports,
+profiles and media stay private. Both native labs stopped with original settings
+restored. Exact build96 artifacts/native acceptance remain pending; existing
 Windows manual-GUI, GTK-versus-Flatpak and API30/x86_64 qualifications still apply.
 
 # Stable2026.10.6/build85 - accepted and published

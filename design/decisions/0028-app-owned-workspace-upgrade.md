@@ -109,6 +109,11 @@ could leave less than one warning line visible. Sharing the viewport preserves
 the requested font size and complete warning text; shrinking the type or hiding
 the compatibility warning would weaken the decision the user is making.
 
+Installation-ID labels and helper paragraphs wrap without a line cap. Keep labels
+above the fields so enlarged text cannot be ellipsized by a single-line floating
+label. In particular, the distinction that historical IDs preserve ownership
+without adding participating devices must remain readable when expanded.
+
 ## Validation and revisit
 
 Require real independent synthetic profiles, native desktop and Android SAF,

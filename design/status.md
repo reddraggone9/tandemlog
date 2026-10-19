@@ -1,15 +1,21 @@
-# App-owned workspace upgrade — RC.3/build95 preparation
+# App-owned workspace upgrade — RC.3/build96 preparation
 
 The approved guided upgrade and Food calendar validation fix are under candidate
-preparation. Build94 passed all hosted gates, but actual Android320dp/200% testing
-found that the upgrade dialog's fixed title squeezed its warnings below one
-readable line. Build95 makes the title and warnings scroll together, preserving
-full text scaling, consent, participant choices and guarded actions.
+preparation. Build94's actual Android320dp/200% testing found that the upgrade
+dialog's fixed title squeezed its warnings below one readable line. Build95
+makes the title and warnings scroll together; actual Linux GTK testing confirmed
+the warnings and actions remain reachable in both themes at200% text.
+
+That native check also found the expanded historical-ID helper cut off the
+distinction between historical ownership and participating devices. Build96
+keeps the shared scroller and wraps both installation-ID labels and help without
+a line cap. Consent, participant choices and guarded actions are preserved.
 
 Build94's signed Android recovery, original-byte, Food Add/Undo, Tasks and launcher
-observations retain their original source attribution. Corrected build95 tests,
-exact candidate artifacts, native acceptance and independent review must pass
-before publication. Production conversion remains outside this trial.
+observations retain their original source attribution. Build95's GTK layout
+observations remain attributed to95. Build96 checks, exact candidate artifacts,
+native acceptance and independent review must pass before publication.
+Production conversion remains outside this trial.
 
 # Unified writer trials and input refinements - 2026.10.7-rc.2/build91 published experimental
 

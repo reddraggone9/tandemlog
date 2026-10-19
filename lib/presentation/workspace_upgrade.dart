@@ -88,6 +88,40 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
     Navigator.pop(context);
   }
 
+  Widget _installationIdsField({
+    required String fieldKey,
+    required TextEditingController controller,
+    required String label,
+    required String helper,
+  }) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ExcludeSemantics(child: Text(label, style: theme.textTheme.bodyLarge)),
+        const SizedBox(height: 8),
+        Semantics(
+          label: label,
+          child: TextField(
+            key: ValueKey(fieldKey),
+            controller: controller,
+            enabled: !checking,
+            minLines: 1,
+            maxLines: 4,
+            onChanged: (_) => setState(() => confirmed = false),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          helper,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ids = {...inventory.owners, widget.writer}.toList()..sort();
@@ -146,19 +180,11 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
                       }),
               ),
             const SizedBox(height: 12),
-            TextField(
-              key: const ValueKey('upgrade-extra-participants'),
+            _installationIdsField(
+              fieldKey: 'upgrade-extra-participants',
               controller: deviceIds,
-              enabled: !checking,
-              minLines: 1,
-              maxLines: 4,
-              onChanged: (_) => setState(() => confirmed = false),
-              decoration: const InputDecoration(
-                labelText: 'Other participating installation IDs',
-                helperText:
-                    'Optional. Find each full ID in Settings on that device.',
-                helperMaxLines: 3,
-              ),
+              label: 'Other participating installation IDs',
+              helper: 'Optional. Find each full ID in Settings on that device.',
             ),
             if (inventory.unresolvedFoodNames.isNotEmpty) ...[
               const SizedBox(height: 16),
@@ -174,19 +200,12 @@ class _WorkspaceUpgradeDialogState extends State<WorkspaceUpgradeDialog> {
               tilePadding: EdgeInsets.zero,
               title: const Text('Historical installation IDs'),
               children: [
-                TextField(
-                  key: const ValueKey('upgrade-known-owners'),
+                _installationIdsField(
+                  fieldKey: 'upgrade-known-owners',
                   controller: ownerIds,
-                  enabled: !checking,
-                  minLines: 1,
-                  maxLines: 4,
-                  onChanged: (_) => setState(() => confirmed = false),
-                  decoration: const InputDecoration(
-                    labelText: 'Additional historical installation IDs',
-                    helperText:
-                        'These preserve ownership; they do not add participating devices.',
-                    helperMaxLines: 3,
-                  ),
+                  label: 'Additional historical installation IDs',
+                  helper:
+                      'These preserve ownership; they do not add participating devices.',
                 ),
                 TextButton(
                   onPressed: checking ? null : _inspect,

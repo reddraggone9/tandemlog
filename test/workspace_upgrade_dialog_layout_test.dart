@@ -42,18 +42,30 @@ Rect _paintedRect(RenderBox box) =>
 Future<void> _readEveryLine(
   WidgetTester tester,
   String text,
-  double scale,
-) async {
+  double scale, {
+  Finder? semanticTarget,
+}) async {
   final finder = find.text(text);
   final paragraph = _paragraph(tester, text);
   expect(paragraph.text.toPlainText(), text);
   expect(paragraph.textScaler.scale(16), scale * 16);
-  expect(paragraph.didExceedMaxLines, isFalse);
+  expect(
+    paragraph.didExceedMaxLines,
+    isFalse,
+    reason: 'The complete text must wrap without a line cap or ellipsis.',
+  );
   final viewport = RenderAbstractViewport.of(paragraph) as RenderBox;
   final boxes = paragraph.getBoxesForSelection(
     TextSelection(baseOffset: 0, extentOffset: text.length),
   );
   expect(boxes, isNotEmpty);
+  expect(
+    paragraph.getBoxesForSelection(
+      TextSelection(baseOffset: text.length - 1, extentOffset: text.length),
+    ),
+    isNotEmpty,
+    reason: 'The final character must be laid out and painted, not ellipsized.',
+  );
   final lineHeight = boxes.map((box) => box.bottom - box.top).reduce(math.max);
   expect(
     viewport.size.height,
@@ -79,11 +91,176 @@ Future<void> _readEveryLine(
     expect(shown.top, greaterThanOrEqualTo(visible.top));
     expect(shown.bottom, lessThanOrEqualTo(visible.bottom));
   }
-  expect(tester.getSemantics(finder).label, contains(text));
+  expect(tester.getSemantics(semanticTarget ?? finder).label, contains(text));
+}
+
+Future<void> _openFieldDialog(
+  WidgetTester tester,
+  Brightness brightness,
+  List<WorkspaceUpgradeChoice?> choices,
+) async {
+  const scale = 2.0;
+  // Actual owner94 Android capture:480x960px/dpi240,24dp status,
+  // 48dp navigation and full system font2. Keep these logical metrics.
+  tester.view.devicePixelRatio = 1.5;
+  tester.view.physicalSize = const Size(480, 960);
+  tester.view.viewPadding = const FakeViewPadding(top: 36, bottom: 72);
+  tester.view.padding = const FakeViewPadding(top: 36, bottom: 72);
+  tester.platformDispatcher.textScaleFactorTestValue = scale;
+  addTearDown(() {
+    tester.view.resetDevicePixelRatio();
+    tester.view.resetPhysicalSize();
+    tester.view.resetViewPadding();
+    tester.view.resetPadding();
+    tester.platformDispatcher.clearTextScaleFactorTestValue();
+  });
+  const writer = '11111111-1111-4111-8111-111111111111';
+  const peer = '22222222-2222-4222-8222-222222222222';
+  final inventory = WorkspaceUpgradeInventory(
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    {writer, peer},
+    [],
+    [],
+  );
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+        platform: TargetPlatform.android,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xff267461),
+          brightness: brightness,
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          border: OutlineInputBorder(),
+          filled: true,
+        ),
+      ),
+      home: Builder(
+        builder: (context) => Scaffold(
+          body: TextButton(
+            onPressed: () async {
+              choices.add(
+                await showDialog<WorkspaceUpgradeChoice>(
+                  context: context,
+                  builder: (_) => WorkspaceUpgradeDialog(
+                    writer: writer,
+                    inventory: inventory,
+                    inspect: (_) async => inventory,
+                  ),
+                ),
+              );
+            },
+            child: const Text('Prepare'),
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.tap(find.text('Prepare'));
+  await tester.pumpAndSettle();
 }
 
 void main() {
   setUpAll(loadSdkRoboto);
+  for (final brightness in Brightness.values) {
+    for (final field in [
+      (
+        key: 'upgrade-extra-participants',
+        label: 'Other participating installation IDs',
+        helper: 'Optional. Find each full ID in Settings on that device.',
+        expanded: false,
+      ),
+      (
+        key: 'upgrade-known-owners',
+        label: 'Additional historical installation IDs',
+        helper:
+            'These preserve ownership; they do not add participating devices.',
+        expanded: true,
+      ),
+    ]) {
+      for (final checkLabel in [true, false]) {
+        testWidgets(
+          'upgrade installation ID ${checkLabel ? 'label' : 'helper'} '
+          '${field.key} paints all text at 320x640 font2 ${brightness.name}',
+          (tester) async {
+            final choices = <WorkspaceUpgradeChoice?>[];
+            await _openFieldDialog(tester, brightness, choices);
+            if (field.expanded) {
+              final expansion = find.text('Historical installation IDs');
+              await Scrollable.ensureVisible(tester.element(expansion));
+              await tester.pumpAndSettle();
+              await tester.tap(expansion);
+              await tester.pumpAndSettle();
+            }
+            final input = find.byKey(ValueKey(field.key));
+            final text = checkLabel ? field.label : field.helper;
+            await _readEveryLine(
+              tester,
+              text,
+              2,
+              semanticTarget: checkLabel ? input : null,
+            );
+            final label = _paragraph(tester, field.label);
+            final help = _paragraph(tester, field.helper);
+            expect(
+              _paintedRect(label).bottom,
+              lessThanOrEqualTo(tester.getRect(input).top),
+            );
+            expect(
+              tester.getRect(input).bottom,
+              lessThanOrEqualTo(_paintedRect(help).top),
+            );
+            expect(tester.getSemantics(input).label, contains(field.label));
+            await tester.showKeyboard(input);
+            await tester.enterText(
+              input,
+              '33333333-3333-4333-8333-333333333333',
+            );
+            await tester.pumpAndSettle();
+            await _readEveryLine(
+              tester,
+              text,
+              2,
+              semanticTarget: checkLabel ? input : null,
+            );
+            expect(
+              _paintedRect(label).bottom,
+              lessThanOrEqualTo(tester.getRect(input).top),
+            );
+            expect(
+              tester.getRect(input).bottom,
+              lessThanOrEqualTo(_paintedRect(help).top),
+            );
+            expect(tester.getSemantics(input).label, contains(field.label));
+            final editable = tester.widget<EditableText>(
+              find.descendant(of: input, matching: find.byType(EditableText)),
+            );
+            expect(editable.focusNode.hasFocus, isTrue);
+            expect(
+              editable.controller.text,
+              '33333333-3333-4333-8333-333333333333',
+            );
+            expect(
+              choices,
+              isEmpty,
+              reason: 'Reading or editing IDs cannot consent to an upgrade.',
+            );
+            expect(
+              tester
+                  .widget<FilledButton>(
+                    find.byKey(const ValueKey('begin-workspace-upgrade')),
+                  )
+                  .onPressed,
+              isNull,
+            );
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
+  }
+
   for (final brightness in Brightness.values) {
     for (final scale in [1.0, 2.0]) {
       testWidgets(
