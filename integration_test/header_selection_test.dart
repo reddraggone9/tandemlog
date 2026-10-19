@@ -197,18 +197,46 @@ void registerHeaderSelectionTests() {
           await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
           await tester.pumpAndSettle();
           expect(find.text('2 selected'), findsOneWidget);
+          // Arrow navigation reveals the next row when it crosses the viewport
+          // edge. Pointer toggles must retain their own starting row and offset.
+          final keyboardTarget = tester.getRect(
+            find.byKey(ValueKey('task-drop-${ids[36]}')),
+          );
+          expect(keyboardTarget.top, greaterThanOrEqualTo(viewBefore.top));
+          expect(keyboardTarget.bottom, lessThanOrEqualTo(viewBefore.bottom));
+          expect(keyboardTarget.left, greaterThanOrEqualTo(viewBefore.left));
+          expect(keyboardTarget.right, lessThanOrEqualTo(viewBefore.right));
+          void expectStationarySelection(Rect row, double offset) {
+            expect(tester.getRect(body(35)), row);
+            expect(position.pixels, offset);
+            expect(tester.getRect(viewport), viewBefore);
+            expect(
+              tester.getRect(find.byKey(const ValueKey('task-header'))),
+              headerBefore,
+            );
+            expect(
+              tester.getRect(find.byKey(const ValueKey('task-entry-area'))),
+              slotBefore,
+            );
+          }
+
+          final rowBeforeToggle = tester.getRect(body(35));
+          final offsetBeforeToggle = position.pixels;
+          expectStationarySelection(rowBeforeToggle, offsetBeforeToggle);
           await tester.tap(body(36));
           await tester.pumpAndSettle();
           expect(find.text('1 selected'), findsOneWidget);
           expect(find.byType(TaskEditor), findsNothing);
-          expect(tester.getRect(viewport), viewBefore);
+          expectStationarySelection(rowBeforeToggle, offsetBeforeToggle);
+          final rowBeforeClear = tester.getRect(body(35));
+          final offsetBeforeClear = position.pixels;
           await tester.tap(body(35));
           await tester.pumpAndSettle();
           expect(
             find.byKey(const ValueKey('compact-selection-actions')),
             findsNothing,
           );
-          expect(tester.getRect(body(35)), rowBefore);
+          expectStationarySelection(rowBeforeClear, offsetBeforeClear);
           expect(controller.value, draft);
           // Selection survives opening/closing Filter. Changing filters/search
           // still deliberately clears it under the existing behavior.
