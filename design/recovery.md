@@ -22,6 +22,24 @@ Current limitations: no automated backup/repair UI, no record-level encryption/a
 Reopening a previously initialized location whose manifest disappeared fails without creating a replacement manifest, including when all canonical files disappeared together. Restore the original space before reopening; the local cache must not cause a fresh namespace to be written over missing history. A fresh, never-initialized location may still initialize normally.
 
 
+## Additional time-zone update recovery
+
+An explicitly initiated reader-capability update retains exact base/target
+manifests and consent in local.sqlite. Only that initiating installation may
+resume its owned replacement; peer adoption never grants repair authority.
+Settings offers a separate Resume action and, on Android, restoration of access
+to the same folder. Ordinary shared Retry only reads and admits history.
+Unfinished editor drafts stay mounted through this additive update.
+
+Unknown bytes, malformed journals, unrelated manifests or lost protected
+identity remain blocked. Preserve the selected folder and stopped private
+profile; do not clear the journal or downgrade the manifest. The protected
+manifest and completed receipt advance only with full successful admission of
+both projections. Opening build98 upgrades the private profile to schema5;
+older RCs cannot reopen it, even if shared activation has not occurred.
+[ADR0030](decisions/0030-required-time-zone-reader-capability.md) specifies the
+owned interrupted-write evidence and exact supported transition.
+
 ## Local versus shared files
 
 The selected canonical folder contains only `tandemlog-space.json` and per-writer `.jsonl` streams (plus transport-generated conflict/temp files if the sync provider creates them). Sync that folder, not its parent. New desktop setup uses `<private-profile>/shared-data`; a saved/custom selection stays unchanged, and a populated legacy `data` default remains recoverable after settings reset. Android uses the explicitly selected SAF tree.

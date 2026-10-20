@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart' show setEquals;
 import 'tag_input.dart';
 import 'civil_date_input.dart';
 import '../domain/schedule.dart';
+import '../domain/time_zone_policy.dart';
+import '../domain/wall_time.dart' show TimeZoneUpgradeRequired;
 import '../domain/occurrence_due_migration.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
@@ -28,6 +30,7 @@ class TaskEditor extends StatefulWidget {
     this.users = const [],
     this.tagInventory = const [],
     this.panel = false,
+    this.timeZonePolicy = TimeZoneNamePolicy.legacy,
     this.textSession,
     this.textStatus,
     this.disableTextFields = false,
@@ -43,6 +46,7 @@ class TaskEditor extends StatefulWidget {
   final Widget? contextNotice;
   final List<Map<String, dynamic>> users;
   final bool panel;
+  final TimeZoneNamePolicy timeZonePolicy;
   final List<String> tagInventory;
   @override
   TaskEditorState createState() => TaskEditorState();
@@ -60,6 +64,7 @@ class TaskEditorState extends State<TaskEditor> {
     users: widget.users,
     tagInventory: widget.tagInventory,
     panel: widget.panel,
+    timeZonePolicy: widget.timeZonePolicy,
     onClose: widget.onClose,
     onCloseReadinessChanged: widget.onCloseReadinessChanged,
     contextNotice: widget.contextNotice,
@@ -83,6 +88,7 @@ class BulkTaskEditor extends StatefulWidget {
     this.users = const [],
     this.tagInventory = const [],
     this.panel = false,
+    this.timeZonePolicy = TimeZoneNamePolicy.legacy,
   });
   final List<Map<String, dynamic>> tasks;
   final Future<void> Function(BulkTaskEdit) onSave;
@@ -91,6 +97,7 @@ class BulkTaskEditor extends StatefulWidget {
   final Widget? contextNotice;
   final List<Map<String, dynamic>> users;
   final bool panel;
+  final TimeZoneNamePolicy timeZonePolicy;
   final List<String> tagInventory;
   @override
   BulkTaskEditorState createState() => BulkTaskEditorState();
@@ -108,6 +115,7 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     users: widget.users,
     tagInventory: widget.tagInventory,
     panel: widget.panel,
+    timeZonePolicy: widget.timeZonePolicy,
     onClose: widget.onClose,
     onCloseReadinessChanged: widget.onCloseReadinessChanged,
     contextNotice: widget.contextNotice,
@@ -123,6 +131,7 @@ class _EditorBody extends StatefulWidget {
     required this.users,
     required this.tagInventory,
     required this.panel,
+    this.timeZonePolicy = TimeZoneNamePolicy.legacy,
     this.onClose,
     this.onCloseReadinessChanged,
     this.contextNotice,
@@ -138,6 +147,7 @@ class _EditorBody extends StatefulWidget {
   final bool disableTextFields;
   final List<Map<String, dynamic>> tasks, users;
   final bool panel;
+  final TimeZoneNamePolicy timeZonePolicy;
   final List<String> tagInventory;
   final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
@@ -475,6 +485,17 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   @override
+  void didUpdateWidget(covariant _EditorBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.timeZonePolicy != widget.timeZonePolicy) {
+      // Invalidate held Save intent and settle only already revealed issues.
+      // Controllers, selection, focus and the original draft baseline survive.
+      formValidation.draftDependenciesChanged();
+      formValidation.changed('timeZone');
+    }
+  }
+
+  @override
   void dispose() {
     formValidation.dispose();
     for (final c in tagQueries.values) {
@@ -645,9 +666,13 @@ class _EditorBodyState extends State<_EditorBody> {
     if (!parseFailed) {
       for (final task in bulk ? originals : [originals.first]) {
         try {
-          TaskSchedule.fromJson(
-            bulk ? {...scheduleOf(task), ...parsed} : parsed,
-          );
+          final schedule = bulk ? {...scheduleOf(task), ...parsed} : parsed;
+          try {
+            widget.timeZonePolicy.assertScheduleAllowed(schedule);
+          } on TimeZoneUpgradeRequired catch (error) {
+            throw ScheduleValidationException(error.message, ['timeZone']);
+          }
+          TaskSchedule.fromJson(schedule);
         } on ScheduleValidationException catch (error) {
           final fields = error.fields;
           final primary = fields.contains(lastEditedField)
@@ -795,6 +820,7 @@ class _EditorBodyState extends State<_EditorBody> {
               title.value,
             );
           }
+          widget.timeZonePolicy.assertScheduleAllowed(patch);
           final parsed = TaskSchedule.fromJson(patch).toJson();
           final originalTags = Set<String>.from(first['tags'] as List? ?? []);
           final desired = committedTags['tags']!;

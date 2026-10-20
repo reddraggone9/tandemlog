@@ -1,0 +1,11 @@
+Frozen timezone2025c data from package:timezone0.11.1.
+Original package copyright (c)2014 timezone project authors.
+The exact BSD2 license and AUTHORS are retained in this directory.
+The updated package:timezone0.11.2 LICENSE is byte-identical, so its existing
+Flutter package license notice also covers these frozen derived data bytes.
+Retain these source notices and the timezone license in binary distributions.
+IANA2025c source data LICENSE declares the data publicdomain; package-generated
+serialization/embedding is redistributed with the package's BSD2 notices.
+
+The four additional 2026e tables are exact chunks from timezone0.11.2 default
+data, redistributed under the same retained BSD2 LICENSE and AUTHORS.

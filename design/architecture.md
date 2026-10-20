@@ -2,6 +2,14 @@
 
 ## Unified writer history: isolated implementation
 
+[Observable workspace state](decisions/0029-observable-workspace-state.md)
+adds a focused immutable in-memory session above the two adapters. The host
+observes the committed Task/Food publication and separate health changes;
+it does not maintain detached SQL row copies. Unchanged semantic slices keep
+their identity, supporting selective view invalidation and bounded Food
+grouping reuse. Command admission and durable authority remain in the stores.
+
+
 [ADR 0027](decisions/0027-unified-writer-history.md) adds a v4 persistence
 coordinator shared by the existing TaskStore and FoodStore APIs. Pure wire,
 conversion and Food-admission rules remain separate from providers and UI.

@@ -1,8 +1,13 @@
-# 2026.10.7-rc.2 — experimental
+# 2026.10.7-rc.3 — experimental
 
-- Task editors have a simpler title-and-Help header.
-- Quick capture restores its embedded **+** button. Empty task capture, first-user setup and Add user inputs keep their action inactive without showing empty-input errors.
-- Deleted Food dates use softer text in Deleted and search results.
-- Explicitly activated disposable v4 trials gain one Tasks/Food history per device and optional device names, with clearer enlarged-text keyboard layouts.
+- Upgrade a shared workspace from Settings, with device consent and resumable progress.
+- Task changes received while working in Food appear when returning to Tasks.
+- Correcting the last validation error returns Add/Save immediately, including date and time selections.
+- Enable CST6CDT, EST5EDT, MST7MDT and PST8PDT in Settings.
 
-This RC upgrades the local app profile. Current stable and RC.1 cannot reopen that upgraded profile; keep using this RC or newer. Existing v3 shared workspaces stay on v3; production history conversion is not included.
+This RC upgrades the local app profile. Older app versions cannot reopen that
+profile; keep using this RC or newer. Shared v3 workspaces stay on v3 until
+explicitly upgraded. Workspace upgrades are forward-only.
+
+Enabling the additional time zone names requires build98 or newer on every
+device. Older apps stop opening that workspace; this setting cannot be disabled.

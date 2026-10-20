@@ -1,14 +1,74 @@
-import 'package:timezone/data/latest.dart' as database;
 import 'package:timezone/timezone.dart' as tz;
 
-bool _initialized = false;
+import 'timezone_data/iana_2025c.dart' as database;
+import 'timezone_data/iana_2026e_additional.dart' as additional_database;
+
+const timeZoneUpgradeRequiredMessage =
+    'Update every device to build 98 or later, then enable additional time zones '
+    'in workspace Settings before using this time zone.';
+
+const additionalTimeZoneNames = ['CST6CDT', 'EST5EDT', 'MST7MDT', 'PST8PDT'];
+const legacyTimeZoneDataSha256 =
+    'e67e57be5d320b54e96381b59fdc2e7b0ec803b7e1be98621e445312cf5f295e';
+const additionalTimeZoneDataSha256 =
+    'a49273d40c8560e4559e79178dd7384d3fb427933929ebe6d22ccfa336bf5a17';
+const additionalTimeZoneFeature = 'timezone-four-names-2026e-v1';
+const additionalTimeZoneMinimumBuild = 98;
+const additionalTimeZoneCapabilityDescriptor = {
+  'reader': 1,
+  'minimumBuild': additionalTimeZoneMinimumBuild,
+  'legacyData': legacyTimeZoneDataSha256,
+  'additionalData': additionalTimeZoneDataSha256,
+  'names': additionalTimeZoneNames,
+};
+
+class TimeZoneUpgradeRequired extends FormatException {
+  const TimeZoneUpgradeRequired() : super(timeZoneUpgradeRequiredMessage);
+}
+
+// Location's constructor only reads these lists. TimeZone values themselves
+// contain final Duration/bool/String fields, so only the three lists need copies.
+tz.Location _immutableLocation(tz.Location location) => tz.Location(
+  location.name,
+  List<int>.unmodifiable(location.transitionAt),
+  List<int>.unmodifiable(location.transitionZone),
+  List<tz.TimeZone>.unmodifiable(location.zones),
+);
+
+final _utcLocation = tz.Location(
+  'Etc/UTC',
+  const [tz.minTime],
+  const [0],
+  const [tz.TimeZone.UTC],
+);
+
+Map<String, tz.Location>? _locations;
 tz.Location timeZoneLocation(String name) {
-  if (name == 'UTC') return tz.UTC;
-  if (!_initialized) {
+  if (name == 'UTC') return _utcLocation;
+  var locations = _locations;
+  if (locations == null) {
+    // Capture the four explicitly pinned new names before loading legacy data.
+    // Workspace admission policy is separate from this pure format resolver.
+    additional_database.initializeTimeZones();
+    final additional = {
+      for (final name in additionalTimeZoneNames)
+        name: _immutableLocation(tz.getLocation(name)),
+    };
     database.initializeTimeZones();
-    _initialized = true;
+    locations = Map<String, tz.Location>.unmodifiable({
+      ...additional,
+      for (final entry in tz.timeZoneDatabase.locations.entries)
+        entry.key: _immutableLocation(entry.value),
+    });
+    _locations = locations;
   }
-  return tz.getLocation(name);
+  final location = locations[name];
+  if (location == null) {
+    throw tz.LocationNotFoundException(
+      'Location with the name "$name" does not exist',
+    );
+  }
+  return location;
 }
 
 class ResolvedWallTime {

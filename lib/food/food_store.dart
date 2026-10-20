@@ -12,6 +12,7 @@ import '../storage/profile_food_intents.dart';
 import '../storage/writer_guard.dart';
 import '../storage/unified_history.dart';
 import '../storage/unified_record.dart';
+import '../storage/workspace_view.dart';
 import 'food_record.dart';
 import 'food_admission.dart';
 import 'food_import_evidence.dart';
@@ -43,6 +44,19 @@ class FoodStore {
   final String writer, space, _lease;
   final DateTime Function() now;
   FoodState state = FoodState([]);
+  FoodViewSnapshot _currentView = FoodViewSnapshot.empty();
+  FoodViewSnapshot get currentView => _currentView;
+  final _viewChanges = WorkspaceChanges();
+  Object? viewFailure;
+  void Function() listenView(void Function() listener) =>
+      _viewChanges.listen(listener);
+
+  void _publishLegacyView() {
+    _currentView = FoodViewSnapshot.next(state, _currentView);
+    state = _currentView.state;
+    _viewChanges.notify();
+  }
+
   List<FoodRecord> _records = [];
   Map<String, FoodRecord> _births = {};
   Uint8List _remaining = Uint8List(0);
@@ -98,12 +112,14 @@ class FoodStore {
         .map((e) => e.food!)
         .toList();
     final admission = snapshot.foodAdmission;
+    final candidateView = FoodViewSnapshot.next(admission.state, _currentView);
     final pending = unified!.pendingRecords
         .where((r) => r.effect.food != null)
         .map((r) => r.effect.food!)
         .toList();
     return () {
-      state = admission.state;
+      _currentView = candidateView;
+      state = candidateView.state;
       _births = admission.births;
       _readyIds = admission.readyIds;
       _records = List.unmodifiable(records);
@@ -236,15 +252,35 @@ class FoodStore {
     if (_closed || _closing != null) {
       return Future.error(StateError('Food workspace is closed.'));
     }
+    var entered = false;
     final result = profile.serialize(() async {
+      entered = true;
       if (_closed) throw StateError('Food workspace is closed.');
-      return work();
+      try {
+        return await work();
+      } finally {
+        if (unified == null) _viewChanges.notify();
+      }
     });
-    _operations = result.then<void>(
+    final observed = result.then<T>(
+      (value) => value,
+      onError: (Object error, StackTrace stack) {
+        if (!entered) {
+          if (unified != null) {
+            unified!.reportQueueFailure(error);
+          } else {
+            viewFailure = error;
+            _viewChanges.notify();
+          }
+        }
+        Error.throwWithStackTrace(error, stack);
+      },
+    );
+    _operations = observed.then<void>(
       (_) {},
       onError: (Object _, StackTrace _) {},
     );
-    return result;
+    return observed;
   }
 
   /// Drain this handle's already admitted work without requiring a healthy SQL
@@ -253,6 +289,7 @@ class FoodStore {
     if (_closed) return Future<void>.value();
     return _closing ??= _operations.then((_) {
       _closed = true;
+      _viewChanges.clear();
       unified?.detachProjectionInProfileQueue(this);
       profile.releaseWorkspace(_lease);
     });
@@ -308,6 +345,22 @@ class FoodStore {
   }
 
   Future<void> _refresh() async {
+    try {
+      await _refreshClassified();
+      if (unified == null) {
+        viewFailure = null;
+        _publishLegacyView();
+      }
+    } catch (error) {
+      if (unified == null) {
+        viewFailure = error;
+        _viewChanges.notify();
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> _refreshClassified() async {
     if (unified != null) {
       await unified!.refreshInProfileQueue();
       return;
@@ -679,6 +732,7 @@ class FoodStore {
     });
     lastPreparedRecords = List.unmodifiable(batch);
     _remaining = appendBytes;
+    _viewChanges.notify();
     await _append(appendBytes);
     await _refresh();
     return batch;

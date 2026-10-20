@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter/material.dart';
 
 import '../presentation/tag_input.dart';
@@ -63,6 +64,76 @@ class FoodInventoryPage extends StatefulWidget {
   State<FoodInventoryPage> createState() => FoodInventoryPageState();
 }
 
+/// One grouping result per immutable Food projection and local filter tuple.
+/// Clock/focus/busy rebuilds reuse the partition; row date paint stays live.
+class _FoodGrouping {
+  _FoodGrouping({
+    required this.state,
+    required this.workspace,
+    required this.view,
+    required this.query,
+    required Set<String> reasons,
+    required Set<String> brands,
+    required Set<String> locations,
+  }) : reasons = Set.unmodifiable(reasons),
+       brands = Set.unmodifiable(brands),
+       locations = Set.unmodifiable(locations) {
+    final querying = query.trim().isNotEmpty;
+    matches = List.unmodifiable(
+      state.view(
+        view == FoodView.inbox ? FoodView.inventory : view,
+        search: query,
+        reasons: reasons,
+        brands: brands,
+        locations: locations,
+      ),
+    );
+    inbox = List.unmodifiable(
+      (view == FoodView.inventory || view == FoodView.inbox) && !querying
+          ? state.view(FoodView.inbox, brands: brands, locations: locations)
+          : <FoodGroup>[],
+    );
+    active = List.unmodifiable([
+      for (final group in [...inbox, ...matches])
+        for (final item in group.containers)
+          if (!item.deleted) item,
+    ]);
+    visibleIds = Set.unmodifiable(active.map((item) => item.id));
+    groups = querying
+        ? List.unmodifiable(matches.where((g) => !g.containers.first.deleted))
+        : matches;
+    deletedGroups = querying
+        ? List.unmodifiable(matches.where((g) => g.containers.first.deleted))
+        : const [];
+  }
+
+  final FoodState state;
+  final Object? workspace;
+  final FoodView view;
+  final String query;
+  final Set<String> reasons, brands, locations;
+  late final List<FoodGroup> matches, inbox, groups, deletedGroups;
+  late final List<FoodContainer> active;
+  late final Set<String> visibleIds;
+
+  bool accepts(
+    FoodState nextState,
+    Object? nextWorkspace,
+    FoodView nextView,
+    String nextQuery,
+    Set<String> nextReasons,
+    Set<String> nextBrands,
+    Set<String> nextLocations,
+  ) =>
+      identical(state, nextState) &&
+      workspace == nextWorkspace &&
+      view == nextView &&
+      query == nextQuery &&
+      setEquals(reasons, nextReasons) &&
+      setEquals(brands, nextBrands) &&
+      setEquals(locations, nextLocations);
+}
+
 class FoodInventoryPageState extends State<FoodInventoryPage> {
   FoodView view = FoodView.inventory;
   final search = TextEditingController();
@@ -85,25 +156,35 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     }
   }
 
-  List<FoodGroup> _matches() => widget.state.view(
-    view == FoodView.inbox ? FoodView.inventory : view,
-    search: search.text,
-    reasons: reasons,
-    brands: brands,
-    locations: locations,
-  );
+  _FoodGrouping? _groupingMemo;
+  _FoodGrouping get _grouping {
+    final memo = _groupingMemo;
+    if (memo != null &&
+        memo.accepts(
+          widget.state,
+          widget.workspaceIdentity,
+          view,
+          search.text,
+          reasons,
+          brands,
+          locations,
+        )) {
+      return memo;
+    }
+    return _groupingMemo = _FoodGrouping(
+      state: widget.state,
+      workspace: widget.workspaceIdentity,
+      view: view,
+      query: search.text,
+      reasons: reasons,
+      brands: brands,
+      locations: locations,
+    );
+  }
 
-  List<FoodGroup> _inbox() =>
-      (view == FoodView.inventory || view == FoodView.inbox) &&
-          search.text.trim().isEmpty
-      ? widget.state.view(FoodView.inbox, brands: brands, locations: locations)
-      : [];
-
-  List<FoodContainer> _visibleActive() => [
-    for (final group in [..._inbox(), ..._matches()])
-      for (final item in group.containers)
-        if (!item.deleted) item,
-  ];
+  List<FoodGroup> _matches() => _grouping.matches;
+  List<FoodGroup> _inbox() => _grouping.inbox;
+  List<FoodContainer> _visibleActive() => _grouping.active;
   Widget Function(bool panel)? _editorBuilder;
   bool _editorModal = false;
   int _editorRequest = 0;
@@ -166,16 +247,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final querying = search.text.trim().isNotEmpty;
     // Inbox remains a domain partition. Stock alone composes its unsearched
     // undated partition; search includes both active and deleted food.
-    final inboxGroups = _inbox();
-    final matchingGroups = _matches();
-    final visibleIds = _visibleActive().map((e) => e.id).toSet();
+    final grouping = _grouping;
+    final inboxGroups = grouping.inbox;
+    final visibleIds = grouping.visibleIds;
     bulkSelected.retainAll(visibleIds);
-    final groups = querying
-        ? matchingGroups.where((g) => !g.containers.first.deleted).toList()
-        : matchingGroups;
-    final deletedGroups = querying
-        ? matchingGroups.where((g) => g.containers.first.deleted).toList()
-        : <FoodGroup>[];
+    final groups = grouping.groups;
+    final deletedGroups = grouping.deletedGroups;
     return Theme(
       data: Theme.of(context).copyWith(
         iconButtonTheme: IconButtonThemeData(

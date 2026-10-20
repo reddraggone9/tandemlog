@@ -3,10 +3,67 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
+import '../domain/time_zone_policy.dart';
+import '../domain/wall_time.dart'
+    show additionalTimeZoneCapabilityDescriptor, additionalTimeZoneFeature;
 import '../food/food_record.dart';
 import 'unified_record.dart';
 
 String bytesDigest(List<int> bytes) => sha256.convert(bytes).toString();
+
+const additionalTimeZonesCapability = additionalTimeZoneFeature;
+
+/// Pure vocabulary errors become the established durable-admission error type.
+void assertWorkspaceTaskTimeZonePolicy(
+  LogEvent event,
+  TimeZoneNamePolicy policy,
+) {
+  try {
+    policy.assertTaskEventAllowed(event);
+  } on FormatException catch (error) {
+    throw FormatFailure(error.message.toString());
+  }
+}
+
+class SupportedTimeZoneExtension {
+  const SupportedTimeZoneExtension._(
+    this.baseRaw,
+    this.targetRaw,
+    this.space,
+    this.epoch,
+  );
+  final String baseRaw, targetRaw, space, epoch;
+}
+
+/// Only the fixed known extension may advance an already protected manifest.
+SupportedTimeZoneExtension? validateTimeZoneExtension(
+  String exactProtectedBaseRaw,
+  String actualDesiredRaw,
+) {
+  final base = UnifiedManifest.decode(exactProtectedBaseRaw);
+  final target = UnifiedManifest.decode(actualDesiredRaw);
+  if (!base.ready ||
+      base.additionalTimeZonesEnabled ||
+      !target.ready ||
+      !target.additionalTimeZonesEnabled) {
+    return null;
+  }
+  final stripped = UnifiedManifest(
+    target.space,
+    target.epoch,
+    target.sourceDigest,
+    target.owners,
+    target.seals,
+    ready: target.ready,
+  );
+  if (stripped.encode() != exactProtectedBaseRaw) return null;
+  return SupportedTimeZoneExtension._(
+    exactProtectedBaseRaw,
+    actualDesiredRaw,
+    base.space,
+    base.epoch,
+  );
+}
 
 class LegacySeal {
   LegacySeal(
@@ -53,6 +110,7 @@ class UnifiedManifest {
     Map<String, Map<String, dynamic>> owners,
     Iterable<LegacySeal> seals, {
     this.ready = true,
+    this.additionalTimeZonesEnabled = false,
   }) : owners = Map.unmodifiable(
          owners.map(
            (k, v) => MapEntry(k, Map<String, dynamic>.unmodifiable(v)),
@@ -66,6 +124,11 @@ class UnifiedManifest {
         owners.length > 256 ||
         owners.keys.any((id) => !isCanonicalId(id))) {
       throw FormatFailure('Invalid app activation manifest.');
+    }
+    if (additionalTimeZonesEnabled && !ready) {
+      throw FormatFailure(
+        'Additional time zones require an active v4 workspace.',
+      );
     }
     for (final entry in owners.entries) {
       final j = entry.value;
@@ -96,6 +159,26 @@ class UnifiedManifest {
   }
   final String space, epoch, sourceDigest;
   final bool ready;
+  final bool additionalTimeZonesEnabled;
+  TimeZoneNamePolicy get timeZonePolicy => additionalTimeZonesEnabled
+      ? TimeZoneNamePolicy.additional2026eV1
+      : TimeZoneNamePolicy.legacy;
+
+  UnifiedManifest withAdditionalTimeZones() {
+    if (!ready) {
+      throw FormatFailure('Finish the shared workspace upgrade first.');
+    }
+    if (additionalTimeZonesEnabled) return this;
+    return UnifiedManifest(
+      space,
+      epoch,
+      sourceDigest,
+      owners,
+      seals,
+      additionalTimeZonesEnabled: true,
+    );
+  }
+
   final Map<String, Map<String, dynamic>> owners;
   final List<LegacySeal> seals;
   String get digest => bytesDigest(utf8.encode(encode()));
@@ -120,14 +203,34 @@ class UnifiedManifest {
     'sourceDigest': sourceDigest,
     'owners': owners,
     'legacySeals': seals.map((s) => s.toJson()).toList(),
+    if (additionalTimeZonesEnabled)
+      'requiredCapabilities': {
+        additionalTimeZonesCapability: additionalTimeZoneCapabilityDescriptor,
+      },
   };
-  UnifiedManifest staged() =>
-      UnifiedManifest(space, epoch, sourceDigest, owners, seals, ready: false);
+  UnifiedManifest staged() => UnifiedManifest(
+    space,
+    epoch,
+    sourceDigest,
+    owners,
+    seals,
+    ready: false,
+    additionalTimeZonesEnabled: additionalTimeZonesEnabled,
+  );
   String encode() => canonicalDataJson(toJson());
   factory UnifiedManifest.decode(String raw) {
     try {
       final j = jsonDecode(raw) as Map<String, dynamic>;
-      if (j.length != 7 || j['v'] != unifiedProtocol || j['ready'] is! bool) {
+      final hasCapability = j.containsKey('requiredCapabilities');
+      if (j.length != (hasCapability ? 8 : 7) ||
+          j['v'] != unifiedProtocol ||
+          j['ready'] is! bool ||
+          hasCapability &&
+              canonicalDataJson(j['requiredCapabilities']) !=
+                  canonicalDataJson({
+                    additionalTimeZonesCapability:
+                        additionalTimeZoneCapabilityDescriptor,
+                  })) {
         throw FormatFailure(
           'Unknown app manifest. Update the app; history was preserved.',
         );
@@ -143,6 +246,7 @@ class UnifiedManifest {
           (v) => LegacySeal.fromJson(Map<String, dynamic>.from(v as Map)),
         ),
         ready: j['ready'] as bool,
+        additionalTimeZonesEnabled: hasCapability,
       );
       if (result.encode() != raw) {
         throw FormatFailure('Noncanonical app manifest.');
@@ -246,6 +350,13 @@ class UnifiedCutoverPlan {
       final lines = utf8.decode(bytes).split('\n');
       for (final raw in lines.take(lines.length - 1)) {
         final e = UnifiedEffect(kind, raw);
+        final taskEvent = e.task;
+        if (taskEvent != null) {
+          assertWorkspaceTaskTimeZonePolicy(
+            taskEvent,
+            TimeZoneNamePolicy.legacy,
+          );
+        }
         if (e.space != space ||
             e.writer != (task ? owner : foodWriter(owner)) ||
             e.sequence != sequence + 1 ||

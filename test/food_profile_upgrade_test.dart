@@ -90,7 +90,12 @@ void main() {
       writeReleasedProfile();
       profile = await LocalProfileDatabase.open(root.path);
       final db = profile!.database;
-      expect(db.select('PRAGMA user_version').single.values.single, 4);
+      // Opening the new reader upgrades local authority additively to schema5.
+      expect(db.select('PRAGMA user_version').single.values.single, 5);
+      expect(
+        db.select('SELECT * FROM protected_workspace_capabilities'),
+        isEmpty,
+      );
       expect(
         db.select('SELECT raw FROM protected_writer_guards').single['raw'],
         utf8.encode('synthetic guard bytes'),
@@ -167,7 +172,12 @@ void main() {
       old.close();
       profile = await LocalProfileDatabase.open(root.path);
       final db = profile!.database;
-      expect(db.select('PRAGMA user_version').single.values.single, 4);
+      // Opening the new reader upgrades local authority additively to schema5.
+      expect(db.select('PRAGMA user_version').single.values.single, 5);
+      expect(
+        db.select('SELECT * FROM protected_workspace_capabilities'),
+        isEmpty,
+      );
       expect(
         db.select('SELECT raw FROM protected_food_intents').single['raw'],
         receipt,

@@ -20,9 +20,11 @@ class LocalProfileDatabase {
   static const fileName = 'local.sqlite';
   static const _applicationId =
       0x544c4442; // TLDB; local, not canonical format.
-  static const schemaVersion = 4;
+  static const schemaVersion = 5;
   static const _version = schemaVersion;
   static const _schema = {
+    'protected_workspace_capabilities':
+        'CREATE TABLE protected_workspace_capabilities (space TEXT NOT NULL, epoch TEXT NOT NULL, feature TEXT NOT NULL, state TEXT NOT NULL, journal BLOB NOT NULL, PRIMARY KEY(space,epoch,feature))',
     'protected_app_workspaces':
         'CREATE TABLE protected_app_workspaces (space TEXT PRIMARY KEY, epoch TEXT NOT NULL, manifest TEXT NOT NULL, observed TEXT NOT NULL)',
     'protected_app_heads':
@@ -55,6 +57,7 @@ class LocalProfileDatabase {
         'CREATE TABLE protected_food_import_witnesses (space TEXT PRIMARY KEY NOT NULL, version INTEGER NOT NULL CHECK(version=1))',
   };
   static const _introduced = {
+    'protected_workspace_capabilities': 5,
     'protected_app_workspaces': 4,
     'protected_app_heads': 4,
     'protected_app_outbox': 4,
@@ -177,7 +180,10 @@ class LocalProfileDatabase {
         );
         db.execute('PRAGMA application_id=$_applicationId');
         db.execute('PRAGMA user_version=$_version');
-      } else if ((version == 1 || version == 2 || version == 3) &&
+      } else if ((version == 1 ||
+              version == 2 ||
+              version == 3 ||
+              version == 4) &&
           application == _applicationId) {
         // Only an exact known schema may advance. Never
         // rebuild missing authority tables as an empty new installation.

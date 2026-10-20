@@ -40,6 +40,17 @@ files. The original helper has no production cleanup action; ADR0028 adds a dist
 Approved foundation: canonical per-device JSON logs and one SQLite cache. [Protocol v3](schema.md) describes the implemented subset and [recovery](recovery.md) its limits. This document explains the larger contract.
 
 
+## Required time-zone reader capability
+
+Build98 adds the protected capability journal through strict LOCAL profile
+schema4-to-5 migration. The shared v4 manifest stays byte-identical until the
+user explicitly enables the four additional names. The deterministic supported
+extension, per-workspace permission, full-admission transactional promotion,
+old-reader delivery-order barriers and forward recovery are specified in
+[ADR0030](decisions/0030-required-time-zone-reader-capability.md). Opening the
+new local profile is forward-only even before shared activation; this is not a
+canonical-log migration or permission to recreate missing private authority.
+
 ## Device-local section preference
 
 The following RC stores optional `lastSection` (`tasks`/`food`) in the existing LocalSettings JSON in `protected_settings.raw` of `local.sqlite`. Missing, unknown and malformed optional values default to Tasks. Other preference saves preserve unrelated JSON fields and the protected writer binding. Save the section only after navigation succeeds through setup and draft guards. This adds no schema version, canonical event, synced preference or new file. [ADR 0021](decisions/0021-local-sections-and-launcher-shortcuts.md) owns navigation rationale.

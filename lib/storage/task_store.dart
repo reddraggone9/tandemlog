@@ -26,6 +26,9 @@ import '../text/native_text_engine.dart';
 import '../text/recurring_text.dart';
 import 'text_cache.dart';
 import 'unified_history.dart';
+import 'unified_manifest.dart' show assertWorkspaceTaskTimeZonePolicy;
+import 'workspace_view.dart';
+import '../domain/time_zone_policy.dart';
 import 'unified_record.dart';
 import 'unified_manifest.dart' show bytesDigest;
 import '../domain/text_context.dart';
@@ -182,16 +185,63 @@ class TaskStore {
   HistoryVerificationReport? _lastHistoryVerification;
   HistoryVerificationReport? get lastHistoryVerification =>
       _lastHistoryVerification;
+  TaskViewSnapshot _currentView = TaskViewSnapshot.empty();
+  TaskViewSnapshot get currentView => _currentView;
+  final _viewChanges = WorkspaceChanges();
+  Object? viewFailure;
+  Object? viewSharedFailure;
+  bool _viewHasPendingSave = false;
+  bool get viewHasPendingSave => _viewHasPendingSave;
+  void Function() listenView(void Function() listener) =>
+      _viewChanges.listen(listener);
+
+  void _publishLegacyView() {
+    final candidate = TaskViewSnapshot.next(rows, _currentView);
+    final pending = _writerHasPendingAppend || pendingTextOperations.isNotEmpty;
+    _currentView = candidate;
+    _viewHasPendingSave = pending;
+    _viewChanges.notify();
+  }
+
+  Future<T> _runWorkspaceOperation<T>(Future<T> Function() work) async {
+    try {
+      return await work();
+    } finally {
+      if (unified == null) _viewChanges.notify();
+    }
+  }
+
   Future<void> _queue = Future<void>.value();
   bool _closed = false;
   Future<void>? _closing;
   Future<T> _serialize<T>(Future<T> Function() work) {
     if (_closed) return Future.error(StateError('Workspace is closed.'));
+    var entered = false;
+    Future<T> run() {
+      entered = true;
+      return _runWorkspaceOperation(work);
+    }
+
     final result = profileDatabase == null
-        ? _queue.then((_) => work())
-        : profileDatabase!.serialize(work);
-    _queue = result.then<void>((_) {}, onError: (Object _, StackTrace _) {});
-    return result;
+        ? _queue.then((_) => run())
+        : profileDatabase!.serialize(run);
+    final observed = result.then<T>(
+      (value) => value,
+      onError: (Object error, StackTrace stack) {
+        if (!entered) {
+          if (unified != null) {
+            unified!.reportQueueFailure(error);
+          } else {
+            viewFailure = error;
+            viewSharedFailure = error;
+            _viewChanges.notify();
+          }
+        }
+        Error.throwWithStackTrace(error, stack);
+      },
+    );
+    _queue = observed.then<void>((_) {}, onError: (Object _, StackTrace _) {});
+    return observed;
   }
 
   static void _rollback(
@@ -230,6 +280,9 @@ class TaskStore {
   }
 
   final UnifiedHistory? unified;
+  TimeZoneNamePolicy get timeZonePolicy =>
+      unified?.timeZonePolicy ?? TimeZoneNamePolicy.legacy;
+  bool _legacyPolicyCacheChecked = false;
 
   TaskStore._(
     this.folder,
@@ -631,13 +684,24 @@ class TaskStore {
     final pending =
         unified!.hasPending || snapshot.incomplete || snapshot.pendingEffects;
     final acknowledged = snapshot.published[writer] ?? 0;
+    final candidateView = revision == _unifiedTaskRevision
+        ? _currentView
+        : TaskViewSnapshot.next(rows, _currentView);
+    final oldWarning = clockWarning;
+    final maximum = snapshot.records.isEmpty
+        ? null
+        : snapshot.records.map((r) => r.clock).reduce((a, b) => a > b ? a : b);
+    _updateClockWarning(maximum, _nowNs());
+    final warning = clockWarning;
+    clockWarning = oldWarning;
     return () {
       _textBaseline = newBaseline;
       textWriteBlocked = newBlocked;
       _unifiedTaskRevision = revision;
       _writerHasPendingAppend = pending;
       _acknowledgedOwnedSequence = acknowledged;
-      _updateClockWarning(_maximumClock(), _nowNs());
+      clockWarning = warning;
+      _currentView = candidateView;
     };
   }
 
@@ -1682,6 +1746,24 @@ class TaskStore {
   }
 
   Future<bool> _refresh({bool verify = false}) async {
+    try {
+      final changed = await _refreshAdmitted(verify: verify);
+      if (unified == null) {
+        viewFailure = null;
+        viewSharedFailure = null;
+        _publishLegacyView();
+      }
+      return changed;
+    } catch (error) {
+      if (unified == null) {
+        viewFailure = error;
+        _viewChanges.notify();
+      }
+      rethrow;
+    }
+  }
+
+  Future<bool> _refreshAdmitted({bool verify = false}) async {
     if (unified != null) {
       final before = _unifiedTaskRevision;
       final snapshot = await unified!.refreshInProfileQueue();
@@ -1698,8 +1780,24 @@ class TaskStore {
       }
       return before != _unifiedTaskRevision;
     }
-    if (await _readSpace(folder) != space) {
-      throw FormatFailure('Workspace identity changed at this location.');
+    try {
+      if (await _readSpace(folder) != space) {
+        throw FormatFailure('Workspace identity changed at this location.');
+      }
+      viewSharedFailure = null;
+    } catch (error) {
+      // Manifest authority is shared even when legacy Food is unavailable.
+      viewSharedFailure = error;
+      rethrow;
+    }
+    if (!_legacyPolicyCacheChecked) {
+      for (final row in db.select('SELECT raw FROM ${tables.events}')) {
+        assertWorkspaceTaskTimeZonePolicy(
+          LogEvent.decode(row['raw'] as String),
+          TimeZoneNamePolicy.legacy,
+        );
+      }
+      _legacyPolicyCacheChecked = true;
     }
     _updateClockWarning(_maximumClock(), _nowNs());
     final guardState = await writerGuard.load(space, writer);
@@ -1864,6 +1962,7 @@ class TaskStore {
       checkedRecords += verified.records.length;
       for (final record in verified.records) {
         final event = record.event;
+        assertWorkspaceTaskTimeZonePolicy(event, TimeZoneNamePolicy.legacy);
         eventLocations[event.id] = HistoryVerificationFailure(
           info.name,
           event.sequence,
@@ -3104,6 +3203,7 @@ class TaskStore {
     LogEvent event,
     OperationReceipt receipt,
   ) async {
+    assertWorkspaceTaskTimeZonePolicy(event, timeZonePolicy);
     if (!_textTypes.contains(event.type)) return;
     if (textEngine == null) {
       throw FormatFailure('Native text support is required before saving.');
@@ -3120,6 +3220,8 @@ class TaskStore {
           [receipt.id, receipt.raw, receipt.entity],
         );
       });
+      _viewHasPendingSave = true;
+      _viewChanges.notify();
       return;
     }
     final intent = _textIntentFile(event);
@@ -3132,6 +3234,8 @@ class TaskStore {
     } else {
       await createFileDurable(intent, utf8.encode(receipt.raw));
     }
+    _viewHasPendingSave = true;
+    _viewChanges.notify();
     db.execute('INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)', [
       receipt.id,
       receipt.raw,
@@ -3144,6 +3248,12 @@ class TaskStore {
       final pending = ProfileTextIntents(
         profileDatabase!,
       ).pending(space, writer);
+      for (final bytes in pending) {
+        assertWorkspaceTaskTimeZonePolicy(
+          LogEvent.decode(utf8.decode(bytes)),
+          TimeZoneNamePolicy.legacy,
+        );
+      }
       final byId = {
         for (final bytes in pending)
           LogEvent.decode(utf8.decode(bytes)).id: utf8.decode(bytes),
@@ -3177,6 +3287,7 @@ class TaskStore {
       if (file is! File || !file.path.endsWith('.json')) continue;
       final raw = await file.readAsString();
       final event = LogEvent.decode(raw);
+      assertWorkspaceTaskTimeZonePolicy(event, TimeZoneNamePolicy.legacy);
       if (!_textTypes.contains(event.type) ||
           event.writer != writer ||
           event.space != space ||
@@ -3299,6 +3410,7 @@ class TaskStore {
   Future<LogEvent> _retryTextOperation(OperationReceipt receipt) async {
     await _refresh();
     final event = LogEvent.decode(receipt.raw);
+    assertWorkspaceTaskTimeZonePolicy(event, timeZonePolicy);
     if (!_textTypes.contains(event.type) ||
         event.writer != writer ||
         event.space != space ||
@@ -3371,6 +3483,9 @@ class TaskStore {
           PreparedWriterRecord(event.sequence, event.hash!),
       ],
     );
+    _writerHasPendingAppend = true;
+    _viewHasPendingSave = true;
+    _viewChanges.notify();
   }
 
   String get _writerChainHead {
@@ -3428,6 +3543,7 @@ class TaskStore {
         data,
       ).encode(previousHash: previousHash ?? _writerChainHead),
     );
+    assertWorkspaceTaskTimeZonePolicy(e, timeZonePolicy);
     final prior = [
       ..._entityEvents(entity),
       if (type == 'task.moved' && pendingCreation?.entity == entity)
@@ -4621,8 +4737,29 @@ class TaskStore {
   /// the protocol's existing last-writer ordering, not a new conditional merge.
   Future<OccurrenceDueMigrationResult> migrateOccurrenceDates({
     bool Function()? canCommit,
+  }) => _serialize(
+    () => _migrateOccurrenceDatesInProfileQueue(canCommit: canCommit),
+  );
+
+  Future<OccurrenceDueMigrationResult> refreshForWorkspace({
+    bool migrateOccurrenceDates = false,
+    bool Function()? canCommit,
   }) => _serialize(() async {
-    var changed = await _refresh();
+    final changed = await _refresh();
+    if (!migrateOccurrenceDates || canCommit?.call() == false) {
+      return OccurrenceDueMigrationResult(0, const {}, null, changed: changed);
+    }
+    return _migrateOccurrenceDatesInProfileQueue(
+      canCommit: canCommit,
+      initialChanged: changed,
+    );
+  });
+
+  Future<OccurrenceDueMigrationResult> _migrateOccurrenceDatesInProfileQueue({
+    bool Function()? canCommit,
+    bool? initialChanged,
+  }) async {
+    var changed = initialChanged ?? await _refresh();
     final conflicts = <String, String>{};
     var migrated = 0;
     Object? failure;
@@ -4670,7 +4807,7 @@ class TaskStore {
       failure,
       changed: changed,
     );
-  });
+  }
 
   Future<LogEvent> edit(
     String entity,
@@ -5118,6 +5255,7 @@ class TaskStore {
         if (profileDatabase == null) db.close();
       } finally {
         _recurringTextMemo.clear();
+        _viewChanges.clear();
         unified?.detachProjectionInProfileQueue(this);
         await lock?.close();
         if (_locationKey != null) {

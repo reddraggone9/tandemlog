@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:sqlite3/sqlite3.dart' show SqliteException;
+
 import '../domain/event.dart';
+import '../domain/time_zone_policy.dart';
 import '../food/inventory.dart';
 import '../food/food_record.dart';
 import '../food/food_admission.dart';
@@ -12,6 +15,8 @@ import 'local_settings.dart';
 import 'log_folder.dart';
 import 'unified_manifest.dart';
 import 'unified_record.dart';
+import 'workspace_view.dart';
+import 'workspace_capabilities.dart';
 import 'task_store.dart';
 import '../text/native_text_engine.dart';
 
@@ -96,6 +101,29 @@ class UnifiedHistory {
   UnifiedSnapshot get snapshot =>
       _snapshot ?? (throw StateError('Unified history is not admitted.'));
   Object? safetyFailure;
+  final _changes = WorkspaceChanges();
+  bool _viewHasPending = false;
+  bool get viewHasPending => _viewHasPending;
+  void reportQueueFailure(Object error) {
+    safetyFailure = error;
+    _changes.notify();
+  }
+
+  Future<T> _onProfile<T>(Future<T> Function() work) async {
+    var entered = false;
+    try {
+      return await profile.serialize(() {
+        entered = true;
+        return work();
+      });
+    } catch (error) {
+      if (!entered) reportQueueFailure(error);
+      rethrow;
+    }
+  }
+
+  void Function() listenChanges(void Function() listener) =>
+      _changes.listen(listener);
   bool _closed = false;
   Future<void>? _closing;
   final _projections = <Object, UnifiedProjectionStage>{};
@@ -123,6 +151,45 @@ class UnifiedHistory {
 
   void detachProjectionInProfileQueue(Object owner) {
     _projections.remove(owner);
+  }
+
+  TimeZoneNamePolicy get timeZonePolicy => manifest.timeZonePolicy;
+
+  Future<UnifiedSnapshot> enableAdditionalTimeZones({required bool confirmed}) {
+    if (!confirmed) {
+      return Future.error(FormatFailure('Explicit confirmation is required.'));
+    }
+    return _onProfile(() async {
+      await refreshInProfileQueue();
+      if (manifest.additionalTimeZonesEnabled) return snapshot;
+      if (hasPending) {
+        throw FormatFailure(
+          'Finish the earlier saved operation before enabling additional time zones.',
+        );
+      }
+      if (profile.database.select(
+        "SELECT 1 FROM protected_app_migrations WHERE space=? AND state NOT IN ('complete','aborted')",
+        [manifest.space],
+      ).isNotEmpty) {
+        throw FormatFailure('Finish the shared workspace upgrade first.');
+      }
+      final base = manifest.encode();
+      final target = manifest.withAdditionalTimeZones().encode();
+      try {
+        await replaceOwnedTimeZoneCapabilityInProfileQueue(
+          profile: profile,
+          folder: folder,
+          writer: writer,
+          expectedRaw: base,
+          targetRaw: target,
+          confirmed: confirmed,
+        );
+        return await refreshInProfileQueue();
+      } catch (error) {
+        reportQueueFailure(error);
+        rethrow;
+      }
+    });
   }
 
   String get _lease => 'app4:${folder.location}';
@@ -190,7 +257,7 @@ class UnifiedHistory {
     return probe._refresh(observe: false);
   });
 
-  Future<UnifiedSnapshot> refresh() => profile.serialize(refreshInProfileQueue);
+  Future<UnifiedSnapshot> refresh() => _onProfile(refreshInProfileQueue);
   Future<UnifiedSnapshot> refreshInProfileQueue() async {
     try {
       if (_closed) throw StateError('App workspace is closed.');
@@ -201,9 +268,11 @@ class UnifiedHistory {
       }
       final result = await _refresh();
       safetyFailure = null;
+      _changes.notify();
       return result;
     } catch (e) {
       safetyFailure = e;
+      _changes.notify();
       rethrow;
     }
   }
@@ -237,12 +306,39 @@ class UnifiedHistory {
       'SELECT epoch,manifest,observed FROM protected_app_workspaces WHERE space=?',
       [current.space],
     );
-    if (bound.isNotEmpty &&
-        (bound.single['epoch'] != current.epoch ||
-            bound.single['manifest'] != rawManifest)) {
-      throw FormatFailure(
-        'App workspace epoch changed. Preserve history before recovery.',
-      );
+    validateCurrentWorkspaceCapabilitiesInProfileQueue(
+      profile: profile,
+      writer: writer,
+      location: folder.location,
+      actualRaw: rawManifest,
+    );
+    String? transitionBase;
+    if (bound.isNotEmpty) {
+      final baseRaw = bound.single['manifest'] as String;
+      if (bound.single['epoch'] != current.epoch ||
+          baseRaw != rawManifest &&
+              validateTimeZoneExtension(baseRaw, rawManifest) == null) {
+        throw FormatFailure(
+          'App workspace epoch changed. Preserve history before recovery.',
+        );
+      }
+      if (baseRaw != rawManifest) {
+        final oldManifest = UnifiedManifest.decode(baseRaw);
+        // Adoption must never retroactively authorize an old-policy reservation.
+        for (final pending in _outbox(oldManifest)) {
+          _validateReservedRecords(oldManifest, pending);
+        }
+        if (observe) {
+          await prepareTimeZoneCapabilityAdoptionInProfileQueue(
+            profile: profile,
+            folder: folder,
+            writer: writer,
+            expectedRaw: baseRaw,
+            targetRaw: rawManifest,
+          );
+        }
+        transitionBase = baseRaw;
+      }
     }
     final registered = <String>{};
     if (bound.isNotEmpty) {
@@ -364,6 +460,15 @@ class UnifiedHistory {
         }
         final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
         final r = UnifiedRecord.decode(raw);
+        final task = r.effect.task;
+        if (task != null) {
+          assertWorkspaceTaskTimeZonePolicy(
+            task,
+            r.effect.historical
+                ? TimeZoneNamePolicy.legacy
+                : current.timeZonePolicy,
+          );
+        }
         if (r.space != current.space ||
             r.epoch != current.epoch ||
             r.writer != owner ||
@@ -571,7 +676,19 @@ class UnifiedHistory {
     }
     if (!observe) return result;
     final publications = <void Function()>[];
+    var pendingAfterCommit = false;
     profile.transaction(() {
+      if (transitionBase != null) {
+        validateTimeZoneCapabilityTransitionInTransaction(
+          profile: profile,
+          space: current.space,
+          epoch: current.epoch,
+          writer: writer,
+          location: folder.location,
+          expectedRaw: transitionBase,
+          targetRaw: rawManifest,
+        );
+      }
       profile.database.execute(
         'INSERT INTO protected_app_workspaces VALUES (?,?,?,?) ON CONFLICT(space) DO UPDATE SET observed=excluded.observed',
         [current.space, current.epoch, rawManifest, canonicalDataJson(owners)],
@@ -591,9 +708,22 @@ class UnifiedHistory {
       for (final stage in _projections.values) {
         publications.add(stage(result));
       }
+      pendingAfterCommit = _outbox(current).isNotEmpty;
+      if (transitionBase != null) {
+        completeTimeZoneCapabilityTransitionInTransaction(
+          profile: profile,
+          space: current.space,
+          epoch: current.epoch,
+          writer: writer,
+          location: folder.location,
+          expectedRaw: transitionBase,
+          targetRaw: rawManifest,
+        );
+      }
     });
     manifest = current;
     _snapshot = result;
+    _viewHasPending = pendingAfterCommit;
     for (final publish in publications) {
       publish();
     }
@@ -1014,6 +1144,13 @@ class UnifiedHistory {
     final count = lines.length - 1;
     for (final raw in lines.take(count)) {
       final r = UnifiedRecord.decode(raw);
+      final task = r.effect.task;
+      if (task != null) {
+        assertWorkspaceTaskTimeZonePolicy(
+          task,
+          r.effect.historical ? TimeZoneNamePolicy.legacy : m.timeZonePolicy,
+        );
+      }
       if (r.space != m.space ||
           r.epoch != m.epoch ||
           r.writer != writer ||
@@ -1139,6 +1276,10 @@ class UnifiedHistory {
         clock,
       );
       final e = builders[i](++sequence, clock, head);
+      final task = e.task;
+      if (task != null) {
+        assertWorkspaceTaskTimeZonePolicy(task, timeZonePolicy);
+      }
       if (e.historical) {
         throw FormatFailure('Legacy events require coordinated conversion.');
       }
@@ -1191,22 +1332,31 @@ class UnifiedHistory {
       );
     }
     if (reserve) {
-      profile.transaction(() {
-        profile.database.execute(
-          'INSERT INTO protected_app_outbox VALUES (?,?,?,?,?,?,?,?)',
-          [
-            manifest.space,
-            manifest.epoch,
-            writer,
-            physicalSequence,
-            commonHead,
-            base.length,
-            bytesDigest(base),
-            bytes,
-          ],
-        );
-        onReserved?.call(List.unmodifiable(records));
-      });
+      try {
+        profile.transaction(() {
+          profile.database.execute(
+            'INSERT INTO protected_app_outbox VALUES (?,?,?,?,?,?,?,?)',
+            [
+              manifest.space,
+              manifest.epoch,
+              writer,
+              physicalSequence,
+              commonHead,
+              base.length,
+              bytesDigest(base),
+              bytes,
+            ],
+          );
+          onReserved?.call(List.unmodifiable(records));
+        });
+      } catch (error) {
+        if (error is LocalDatabaseFailure || error is SqliteException) {
+          reportQueueFailure(error);
+        }
+        rethrow;
+      }
+      _viewHasPending = true;
+      _changes.notify();
     }
     return UnifiedReservation(List.unmodifiable(records), bytes);
   }
@@ -1232,6 +1382,16 @@ class UnifiedHistory {
   }
 
   Future<UnifiedSnapshot> commitInProfileQueue() async {
+    try {
+      return await _commitInProfileQueue();
+    } catch (error) {
+      safetyFailure = error;
+      _changes.notify();
+      rethrow;
+    }
+  }
+
+  Future<UnifiedSnapshot> _commitInProfileQueue() async {
     await refreshInProfileQueue();
     final pending = _outbox(manifest);
     if (pending.length != 1) {
@@ -1260,14 +1420,24 @@ class UnifiedHistory {
   }
 
   Future<UnifiedSnapshot> appendAtomic(List<UnifiedEffectBuilder> builders) =>
-      profile.serialize(() async {
+      _onProfile(() async {
         await prepareInProfileQueue(builders);
         return commitInProfileQueue();
       });
 
   Future<UnifiedSnapshot> recoverPrepared() =>
-      profile.serialize(recoverPreparedInProfileQueue);
+      _onProfile(recoverPreparedInProfileQueue);
   Future<UnifiedSnapshot> recoverPreparedInProfileQueue() async {
+    try {
+      return await _recoverPreparedInProfileQueue();
+    } catch (error) {
+      safetyFailure = error;
+      _changes.notify();
+      rethrow;
+    }
+  }
+
+  Future<UnifiedSnapshot> _recoverPreparedInProfileQueue() async {
     await refreshInProfileQueue();
     final pending = _outbox(manifest);
     if (pending.isEmpty) return snapshot;
@@ -1301,13 +1471,14 @@ class UnifiedHistory {
   Future<void> close() => _closing ??= profile.closeWorkspace(_lease, () {
     _closed = true;
     _projections.clear();
+    _changes.clear();
     _taskValidation.clear();
   });
 
   Future<UnifiedSnapshot> renameDevice(String? name) =>
       appendAtomic([(sequence, clock, head) => UnifiedEffect.named(name)]);
 
-  Future<void> rebuildOwned() => profile.serialize(() async {
+  Future<void> rebuildOwned() => _onProfile(() async {
     await refreshInProfileQueue();
     if (snapshot.incomplete ||
         hasPending ||

@@ -2,6 +2,31 @@
 
 Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `2026.10.2-rc.1+43`; app dependency graph remains unchanged at `29827eb`. Inventory itself required no package update/build. Subsequent maintenance implements the bounded updater and enforced lockfile below; no dependency PR is merged.
 
+
+## Reviewed maintenance and holds — 2026-10-20
+
+This entry supersedes older proposal inventories only for the three explicitly
+reviewed updates below. Gradle, AGP and Base64 holds remain unchanged.
+
+The isolated October20 integration applies PR12’s four actions/setup-java pin replacements from6.0.1 (`de7274f081f381c8f8158605e0321c36c376e2e6`) to6.1.0 (`b843ebf9b913146b38da2eaa7aeddf76074ae1ad`), retaining Node24, Temurin21 and existing workflow/signing permissions. Exact official source archives, all267 Git-tree members per version, shipped JS and the three changed runtime packages (brace-expansion5.0.12, fast-xml-parser5.11.1, undici6.29.0) passed scoped source review. Clearance covers the prebundled action only; the changed dev/native/compiler graph is not approved for npm installation or rebuilding. Existing upstream green checks are supporting evidence; repository static checks and exact-source hosted Android validation remain integration gates. PR12 is not automatically merged, and this maintenance authorizes no publication.
+
+PR13 (`sqlite3` 3.7.0 → 3.7.1) is held after exact pub-source, native-hook, and platform-asset review. Its default native engine advances SQLite 3.53.4 to 3.54.0, which introduces a VDBE opcode-buffer overflow on affected 32-bit builds; the shipped Android ARM32 target is relevant. SQLite’s official report excludes 3.53.4 and 64-bit builds from this particular defect, and fixes it in 3.54.1. The published Dart package was still 3.7.1 at review time. Retain 3.7.0; reconsider a separately audited package containing the fix before dependency evaluation. No changed package hook or native library was executed. [Official defect and fix](https://sqlite.org/bugs/info/2026-10-10T18:05:46Z), [SQLite 3.54.1](https://www.sqlite.org/releaselog/3_54_1.html).
+
+Timezone0.11.2 is approved for its audited runtime/deserializer fixes only.
+The app retains the exact0.11.1 embedded2025c database and private lookup for
+all341 existing zone names. The four newly packaged names (CST6CDT, EST5EDT,
+MST7MDT, PST8PDT) remain rejected until the explicit workspace reader-floor
+activation in [ADR0030](decisions/0030-required-time-zone-reader-capability.md)
+is implemented and accepted. That compatibility outcome is in progress; the
+interim refusal is not completion. Permission is per workspace, with fixed
+additional-name2026e tables and no silent normalization or existing-rule change.
+A general2026e rules migration remains a separate design decision. This avoids
+reinterpreting existing unversioned schedules: the new package also changes
+effective rules for existing names, including Winnipeg and Vancouver.
+Frozen old-reader and exact-data tests, license/provenance notices and ordinary
+application checks are integration gates; native acceptance remains separate.
+
+
 ## Narrow Kotlin maintenance — 2026-10-08
 
 The isolated remediation branch changes the main Android KGP request from 2.4.0 to 2.4.20, keeping AGP 9.1.0 and Gradle 9.3.1. [Per-version review and effective scope evidence](kotlin-2.4.20-remediation.md) record the KAPT advisory, signed artifacts, bundled hooks/native payloads and retained older Flutter/subproject scopes. The proposal passes independent static review, targeted resolution, local native-backed source tests and all-platform first CI at ac20d4e. Hosted cold/warm Android builds at 45eb9e8 and independent actual artifact/selected-graph review pass; all-platform follow-up CI at 45eb9e8 also passes. Final integration, Android runtime ABI/UI/provider acceptance and publication remain separate. Compiled-source receipts are distinct from later evidence-only commits. The historical inventory below is not rewritten as a claim that every Kotlin scope has upgraded.

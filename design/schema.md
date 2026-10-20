@@ -5,6 +5,18 @@ envelope and additive private-profile schema3 are specified in
 [ADR0014](decisions/0014-food-inventory.md); Food records are outside task JSONL
 discovery and do not change task v3 encoding or meanings.
 
+## V4 capability and local schema5
+
+The following RC understands one fixed requiredCapabilities extension of the
+ready v4 manifest, enabling exactly four additional time-zone names while
+preserving released2025c rules. V3 never gains this permission. Exact descriptor,
+byte equality, old-reader rejection and strict additive profile schema5 are
+specified in [ADR0030](decisions/0030-required-time-zone-reader-capability.md).
+The protected_workspace_capabilities table is local authority, not a disposable
+projection. Frozen prior local schemas must validate before migration; missing
+or modified authority remains an error. Existing canonical v3 bytes and meanings
+remain unchanged.
+
 ## Food Undo envelope
 
 The next preview adds a closed Food envelope version2 solely for `undo`.

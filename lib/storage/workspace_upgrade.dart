@@ -704,10 +704,12 @@ class WorkspaceUpgrade {
             receipt['location'] != folder.location ||
             receipt['sessionDigest'] != bytesDigest(raw) ||
             receipt['manifest'] is! String ||
-            utf8.decode(
-                  await _read(folder, 'tandemlog-space.json', 1024 * 1024),
-                ) !=
-                receipt['manifest']) {
+            !_matchesKnownReadyManifest(
+              receipt['manifest'] as String,
+              utf8.decode(
+                await _read(folder, 'tandemlog-space.json', 1024 * 1024),
+              ),
+            )) {
           throw FormatFailure(
             'Completed upgrade differs from protected activation.',
           );
@@ -898,6 +900,18 @@ class WorkspaceUpgrade {
         _equal(actual, ready)) {
       return;
     }
+    if ({
+          'output',
+          'activating',
+          'ready',
+          'complete',
+        }.contains(_state['phase']) &&
+        _matchesKnownReadyManifest(
+          conversion.manifest.encode(),
+          utf8.decode(actual),
+        )) {
+      return;
+    }
     final phase = _state['phase'];
     final expected = phase == 'staging' ? original : staged;
     final desired = phase == 'staging' ? staged : ready;
@@ -1051,9 +1065,46 @@ class WorkspaceUpgrade {
     return phases.contains(rows.single['state']);
   }
 
+  // Called only while UnifiedHistory.preflight owns this profile's queue.
+  // A retained prefix is prospective input, never a published ready manifest.
+  bool _allowsOwnedActivationPrefix(Uint8List actual) {
+    if (!isCoordinator || _state['phase'] != 'activating') return false;
+    final rows = profile.database.select(
+      'SELECT plan,state FROM protected_app_migrations WHERE space=? AND epoch=?',
+      [space, sessionId],
+    );
+    if (rows.length != 1 || rows.single['state'] != 'activating') return false;
+    final saved = jsonDecode(utf8.decode(rows.single['plan'] as List<int>));
+    if (saved is! Map ||
+        saved['kind'] != 'workspace-upgrade-v1' ||
+        saved['phase'] != 'activating' ||
+        saved['consented'] != true ||
+        saved['location'] != folder.location ||
+        canonicalDataJson(saved['session']) != canonicalDataJson(_session) ||
+        canonicalDataJson(saved) != canonicalDataJson(_state)) {
+      return false;
+    }
+    final expected = utf8.encode(conversion.manifest.staged().encode());
+    final desired = utf8.encode(conversion.manifest.encode());
+    final intent = saved['replacement'];
+    return intent is Map &&
+        intent.length == 2 &&
+        intent['expected'] == base64Encode(expected) &&
+        intent['desired'] == base64Encode(desired) &&
+        actual.length < desired.length &&
+        _equal(actual, desired.take(actual.length).toList());
+  }
+
   Future<UnifiedSnapshot> _preflight({required bool actualOutputs}) =>
       UnifiedHistory.preflight(
-        _UpgradePreview(folder, conversion, actualOutputs),
+        _UpgradePreview(
+          folder,
+          conversion,
+          actualOutputs,
+          allowsOwnedActivationPrefix: actualOutputs
+              ? _allowsOwnedActivationPrefix
+              : null,
+        ),
         profile: profile,
         writer: writer,
         textEngine: textEngine,
@@ -1079,7 +1130,10 @@ class WorkspaceUpgrade {
     _inputs = await _receipts('input');
     _outputs = await _receipts('output');
     final actual = await _read(folder, 'tandemlog-space.json', 1024 * 1024);
-    if (_equal(actual, utf8.encode(conversion.manifest.encode()))) {
+    if (_matchesKnownReadyManifest(
+      conversion.manifest.encode(),
+      utf8.decode(actual),
+    )) {
       _phase = isParticipant && _state['phase'] != 'complete'
           ? 'ready'
           : 'complete';
@@ -1415,11 +1469,31 @@ class WorkspaceUpgrade {
   }
 }
 
+bool _matchesKnownReadyManifest(String baseRaw, String actualRaw) {
+  if (baseRaw == actualRaw) return true;
+  Object? decoded;
+  try {
+    decoded = jsonDecode(actualRaw);
+  } on FormatException {
+    return false;
+  }
+  if (decoded is! Map || !decoded.containsKey('requiredCapabilities')) {
+    return false;
+  }
+  return validateTimeZoneExtension(baseRaw, actualRaw) != null;
+}
+
 class _UpgradePreview implements LogFolder, BoundedLogFolder {
-  _UpgradePreview(this.inner, this.conversion, this.actualOutputs);
+  _UpgradePreview(
+    this.inner,
+    this.conversion,
+    this.actualOutputs, {
+    this.allowsOwnedActivationPrefix,
+  });
   final LogFolder inner;
   final UnifiedConversion conversion;
   final bool actualOutputs;
+  final bool Function(Uint8List)? allowsOwnedActivationPrefix;
   @override
   String get location => inner.location;
   @override
@@ -1436,7 +1510,21 @@ class _UpgradePreview implements LogFolder, BoundedLogFolder {
   @override
   Future<Uint8List> read(String name) async {
     if (name == 'tandemlog-space.json') {
-      return Uint8List.fromList(utf8.encode(conversion.manifest.encode()));
+      final base = conversion.manifest.encode();
+      if (actualOutputs) {
+        final actual = await WorkspaceUpgrade._read(inner, name, 1024 * 1024);
+        if (allowsOwnedActivationPrefix?.call(actual) ?? false) {
+          return Uint8List.fromList(utf8.encode(base));
+        }
+        final raw = utf8.decode(actual);
+        if (_matchesKnownReadyManifest(base, raw)) return actual;
+        if (raw != conversion.manifest.staged().encode()) {
+          throw FormatFailure(
+            'Upgrade preflight manifest changed outside the sealed activation.',
+          );
+        }
+      }
+      return Uint8List.fromList(utf8.encode(base));
     }
     if (!actualOutputs && conversion.files.containsKey(name)) {
       return Uint8List.fromList(conversion.files[name]!);

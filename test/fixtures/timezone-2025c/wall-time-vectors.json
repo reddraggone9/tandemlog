@@ -1,0 +1,103 @@
+[
+  {
+    "zone": "America/Winnipeg",
+    "date": "2026-11-02",
+    "time": "09:00",
+    "instant": "2026-11-02T15:00:00Z"
+  },
+  {
+    "zone": "America/Vancouver",
+    "date": "2026-11-02",
+    "time": "09:00",
+    "instant": "2026-11-02T17:00:00Z"
+  },
+  {
+    "zone": "America/Edmonton",
+    "date": "2026-11-02",
+    "time": "09:00",
+    "instant": "2026-11-02T16:00:00Z"
+  },
+  {
+    "zone": "America/Inuvik",
+    "date": "2026-11-02",
+    "time": "09:00",
+    "instant": "2026-11-02T16:00:00Z"
+  },
+  {
+    "zone": "Africa/Casablanca",
+    "date": "2026-11-02",
+    "time": "09:00",
+    "instant": "2026-11-02T08:00:00Z"
+  },
+  {
+    "zone": "Africa/El_Aaiun",
+    "date": "2026-11-02",
+    "time": "09:00",
+    "instant": "2026-11-02T08:00:00Z"
+  },
+  {
+    "zone": "America/Bogota",
+    "date": "1992-05-02",
+    "time": "12:00",
+    "instant": "1992-05-02T17:00:00Z"
+  },
+  {
+    "zone": "Asia/Tehran",
+    "date": "1979-05-26",
+    "time": "12:00",
+    "instant": "1979-05-26T08:30:00Z"
+  },
+  {
+    "zone": "Europe/Chisinau",
+    "date": "2022-03-27",
+    "time": "03:30",
+    "instant": "2022-03-27T00:30:00Z"
+  },
+  {
+    "zone": "Europe/Dublin",
+    "date": "1925-09-27",
+    "time": "12:00",
+    "instant": "1925-09-27T11:00:00Z"
+  },
+  {
+    "zone": "America/Chicago",
+    "date": "2026-03-08",
+    "time": "02:30",
+    "instant": "2026-03-08T08:30:00Z",
+    "gapMinutes": 60
+  },
+  {
+    "zone": "America/Chicago",
+    "date": "2026-11-01",
+    "time": "01:30",
+    "instant": "2026-11-01T06:30:00Z",
+    "ambiguous": true
+  },
+  {
+    "zone": "Australia/Lord_Howe",
+    "date": "2026-10-04",
+    "time": "02:15",
+    "instant": "2026-10-03T15:45:00Z",
+    "gapMinutes": 30
+  },
+  {
+    "zone": "America/Winnipeg",
+    "date": "2026-11-01",
+    "time": "01:30",
+    "instant": "2026-11-01T06:30:00Z",
+    "ambiguous": true
+  },
+  {
+    "zone": "America/Vancouver",
+    "date": "2026-11-01",
+    "time": "01:30",
+    "instant": "2026-11-01T08:30:00Z",
+    "ambiguous": true
+  },
+  {
+    "zone": "UTC",
+    "date": "2026-11-02",
+    "time": "09:00",
+    "instant": "2026-11-02T09:00:00Z"
+  }
+]

@@ -98,6 +98,8 @@ class TaskSchedule {
     if (timeZone != null) {
       try {
         timeZoneLocation(timeZone);
+      } on TimeZoneUpgradeRequired catch (error) {
+        throw ScheduleValidationException(error.message, ['timeZone']);
       } catch (_) {
         throw const ScheduleValidationException(
           'Unknown time zone identifier.',

@@ -32,6 +32,7 @@ import 'presentation/task_drop_indicator.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
+import 'domain/time_zone_policy.dart';
 import 'presentation/view_clock.dart';
 import 'presentation/task_metadata.dart';
 import 'presentation/tag_filter_picker.dart';
@@ -39,6 +40,7 @@ import 'presentation/task_editor.dart';
 import 'presentation/form_validation.dart';
 import 'presentation/name_entry_dialog.dart';
 import 'presentation/device_name_dialog.dart';
+import 'presentation/time_zone_upgrade_dialog.dart';
 import 'presentation/workspace_upgrade.dart';
 import 'presentation/checklist_panel.dart';
 import 'presentation/checklist_disclosure_ink_border.dart';
@@ -57,6 +59,8 @@ import 'storage/local_profile_database.dart';
 import 'storage/local_profile_migration.dart';
 import 'storage/task_store.dart';
 import 'storage/unified_history.dart';
+import 'storage/workspace_state.dart';
+import 'storage/workspace_capabilities.dart';
 import 'storage/workspace_upgrade.dart';
 import 'storage/workspace_upgrade_recovery.dart';
 import 'storage/checklist_expansion_store.dart';
@@ -252,6 +256,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool taskMenuOpen = false;
   bool busy = true, all = false, showCompleted = false, showUpcoming = false;
   bool choosingFolder = false;
+  // Keep private setup input mounted and focused during additive metadata I/O.
+  // This does not grant workspace permission or bypass busy command guards.
+  bool _changingTimeZoneMetadata = false;
   // Consent retains command admission/lifecycle ownership without displaying
   // a running operation while the user is deciding.
   bool awaitingCompletionConfirmation = false;
@@ -302,7 +309,60 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   );
 
   String? pendingUserId;
-  List<Map<String, dynamic>> rows = [];
+  WorkspaceState? workspaceState;
+  void Function()? _unsubscribeWorkspace;
+  bool _taskProjectionDirty = true;
+  List<Map<String, dynamic>> get rows =>
+      workspaceState?.current.tasks.rows ?? const [];
+
+  void _detachWorkspaceState() {
+    _unsubscribeWorkspace?.call();
+    _unsubscribeWorkspace = null;
+    workspaceState?.close();
+    workspaceState = null;
+  }
+
+  TimeZoneNamePolicy get _timeZonePolicy =>
+      workspaceState?.current.timeZonePolicy ?? TimeZoneNamePolicy.legacy;
+
+  void _bindWorkspaceState() {
+    final tasks = store, food = foodStore;
+    final current = workspaceState;
+    if (identical(current?.tasks, tasks) && identical(current?.food, food)) {
+      return;
+    }
+    _detachWorkspaceState();
+    _taskProjectionDirty = true;
+    if (tasks == null) return;
+    final session = workspaceState = WorkspaceState(tasks: tasks, food: food);
+    var previous = session.current;
+    _unsubscribeWorkspace = session.listen((next) {
+      if (!mounted ||
+          !identical(workspaceState, session) ||
+          !identical(store, tasks) ||
+          !identical(foodStore, food)) {
+        return;
+      }
+      final tasksChanged = !identical(previous.tasks, next.tasks);
+      final usersChanged = !identical(previous.tasks.users, next.tasks.users);
+      final foodChanged = !identical(previous.food, next.food);
+      final healthChanged = !identical(previous.health, next.health);
+      final policyChanged = previous.timeZonePolicy != next.timeZonePolicy;
+      previous = next;
+      if (next.health.sharedFailure != null) {
+        _stopForSharedSafety(next.health.sharedFailure!);
+        return;
+      }
+      if (tasksChanged) _taskProjectionDirty = true;
+      if (healthChanged ||
+          policyChanged ||
+          (foodVisible ? foodChanged || usersChanged : tasksChanged)) {
+        setState(() {});
+      }
+      if (tasksChanged && !foodVisible) _invalidateView();
+    });
+  }
+
   final capture = TextEditingController();
   final captureFocus = FocusNode();
   bool captureFailure = false;
@@ -364,6 +424,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   void _invalidateView() {
     if (!mounted || !foreground) return;
+    if (foodVisible && taskView != null) {
+      _taskProjectionDirty = true;
+      viewClock.stop();
+      return;
+    }
     if (!timeSource.ready) {
       viewClock.stop();
       setState(() => viewError = timeSource.error);
@@ -428,6 +493,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             tags: Set.of(selectedTags),
             searchQuery: searchQuery,
           );
+          _taskProjectionDirty = false;
           taskViewZoneId = time.localZoneId;
           taskViewInstant = time.instant;
           return projected;
@@ -521,6 +587,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             : LocalLogFolder(location));
     final engine = textEngine ??=
         widget.textEngineFactory?.call() ?? NativeTextEngine();
+    await resumeOwnedWorkspaceCapabilitiesBeforeOpen(
+      profile: profileDatabase!,
+      folder: folder,
+      writer: settings!.writer,
+    );
     // Detect shared sessions before store opening can initialize text or
     // automatically append occurrence-to-Due changes.
     try {
@@ -537,7 +608,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         upgradeScreen = true;
         store = null;
         foodStore = null;
-        rows = [];
+        _bindWorkspaceState();
         return true;
       }
       workspaceUpgrade = null;
@@ -553,7 +624,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       upgradeScreen = true;
       store = null;
       foodStore = null;
-      rows = [];
+      _bindWorkspaceState();
       return true;
     }
     UnifiedHistory? unified;
@@ -661,7 +732,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     foodStore = openedFood;
     foodError = openedFoodError;
     expandedChecklists = expanded;
-    rows = store!.rows;
+    _bindWorkspaceState();
     if (_hasPendingOperation(store!)) {
       error =
           'An earlier saved operation needs confirmation. Retry to finish it.';
@@ -772,6 +843,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           _clearSelection();
           ScaffoldMessenger.of(context).clearSnackBars();
           setState(() => foodVisible = latest.food);
+          _invalidateView();
         }
         final section = latest.food ? AppSection.food : AppSection.tasks;
         if (settings!.lastSection != section) {
@@ -980,6 +1052,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         setState(() {
           foodStore = opened;
           foodError = null;
+          _bindWorkspaceState();
         });
       } on FoodHistoryFailure catch (failure) {
         if (mounted && identical(store, expected)) {
@@ -1048,16 +1121,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
     return Column(
       children: [
-        if (origin.hasPreparedAppend ||
+        if (workspaceState!.health.hasPendingFoodSave ||
             hasPendingCommand ||
-            origin.pendingReferences > 0)
+            workspaceState!.health.foodPendingReferences > 0)
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
-                    origin.hasPreparedAppend || hasPendingCommand
+                    workspaceState!.health.hasPendingFoodSave ||
+                            hasPendingCommand
                         ? 'An earlier food save needs confirmation. Retry to finish it.'
                         : 'Waiting for related food changes from folder sync.',
                   ),
@@ -1073,7 +1147,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           child: FoodInventoryPage(
             key: foodPageKey,
             onCloseReadinessChanged: _wakeSectionRequests,
-            state: origin.state,
+            state: workspaceState!.current.food!.state,
             workspaceIdentity: origin,
             progress: toolbarProgress(
               busy: busy && !awaitingCompletionConfirmation,
@@ -1083,9 +1157,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             identityMenu: (child) => _identityMenu(users, child: child),
             busy: busy,
             error: foodError,
-            savePending: origin.hasPreparedAppend || pendingFoodCommand != null,
+            savePending:
+                workspaceState!.health.hasPendingFoodSave ||
+                pendingFoodCommand != null,
             hasPendingSave: () =>
-                origin.hasPreparedAppend || pendingFoodCommand != null,
+                workspaceState!.health.hasPendingFoodSave ||
+                pendingFoodCommand != null,
             onAdd: (details, count) => _foodCommand(
               origin,
               'add:$count:${details.groupKey}',
@@ -1114,7 +1191,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             ),
             undoLabel: undo == null ? 'Undo' : 'Undo ${undo.label}',
             onUndo:
-                undo == null || origin.hasPreparedAppend || hasPendingCommand
+                undo == null ||
+                    workspaceState!.health.hasPendingFoodSave ||
+                    hasPendingCommand
                 ? null
                 : () => _undoFoodLatest(origin),
           ),
@@ -1188,7 +1267,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       rethrow;
     }
     if (!mounted) return;
-    rows = store!.rows;
+
     user = selected;
     if (destinationRevision != null) {
       if (requestedSection != null &&
@@ -1220,8 +1299,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }, allowDuringUpgrade: true);
 
   Future<void> _showSettings() async {
+    final origin = store, owner = profileDatabase, preferences = settings;
     final location =
-        upgradeFolder?.location ?? store?.folder.location ?? settings?.folder;
+        upgradeFolder?.location ??
+        origin?.folder.location ??
+        preferences?.folder;
+    bool current() =>
+        mounted &&
+        identical(store, origin) &&
+        identical(profileDatabase, owner) &&
+        identical(settings, preferences) &&
+        location ==
+            (upgradeFolder?.location ??
+                store?.folder.location ??
+                settings?.folder);
     bool canOpen = false;
     if (location != null) {
       try {
@@ -1230,7 +1321,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         /* unavailable */
       }
     }
-    if (!mounted) return;
+    if (!current()) return;
+    var timeZoneRecovery = false;
+    if (location != null && owner != null && preferences != null) {
+      try {
+        timeZoneRecovery = await hasOwnedPendingWorkspaceCapabilities(
+          profile: owner,
+          writer: preferences.writer,
+          location: location,
+        );
+      } catch (failure) {
+        if (current()) _stopForSharedSafety(failure);
+      }
+    }
+    if (!mounted || !current()) return;
     final action = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -1251,8 +1355,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     Appearance.dark => 'Dark',
                   }),
                   trailing: const Icon(Icons.chevron_right),
-                  enabled: settingsLoaded,
-                  onTap: settingsLoaded
+                  enabled: settingsLoaded && sharedSafetyError == null,
+                  onTap: settingsLoaded && sharedSafetyError == null
                       ? () async {
                           final choice = await showDialog<Appearance>(
                             context: ctx,
@@ -1337,6 +1441,49 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     onTap: () => Navigator.pop(ctx, 'device-name'),
                   ),
                 ],
+                if (store != null || timeZoneRecovery) ...[
+                  ListTile(
+                    key: const ValueKey('additional-time-zones-setting'),
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      timeZoneRecovery
+                          ? 'Resume time zone update…'
+                          : 'Additional time zones',
+                    ),
+                    subtitle: Text(
+                      timeZoneRecovery
+                          ? 'Finish the update already started on this device'
+                          : store?.unified == null
+                          ? 'Upgrade the shared workspace first'
+                          : _timeZonePolicy.allowsAdditionalTimeZones
+                          ? 'Enabled · requires build 98 or newer on every device'
+                          : 'Requires updated apps on every device',
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    enabled:
+                        !busy &&
+                        (timeZoneRecovery ||
+                            (sharedSafetyError == null &&
+                                !_upgradeActive &&
+                                !_timeZonePolicy.allowsAdditionalTimeZones &&
+                                (store == null ||
+                                    !_hasPendingOperation(store!)))),
+                    onTap: () {
+                      if (!ctx.mounted ||
+                          ModalRoute.of(ctx)?.isCurrent != true) {
+                        return;
+                      }
+                      Navigator.pop(
+                        ctx,
+                        timeZoneRecovery
+                            ? 'resume-time-zones'
+                            : store?.unified == null
+                            ? 'upgrade'
+                            : 'additional-time-zones',
+                      );
+                    },
+                  ),
+                ],
                 const Divider(height: 32),
                 const Text('Data folder'),
                 const SizedBox(height: 8),
@@ -1353,6 +1500,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       : 'Tasks are stored in this folder. Use your sync app to share changes between devices, and back up the folder before removing app data. Switching folders does not move or delete tasks.',
                 ),
                 const SizedBox(height: 12),
+                if (timeZoneRecovery && widget.folderActions.requiresPicker)
+                  OutlinedButton.icon(
+                    key: const ValueKey(
+                      'restore-time-zone-folder-access-setting',
+                    ),
+                    onPressed: busy
+                        ? null
+                        : () {
+                            if (!ctx.mounted ||
+                                ModalRoute.of(ctx)?.isCurrent != true) {
+                              return;
+                            }
+                            Navigator.pop(ctx, 'restore-time-zone-access');
+                          },
+                    icon: const Icon(Icons.folder_open),
+                    label: const Text('Restore access to this folder'),
+                  ),
                 if (_upgradeActive)
                   OutlinedButton.icon(
                     key: const ValueKey(
@@ -1376,7 +1540,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           minimumSize: const Size(64, 48),
                           visualDensity: VisualDensity.standard,
                         ),
-                        onPressed: canOpen
+                        onPressed: canOpen && sharedSafetyError == null
                             ? () => Navigator.pop(ctx, 'open')
                             : null,
                         icon: const Icon(Icons.folder_open),
@@ -1391,7 +1555,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           settingsLoaded &&
                               !busy &&
                               !choosingFolder &&
-                              !_upgradeActive
+                              !_upgradeActive &&
+                              sharedSafetyError == null
                           ? () => Navigator.pop(ctx, 'choose')
                           : null,
                       child: Text(
@@ -1406,7 +1571,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         minimumSize: const Size(64, 48),
                         visualDensity: VisualDensity.standard,
                       ),
-                      onPressed: store != null && !busy && !_upgradeActive
+                      onPressed:
+                          store != null &&
+                              !busy &&
+                              !_upgradeActive &&
+                              sharedSafetyError == null
                           ? () => Navigator.pop(ctx, 'verify')
                           : null,
                       icon: const Icon(Icons.fact_check_outlined),
@@ -1443,7 +1612,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         ],
       ),
     );
-    if (!mounted || action == null) return;
+    if (!current() || action == null) return;
     if (action == 'restore-upgrade-access') {
       await _restoreWorkspaceUpgradeAccess();
     } else if (action == 'upgrade') {
@@ -1451,6 +1620,31 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         await _continueWorkspaceUpgrade();
       } else {
         await _prepareWorkspaceUpgrade();
+      }
+    } else if (action == 'additional-time-zones') {
+      await _enableAdditionalTimeZones();
+    } else if (action == 'resume-time-zones') {
+      await _resumeAdditionalTimeZones(location!);
+    } else if (action == 'restore-time-zone-access') {
+      final origin = store, owner = profileDatabase, preferences = settings;
+      try {
+        final restored = await widget.folderActions.restoreAccess(location!);
+        if (restored != null &&
+            mounted &&
+            identical(store, origin) &&
+            identical(profileDatabase, owner) &&
+            identical(settings, preferences)) {
+          if (restored != location) {
+            throw StateError(
+              'Choose the same data folder to resume this update.',
+            );
+          }
+          await _resumeAdditionalTimeZones(location);
+        }
+      } catch (failure) {
+        if (mounted && identical(store, origin)) {
+          setState(() => error = failureMessage(failure));
+        }
       }
     } else if (action == 'device-name') {
       await _editDeviceName();
@@ -1908,12 +2102,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final previous = store, previousFood = foodStore;
     final expectedSpace = previous?.space ?? workspaceUpgrade?.space;
     final expectedWriter = settings!.writer;
+    _detachWorkspaceState();
     await previousFood?.close();
     await previous?.close();
     await previous?.unified?.close();
     store = null;
     foodStore = null;
-    rows = [];
+    _bindWorkspaceState();
     await _open(folder.location, closeEditors: false);
     if (!_upgradeActive && mounted) {
       final reopened = store;
@@ -1956,6 +2151,104 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       sharedSafetyError = null;
       error = null;
       _invalidateView();
+    }
+  }
+
+  Future<void> _enableAdditionalTimeZones() async {
+    final origin = store, history = store?.unified;
+    if (!mounted ||
+        busy ||
+        origin == null ||
+        history == null ||
+        sharedSafetyError != null ||
+        _upgradeActive ||
+        _hasPendingOperation(origin) ||
+        _timeZonePolicy.allowsAdditionalTimeZones) {
+      return;
+    }
+    final confirmed = await confirmAdditionalTimeZones(context);
+    if (!confirmed ||
+        !mounted ||
+        !identical(store, origin) ||
+        !identical(origin.unified, history)) {
+      return;
+    }
+    // This adds reader support in the same workspace/epoch. Draft controllers,
+    // captures and baselines remain owned by their existing editor sessions.
+    setState(() => _changingTimeZoneMetadata = true);
+    try {
+      await _act(() async {
+        if (!mounted || !identical(store, origin) || _upgradeActive) return;
+        await history.enableAdditionalTimeZones(confirmed: true);
+      });
+    } finally {
+      _changingTimeZoneMetadata = false;
+      if (mounted) setState(() {});
+    }
+  }
+
+  Future<void> _resumeAdditionalTimeZones(String location) async {
+    final origin = store, foodOrigin = foodStore, owner = profileDatabase;
+    final preferences = settings;
+    if (!mounted ||
+        busy ||
+        owner == null ||
+        preferences == null ||
+        (origin != null && origin.folder.location != location)) {
+      return;
+    }
+    final writer = preferences.writer;
+    bool current() =>
+        mounted &&
+        identical(store, origin) &&
+        identical(foodStore, foodOrigin) &&
+        identical(profileDatabase, owner) &&
+        identical(settings, preferences) &&
+        preferences.writer == writer;
+    final completion = activeActionDone = Completer<void>();
+    importer?.stop();
+    setState(() {
+      _changingTimeZoneMetadata = true;
+      busy = true;
+    });
+    try {
+      await syncing;
+      if (!current()) return;
+      await resumeOwnedWorkspaceCapabilitiesBeforeOpen(
+        profile: owner,
+        folder:
+            origin?.folder ??
+            widget.folderFactory?.call(location) ??
+            (Platform.isAndroid
+                ? AndroidLogFolder(location)
+                : LocalLogFolder(location)),
+        writer: writer,
+      );
+      if (!current()) return;
+      if (origin == null) {
+        await _open(location, closeEditors: false);
+      } else {
+        await workspaceState!.refresh();
+      }
+      if (mounted && (origin == null || identical(store, origin))) {
+        setState(() {
+          sharedSafetyError = null;
+          if (!captureFailure) error = null;
+          errorFromRefresh = false;
+        });
+      }
+    } catch (failure) {
+      if (current()) _stopForSharedSafety(failure);
+    } finally {
+      completion.complete();
+      if (identical(activeActionDone, completion)) activeActionDone = null;
+      _changingTimeZoneMetadata = false;
+      if (mounted) {
+        setState(() => busy = false);
+        _configureImporter();
+        if (sharedSafetyError == null) importer?.request();
+        _wakeSectionRequests();
+      }
     }
   }
 
@@ -2092,7 +2385,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         setState(() {
           error = null;
           errorFromRefresh = false;
-          rows = store?.rows ?? [];
         });
       }
     } catch (e) {
@@ -2171,9 +2463,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         final confirmed = origin.confirmedOperations(prepared);
         final confirmedLatest =
             latest != null && latest.operations.any(confirmed.contains);
-        setState(() {
-          rows = origin.rows;
-        });
         _invalidateView();
         if (latest != null &&
             confirmedLatest &&
@@ -2289,7 +2578,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (rebaseBulk && _sameTaskContent(beforeUndo, origin.taskSnapshot)) {
           bulkSnapshot = origin.taskSnapshot;
         }
-        rows = origin.rows;
       });
       _invalidateView();
       final newer = result.keptNewerChanges ? ' Newer changes were kept.' : '';
@@ -2327,7 +2615,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   void _configureImporter() {
     _configureUpgradePolling();
-    _invalidateView();
+    _bindWorkspaceState();
+    if (_taskProjectionDirty) _invalidateView();
     if (!identical(watchedStore, store)) {
       importer?.dispose();
       watchedStore = store;
@@ -2362,7 +2651,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return;
     }
     final origin = store!;
-    final foodOrigin = foodStore;
     syncing = () async {
       try {
         // Discover a peer's session before normal reconciliation and its
@@ -2389,30 +2677,43 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
         final previousClockWarning = origin.clockWarning;
         final previousMigrationError = occurrenceMigrationError;
-        var changed = await origin.refresh();
-        if (editingTask == null &&
-            editingBulk == null &&
-            !openingChecklistEditor &&
-            checklistEditorDone == null &&
-            pendingCapture.isEmpty) {
-          final migration = await origin.migrateOccurrenceDates(
-            canCommit: () =>
-                mounted &&
-                identical(store, origin) &&
-                !busy &&
-                editingTask == null &&
-                editingBulk == null &&
-                !openingChecklistEditor &&
-                checklistEditorDone == null &&
-                pendingCapture.isEmpty &&
-                foreground &&
-                sharedSafetyError == null &&
-                !_upgradeActive,
-          );
-          changed = changed || migration.changed;
-          occurrenceMigrationError = migration.error == null
+        final session = workspaceState!;
+        final previousTasks = session.current.tasks;
+        final result = await session.refresh(
+          migrateOccurrenceDates:
+              editingTask == null &&
+              editingBulk == null &&
+              !openingChecklistEditor &&
+              checklistEditorDone == null &&
+              pendingCapture.isEmpty,
+          canMigrate: () =>
+              mounted &&
+              identical(workspaceState, session) &&
+              identical(store, origin) &&
+              !busy &&
+              editingTask == null &&
+              editingBulk == null &&
+              !openingChecklistEditor &&
+              checklistEditorDone == null &&
+              pendingCapture.isEmpty &&
+              foreground &&
+              sharedSafetyError == null &&
+              !_upgradeActive,
+        );
+        final changed = !identical(previousTasks, result.snapshot.tasks);
+        final nextFoodError = result.snapshot.health.foodFailure;
+        final message = nextFoodError == null
+            ? null
+            : failureMessage(nextFoodError);
+        if (mounted &&
+            identical(workspaceState, session) &&
+            foodError != message) {
+          setState(() => foodError = message);
+        }
+        if (result.migration != null) {
+          occurrenceMigrationError = result.migrationError == null
               ? null
-              : failureMessage(migration.error!);
+              : failureMessage(result.migrationError!);
         }
         undoHistory.reconcile(origin.confirmedOperations);
         final clockWarningChanged = previousClockWarning != origin.clockWarning;
@@ -2436,7 +2737,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 errorFromRefresh ||
                 reconcileCapture)) {
           setState(() {
-            rows = origin.rows;
             if (_hasPendingOperation(origin)) {
               error =
                   'An earlier saved operation needs confirmation. Retry to finish it.';
@@ -2470,31 +2770,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           });
         }
       }
-      // Unified projections share admission. Released v3 keeps its independent
-      // Food failure behavior.
-      if (foodOrigin != null) {
-        try {
-          await foodOrigin.refresh();
-          if (mounted && identical(foodStore, foodOrigin)) {
-            setState(() => foodError = null);
-          }
-        } catch (e) {
-          if (mounted && identical(foodStore, foodOrigin)) {
-            if (e is FoodHistoryFailure) {
-              setState(() => foodError = failureMessage(e));
-            } else {
-              _stopForSharedSafety(e);
-            }
-          }
-        }
-      }
     }();
     await syncing;
     syncing = null;
   }
 
   bool _hasPendingOperation(TaskStore origin) =>
-      origin.unified?.hasPending ?? origin.pendingTextOperations.isNotEmpty;
+      identical(workspaceState?.tasks, origin)
+      ? workspaceState!.health.hasPendingTaskSave
+      : origin.unified?.hasPending ?? origin.pendingTextOperations.isNotEmpty;
 
   Future<void> _retryFolderRead() async {
     final origin = store;
@@ -2599,7 +2883,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         foodStore = foodOrigin ?? openedFood;
         foodError = isolatedFoodError;
         sharedSafetyError = null;
-        rows = origin.rows;
+        _bindWorkspaceState();
         if (!captureFailure) error = null;
         errorFromRefresh = false;
         if (_hasPendingOperation(origin)) {
@@ -2699,7 +2983,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         final previousStore = store;
         final previousFood = foodStore, previousFoodError = foodError;
         final previousUser = user;
-        final previousRows = rows;
         final previousFolder = settings!.folder;
         final previousExpanded = expandedChecklists;
         final previousError = error;
@@ -2708,6 +2991,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           if (!await _open(selected, closeEditors: false) || !mounted) return;
           await _saveSettings();
         } catch (_) {
+          _detachWorkspaceState();
           if (!identical(foodStore, previousFood)) await foodStore?.close();
           if (!identical(store, previousStore)) {
             final failed = store;
@@ -2716,9 +3000,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           }
           store = previousStore;
           foodStore = previousFood;
+          _bindWorkspaceState();
           foodError = previousFoodError;
           user = previousUser;
-          rows = previousRows;
           expandedChecklists = previousExpanded;
           error = previousError;
           errorFromRefresh = previousErrorFromRefresh;
@@ -3000,7 +3284,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             : TextSaveCommand(origin, session);
         editingTextStatus = status;
         editingBulk = null;
-        rows = origin.rows;
       });
     } else if (tasks.isNotEmpty) {
       setState(() {
@@ -3259,7 +3542,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       );
       await origin.refresh();
       if (mounted) {
-        setState(() => rows = origin.rows);
         _invalidateView();
       }
       if (result.error is StaleTaskSnapshot) bulkConflict = true;
@@ -3294,7 +3576,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (error is StaleTaskSnapshot) bulkConflict = true;
       await origin.refresh();
       if (mounted) {
-        setState(() => rows = origin.rows);
         _invalidateView();
       }
       rethrow;
@@ -3437,6 +3718,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       final editor = task != null
           ? TaskEditor(
               key: editorKey,
+              timeZonePolicy: _timeZonePolicy,
               onCloseReadinessChanged: _wakeSectionRequests,
               contextNotice:
                   !panel && error != null && sharedSafetyError == null
@@ -3483,7 +3765,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 );
                 await origin.refresh();
                 if (mounted) {
-                  setState(() => rows = origin.rows);
                   _invalidateView();
                 }
               },
@@ -3554,7 +3835,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 }
                 if (mounted) {
                   setState(() {
-                    rows = origin.rows;
                     final saved = rows
                         .where(
                           (row) =>
@@ -3569,6 +3849,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             )
           : BulkTaskEditor(
               key: bulkEditorKey,
+              timeZonePolicy: _timeZonePolicy,
               onCloseReadinessChanged: _wakeSectionRequests,
               contextNotice:
                   !panel && error != null && sharedSafetyError == null
@@ -3620,7 +3901,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     )
                     .toList();
                 if (mounted) {
-                  setState(() => rows = origin.rows);
                   _invalidateView();
                 }
                 if (!result.succeeded) {
@@ -3956,7 +4236,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ),
         );
         await store!.refresh();
-        rows = store!.rows;
+
         if (!result.succeeded) {
           throw StateError(
             '${result.committedIds.length} moves acknowledged; additional moves may have saved. The list was refreshed; review it before dragging again. ${failureMessage(result.error!)}',
@@ -4867,7 +5147,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 if (mounted) {
                   setState(() {
                     busy = false;
-                    rows = origin.rows;
                   });
                   _invalidateView();
                   _configureImporter();
@@ -4919,6 +5198,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _detachWorkspaceState();
     FocusManager.instance.removeListener(_focusChanged);
     sectionNavigation?.dispose();
     upgradePoll?.cancel();
@@ -5118,6 +5398,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                     ? 'Upgrade waiting · continue'
                                     : 'Workspace upgrade available',
                               ),
+                            ),
+                          ),
+                        ),
+                      if (sharedSafetyError != null && keepSetupInputs)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              key: const ValueKey('shared-recovery-settings'),
+                              style: TextButton.styleFrom(
+                                minimumSize: const Size(64, 48),
+                                visualDensity: VisualDensity.standard,
+                              ),
+                              onPressed: busy ? null : _showSettings,
+                              child: const Text('Settings'),
                             ),
                           ),
                         ),
@@ -5325,14 +5621,40 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(12),
-                                        child: TextButton(
-                                          key: const ValueKey(
-                                            'retry-shared-read',
-                                          ),
-                                          onPressed: busy
-                                              ? null
-                                              : _retrySharedRead,
-                                          child: const Text('Retry'),
+                                        child: Wrap(
+                                          spacing: 12,
+                                          runSpacing: 8,
+                                          alignment: WrapAlignment.center,
+                                          children: [
+                                            TextButton(
+                                              key: const ValueKey(
+                                                'retry-shared-read',
+                                              ),
+                                              style: TextButton.styleFrom(
+                                                minimumSize: const Size(64, 48),
+                                                visualDensity:
+                                                    VisualDensity.standard,
+                                              ),
+                                              onPressed: busy
+                                                  ? null
+                                                  : _retrySharedRead,
+                                              child: const Text('Retry'),
+                                            ),
+                                            TextButton(
+                                              key: const ValueKey(
+                                                'shared-recovery-settings',
+                                              ),
+                                              style: TextButton.styleFrom(
+                                                minimumSize: const Size(64, 48),
+                                                visualDensity:
+                                                    VisualDensity.standard,
+                                              ),
+                                              onPressed: busy
+                                                  ? null
+                                                  : _showSettings,
+                                              child: const Text('Settings'),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -5444,7 +5766,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       focusNode: firstNameFocus,
                       readOnly: pendingUserName != null,
                       autofocus: true,
-                      enabled: !busy,
+                      enabled: !busy || _changingTimeZoneMetadata,
                       maxLength: 100,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(

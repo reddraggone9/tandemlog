@@ -1,0 +1,45 @@
+{
+  "v": 1,
+  "package": "timezone",
+  "version": "0.11.2",
+  "archiveSHA256": "9f4e5a1a0e4fef7dd3424842c0575db01bfb7a11730e8d55753fcd5c5c98767b",
+  "upstreamCommit": "c6d9dce25161ca0fec4428de977f0f47a2fd1586",
+  "sourcePath": "lib/data/latest.tzf",
+  "sourceDataSHA256": "a49273d40c8560e4559e79178dd7384d3fb427933929ebe6d22ccfa336bf5a17",
+  "selectedDataSHA256": "157d7906210f5331f21db80763a5e85601182890ff5c2a32adb0bd4721b7047f",
+  "selectedBytes": 5696,
+  "names": [
+    "CST6CDT",
+    "EST5EDT",
+    "MST7MDT",
+    "PST8PDT"
+  ],
+  "chunks": [
+    {
+      "name": "CST6CDT",
+      "sourceOffset": 189208,
+      "bytes": 1424,
+      "sha256": "c0a4a209d362135d12403afb1dc859eed376bd394b3b80ef61a139f065748e68"
+    },
+    {
+      "name": "EST5EDT",
+      "sourceOffset": 190632,
+      "bytes": 1424,
+      "sha256": "dbfb6de5e60291ca9e5a0136ba20f5123d81c0f8aa17869372a79bd93ed743d9"
+    },
+    {
+      "name": "MST7MDT",
+      "sourceOffset": 245224,
+      "bytes": 1424,
+      "sha256": "f5715d4b2f24ffad8f53100e87d1830ddb370b6e0ee66c4f0fb1eb599ebe1aa1"
+    },
+    {
+      "name": "PST8PDT",
+      "sourceOffset": 246648,
+      "bytes": 1424,
+      "sha256": "ee18fff12e3eb9670637d0a5a1ab1d16b8ccb5ab6aeba5cd9aae2d5f865f9763"
+    }
+  ],
+  "derivation": "Concatenate exact original 8-byte chunk headers and payloads for these four names only, in names order. No table data regenerated.",
+  "generatedDartSHA256": "485b3dad9559c35628e41cac9694ced10e0389ee5d29c5ce8deaf87a132a7b85"
+}
