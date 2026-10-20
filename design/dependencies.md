@@ -15,10 +15,11 @@ PR13 (`sqlite3` 3.7.0 → 3.7.1) is held after exact pub-source, native-hook, an
 Timezone0.11.2 is approved for its audited runtime/deserializer fixes only.
 The app retains the exact0.11.1 embedded2025c database and private lookup for
 all341 existing zone names. The four newly packaged names (CST6CDT, EST5EDT,
-MST7MDT, PST8PDT) remain rejected until the explicit workspace reader-floor
-activation in [ADR0030](decisions/0030-required-time-zone-reader-capability.md)
-is implemented and accepted. That compatibility outcome is in progress; the
-interim refusal is not completion. Permission is per workspace, with fixed
+MST7MDT, PST8PDT) require the explicit workspace reader-floor activation in
+[ADR0030](decisions/0030-required-time-zone-reader-capability.md).
+[RC.3/build98 acceptance](../evidence/prerelease-2026.10.7-rc.3/publication/README.md)
+completes that explicit compatibility outcome; the earlier interim refusal alone
+was not completion. Permission is per workspace, with fixed
 additional-name2026e tables and no silent normalization or existing-rule change.
 A general2026e rules migration remains a separate design decision. This avoids
 reinterpreting existing unversioned schedules: the new package also changes

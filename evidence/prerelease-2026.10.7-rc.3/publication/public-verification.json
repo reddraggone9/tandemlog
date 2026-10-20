@@ -1,0 +1,54 @@
+{
+  "atUtc": "2026-10-20T20:00:44.576670+00:00",
+  "verdict": "PASS_PUBLIC_EXACT_BYTES_AND_RELEASE",
+  "releaseURL": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.3",
+  "releaseId": 418815189,
+  "sourceSHA": "5358967e9c3c97dabd914acd5ca59fd5f15317c3",
+  "version": "2026.10.7-rc.3+98",
+  "candidateRunId": 39454347693,
+  "promotionRunId": 39488138047,
+  "prerelease": true,
+  "draft": false,
+  "latestStableUnchanged": "v2026.10.6",
+  "allThreeAnonymousDownloads": [
+    {
+      "name": "tandemlog-2026.10.7-rc.3-android.apk",
+      "assetId": 660337069,
+      "bytes": 69004777,
+      "sha256": "064220079627b44a1f7e0e103dbecc3282cbbc1354bdb49f9035a91cd083ab24",
+      "matchesOriginalCandidate": true,
+      "githubDigestMatched": true,
+      "downloadedAnonymously": true,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.7-rc.3/tandemlog-2026.10.7-rc.3-android.apk"
+    },
+    {
+      "name": "tandemlog-2026.10.7-rc.3-linux-x64.flatpak",
+      "assetId": 660337062,
+      "bytes": 9412608,
+      "sha256": "4f271532c79069c26c3b73e824260c40e2f99538aca70a38453481b5cb7842d4",
+      "matchesOriginalCandidate": true,
+      "githubDigestMatched": true,
+      "downloadedAnonymously": true,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.7-rc.3/tandemlog-2026.10.7-rc.3-linux-x64.flatpak"
+    },
+    {
+      "name": "tandemlog-2026.10.7-rc.3-windows-x64-setup.exe",
+      "assetId": 660337072,
+      "bytes": 12590903,
+      "sha256": "9c2a11d66f706948c72ac14e38a7435b9c47fa7bd946b3682c61ec75dae94a61",
+      "matchesOriginalCandidate": true,
+      "githubDigestMatched": true,
+      "downloadedAnonymously": true,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.7-rc.3/tandemlog-2026.10.7-rc.3-windows-x64-setup.exe"
+    }
+  ],
+  "publicApkSignatureReverified": true,
+  "publicApkVersionCode": 98,
+  "ownerSignerSHA256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "notesMatchIndependentlyAcceptedDraft": true,
+  "priorReleasesUnchanged": 35,
+  "allPriorTagRefsUnchanged": 35,
+  "sourceCheckoutClean": true,
+  "rebuilt": false,
+  "productionTouched": false
+}

@@ -29,18 +29,19 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Required support for additional time zone names](decisions/0030-required-time-zone-reader-capability.md):
   accepted explicit reader-floor design with exact legacy rules and owned
-  recovery. Implementation and acceptance are in progress; the interim rejection
-  alone does not complete this outcome. Build98's new local journal uses
+  recovery. Implemented and accepted in [RC.3/build98](../evidence/prerelease-2026.10.7-rc.3/publication/README.md),
+  including explicit activation and the reader floor. Build98's local journal uses
   forward-only profile schema5.
 
 
 - [Observable workspace state](decisions/0029-observable-workspace-state.md):
   approved correction for indirect-admission Task staleness, shared reconciliation
-  and selective derived views. Implementation and acceptance are in progress;
-  candidate97 keeps its original source/artifact attribution.
+  and selective derived views. Implemented and accepted in
+  [RC.3/build98](../evidence/prerelease-2026.10.7-rc.3/publication/README.md); candidate97
+  keeps its original source/artifact attribution.
 
 
-- [App-owned workspace upgrade](decisions/0028-app-owned-workspace-upgrade.md): approved replacement for RC.2's engineering-only activation. Explicit device consent, protected snapshots, coordinated freeze and resumable SAF activation are implemented on the isolated branch; source, native and release gates remain in progress. No production conversion has occurred.
+- [App-owned workspace upgrade](decisions/0028-app-owned-workspace-upgrade.md): approved replacement for RC.2's engineering-only activation. Explicit device consent, protected snapshots, coordinated freeze and resumable SAF activation are implemented; source, qualified native and release gates passed for [RC.3/build98](../evidence/prerelease-2026.10.7-rc.3/publication/README.md). No production conversion has occurred.
 
 - [Unified writer history and optional installation names](decisions/0027-unified-writer-history.md): implementation authorized on isolated disposable trials. Published experimentally as 2026.10.7-rc.2/build91 after exact native acceptance and independent review; [candidate and publication receipts](../evidence/prerelease-2026.10.7-rc.2/publication/README.md) retain coverage and the forward-only local-profile upgrade limit. Production conversion and adoption/consolidation remain deferred.
 

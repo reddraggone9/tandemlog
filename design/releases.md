@@ -262,3 +262,7 @@ schema3-to4 upgrade prevents stable/build85 and RC.1/build86 reopening the same
 upgraded profile; existing shared v3 stays v3. Qualified native/UI/media coverage
 remains explicit. Production conversion, writer adoption and stable promotion
 remain held; no dependency adoption accompanied publication.
+
+## Published experimental2026.10.7-rc.3/build98
+
+[RC.3](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.3) published2026-10-20T19:59:59Z from exact accepted source `5358967e9c3c97dabd914acd5ca59fd5f15317c3`. Signed candidate39454347693 and [promotion39488138047](https://github.com/reddraggone9/tandemlog/actions/runs/39488138047) passed every required job and reused the original installers without rebuilding. Reviewed notes SHA256 `c418540e148b5e4840507be36c26754cff8d597575732d34b976158ee55bedf9` match public copy. [Acceptance and public receipts](../evidence/prerelease-2026.10.7-rc.3/publication/README.md) verify anonymous original bytes, owner APK identity/build98, exact tag/source/notes and all35 prior releases/assets/tag refs unchanged. Lee explicitly authorized this RC; fresh quota cleared the standing threshold without override. Stable2026.10.6 remains Latest. Windows manual-GUI waiver, extracted GTK versus hosted Flatpak, API30/x86_64 and retained Android01 failed-cleanup/separate Android02 successful-replacement qualifications remain explicit. No production migration, stable promotion or unrelated dependency update occurred.

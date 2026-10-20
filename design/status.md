@@ -1,3 +1,9 @@
+# Experimental 2026.10.7-rc.3/build98 - accepted and published
+
+[RC.3](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.3) is published from accepted source `5358967e9c3c97dabd914acd5ca59fd5f15317c3`. [Acceptance and public receipts](../evidence/prerelease-2026.10.7-rc.3/publication/README.md) bind successful signed candidate39454347693 and promotion39488138047 to the original three installers without rebuilding. Exact native GTK Save/peer incoming-while-Food and owner-APK Android workflows, canonical audits, visible-input media and separate editorial review completed. Android01's failed independent cleanup remains unwaived; a fresh distinct Android02 completed guided/native-IME and independent settings-restoration/cleanup acceptance. All labs stopped.
+
+Anonymous public downloads match the exact accepted bytes; owner APK signature/package/version/build98 and actual notes/tag/source verify. Prerelease=true and stable2026.10.6 remains Latest; all35 prior releases/assets/tag refs are preserved. Windows manual-GUI waiver, manual extracted GTK versus hosted Flatpak and API30/x86_64 qualifications remain explicit. SQLite/Gradle/AGP/Base64 holds remain. No production migration or stable promotion occurred. Earlier entries below retain their original source/build attribution.
+
 # App-owned workspace upgrade — RC.3/build97 preparation
 
 The approved guided upgrade and Food calendar validation fix remain under
