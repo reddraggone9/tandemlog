@@ -27,3 +27,9 @@ evidence/toolbar-2026.10.4-rc.3/logs/*.txt -text -whitespace
 
 # Original RC3 candidate reports and archive receipts retain exact bytes.
 evidence/toolbar-2026.10.4-rc.3/candidate/** -text -whitespace
+
+# Frozen time zone readers, generated tables and provenance are exact bytes.
+# Preserve historical compatibility hashes in Windows autocrlf checkouts.
+lib/domain/timezone_data/** -text
+test/fixtures/timezone-2025c/** -text
+test/fixtures/timezone-additional-2026e/** -text
