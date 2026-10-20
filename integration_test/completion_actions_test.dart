@@ -21,13 +21,25 @@ class _HeldFoodReadFolder implements LogFolder, BoundedLogFolder {
   _HeldFoodReadFolder(this.inner);
   final LocalLogFolder inner;
   bool pause = false;
+  String? failedTaskFile;
   final entered = Completer<void>(), release = Completer<void>();
   @override
   String get location => inner.location;
   @override
   Future<List<LogFileInfo>> list() => inner.list();
   @override
-  Future<Uint8List> read(String name) => inner.read(name);
+  Future<Uint8List> read(String name) {
+    if (name == failedTaskFile) {
+      throw FileSystemException(
+        'Synthetic task-only provider read failure before reopening. '
+        'The saved completion and recurrence remain unchanged while this '
+        'long diagnostic is inspected and the task read is retried.',
+        name,
+      );
+    }
+    return inner.read(name);
+  }
+
   @override
   Future<Uint8List> readBounded(String name, int maximumBytes) async {
     if (pause && name == 'tandemlog-space.json') {
@@ -139,12 +151,44 @@ void registerCompletionActionTests() {
         final saved = await manifest.rename(
           '${root.path}/manifest-backup.json',
         );
+        await tester.tap(check(repeat));
+        await flows.waitForUi(
+          tester,
+          () => find.text('Workspace requires recovery').evaluate().isNotEmpty,
+        );
+        final dynamic host = tester.state(find.byType(TasksPage));
+        expect(host.sharedSafetyError, isNotNull);
+        expect(check(repeat).hitTestable(), findsNothing);
+        expect(find.text('Task reopened; next occurrence kept.'), findsNothing);
+        expect(
+          {
+            await for (final file in folder.list())
+              if (file is File)
+                file.path: base64Encode(await file.readAsBytes()),
+          },
+          {
+            for (final entry in canonical.entries)
+              if (entry.key != manifest.path) entry.key: entry.value,
+          },
+        );
+        await saved.rename(manifest.path);
+        await tester.tap(find.byKey(const ValueKey('retry-shared-read')));
+        await flows.waitForUi(tester, () => host.sharedSafetyError == null);
+        expect({
+          await for (final file in folder.list())
+            if (file is File) file.path: base64Encode(await file.readAsBytes()),
+        }, canonical);
+        expect(tester.widget<Checkbox>(check(repeat)).value, isTrue);
+
+        // A task-local failure still admits the independent Food read. Hold
+        // that read to inspect the ordinary diagnostic with real keyboard input.
+        final failedTaskFile = '${writer.writer}.jsonl';
+        transport.failedTaskFile = failedTaskFile;
         transport.pause = true;
         await tester.tap(check(repeat));
         await flows.waitForUi(
           tester,
-          () =>
-              find.textContaining('tandemlog-space.json').evaluate().isNotEmpty,
+          () => find.textContaining(failedTaskFile).evaluate().isNotEmpty,
         );
         expect(find.text('Task reopened; next occurrence kept.'), findsNothing);
         await flows.waitForUi(tester, () => transport.entered.isCompleted);
@@ -154,10 +198,7 @@ void registerCompletionActionTests() {
           of: errorScroll,
           matching: find.byType(Text),
         );
-        expect(
-          tester.widget<Text>(errorText).data,
-          contains('tandemlog-space.json'),
-        );
+        expect(tester.widget<Text>(errorText).data, contains(failedTaskFile));
         final scrollState = tester.state<ScrollableState>(
           find.descendant(of: errorScroll, matching: find.byType(Scrollable)),
         );
@@ -213,20 +254,14 @@ void registerCompletionActionTests() {
           isFalse,
           reason: 'Shift+Tab leaves error details',
         );
+        transport.failedTaskFile = null;
         transport.release.complete();
-        await flows.waitForUi(
-          tester,
-          () => find.text('Workspace requires recovery').evaluate().isNotEmpty,
-        );
-        await flows.waitForUi(
-          tester,
-          () => find.text('Retry').evaluate().isNotEmpty,
-        );
-        await saved.rename(manifest.path);
+        await flows.waitForUi(tester, () => host.syncing == null);
+        expect(host.sharedSafetyError, isNull);
         await tester.tap(find.text('Retry').first);
         await flows.waitForUi(
           tester,
-          () => find.textContaining('tandemlog-space.json').evaluate().isEmpty,
+          () => find.textContaining(failedTaskFile).evaluate().isEmpty,
         );
         expect({
           await for (final file in folder.list())

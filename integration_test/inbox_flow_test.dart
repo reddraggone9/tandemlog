@@ -238,7 +238,11 @@ void registerInboxFlowTests() {
         expect(tester.widget<TextField>(capture).readOnly, isTrue);
         final beforeRefresh = folder.lists;
         _resumeFromPause(tester);
-        await flows.waitForUi(tester, () => folder.lists > beforeRefresh);
+        final dynamic host = tester.state(find.byType(TasksPage));
+        await flows.waitForUi(
+          tester,
+          () => folder.lists > beforeRefresh && host.syncing == null,
+        );
         await tester.pumpAndSettle(const Duration(milliseconds: 100));
         expect(
           tester.widget<TextField>(capture).controller!.text,
@@ -259,6 +263,49 @@ void registerInboxFlowTests() {
           findsOneWidget,
         );
         await captureNativeFixtureUi(tester, 'initial-rank-prefix-pending');
+        final captureProgress = host.error;
+        final pendingCanonical = <String, List<int>>{
+          for (final file in await folder.list())
+            file.name: await folder.read(file.name),
+        };
+        final manifest = File('${shared.path}/tandemlog-space.json');
+        final savedManifest = await manifest.rename(
+          '${root.path}/pending-manifest-backup.json',
+        );
+        _resumeFromPause(tester);
+        await flows.waitForUi(tester, () => host.sharedSafetyError != null);
+        expect(find.text('Workspace requires recovery'), findsOneWidget);
+        expect(host.capture.text, 'New pending');
+        expect(host.pendingCapture, isNotEmpty);
+        expect(
+          host.error,
+          captureProgress,
+          reason: 'The shared recovery panel owns the new read diagnostic.',
+        );
+        await savedManifest.rename(manifest.path);
+        await tester.tap(find.byKey(const ValueKey('retry-shared-read')));
+        await flows.waitForUi(
+          tester,
+          () => host.sharedSafetyError == null && !host.busy,
+        );
+        expect(
+          find.textContaining(
+            '1 tasks confirmed created; 1 remain to finish capture.',
+          ),
+          findsOneWidget,
+          reason: 'Admission-only recovery retains capture-owned progress.',
+        );
+        expect(
+          tester.widget<TextField>(capture).controller!.text,
+          'New pending',
+        );
+        expect(tester.widget<TextField>(capture).readOnly, isTrue);
+        expect(folder.delayedSuffix, isNotNull);
+        expect(host.workspaceState.health.hasPendingTaskSave, isTrue);
+        expect(<String, List<int>>{
+          for (final file in await folder.list())
+            file.name: await folder.read(file.name),
+        }, pendingCanonical);
         await folder.revealPending();
         _resumeFromPause(tester);
         await flows.waitForUi(

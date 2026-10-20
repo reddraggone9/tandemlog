@@ -2737,7 +2737,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 errorFromRefresh ||
                 reconcileCapture)) {
           setState(() {
-            if (_hasPendingOperation(origin)) {
+            if (captureFailure && pendingCapture.isNotEmpty) {
+              // Capture owns the detailed created/remaining progress and Retry.
+              // Its reserved placement is also a pending workspace operation.
+              errorFromRefresh = false;
+            } else if (_hasPendingOperation(origin)) {
               error =
                   'An earlier saved operation needs confirmation. Retry to finish it.';
               errorFromRefresh = true;
@@ -2764,6 +2768,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             _stopForSharedSafety(e);
             return;
           }
+          // Shared health already shows this failure in the recovery panel.
+          // Keep the action-owned diagnostic for admission-only recovery.
+          if (sharedSafetyError != null) return;
           setState(() {
             error = failureMessage(e);
             errorFromRefresh = true;
@@ -2886,7 +2893,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         _bindWorkspaceState();
         if (!captureFailure) error = null;
         errorFromRefresh = false;
-        if (_hasPendingOperation(origin)) {
+        // Admission-only recovery keeps capture-owned progress and Retry.
+        if (!(captureFailure && pendingCapture.isNotEmpty) &&
+            _hasPendingOperation(origin)) {
           error =
               'An earlier saved operation needs confirmation. Retry to finish it.';
           errorFromRefresh = true;
