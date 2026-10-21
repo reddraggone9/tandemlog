@@ -193,7 +193,7 @@ void registerInboxFlowTests() {
     }
   });
   testWidgets(
-    'creation-only prefix keeps immutable capture through background reconciliation',
+    'incomplete atomic capture keeps its immutable draft through read recovery',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('inbox-prefix-ui-');
       final shared = await Directory('${root.path}/shared').create();
@@ -232,6 +232,7 @@ void registerInboxFlowTests() {
         await flows.waitForCaptureAction(tester);
         await tester.tap(find.byKey(const ValueKey('capture-add')));
         await flows.waitForUi(tester, () => folder.delayedSuffix != null);
+        await flows.recoverSharedReadForTest(tester);
         await tester.pumpAndSettle(const Duration(milliseconds: 100));
         expect(
           tester.widget<TextField>(capture).controller!.text,
@@ -250,7 +251,7 @@ void registerInboxFlowTests() {
           tester.widget<TextField>(capture).controller!.text,
           'New pending',
           reason:
-              'A durable creation does not acknowledge its reserved initial move.',
+              'An incomplete atomic action acknowledges neither creation nor placement.',
         );
         expect(
           tester.widget<TextField>(capture).readOnly,
@@ -260,7 +261,7 @@ void registerInboxFlowTests() {
         );
         expect(
           find.textContaining(
-            '1 tasks confirmed created; 1 remain to finish capture.',
+            '0 tasks confirmed created; 1 remain to finish capture.',
           ),
           findsOneWidget,
         );
@@ -292,7 +293,7 @@ void registerInboxFlowTests() {
         );
         expect(
           find.textContaining(
-            '1 tasks confirmed created; 1 remain to finish capture.',
+            '0 tasks confirmed created; 1 remain to finish capture.',
           ),
           findsOneWidget,
           reason: 'Admission-only recovery retains capture-owned progress.',

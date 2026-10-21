@@ -19,7 +19,8 @@ import '../test/batch_storage_test.dart' show CountingFolder;
 import '../test/food_expiry_guidance_test.dart' show selectFoodView;
 import 'food_production_workflow_test.dart' show switchSection;
 import 'native_text_fixtures.dart';
-import 'task_flow_test.dart' show readProfileSettings, waitForUi;
+import 'task_flow_test.dart'
+    show readProfileSettings, waitForUi, recoverSharedReadForTest;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -315,6 +316,7 @@ void registerFoodAccountWorkflowTests() {
         fixture.folder.fault = 'before';
         await tester.tap(find.widgetWithText(FilledButton, 'Add'));
         await waitForUi(tester, () => fixture.folder.delayedSuffix != null);
+        await recoverSharedReadForTest(tester);
         await tester.pumpAndSettle();
         final host = tester.state(find.byType(TasksPage)) as dynamic;
         final reservedName = fixture.folder.delayedName!;

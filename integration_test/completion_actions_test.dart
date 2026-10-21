@@ -1,5 +1,4 @@
 import 'profile_fixture.dart';
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -15,37 +14,31 @@ import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
-/// Task reads fail immediately while a provider's separate bounded Food read
-/// is pending. This makes the initiating action error visible before shared
-/// recovery replaces it, rather than relying on a native watcher timing race.
+/// A bounded common-history read failure must stop both modules while the
+/// saved recurrence and its Undo remain intact.
 class _HeldFoodReadFolder implements LogFolder, BoundedLogFolder {
   _HeldFoodReadFolder(this.inner);
   final LocalLogFolder inner;
-  bool pause = false;
   String? failedTaskFile;
-  final entered = Completer<void>(), release = Completer<void>();
   @override
   String get location => inner.location;
   @override
   Future<List<LogFileInfo>> list() => inner.list();
   @override
-  Future<Uint8List> read(String name) {
-    if (name == failedTaskFile) {
-      throw FileSystemException(
-        'Synthetic task-only provider read failure before reopening. '
-        'The saved completion and recurrence remain unchanged while this '
-        'long diagnostic is inspected and the task read is retried.',
-        name,
-      );
-    }
-    return inner.read(name);
-  }
+  Future<Uint8List> read(String name) => readBounded(name, 32 * 1024 * 1024);
 
   @override
-  Future<Uint8List> readBounded(String name, int maximumBytes) async {
-    if (pause && name == 'tandemlog-space.json') {
-      if (!entered.isCompleted) entered.complete();
-      await release.future;
+  Future<Uint8List> readBounded(String name, int maximumBytes) {
+    if (name == failedTaskFile) {
+      throw FileSystemException(
+        'Synthetic common-history provider read failure before reopening. '
+        'The saved completion and recurrence remain unchanged while this '
+        'long diagnostic is inspected with Tab, arrows and Page Down. '
+        'Restore access to the exact current history before retrying admission. '
+        'No other module may write around this failure. '
+        'The prior completed task, successor and Undo are preserved.',
+        name,
+      );
     }
     return inner.readBounded(name, maximumBytes);
   }
@@ -179,22 +172,25 @@ void registerCompletionActionTests() {
         }, canonical);
         expect(tester.widget<Checkbox>(check(repeat)).value, isTrue);
 
-        // A task-local failure still admits the independent Food read. Hold
-        // that read to inspect the ordinary diagnostic with real keyboard input.
+        // The same common failure blocks both modules. Inspect the shared
+        // diagnostic with real keyboard traversal before admission-only Retry.
         final failedTaskFile = '${writer.writer}.applog';
         transport.failedTaskFile = failedTaskFile;
-        transport.pause = true;
         await tester.tap(check(repeat));
         await flows.waitForUi(
           tester,
           () => find.textContaining(failedTaskFile).evaluate().isNotEmpty,
         );
         expect(find.text('Task reopened; next occurrence kept.'), findsNothing);
-        await flows.waitForUi(tester, () => transport.entered.isCompleted);
-        final errorScroll = find.byKey(const ValueKey('action-error-scroll'));
-        expect(tester.getSize(errorScroll).height, lessThanOrEqualTo(120));
+        final errorScroll = find.byKey(
+          const ValueKey('shared-recovery-error-scroll'),
+        );
+        expect(
+          tester.getSize(errorScroll).height,
+          lessThan(tester.view.physicalSize.height),
+        );
         final errorText = find.descendant(
-          of: errorScroll,
+          of: find.byKey(const ValueKey('shared-recovery-error-details')),
           matching: find.byType(Text),
         );
         expect(tester.widget<Text>(errorText).data, contains(failedTaskFile));
@@ -254,10 +250,8 @@ void registerCompletionActionTests() {
           reason: 'Shift+Tab leaves error details',
         );
         transport.failedTaskFile = null;
-        transport.release.complete();
-        await flows.waitForUi(tester, () => host.syncing == null);
+        await flows.recoverSharedReadForTest(tester);
         expect(host.sharedSafetyError, isNull);
-        await tester.tap(find.text('Retry').first);
         await flows.waitForUi(
           tester,
           () => find.textContaining(failedTaskFile).evaluate().isEmpty,
@@ -329,7 +323,6 @@ void registerCompletionActionTests() {
         await captureNativeFixtureUi(tester, 'completion-final');
         expect(tester.takeException(), isNull);
       } finally {
-        if (!transport.release.isCompleted) transport.release.complete();
         await tester.pumpWidget(const SizedBox());
         await tester.pumpAndSettle();
         tester.view.resetPhysicalSize();

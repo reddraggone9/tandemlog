@@ -115,6 +115,13 @@ void registerInlineChecklistWorkspaceTests() {
             id: anchor,
           );
         }
+        // Enrollment is metadata, not a stale callback write. Enroll this same
+        // app installation in both fixtures before sealing their byte baselines.
+        await seedNativeProfile(profile.path, {
+          'folder': secondDirectory.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         await seedNativeProfile(profile.path, {
           'folder': firstDirectory.path,
           'user': user,

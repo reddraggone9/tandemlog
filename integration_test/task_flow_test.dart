@@ -288,6 +288,18 @@ Future<void> waitForUi(WidgetTester tester, bool Function() ready) async {
   await tester.pumpAndSettle();
 }
 
+/// Common admission is an explicit read-only step after a provider error.
+/// It does not finish an uncertain Save or allocate replacement identities.
+Future<void> recoverSharedReadForTest(WidgetTester tester) async {
+  final retry = find.byKey(const ValueKey('retry-shared-read'));
+  if (retry.evaluate().isEmpty) return;
+  final host = tester.state(find.byType(TasksPage)) as dynamic;
+  await waitForUi(tester, () => !host.busy);
+  expect(retry.hitTestable(), findsOneWidget);
+  await tester.tap(retry);
+  await waitForUi(tester, () => host.sharedSafetyError == null && !host.busy);
+}
+
 /// Synthetic text updates schedule the frame that enables the suffix action.
 Future<void> waitForCaptureAction(WidgetTester tester) async {
   final action = find.byKey(const ValueKey('capture-add'));

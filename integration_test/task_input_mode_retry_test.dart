@@ -13,7 +13,8 @@ import 'package:uuid/uuid.dart';
 
 import '../test/batch_storage_test.dart' show CountingFolder;
 import 'native_text_fixtures.dart';
-import 'task_flow_test.dart' show waitForUi, waitForCaptureAction;
+import 'task_flow_test.dart'
+    show waitForUi, waitForCaptureAction, recoverSharedReadForTest;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -22,117 +23,118 @@ void main() {
 
 void registerTaskInputModeRetryTests() {
   for (final fault in ['before', 'prefix']) {
-    testWidgets(
-      'Search cannot discard a $fault capture awaiting confirmation',
-      (tester) async {
-        await _withWorkspace(tester, 390, (folder, _) async {
-          final capture = await _openCapture(tester);
-          const draft = 'New pending\nSecond pending';
-          await tester.enterText(capture, draft);
-          folder.fault = fault;
-          await waitForCaptureAction(tester);
-          await tester.tap(find.byKey(const ValueKey('capture-add')));
-          await waitForUi(tester, () => folder.delayedSuffix != null);
-          await tester.pumpAndSettle();
-          final controller = tester.widget<TextField>(capture).controller!;
-          expect(controller.text, draft);
-          expect(tester.widget<TextField>(capture).readOnly, isTrue);
-          expect(
-            tester
-                .widget<IconButton>(find.byKey(const ValueKey('open-search')))
-                .onPressed,
-            isNull,
-          );
-          final dynamic state = tester.state(find.byType(TasksPage));
-          final failureText = state.error as String?;
-          expect(failureText, isNotNull);
-          debugPrint('INPUT_MODE_CAPTURE_FAILURE $fault: $failureText');
-          expect(find.text(failureText!), findsOneWidget);
-          expect(
-            find.text('Retry to check these tasks before editing.'),
-            findsOneWidget,
-          );
-          final reservedName = folder.delayedName!;
-          final reservedSuffix = List<int>.of(folder.delayedSuffix!);
-          final prefix =
-              (await folder.delegate.list()).any(
-                (file) => file.name == reservedName,
-              )
-              ? await folder.delegate.read(reservedName)
-              : <int>[];
-          final beforeSwitch = await _records(folder.delegate);
-          final appendsBeforeSwitch = folder.appends;
+    testWidgets('Search cannot discard a $fault capture awaiting confirmation', (
+      tester,
+    ) async {
+      await _withWorkspace(tester, 390, (folder, _) async {
+        final capture = await _openCapture(tester);
+        const draft = 'New pending\nSecond pending';
+        await tester.enterText(capture, draft);
+        folder.fault = fault;
+        await waitForCaptureAction(tester);
+        await tester.tap(find.byKey(const ValueKey('capture-add')));
+        await waitForUi(tester, () => folder.delayedSuffix != null);
+        await recoverSharedReadForTest(tester);
+        await tester.pumpAndSettle();
+        final controller = tester.widget<TextField>(capture).controller!;
+        expect(controller.text, draft);
+        expect(tester.widget<TextField>(capture).readOnly, isTrue);
+        expect(
+          tester
+              .widget<IconButton>(find.byKey(const ValueKey('open-search')))
+              .onPressed,
+          isNull,
+        );
+        final dynamic state = tester.state(find.byType(TasksPage));
+        final failureText = state.error as String?;
+        expect(failureText, isNotNull);
+        debugPrint('INPUT_MODE_CAPTURE_FAILURE $fault: $failureText');
+        expect(find.text(failureText!), findsOneWidget);
+        expect(
+          find.text('Retry to check these tasks before editing.'),
+          findsOneWidget,
+        );
+        final reservedName = folder.delayedName!;
+        final reservedSuffix = List<int>.of(folder.delayedSuffix!);
+        final prefix =
+            (await folder.delegate.list()).any(
+              (file) => file.name == reservedName,
+            )
+            ? await folder.delegate.read(reservedName)
+            : <int>[];
+        final beforeSwitch = await _records(folder.delegate);
+        final appendsBeforeSwitch = folder.appends;
 
-          await _attemptSearch(tester);
-          expect(find.byKey(const ValueKey('task-search')), findsNothing);
-          expect(capture, findsOneWidget);
-          expect(controller.text, draft);
-          expect(tester.widget<TextField>(capture).readOnly, isTrue);
-          expect(folder.delayedName, reservedName);
-          expect(folder.delayedSuffix, reservedSuffix);
-          expect(folder.appends, appendsBeforeSwitch);
-          expect(await _records(folder.delegate), beforeSwitch);
-          // Retrying an uncertain append cannot allocate a replacement packet
-          // or abandon the original reserved capture identities.
-          await tester.tap(find.byKey(const ValueKey('capture-add')));
-          await tester.pumpAndSettle();
-          expect(controller.text, draft);
-          expect(tester.widget<TextField>(capture).readOnly, isTrue);
-          expect(folder.delayedName, reservedName);
-          expect(folder.delayedSuffix, reservedSuffix);
-          expect(folder.appends, appendsBeforeSwitch);
-          expect(await _records(folder.delegate), beforeSwitch);
-          await captureNativeFixtureUi(
-            tester,
-            'input-mode-$fault-retry-retained',
-          );
+        await _attemptSearch(tester);
+        expect(find.byKey(const ValueKey('task-search')), findsNothing);
+        expect(capture, findsOneWidget);
+        expect(controller.text, draft);
+        expect(tester.widget<TextField>(capture).readOnly, isTrue);
+        expect(folder.delayedName, reservedName);
+        expect(folder.delayedSuffix, reservedSuffix);
+        expect(folder.appends, appendsBeforeSwitch);
+        expect(await _records(folder.delegate), beforeSwitch);
+        // Retrying an uncertain append cannot allocate a replacement packet
+        // or abandon the original reserved capture identities.
+        await tester.tap(find.byKey(const ValueKey('capture-add')));
+        await tester.pumpAndSettle();
+        expect(controller.text, draft);
+        expect(tester.widget<TextField>(capture).readOnly, isTrue);
+        expect(folder.delayedName, reservedName);
+        expect(folder.delayedSuffix, reservedSuffix);
+        expect(folder.appends, appendsBeforeSwitch);
+        expect(await _records(folder.delegate), beforeSwitch);
+        await captureNativeFixtureUi(
+          tester,
+          'input-mode-$fault-retry-retained',
+        );
 
-          // A creation-only prefix does not confirm its reserved initial move.
-          // A normal refresh must still keep both original capture identities.
-          final listsBefore = folder.lists;
-          _resume(tester);
-          await waitForUi(tester, () => folder.lists > listsBefore);
-          await tester.pumpAndSettle();
-          expect(controller.text, draft);
-          expect(tester.widget<TextField>(capture).readOnly, isTrue);
-          await _attemptSearch(tester);
-          expect(find.byKey(const ValueKey('task-search')), findsNothing);
-          expect(folder.delayedSuffix, reservedSuffix);
-          expect(await _records(folder.delegate), beforeSwitch);
+        // An incomplete atomic action confirms neither creation nor placement.
+        // Read-only refresh keeps both reserved capture identities.
+        final listsBefore = folder.lists;
+        _resume(tester);
+        await waitForUi(tester, () => folder.lists > listsBefore);
+        await tester.pumpAndSettle();
+        expect(controller.text, draft);
+        expect(tester.widget<TextField>(capture).readOnly, isTrue);
+        await _attemptSearch(tester);
+        expect(find.byKey(const ValueKey('task-search')), findsNothing);
+        expect(folder.delayedSuffix, reservedSuffix);
+        expect(await _records(folder.delegate), beforeSwitch);
 
-          await folder.revealPending();
-          _resume(tester);
-          await waitForUi(tester, () => controller.text.isEmpty);
-          await tester.pumpAndSettle();
-          expect(
-            capture,
-            findsOneWidget,
-            reason: 'Confirmation keeps Add mode active.',
-          );
-          expect(tester.widget<TextField>(capture).readOnly, isFalse);
-          expect(find.text('New pending'), findsOneWidget);
-          expect(find.text('Second pending'), findsOneWidget);
-          expect(await folder.delegate.read(reservedName), [
-            ...prefix,
-            ...reservedSuffix,
-          ]);
-          final confirmedBytes = await _records(folder.delegate);
-          await tester.tap(find.byKey(const ValueKey('capture-add')));
-          await tester.pumpAndSettle();
-          expect(
-            folder.appends,
-            appendsBeforeSwitch,
-            reason: 'Retry must not allocate or append replacement captures.',
-          );
-          expect(await _records(folder.delegate), confirmedBytes);
-          await _attemptSearch(tester);
-          expect(find.byKey(const ValueKey('task-search')), findsOneWidget);
-          expect(capture, findsNothing);
-          expect(await _records(folder.delegate), confirmedBytes);
-          expect(tester.takeException(), isNull);
-        });
-      },
-    );
+        await folder.revealPending();
+        await recoverSharedReadForTest(tester);
+        _resume(tester);
+        await waitForUi(tester, () => controller.text.isEmpty);
+        await tester.pumpAndSettle();
+        expect(
+          capture,
+          findsOneWidget,
+          reason: 'Confirmation keeps Add mode active.',
+        );
+        expect(tester.widget<TextField>(capture).readOnly, isFalse);
+        expect(find.text('New pending'), findsOneWidget);
+        expect(find.text('Second pending'), findsOneWidget);
+        expect(await folder.delegate.read(reservedName), [
+          ...prefix,
+          ...reservedSuffix,
+        ]);
+        final confirmedBytes = await _records(folder.delegate);
+        await tester.tap(find.byKey(const ValueKey('capture-add')));
+        await tester.pumpAndSettle();
+        expect(
+          folder.appends,
+          appendsBeforeSwitch,
+          reason: 'Retry must not allocate or append replacement captures.',
+        );
+        expect(await _records(folder.delegate), confirmedBytes);
+        await _attemptSearch(tester);
+        expect(find.byKey(const ValueKey('task-search')), findsOneWidget);
+        expect(capture, findsNothing);
+        expect(await _records(folder.delegate), confirmedBytes);
+        expect(tester.takeException(), isNull);
+      });
+    });
   }
 
   testWidgets('Search cannot clear capture during an unfinished append', (

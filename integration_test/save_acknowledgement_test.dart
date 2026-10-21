@@ -9,6 +9,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:uuid/uuid.dart';
 import 'package:tandemlog/application/task_text_session.dart';
 import 'package:tandemlog/application/text_save_command.dart';
@@ -16,7 +17,7 @@ import 'native_text_fixtures.dart';
 
 /// Simulates a sync-provider atomic replacement after an acknowledged append.
 /// Existing committed bytes survive; the new suffix is absent at reconciliation.
-class _ReplacingFolder implements LogFolder {
+class _ReplacingFolder implements LogFolder, BoundedLogFolder {
   _ReplacingFolder(this.inner);
   final LocalLogFolder inner;
   bool replaceAfterAppend = false;
@@ -31,6 +32,9 @@ class _ReplacingFolder implements LogFolder {
   ];
   @override
   Future<Uint8List> read(String name) => inner.read(name);
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
   @override
   Future<void> create(String name, Uint8List bytes) =>
       inner.create(name, bytes);
@@ -51,6 +55,23 @@ class _ReplacingFolder implements LogFolder {
 
   Future<void> restoreDroppedSuffix() =>
       inner.append(droppedName!, droppedSuffix!);
+}
+
+// Native providers finish asynchronously after the last animated frame.
+Future<void> _waitForSave(
+  WidgetTester tester, {
+  bool Function()? completed,
+}) async {
+  for (var attempt = 0; attempt < 300; attempt++) {
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(milliseconds: 30));
+    if (completed?.call() ??
+        !tester.state<TaskEditorState>(find.byType(TaskEditor)).closeBusy) {
+      await tester.pumpAndSettle();
+      return;
+    }
+  }
+  fail('The explicit Save did not finish within the bounded provider wait.');
 }
 
 void main() {
@@ -105,9 +126,9 @@ void registerSaveAcknowledgementTests() {
         );
         folder.replaceAfterAppend = true;
         await tester.tap(find.text('Save changes'));
-        await tester.pumpAndSettle();
+        await _waitForSave(tester);
         expect(closes, 0);
-        expect(find.textContaining('could be confirmed'), findsOneWidget);
+        expect(find.textContaining('not confirmed'), findsOneWidget);
         for (final entry in {
           'title': 'Retained draft',
           'description': 'Unsaved details remain available for retry.',
@@ -122,12 +143,9 @@ void registerSaveAcknowledgementTests() {
         expect(await folder.read('${store.writer}.applog'), before);
         final appendCalls = folder.appendCalls;
         await tester.tap(find.text('Save changes'));
-        await tester.pumpAndSettle();
+        await _waitForSave(tester);
         expect(closes, 0);
-        expect(
-          find.textContaining('earlier append is unresolved'),
-          findsOneWidget,
-        );
+        expect(find.textContaining('uncertain result'), findsOneWidget);
         expect(folder.appendCalls, appendCalls);
         expect(await folder.read('${store.writer}.applog'), before);
         expect(row()['title'], 'Original task');
@@ -216,6 +234,7 @@ void registerSaveAcknowledgementTests() {
         // Standalone editor receipt fixture deliberately covers native task
         // creation before a baseline, not application workspace admission.
         initializeNewWorkspaceText: false,
+        nativeLibraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
       );
       TaskTextSession? session;
       var closes = 0;
@@ -266,7 +285,7 @@ void registerSaveAcknowledgementTests() {
         final before = await folder.read('${store.writer}.applog');
         folder.replaceAfterAppend = true;
         await tester.tap(find.text('Save changes'));
-        await tester.pumpAndSettle();
+        await _waitForSave(tester);
         final prepared = session.prepare(), receipt = prepared.receipt!;
         expect(prepared.committed, isFalse);
         expect(session.hasPendingReceipt, isTrue);
@@ -292,9 +311,19 @@ void registerSaveAcknowledgementTests() {
         );
         expect(cancel.onPressed, isNull);
         final attempted = folder.droppedSuffix!;
-        expect(utf8.decode(attempted), '${receipt.raw}\n');
+        final attemptedAction = UnifiedRecord.decode(
+          utf8.decode(attempted).trim(),
+        );
+        expect(attemptedAction.effects, hasLength(1));
+        expect(attemptedAction.effects.single.kind, 'task');
+        expect(attemptedAction.effects.single.raw, receipt.raw);
+        expect(
+          const LineSplitter().convert(utf8.decode(attempted)),
+          hasLength(1),
+        );
+        expect(attempted.last, 10);
         await tester.tap(find.text('Retry Save'));
-        await tester.pumpAndSettle();
+        await _waitForSave(tester, completed: () => closes == 1);
         expect(session.hasPendingReceipt, isFalse);
         expect(prepared.committed, isTrue);
         expect(await folder.read('${store.writer}.applog'), [

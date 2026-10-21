@@ -4217,6 +4217,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   'Wait for the current change, then retry Save.',
                 );
               }
+              // The shared recovery panel is behind this modal. Only a
+              // retained immutable receipt may use Retry Save to revalidate
+              // the common history before the ordinary command fence.
+              if (sharedSafetyError != null &&
+                  (creationReceipt != null ||
+                      session?.hasPendingReceipt == true)) {
+                await _retrySharedRead();
+              }
+              if (!mounted || busy || !identical(store, origin)) {
+                throw StateError(
+                  'The workspace changed. Preserve this draft before retrying.',
+                );
+              }
               final done = activeActionDone = Completer<void>();
               itemSaveDone = done;
               setState(() => busy = true);
@@ -4301,9 +4314,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           session?.cancel();
           if (captured != null) origin.releaseTextCapture(captured);
         }
-        // A forced application exit cannot cancel unconfirmed immutable intent.
-        // The durable outbox and captured documents remain owned by TaskStore;
-        // shutdown closes its handles only after the in-flight append finishes.
+        // In-flight work owns its captured documents until shutdown waits for
+        // it. Unacknowledged intent is memory-only and is not retried on restart.
       } finally {
         if (identical(checklistEditorKey, key)) {
           checklistEditorKey = null;
@@ -4635,6 +4647,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                     children: [
                                       Expanded(
                                         child: SingleChildScrollView(
+                                          key: const ValueKey(
+                                            'shared-recovery-error-scroll',
+                                          ),
+                                          primary: false,
                                           child: Padding(
                                             padding: const EdgeInsets.all(24),
                                             child: Column(
@@ -4644,7 +4660,32 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                                   'Workspace requires recovery',
                                                 ),
                                                 const SizedBox(height: 12),
-                                                Text(sharedSafetyError!),
+                                                Shortcuts(
+                                                  shortcuts: const {
+                                                    SingleActivator(
+                                                      LogicalKeyboardKey
+                                                          .arrowDown,
+                                                    ): ScrollIntent(
+                                                      direction:
+                                                          AxisDirection.down,
+                                                    ),
+                                                    SingleActivator(
+                                                      LogicalKeyboardKey
+                                                          .arrowUp,
+                                                    ): ScrollIntent(
+                                                      direction:
+                                                          AxisDirection.up,
+                                                    ),
+                                                  },
+                                                  child: Focus(
+                                                    key: const ValueKey(
+                                                      'shared-recovery-error-details',
+                                                    ),
+                                                    child: Text(
+                                                      sharedSafetyError!,
+                                                    ),
+                                                  ),
+                                                ),
                                                 const SizedBox(height: 12),
                                                 const Text(
                                                   'Preserve the profile and data folder. Retry after restoring their integrity.',

@@ -84,7 +84,7 @@ void main() {
 void registerChecklistLifecycleTests() {
   for (final lostAcknowledgement in [false, true]) {
     testWidgets(
-      'application disposal during item Save ${lostAcknowledgement ? 'unknown' : 'confirmed'} preserves durable intent',
+      'application disposal during item Save ${lostAcknowledgement ? 'unknown' : 'confirmed'} waits for captured native ownership',
       (tester) async {
         final root = await Directory.systemTemp.createTemp(
           'checklist-save-exit-',
@@ -160,16 +160,31 @@ void registerChecklistLifecycleTests() {
           expect(() => document.read(), throwsStateError);
           await peer.refresh();
           expect(peer.checklistItems(parent).single['title'], 'Saved at exit');
-          // Restart the exact former application profile, recovering its original
-          // outbox intent rather than creating a second edit after lost ack.
+          // Restart reads the completed canonical edit without replaying
+          // abandoned in-memory intent or appending a replacement edit.
+          final beforeRestart = {
+            for (final entry in await inner.list())
+              entry.name: base64Encode(await inner.read(entry.name)),
+          };
+          final callsBeforeRestart = folder.appends;
           folder.releaseAppend = null;
-          await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+          await tester.pumpWidget(
+            TandemlogApp(
+              profilePath: profile.path,
+              folderFactory: (_) => folder,
+            ),
+          );
           await flows.waitForUi(
             tester,
             () => _key('task-row-$parent').evaluate().isNotEmpty,
           );
           await _expandChecklist(tester, parent);
           expect(find.text('Saved at exit'), findsOneWidget);
+          expect(folder.appends, callsBeforeRestart);
+          expect({
+            for (final entry in await inner.list())
+              entry.name: base64Encode(await inner.read(entry.name)),
+          }, beforeRestart);
           expect(tester.takeException(), isNull);
         } finally {
           if (folder.releaseAppend?.isCompleted == false) {
@@ -312,10 +327,8 @@ void registerChecklistLifecycleTests() {
                   .evaluate()
                   .isNotEmpty,
             );
-            await flows.waitForUi(
-              tester,
-              () => find.text('0/1').evaluate().isNotEmpty,
-            );
+            // The modal retains input while the common read fence is latched.
+            // Confirm canonical admission independently before its own retry.
             await peer.refresh();
             expect(peer.checklistItems(parent).single['title'], 'Exactly once');
             final before = {
@@ -342,6 +355,8 @@ void registerChecklistLifecycleTests() {
               tester,
               () => find.byType(ChecklistItemEditor).evaluate().isEmpty,
             );
+            expect(find.text('0/1'), findsOneWidget);
+            expect(peer.checklistItems(parent).single['title'], 'Exactly once');
             expect(folder.appends, calls);
             expect({
               for (final entry in await inner.list())

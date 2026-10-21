@@ -11,7 +11,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
-import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:uuid/uuid.dart';
@@ -130,8 +129,8 @@ void registerFoodProductionTests() {
         await tester.pump();
         expect(state.busy, true);
         state.profileDatabase.database.execute(
-          'DELETE FROM protected_writer_guards WHERE space=? AND writer=?',
-          [state.store.space, foodWriter(state.settings.writer)],
+          'DELETE FROM protected_app_heads WHERE space=? AND writer=?',
+          [state.store.space, state.settings.writer],
         );
         gate.release.complete();
         await flows.waitForUi(
@@ -239,8 +238,8 @@ void registerFoodProductionTests() {
           final manifest = File('${data.path}/tandemlog-space.json');
           if (loseGuard) {
             state.profileDatabase.database.execute(
-              'DELETE FROM protected_writer_guards WHERE space=? AND writer=?',
-              [state.store.space, foodWriter(state.settings.writer)],
+              'DELETE FROM protected_app_heads WHERE space=? AND writer=?',
+              [state.store.space, state.settings.writer],
             );
           } else {
             movedManifest = await manifest.rename(
@@ -396,7 +395,7 @@ void registerFoodProductionTests() {
         };
         await malformed.writeAsString('{"v":99}\n', flush: true);
         host.importer.request();
-        await flows.waitForUi(tester, () => host.error != null);
+        await flows.waitForUi(tester, () => host.sharedSafetyError != null);
         expect(find.text('Preserved synthetic task'), findsOneWidget);
         await expectLater(
           host.store.edit(
@@ -419,11 +418,9 @@ void registerFoodProductionTests() {
         }
         expect(await malformed.readAsString(), '{"v":99}\n');
         await malformed.delete();
-        host.importer.request();
-        await flows.waitForUi(
-          tester,
-          () => host.error == null && host.busy == false,
-        );
+        await flows.recoverSharedReadForTest(tester);
+        expect(host.sharedSafetyError, isNull);
+        expect(host.busy, isFalse);
         await switchSection(tester, food: true);
         expect(find.text('Preserved synthetic rice'), findsOneWidget);
         await switchSection(tester, food: false);

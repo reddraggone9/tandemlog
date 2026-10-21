@@ -562,6 +562,7 @@ void registerInlineChecklistWorkflowTests() {
         expect(state.busy, false);
         expect(find.text('Delete task?'), findsNothing);
         folder.failLists = false;
+        await flows.recoverSharedReadForTest(tester);
         expect({
           for (final file in await inner.list())
             file.name: base64Encode(await inner.read(file.name)),

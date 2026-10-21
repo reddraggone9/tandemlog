@@ -892,6 +892,9 @@ class TaskStore {
 
   Future<bool> _refresh({bool verify = false}) async {
     final before = _unifiedTaskRevision;
+    final previousTaskIds = verify
+        ? unified!.snapshot.tasks.map((event) => event.id).toSet()
+        : const <String>{};
     final snapshot = await unified!.refreshInProfileQueue();
     if (verify) {
       _lastHistoryVerification = HistoryVerificationReport(
@@ -901,7 +904,9 @@ class TaskStore {
           0,
           (n, b) => n + b.length,
         ),
-        importedEventCount: snapshot.tasks.length,
+        importedEventCount: snapshot.tasks
+            .where((event) => !previousTaskIds.contains(event.id))
+            .length,
       );
     }
     return before != _unifiedTaskRevision;

@@ -23,7 +23,8 @@ import '../test/food_expiry_guidance_test.dart' show selectFoodView;
 import 'food_production_workflow_test.dart' show switchSection;
 import 'food_preview_workflow_test.dart' as pixels;
 import 'native_text_fixtures.dart';
-import 'task_flow_test.dart' show TestFolders, waitForUi;
+import 'task_flow_test.dart'
+    show TestFolders, waitForUi, recoverSharedReadForTest;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -396,6 +397,7 @@ void registerFoodUndoStackWorkflowTests() {
         fixture.folder.fault = 'before';
         await tester.tap(find.widgetWithText(FilledButton, 'Add'));
         await waitForUi(tester, () => fixture.folder.delayedSuffix != null);
+        await recoverSharedReadForTest(tester);
         final name = fixture.folder.delayedName!;
         final reserved = List<int>.of(fixture.folder.delayedSuffix!);
         final packets = _decodeRecords(reserved);
@@ -451,6 +453,7 @@ void registerFoodUndoStackWorkflowTests() {
         fixture.folder.fault = 'before';
         await tester.tap(_undoFinder(tester));
         await waitForUi(tester, () => fixture.folder.delayedSuffix != null);
+        await recoverSharedReadForTest(tester);
         await _idle(tester);
         final name = fixture.folder.delayedName!;
         final reserved = List<int>.of(fixture.folder.delayedSuffix!);

@@ -156,13 +156,23 @@ void registerTextWorkflowTests() {
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
         await flows.waitForUi(
           tester,
-          () => find
-              .textContaining('no verified shared-text initialization')
-              .evaluate()
-              .isNotEmpty,
+          () => find.text('Retained legacy task').evaluate().isNotEmpty,
         );
         final state = tester.state(find.byType(TasksPage)) as dynamic;
-        expect(state.store, isNull);
+        expect(state.store, isA<TaskStore>());
+        expect((state.store as TaskStore).sharedTextInitialized, isFalse);
+        await flows.selectTask(tester, task, control: false);
+        expect(
+          find.textContaining('no verified shared text setup'),
+          findsOneWidget,
+        );
+        expect(
+          tester.widget<TextField>(find.byKey(const ValueKey('title'))).enabled,
+          isFalse,
+        );
+        expect(await canonical(), before);
+        await tester.tap(find.text('Cancel').last);
+        await tester.pumpAndSettle();
         await flows.openSettings(tester);
         expect(
           find.byKey(const ValueKey('initialize-shared-text')),
