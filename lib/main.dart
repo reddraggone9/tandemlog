@@ -4217,14 +4217,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   'Wait for the current change, then retry Save.',
                 );
               }
-              // The shared recovery panel is behind this modal. Only a
-              // retained immutable receipt may use Retry Save to revalidate
-              // the common history before the ordinary command fence.
-              if (sharedSafetyError != null &&
-                  (creationReceipt != null ||
-                      session?.hasPendingReceipt == true)) {
-                await _retrySharedRead();
-              }
+              // The shared recovery panel is behind this modal. An explicit
+              // Save revalidates repaired history even if the earlier attempt
+              // stopped before preparing a receipt. Identity checks, the command
+              // fence and any retained receipt still guard the actual write.
+              if (sharedSafetyError != null) await _retrySharedRead();
               if (!mounted || busy || !identical(store, origin)) {
                 throw StateError(
                   'The workspace changed. Preserve this draft before retrying.',

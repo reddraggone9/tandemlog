@@ -1032,3 +1032,8 @@ All nine public assets were downloaded and compared with GitHub's SHA-256 digest
 ## Rc3 build-7 candidate handoff
 
 [Candidate 36781661950](https://github.com/reddraggone9/tandemlog/actions/runs/36781661950) passed Linux, Windows, Android and owner-signing gates at source `46bcb5a981cd7c8d751a187dd463b898c316835f`. Downloaded archives/checksums passed; the exact hosted Linux bundle launched locally and its compiled migration tool passed byte-exact synthetic smoke. Signed APK SHA-256: `199da11842204cd0dcc9f4bb3abe006c64f03a3e40ec60dcad21961bccc6c340`, version 0.1.0-rc.3/code 7, package com.reddraggone9.tandemlog, non-debuggable and matching the pinned owner certificate. It was handed to the device worker through Library; no rc3 publication or live migration has occurred.
+
+
+### Checklist recovery before preparation
+
+Exact development source e73440f passed Android peer admission while Food was active and owner/non-owner incomplete-tail checks. A native checklist trial found that an explicit Save remained blocked after repaired history when failure happened before a receipt was prepared. The focused repair lets that modal Save request admission-only recovery before the existing identity and command checks. Two real native-engine host regressions cover creation and editing, including repeated refusal while corruption remains, preserved title/Notes, unchanged prior bytes and one committed action after repair. Existing receipt retry controls still pass. Exact-artifact native verification of this repair, full hosted native acceptance and GTK manual acceptance remain pending; the failed trial is retained. No release or live cutover is implied.
