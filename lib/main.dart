@@ -1048,6 +1048,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   ),
                 ),
                 TextButton(
+                  key: const ValueKey('retry-food-save'),
                   onPressed: busy ? null : () => _recoverFood(origin),
                   child: const Text('Retry'),
                 ),

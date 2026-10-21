@@ -462,86 +462,108 @@ class UnifiedHistory {
       for (var i = 0; i < bytes.length; i++) {
         if (bytes[i] != 10) {
           if (i - start >= maximumUnifiedRecordBytes) {
-            throw FormatFailure('Oversized app record.');
+            throw HistoryVerificationFailure(
+              name,
+              sequence + 1,
+              start,
+              'Oversized app record.',
+            );
           }
           continue;
         }
-        final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
-        final r = UnifiedRecord.decode(raw);
-        for (final e in r.effects) {
-          final task = e.task;
-          if (task != null) {
-            assertWorkspaceTaskTimeZonePolicy(task, current.timeZonePolicy);
+        final recordNumber = sequence + 1;
+        try {
+          final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
+          final r = UnifiedRecord.decode(raw);
+          for (final e in r.effects) {
+            final task = e.task;
+            if (task != null) {
+              assertWorkspaceTaskTimeZonePolicy(task, current.timeZonePolicy);
+            }
           }
-        }
-        if (r.space != current.space ||
-            r.epoch != current.epoch ||
-            r.writer != owner ||
-            r.sequence != sequence + 1 ||
-            r.previousHash != head ||
-            clock != null && r.firstClock <= clock) {
-          throw FormatFailure(
-            'App writer sequence, identity, clock or chain differs.',
-          );
-        }
-        if (!current.owners.containsKey(owner) &&
-            r.sequence == 1 &&
-            (r.effects.length != 1 || r.effect.kind != 'writer.joined')) {
-          throw FormatFailure(
-            'New installation history must begin with its own header.',
-          );
-        }
-        if (r.effects.any((e) => e.kind == 'writer.joined') &&
-            (r.sequence != 1 || current.owners.containsKey(owner))) {
-          throw FormatFailure('Installation header is misplaced.');
-        }
-        if (r.sequence <= historicalCount) {
-          if (!r.historical ||
-              r.effects.length != 1 ||
-              current.authorOfReference(r.effect.writer) != owner) {
+          if (r.space != current.space ||
+              r.epoch != current.epoch ||
+              r.writer != owner ||
+              r.sequence != sequence + 1 ||
+              r.previousHash != head ||
+              clock != null && r.firstClock <= clock) {
             throw FormatFailure(
-              'App migration prefix is not original owner history.',
+              'App writer sequence, identity, clock or chain differs.',
             );
           }
-        } else if (r.historical) {
-          throw FormatFailure(
-            'Unexpected late legacy event in the active writer chain.',
-          );
-        }
-        all.add(r);
-        sequence = r.sequence;
-        head = r.hash;
-        clock = r.clock;
-        if (r.sequence == historicalCount) {
-          migrationEnd = i + 1;
-          if (head != current.owners[owner]!['head']) {
-            throw FormatFailure('Migration prefix head differs.');
+          if (!current.owners.containsKey(owner) &&
+              r.sequence == 1 &&
+              (r.effects.length != 1 || r.effect.kind != 'writer.joined')) {
+            throw FormatFailure(
+              'New installation history must begin with its own header.',
+            );
           }
-        }
-        for (final e in r.effects) {
-          if (e.isData && e.writer == owner) {
-            if (!e.historical && e.sequence <= semanticSequence) {
+          if (r.effects.any((e) => e.kind == 'writer.joined') &&
+              (r.sequence != 1 || current.owners.containsKey(owner))) {
+            throw FormatFailure('Installation header is misplaced.');
+          }
+          if (r.sequence <= historicalCount) {
+            if (!r.historical ||
+                r.effects.length != 1 ||
+                current.authorOfReference(r.effect.writer) != owner) {
               throw FormatFailure(
-                'Logical effect sequence was reused or reordered.',
+                'App migration prefix is not original owner history.',
               );
             }
-            if (e.sequence > semanticSequence) semanticSequence = e.sequence;
+          } else if (r.historical) {
+            throw FormatFailure(
+              'Unexpected late legacy event in the active writer chain.',
+            );
           }
-          if (e.isData) {
-            final existing = semantic[e.key];
-            if (existing != null && existing.raw != e.raw) {
-              throw FormatFailure('Conflicting semantic effect identity.');
+          all.add(r);
+          sequence = r.sequence;
+          head = r.hash;
+          clock = r.clock;
+          if (r.sequence == historicalCount) {
+            migrationEnd = i + 1;
+            if (head != current.owners[owner]!['head']) {
+              throw FormatFailure('Migration prefix head differs.');
             }
-            if (existing == null) {
-              semantic[e.key] = e;
+          }
+          for (final e in r.effects) {
+            if (e.isData && e.writer == owner) {
+              if (!e.historical && e.sequence <= semanticSequence) {
+                throw FormatFailure(
+                  'Logical effect sequence was reused or reordered.',
+                );
+              }
+              if (e.sequence > semanticSequence) semanticSequence = e.sequence;
+            }
+            if (e.isData) {
+              final existing = semantic[e.key];
+              if (existing != null && existing.raw != e.raw) {
+                throw FormatFailure('Conflicting semantic effect identity.');
+              }
+              if (existing == null) {
+                semantic[e.key] = e;
+                admitted.add(e);
+              }
+            } else {
               admitted.add(e);
             }
-          } else {
-            admitted.add(e);
           }
+          completeSequence = sequence;
+          start = i + 1;
+        } on FormatFailure catch (failure) {
+          throw HistoryVerificationFailure(
+            name,
+            recordNumber,
+            start,
+            failure.message,
+          );
+        } on FormatException {
+          throw HistoryVerificationFailure(
+            name,
+            recordNumber,
+            start,
+            'App record is not valid UTF-8.',
+          );
         }
-        completeSequence = sequence;
-        start = i + 1;
       }
       if (current.owners.containsKey(owner) &&
           (sequence < historicalCount ||

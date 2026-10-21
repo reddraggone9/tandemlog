@@ -186,12 +186,14 @@ void main() {
           }
           expect(tester.takeException(), isNull);
         } finally {
-          if (await tester.runAsync(bad.exists) == true)
+          if (await tester.runAsync(bad.exists) == true) {
             await tester.runAsync(bad.delete);
+          }
           await tester.pumpWidget(const SizedBox.shrink());
           await tester.pumpAndSettle();
-          if (resources != null)
+          if (resources != null) {
             await host.waitForHostShutdown(tester, resources);
+          }
           await tester.runAsync(() => data.root.delete(recursive: true));
         }
       },

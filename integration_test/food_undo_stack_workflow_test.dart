@@ -469,7 +469,7 @@ void registerFoodUndoStackWorkflowTests() {
         final bytes = await _records(fixture.folder.delegate);
         final beforeRetry = fixture.folder.appends;
         await captureNativeFixtureUi(tester, 'food-undo-pending-inverse');
-        await tester.tap(find.widgetWithText(TextButton, 'Retry'));
+        await tester.tap(find.byKey(const ValueKey('retry-food-save')));
         await waitForUi(tester, () => _snapshot(tester) == added);
         await _idle(tester);
         final prefix = bytes[name] ?? const <int>[];

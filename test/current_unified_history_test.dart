@@ -129,6 +129,63 @@ void main() {
       expect(h.hasPending, isFalse);
     },
   );
+  for (final bad in <String, List<int>>{
+    'unknown version': utf8.encode('{"v":99}\n'),
+    'invalid UTF-8': [0xff, 10],
+    'malformed complete JSON': utf8.encode('{broken}\n'),
+  }.entries) {
+    test(
+      'corrupt ${bad.key} reports physical record and UTF-8 byte offset',
+      () async {
+        await h.appendAtomic([
+          (sequence, clock, head) => UnifiedEffect(
+            'task',
+            LogEvent(
+              h.manifest.space,
+              writer,
+              sequence,
+              clock,
+              person,
+              'user.created',
+              {'name': 'Synthetic café ☕'},
+            ).encode(previousHash: head),
+          ),
+        ]);
+        final name = unifiedLogName(writer);
+        final before = await folder.read(name);
+        expect(before.length, greaterThan(utf8.decode(before).length));
+        final record = before.where((byte) => byte == 10).length + 1;
+        await folder.append(name, Uint8List.fromList(bad.value));
+        final damaged = await folder.read(name);
+        await expectLater(
+          h.refresh(),
+          throwsA(
+            isA<HistoryVerificationFailure>()
+                .having((e) => e.fileName, 'filename', name)
+                .having((e) => e.recordNumber, 'physical record', record)
+                .having((e) => e.byteOffset, 'UTF-8 offset', before.length),
+          ),
+        );
+        expect(await folder.read(name), damaged);
+        expect(h.snapshot.tasks.single.data['name'], 'Synthetic café ☕');
+      },
+    );
+  }
+  test(
+    'unfinished multibyte tail waits without corruption or mutation',
+    () async {
+      await h.appendAtomic([user()]);
+      final name = unifiedLogName(writer);
+      final prefix = await folder.read(name);
+      await folder.append(name, Uint8List.fromList([0xf0, 0x9f]));
+      final partial = await folder.read(name);
+      await h.refresh();
+      expect(h.snapshot.tasks.single.entity, person);
+      expect(h.snapshot.incomplete, isTrue);
+      expect(await folder.read(name), partial);
+      expect(partial.take(prefix.length), prefix);
+    },
+  );
   for (final cut in [0, 1, 1500, 1000000]) {
     test(
       'restart cut=$cut admits complete actions only and never replays intent',

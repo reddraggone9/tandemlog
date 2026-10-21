@@ -364,7 +364,7 @@ void registerFoodAccountWorkflowTests() {
         expect(await _records(fixture.folder.delegate), before);
         await captureNativeFixtureUi(tester, 'food-account-pending-blocked');
 
-        await tester.tap(find.widgetWithText(TextButton, 'Retry'));
+        await tester.tap(find.byKey(const ValueKey('retry-food-save')));
         await waitForUi(
           tester,
           () => host.pendingFoodCommand == null && host.busy == false,

@@ -21,6 +21,7 @@ import 'package:tandemlog/presentation/task_toolbar.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/storage/local_settings.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 
 import 'native_text_fixtures.dart';
 import 'task_editor_error_keyboard_workflow_test.dart'
@@ -319,7 +320,9 @@ Future<void> waitForCaptureAction(WidgetTester tester) async {
 void main() {
   // Native flutter test initializes this binding before invoking the target.
   // Reuse it; constructing another binding fails before any case can run.
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // Integration bindings otherwise default to no timeout, overriding CLI bounds.
+  binding.defaultTestTimeout = const Timeout(Duration(minutes: 3));
   registerStickyTaskGroupTests();
   registerStartHintTests();
   registerSaveAcknowledgementTests();
@@ -1534,7 +1537,7 @@ void main() {
       );
       expect(find.text('Buy oats'), findsOneWidget);
       await bad.delete();
-      await tester.pump(const Duration(seconds: 1));
+      await recoverSharedReadForTest(tester);
       await tester.pumpAndSettle();
       expect(find.textContaining('Unknown app history version'), findsNothing);
       await closeApp();
@@ -1875,6 +1878,8 @@ void main() {
         expect(reserved.title, 'Retry composition');
         expect(find.byTooltip('Retry Add'), findsOneWidget);
         await broken.delete();
+        await recoverSharedReadForTest(tester);
+        expect(host.pendingCapture.single.id, reservedId);
         await tester.tap(primary);
         await tester.pumpAndSettle();
         expect(
@@ -2101,7 +2106,7 @@ void main() {
   );
 
   testWidgets(
-    'desktop Start retains legacy default data after settings reset',
+    'desktop Start retains existing default data after settings reset',
     (tester) async {
       final root = await Directory.systemTemp.createTemp(
         'tandemlog-legacy-default',
@@ -2152,7 +2157,18 @@ void main() {
       for (final entry in original.entries) {
         expect(await File(entry.key).readAsBytes(), entry.value);
       }
-      expect(await legacy.list().length, original.length);
+      final writer = readProfileSettings(tester)['writer'] as String;
+      final enrolled = File('${legacy.path}/${unifiedLogName(writer)}');
+      expect(original.containsKey(enrolled.path), isFalse);
+      final records = (await enrolled.readAsLines())
+          .map(UnifiedRecord.decode)
+          .toList();
+      expect(records, hasLength(1));
+      expect(records.single.writer, writer);
+      expect(records.single.sequence, 1);
+      expect(records.single.effects, hasLength(1));
+      expect(records.single.effect.kind, 'writer.joined');
+      expect(await legacy.list().length, original.length + 1);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await root.delete(recursive: true);
@@ -2761,15 +2777,22 @@ void main() {
     await store.command(user, 'user.created', {
       'name': 'Alexandria Example Household Member',
     });
-    for (var i = 0; i <= 1000; i++) {
-      final id = const Uuid().v4();
-      await store.createNativeFixtureTask(id, {
-        'title': 'Example task $i',
-        'description': '',
-        'assignee': user,
-      });
-      if (i == 0) await store.command(id, 'task.completed', {});
+    final ids = List.generate(1001, (_) => const Uuid().v4());
+    final setup = Stopwatch()..start();
+    // Keep the 1000-open/one-completed badge boundary without replaying the
+    // growing canonical history once per task. Use real bounded capture actions.
+    for (var first = 0; first < ids.length; first += 100) {
+      final end = (first + 100).clamp(0, ids.length);
+      final result = await store.createTasks({
+        for (var i = first; i < end; i++) ids[i]: 'Example task $i',
+      }, user);
+      expect(result.error, isNull);
+      debugPrint(
+        'HEADER_FIXTURE_TASKS=$end/1001 MS=${setup.elapsedMilliseconds}',
+      );
     }
+    await store.command(ids.first, 'task.completed', {});
+    expect(store.rows.where((row) => row['kind'] == 'task'), hasLength(1001));
     await store.close();
     await seedNativeProfile(profile.path, {
       'folder': folder.path,
