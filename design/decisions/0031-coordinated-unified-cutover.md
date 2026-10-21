@@ -20,7 +20,7 @@ The converter must validate old hashes/proofs before generating the new seals, t
 
 ## Required revisions on first persistence
 
-Operation families and integer revisions form a closed registry. A revision is emitted only when its persisted meaning is needed. Revision1 retains the frozen existing time-zone rules; timezone-bearing operations using a newly supported name use the required revision that defines those fixed rules. Installation, startup, selection of a draft value, Cancel and no-op Save change no shared metadata. Future revisions are rejected rather than skipped by readers that do not implement them.
+Operation families and integer revisions form a closed registry. A revision is emitted only when its persisted meaning is needed. Revision1 retains the frozen existing time-zone rules; timezone-bearing operations using a newly supported name use the required revision that defines those fixed rules. Installation, startup, selection of a draft value, Cancel and no-op Save change no shared time-zone capability metadata. Future revisions are rejected rather than skipped by readers that do not implement them.
 
 There is no separate mutable time-zone floor to race the first Task write. The required revision and data are in the same hashed operation. Same-session exact receipt/native ownership remains. Unfinished intent is not persisted or retried after restart. Partial remote tails wait for completion; complete unknown required semantics stop common admission for both modules.
 
@@ -32,7 +32,7 @@ Retain one private SQLite owner, protected settings/writer identity, common ackn
 
 One atomic user action/Save is one LF-terminated action with multiple typed effects. Logical effect IDs are independent of physical action positions. Bounds are16MiB/action,32MiB/file,256MiB/workspace and10000effects. The current bounded1000-item Food import fits one action. Conversion preserves each old committed operation rather than inventing atomic grouping.
 
-Nonowners ignore unterminated tails without changing them. Before a new action the owner can compare/truncate only its suffix. Read-only refresh/preview does not clean it. Complete invalid records remain corruption. Android must prove rw/seek/truncate/fsync on the actual provider. An append-only provider unable to discard an abandoned suffix after restart must refuse a new write; replacing the committed prefix is not a fallback.
+Nonowners ignore unterminated tails without changing them. Before a new action the owner can compare/truncate only its suffix. Read-only refresh/preview does not clean a user-action tail. Initial enrollment is the exception: when this installation has no complete header, opening it may replace its incomplete first-header suffix with a new writer.joined header. This does not retry a user Save. Complete invalid records remain corruption. Android must prove rw/seek/truncate/fsync on the actual provider. An append-only provider unable to discard an abandoned suffix after restart must refuse a new write; replacing the committed prefix is not a fallback.
 
 Keep installation ID and folder selection, plus selected person, appearance and last section when straightforward. Reset other local state, including drafts and unfinished Save/import intent. Canonical Undo effects, text lineage and history remain. Full profile snapshots/pending-save rescue are optional precaution, not cutover prerequisites. Do not reset an actual profile during development.
 

@@ -304,13 +304,10 @@ Future<void> waitForCaptureAction(WidgetTester tester) async {
   expect(action.hitTestable(), findsOneWidget);
 }
 
-class BoundedNativeTestBinding extends IntegrationTestWidgetsFlutterBinding {
-  @override
-  Timeout get defaultTestTimeout => const Timeout(Duration(minutes: 2));
-}
-
 void main() {
-  BoundedNativeTestBinding();
+  // Native flutter test initializes this binding before invoking the target.
+  // Reuse it; constructing another binding fails before any case can run.
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   registerStickyTaskGroupTests();
   registerStartHintTests();
   registerSaveAcknowledgementTests();
