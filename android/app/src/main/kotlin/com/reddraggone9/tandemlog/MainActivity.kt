@@ -1,5 +1,7 @@
 package com.reddraggone9.tandemlog
 
+import android.system.Os
+import android.system.OsConstants
 import android.app.Activity
 import android.content.Intent
 import android.content.BroadcastReceiver
@@ -283,6 +285,44 @@ class MainActivity : FlutterActivity() {
                                     input.readBytes()
                                 }
                             }
+                        }
+                        "truncateOwnedTail" -> {
+                            val expected = call.argument<ByteArray>("expected") ?: error("Missing expected bytes")
+                            val keep = call.argument<Number>("keepBytes")?.toInt() ?: error("Missing prefix length")
+                            require(expected.size <= 32 * 1024 * 1024 &&
+                                keep >= 0 && keep < expected.size &&
+                                (keep == 0 || expected[keep - 1] == 10.toByte())) {
+                                "Only an incomplete trailing record may be discarded"
+                            }
+                            for (i in keep until expected.size) require(expected[i] != 10.toByte()) {
+                                "Only an incomplete trailing record may be discarded"
+                            }
+                            val uri = child(tree, name!!) ?: throw MissingFolderFile(name)
+                            // rw must preserve bytes on open. Never use w/rwt or
+                            // fall back to replacing a complete canonical file.
+                            contentResolver.openFileDescriptor(uri, "rw")!!.use { descriptor ->
+                                val fd = descriptor.fileDescriptor
+                                val stat = Os.fstat(fd)
+                                require(OsConstants.S_ISREG(stat.st_mode) && stat.st_size == expected.size.toLong()) {
+                                    "Provider cannot safely truncate this owned file"
+                                }
+                                Os.lseek(fd, 0L, OsConstants.SEEK_SET)
+                                val chunk = ByteArray(64 * 1024)
+                                var offset = 0
+                                while (offset < expected.size) {
+                                    val count = Os.read(fd, chunk, 0, minOf(chunk.size, expected.size - offset))
+                                    require(count > 0) { "Owned history changed before suffix cleanup" }
+                                    for (i in 0 until count) require(chunk[i] == expected[offset + i]) {
+                                        "Owned history changed before suffix cleanup"
+                                    }
+                                    offset += count
+                                }
+                                require(Os.fstat(fd).st_size == expected.size.toLong()) { "Owned history grew during cleanup" }
+                                Os.ftruncate(fd, keep.toLong())
+                                Os.fsync(fd)
+                                require(Os.fstat(fd).st_size == keep.toLong()) { "Owned cleanup was not confirmed" }
+                            }
+                            null
                         }
                         "append", "create" -> {
                             val existing = child(tree, name!!)

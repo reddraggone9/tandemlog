@@ -11,7 +11,6 @@ import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/unified_history.dart';
-import 'package:tandemlog/storage/unified_manifest.dart';
 import 'package:tandemlog/storage/unified_record.dart';
 import 'unified_conversion_test.dart' as fixture;
 
@@ -85,10 +84,44 @@ UnifiedEffectBuilder foodBuilder() =>
       ).encode(),
     );
 
+UnifiedRecord actionRecord(
+  String writer,
+  int sequence,
+  int time,
+  String head,
+  List<UnifiedEffectBuilder> builders, {
+  Map<String, UnifiedFrontier>? observed,
+  int? logicalStart,
+}) {
+  final effects = <UnifiedEffect>[];
+  var predecessor = head;
+  for (var i = 0; i < builders.length; i++) {
+    final effect = builders[i](
+      (logicalStart ?? sequence) + i,
+      EventClock(BigInt.from(time + i)),
+      predecessor,
+    );
+    effects.add(effect);
+    if (effect.isData) predecessor = effect.integrityHash;
+  }
+  return UnifiedRecord(
+    space: space,
+    epoch: _actionEpoch,
+    writer: writer,
+    sequence: sequence,
+    clock: EventClock(BigInt.from(time + builders.length - 1)),
+    previousHash: head,
+    effects: effects,
+    observed: observed ?? {writer: UnifiedFrontier(sequence - 1, head)},
+  );
+}
+
+late String _actionEpoch;
+
 void main() {
   late Directory root;
   late FaultFolder folder;
-  late UnifiedConversion converted;
+  late fixture.FixtureConversion converted;
   LocalProfileDatabase? profile;
   UnifiedHistory? history;
   Future<void> open() async {
@@ -131,6 +164,7 @@ void main() {
       await folder.create(entry.key, Uint8List.fromList(entry.value));
     }
     await open();
+    _actionEpoch = history!.manifest.epoch;
   });
   tearDown(() async {
     await history?.close();
@@ -161,45 +195,42 @@ void main() {
   );
 
   test(
-    'one future allocator/chain commits Tasks and Food as one frame',
+    'one allocator commits mixed typed effects in one action without coupling effect IDs to line count',
     () async {
-      final before = history!.physicalSequence;
+      final before = history!.physicalSequence,
+          logicalBefore = history!.logicalSequence,
+          head = history!.commonHead;
       final after = await history!.appendAtomic([
         taskBuilder(newTask),
         foodBuilder(),
       ]);
-      final added = after.records.where((r) => r.sequence > before).toList();
-      expect(added.map((r) => r.sequence), [before + 1, before + 2]);
-      expect(added.first.transactionCount, 2);
-      expect(added.last.previousHash, added.first.hash);
-      expect(added.map((r) => r.effect.id), ['$owner:6', '$owner:7']);
+      final added = after.records
+          .where((r) => r.writer == owner && r.sequence > before)
+          .single;
+      expect(added.sequence, before + 1);
+      expect(added.previousHash, head);
+      expect(added.effects.map((e) => e.id), [
+        '$owner:${logicalBefore + 1}',
+        '$owner:${logicalBefore + 2}',
+      ]);
+      expect(
+        added.effects.last.previousHash,
+        added.effects.first.integrityHash,
+      );
       expect(after.tasks.any((e) => e.entity == newTask), isTrue);
       expect(after.food.any((op) => op.targets.contains(newFood)), isTrue);
       expect(history!.hasPending, isFalse);
       expect(
-        profile!.database.select('SELECT * FROM protected_app_outbox'),
-        isEmpty,
-      );
-      expect(
-        profile!.database.select('SELECT * FROM protected_writer_guards'),
-        isEmpty,
-      );
-      expect(
-        profile!.database.select('SELECT * FROM protected_food_intents'),
-        isEmpty,
-      );
-      expect(
-        (await folder.list())
-            .map((i) => i.name)
-            .where((n) => n.endsWith('.foodlog')),
+        profile!.database.select(
+          "SELECT name FROM sqlite_schema WHERE type='table' AND name IN ('protected_app_outbox','protected_writer_guards','protected_food_intents')",
+        ),
         isEmpty,
       );
     },
   );
-
   for (final cut in [0, 1, 1200, 1000000]) {
     test(
-      'interrupted atomic frame $cut recovers exact bytes once across reopen',
+      'converted prefix survives interrupted action cut=$cut; restart has no implicit retry',
       () async {
         final baseline = history!.snapshot;
         folder.cut = cut;
@@ -207,45 +238,44 @@ void main() {
           history!.appendAtomic([taskBuilder(newTask), foodBuilder()]),
           throwsA(isA<FileSystemException>()),
         );
-        final observed = await history!.refresh();
-        final complete = cut >= 1000000;
-        expect(observed.tasks.any((e) => e.entity == newTask), complete);
+        final interrupted = await folder.read(unifiedLogName(owner));
+        final complete =
+            interrupted.last == 10 &&
+            interrupted.length > baseline.physical[owner]!.length;
+        await history!.refresh();
         expect(
-          observed.food.any((op) => op.targets.contains(newFood)),
+          history!.snapshot.tasks.any((e) => e.entity == newTask),
           complete,
         );
-        if (!complete) {
-          expect(history!.hasPending, isTrue);
-          expect(observed.effects.length, baseline.effects.length);
-          await expectLater(
-            history!.renameDevice('blocked'),
-            throwsA(isA<FormatFailure>()),
-          );
-        }
-        final attempt = profile!.database.select(
-          'SELECT raw FROM protected_app_outbox',
+        expect(
+          history!.snapshot.food.any((e) => e.targets.contains(newFood)),
+          complete,
         );
-        final expected = attempt.isEmpty
-            ? null
-            : Uint8List.fromList(attempt.single['raw'] as List<int>);
         await history!.close();
         history = null;
         await profile!.close();
         profile = null;
         await open();
-        final result = await history!.recoverPrepared();
+        expect(history!.hasPending, isFalse);
+        await history!.recoverPrepared();
+        await history!.recoverPrepared();
+        expect(await folder.read(unifiedLogName(owner)), interrupted);
+        if (!complete) {
+          await history!.appendAtomic([taskBuilder(newTask), foodBuilder()]);
+        }
+        final result = history!.snapshot;
         expect(result.tasks.where((e) => e.entity == newTask), hasLength(1));
         expect(
-          result.food.where((op) => op.targets.contains(newFood)),
+          result.food.where((e) => e.targets.contains(newFood)),
           hasLength(1),
         );
-        expect(history!.physicalSequence, 7);
-        final bytes = await folder.read(unifiedLogName(owner));
-        if (expected != null) {
-          expect(bytes.sublist(baseline.physical[owner]!.length), expected);
-        }
-        await history!.recoverPrepared();
-        expect(await folder.read(unifiedLogName(owner)), bytes);
+        expect(history!.physicalSequence, 6);
+        expect(
+          (await folder.read(
+            unifiedLogName(owner),
+          )).take(baseline.physical[owner]!.length).toList(),
+          baseline.physical[owner],
+        );
       },
     );
   }
@@ -266,7 +296,7 @@ void main() {
       await history!.renameDevice('Travel laptop');
       expect(history!.snapshot.deviceName(owner), 'Travel laptop');
       final records = history!.snapshot.records.where(
-        (r) => r.effect.kind == 'writer.named',
+        (r) => r.effects.length == 1 && r.effect.kind == 'writer.named',
       );
       expect(records.map((r) => r.effect.name), [
         'Office laptop',
@@ -329,26 +359,35 @@ void main() {
   );
 
   test(
-    'late legacy tail and unknown active writer block the entire workspace',
+    'legacy files and unjoined complete current writers block the entire workspace',
     () async {
-      final old = fixture.sources().entries.first;
-      await folder.file(old.key).writeAsBytes(old.value, flush: true);
-      await history!.refresh(); // exact sealed transport repeat is harmless
-      await folder.file(old.key).writeAsBytes([...old.value, 10], flush: true);
+      final legacy = folder.file('$owner.jsonl');
+      final evidence = utf8.encode('{"v":3}\n');
+      await legacy.writeAsBytes(evidence);
+      await expectLater(history!.refresh(), throwsA(isA<FormatFailure>()));
       await expectLater(
         history!.renameDevice('blocked'),
         throwsA(isA<FormatFailure>()),
       );
-      await folder.file(old.key).writeAsBytes(old.value, flush: true);
-      final unknown = '77777777-7777-4777-8777-777777777777';
-      await folder.create(unifiedLogName(unknown), Uint8List(0));
-      await expectLater(
-        history!.appendAtomic([foodBuilder()]),
-        throwsA(isA<FormatFailure>()),
+      expect(await legacy.readAsBytes(), evidence);
+      await legacy.delete();
+      await history!.refresh();
+      const unknown = '77777777-7777-4777-8777-777777777777';
+      final genesis = unifiedGenesis(space, history!.manifest.epoch, unknown);
+      final unjoined = actionRecord(unknown, 1, 3000000000, genesis, [
+        (seq, clock, head) => UnifiedEffect.named('No installation header'),
+      ]);
+      await folder.create(
+        unifiedLogName(unknown),
+        Uint8List.fromList(utf8.encode('${unjoined.encode()}\n')),
+      );
+      await expectLater(history!.refresh(), throwsA(isA<FormatFailure>()));
+      expect(
+        await folder.read(unifiedLogName(unknown)),
+        utf8.encode('${unjoined.encode()}\n'),
       );
     },
   );
-
   test(
     'normal self rebuild is byte-identical and snapshots cannot be mutated',
     () async {
@@ -366,9 +405,15 @@ void main() {
   );
 
   test(
-    'new common writer can undo its own legacy Food contribution without rewriting attribution',
+    'mapped device can undo historical Food while retaining normalized evidence',
     () async {
       final old = fixture.foodHistory().first;
+      final normalized = history!.snapshot.effects
+          .where((e) => e.food?.id == old.id)
+          .single;
+      expect(normalized.food!.author, owner);
+      expect(normalized.food!.hash, old.hash);
+      final originalNormalizedRaw = normalized.raw;
       await history!.appendAtomic([
         (seq, clock, head) => UnifiedEffect(
           'food',
@@ -404,13 +449,13 @@ void main() {
       expect(state.containers.where((c) => c.id == fixture.container), isEmpty);
       expect(
         history!.snapshot.effects.where((e) => e.food?.id == old.id).single.raw,
-        old.encode(),
+        originalNormalizedRaw,
       );
     },
   );
 
   test(
-    'invalid whole frame is rejected before any reservation or canonical append',
+    'invalid whole action is rejected before any reservation or canonical append',
     () async {
       final before = await folder.read(unifiedLogName(owner));
       await expectLater(
@@ -423,77 +468,39 @@ void main() {
   );
 
   test(
-    'mixed frame waits for missing Task creation without a declared peer frontier',
+    'mixed action waits for Task creation even without a declared peer frontier',
     () async {
-      const peer = fixture.peer;
-      final m = history!.manifest;
-      final birthClock = EventClock(BigInt.from(3000000000));
-      final editClock = EventClock(BigInt.from(4000000000));
-      final first = UnifiedRecord(
-        space: space,
-        epoch: m.epoch,
-        writer: owner,
-        sequence: 6,
-        clock: editClock,
-        previousHash: history!.commonHead,
-        effect: UnifiedEffect(
+      final head = history!.commonHead;
+      final mixed = actionRecord(owner, 6, 4000000000, head, [
+        (seq, clock, previous) => UnifiedEffect(
           'task',
-          LogEvent(space, owner, 6, editClock, newTask, 'task.edited', {
+          LogEvent(space, owner, seq, clock, newTask, 'task.edited', {
             'title': 'Edited incoming task',
-          }).encode(previousHash: history!.commonHead),
+          }).encode(previousHash: previous),
         ),
-        transactionStart: 6,
-        transactionCount: 2,
-        transactionIndex: 0,
-        observed: {owner: UnifiedFrontier(5, history!.commonHead)},
-      );
-      final foodClock = EventClock(BigInt.from(4000000001));
-      final second = UnifiedRecord(
-        space: space,
-        epoch: m.epoch,
-        writer: owner,
-        sequence: 7,
-        clock: foodClock,
-        previousHash: first.hash,
-        effect: foodBuilder()(7, foodClock, first.hash),
-        transactionStart: 6,
-        transactionCount: 2,
-        transactionIndex: 1,
-        observed: first.observed,
-      );
+        foodBuilder(),
+      ]);
       await folder.append(
         unifiedLogName(owner),
-        Uint8List.fromList(
-          utf8.encode('${first.encode()}\n${second.encode()}\n'),
-        ),
+        Uint8List.fromList(utf8.encode('${mixed.encode()}\n')),
       );
       final waiting = await history!.refresh();
       expect(waiting.pendingEffects, isTrue);
       expect(waiting.food.any((e) => e.targets.contains(newFood)), isFalse);
       expect(waiting.tasks.any((e) => e.entity == newTask), isFalse);
-      final genesis = unifiedGenesis(space, m.epoch, peer);
-      final birth = UnifiedRecord(
-        space: space,
-        epoch: m.epoch,
-        writer: peer,
-        sequence: 1,
-        clock: birthClock,
-        previousHash: genesis,
-        effect: UnifiedEffect(
+      final genesis = unifiedGenesis(space, _actionEpoch, fixture.peer);
+      final birth = actionRecord(fixture.peer, 1, 3000000000, genesis, [
+        (seq, clock, previous) => UnifiedEffect(
           'task',
-          LogEvent(space, peer, 1, birthClock, newTask, 'task.created', {
+          LogEvent(space, fixture.peer, seq, clock, newTask, 'task.created', {
             'title': 'Incoming task',
             'description': '',
             'assignee': fixture.peer,
-          }).encode(previousHash: genesis),
+          }).encode(previousHash: previous),
         ),
-        transactionStart: 1,
-        transactionCount: 1,
-        transactionIndex: 0,
-        observed: {peer: UnifiedFrontier(0, genesis)},
-      );
+      ]);
       await folder.append(
-        unifiedLogName(peer),
+        unifiedLogName(fixture.peer),
         Uint8List.fromList(utf8.encode('${birth.encode()}\n')),
       );
       final ready = await history!.refresh();
@@ -505,7 +512,6 @@ void main() {
       );
     },
   );
-
   test(
     'local missing Task dependency never reserves a partial domain command',
     () async {
@@ -529,106 +535,76 @@ void main() {
 
   for (final observeMissingPeer in [false, true]) {
     test(
-      'mixed frame and later writer commands wait together for peer dependency, observed=$observeMissingPeer',
+      'mixed action and later metadata wait for peer dependency observed=$observeMissingPeer',
       () async {
-        const peer = fixture.peer;
-        final m = history!.manifest, foodAuthor = foodWriter(owner);
-        final peerClock = EventClock(BigInt.from(1000000000000000000));
-        final taskClock = EventClock(BigInt.from(2000000000000000000));
-        final ownClock = EventClock(taskClock.value + BigInt.one);
-        final peerHead = unifiedGenesis(space, m.epoch, peer);
-        final prerequisite = FoodRecord(
-          unified: true,
-          space: space,
-          writer: peer,
-          sequence: 1,
-          clock: peerClock,
-          previousHash: peerHead,
-          createdWith: {fixture.container: '$foodAuthor:1'},
-          operation: FoodOperation(
-            id: '$peer:1',
-            order: peerClock.value.toInt(),
-            action: FoodAction.edit,
-            targets: [fixture.container],
-            contents: const Contents.fraction(1, 2),
-          ),
-        );
-        final peerRecord = UnifiedRecord(
-          space: space,
-          epoch: m.epoch,
-          writer: peer,
-          sequence: 1,
-          clock: peerClock,
-          previousHash: peerHead,
-          effect: UnifiedEffect('food', prerequisite.encode()),
-          transactionStart: 1,
-          transactionCount: 1,
-          transactionIndex: 0,
-          observed: {peer: UnifiedFrontier(0, peerHead)},
+        final peerHead = unifiedGenesis(space, _actionEpoch, fixture.peer);
+        final foodAuthor = foodWriter(owner);
+        final prerequisite = actionRecord(
+          fixture.peer,
+          1,
+          1000000000000000000,
+          peerHead,
+          [
+            (seq, clock, head) => UnifiedEffect(
+              'food',
+              FoodRecord(
+                space: space,
+                writer: fixture.peer,
+                sequence: seq,
+                clock: clock,
+                previousHash: head,
+                createdWith: {fixture.container: '$foodAuthor:1'},
+                operation: FoodOperation(
+                  id: '${fixture.peer}:$seq',
+                  order: clock.value.toInt(),
+                  action: FoodAction.edit,
+                  targets: [fixture.container],
+                  contents: const Contents.fraction(1, 2),
+                ),
+              ).encode(),
+            ),
+          ],
         );
         final observed = {
           owner: UnifiedFrontier(5, history!.commonHead),
-          if (observeMissingPeer) peer: UnifiedFrontier(1, peerRecord.hash),
+          if (observeMissingPeer)
+            fixture.peer: UnifiedFrontier(1, prerequisite.hash),
         };
-        final first = UnifiedRecord(
-          space: space,
-          epoch: m.epoch,
-          writer: owner,
-          sequence: 6,
-          clock: taskClock,
-          previousHash: history!.commonHead,
-          effect: taskBuilder(newTask)(6, taskClock, history!.commonHead),
-          transactionStart: 6,
-          transactionCount: 2,
-          transactionIndex: 0,
+        final mixed = actionRecord(
+          owner,
+          6,
+          2000000000000000000,
+          history!.commonHead,
+          [
+            taskBuilder(newTask),
+            (seq, clock, head) => UnifiedEffect(
+              'food',
+              FoodRecord(
+                space: space,
+                writer: owner,
+                sequence: seq,
+                clock: clock,
+                previousHash: head,
+                createdWith: {fixture.container: '$foodAuthor:1'},
+                operation: FoodOperation(
+                  id: '$owner:$seq',
+                  order: clock.value.toInt(),
+                  action: FoodAction.edit,
+                  targets: [fixture.container],
+                  contents: const Contents.fraction(1, 4),
+                  observedEdits: ['${fixture.peer}:1'],
+                ),
+              ).encode(),
+            ),
+          ],
           observed: observed,
         );
-        final pending = FoodRecord(
-          unified: true,
-          space: space,
-          writer: owner,
-          sequence: 7,
-          clock: ownClock,
-          previousHash: first.hash,
-          createdWith: {fixture.container: '$foodAuthor:1'},
-          operation: FoodOperation(
-            id: '$owner:7',
-            order: ownClock.value.toInt(),
-            action: FoodAction.edit,
-            targets: [fixture.container],
-            contents: const Contents.fraction(1, 4),
-            observedEdits: ['$peer:1'],
-          ),
-        );
-        final second = UnifiedRecord(
-          space: space,
-          epoch: m.epoch,
-          writer: owner,
-          sequence: 7,
-          clock: ownClock,
-          previousHash: first.hash,
-          effect: UnifiedEffect('food', pending.encode()),
-          transactionStart: 6,
-          transactionCount: 2,
-          transactionIndex: 1,
-          observed: observed,
-        );
-        final later = UnifiedRecord(
-          space: space,
-          epoch: m.epoch,
-          writer: owner,
-          sequence: 8,
-          clock: EventClock(ownClock.value + BigInt.one),
-          previousHash: second.hash,
-          effect: UnifiedEffect.named('Must wait with earlier frame'),
-          transactionStart: 8,
-          transactionCount: 1,
-          transactionIndex: 0,
-          observed: {owner: UnifiedFrontier(7, second.hash)},
-        );
-        final suffix = utf8.encode(
-          '${[first, second, later].map((r) => r.encode()).join('\n')}\n',
-        );
+        final pending = mixed.effects.last.food!;
+        final later = actionRecord(owner, 7, 2000000000000000002, mixed.hash, [
+          (seq, clock, head) =>
+              UnifiedEffect.named('Must wait with earlier action'),
+        ]);
+        final suffix = utf8.encode('${mixed.encode()}\n${later.encode()}\n');
         await folder.append(unifiedLogName(owner), Uint8List.fromList(suffix));
         final waiting = await history!.refresh();
         expect(waiting.pendingEffects, isTrue);
@@ -636,7 +612,7 @@ void main() {
         expect(waiting.food.any((e) => e.id == pending.id), isFalse);
         expect(waiting.deviceName(owner), isNull);
         expect(waiting.published[owner], 5);
-        expect(history!.physicalSequence, 8);
+        expect(history!.physicalSequence, 7);
         await expectLater(
           history!.renameDevice('blocked'),
           throwsA(isA<FormatFailure>()),
@@ -647,20 +623,16 @@ void main() {
         profile = null;
         await open();
         expect(history!.snapshot.pendingEffects, isTrue);
-        expect(
-          history!.snapshot.tasks.any((e) => e.entity == newTask),
-          isFalse,
-        );
         await folder.append(
-          unifiedLogName(peer),
-          Uint8List.fromList(utf8.encode('${peerRecord.encode()}\n')),
+          unifiedLogName(fixture.peer),
+          Uint8List.fromList(utf8.encode('${prerequisite.encode()}\n')),
         );
         final ready = await history!.refresh();
         expect(ready.pendingEffects, isFalse);
         expect(ready.tasks.any((e) => e.entity == newTask), isTrue);
         expect(ready.food.any((e) => e.id == pending.id), isTrue);
-        expect(ready.deviceName(owner), 'Must wait with earlier frame');
-        expect(ready.published[owner], 8);
+        expect(ready.deviceName(owner), 'Must wait with earlier action');
+        expect(ready.published[owner], 7);
         expect(
           ready.foodAdmission.state.containers.single.contents.toJson(),
           const Contents.fraction(1, 4).toJson(),
@@ -723,7 +695,7 @@ void main() {
     },
   );
   test(
-    'cross-writer fixed point holds reverse-scanned frames across reopen',
+    'cross-writer fixed point holds reverse-scanned actions across reopen',
     () async {
       const b = '66666666-6666-4666-8666-666666666666',
           c = '77777777-7777-4777-8777-777777777777',
@@ -732,23 +704,14 @@ void main() {
         (await Directory('${root.path}/transitive').create()).path,
       );
       final owners = {owner, fixture.peer, b, c, d};
-      final plan = UnifiedCutoverPlan.inspect(
+      final plan = fixture.FixturePlan.inspect(
         space: space,
         owners: owners,
         participants: owners,
         sources: fixture.sources(),
         hasUnresolvedPreparedWrites: false,
       );
-      final cv = plan.convert(
-        owners.map(
-          (w) => CutoverAcknowledgement(
-            w,
-            plan.sourceDigest,
-            quiesced: true,
-            pendingResolved: true,
-          ),
-        ),
-      );
+      final cv = plan.prepareConversion();
       await f.create(
         'tandemlog-space.json',
         Uint8List.fromList(utf8.encode(cv.manifest.encode())),
@@ -771,169 +734,108 @@ void main() {
       UnifiedHistory? app;
       try {
         app = await UnifiedHistory.open(f, profile: db, writer: owner);
-        final epoch = app.manifest.epoch;
-        UnifiedRecord record(
-          String writer,
-          int seq,
-          int start,
-          int count,
-          int index,
-          int time,
-          String head,
-          Map<String, UnifiedFrontier> observed,
-          UnifiedEffect effect,
-        ) => UnifiedRecord(
-          space: space,
-          epoch: epoch,
-          writer: writer,
-          sequence: seq,
-          clock: EventClock(BigInt.from(time)),
-          previousHash: head,
-          effect: effect,
-          transactionStart: start,
-          transactionCount: count,
-          transactionIndex: index,
-          observed: observed,
-        );
-        UnifiedEffect editFood(
-          String writer,
-          int seq,
-          int time,
-          String head,
-          List<String> refs,
-        ) => UnifiedEffect(
-          'food',
-          FoodRecord(
-            unified: true,
-            space: space,
-            writer: writer,
-            sequence: seq,
-            clock: EventClock(BigInt.from(time)),
-            previousHash: head,
-            createdWith: {fixture.container: fixture.foodHistory().first.id},
-            operation: FoodOperation(
-              id: '$writer:$seq',
-              order: time,
-              action: FoodAction.edit,
-              targets: [fixture.container],
-              contents: const Contents.fraction(1, 2),
-              observedEdits: refs,
-            ),
-          ).encode(),
-        );
-        final dg = unifiedGenesis(space, epoch, d);
-        final prerequisite = record(d, 1, 1, 1, 0, 3000000000, dg, {
-          d: UnifiedFrontier(0, dg),
-        }, editFood(d, 1, 3000000000, dg, []));
-        List<UnifiedRecord> frame(
-          String writer,
+        _actionEpoch = app.manifest.epoch;
+        UnifiedEffectBuilder editFood(String author, List<String> refs) =>
+            (seq, clock, head) => UnifiedEffect(
+              'food',
+              FoodRecord(
+                space: space,
+                writer: author,
+                sequence: seq,
+                clock: clock,
+                previousHash: head,
+                createdWith: {
+                  fixture.container: fixture.foodHistory().first.id,
+                },
+                operation: FoodOperation(
+                  id: '$author:$seq',
+                  order: clock.value.toInt(),
+                  action: FoodAction.edit,
+                  targets: [fixture.container],
+                  contents: const Contents.fraction(1, 2),
+                  observedEdits: refs,
+                ),
+              ).encode(),
+            );
+        final dg = unifiedGenesis(space, _actionEpoch, d);
+        final prerequisite = actionRecord(d, 1, 3000000000, dg, [
+          editFood(d, []),
+        ]);
+        List<UnifiedRecord> chain(
+          String author,
           int start,
           int time,
           String head,
           String dependency,
-          int depSeq,
-          String depHash, {
+          UnifiedRecord requiredAction, {
           bool missingFood = false,
         }) {
-          final observed = {
-            writer: UnifiedFrontier(start - 1, head),
-            dependency: UnifiedFrontier(depSeq, depHash),
-          };
-          final first = record(
-            writer,
+          final mixed = actionRecord(
+            author,
             start,
-            start,
-            2,
-            0,
             time,
             head,
-            observed,
-            UnifiedEffect(
-              'task',
-              LogEvent(
-                space,
-                writer,
-                start,
-                EventClock(BigInt.from(time)),
-                writer,
-                'user.created',
-                {'name': 'Synthetic $writer'},
-              ).encode(previousHash: head),
-            ),
+            [
+              (seq, clock, previous) => UnifiedEffect(
+                'task',
+                LogEvent(space, author, seq, clock, author, 'user.created', {
+                  'name': 'Synthetic $author',
+                }).encode(previousHash: previous),
+              ),
+              if (missingFood)
+                editFood(author, ['$dependency:1'])
+              else
+                (seq, clock, previous) => UnifiedEffect(
+                  'food',
+                  FoodRecord(
+                    space: space,
+                    writer: author,
+                    sequence: seq,
+                    clock: clock,
+                    previousHash: previous,
+                    operation: FoodOperation(
+                      id: '$author:$seq',
+                      order: clock.value.toInt(),
+                      action: FoodAction.add,
+                      targets: [author],
+                      details: const FoodDetails(name: 'Atomic'),
+                      createdAt: '2026-10-18T00:00:00Z',
+                    ),
+                  ).encode(),
+                ),
+            ],
+            observed: {
+              author: UnifiedFrontier(start - 1, head),
+              dependency: UnifiedFrontier(
+                requiredAction.sequence,
+                requiredAction.hash,
+              ),
+            },
           );
-          final second = record(
-            writer,
-            start + 1,
-            start,
-            2,
-            1,
-            time + 1,
-            first.hash,
-            observed,
-            missingFood
-                ? editFood(writer, start + 1, time + 1, first.hash, ['$d:1'])
-                : UnifiedEffect(
-                    'food',
-                    FoodRecord(
-                      unified: true,
-                      space: space,
-                      writer: writer,
-                      sequence: start + 1,
-                      clock: EventClock(BigInt.from(time + 1)),
-                      previousHash: first.hash,
-                      operation: FoodOperation(
-                        id: '$writer:${start + 1}',
-                        order: time + 1,
-                        action: FoodAction.add,
-                        targets: [writer],
-                        details: const FoodDetails(name: 'Atomic'),
-                        createdAt: '2026-10-18T00:00:00Z',
-                      ),
-                    ).encode(),
-                  ),
-          );
-          final last = record(
-            writer,
-            start + 2,
-            start + 2,
-            1,
-            0,
-            time + 2,
-            second.hash,
-            {writer: UnifiedFrontier(start + 1, second.hash)},
-            UnifiedEffect.named('Same label'),
-          );
-          return [first, second, last];
+          final later = actionRecord(author, start + 1, time + 2, mixed.hash, [
+            (seq, clock, previous) => UnifiedEffect.named('Same label'),
+          ]);
+          return [mixed, later];
         }
 
-        final cf = frame(
+        final cf = chain(
           c,
           1,
           4000000000,
-          unifiedGenesis(space, epoch, c),
+          unifiedGenesis(space, _actionEpoch, c),
           d,
-          1,
-          prerequisite.hash,
+          prerequisite,
           missingFood: true,
         );
-        final bf = frame(
+        final bf = chain(
           b,
           1,
           5000000000,
-          unifiedGenesis(space, epoch, b),
+          unifiedGenesis(space, _actionEpoch, b),
           c,
-          2,
-          cf[1].hash,
+          cf.first,
         );
-        final af = frame(
-          owner,
-          6,
-          6000000000,
-          app.commonHead,
-          b,
-          2,
-          bf[1].hash,
-        );
+        final af = chain(owner, 6, 6000000000, app.commonHead, b, bf.first);
         for (final records in [af, bf, cf]) {
           await f.append(
             unifiedLogName(records.first.writer),
@@ -956,15 +858,11 @@ void main() {
             author: await f.read(unifiedLogName(author)),
         };
         await app.close();
-        app = null;
         app = await UnifiedHistory.open(f, profile: db, writer: owner);
         expect(app.snapshot.pendingEffects, isTrue);
-        for (final author in bytes.keys) {
-          expect(app.snapshot.physical[author], bytes[author]);
-        }
-        final wrong = record(d, 1, 1, 1, 0, 3000000000, dg, {
-          d: UnifiedFrontier(0, dg),
-        }, UnifiedEffect.named('Wrong promised event'));
+        final wrong = actionRecord(d, 1, 3000000000, dg, [
+          (seq, clock, head) => UnifiedEffect.named('Wrong promised event'),
+        ]);
         await f.append(
           unifiedLogName(d),
           Uint8List.fromList(utf8.encode('${wrong.encode()}\n')),
@@ -1052,10 +950,9 @@ void main() {
     },
   );
   test(
-    'append-only provider resumes only exact missing bytes after repeated partial writes',
+    'same-session append-only reconciliation completes only exact bytes after repeated partial writes',
     () async {
       await history!.close();
-      history = null;
       history = await UnifiedHistory.open(
         AppendOnlyFolder(folder),
         profile: profile!,
@@ -1067,11 +964,7 @@ void main() {
         history!.appendAtomic([taskBuilder(newTask), foodBuilder()]),
         throwsA(isA<FileSystemException>()),
       );
-      final exact =
-          profile!.database
-                  .select('SELECT raw FROM protected_app_outbox')
-                  .single['raw']
-              as List<int>;
+      final exact = utf8.encode('${history!.pendingRecords.single.encode()}\n');
       folder.cut = 7;
       await expectLater(
         history!.recoverPrepared(),
@@ -1081,13 +974,6 @@ void main() {
         (await folder.read(unifiedLogName(owner))).sublist(before.length),
         exact.take(67).toList(),
       );
-      await history!.close();
-      history = null;
-      history = await UnifiedHistory.open(
-        AppendOnlyFolder(folder),
-        profile: profile!,
-        writer: owner,
-      );
       await history!.recoverPrepared();
       expect(await folder.read(unifiedLogName(owner)), [...before, ...exact]);
       expect(history!.hasPending, isFalse);
@@ -1096,55 +982,93 @@ void main() {
         history!.snapshot.food.any((e) => e.targets.contains(newFood)),
         isTrue,
       );
+      await history!.close();
+      history = await UnifiedHistory.open(
+        AppendOnlyFolder(folder),
+        profile: profile!,
+        writer: owner,
+      );
+      final confirmed = await folder.read(unifiedLogName(owner));
+      await history!.recoverPrepared();
+      expect(await folder.read(unifiedLogName(owner)), confirmed);
     },
   );
-
   test(
-    'a corrupted reserved clock cannot append below the trusted common head',
+    'append-only provider cannot invent restart recovery or rewrite a committed prefix',
     () async {
-      await profile!.serialize(() async {
-        await history!.prepareInProfileQueue([
-          (seq, clock, head) => UnifiedEffect.named('Reserved'),
-        ]);
-      });
-      final p = profile!.database
-          .select('SELECT * FROM protected_app_outbox')
-          .single;
-      final original = Uint8List.fromList(p['raw'] as List<int>);
-      final decoded = UnifiedRecord.decode(utf8.decode(original).trim());
-      final corrupt = UnifiedRecord(
-        space: space,
-        epoch: decoded.epoch,
+      await history!.close();
+      history = await UnifiedHistory.open(
+        AppendOnlyFolder(folder),
+        profile: profile!,
         writer: owner,
-        sequence: decoded.sequence,
-        clock: EventClock(BigInt.zero),
-        previousHash: decoded.previousHash,
-        effect: decoded.effect,
-        transactionStart: decoded.transactionStart,
-        transactionCount: 1,
-        transactionIndex: 0,
-        observed: decoded.observed,
       );
-      final before = await folder.read(unifiedLogName(owner));
-      profile!.transaction(
-        () => profile!.database.execute(
-          'UPDATE protected_app_outbox SET raw=?',
-          [utf8.encode('${corrupt.encode()}\n')],
+      folder.cut = 60;
+      await expectLater(
+        history!.appendAtomic([taskBuilder(newTask), foodBuilder()]),
+        throwsA(isA<FileSystemException>()),
+      );
+      final partial = await folder.read(unifiedLogName(owner));
+      await history!.close();
+      history = await UnifiedHistory.open(
+        AppendOnlyFolder(folder),
+        profile: profile!,
+        writer: owner,
+      );
+      expect(history!.hasPending, isFalse);
+      await history!.recoverPrepared();
+      expect(await folder.read(unifiedLogName(owner)), partial);
+      await expectLater(
+        history!.appendAtomic([taskBuilder(newTask), foodBuilder()]),
+        throwsA(
+          isA<FormatFailure>().having(
+            (e) => e.toString(),
+            'provider',
+            contains('cannot discard'),
+          ),
         ),
       );
+      expect(await folder.read(unifiedLogName(owner)), partial);
+      expect(history!.snapshot.tasks.any((e) => e.entity == newTask), isFalse);
+    },
+  );
+  test(
+    'a complete decreasing-clock action cannot be admitted below the trusted common head',
+    () async {
+      final before = await folder.read(unifiedLogName(owner));
+      final heads = profile!.database
+          .select('SELECT * FROM protected_app_heads')
+          .map((r) => r.toString())
+          .toList();
+      final corrupt = actionRecord(
+        owner,
+        history!.physicalSequence + 1,
+        0,
+        history!.commonHead,
+        [(seq, clock, head) => UnifiedEffect.named('Corrupt clock')],
+      );
+      await folder.append(
+        unifiedLogName(owner),
+        Uint8List.fromList(utf8.encode('${corrupt.encode()}\n')),
+      );
+      final evidence = await folder.read(unifiedLogName(owner));
+      await expectLater(history!.refresh(), throwsA(isA<FormatFailure>()));
       await expectLater(
-        history!.recoverPrepared(),
+        history!.renameDevice('blocked'),
         throwsA(isA<FormatFailure>()),
       );
-      expect(await folder.read(unifiedLogName(owner)), before);
-      profile!.transaction(
-        () => profile!.database.execute(
-          'UPDATE protected_app_outbox SET raw=?',
-          [original],
-        ),
+      expect(
+        profile!.database
+            .select('SELECT * FROM protected_app_heads')
+            .map((r) => r.toString())
+            .toList(),
+        heads,
       );
-      await history!.recoverPrepared();
-      expect(history!.snapshot.deviceName(owner), 'Reserved');
+      expect(await folder.read(unifiedLogName(owner)), evidence);
+      // Restore only this synthetic injected corruption to check subsequent clock continuation.
+      await folder.file(unifiedLogName(owner)).writeAsBytes(before);
+      await history!.refresh();
+      await history!.renameDevice('Valid');
+      expect(history!.snapshot.deviceName(owner), 'Valid');
     },
   );
 }

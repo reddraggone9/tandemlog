@@ -427,6 +427,9 @@ LogEvent _freezeEvent(LogEvent event) => LogEvent(
   previousHash: event.previousHash,
   hash: event.hash,
   canonicalRaw: event.canonicalRaw,
+  attributedWriter: event.attributedWriter,
+  integrityHash: event.integrityHash,
+  operationRevision: event.operationRevision,
 );
 
 /// Resolves only immutable, admitted history. No receipt creation, writes,

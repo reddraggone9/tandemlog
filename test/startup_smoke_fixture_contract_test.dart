@@ -5,12 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:crypto/crypto.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 
 void main() {
   for (final installer in [false, true]) {
     test(
-      '${installer ? 'installer' : 'startup'} synthetic seed is admitted by the actual startup contract without rewriting scalar history',
+      '${installer ? 'installer' : 'startup'} synthetic seed is admitted by the actual startup contract without rewriting current canonical history',
       () async {
         final root = await Directory.systemTemp.createTemp('smoke-contract-');
         final engine = NativeTextEngine(
@@ -75,9 +77,22 @@ void main() {
           );
           expect(
             await File('${root.path}/profile/local.sqlite').exists(),
-            isFalse,
-            reason: 'Fixture construction must not warm the measured profile.',
+            isTrue,
           );
+          final profile = await LocalProfileDatabase.open(
+            '${root.path}/profile',
+          );
+          try {
+            expect(
+              profile.database.select(
+                "SELECT name FROM sqlite_schema WHERE name LIKE 'tasks_%'",
+              ),
+              isEmpty,
+              reason: 'Fixture construction keeps measured projections cold.',
+            );
+          } finally {
+            await profile.close();
+          }
           // This is the same admission flag used by main, rather than a SQL
           // projection/window check that could precede startup refusal.
           store = await TaskStore.open(
@@ -85,6 +100,7 @@ void main() {
             '${root.path}/probe-private',
             textEngine: engine,
             initializeNewWorkspaceText: true,
+            writerIdentity: receipt['writer'] as String,
           );
           expect(store.sharedTextInitialized, isTrue);
           expect(store.rows, hasLength(installer ? 2 : 4));
@@ -93,23 +109,22 @@ void main() {
             hasLength(installer ? 1 : 3),
           );
           await store.verifyHistory();
-          final records = <Map<String, dynamic>>[
+          final effects = [
             for (final file in await folder.list())
-              if (file.name.endsWith('.jsonl'))
+              if (file.name.endsWith('.applog'))
                 for (final line in const LineSplitter().convert(
                   utf8.decode(await folder.read(file.name)),
                 ))
-                  (jsonDecode(line) as Map).cast<String, dynamic>(),
+                  ...UnifiedRecord.decode(line).effects,
           ];
           expect(
-            records.where((record) => record['type'] == 'task.created'),
+            effects.where((e) => e.task?.type == 'task.created'),
             hasLength(installer ? 1 : 3),
-            reason: 'The historical scalar workload stays comparable.',
+            reason:
+                'The scalar workload remains comparable; its wire format is current.',
           );
           expect(
-            records.where(
-              (record) => record['type'] == 'text.baselineInitialized',
-            ),
+            effects.where((e) => e.task?.type == 'text.baselineInitialized'),
             hasLength(1),
           );
           if (installer) {
@@ -129,6 +144,7 @@ void main() {
             '${root.path}/cold-probe-private',
             textEngine: engine,
             initializeNewWorkspaceText: true,
+            writerIdentity: receipt['writer'] as String,
           );
           expect(store.sharedTextInitialized, isTrue);
           expect({

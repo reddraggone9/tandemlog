@@ -58,16 +58,17 @@ class _Fixture {
         'remove': [],
       },
     });
-    await store.initializeSharedTextForHistoricalFixture();
+    await store.initializeSharedText();
     await store.reopen(parent, [original.id]);
     return _Fixture(root, folder, engine, store, parent, child, original);
   }
 
   Map<String, dynamic> row(String id) =>
       jsonDecode(
-            store.db.select('SELECT raw FROM views WHERE id=?', [
-                  id,
-                ]).single['raw']
+            store.db.select(
+                  'SELECT raw FROM ${store.tables.views} WHERE id=?',
+                  [id],
+                ).single['raw']
                 as String,
           )
           as Map<String, dynamic>;
@@ -144,12 +145,12 @@ void main() {
           completionDay: DateTime(2030, 8, 2),
         );
         await File(
-          '${peerFolder.path}/${peer.writer}.jsonl',
-        ).copy('${f.folder.path}/${peer.writer}.jsonl');
+          '${peerFolder.path}/${peer.writer}.applog',
+        ).copy('${f.folder.path}/${peer.writer}.applog');
         await f.store.refresh();
         await File(
-          '${f.folder.path}/${f.store.writer}.jsonl',
-        ).copy('${peerFolder.path}/${f.store.writer}.jsonl');
+          '${f.folder.path}/${f.store.writer}.applog',
+        ).copy('${peerFolder.path}/${f.store.writer}.applog');
         await peer.refresh();
         expect(f.store.activeCompletionIds(f.parent).toSet(), {a.id, b.id});
         expect(peer.activeCompletionIds(f.parent).toSet(), {a.id, b.id});
@@ -159,11 +160,13 @@ void main() {
           before,
         );
         final eventCount = f.store.db
-            .select('SELECT COUNT(*) AS n FROM events')
+            .select('SELECT COUNT(*) AS n FROM ${f.store.tables.events}')
             .single['n'];
         await f.store.refresh();
         expect(
-          f.store.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+          f.store.db
+              .select('SELECT COUNT(*) AS n FROM ${f.store.tables.events}')
+              .single['n'],
           eventCount,
         );
         final undo = await f.store.undoOperations([a.id]);
@@ -264,7 +267,7 @@ void main() {
           final before = jsonEncode(f.row(f.child));
           final contexts = f.store.db
               .select(
-                'SELECT field,context FROM text_fields WHERE entity=? ORDER BY field',
+                'SELECT field,context FROM ${f.store.tables.textFields} WHERE entity=? ORDER BY field',
                 [f.child],
               )
               .map((r) => Map<String, dynamic>.from(r))
@@ -279,7 +282,11 @@ void main() {
             '${f.root.path}/profile',
             textEngine: f.engine,
           );
-          expect(f.store.readFiles, 0);
+          expect(
+            f.store.readFiles,
+            greaterThan(0),
+            reason: 'Current admission revalidates canonical bytes',
+          );
           expect(jsonEncode(f.store.taskSnapshot), snapshot);
           await f.store.close();
           f.store = await TaskStore.open(
@@ -291,7 +298,7 @@ void main() {
           expect(
             f.store.db
                 .select(
-                  'SELECT field,context FROM text_fields WHERE entity=? ORDER BY field',
+                  'SELECT field,context FROM ${f.store.tables.textFields} WHERE entity=? ORDER BY field',
                   [f.child],
                 )
                 .map((r) => Map<String, dynamic>.from(r))

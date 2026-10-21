@@ -1,5 +1,7 @@
 # Required support for additional time zone names
 
+Current-client supersession: [ADR0031](0031-coordinated-unified-cutover.md) replaces this transition/reader mechanism. This record remains historical rationale and released-source attribution; it does not require current live old decoders, conversion UI or durable unfinished intent.
+
 Status: Accepted design, 2026-10-20; implementation and acceptance in progress.
 
 ## Context

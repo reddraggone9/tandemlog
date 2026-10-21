@@ -1,22 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:sqlite3/sqlite3.dart' show SqliteException;
+
+import 'package:uuid/uuid.dart';
 
 import '../domain/event.dart';
 import '../domain/time_zone_policy.dart';
 import '../food/inventory.dart';
 import '../food/food_record.dart';
 import '../food/food_admission.dart';
-import '../food/food_import_evidence.dart';
 import 'local_profile_database.dart';
 import 'local_settings.dart';
 import 'log_folder.dart';
 import 'unified_manifest.dart';
 import 'unified_record.dart';
 import 'workspace_view.dart';
-import 'workspace_capabilities.dart';
 import 'task_store.dart';
 import '../text/native_text_engine.dart';
 
@@ -36,8 +35,8 @@ class UnifiedReservation {
   final Uint8List bytes;
 }
 
-/// A single admitted revision. Physical observations include incomplete frames;
-/// effects include only complete validated transactions.
+/// A single admitted revision. Physical observations include incomplete tails;
+/// effects include only complete validated actions.
 class UnifiedSnapshot {
   UnifiedSnapshot(
     this.revision,
@@ -68,6 +67,7 @@ class UnifiedSnapshot {
     String? result;
     for (final record in records) {
       if (record.writer == writer &&
+          record.effects.length == 1 &&
           record.effect.kind == 'writer.named' &&
           record.sequence <= (published[writer] ?? 0)) {
         result = record.effect.name;
@@ -101,6 +101,7 @@ class UnifiedHistory {
   UnifiedSnapshot get snapshot =>
       _snapshot ?? (throw StateError('Unified history is not admitted.'));
   Object? safetyFailure;
+  int readFiles = 0;
   final _changes = WorkspaceChanges();
   bool _viewHasPending = false;
   bool get viewHasPending => _viewHasPending;
@@ -125,12 +126,15 @@ class UnifiedHistory {
   void Function() listenChanges(void Function() listener) =>
       _changes.listen(listener);
   bool _closed = false;
+  bool _joiningHeader = false;
   Future<void>? _closing;
   final _projections = <Object, UnifiedProjectionStage>{};
   // Cache only successful pure native/domain validation by exact semantic bytes.
   // Real provider bytes, protected observations and SQL projections are still
   // checked on every refresh. No metadata-only freshness assumptions.
   final _taskValidation = <String, Set<String>>{};
+  Map<String, Object?>? _pending;
+  Map<String, dynamic>? _pendingProvenance;
 
   /// Called on the shared profile queue. Staging runs synchronously inside the
   /// same SQL transaction as admission; memory publishes only after its commit.
@@ -155,44 +159,9 @@ class UnifiedHistory {
 
   TimeZoneNamePolicy get timeZonePolicy => manifest.timeZonePolicy;
 
-  Future<UnifiedSnapshot> enableAdditionalTimeZones({required bool confirmed}) {
-    if (!confirmed) {
-      return Future.error(FormatFailure('Explicit confirmation is required.'));
-    }
-    return _onProfile(() async {
-      await refreshInProfileQueue();
-      if (manifest.additionalTimeZonesEnabled) return snapshot;
-      if (hasPending) {
-        throw FormatFailure(
-          'Finish the earlier saved operation before enabling additional time zones.',
-        );
-      }
-      if (profile.database.select(
-        "SELECT 1 FROM protected_app_migrations WHERE space=? AND state NOT IN ('complete','aborted')",
-        [manifest.space],
-      ).isNotEmpty) {
-        throw FormatFailure('Finish the shared workspace upgrade first.');
-      }
-      final base = manifest.encode();
-      final target = manifest.withAdditionalTimeZones().encode();
-      try {
-        await replaceOwnedTimeZoneCapabilityInProfileQueue(
-          profile: profile,
-          folder: folder,
-          writer: writer,
-          expectedRaw: base,
-          targetRaw: target,
-          confirmed: confirmed,
-        );
-        return await refreshInProfileQueue();
-      } catch (error) {
-        reportQueueFailure(error);
-        rethrow;
-      }
-    });
-  }
-
-  String get _lease => 'app4:${folder.location}';
+  String get _lease => 'app5:${folder.location}';
+  String get _locationKey =>
+      'app5.location.${bytesDigest(utf8.encode(folder.location))}';
   static const maximumFileBytes = maximumUnifiedFileBytes;
   static const maximumTotalBytes = maximumUnifiedWorkspaceBytes;
 
@@ -221,17 +190,59 @@ class UnifiedHistory {
     profile.acquireWorkspace(result._lease);
     try {
       await result.refresh();
-      if (!result.manifest.owners.containsKey(writer) &&
-          result.physicalSequence == 0 &&
-          !result.hasPending) {
-        await result.appendAtomic([
-          (seq, clock, head) => UnifiedEffect.joined(),
-        ]);
-      }
       return result;
     } catch (_) {
       profile.releaseWorkspace(result._lease);
       rethrow;
+    }
+  }
+
+  /// Only a genuinely empty folder can be initialized. Unsupported manifests,
+  /// conflicted histories and interrupted conversions are never replaced.
+  static Future<UnifiedHistory> create(
+    LogFolder folder, {
+    required LocalProfileDatabase profile,
+    required String writer,
+    NativeTextEngine? textEngine,
+    DateTime Function()? now,
+  }) async {
+    final creationLease = 'creating:${const Uuid().v4()}';
+    profile.acquireWorkspace(creationLease);
+    try {
+      final locationKey =
+          'app5.location.${bytesDigest(utf8.encode(folder.location))}';
+      if (profile.database.select(
+        'SELECT 1 FROM profile_metadata WHERE key=?',
+        [locationKey],
+      ).isNotEmpty) {
+        throw FormatFailure(
+          'This workspace location was previously bound. Restore its missing history before opening it.',
+        );
+      }
+      if ((await folder.list()).isNotEmpty) {
+        throw FormatFailure(
+          'This folder is not empty. Open a converted workspace or choose a new empty folder.',
+        );
+      }
+      if (LocalSettings.protectedValues(profile)['writer'] != writer) {
+        throw FormatFailure(
+          'Installation identity differs from protected settings.',
+        );
+      }
+      final manifest = UnifiedManifest.empty(const Uuid().v4(), writer);
+      await folder.create(
+        'tandemlog-space.json',
+        Uint8List.fromList(utf8.encode(manifest.encode())),
+      );
+      return await open(
+        folder,
+        profile: profile,
+        writer: writer,
+        textEngine: textEngine,
+        now: now,
+      );
+    } finally {
+      profile.releaseWorkspace(creationLease);
     }
   }
 
@@ -266,10 +277,25 @@ class UnifiedHistory {
           'Installation writer differs from protected settings.',
         );
       }
-      final result = await _refresh();
+      await _refresh();
+      if (!_joiningHeader &&
+          !manifest.owners.containsKey(writer) &&
+          physicalSequence == 0 &&
+          !hasPending &&
+          !snapshot.pendingEffects) {
+        _joiningHeader = true;
+        try {
+          await _prepareInProfileQueue([
+            (seq, clock, head) => UnifiedEffect.joined(),
+          ], reserve: true);
+          await commitInProfileQueue();
+        } finally {
+          _joiningHeader = false;
+        }
+      }
       safetyFailure = null;
       _changes.notify();
-      return result;
+      return snapshot;
     } catch (e) {
       safetyFailure = e;
       _changes.notify();
@@ -289,7 +315,9 @@ class UnifiedHistory {
         throw FormatFailure('Linked or missing unified history is unsafe.');
       }
     }
-    return (folder as BoundedLogFolder).readBounded(name, limit);
+    final bytes = await (folder as BoundedLogFolder).readBounded(name, limit);
+    if (name.endsWith('.applog')) readFiles++;
+    return bytes;
   }
 
   Future<UnifiedSnapshot> _refresh({bool observe = true}) async {
@@ -297,48 +325,30 @@ class UnifiedHistory {
       await _read('tandemlog-space.json', 1024 * 1024),
     );
     final current = UnifiedManifest.decode(rawManifest);
-    if (!current.ready) {
-      throw FormatFailure(
-        'App cutover is staged; waiting for verified participant acknowledgements.',
-      );
-    }
     final bound = profile.database.select(
       'SELECT epoch,manifest,observed FROM protected_app_workspaces WHERE space=?',
       [current.space],
     );
-    validateCurrentWorkspaceCapabilitiesInProfileQueue(
-      profile: profile,
-      writer: writer,
-      location: folder.location,
-      actualRaw: rawManifest,
+    if (bound.isNotEmpty &&
+        (bound.single['epoch'] != current.epoch ||
+            bound.single['manifest'] != rawManifest)) {
+      throw FormatFailure(
+        'Workspace bootstrap changed. Preserve the profile and history before recovery.',
+      );
+    }
+    final locationBinding = canonicalDataJson({
+      'space': current.space,
+      'epoch': current.epoch,
+    });
+    final locationRows = profile.database.select(
+      'SELECT value FROM profile_metadata WHERE key=?',
+      [_locationKey],
     );
-    String? transitionBase;
-    if (bound.isNotEmpty) {
-      final baseRaw = bound.single['manifest'] as String;
-      if (bound.single['epoch'] != current.epoch ||
-          baseRaw != rawManifest &&
-              validateTimeZoneExtension(baseRaw, rawManifest) == null) {
-        throw FormatFailure(
-          'App workspace epoch changed. Preserve history before recovery.',
-        );
-      }
-      if (baseRaw != rawManifest) {
-        final oldManifest = UnifiedManifest.decode(baseRaw);
-        // Adoption must never retroactively authorize an old-policy reservation.
-        for (final pending in _outbox(oldManifest)) {
-          _validateReservedRecords(oldManifest, pending);
-        }
-        if (observe) {
-          await prepareTimeZoneCapabilityAdoptionInProfileQueue(
-            profile: profile,
-            folder: folder,
-            writer: writer,
-            expectedRaw: baseRaw,
-            targetRaw: rawManifest,
-          );
-        }
-        transitionBase = baseRaw;
-      }
+    if (locationRows.isNotEmpty &&
+        locationRows.single['value'] != locationBinding) {
+      throw FormatFailure(
+        'Workspace identity changed at a previously bound location. Preserve the profile and history.',
+      );
     }
     final registered = <String>{};
     if (bound.isNotEmpty) {
@@ -374,9 +384,13 @@ class UnifiedHistory {
     if (byName.length != infos.length) {
       throw FormatFailure('Ambiguous app history filenames.');
     }
-    final seals = {for (final s in current.seals) s.name: s};
     for (final info in infos) {
       final name = info.name;
+      if (name.toLowerCase().contains('sync-conflict')) {
+        throw FormatFailure(
+          'A sync conflict is present. Preserve both copies before recovery.',
+        );
+      }
       if (name.contains('.applog')) {
         if (!name.endsWith('.applog')) {
           throw FormatFailure('Conflicting app history filename.');
@@ -388,14 +402,9 @@ class UnifiedHistory {
         ownerSet.add(owner);
       }
       if (name.endsWith('.jsonl') || name.endsWith('.foodlog')) {
-        final seal = seals[name];
-        if (seal == null || info.size != null && info.size != seal.length) {
-          throw FormatFailure('Late, changed or unknown legacy history $name.');
-        }
-        final bytes = await _read(name, maximumFileBytes);
-        if (bytes.length != seal.length || bytesDigest(bytes) != seal.digest) {
-          throw FormatFailure('Sealed legacy history changed: $name.');
-        }
+        throw FormatFailure(
+          'Legacy history is not accepted in a normalized workspace. Preserve it outside this folder.',
+        );
       }
     }
     if (ownerSet.length > 256) {
@@ -404,7 +413,6 @@ class UnifiedHistory {
     final observed = <String, Uint8List>{},
         all = <UnifiedRecord>[],
         admitted = <UnifiedEffect>[],
-        frames = <List<UnifiedRecord>>[],
         published = <String, int>{},
         heads = <List<Object?>>[];
     final semantic = <String, UnifiedEffect>{};
@@ -418,8 +426,8 @@ class UnifiedHistory {
         [current.space, current.epoch, owner],
       );
       final missingNewSelf =
-          owner == writer &&
-          !current.owners.containsKey(owner) &&
+          ((owner == writer && !current.owners.containsKey(owner)) ||
+              current.owners[owner]?['count'] == 0) &&
           (protected.isEmpty ||
               protected.single['sequence'] == 0 &&
                   protected.single['bytes'] == 0);
@@ -447,8 +455,8 @@ class UnifiedHistory {
           sequence = 0,
           head = unifiedGenesis(current.space, current.epoch, owner);
       EventClock? clock;
-      var completeSequence = 0, frameStart = 0, frameCount = 0;
-      final frame = <UnifiedRecord>[];
+      var semanticSequence = 0;
+      var completeSequence = 0;
       var migrationEnd = 0;
       final historicalCount = current.owners[owner]?['count'] as int? ?? 0;
       for (var i = 0; i < bytes.length; i++) {
@@ -460,62 +468,46 @@ class UnifiedHistory {
         }
         final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
         final r = UnifiedRecord.decode(raw);
-        final task = r.effect.task;
-        if (task != null) {
-          assertWorkspaceTaskTimeZonePolicy(
-            task,
-            r.effect.historical
-                ? TimeZoneNamePolicy.legacy
-                : current.timeZonePolicy,
-          );
+        for (final e in r.effects) {
+          final task = e.task;
+          if (task != null) {
+            assertWorkspaceTaskTimeZonePolicy(task, current.timeZonePolicy);
+          }
         }
         if (r.space != current.space ||
             r.epoch != current.epoch ||
             r.writer != owner ||
             r.sequence != sequence + 1 ||
             r.previousHash != head ||
-            clock != null && r.clock <= clock) {
+            clock != null && r.firstClock <= clock) {
           throw FormatFailure(
             'App writer sequence, identity, clock or chain differs.',
           );
         }
         if (!current.owners.containsKey(owner) &&
             r.sequence == 1 &&
-            (r.effect.kind != 'writer.joined' || r.transactionCount != 1)) {
+            (r.effects.length != 1 || r.effect.kind != 'writer.joined')) {
           throw FormatFailure(
             'New installation history must begin with its own header.',
           );
         }
-        if (r.effect.kind == 'writer.joined' &&
+        if (r.effects.any((e) => e.kind == 'writer.joined') &&
             (r.sequence != 1 || current.owners.containsKey(owner))) {
           throw FormatFailure('Installation header is misplaced.');
         }
         if (r.sequence <= historicalCount) {
-          if (!r.effect.historical ||
-              r.transactionCount != 1 ||
-              current.ownerOfLegacy(r.effect.writer, r.effect.kind) != owner) {
+          if (!r.historical ||
+              r.effects.length != 1 ||
+              current.authorOfReference(r.effect.writer) != owner) {
             throw FormatFailure(
               'App migration prefix is not original owner history.',
             );
           }
-        } else if (r.effect.historical) {
+        } else if (r.historical) {
           throw FormatFailure(
             'Unexpected late legacy event in the active writer chain.',
           );
         }
-        if (frame.isEmpty) {
-          if (r.transactionIndex != 0 || r.transactionStart != r.sequence) {
-            throw FormatFailure('App transaction starts in the middle.');
-          }
-          frameStart = r.transactionStart;
-          frameCount = r.transactionCount;
-        }
-        if (r.transactionStart != frameStart ||
-            r.transactionCount != frameCount ||
-            r.transactionIndex != frame.length) {
-          throw FormatFailure('App transaction frame is inconsistent.');
-        }
-        frame.add(r);
         all.add(r);
         sequence = r.sequence;
         head = r.hash;
@@ -526,28 +518,29 @@ class UnifiedHistory {
             throw FormatFailure('Migration prefix head differs.');
           }
         }
-        if (r.completesTransaction) {
-          for (final event in frame) {
-            final e = event.effect;
-            if (e.isData) {
-              final existing = semantic[e.key];
-              if (existing != null && existing.raw != e.raw) {
-                throw FormatFailure(
-                  'Conflicting original semantic event identity.',
-                );
-              }
-              if (existing == null) {
-                semantic[e.key] = e;
-                admitted.add(e);
-              }
-            } else {
+        for (final e in r.effects) {
+          if (e.isData && e.writer == owner) {
+            if (!e.historical && e.sequence <= semanticSequence) {
+              throw FormatFailure(
+                'Logical effect sequence was reused or reordered.',
+              );
+            }
+            if (e.sequence > semanticSequence) semanticSequence = e.sequence;
+          }
+          if (e.isData) {
+            final existing = semantic[e.key];
+            if (existing != null && existing.raw != e.raw) {
+              throw FormatFailure('Conflicting semantic effect identity.');
+            }
+            if (existing == null) {
+              semantic[e.key] = e;
               admitted.add(e);
             }
+          } else {
+            admitted.add(e);
           }
-          frames.add(List.unmodifiable(frame));
-          completeSequence = sequence;
-          frame.clear();
         }
+        completeSequence = sequence;
         start = i + 1;
       }
       if (current.owners.containsKey(owner) &&
@@ -555,21 +548,6 @@ class UnifiedHistory {
               bytesDigest(Uint8List.sublistView(bytes, 0, migrationEnd)) !=
                   current.owners[owner]!['digest'])) {
         throw FormatFailure('Incomplete or changed migration prefix.');
-      }
-      if (!current.owners.containsKey(owner) && sequence == 0 && exists) {
-        final pending = owner == writer
-            ? _outbox(current)
-            : <Map<String, Object?>>[];
-        if (pending.isEmpty ||
-            _validateReservedRecords(
-                  current,
-                  pending.single,
-                ).first.effect.kind !=
-                'writer.joined') {
-          throw FormatFailure(
-            'New installation header is missing or incomplete.',
-          );
-        }
       }
       if (protected.isNotEmpty) {
         final old = protected.single,
@@ -590,7 +568,7 @@ class UnifiedHistory {
           throw FormatFailure('Trusted app prefix identity or head differs.');
         }
       }
-      if (start < bytes.length || frame.isNotEmpty) incomplete = true;
+      if (start < bytes.length) incomplete = true;
       published[owner] = completeSequence;
       heads.add([
         current.space,
@@ -598,35 +576,13 @@ class UnifiedHistory {
         owner,
         sequence,
         head,
-        bytes.length,
-        bytesDigest(bytes),
+        start,
+        bytesDigest(Uint8List.sublistView(bytes, 0, start)),
         completeSequence,
       ]);
     }
-    final imports = readFoodImportEvidence(profile, current.space);
-    final foodHashes = <String, String>{
-      for (final r in all)
-        if (r.effect.food != null) r.effect.food!.id: r.effect.food!.hash,
-    };
-    final reserved = _outbox(current);
-    if (reserved.isNotEmpty) {
-      for (final r in _validateReservedRecords(current, reserved.single)) {
-        if (r.effect.food != null) {
-          foodHashes[r.effect.food!.id] = r.effect.food!.hash;
-        }
-      }
-    }
-    for (final attempt in imports) {
-      for (final record in attempt['records'] as List) {
-        if (foodHashes[record['id']] != record['hash']) {
-          throw FormatFailure(
-            'Retained import evidence is missing from exact app history or its receipt.',
-          );
-        }
-      }
-    }
-    _validateLegacyCoverage(all, current);
-    // Validate all physical evidence before deciding visibility. A blocked frame
+    _validateReferenceCoverage(all, current);
+    // Validate all physical evidence before deciding visibility. A blocked action
     // cannot conceal a malformed event or relax the app-wide format fence.
     var taskReady = <String>{};
     final allAdmission = _validateEffects(
@@ -634,19 +590,18 @@ class UnifiedHistory {
       current,
       onTaskReady: (ids) => taskReady = ids,
     );
-    final publication = _publishFrames(
-      frames,
+    final publication = _publishActions(
+      all,
       published,
       current,
-      all,
       admitted,
       allAdmission,
       taskReady,
     );
     final visible = publication.$1;
     final foodAdmission = publication.$2;
-    final pendingEffects = frames.any(
-      (f) => f.last.sequence > (published[f.first.writer] ?? 0),
+    final pendingEffects = all.any(
+      (r) => r.sequence > (published[r.writer] ?? 0),
     );
     for (final row in heads) {
       row[7] = published[row[2] as String] ?? 0;
@@ -669,7 +624,6 @@ class UnifiedHistory {
       foodAdmission,
       pendingEffects,
     );
-    if (bound.isEmpty) await _validateLegacyProtectedAuthority(current, result);
     final pending = _outbox(current);
     if (pending.isNotEmpty) {
       _validatePreparedPrefix(current, result, pending.single);
@@ -677,18 +631,13 @@ class UnifiedHistory {
     if (!observe) return result;
     final publications = <void Function()>[];
     var pendingAfterCommit = false;
+    final retirePending =
+        pending.isNotEmpty && _preparedComplete(result, pending.single);
     profile.transaction(() {
-      if (transitionBase != null) {
-        validateTimeZoneCapabilityTransitionInTransaction(
-          profile: profile,
-          space: current.space,
-          epoch: current.epoch,
-          writer: writer,
-          location: folder.location,
-          expectedRaw: transitionBase,
-          targetRaw: rawManifest,
-        );
-      }
+      profile.database.execute(
+        'INSERT OR IGNORE INTO profile_metadata VALUES (?,?)',
+        [_locationKey, locationBinding],
+      );
       profile.database.execute(
         'INSERT INTO protected_app_workspaces VALUES (?,?,?,?) ON CONFLICT(space) DO UPDATE SET observed=excluded.observed',
         [current.space, current.epoch, rawManifest, canonicalDataJson(owners)],
@@ -699,28 +648,15 @@ class UnifiedHistory {
           row,
         );
       }
-      if (pending.isNotEmpty && _preparedComplete(result, pending.single)) {
-        profile.database.execute(
-          'DELETE FROM protected_app_outbox WHERE space=? AND epoch=? AND writer=?',
-          [current.space, current.epoch, writer],
-        );
-      }
       for (final stage in _projections.values) {
         publications.add(stage(result));
       }
-      pendingAfterCommit = _outbox(current).isNotEmpty;
-      if (transitionBase != null) {
-        completeTimeZoneCapabilityTransitionInTransaction(
-          profile: profile,
-          space: current.space,
-          epoch: current.epoch,
-          writer: writer,
-          location: folder.location,
-          expectedRaw: transitionBase,
-          targetRaw: rawManifest,
-        );
-      }
+      pendingAfterCommit = !retirePending && _outbox(current).isNotEmpty;
     });
+    if (retirePending) {
+      _pending = null;
+      _pendingProvenance = null;
+    }
     manifest = current;
     _snapshot = result;
     _viewHasPending = pendingAfterCommit;
@@ -730,46 +666,29 @@ class UnifiedHistory {
     return result;
   }
 
-  /// Semantic publication is a fixed point of complete writer prefixes.
-  /// Hold the entire future frame for a missing Food dependency, and hold any
-  /// later frame whose observed prefix is held. Legacy single events preserve
-  /// their existing per-domain pending-reference rules.
-  (List<UnifiedEffect>, FoodAdmission) _publishFrames(
-    List<List<UnifiedRecord>> frames,
+  /// Publish complete writer prefixes to a fixed point. A missing typed
+  /// dependency holds the entire action and actions observing its frontier.
+  (List<UnifiedEffect>, FoodAdmission) _publishActions(
+    List<UnifiedRecord> actions,
     Map<String, int> published,
     UnifiedManifest m,
-    List<UnifiedRecord> all,
     List<UnifiedEffect> admitted,
     FoodAdmission allAdmission,
     Set<String> taskReady,
   ) {
-    final physical = {for (final r in all) r.recordId: r};
-    for (final frame in frames) {
-      final first = frame.first;
-      final observed = canonicalDataJson(
-        first.observed.map((k, v) => MapEntry(k, v.toJson())),
-      );
-      for (final r in frame) {
-        if (canonicalDataJson(
-              r.observed.map((k, v) => MapEntry(k, v.toJson())),
-            ) !=
-            observed) {
-          throw FormatFailure('App frame has inconsistent observed history.');
-        }
-      }
-      for (final entry in first.observed.entries) {
+    final physical = {for (final r in actions) r.recordId: r};
+    for (final action in actions) {
+      for (final entry in action.observed.entries) {
         final f = entry.value;
         if (f.sequence == 0) {
           if (f.hash != unifiedGenesis(m.space, m.epoch, entry.key)) {
-            throw FormatFailure('App command observes a different genesis.');
+            throw FormatFailure('App action observes a different genesis.');
           }
         } else {
           final target = physical['app:${m.epoch}:${entry.key}:${f.sequence}'];
           if (target != null &&
-              (target.hash != f.hash ||
-                  !target.completesTransaction ||
-                  target.clock >= first.clock)) {
-            throw FormatFailure('App command observes an invalid frontier.');
+              (target.hash != f.hash || target.clock >= action.firstClock)) {
+            throw FormatFailure('App action observes an invalid frontier.');
           }
         }
       }
@@ -786,131 +705,99 @@ class UnifiedHistory {
       if (trusted < (m.owners[owner]?['count'] as int? ?? 0) ||
           trusted > (complete[owner] ?? 0) ||
           trusted > 0 &&
-              !physical['app:${m.epoch}:$owner:$trusted']!
-                  .completesTransaction) {
+              !physical.containsKey('app:${m.epoch}:$owner:$trusted')) {
         throw FormatFailure(
           'Trusted app publication frontier differs from physical history.',
         );
       }
       published[owner] = trusted;
     }
-    // The ordinary complete case needs one semantic pass, not one native
-    // replay per historical frame. Missing delivery retains the ascending
-    // protected-prefix algorithm below.
-    if (frames.every(
-      (frame) =>
-          frame.first.observed.entries.every(
+    bool ready(UnifiedEffect e, FoodAdmission food, Set<String> tasks) =>
+        (e.task == null || tasks.contains(e.task!.id)) &&
+        (e.food == null || food.readyIds.contains(e.food!.id));
+    // Complete delivery needs one semantic pass, rather than replay per action.
+    if (actions.every(
+      (a) =>
+          a.observed.entries.every(
             (e) => e.value.sequence <= (complete[e.key] ?? 0),
           ) &&
-          frame.every(
-            (r) =>
-                (r.effect.task == null ||
-                    taskReady.contains(r.effect.task!.id)) &&
-                (r.effect.food == null ||
-                    allAdmission.readyIds.contains(r.effect.food!.id)),
-          ),
+          a.effects.every((e) => ready(e, allAdmission, taskReady)),
     )) {
       published.addAll(complete);
       return (admitted, allAdmission);
     }
-    List<UnifiedEffect> effects() {
-      final result = <UnifiedEffect>[], seen = <String>{};
-      for (final frame in frames) {
-        if (frame.last.sequence > (published[frame.first.writer] ?? 0)) {
-          continue;
-        }
-        for (final r in frame) {
-          if (!r.effect.isData || seen.add(r.effect.key)) result.add(r.effect);
+    final visible = <UnifiedEffect>[], seen = <String>{};
+    for (final action in actions) {
+      if (action.sequence > (published[action.writer] ?? 0)) {
+        continue;
+      }
+      for (final e in action.effects) {
+        if (!e.isData || seen.add(e.key)) {
+          visible.add(e);
         }
       }
-      return result;
     }
-
-    var visible = effects();
     var admission = _validateEffects(visible, m);
     while (true) {
       var changed = false;
-      for (final frame in frames) {
-        final first = frame.first;
-        if (first.effect.historical ||
-            first.sequence != (published[first.writer] ?? 0) + 1 ||
-            !first.observed.entries.every(
+      for (final action in actions) {
+        if (action.historical ||
+            action.sequence != (published[action.writer] ?? 0) + 1 ||
+            !action.observed.entries.every(
               (e) => e.value.sequence <= (published[e.key] ?? 0),
             )) {
           continue;
         }
-        final candidate = [...visible, ...frame.map((r) => r.effect)];
-        var taskReady = <String>{};
+        final candidate = [...visible, ...action.effects];
+        var readyTasks = <String>{};
         final checked = _validateEffects(
           candidate,
           m,
-          onTaskReady: (ids) => taskReady = ids,
+          onTaskReady: (ids) => readyTasks = ids,
         );
-        if (!frame.every(
-          (r) =>
-              (r.effect.food == null ||
-                  checked.readyIds.contains(r.effect.food!.id)) &&
-              (r.effect.task == null || taskReady.contains(r.effect.task!.id)),
-        )) {
+        if (!action.effects.every((e) => ready(e, checked, readyTasks))) {
           continue;
         }
-        published[first.writer] = frame.last.sequence;
-        visible = candidate;
+        published[action.writer] = action.sequence;
+        visible.addAll(action.effects);
         admission = checked;
         changed = true;
       }
-      if (!changed) return (visible, admission);
+      if (!changed) {
+        return (visible, admission);
+      }
     }
   }
 
-  void _validateLegacyCoverage(List<UnifiedRecord> records, UnifiedManifest m) {
-    final covered = <String>{};
-    for (final seal in m.seals) {
-      final original =
-          records
-              .where(
-                (r) =>
-                    r.writer == seal.owner &&
-                    r.effect.kind == seal.kind &&
-                    r.effect.historical,
-              )
-              .map((r) => r.effect)
-              .toList()
-            ..sort((a, b) => a.sequence.compareTo(b.sequence));
-      var sequence = 0,
-          head = eventGenesisHash(
-            m.space,
-            seal.kind == 'legacy.task' ? seal.owner : foodWriter(seal.owner),
-          );
-      final output = BytesBuilder(copy: false);
+  void _validateReferenceCoverage(
+    List<UnifiedRecord> records,
+    UnifiedManifest m,
+  ) {
+    final streams = <String, List<UnifiedEffect>>{};
+    for (final r in records.where((r) => r.historical)) {
+      streams
+          .putIfAbsent(
+            '${r.effect.task == null ? 'food' : 'task'}:${r.effect.writer}',
+            () => [],
+          )
+          .add(r.effect);
+    }
+    for (final stream in streams.values) {
+      stream.sort((a, b) => a.sequence.compareTo(b.sequence));
+      var sequence = 0, head = eventGenesisHash(m.space, stream.first.writer);
       EventClock? clock;
-      for (final e in original) {
-        if (e.sequence != ++sequence ||
-            e.previousHash != head ||
-            clock != null && e.clock <= clock ||
-            !covered.add(e.key)) {
+      for (final effect in stream) {
+        if (effect.sequence != ++sequence ||
+            effect.previousHash != head ||
+            clock != null && effect.clock <= clock ||
+            effect.author != m.authorOfReference(effect.writer)) {
           throw FormatFailure(
-            'Historical source continuity or coverage differs.',
+            'Normalized reference continuity or attribution differs.',
           );
         }
-        output.add(utf8.encode('${e.raw}\n'));
-        head = e.semanticHash;
-        clock = e.clock;
+        head = effect.semanticHash;
+        clock = effect.clock;
       }
-      final bytes = output.takeBytes();
-      if (sequence != seal.count ||
-          head != seal.head ||
-          bytes.length != seal.length ||
-          bytesDigest(bytes) != seal.digest) {
-        throw FormatFailure(
-          'Converted history does not preserve its sealed source.',
-        );
-      }
-    }
-    if (records
-        .where((r) => r.effect.historical)
-        .any((r) => !covered.contains(r.effect.key))) {
-      throw FormatFailure('Converted event has no sealed source.');
     }
   }
 
@@ -959,119 +846,23 @@ class UnifiedHistory {
     onTaskReady?.call(ready!);
     return admitFoodRecords(
       food.values.toList(),
-      legacyOwners: {
-        for (final owner in m.owners.keys) foodWriter(owner): owner,
-      },
+      legacyOwners: m.referenceAuthors,
     );
   }
 
-  Future<void> _validateLegacyProtectedAuthority(
-    UnifiedManifest m,
-    UnifiedSnapshot s,
-  ) async {
-    final originals = <String, Uint8List>{};
-    for (final owner in m.owners.keys) {
-      final tasks =
-          s.records
-              .where((r) => r.writer == owner && r.effect.kind == 'legacy.task')
-              .map((r) => r.effect)
-              .toList()
-            ..sort((a, b) => a.sequence.compareTo(b.sequence));
-      if (m.seals.any((seal) => seal.name == '$owner.jsonl')) {
-        originals['$owner.jsonl'] = Uint8List.fromList(
-          utf8.encode(tasks.map((e) => '${e.raw}\n').join()),
-        );
-      }
-    }
-    await TaskStore.verifyConvertedHistoryObservations(
-      profile,
-      m.space,
-      originals,
-    );
-    final db = profile.database;
-    for (final table in ['protected_text_intents', 'protected_food_intents']) {
-      if (db.select('SELECT 1 FROM $table WHERE space=? LIMIT 1', [
-        m.space,
-      ]).isNotEmpty) {
-        throw FormatFailure(
-          'Resolve exact legacy pending appends before cutover.',
-        );
-      }
-    }
-    final index = {for (final e in s.effects.where((e) => e.isData)) e.key: e};
-    for (final row in db.select(
-      'SELECT * FROM protected_writer_guards WHERE space=?',
-      [m.space],
-    )) {
-      final raw = row['raw'];
-      final guard = decodeWriterGuardState(
-        raw is String ? utf8.encode(raw) : raw as List<int>,
-        m.space,
-        row['writer'] as String,
-      );
-      final seq = guard.sequence;
-      if (guard.pending.isNotEmpty) {
-        throw FormatFailure('Legacy writer still has reserved bytes.');
-      }
-      final author = row['writer'] as String;
-      // A real active installation may have opened Food without ever writing
-      // either legacy stream. Its strict genesis checkpoint is local authority,
-      // not historical ownership; do not invent a converted owner for it.
-      final emptyCurrentAuthority =
-          seq == 0 &&
-          (author == writer || author == foodWriter(writer)) &&
-          guard.hash == eventGenesisHash(m.space, author) &&
-          !m.seals.any(
-            (seal) =>
-                seal.name == '$author.jsonl' ||
-                seal.name == foodLogName(author),
-          ) &&
-          !s.effects.any(
-            (effect) => effect.historical && effect.writer == author,
-          );
-      if (!m.owners.containsKey(author) &&
-          !m.owners.keys.any((o) => foodWriter(o) == author) &&
-          !emptyCurrentAuthority) {
-        throw FormatFailure(
-          'Trusted legacy writer is missing from the owner roster.',
-        );
-      }
-      if (seq > 0) {
-        final matches = ['task', 'food']
-            .map((kind) => index['$kind:${m.space}:$author:$seq'])
-            .whereType<UnifiedEffect>()
-            .toList();
-        if (matches.length != 1 || matches.single.semanticHash != guard.hash) {
-          throw FormatFailure(
-            'Cutover does not preserve the trusted legacy writer head.',
-          );
-        }
-      }
-    }
-    for (final row in db.select(
-      'SELECT * FROM protected_food_heads WHERE space=?',
-      [m.space],
-    )) {
-      final seq = row['sequence'] as int;
-      if (seq > 0) {
-        final key = 'food:${m.space}:${row['writer'] as String}:$seq';
-        if (index[key]?.semanticHash != row['hash']) {
-          throw FormatFailure(
-            'Cutover does not preserve the trusted Food head.',
-          );
-        }
-      }
-    }
-  }
+  // Same-session only. Closing/crashing discards unacknowledged intent;
+  // no private bytes can trigger a write after restart.
+  List<Map<String, Object?>> _outbox(UnifiedManifest m) =>
+      _pending == null ? const [] : [_pending!];
+  Map<String, dynamic>? get pendingProvenance => _pendingProvenance;
 
-  List<Map<String, Object?>> _outbox(UnifiedManifest m) => profile.database
-      .select(
-        'SELECT * FROM protected_app_outbox WHERE space=? AND epoch=? AND writer=?',
-        [m.space, m.epoch, writer],
-      )
-      .map((r) => Map<String, Object?>.from(r))
-      .toList();
   bool get hasPending => _outbox(manifest).isNotEmpty;
+
+  /// Projection staging describes the state AFTER its SQL admission commits.
+  /// Until then, the same-session bytes remain available if any stage aborts.
+  bool hasPendingAfter(UnifiedSnapshot candidate) =>
+      _pending != null && !_preparedComplete(candidate, _pending!);
+
   List<UnifiedRecord> get pendingRecords {
     final pending = _outbox(manifest);
     return pending.isEmpty
@@ -1106,7 +897,6 @@ class UnifiedHistory {
                   p['base_hash'] != unifiedGenesis(m.space, m.epoch, writer)
             : prefix.length != 1 ||
                   prefix.single.hash != p['base_hash'] ||
-                  !prefix.single.completesTransaction ||
                   reserved.first.clock <= prefix.single.clock) ||
         bytes.length < base ||
         (base > 0 &&
@@ -1133,41 +923,21 @@ class UnifiedHistory {
     Map<String, Object?> p,
   ) {
     final bytes = p['raw'] as List<int>;
-    if (bytes.isEmpty || bytes.last != 10 || bytes.length > maximumFileBytes) {
-      throw FormatFailure('Invalid app recovery receipt bytes.');
+    if (bytes.isEmpty || bytes.last != 10) {
+      throw FormatFailure('Invalid in-memory action bytes.');
     }
-    final records = <UnifiedRecord>[];
-    var sequence = p['base_sequence'] as int, head = p['base_hash'] as String;
-    EventClock? clock;
-    final start = sequence + 1;
-    final lines = utf8.decode(bytes).split('\n');
-    final count = lines.length - 1;
-    for (final raw in lines.take(count)) {
-      final r = UnifiedRecord.decode(raw);
-      final task = r.effect.task;
-      if (task != null) {
-        assertWorkspaceTaskTimeZonePolicy(
-          task,
-          r.effect.historical ? TimeZoneNamePolicy.legacy : m.timeZonePolicy,
-        );
-      }
-      if (r.space != m.space ||
-          r.epoch != m.epoch ||
-          r.writer != writer ||
-          r.sequence != ++sequence ||
-          r.previousHash != head ||
-          r.transactionStart != start ||
-          r.transactionCount != count ||
-          r.transactionIndex != records.length ||
-          r.effect.historical ||
-          clock != null && r.clock <= clock) {
-        throw FormatFailure('App recovery reservation is inconsistent.');
-      }
-      records.add(r);
-      clock = r.clock;
-      head = r.hash;
+    final r = UnifiedRecord.decode(
+      utf8.decode(bytes.sublist(0, bytes.length - 1)),
+    );
+    if (r.space != m.space ||
+        r.epoch != m.epoch ||
+        r.writer != writer ||
+        r.sequence != (p['base_sequence'] as int) + 1 ||
+        r.previousHash != p['base_hash'] ||
+        r.historical) {
+      throw FormatFailure('In-memory action identity differs.');
     }
-    return records;
+    return [r];
   }
 
   bool _preparedComplete(UnifiedSnapshot s, Map<String, Object?> p) =>
@@ -1180,6 +950,10 @@ class UnifiedHistory {
   int get physicalSequence => snapshot.records
       .where((r) => r.writer == writer)
       .fold(0, (a, r) => r.sequence > a ? r.sequence : a);
+  int get logicalSequence => snapshot.records
+      .expand((r) => r.effects)
+      .where((e) => e.isData && e.writer == writer)
+      .fold<int>(0, (n, e) => e.sequence > n ? e.sequence : n);
   String get commonHead {
     final own = snapshot.records.where((r) => r.writer == writer);
     return own.isEmpty
@@ -1190,29 +964,6 @@ class UnifiedHistory {
   EventClock? get maximumClock => snapshot.records.isEmpty
       ? null
       : snapshot.records.map((r) => r.clock).reduce((a, b) => a > b ? a : b);
-
-  UnifiedRecord preview(
-    UnifiedEffect e, {
-    required int sequence,
-    required EventClock clock,
-    required String predecessor,
-    required int start,
-    required int count,
-    required int index,
-    Map<String, UnifiedFrontier>? observed,
-  }) => UnifiedRecord(
-    space: manifest.space,
-    epoch: manifest.epoch,
-    writer: writer,
-    sequence: sequence,
-    clock: clock,
-    previousHash: predecessor,
-    effect: e,
-    transactionStart: start,
-    transactionCount: count,
-    transactionIndex: index,
-    observed: observed ?? _observedFrontier,
-  );
 
   Map<String, UnifiedFrontier> get _observedFrontier => {
     for (final e in snapshot.published.entries)
@@ -1231,10 +982,12 @@ class UnifiedHistory {
     List<UnifiedEffectBuilder> builders, {
     String? expectedRevision,
     void Function(List<UnifiedRecord>)? onReserved,
+    Map<String, dynamic>? provenance,
   }) => _prepareInProfileQueue(
     builders,
     expectedRevision: expectedRevision,
     onReserved: onReserved,
+    provenance: provenance,
     reserve: true,
   );
 
@@ -1246,10 +999,12 @@ class UnifiedHistory {
     List<UnifiedEffectBuilder> builders, {
     String? expectedRevision,
     void Function(List<UnifiedRecord>)? onReserved,
+    Map<String, dynamic>? provenance,
     required bool reserve,
   }) async {
     await refreshInProfileQueue();
-    if (snapshot.incomplete || snapshot.pendingEffects || hasPending) {
+    if (reserve && !hasPending) await _discardOwnedTail();
+    if (snapshot.pendingEffects || hasPending) {
       throw FormatFailure(
         'App history has an incomplete command; preserve drafts and recover.',
       );
@@ -1260,48 +1015,57 @@ class UnifiedHistory {
     if (builders.isEmpty || builders.length > 10000) {
       throw FormatFailure('Choose a bounded nonempty app command.');
     }
-    final records = <UnifiedRecord>[];
-    final prepared = BytesBuilder(copy: false);
     final base = snapshot.physical[writer]!;
     final currentTotal = snapshot.physical.values.fold<int>(
       0,
       (n, b) => n + b.length,
     );
-    var sequence = physicalSequence, head = commonHead;
+    final effects = <UnifiedEffect>[];
+    var effectBytes = 0;
+    var semanticSequence = logicalSequence;
+    var semanticHead = commonHead;
     EventClock? clock = maximumClock;
-    final start = sequence + 1;
-    for (var i = 0; i < builders.length; i++) {
+    for (final build in builders) {
       clock = EventClock.next(
         BigInt.from(now().microsecondsSinceEpoch) * BigInt.from(1000),
         clock,
       );
-      final e = builders[i](++sequence, clock, head);
-      final task = e.task;
-      if (task != null) {
-        assertWorkspaceTaskTimeZonePolicy(task, timeZonePolicy);
-      }
+      final e = build(++semanticSequence, clock, semanticHead);
       if (e.historical) {
-        throw FormatFailure('Legacy events require coordinated conversion.');
+        throw FormatFailure('Historical effects require offline conversion.');
       }
-      final record = preview(
-        e,
-        sequence: sequence,
-        clock: clock,
-        predecessor: head,
-        start: start,
-        count: builders.length,
-        index: i,
-      );
-      final encoded = utf8.encode('${record.encode()}\n');
-      if (base.length + prepared.length + encoded.length > maximumFileBytes ||
-          currentTotal + prepared.length + encoded.length > maximumTotalBytes) {
+      if (e.task != null) {
+        assertWorkspaceTaskTimeZonePolicy(e.task!, timeZonePolicy);
+      }
+      effectBytes += utf8.encode(canonicalDataJson(e.toJson())).length;
+      if (effectBytes > maximumUnifiedRecordBytes) {
         throw FormatFailure(
-          'App command exceeds safe byte budgets; no bytes were reserved.',
+          'Action exceeds safe record size; nothing was written.',
         );
       }
-      prepared.add(encoded);
-      records.add(record);
-      head = record.hash;
+      effects.add(e);
+      if (e.isData) semanticHead = e.integrityHash;
+    }
+    final record = UnifiedRecord(
+      space: manifest.space,
+      epoch: manifest.epoch,
+      writer: writer,
+      sequence: physicalSequence + 1,
+      clock: clock!,
+      previousHash: commonHead,
+      effects: effects,
+      observed: _observedFrontier,
+      provenance: provenance,
+    );
+    final records = [record];
+    final bytes = Uint8List.fromList(
+      utf8.encode('${record.encode()}\n'),
+    ).asUnmodifiableView();
+    if (base.length + bytes.length > maximumFileBytes ||
+        currentTotal + bytes.length > maximumTotalBytes) {
+      throw FormatFailure(
+        'Action exceeds safe byte budgets; nothing was written.',
+      );
     }
     if (!manifest.owners.containsKey(writer) &&
         physicalSequence == 0 &&
@@ -1311,45 +1075,38 @@ class UnifiedHistory {
         'Complete this installation header before other commands.',
       );
     }
-    final bytes = prepared.takeBytes().asUnmodifiableView();
     var taskReady = <String>{};
     final admission = _validateEffects(
-      [...snapshot.effects, ...records.map((r) => r.effect)],
+      [...snapshot.effects, ...effects],
       manifest,
       onTaskReady: (ids) => taskReady = ids,
     );
-    if (records.any(
-          (r) =>
-              r.effect.task != null && !taskReady.contains(r.effect.task!.id),
-        ) ||
-        records.any(
-          (r) =>
-              r.effect.food != null &&
-              !admission.readyIds.contains(r.effect.food!.id),
-        )) {
+    if (effects.any(
+      (e) =>
+          e.task != null && !taskReady.contains(e.task!.id) ||
+          e.food != null && !admission.readyIds.contains(e.food!.id),
+    )) {
       throw FormatFailure(
         'Resolve missing app dependencies before reserving a command.',
       );
     }
     if (reserve) {
+      _pending = {
+        'space': manifest.space,
+        'epoch': manifest.epoch,
+        'writer': writer,
+        'base_sequence': physicalSequence,
+        'base_hash': commonHead,
+        'base_bytes': base.length,
+        'base_digest': bytesDigest(base),
+        'raw': bytes,
+      };
+      _pendingProvenance = provenance;
       try {
-        profile.transaction(() {
-          profile.database.execute(
-            'INSERT INTO protected_app_outbox VALUES (?,?,?,?,?,?,?,?)',
-            [
-              manifest.space,
-              manifest.epoch,
-              writer,
-              physicalSequence,
-              commonHead,
-              base.length,
-              bytesDigest(base),
-              bytes,
-            ],
-          );
-          onReserved?.call(List.unmodifiable(records));
-        });
+        onReserved?.call(List.unmodifiable(records));
       } catch (error) {
+        _pending = null;
+        _pendingProvenance = null;
         if (error is LocalDatabaseFailure || error is SqliteException) {
           reportQueueFailure(error);
         }
@@ -1361,6 +1118,30 @@ class UnifiedHistory {
     return UnifiedReservation(List.unmodifiable(records), bytes);
   }
 
+  Future<void> _discardOwnedTail() async {
+    final actual = snapshot.physical[writer]!;
+    final end = actual.lastIndexOf(10) + 1;
+    if (end == actual.length) return;
+    if (folder is! TailTruncateLogFolder) {
+      throw FormatFailure(
+        'This provider cannot discard an incomplete owned save safely.',
+      );
+    }
+    await (folder as TailTruncateLogFolder).truncateOwnedTail(
+      unifiedLogName(writer),
+      actual,
+      end,
+    );
+    final confirmed = (await refreshInProfileQueue()).physical[writer]!;
+    if (confirmed.length != end ||
+        bytesDigest(confirmed) !=
+            bytesDigest(Uint8List.sublistView(actual, 0, end))) {
+      throw FormatFailure(
+        'Owned suffix cleanup was not confirmed; no new action was reserved.',
+      );
+    }
+  }
+
   Future<(Uint8List, bool)> _ownedActual() async {
     final name = unifiedLogName(writer);
     final infos = await folder.list();
@@ -1368,12 +1149,16 @@ class UnifiedHistory {
     if (matches.length > 1) throw FormatFailure('Ambiguous owned app history.');
     if (matches.isNotEmpty) return (await _read(name, maximumFileBytes), true);
     final pending = _outbox(manifest);
-    if (!manifest.owners.containsKey(writer) &&
-        pending.length == 1 &&
+    if (pending.length == 1 &&
         pending.single['base_sequence'] == 0 &&
         pending.single['base_bytes'] == 0 &&
-        _validateReservedRecords(manifest, pending.single).first.effect.kind ==
-            'writer.joined') {
+        (manifest.owners[writer]?['count'] == 0 ||
+            !manifest.owners.containsKey(writer) &&
+                _validateReservedRecords(
+                      manifest,
+                      pending.single,
+                    ).first.effect.kind ==
+                    'writer.joined')) {
       return (Uint8List(0), false);
     }
     throw FormatFailure(

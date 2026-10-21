@@ -41,6 +41,17 @@ abstract class LogFolder {
   Future<void> create(String name, Uint8List bytes);
 }
 
+/// Sole-writer suffix cleanup. The caller has validated every newline-terminated
+/// record. Implementations compare the same target bytes before shrinking only
+/// the unterminated suffix; they never rewrite a committed prefix.
+abstract class TailTruncateLogFolder {
+  Future<void> truncateOwnedTail(
+    String name,
+    Uint8List expected,
+    int keepBytes,
+  );
+}
+
 /// Optional actual seek capability. A null result requests a conservative full
 /// read; implementations must not read/skip the old prefix to produce a suffix.
 abstract class RangeLogFolder {
@@ -93,7 +104,49 @@ class LocalLogFolder
         RangeLogFolder,
         BoundedLogFolder,
         AtomicReplaceLogFolder,
-        RecoverableReplaceLogFolder {
+        RecoverableReplaceLogFolder,
+        TailTruncateLogFolder {
+  @override
+  Future<void> truncateOwnedTail(
+    String name,
+    Uint8List expected,
+    int keepBytes,
+  ) async {
+    if (keepBytes < 0 ||
+        keepBytes >= expected.length ||
+        keepBytes > 0 && expected[keepBytes - 1] != 10 ||
+        expected.sublist(keepBytes).contains(10)) {
+      throw FolderAccessFailure(
+        'Only an incomplete trailing record may be discarded.',
+      );
+    }
+    final target = file(name);
+    if (await FileSystemEntity.type(target.path, followLinks: false) !=
+        FileSystemEntityType.file) {
+      throw FolderAccessFailure('Owned history is not a regular file.');
+    }
+    final current = await readBounded(name, maximumOwnedReplacementBytes);
+    if (!_sameBytes(current, expected)) {
+      throw FolderAccessFailure('Owned history changed before suffix cleanup.');
+    }
+    final handle = await target.open(mode: FileMode.append);
+    try {
+      if (await handle.length() != expected.length) {
+        throw FolderAccessFailure(
+          'Owned history length changed before suffix cleanup.',
+        );
+      }
+      await handle.truncate(keepBytes);
+      await handle.flush();
+    } finally {
+      await handle.close();
+    }
+    final after = await readBounded(name, maximumOwnedReplacementBytes);
+    if (!_sameBytes(after, expected.sublist(0, keepBytes))) {
+      throw FolderAccessFailure('Owned suffix cleanup was not confirmed.');
+    }
+  }
+
   @override
   final String location;
   LocalLogFolder(this.location, {LocalDurability? durability})

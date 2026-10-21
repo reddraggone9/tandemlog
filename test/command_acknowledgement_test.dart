@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 /// Append succeeds, then a transport replaces the stream before reconciliation.
 /// The previously committed prefix is preserved byte-for-byte.
-class _ReplacingFolder implements LogFolder {
+class _ReplacingFolder implements LogFolder, BoundedLogFolder {
   _ReplacingFolder(this.inner);
   final LocalLogFolder inner;
   int? keepNewRecords;
@@ -31,6 +31,9 @@ class _ReplacingFolder implements LogFolder {
   @override
   Future<Uint8List> read(String name) => inner.read(name);
   @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
+  @override
   Future<void> create(String name, Uint8List bytes) =>
       inner.create(name, bytes);
   @override
@@ -46,15 +49,18 @@ class _ReplacingFolder implements LogFolder {
     String suffix;
     if (replace) {
       final event = jsonDecode(lines.single) as Map<String, dynamic>;
-      (event['data'] as Map<String, dynamic>)['title'] =
+      final effect = (event['effects'] as List).single as Map<String, dynamic>;
+      final operation =
+          jsonDecode(effect['raw'] as String) as Map<String, dynamic>;
+      ((operation['value'] as Map)['values'] as Map)['title'] =
           'Transport replacement';
+      effect['raw'] = jsonEncode(operation);
       suffix = '${jsonEncode(event)}\n';
     } else {
-      suffix = lines.take(keep!).map((line) => '$line\n').join();
+      final prefix = keep!.clamp(0, bytes.length - 1);
+      suffix = utf8.decode(bytes.sublist(0, prefix));
       delayedName = name;
-      delayedSuffix = Uint8List.fromList(
-        utf8.encode(lines.skip(keep).map((line) => '$line\n').join()),
-      );
+      delayedSuffix = Uint8List.sublistView(bytes, prefix);
     }
     final temporary = File('$location/replacement.tmp');
     await temporary.writeAsBytes([
@@ -90,7 +96,7 @@ void main() {
     store = await TaskStore.open(folder, '${root.path}/private');
     user = const Uuid().v4();
     // The hook reads an existing stream, so the initial user append is ordinary.
-    await folder.create('${store.writer}.jsonl', Uint8List(0));
+    await folder.create('${store.writer}.applog', Uint8List(0));
     await store.command(user, 'user.created', {'name': 'Example'});
   });
   tearDown(() async {
@@ -156,7 +162,7 @@ void main() {
   for (final keep in [0, 1]) {
     for (final action in ['create', 'edit', 'delete']) {
       test(
-        '$action batch reports $keep confirmed records after suffix replacement',
+        '$action batch with $keep bytes of the action publishes only its complete transaction',
         () async {
           final ids = action == 'create'
               ? [const Uuid().v4(), const Uuid().v4()]
@@ -181,19 +187,19 @@ void main() {
           }
           expect(result.succeeded, isFalse);
           expect(result.error, isNotNull);
-          expect(result.committedIds, ids.take(keep));
-          expect(result.remainingIds, ids.skip(keep));
+          expect(result.committedIds, ids.take(0));
+          expect(result.remainingIds, ids);
           if (action == 'create') {
-            expect(ids.where(store.hasEntity), ids.take(keep));
+            expect(ids.where(store.hasEntity), ids.take(0));
           } else if (action == 'edit') {
             expect(
               ids.where((id) => (row(id)['tags'] as List).contains('Draft')),
-              ids.take(keep),
+              ids.take(0),
             );
           } else {
             expect(
               ids.where((id) => !store.rows.any((task) => task['id'] == id)),
-              ids.take(keep),
+              ids.take(0),
             );
           }
           await folder.revealPending();
@@ -234,7 +240,7 @@ void main() {
         final targets = store.activeCompletionIds(id);
         folder.keepNewRecords = keep;
         await expectLater(store.reopen(id, targets), throwsA(anything));
-        expect(store.activeCompletionIds(id), targets.skip(keep));
+        expect(store.activeCompletionIds(id), targets);
         await expectLater(
           store.reopen(id, targets),
           throwsA(isA<WriterGuardFailure>()),
@@ -261,11 +267,11 @@ void main() {
         folder.keepNewRecords = keep;
         final result = await store.undoOperations(operations);
         expect(result.error, isNotNull);
-        expect(result.undone, operations.take(keep));
-        expect(result.remaining, operations.skip(keep));
+        expect(result.undone, operations.take(0));
+        expect(result.remaining, operations);
         expect(
           ids.where((id) => (row(id)['tags'] as List).isEmpty),
-          ids.take(keep),
+          ids.take(0),
         );
         final blocked = await store.undoOperations(result.remaining);
         expect(blocked.error, isA<WriterGuardFailure>());

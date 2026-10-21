@@ -4,17 +4,17 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/domain/event.dart';
-import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
-import 'package:tandemlog/storage/profile_food_intents.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/storage/task_store.dart';
 
 const installation = '00000000-0000-4000-8000-000000000001';
 
-class FaultFolder implements LogFolder, BoundedLogFolder {
+class FaultFolder
+    implements LogFolder, BoundedLogFolder, TailTruncateLogFolder {
   FaultFolder(this.inner);
   final LogFolder inner;
   int? prefix;
@@ -52,6 +52,16 @@ class FaultFolder implements LogFolder, BoundedLogFolder {
   }
 
   @override
+  Future<void> truncateOwnedTail(
+    String name,
+    Uint8List expected,
+    int keepBytes,
+  ) => (inner as TailTruncateLogFolder).truncateOwnedTail(
+    name,
+    expected,
+    keepBytes,
+  );
+  @override
   Future<void> create(String n, Uint8List b) => write(n, b, true);
   @override
   Future<void> append(String n, Uint8List b) => write(n, b, false);
@@ -74,6 +84,9 @@ void main() {
       profileDatabase: profile,
       writerIdentity: installation,
     );
+    // Empty declared bootstrap owners may have no file until their first save.
+    // These provider-fault tests explicitly supply the equivalent empty file.
+    await folder.create('$installation.applog', Uint8List(0));
   });
   tearDown(() async {
     await food?.close();
@@ -83,46 +96,46 @@ void main() {
     await root.delete(recursive: true);
   });
   Future<void> open() async {
-    food = await FoodStore.open(
-      folder,
-      profile: profile,
-      installationWriter: installation,
-      space: tasks.space,
-    );
+    await tasks.refresh();
+    food = await FoodStore.openUnified(tasks.unified!);
   }
 
+  List<Map<String, Object?>> receipts() => [
+    for (final r in tasks.unified!.pendingRecords)
+      {'raw': utf8.encode('${r.encode()}\n')},
+  ];
   test(
-    'malformed Food disables only Food and existing Tasks remain writable',
+    'malformed common Food history blocks both modules without changing the view',
     () async {
-      await File(
-        '${folder.location}/food-$installation.foodlog',
-      ).writeAsString('not-json\n');
-      await expectLater(open(), throwsA(isA<FoodHistoryFailure>()));
-      await tasks.refresh();
-      await tasks.command(
-        '00000000-0000-4000-8000-000000000002',
-        'user.created',
-        {'name': 'Still available'},
+      await open();
+      final file = File('${folder.location}/$installation.applog');
+      final original = await file.readAsBytes();
+      await file.writeAsBytes([...original, ...utf8.encode('not-json\n')]);
+      await expectLater(food!.refresh(), throwsA(isA<FormatFailure>()));
+      await expectLater(
+        tasks.command('00000000-0000-4000-8000-000000000002', 'user.created', {
+          'name': 'Must not append',
+        }),
+        throwsA(isA<FormatFailure>()),
       );
-      expect(tasks.rows.single['name'], 'Still available');
-      expect(
-        ProfileFoodIntents(
-          profile,
-        ).pending(tasks.space, foodWriter(installation)),
-        isEmpty,
-      );
+      expect(tasks.rows, isEmpty);
+      expect(food!.state.active, isEmpty);
+      expect(receipts(), isEmpty);
+      expect(await file.readAsBytes(), [
+        ...original,
+        ...utf8.encode('not-json\n'),
+      ]);
     },
   );
   test(
-    'Food-only provider failure preserves the typed module boundary',
+    'common provider failure blocks both modules and recovers after access returns',
     () async {
-      final name = 'food-$installation.foodlog';
-      await File('${folder.location}/$name').writeAsBytes([]);
-      folder.readFailure = name;
-      await expectLater(open(), throwsA(isA<FoodHistoryFailure>()));
-      await tasks.refresh();
-      folder.readFailure = null;
       await open();
+      folder.readFailure = '$installation.applog';
+      await expectLater(food!.refresh(), throwsA(isA<FolderAccessFailure>()));
+      await expectLater(tasks.refresh(), throwsA(isA<FolderAccessFailure>()));
+      folder.readFailure = null;
+      await food!.refresh();
       expect(food!.state.active, isEmpty);
     },
   );
@@ -130,103 +143,62 @@ void main() {
     await File(
       '${folder.location}/tandemlog-space.json',
     ).writeAsString('{"v":3,"id":"00000000-0000-4000-8000-000000000003"}');
-    await expectLater(
-      open(),
-      throwsA(
-        isA<FormatException>().having(
-          (e) => e is FoodHistoryFailure,
-          'module-only',
-          false,
-        ),
-      ),
-    );
+    await expectLater(open(), throwsA(isA<FormatFailure>()));
     await expectLater(tasks.refresh(), throwsA(isA<FormatFailure>()));
-    expect(
-      profile.database.select('SELECT * FROM protected_food_heads'),
-      isEmpty,
-    );
   });
-  test(
-    'malformed protected Food head is shared integrity, not history',
-    () async {
-      await open();
-      await food!.close();
-      food = null;
-      profile.database.execute('UPDATE protected_food_heads SET sequence=-1');
-      await expectLater(
-        open(),
-        throwsA(
-          isA<FormatException>().having(
-            (e) => e is FoodHistoryFailure,
-            'module-only',
-            false,
-          ),
-        ),
-      );
-    },
-  );
+  test('malformed protected common head is shared integrity', () async {
+    await open();
+    profile.database.execute('UPDATE protected_app_heads SET sequence=-1');
+    await expectLater(food!.refresh(), throwsA(isA<FormatFailure>()));
+    await expectLater(tasks.refresh(), throwsA(isA<FormatFailure>()));
+  });
   for (final name in [
-    'food-$installation.sync-conflict-synthetic.foodlog',
-    'food-$installation.foodlog.sync-conflict-synthetic',
+    '$installation.sync-conflict-synthetic.applog',
+    '$installation.applog.sync-conflict-synthetic',
+    'unclassified.sync-conflict-synthetic',
   ]) {
-    test('recognized Food conflict stays module-scoped: $name', () async {
-      await File('${folder.location}/$name').writeAsString('preserve me');
-      await tasks.refresh();
-      await expectLater(open(), throwsA(isA<FoodHistoryFailure>()));
-      expect(
-        await File('${folder.location}/$name').readAsString(),
-        'preserve me',
-      );
-    });
+    test(
+      'sync conflict blocks both modules and preserves its bytes: $name',
+      () async {
+        await open();
+        final conflict = File('${folder.location}/$name');
+        await conflict.writeAsString('preserve me');
+        await expectLater(tasks.refresh(), throwsA(isA<FormatFailure>()));
+        await expectLater(food!.refresh(), throwsA(isA<FormatFailure>()));
+        expect(await conflict.readAsString(), 'preserve me');
+      },
+    );
   }
   test(
-    'unclassified conflict preserves released Task fail-closed policy',
-    () async {
-      await File(
-        '${folder.location}/unclassified.sync-conflict-synthetic',
-      ).writeAsString('preserve me');
-      await expectLater(tasks.refresh(), throwsA(isA<FormatFailure>()));
-    },
-  );
-  test(
-    'disabled Food retains exact prepared bytes for explicit recovery',
+    'corrupt owned append retains its exact receipt without guessing repair',
     () async {
       await open();
+      final file = File('${folder.location}/$installation.applog');
+      final original = await file.readAsBytes();
       folder.prefix = 71;
       await expectLater(
         food!.add(const FoodDetails(name: 'Rice'), 1),
         throwsStateError,
       );
-      final receipts = ProfileFoodIntents(
-        profile,
-      ).pending(tasks.space, foodWriter(installation));
-      await food!.close();
-      food = null;
-      final remote = File('${folder.location}/food-$installation.foodlog');
-      await remote.writeAsString('not-json\n');
-      await expectLater(open(), throwsA(isA<FoodHistoryFailure>()));
-      expect(
-        ProfileFoodIntents(
-          profile,
-        ).pending(tasks.space, foodWriter(installation)).single,
-        receipts.single,
-      );
-      await tasks.refresh();
-      await remote.writeAsBytes([]);
-      await open();
+      final pending = receipts();
+      expect(pending, hasLength(1));
+      await file.writeAsBytes([...original, ...utf8.encode('not-json\n')]);
+      await expectLater(food!.refresh(), throwsA(isA<FormatFailure>()));
+      expect(receipts(), pending);
+      expect(food!.state.active, isEmpty);
+      // Restore the exact failed synthetic prefix, then use normal exact recovery.
+      await file.writeAsBytes([
+        ...original,
+        ...(pending.single['raw'] as List<int>).take(71),
+      ]);
       await food!.recoverPrepared();
       expect(food!.state.active, hasLength(1));
-      expect(
-        ProfileFoodIntents(
-          profile,
-        ).pending(tasks.space, foodWriter(installation)),
-        isEmpty,
-      );
+      expect(receipts(), isEmpty);
     },
   );
 
   test(
-    'food physical count and durable Deleted survive restart without changing task v3 bytes',
+    'physical count and durable Deleted survive restart with the task prefix unchanged',
     () async {
       final before = await folder.read('tandemlog-space.json');
       await tasks.command(
@@ -234,7 +206,7 @@ void main() {
         'user.created',
         {'name': 'Synthetic'},
       );
-      final taskBytes = await folder.read('$installation.jsonl');
+      final taskBytes = await folder.read('$installation.applog');
       await open();
       await food!.add(const FoodDetails(name: 'Rice', expiry: '2026-10-15'), 8);
       final id = food!.state.active.first.id;
@@ -246,16 +218,21 @@ void main() {
       await food!.restore([food!.state.deleted.single]);
       expect(food!.state.active, hasLength(8));
       await tasks.refresh();
-      expect(await folder.read('$installation.jsonl'), taskBytes);
+      expect(
+        (await folder.read(
+          '$installation.applog',
+        )).take(taskBytes.length).toList(),
+        taskBytes,
+      );
       expect(await folder.read('tandemlog-space.json'), before);
       expect(
-        (await folder.list()).where((e) => e.name.endsWith('.foodlog')),
+        (await folder.list()).where((e) => e.name.endsWith('.applog')),
         hasLength(1),
       );
     },
   );
   test(
-    'partial first record is resumed exactly from protected bytes across restart',
+    'partial first action is reconciled from memory in the same running profile',
     () async {
       await open();
       folder.prefix = 71;
@@ -263,9 +240,8 @@ void main() {
         food!.add(const FoodDetails(name: 'Rice'), 1),
         throwsStateError,
       );
-      final saved = ProfileFoodIntents(
-        profile,
-      ).pending(tasks.space, foodWriter(installation));
+      final base = tasks.unified!.snapshot.physical[installation]!;
+      final saved = receipts();
       expect(saved, hasLength(1));
       expect(food!.state.active, isEmpty);
       await food!.close();
@@ -273,16 +249,11 @@ void main() {
       expect(food!.hasPreparedAppend, isTrue);
       await food!.recoverPrepared();
       expect(food!.state.active, hasLength(1));
-      expect(
-        await folder.read(foodLogName(foodWriter(installation))),
-        utf8.encode('${utf8.decode(saved.single)}\n'),
-      );
-      expect(
-        ProfileFoodIntents(
-          profile,
-        ).pending(tasks.space, foodWriter(installation)),
-        isEmpty,
-      );
+      expect(await folder.read(unifiedLogName(installation)), [
+        ...base,
+        ...(saved.single['raw'] as List<int>),
+      ]);
+      expect(receipts(), isEmpty);
     },
   );
   test(
@@ -307,58 +278,64 @@ void main() {
       await open();
       await food!.add(const FoodDetails(name: 'Rice'), 1);
       await File(
-        '${folder.location}/${foodLogName(foodWriter(installation))}',
+        '${folder.location}/${unifiedLogName(installation)}',
       ).rename('${root.path}/preserved.foodlog');
-      await expectLater(food!.refresh(), throwsFormatException);
+      await expectLater(food!.refresh(), throwsA(isA<FormatFailure>()));
       expect(food!.state.active, hasLength(1));
       await expectLater(
         food!.remove([food!.state.active.single.id]),
-        throwsFormatException,
+        throwsA(isA<FormatFailure>()),
       );
     },
   );
   test('food refresh SQL fault preserves state and receipts together', () async {
     await open();
     profile.database.execute(
-      "CREATE TRIGGER reject_food_head BEFORE INSERT ON protected_food_heads WHEN NEW.sequence>0 BEGIN SELECT RAISE(ABORT,'synthetic admission failure'); END",
+      "CREATE TRIGGER reject_food_head BEFORE INSERT ON protected_app_heads WHEN NEW.sequence>0 BEGIN SELECT RAISE(ABORT,'synthetic admission failure'); END",
     );
     await expectLater(
       food!.add(const FoodDetails(name: 'Rice'), 1),
       throwsA(isA<Exception>()),
     );
     expect(food!.state.active, isEmpty);
-    expect(
-      ProfileFoodIntents(
-        profile,
-      ).pending(tasks.space, foodWriter(installation)),
-      hasLength(1),
-    );
+    expect(receipts(), hasLength(1));
     profile.database.execute('DROP TRIGGER reject_food_head');
     await food!.refresh();
     expect(food!.state.active, hasLength(1));
     expect(food!.hasPreparedAppend, isFalse);
   });
   test(
-    'missing own reservation after initialization cannot reuse a sequence',
+    'restart forgets the unfinished Food save and truncates only its tail on explicit Save',
     () async {
       await open();
-      folder.prefix = 0;
+      final file = File('${folder.location}/$installation.applog');
+      final before = await file.readAsBytes();
+      folder.prefix = 71;
       await expectLater(
-        food!.add(const FoodDetails(name: 'Rice'), 1),
+        food!.add(const FoodDetails(name: 'Abandoned'), 1),
         throwsStateError,
       );
+      final abandoned =
+          food!.lastPreparedRecords.single.operation.targets.single;
+      final partial = await file.readAsBytes();
       await food!.close();
       food = null;
-      profile.database.execute('DELETE FROM protected_food_intents');
-      profile.database.execute(
-        'DELETE FROM protected_writer_guards WHERE space=? AND writer=?',
-        [tasks.space, foodWriter(installation)],
+      await tasks.close();
+      await profile.close();
+      profile = await LocalProfileDatabase.open('${root.path}/profile');
+      tasks = await TaskStore.open(
+        folder,
+        profile.root,
+        profileDatabase: profile,
+        writerIdentity: installation,
       );
-      await expectLater(open(), throwsFormatException);
-      expect(
-        (await folder.read(foodLogName(foodWriter(installation)))).length,
-        0,
-      );
+      await open();
+      expect(food!.hasPreparedAppend, isFalse);
+      expect(await file.readAsBytes(), partial);
+      await food!.add(const FoodDetails(name: 'Replacement'), 1);
+      expect(food!.state.active.single.details.name, 'Replacement');
+      expect(food!.state.active.single.id, isNot(abandoned));
+      expect((await file.readAsBytes()).take(before.length).toList(), before);
     },
   );
 
@@ -370,7 +347,7 @@ void main() {
       );
       profile.transaction(
         () => profile.database.execute(
-          'INSERT INTO protected_settings VALUES (1,?,?)',
+          'INSERT OR REPLACE INTO protected_settings VALUES (1,?,?)',
           [installation, settingsRaw],
         ),
       );
@@ -379,19 +356,21 @@ void main() {
         'user.created',
         {'name': 'Preserved after poison'},
       );
-      final taskBytes = await folder.read('$installation.jsonl');
+      final taskBytes = await folder.read('$installation.applog');
       await open();
       await food!.add(const FoodDetails(name: 'Rice'), 1);
       final id = food!.state.active.single.id;
       final space = tasks.space;
       final writer = food!.writer;
-      final before = await folder.read(foodLogName(writer));
+      final before = await folder.read(unifiedLogName(writer));
       final heads = profile.database
-          .select('SELECT * FROM protected_food_heads')
+          .select('SELECT * FROM protected_app_heads')
           .map((row) => Map<String, Object?>.from(row))
           .toList();
       final guards = profile.database
-          .select('SELECT * FROM protected_writer_guards ORDER BY space,writer')
+          .select(
+            'SELECT * FROM protected_app_heads ORDER BY space,epoch,writer',
+          )
           .map((row) => Map<String, Object?>.from(row))
           .toList();
       expect(
@@ -427,7 +406,7 @@ void main() {
         settingsRaw,
       );
       expect(
-        profile.database.select('SELECT * FROM protected_food_heads'),
+        profile.database.select('SELECT * FROM protected_app_heads'),
         heads,
       );
       tasks = await TaskStore.open(
@@ -441,12 +420,17 @@ void main() {
       expect(tasks.space, space);
       expect(food!.writer, writer);
       expect(food!.state.active.single.id, id);
-      expect(await folder.read(foodLogName(writer)), before);
-      expect(await folder.read('$installation.jsonl'), taskBytes);
+      expect(await folder.read(unifiedLogName(writer)), before);
+      expect(
+        (await folder.read(
+          '$installation.applog',
+        )).take(taskBytes.length).toList(),
+        taskBytes,
+      );
       expect(tasks.rows.single['name'], 'Preserved after poison');
       expect(
         profile.database.select(
-          'SELECT * FROM protected_writer_guards ORDER BY space,writer',
+          'SELECT * FROM protected_app_heads ORDER BY space,epoch,writer',
         ),
         guards,
       );

@@ -9,8 +9,9 @@ import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/log_folder.dart';
-import 'package:tandemlog/storage/profile_food_intents.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_record.dart';
+import 'current_history_fixture.dart';
 
 const installation = '00000000-0000-4000-8000-000000000001';
 const otherInstallation = '00000000-0000-4000-8000-000000000020';
@@ -39,10 +40,7 @@ class UndoFaultFolder implements LogFolder, BoundedLogFolder {
     final prefix = completePrefix;
     completePrefix = null;
     if (prefix != null) {
-      var end = 0, lines = 0;
-      while (end < bytes.length && lines < prefix) {
-        if (bytes[end++] == 10) lines++;
-      }
+      final end = prefix.clamp(0, bytes.length - 1);
       if (end > 0) {
         await inner.append(name, Uint8List.sublistView(bytes, 0, end));
       }
@@ -74,12 +72,7 @@ void main() {
       profileDatabase: profile,
       writerIdentity: installation,
     );
-    food = await FoodStore.open(
-      folder,
-      profile: profile,
-      installationWriter: installation,
-      space: tasks.space,
-    );
+    food = await FoodStore.openUnified(tasks.unified!);
   });
   tearDown(() async {
     await food.close();
@@ -87,6 +80,11 @@ void main() {
     await profile.close();
     await root.delete(recursive: true);
   });
+  List<List<int>> pending() => tasks.unified!.pendingRecords
+      .expand((r) => r.effects)
+      .where((e) => e.food != null)
+      .map((e) => utf8.encode(e.raw))
+      .toList();
   Future<List<FoodRecord>> inverse(List<FoodRecord> records) =>
       (food as dynamic).undoOperations(records) as Future<List<FoodRecord>>;
   Future<void> remote(
@@ -106,8 +104,8 @@ void main() {
       createdWith: basis ?? {},
     );
     await File(
-      '${folder.location}/${foodLogName(record.writer)}',
-    ).writeAsString('${record.encode()}\n');
+      '${folder.location}/${unifiedLogName(record.writer)}',
+    ).writeAsBytes(peerFoodBytesFor(tasks, [record]));
   }
 
   FoodOperation remoteEdit(String id, String birth, {bool remove = false}) =>
@@ -129,7 +127,7 @@ void main() {
       await food.add(const FoodDetails(name: 'Rice', expiry: '2026-10-15'), 2);
       final add = food.lastPreparedRecords.toList();
       final ids = food.state.active.map((c) => c.id).toList();
-      final originalBytes = await folder.read(foodLogName(food.writer));
+      final originalBytes = await folder.read(unifiedLogName(food.writer));
       await food.changeDetails(
         ids,
         const FoodDetails(
@@ -158,21 +156,13 @@ void main() {
       expect(food.state.active.map((c) => c.id).toSet(), ids.toSet());
       await inverse(add);
       expect(food.state.containers, isEmpty);
-      final nowBytes = await folder.read(foodLogName(food.writer));
+      final nowBytes = await folder.read(unifiedLogName(food.writer));
       expect(nowBytes.take(originalBytes.length).toList(), originalBytes);
-      expect(
-        ProfileFoodIntents(profile).pending(tasks.space, food.writer),
-        isEmpty,
-      );
+      expect(pending(), isEmpty);
       await food.close();
-      food = await FoodStore.open(
-        folder,
-        profile: profile,
-        installationWriter: installation,
-        space: tasks.space,
-      );
+      food = await FoodStore.openUnified(tasks.unified!);
       expect(food.state.containers, isEmpty);
-      expect(await folder.read(foodLogName(food.writer)), nowBytes);
+      expect(await folder.read(unifiedLogName(food.writer)), nowBytes);
     },
   );
 
@@ -226,7 +216,7 @@ void main() {
   );
 
   test(
-    'bulk Undo failure acknowledges only exact admitted prefix and retains full receipts',
+    'bulk Undo interruption acknowledges no partial effect and retains same-session receipts',
     () async {
       await food.add(const FoodDetails(name: 'Rice'), 100);
       await food.add(const FoodDetails(name: 'Rice'), 1);
@@ -238,19 +228,19 @@ void main() {
       final prepared = food.lastPreparedRecords.toList();
       expect(prepared, hasLength(2));
       await food.refresh();
-      expect(prepared.map(food.isAdmitted), [true, false]);
-      expect(food.state.active, hasLength(100));
-      expect(food.state.deleted, hasLength(1));
-      final before = await folder.read(foodLogName(food.writer));
+      expect(prepared.map(food.isAdmitted), [false, false]);
+      expect(food.state.active, isEmpty);
+      expect(food.state.deleted, hasLength(101));
+      final before = await folder.read(unifiedLogName(food.writer));
       await food.recoverPrepared();
       expect(prepared.every(food.isAdmitted), isTrue);
       expect(food.state.active, hasLength(101));
-      final after = await folder.read(foodLogName(food.writer));
+      final after = await folder.read(unifiedLogName(food.writer));
       expect(after.take(before.length).toList(), before);
       final calls = folder.appendCalls;
       expect(await inverse(removals), isEmpty);
       expect(folder.appendCalls, calls);
-      expect(await folder.read(foodLogName(food.writer)), after);
+      expect(await folder.read(unifiedLogName(food.writer)), after);
     },
   );
 
@@ -265,25 +255,15 @@ void main() {
       await food.refresh();
       expect(prepared.any(food.isAdmitted), isFalse);
       expect(food.state.deleted, hasLength(1));
-      final retained = ProfileFoodIntents(
-        profile,
-      ).pending(tasks.space, food.writer);
+      final retained = pending();
       expect(retained.single, utf8.encode(prepared.single.encode()));
       await food.close();
-      food = await FoodStore.open(
-        folder,
-        profile: profile,
-        installationWriter: installation,
-        space: tasks.space,
-      );
+      food = await FoodStore.openUnified(tasks.unified!);
       expect(food.state.deleted, hasLength(1));
       await food.recoverPrepared();
       expect(food.isAdmitted(prepared.single), isTrue);
       expect(food.state.active, hasLength(1));
-      expect(
-        ProfileFoodIntents(profile).pending(tasks.space, food.writer),
-        isEmpty,
-      );
+      expect(pending(), isEmpty);
     },
   );
 
@@ -297,9 +277,9 @@ void main() {
       final prepared = food.lastPreparedRecords.toList();
       await food.refresh();
       expect(prepared.every(food.isAdmitted), isTrue);
-      final before = await folder.read(foodLogName(food.writer));
+      final before = await folder.read(unifiedLogName(food.writer));
       expect(await inverse(add), isEmpty);
-      expect(await folder.read(foodLogName(food.writer)), before);
+      expect(await folder.read(unifiedLogName(food.writer)), before);
     },
   );
 
@@ -312,11 +292,15 @@ void main() {
       final peerEdit = remoteEdit(id, add.id);
       await remote(peerEdit, basis: {id: add.id});
       await food.refresh();
-      final peerRecord = FoodRecord.decode(
-        (await File(
-          '${folder.location}/${foodLogName(foodWriter(otherInstallation))}',
-        ).readAsLines()).single,
-      );
+      final peerRecord =
+          (await File(
+                '${folder.location}/${unifiedLogName(foodWriter(otherInstallation))}',
+              ).readAsLines())
+              .map(UnifiedRecord.decode)
+              .expand((r) => r.effects)
+              .map((e) => e.food)
+              .whereType<FoodRecord>()
+              .single;
       final fake = FoodRecord(
         space: add.space,
         writer: add.writer,
@@ -332,7 +316,7 @@ void main() {
           createdAt: add.operation.createdAt,
         ),
       );
-      final before = await folder.read(foodLogName(food.writer));
+      final before = await folder.read(unifiedLogName(food.writer));
       for (final receipts in [
         [peerRecord],
         [fake],
@@ -340,7 +324,7 @@ void main() {
         <FoodRecord>[],
       ]) {
         await expectLater(inverse(receipts), throwsFormatException);
-        expect(await folder.read(foodLogName(food.writer)), before);
+        expect(await folder.read(unifiedLogName(food.writer)), before);
       }
       final undone = await inverse([add]);
       await expectLater(inverse(undone), throwsFormatException);
@@ -372,17 +356,6 @@ void main() {
         ),
         createdWith: {id: wrongBasis.id},
       );
-      final inverseRecord = FoodRecord.decode(
-        jsonEncode(
-          jsonDecode(
-            File(
-              'test/fixtures/food-undo/mixed-v1-v2.foodlog',
-            ).readAsLinesSync().last,
-          ),
-        ),
-      );
-      // The frozen v2 fixture is exercised above; construct this site's own record
-      // through the compact operation decoder without bypassing hash validation.
       final retraction = FoodRecord(
         space: tasks.space,
         writer: peerWriter,
@@ -393,15 +366,15 @@ void main() {
         operation: FoodOperation.fromJson({
           'id': '$peerWriter:2',
           'order': '${bad.clock.value + BigInt.one}',
-          'action': inverseRecord.operation.action.name,
+          'action': 'undo',
           'targets': [id],
           'retracts': bad.id,
         }),
       );
       await File(
-        '${folder.location}/${foodLogName(peerWriter)}',
-      ).writeAsString('${bad.encode()}\n${retraction.encode()}\n');
-      await expectLater(food.refresh(), throwsA(isA<FoodHistoryFailure>()));
+        '${folder.location}/${unifiedLogName(peerWriter)}',
+      ).writeAsBytes(peerFoodBytesFor(tasks, [bad, retraction]));
+      await expectLater(food.refresh(), throwsFormatException);
       expect(food.state.active.single.id, id);
     },
   );
@@ -448,14 +421,14 @@ void main() {
           }),
         );
         await File(
-          '${folder.location}/${foodLogName(editor)}',
-        ).writeAsString('${original.encode()}\n${retraction.encode()}\n');
+          '${folder.location}/${unifiedLogName(editor)}',
+        ).writeAsBytes(peerFoodBytesFor(tasks, [original, retraction]));
         await food.refresh();
         expect(food.pendingOperationIds.toSet(), {original.id, retraction.id});
         expect(food.state.containers, isEmpty);
         await expectLater(
           food.add(const FoodDetails(name: 'Blocked while pending'), 1),
-          throwsFormatException,
+          throwsA(isA<FormatFailure>()),
         );
         final creation = FoodRecord(
           space: tasks.space,
@@ -473,10 +446,10 @@ void main() {
           ),
         );
         await File(
-          '${folder.location}/${foodLogName(creator)}',
-        ).writeAsString('${creation.encode()}\n');
+          '${folder.location}/${unifiedLogName(creator)}',
+        ).writeAsBytes(peerFoodBytesFor(tasks, [creation]));
         if (wrongTarget) {
-          await expectLater(food.refresh(), throwsA(isA<FoodHistoryFailure>()));
+          await expectLater(food.refresh(), throwsFormatException);
           expect(food.state.containers, isEmpty);
           expect(food.pendingReferences, 2);
         } else {

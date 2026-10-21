@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'local_durability.dart';
+import 'local_settings.dart';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:sqlite3/sqlite3.dart';
@@ -16,11 +18,7 @@ import '../domain/occurrence_due_migration.dart';
 import 'log_folder.dart';
 import 'profile_lock.dart';
 import 'writer_guard.dart';
-import 'local_durability.dart';
 import 'local_profile_database.dart';
-import 'workspace_upgrade_guard.dart';
-import 'profile_text_intents.dart';
-import 'legacy_cache_import.dart';
 import 'task_tables.dart';
 import '../text/native_text_engine.dart';
 import '../text/recurring_text.dart';
@@ -160,7 +158,6 @@ class TaskStore {
   final LocalProfileDatabase? profileDatabase;
   final TaskTables tables;
   final String? _locationKey;
-  final WriterGuard writerGuard;
   final NativeTextEngine? textEngine;
   final String privatePath;
   String? textWriteBlocked;
@@ -174,13 +171,13 @@ class TaskStore {
   final Map<String, _NativeUndoField> _nativeUndoFields = {};
   final _recurringTextMemo = RecurringTextMemo();
   static const _textTypes = nativeTextIntentTypes;
-  int _acknowledgedOwnedSequence = 0;
   bool _writerHasPendingAppend = false;
   final DateTime Function() now;
   static const materialClockSkew = Duration(minutes: 5);
   String? clockWarning;
   late final String space;
-  int readFiles = 0, cacheTransactions = 0;
+  int get readFiles => unified?.readFiles ?? 0;
+  int cacheTransactions = 0;
   Map<String, int>? lastBatchTiming;
   HistoryVerificationReport? _lastHistoryVerification;
   HistoryVerificationReport? get lastHistoryVerification =>
@@ -190,18 +187,10 @@ class TaskStore {
   final _viewChanges = WorkspaceChanges();
   Object? viewFailure;
   Object? viewSharedFailure;
-  bool _viewHasPendingSave = false;
+  final bool _viewHasPendingSave = false;
   bool get viewHasPendingSave => _viewHasPendingSave;
   void Function() listenView(void Function() listener) =>
       _viewChanges.listen(listener);
-
-  void _publishLegacyView() {
-    final candidate = TaskViewSnapshot.next(rows, _currentView);
-    final pending = _writerHasPendingAppend || pendingTextOperations.isNotEmpty;
-    _currentView = candidate;
-    _viewHasPendingSave = pending;
-    _viewChanges.notify();
-  }
 
   Future<T> _runWorkspaceOperation<T>(Future<T> Function() work) async {
     try {
@@ -214,6 +203,7 @@ class TaskStore {
   Future<void> _queue = Future<void>.value();
   bool _closed = false;
   Future<void>? _closing;
+  Future<void> Function()? _closeOwnedResources;
   Future<T> _serialize<T>(Future<T> Function() work) {
     if (_closed) return Future.error(StateError('Workspace is closed.'));
     var entered = false;
@@ -256,33 +246,9 @@ class TaskStore {
     }
   }
 
-  static Future<String> _readSpace(LogFolder folder) async {
-    final raw = await folder.read('tandemlog-space.json');
-    if (raw.length > 4096) throw FormatFailure('Oversized workspace manifest.');
-    final manifest = jsonDecode(utf8.decode(raw));
-    if (manifest is Map<String, dynamic> &&
-        (manifest['v'] == 1 || manifest['v'] == 2) &&
-        manifest['id'] is String &&
-        isCanonicalId(manifest['id']) &&
-        manifest.keys.every((key) => {'v', 'id'}.contains(key))) {
-      throw FormatFailure(
-        'This folder uses an older prerelease format (v${manifest['v']}). Preserve this folder and choose a new data folder for this prerelease.',
-      );
-    }
-    if (manifest is! Map<String, dynamic> ||
-        manifest['v'] != protocolVersion ||
-        manifest['id'] is! String ||
-        !isCanonicalId(manifest['id']) ||
-        manifest.keys.any((key) => !{'v', 'id'}.contains(key))) {
-      throw FormatFailure('Unsupported or invalid workspace manifest.');
-    }
-    return manifest['id'] as String;
-  }
-
   final UnifiedHistory? unified;
   TimeZoneNamePolicy get timeZonePolicy =>
-      unified?.timeZonePolicy ?? TimeZoneNamePolicy.legacy;
-  bool _legacyPolicyCacheChecked = false;
+      unified?.timeZonePolicy ?? TimeZoneNamePolicy.additional2026eV1;
 
   TaskStore._(
     this.folder,
@@ -290,7 +256,6 @@ class TaskStore {
     this.writer,
     this.lock,
     this.now,
-    this.writerGuard,
     this.textEngine,
     this.privatePath,
     this.profileDatabase,
@@ -321,7 +286,6 @@ class TaskStore {
         writer,
         null,
         DateTime.now,
-        _SemanticValidationGuard(),
         textEngine,
         '',
         null,
@@ -343,7 +307,7 @@ class TaskStore {
   }
 
   static List<String> _latestProjectionSchema(TaskTables tables) => [
-    'CREATE TABLE IF NOT EXISTS ${tables.events} (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
+    'CREATE TABLE IF NOT EXISTS ${tables.events} (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, semantic TEXT NOT NULL, UNIQUE(writer,seq))',
     'CREATE TABLE IF NOT EXISTS ${tables.views} (id TEXT PRIMARY KEY, raw TEXT NOT NULL)',
     'CREATE TABLE IF NOT EXISTS ${tables.streams} (name TEXT PRIMARY KEY, offset INTEGER NOT NULL, hash TEXT NOT NULL, stamp TEXT NOT NULL, hash_offset INTEGER NOT NULL DEFAULT 0, range_capable INTEGER NOT NULL DEFAULT 0, chain_head TEXT, last_seq INTEGER NOT NULL DEFAULT 0, last_clock INTEGER)',
     'CREATE TABLE IF NOT EXISTS ${tables.streamRanges} (name TEXT NOT NULL, start_offset INTEGER NOT NULL, end_offset INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(name,start_offset))',
@@ -366,13 +330,14 @@ class TaskStore {
             'Native text support is required before app admission.',
           );
         }
-        db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?)', [
+        db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?,?)', [
           e.id,
           e.entity,
           e.writer,
           e.sequence,
           e.clock.value.toInt(),
           e.canonicalRaw,
+          jsonEncode({'type': e.type, 'data': e.data}),
         ]);
       }
       final writers = events.map((e) => e.writer).toSet();
@@ -466,7 +431,7 @@ class TaskStore {
     // Resolve derived births with the exact same seed selection used by rows.
     for (final child in births.keys.toList()) {
       final seeds = db.select(
-        "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+        "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
         [child],
       );
       if (seeds.isNotEmpty) {
@@ -499,6 +464,17 @@ class TaskStore {
         }
       }
     }
+    final competingRoots =
+        db
+            .select(
+              "SELECT id FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='text.baselineInitialized' LIMIT 2",
+            )
+            .length ==
+        2;
+    bool availableState(Map? state) =>
+        state != null &&
+        (state['textUnavailable'] == null ||
+            competingRoots && state['textUnavailable'] == textWriteBlocked);
     final dependencies = <String, Set<String>>{};
     final candidates = <String>{};
     for (final e in events) {
@@ -515,14 +491,11 @@ class TaskStore {
       }
 
       if (e.type == 'text.baselineInitialized') {
-        if (_textBaseline?.id == e.id) candidates.add(e.id);
+        if (_textBaseline?.id == e.id || competingRoots) candidates.add(e.id);
       } else {
         entity(e.entity);
         final state = states[e.entity];
-        var ready =
-            state != null &&
-            state['textUnavailable'] == null &&
-            !nativePending.contains(e.entity);
+        var ready = availableState(state) && !nativePending.contains(e.entity);
         if (e.type == 'task.textEdited' || e.type == 'task.textEditUndone') {
           final hasSeed = events.any(
             (other) =>
@@ -540,8 +513,7 @@ class TaskStore {
             .where((entry) => entry.value == e.id)
             .any(
               (entry) =>
-                  states[entry.key] == null ||
-                  states[entry.key]!['textUnavailable'] != null ||
+                  !availableState(states[entry.key]) ||
                   nativePending.contains(entry.key),
             )) {
           ready = false;
@@ -601,11 +573,122 @@ class TaskStore {
     }
   }
 
+  /// Open a standalone handle over the same normalized common authority used
+  /// by the application. This convenience owns its history and, when omitted,
+  /// its local profile. It never reads or converts a legacy workspace.
+  static Future<TaskStore> open(
+    LogFolder folder,
+    String privatePath, {
+    void Function(String, int)? onTiming,
+    DateTime Function()? now,
+    String? writerIdentity,
+    NativeTextEngine? textEngine,
+    LocalProfileDatabase? profileDatabase,
+    bool initializeNewWorkspaceText = false,
+  }) async {
+    if (initializeNewWorkspaceText && textEngine == null) {
+      throw ArgumentError(
+        'Native text support is required before creating a text workspace.',
+      );
+    }
+    final started = Stopwatch()..start();
+    final profile =
+        profileDatabase ?? await LocalProfileDatabase.open(privatePath);
+    final openingLease = 'opening:${const Uuid().v4()}';
+    profile.acquireWorkspace(openingLease);
+    UnifiedHistory? history;
+    TaskStore? store;
+    try {
+      final rows = profile.database.select('SELECT * FROM protected_settings');
+      if (rows.isEmpty) {
+        if (await File('${profile.root}/settings.json').exists()) {
+          throw FormatFailure(
+            'This profile needs the coordinated offline handoff. Preserve its original files.',
+          );
+        }
+        final id = writerIdentity ?? const Uuid().v4();
+        if (!isCanonicalId(id)) {
+          throw FormatFailure('Invalid installation identity.');
+        }
+        profile.transaction(
+          () => profile.database.execute(
+            'INSERT INTO protected_settings VALUES (1,?,?)',
+            [
+              id,
+              utf8.encode(jsonEncode({'writer': id, 'appearance': 'system'})),
+            ],
+          ),
+        );
+      }
+      final writer = LocalSettings.protectedValues(profile)['writer'] as String;
+      if (writerIdentity != null && writerIdentity != writer) {
+        throw FormatFailure(
+          'Installation identity differs from protected settings.',
+        );
+      }
+      if (folder is LocalLogFolder) {
+        await ensureDirectoryDurable(Directory(folder.location));
+      }
+      final files = await folder.list();
+      final genuinelyNew = files.isEmpty;
+      if (!genuinelyNew &&
+          !files.any((f) => f.name == 'tandemlog-space.json')) {
+        throw FormatFailure(
+          'Workspace manifest is missing. Preserve the existing history.',
+        );
+      }
+      history = genuinelyNew
+          ? await UnifiedHistory.create(
+              folder,
+              profile: profile,
+              writer: writer,
+              now: now,
+              textEngine: textEngine,
+            )
+          : await UnifiedHistory.open(
+              folder,
+              profile: profile,
+              writer: writer,
+              now: now,
+              textEngine: textEngine,
+            );
+      store = await openUnified(history);
+      if (initializeNewWorkspaceText && !store.sharedTextInitialized) {
+        if (history.snapshot.tasks.isNotEmpty) {
+          throw FormatFailure(
+            'Existing Task history has no shared-text root. Preserve it for offline conversion.',
+          );
+        }
+        // An empty current canonical history needs no private bootstrap intent.
+        // A prior unacknowledged suffix is discarded by its owner before Save.
+        await store.initializeSharedText();
+      }
+      final ownedHistory = history;
+      store._closeOwnedResources = () async {
+        try {
+          await ownedHistory.close();
+        } finally {
+          if (profileDatabase == null) await profile.close();
+        }
+      };
+      onTiming?.call('unified-open', started.elapsedMilliseconds);
+      return store;
+    } catch (_) {
+      await store?.close();
+      await history?.close();
+      profile.releaseWorkspace(openingLease);
+      if (profileDatabase == null) await profile.close();
+      rethrow;
+    } finally {
+      profile.releaseWorkspace(openingLease);
+    }
+  }
+
   static Future<TaskStore> openUnified(UnifiedHistory history) async {
     final key = sha256
         .convert(
           utf8.encode(
-            '${history.folder.location}#app4:${history.manifest.epoch}',
+            '${history.folder.location}#app5:${history.manifest.epoch}',
           ),
         )
         .toString();
@@ -625,7 +708,6 @@ class TaskStore {
           history.writer,
           null,
           history.now,
-          _SemanticValidationGuard(),
           history.textEngine,
           history.profile.root,
           history.profile,
@@ -650,9 +732,20 @@ class TaskStore {
   String? _unifiedTaskRevision;
   void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
     final events = snapshot.tasks.toList();
+    final oldIds = db
+        .select('SELECT id FROM ${tables.events}')
+        .map((r) => r['id'])
+        .toSet();
+    final added = events.where((e) => !oldIds.contains(e.id)).toList();
+    final affected = {
+      ...added.map((e) => e.entity),
+      if (added.isNotEmpty) ..._textCaptures.map((c) => c.entity),
+      if (added.isNotEmpty) ..._nativeUndoFields.values.map((f) => f.entity),
+    };
     final revision = bytesDigest(
       utf8.encode(events.map((e) => '${e.canonicalRaw!}\n').join()),
     );
+    final projectionChanged = revision != _unifiedTaskRevision;
     final oldBaseline = _textBaseline, oldBlocked = textWriteBlocked;
     LogEvent? newBaseline = oldBaseline;
     String? newBlocked = oldBlocked;
@@ -682,8 +775,7 @@ class TaskStore {
       }
     }
     final pending =
-        unified!.hasPending || snapshot.incomplete || snapshot.pendingEffects;
-    final acknowledged = snapshot.published[writer] ?? 0;
+        unified!.hasPendingAfter(snapshot) || snapshot.pendingEffects;
     final candidateView = revision == _unifiedTaskRevision
         ? _currentView
         : TaskViewSnapshot.next(rows, _currentView);
@@ -697,11 +789,13 @@ class TaskStore {
     return () {
       _textBaseline = newBaseline;
       textWriteBlocked = newBlocked;
+      if (projectionChanged) cacheTransactions++;
       _unifiedTaskRevision = revision;
       _writerHasPendingAppend = pending;
-      _acknowledgedOwnedSequence = acknowledged;
       clockWarning = warning;
       _currentView = candidateView;
+      _updateCapturedTextDocuments(added, affected);
+      _updateNativeUndoOwners(added, affected);
     };
   }
 
@@ -740,8 +834,9 @@ class TaskStore {
       },
     );
     final receipts = reservation.records
-        .map((r) {
-          final e = r.effect.task!;
+        .expand((r) => r.effects)
+        .map((effect) {
+          final e = effect.task!;
           return OperationReceipt(e.id, e.canonicalRaw!, e.entity);
         })
         .toList(growable: false);
@@ -753,663 +848,6 @@ class TaskStore {
     await unified!.commitInProfileQueue();
     _requireConfirmed(receipts);
     return receipts;
-  }
-
-  static Future<TaskStore> open(
-    LogFolder folder,
-    String privatePath, {
-    void Function(String, int)? onTiming,
-    DateTime Function()? now,
-    String? writerIdentity,
-    WriterGuard? writerGuard,
-    NativeTextEngine? textEngine,
-    LocalProfileDatabase? profileDatabase,
-    bool initializeNewWorkspaceText = false,
-  }) async {
-    if (initializeNewWorkspaceText && textEngine == null) {
-      throw ArgumentError(
-        'New workspace text initialization requires native text support.',
-      );
-    }
-    if (profileDatabase == null) {
-      return _open(
-        folder,
-        privatePath,
-        onTiming: onTiming,
-        now: now,
-        writerIdentity: writerIdentity,
-        writerGuard: writerGuard,
-        textEngine: textEngine,
-        initializeNewWorkspaceText: initializeNewWorkspaceText,
-      );
-    }
-    if (writerIdentity == null || writerGuard != null) {
-      return Future.error(
-        ArgumentError(
-          'A shared profile needs its settings writer and database guard.',
-        ),
-      );
-    }
-    final key = sha256.convert(utf8.encode(folder.location)).toString();
-    profileDatabase.acquireWorkspace(key);
-    try {
-      return await profileDatabase.serialize(() async {
-        return _open(
-          folder,
-          privatePath,
-          onTiming: onTiming,
-          now: now,
-          writerIdentity: writerIdentity,
-          textEngine: textEngine,
-          initializeNewWorkspaceText: initializeNewWorkspaceText,
-          profileDatabase: profileDatabase,
-          tables: TaskTables.forLocation(key),
-          locationKey: key,
-        );
-      });
-    } catch (_) {
-      profileDatabase.releaseWorkspace(key);
-      rethrow;
-    }
-  }
-
-  static Future<TaskStore> _open(
-    LogFolder folder,
-    String privatePath, {
-    void Function(String, int)? onTiming,
-    DateTime Function()? now,
-    String? writerIdentity,
-    WriterGuard? writerGuard,
-    NativeTextEngine? textEngine,
-    LocalProfileDatabase? profileDatabase,
-    TaskTables tables = const TaskTables.legacy(),
-    String? locationKey,
-    bool initializeNewWorkspaceText = false,
-  }) async {
-    final phase = Stopwatch()..start();
-    void mark(String name) {
-      onTiming?.call(name, phase.elapsedMilliseconds);
-      phase.reset();
-    }
-
-    if (profileDatabase == null) {
-      await ensureDirectoryDurable(Directory(privatePath));
-    }
-    final lock = profileDatabase == null
-        ? await ProfileLock.acquire(
-            privatePath,
-            fileName: 'session.lock',
-            message: 'This workspace is already open in another app instance.',
-          )
-        : null;
-    Database? db;
-    try {
-      // The application supplies its settings-owned installation identity.
-      // Omitted identity retains compatibility for standalone store clients.
-      var writer = writerIdentity;
-      if (writer == null) {
-        final identity = File('$privatePath/writer-id');
-        if (!await identity.exists()) {
-          await createFileDurable(identity, utf8.encode(const Uuid().v4()));
-        }
-        await syncParentAfterCreate(identity);
-        writer = (await identity.readAsString()).trim();
-      }
-      if (!isCanonicalId(writer)) {
-        throw FormatFailure('Invalid local writer identity.');
-      }
-      mark('identity_lock');
-      if (profileDatabase != null) {
-        for (final row in profileDatabase.database.select(
-          'SELECT * FROM protected_cache_imports',
-        )) {
-          _cacheSnapshot(row);
-        }
-      }
-      // Reject old canonical protocols before opening or migrating their cache.
-      if ((await folder.list()).any((f) => f.name == 'tandemlog-space.json')) {
-        await _readSpace(folder);
-      }
-      db =
-          profileDatabase?.database ??
-          sqlite3.open('$privatePath/cache.sqlite');
-      final bindingKey = 'workspace.$locationKey.space';
-      final binding = profileDatabase == null
-          ? null
-          : db.select('SELECT value FROM profile_metadata WHERE key=?', [
-              bindingKey,
-            ]);
-      if (binding != null && binding.isNotEmpty) {
-        for (final name in [
-          tables.events,
-          tables.views,
-          tables.streams,
-          tables.streamRanges,
-          tables.metadata,
-          tables.positions,
-          tables.textFields,
-          tables.textActors,
-          tables.textOutbox,
-        ]) {
-          if (db.select(
-            "SELECT 1 FROM sqlite_schema WHERE type='table' AND name=?",
-            [name],
-          ).isEmpty) {
-            throw FormatFailure(
-              'Workspace tables are missing; preserve the profile before recovery.',
-            );
-          }
-        }
-      }
-      final version = profileDatabase == null
-          ? db.select('PRAGMA user_version').first.values.first as int
-          : binding!.isEmpty
-          ? 0
-          : int.parse(
-              db
-                      .select(
-                        "SELECT value FROM ${tables.metadata} WHERE key='projection_schema'",
-                      )
-                      .single['value']
-                  as String,
-            );
-      if (version < 0 || version > 16) {
-        throw FormatFailure(
-          'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
-        );
-      }
-      if (profileDatabase != null && binding!.isNotEmpty && version < 13) {
-        throw FormatFailure(
-          'Unsupported shared projection version; preserve the profile before recovery.',
-        );
-      }
-      if (profileDatabase == null) {
-        db.execute('PRAGMA journal_mode=WAL');
-        db.execute('PRAGMA synchronous=FULL');
-      }
-      if (version > 0 && version < 13) {
-        if (profileDatabase != null) {
-          throw FormatFailure(
-            'Unsupported shared projection version; preserve the profile before recovery.',
-          );
-        }
-        await _prepareCacheReplay(db, folder, privatePath, version);
-      }
-      db.execute(
-        'CREATE TABLE IF NOT EXISTS ${tables.events} (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
-      );
-      db.execute(
-        'CREATE INDEX IF NOT EXISTS ${tables.eventsEntity} ON ${tables.events}(entity,clock,writer)',
-      );
-      db.execute(
-        "CREATE INDEX IF NOT EXISTS ${tables.eventsType} ON ${tables.events}(json_extract(raw,'\$.type'))",
-      );
-      db.execute(
-        'CREATE INDEX IF NOT EXISTS ${tables.eventsClock} ON ${tables.events}(clock)',
-      );
-      db.execute(
-        "CREATE INDEX IF NOT EXISTS ${tables.eventsSuccessor} ON ${tables.events}(json_extract(raw,'\$.data.successor.id'))",
-      );
-      db.execute(
-        'CREATE TABLE IF NOT EXISTS ${tables.views} (id TEXT PRIMARY KEY, raw TEXT NOT NULL)',
-      );
-      db.execute(
-        'CREATE TABLE IF NOT EXISTS ${tables.streams} (name TEXT PRIMARY KEY, offset INTEGER NOT NULL, hash TEXT NOT NULL, stamp TEXT NOT NULL)',
-      );
-      // Retain older whole-prefix baselines as integrity evidence at their
-      // original offsets; they are never resumable SHA state.
-      db.execute('BEGIN IMMEDIATE');
-      try {
-        final columns = db.select('PRAGMA table_info(${tables.streams})');
-        if (!columns.any((r) => r['name'] == 'hash_offset')) {
-          db.execute(
-            'ALTER TABLE ${tables.streams} ADD COLUMN hash_offset INTEGER NOT NULL DEFAULT 0',
-          );
-          db.execute('UPDATE ${tables.streams} SET hash_offset=offset');
-        }
-        if (!columns.any((r) => r['name'] == 'range_capable')) {
-          db.execute(
-            'ALTER TABLE ${tables.streams} ADD COLUMN range_capable INTEGER NOT NULL DEFAULT 0',
-          );
-        }
-        db.execute(
-          'CREATE TABLE IF NOT EXISTS ${tables.streamRanges} (name TEXT NOT NULL, start_offset INTEGER NOT NULL, end_offset INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(name,start_offset))',
-        );
-        for (final definition in [
-          'chain_head TEXT',
-          'last_seq INTEGER NOT NULL DEFAULT 0',
-          'last_clock INTEGER',
-        ]) {
-          final name = definition.split(' ').first;
-          if (!columns.any((r) => r['name'] == name)) {
-            db.execute('ALTER TABLE ${tables.streams} ADD COLUMN $definition');
-          }
-        }
-        db.execute(
-          "UPDATE ${tables.streams} SET chain_head=(SELECT json_extract(raw,'\$.hash') FROM ${tables.events} WHERE writer=substr(${tables.streams}.name,1,length(${tables.streams}.name)-6) ORDER BY seq DESC LIMIT 1), last_seq=(SELECT COALESCE(MAX(seq),0) FROM ${tables.events} WHERE writer=substr(${tables.streams}.name,1,length(${tables.streams}.name)-6)), last_clock=(SELECT MAX(clock) FROM ${tables.events} WHERE writer=substr(${tables.streams}.name,1,length(${tables.streams}.name)-6)) WHERE chain_head IS NULL",
-        );
-        db.execute(
-          'CREATE TABLE IF NOT EXISTS ${tables.textFields} (entity TEXT NOT NULL, field TEXT NOT NULL, context TEXT NOT NULL, codec TEXT NOT NULL, adapter INTEGER NOT NULL, seed_hash TEXT NOT NULL, state BLOB NOT NULL, state_hash TEXT NOT NULL, frontier TEXT NOT NULL, PRIMARY KEY(entity,field))',
-        );
-        db.execute(
-          'CREATE TABLE IF NOT EXISTS ${tables.textActors} (context TEXT NOT NULL, actor INTEGER NOT NULL, writer TEXT NOT NULL, allocation TEXT NOT NULL, PRIMARY KEY(context,actor))',
-        );
-        db.execute(
-          'CREATE TABLE IF NOT EXISTS ${tables.textOutbox} (id TEXT PRIMARY KEY, raw TEXT NOT NULL, entity TEXT NOT NULL)',
-        );
-        if (profileDatabase == null) {
-          db.execute(
-            'PRAGMA user_version=${textEngine != null || version >= 14 ? 16 : 13}',
-          );
-        }
-        db.execute('COMMIT');
-      } catch (error) {
-        _rollback(db, profileDatabase, error);
-        rethrow;
-      }
-      db.execute(
-        'CREATE TABLE IF NOT EXISTS ${tables.positions} (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
-      );
-      mark('sqlite_open_schema');
-      final store = TaskStore._(
-        folder,
-        db,
-        writer,
-        lock,
-        now ?? DateTime.now,
-        writerGuard ??
-            (profileDatabase == null
-                ? FileWriterGuard(privatePath)
-                : SqliteWriterGuard(profileDatabase)),
-        textEngine,
-        privatePath,
-        profileDatabase,
-        tables,
-        locationKey,
-      );
-      db.execute(
-        'CREATE TABLE IF NOT EXISTS ${tables.metadata} (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
-      );
-      if (profileDatabase != null && binding!.isEmpty) {
-        _seedLegacyNamespace(profileDatabase, tables, locationKey!);
-      }
-      final old = db.select(
-        "SELECT value FROM ${tables.metadata} WHERE key='space'",
-      );
-      final files = await folder.list();
-      var createdManifest = false;
-      if (!files.any((f) => f.name == 'tandemlog-space.json')) {
-        if (old.isNotEmpty) {
-          throw FormatFailure(
-            'Previously opened workspace manifest is missing. Restore it before writing.',
-          );
-        }
-        if (files.any(
-          (f) =>
-              f.name.endsWith('.jsonl') ||
-              (initializeNewWorkspaceText &&
-                  (f.name.endsWith('.foodlog') || isFoodConflictName(f.name))),
-        )) {
-          throw FormatFailure(
-            'Logs exist without a workspace manifest. Restore the manifest before opening.',
-          );
-        }
-        await WorkspaceUpgradeGuard.assertWritable(
-          folder: folder,
-          space: '',
-          profile: profileDatabase,
-        );
-        await folder.create(
-          'tandemlog-space.json',
-          Uint8List.fromList(
-            utf8.encode(
-              jsonEncode({'v': protocolVersion, 'id': const Uuid().v4()}),
-            ),
-          ),
-        );
-        createdManifest = true;
-      }
-      store.space = await _readSpace(folder);
-      if (binding != null &&
-          binding.isNotEmpty &&
-          binding.single['value'] != store.space) {
-        throw FormatFailure('Workspace identity changed at this location.');
-      }
-      // A selected location must never silently change to another data space.
-      if (old.isNotEmpty && old.first['value'] != store.space) {
-        throw FormatFailure('Workspace identity changed at this location.');
-      }
-      db.execute(
-        "INSERT OR IGNORE INTO ${tables.metadata} VALUES ('space',?)",
-        [store.space],
-      );
-      if (profileDatabase != null) {
-        profileDatabase.transaction(() {
-          db!.execute('INSERT OR IGNORE INTO profile_metadata VALUES (?,?)', [
-            bindingKey,
-            store.space,
-          ]);
-          db.execute(
-            "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('projection_schema',?)",
-            ['${textEngine != null || version >= 14 ? 16 : 13}'],
-          );
-        });
-      }
-      mark('manifest');
-      await store._verifyLegacyObservations();
-      await store._restoreTextIntents();
-      await store._refresh();
-      if (textEngine == null &&
-          db
-              .select(
-                "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('checklist.itemCreated','task.createdWithText','task.completedWithText','task.completedWithChecklist','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
-              )
-              .isNotEmpty) {
-        throw FormatFailure(
-          'Native text support is required. Update the app; history was preserved.',
-        );
-      }
-      if (textEngine != null) store._validateTextBaseline();
-      final orderVersion = db.select(
-        "SELECT value FROM ${tables.metadata} WHERE key='order_projection'",
-      );
-      if (orderVersion.isEmpty ||
-          orderVersion.single['value'] != '3' ||
-          db
-                  .select('SELECT COUNT(*) AS n FROM ${tables.positions}')
-                  .first['n'] !=
-              db
-                  .select('SELECT COUNT(*) AS n FROM ${tables.views}')
-                  .first['n']) {
-        db.execute('BEGIN IMMEDIATE');
-        try {
-          store._rebuildOrder();
-          db.execute('COMMIT');
-        } catch (error) {
-          _rollback(db, profileDatabase, error);
-          rethrow;
-        }
-      }
-      mark('ingest');
-      if (initializeNewWorkspaceText) {
-        // A retained preparation is the authority for an uncertain bootstrap;
-        // reopening must finish those exact bytes, never generate a new root.
-        for (final receipt in store.pendingTextOperations) {
-          if (LogEvent.decode(receipt.raw).type == 'text.baselineInitialized') {
-            await store._retryTextOperation(receipt);
-          }
-        }
-        if (createdManifest && !store.sharedTextInitialized) {
-          // A peer may have written after manifest creation. Such history is
-          // not an empty bootstrap and must not be silently adopted.
-          if (db.select('SELECT 1 FROM ${tables.events} LIMIT 1').isNotEmpty) {
-            throw FormatFailure(
-              'New workspace history changed before text initialization. Restore its initialized history before opening.',
-            );
-          }
-          await store._initializeSharedText(requireEmptyHistory: true);
-        }
-        if (!store.sharedTextInitialized) {
-          throw FormatFailure(
-            store.textWriteBlocked ??
-                'This workspace has no verified shared-text initialization. Restore its initialized history before opening.',
-          );
-        }
-      }
-      return store;
-    } catch (_) {
-      try {
-        if (profileDatabase == null) db?.close();
-      } finally {
-        await lock?.close();
-      }
-      rethrow;
-    }
-  }
-
-  /// Prove conversion against every retained Task observation for this space,
-  /// including aliases/backups and current range checkpoints. This reads only
-  /// reconstructed original bytes; it never rebinds or clears old authority.
-  static Future<void> verifyConvertedHistoryObservations(
-    LocalProfileDatabase profile,
-    String space,
-    Map<String, Uint8List> originalSources,
-  ) async {
-    final proof = _ConvertedLegacyProofFolder(originalSources);
-    Future<void> verify(LegacyCacheSnapshot snapshot) async {
-      await snapshot.verifyCanonical(proof);
-      for (final raw in snapshot.outbox) {
-        final event = LogEvent.decode(raw);
-        final source = originalSources['${event.writer}.jsonl'];
-        if (source == null || !utf8.decode(source).split('\n').contains(raw)) {
-          throw FormatFailure(
-            'Resolve retained legacy native receipts before cutover.',
-          );
-        }
-      }
-    }
-
-    final db = profile.database;
-    for (final row in db.select(
-      'SELECT * FROM protected_cache_imports WHERE space=? ORDER BY path',
-      [space],
-    )) {
-      await verify(_cacheSnapshot(row));
-    }
-    for (final binding in db.select(
-      "SELECT key FROM profile_metadata WHERE value=? AND key LIKE 'workspace.%.space'",
-      [space],
-    )) {
-      final match = RegExp(
-        r'^workspace\.([0-9a-f]{64})\.space$',
-      ).firstMatch(binding['key'] as String);
-      if (match == null) {
-        throw FormatFailure('Invalid protected Task workspace binding.');
-      }
-      final location = match.group(1)!;
-      final tables = TaskTables.forLocation(location);
-      final metadata = {
-        for (final row in db.select('SELECT * FROM ${tables.metadata}'))
-          row['key'] as String: row['value'] as String,
-      };
-      if (metadata['space'] != space) {
-        throw FormatFailure('Task cache workspace binding differs at cutover.');
-      }
-      final data = {
-        'v': 1,
-        'path': 'spaces/$location/cache.sqlite',
-        'location': location,
-        'space': space,
-        'version': 16,
-        'metadata': metadata,
-        'streams': db
-            .select('SELECT * FROM ${tables.streams}')
-            .map((r) => Map<String, dynamic>.from(r))
-            .toList(),
-        'ranges': db
-            .select('SELECT * FROM ${tables.streamRanges}')
-            .map((r) => Map<String, dynamic>.from(r))
-            .toList(),
-        'events': db
-            .select('SELECT raw FROM ${tables.events}')
-            .map((r) => r['raw'] as String)
-            .toList(),
-        'outbox': db
-            .select('SELECT raw FROM ${tables.textOutbox}')
-            .map((r) => r['raw'] as String)
-            .toList(),
-      };
-      await verify(LegacyCacheSnapshot.decode(utf8.encode(jsonEncode(data))));
-    }
-  }
-
-  static LegacyCacheSnapshot _cacheSnapshot(Row row) {
-    final raw = row['raw'] as List<int>;
-    final snapshot = LegacyCacheSnapshot.decode(raw);
-    if (sha256.convert(raw).toString() != row['hash'] ||
-        snapshot.path != row['path'] ||
-        snapshot.location != row['location'] ||
-        snapshot.space != row['space']) {
-      throw FormatFailure(
-        'Protected cache observation binding differs; preserve the profile before recovery.',
-      );
-    }
-    return snapshot;
-  }
-
-  static void _seedLegacyNamespace(
-    LocalProfileDatabase profile,
-    TaskTables tables,
-    String location,
-  ) {
-    final rows = profile.database.select(
-      'SELECT * FROM protected_cache_imports WHERE location=? ORDER BY path',
-      [location],
-    );
-    if (rows.isEmpty) return;
-    final snapshots = rows.map(_cacheSnapshot).toList();
-    final spaces = snapshots.map((s) => s.space).toSet();
-    if (spaces.length != 1) {
-      throw FormatFailure(
-        'Legacy location has conflicting workspace identities.',
-      );
-    }
-    final primary = snapshots.where((s) => s.primary).toList();
-    profile.transaction(() {
-      final db = profile.database;
-      final existing = db.select(
-        "SELECT value FROM ${tables.metadata} WHERE key='space'",
-      );
-      if (existing.isNotEmpty && existing.single['value'] != spaces.single) {
-        throw FormatFailure('Workspace identity changed at this location.');
-      }
-      db.execute(
-        "INSERT OR IGNORE INTO ${tables.metadata} VALUES ('space',?)",
-        [spaces.single],
-      );
-      if (db
-          .select("SELECT 1 FROM ${tables.metadata} WHERE key='legacy_seeded'")
-          .isNotEmpty) {
-        return;
-      }
-      if (primary.isNotEmpty) {
-        final snapshot = primary.single;
-        for (final row in snapshot.normalizedStreams) {
-          db.execute(
-            'INSERT INTO ${tables.streams} VALUES (?,?,?,?,?,?,?,?,?)',
-            [
-              row['name'],
-              row['offset'],
-              row['hash'],
-              row['stamp'],
-              row['hash_offset'],
-              row['range_capable'],
-              row['chain_head'],
-              row['last_seq'],
-              row['last_clock'],
-            ],
-          );
-        }
-        for (final row in snapshot.ranges) {
-          db.execute('INSERT INTO ${tables.streamRanges} VALUES (?,?,?,?)', [
-            row['name'],
-            row['start_offset'],
-            row['end_offset'],
-            row['hash'],
-          ]);
-        }
-        for (final entry in snapshot.metadata.entries.where(
-          (e) => e.key.startsWith('ui.'),
-        )) {
-          db.execute('INSERT OR IGNORE INTO ${tables.metadata} VALUES (?,?)', [
-            entry.key,
-            entry.value,
-          ]);
-        }
-      }
-      db.execute(
-        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('replay_pending','1')",
-      );
-      db.execute("INSERT INTO ${tables.metadata} VALUES ('legacy_seeded','1')");
-    });
-  }
-
-  Future<void> _verifyLegacyObservations() async {
-    if (profileDatabase == null) return;
-    final all = db.select(
-      'SELECT * FROM protected_cache_imports ORDER BY path',
-    );
-    final snapshots = {for (final row in all) row['path']: _cacheSnapshot(row)};
-    final rows = all.where((r) => r['space'] == space).toList();
-    if (rows.isEmpty) return;
-    final digest = sha256
-        .convert(utf8.encode(rows.map((r) => r['hash']).join('|')))
-        .toString();
-    final previous = db.select(
-      "SELECT value FROM ${tables.metadata} WHERE key='legacy_verified'",
-    );
-    if (previous.isNotEmpty && previous.single['value'] == digest) return;
-    for (final row in rows) {
-      await snapshots[row['path']]!.verifyCanonical(folder);
-    }
-    // Only set this after refresh has admitted the whole present history. The
-    // verified legacy lower bounds remain in protected snapshots regardless.
-    await _refresh();
-    profileDatabase!.transaction(
-      () => db.execute(
-        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('legacy_verified',?)",
-        [digest],
-      ),
-    );
-  }
-
-  /// Keep prior integrity checkpoints and space binding while discarding only
-  /// obsolete materializations. A failed/restarted replay keeps these guards.
-  static Future<void> _prepareCacheReplay(
-    Database db,
-    LogFolder folder,
-    String privatePath,
-    int version,
-  ) async {
-    const tables = TaskTables.legacy();
-    final savedSpace = db.select(
-      "SELECT value FROM ${tables.metadata} WHERE key='space'",
-    );
-    if (savedSpace.length != 1 || !isCanonicalId(savedSpace.single['value'])) {
-      throw FormatFailure(
-        'Old cache has no valid workspace identity. It was retained; recover the workspace before rebuilding.',
-      );
-    }
-    if (!(await folder.list()).any(
-      (file) => file.name == 'tandemlog-space.json',
-    )) {
-      throw FormatFailure(
-        'Previously opened workspace manifest is missing. Restore it before rebuilding.',
-      );
-    }
-    if (await _readSpace(folder) != savedSpace.single['value']) {
-      throw FormatFailure('Workspace identity changed at this location.');
-    }
-    // A complete SQLite snapshot includes committed WAL data. It is retained
-    // even if replay later finds invalid or unsupported canonical records.
-    final backup = '$privatePath/cache-v$version-${const Uuid().v4()}.sqlite';
-    db.execute('VACUUM INTO ?', [backup]);
-    await syncParentAfterCreate(File(backup));
-    db.execute('BEGIN IMMEDIATE');
-    try {
-      for (final table in ['events', 'views', 'positions']) {
-        db.execute('DROP TABLE IF EXISTS $table');
-      }
-      db.execute("DELETE FROM ${tables.metadata} WHERE key='order_projection'");
-      db.execute(
-        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('replay_pending','1')",
-      );
-      db.execute('PRAGMA user_version=10');
-      db.execute('COMMIT');
-    } catch (error) {
-      _rollback(db, null, error);
-      rethrow;
-    }
   }
 
   EventClock? _maximumClock([String? writerId]) {
@@ -1448,851 +886,25 @@ class TaskStore {
   /// binding, trusted stream observations, UI state, guards and exact intents
   /// remain in place; replay is forced even for unchanged-size canonical logs.
   Future<void> rebuildCache() => _serialize(() async {
-    if (unified != null) {
-      _unifiedTaskRevision = null;
-      await _refresh();
-      return;
-    }
-    if (profileDatabase == null) {
-      throw StateError('Namespace rebuild requires the app-owned database.');
-    }
-    profileDatabase!.transaction(() {
-      for (final table in [
-        tables.events,
-        tables.views,
-        tables.positions,
-        tables.textFields,
-        tables.textActors,
-        tables.textOutbox,
-      ]) {
-        db.execute('DELETE FROM $table');
-      }
-      db.execute("DELETE FROM ${tables.metadata} WHERE key='order_projection'");
-      db.execute(
-        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('replay_pending','1')",
-      );
-    });
-    _recurringTextMemo.clear();
-    await _restoreTextIntents();
+    _unifiedTaskRevision = null;
     await _refresh();
   });
 
-  HistoryVerificationFailure _historyFailure(
-    String name,
-    Uint8List bytes,
-    int byteOffset,
-    String reason,
-  ) {
-    var record = 1;
-    for (var i = 0; i < byteOffset && i < bytes.length; i++) {
-      if (bytes[i] == 10) record++;
-    }
-    return HistoryVerificationFailure(name, record, byteOffset, reason);
-  }
-
-  HistoryVerificationFailure _baselineFailure(String name, Uint8List bytes) {
-    final writerId = name.substring(0, name.length - 6);
-    var offset = 0;
-    for (final row in db.select(
-      'SELECT seq,raw FROM ${tables.events} WHERE writer=? ORDER BY seq',
-      [writerId],
-    )) {
-      final expected = utf8.encode('${row['raw']}\n');
-      var matches = offset + expected.length <= bytes.length;
-      if (matches) {
-        for (var i = 0; i < expected.length; i++) {
-          if (bytes[offset + i] != expected[i]) {
-            matches = false;
-            break;
-          }
-        }
-      }
-      if (!matches) {
-        return HistoryVerificationFailure(
-          name,
-          row['seq'] as int,
-          offset,
-          'Previously imported history changed. Restore the original log before writing.',
-        );
-      }
-      offset += expected.length;
-    }
-    return _historyFailure(
-      name,
-      bytes,
-      offset,
-      'Previously imported history checkpoints changed. Preserve the cache and log before recovery.',
-    );
-  }
-
-  void _verifyHistoryBytes(String name, Uint8List bytes, Row row) {
-    final offset = row['offset'] as int;
-    final baseline = row['hash_offset'] as int;
-    if (bytes.length < offset ||
-        baseline < 0 ||
-        baseline > offset ||
-        sha256.convert(Uint8List.sublistView(bytes, 0, baseline)).toString() !=
-            row['hash']) {
-      throw _baselineFailure(name, bytes);
-    }
-    var covered = baseline;
-    for (final range in db.select(
-      'SELECT * FROM ${tables.streamRanges} WHERE name=? ORDER BY start_offset',
-      [name],
-    )) {
-      final start = range['start_offset'] as int;
-      final end = range['end_offset'] as int;
-      if (start != covered ||
-          end > offset ||
-          end <= start ||
-          sha256.convert(Uint8List.sublistView(bytes, start, end)).toString() !=
-              range['hash']) {
-        throw _baselineFailure(name, bytes);
-      }
-      covered = end;
-    }
-    if (covered != offset) {
-      throw _historyFailure(
-        name,
-        bytes,
-        covered,
-        'Cached history checkpoints are incomplete. Preserve the cache and log before recovery.',
-      );
-    }
-  }
-
-  _VerifiedWriterRecords _decodeWriterRecords(
-    String name,
-    Uint8List bytes,
-    int completeLength,
-    int start,
-    int lastSeq,
-    EventClock? lastClock,
-    String chainHead,
-    Row? checkpoint,
-  ) {
-    final writerName = name.substring(0, name.length - 6);
-    final checkpointOffset = checkpoint?['offset'] as int?;
-    final records = <_LocatedWriterRecord>[];
-    var lineStart = 0;
-    for (var i = 0; i < completeLength; i++) {
-      if (bytes[i] != 10) continue;
-      final recordOffset = start + lineStart;
-      final recordNumber = lastSeq + 1;
-      LogEvent event;
-      String raw;
-      try {
-        if (i == lineStart) throw FormatFailure('Blank canonical record.');
-        if (i - lineStart > 1024 * 1024) {
-          throw FormatFailure('Oversized event.');
-        }
-        raw = utf8.decode(Uint8List.sublistView(bytes, lineStart, i));
-        event = LogEvent.decode(raw);
-        if (event.space != space ||
-            event.writer != writerName ||
-            event.sequence != lastSeq + 1 ||
-            (lastClock != null && event.clock <= lastClock)) {
-          throw FormatFailure('Invalid space, writer, sequence or clock.');
-        }
-        if (event.previousHash != chainHead) {
-          throw FormatFailure(
-            'Previous record hash does not match the writer chain.',
-          );
-        }
-      } catch (failure) {
-        throw HistoryVerificationFailure(
-          name,
-          recordNumber,
-          recordOffset,
-          failure is FormatFailure
-              ? failure.message
-              : 'Malformed canonical record.',
-        );
-      }
-      lastSeq = event.sequence;
-      lastClock = event.clock;
-      chainHead = event.hash!;
-      if (checkpoint != null &&
-          i + 1 == checkpointOffset &&
-          (chainHead != checkpoint['chain_head'] ||
-              lastSeq != checkpoint['last_seq'] ||
-              lastClock.value.toInt() != checkpoint['last_clock'])) {
-        throw HistoryVerificationFailure(
-          name,
-          recordNumber,
-          recordOffset,
-          'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
-        );
-      }
-      records.add(_LocatedWriterRecord(event, raw, recordOffset));
-      lineStart = i + 1;
-    }
-    if (checkpointOffset == 0 &&
-        (checkpoint!['chain_head'] != eventGenesisHash(space, writerName) ||
-            checkpoint['last_seq'] != 0 ||
-            checkpoint['last_clock'] != null)) {
-      throw HistoryVerificationFailure(
-        name,
-        1,
-        0,
-        'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
-      );
-    }
-    return _VerifiedWriterRecords(lastSeq, lastClock, chainHead, records);
-  }
-
-  String? _ownedRecordHash(int sequence, List<LogEvent> importedEvents) {
-    if (sequence == 0) return eventGenesisHash(space, writer);
-    for (final event in importedEvents) {
-      if (event.writer == writer && event.sequence == sequence) {
-        return event.hash;
-      }
-    }
-    final cached = db.select(
-      'SELECT raw FROM ${tables.events} WHERE writer=? AND seq=?',
-      [writer, sequence],
-    );
-    return cached.isEmpty
-        ? null
-        : LogEvent.decode(cached.single['raw'] as String).hash;
-  }
-
-  void _validateOwnedWriterGuard(
-    WriterGuardState? guardState,
-    int ownedSequence,
-    List<LogEvent> importedEvents,
-  ) {
-    if (guardState == null) return;
-    if (ownedSequence < guardState.sequence ||
-        _ownedRecordHash(guardState.sequence, importedEvents) !=
-            guardState.hash) {
-      throw WriterGuardFailure(
-        'The owned writer history is behind or differs from its acknowledged safety checkpoint. Restore the acknowledged history before writing.',
-      );
-    }
-    if (guardState.pending.isEmpty) return;
-    if (ownedSequence > guardState.pending.last.sequence) {
-      throw WriterGuardFailure(
-        'The owned writer history differs from its unresolved prepared append. Preserve the profile and workspace before recovery.',
-      );
-    }
-    for (final record in guardState.pending) {
-      if (record.sequence <= ownedSequence &&
-          _ownedRecordHash(record.sequence, importedEvents) != record.hash) {
-        throw WriterGuardFailure(
-          'The owned writer history differs from its unresolved prepared append. Preserve the profile and workspace before recovery.',
-        );
-      }
-    }
-  }
-
-  Future<void> _acknowledgeWriterHead(
-    WriterGuardState? guardState,
-    int ownedSequence,
-    String ownedHash,
-  ) async {
-    await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
-    _publishWriterHead(guardState, ownedSequence);
-  }
-
-  void _publishWriterHead(WriterGuardState? guardState, int ownedSequence) {
-    _acknowledgedOwnedSequence = ownedSequence;
-    _writerHasPendingAppend =
-        guardState != null &&
-        guardState.pending.isNotEmpty &&
-        guardState.pending.last.sequence > ownedSequence;
-  }
-
-  HistoryVerificationFailure _locatedHistoryFailure(
-    FormatFailure failure,
-    Map<String, HistoryVerificationFailure> eventLocations,
-    HistoryVerificationFailure fallback,
-  ) {
-    var location = fallback;
-    for (final entry in eventLocations.entries) {
-      if (failure.message.contains(entry.key)) {
-        location = entry.value;
-        break;
-      }
-    }
-    return HistoryVerificationFailure(
-      location.fileName,
-      location.recordNumber,
-      location.byteOffset,
-      failure.message,
-    );
-  }
-
-  void _validateAuditedSemantics(
-    Set<String> auditedEntities,
-    Map<String, HistoryVerificationFailure> eventLocations,
-  ) {
-    try {
-      _validateUndoReferences();
-      _validateMoves();
-      _validateTagReferences();
-      _validateChecklistReferences();
-      _validateChecklistCompletions();
-      for (final entity in auditedEntities) {
-        _projectEntity(entity);
-      }
-    } on FormatFailure catch (failure) {
-      throw _locatedHistoryFailure(
-        failure,
-        eventLocations,
-        eventLocations.values.last,
-      );
-    }
-  }
-
   Future<bool> _refresh({bool verify = false}) async {
-    try {
-      final changed = await _refreshAdmitted(verify: verify);
-      if (unified == null) {
-        viewFailure = null;
-        viewSharedFailure = null;
-        _publishLegacyView();
-      }
-      return changed;
-    } catch (error) {
-      if (unified == null) {
-        viewFailure = error;
-        _viewChanges.notify();
-      }
-      rethrow;
-    }
-  }
-
-  Future<bool> _refreshAdmitted({bool verify = false}) async {
-    if (unified != null) {
-      final before = _unifiedTaskRevision;
-      final snapshot = await unified!.refreshInProfileQueue();
-      if (verify) {
-        _lastHistoryVerification = HistoryVerificationReport(
-          checkedLogCount: snapshot.physical.length,
-          checkedRecordCount: snapshot.records.length,
-          checkedByteCount: snapshot.physical.values.fold(
-            0,
-            (n, b) => n + b.length,
-          ),
-          importedEventCount: snapshot.tasks.length,
-        );
-      }
-      return before != _unifiedTaskRevision;
-    }
-    try {
-      if (await _readSpace(folder) != space) {
-        throw FormatFailure('Workspace identity changed at this location.');
-      }
-      viewSharedFailure = null;
-    } catch (error) {
-      // Manifest authority is shared even when legacy Food is unavailable.
-      viewSharedFailure = error;
-      rethrow;
-    }
-    if (!_legacyPolicyCacheChecked) {
-      for (final row in db.select('SELECT raw FROM ${tables.events}')) {
-        assertWorkspaceTaskTimeZonePolicy(
-          LogEvent.decode(row['raw'] as String),
-          TimeZoneNamePolicy.legacy,
-        );
-      }
-      _legacyPolicyCacheChecked = true;
-    }
-    _updateClockWarning(_maximumClock(), _nowNs());
-    final guardState = await writerGuard.load(space, writer);
-    _acknowledgedOwnedSequence = guardState?.sequence ?? 0;
-    _writerHasPendingAppend = guardState?.pending.isNotEmpty ?? false;
-    final files = await folder.list();
-    if (guardState != null &&
-        guardState.sequence > 0 &&
-        !files.any((file) => file.name == '$writer.jsonl')) {
-      throw WriterGuardFailure(
-        'Previously imported log for the acknowledged owned writer is missing. Restore the workspace history before writing.',
-      );
-    }
-    if (files.any(
-      (f) => f.name.contains('sync-conflict') && !isFoodConflictName(f.name),
-    )) {
-      throw FormatFailure(
-        'A folder-sync conflict copy needs recovery. No history was discarded.',
-      );
-    }
-    final logs = files.where((f) => f.name.endsWith('.jsonl')).toList();
-    final names = logs.map((f) => f.name).toSet();
-    for (final row in db.select('SELECT name FROM ${tables.streams}')) {
-      if (!names.contains(row['name'])) {
-        throw HistoryVerificationFailure(
-          row['name'] as String,
-          1,
-          0,
-          'Previously imported log is missing. Restore it; do not rebuild away this warning.',
-        );
-      }
-    }
-    final replay = db
-        .select(
-          "SELECT value FROM ${tables.metadata} WHERE key='replay_pending'",
-        )
-        .isNotEmpty;
-    var checkedRecords = 0, checkedBytes = 0;
-    final eventLocations = <String, HistoryVerificationFailure>{};
-    final auditedEntities = <String>{};
-    final newEvents = <LogEvent>[];
-    final newEventRaws = <String>[];
-    final checkpoints = <List<Object?>>[];
-    final rangeCheckpoints = <List<Object?>>[];
-    final fullCheckpoints = <String>[];
-    for (final info in logs) {
-      final writerName = info.name.substring(0, info.name.length - 6);
-      if (!isCanonicalId(writerName)) {
-        throw HistoryVerificationFailure(
-          info.name,
-          1,
-          0,
-          'Unrecognized log filename.',
-        );
-      }
-      final saved = db.select('SELECT * FROM ${tables.streams} WHERE name=?', [
-        info.name,
-      ]);
-      final row = saved.isEmpty ? null : saved.first;
-      final offset = row == null ? 0 : row['offset'] as int;
-      final observedSize = info.size != null && info.size! >= 0
-          ? info.size
-          : null;
-      if (!verify && observedSize != null && observedSize < offset) {
-        throw HistoryVerificationFailure(
-          info.name,
-          (row?['last_seq'] as int? ?? 0) + 1,
-          offset,
-          'Previously imported history was truncated. Restore the original log before writing.',
-        );
-      }
-      final hasHead = row != null && row['chain_head'] != null;
-      final reconcileOwned =
-          info.name == '$writer.jsonl' &&
-          (guardState == null || guardState.pending.isNotEmpty);
-      if (!verify &&
-          !replay &&
-          !reconcileOwned &&
-          hasHead &&
-          folder is RangeLogFolder &&
-          row['range_capable'] == 1 &&
-          observedSize != null &&
-          observedSize == offset) {
-        continue;
-      }
-      Uint8List? suffix;
-      final forceOwnedFull =
-          info.name == '$writer.jsonl' &&
-          row != null &&
-          (guardState == null ||
-              (guardState.pending.isNotEmpty && observedSize == offset));
-      if (!verify &&
-          !replay &&
-          !forceOwnedFull &&
-          (hasHead || row == null) &&
-          observedSize != null &&
-          folder is RangeLogFolder) {
-        suffix = await (folder as RangeLogFolder).readFrom(info.name, offset);
-      }
-      var rangeCapable = suffix != null;
-      final full = suffix == null || row == null;
-      final bytes = suffix ?? await folder.read(info.name);
-      readFiles++;
-      final start = full ? 0 : offset;
-      if (full && row != null) _verifyHistoryBytes(info.name, bytes, row);
-      if (bytes.length + start < offset ||
-          (observedSize != null && bytes.length + start < observedSize)) {
-        throw HistoryVerificationFailure(
-          info.name,
-          (row?['last_seq'] as int? ?? 0) + 1,
-          offset,
-          'Previously imported history was truncated. Restore the original log before writing.',
-        );
-      }
-      final completeLength = bytes.lastIndexOf(10) + 1;
-      final end = start + completeLength;
-      if (end < offset) {
-        throw _historyFailure(
-          info.name,
-          bytes,
-          completeLength,
-          'Previously imported history was truncated. Restore the original log before writing.',
-        );
-      }
-      final completeRecords = bytes
-          .take(completeLength)
-          .where((byte) => byte == 10)
-          .length;
-      if (bytes.length - completeLength > 1024 * 1024) {
-        throw HistoryVerificationFailure(
-          info.name,
-          (full ? 0 : row['last_seq'] as int) + completeRecords + 1,
-          end,
-          'Oversized incomplete record.',
-        );
-      }
-      if (info.name == '$writer.jsonl' && completeLength != bytes.length) {
-        throw HistoryVerificationFailure(
-          info.name,
-          (full ? 0 : row['last_seq'] as int) + completeRecords + 1,
-          end,
-          'Interrupted local append detected. Preserve the file and recover its incomplete tail before writing.',
-        );
-      }
-      final verified = _decodeWriterRecords(
-        info.name,
-        bytes,
-        completeLength,
-        start,
-        full ? 0 : row['last_seq'] as int,
-        full || row['last_clock'] == null
-            ? null
-            : EventClock(BigInt.from(row['last_clock'] as int)),
-        full
-            ? eventGenesisHash(space, writerName)
-            : row['chain_head'] as String,
-        full && hasHead ? row : null,
-      );
-      final lastSeq = verified.sequence;
-      final lastClock = verified.clock;
-      final chainHead = verified.hash;
-      checkedRecords += verified.records.length;
-      for (final record in verified.records) {
-        final event = record.event;
-        assertWorkspaceTaskTimeZonePolicy(event, TimeZoneNamePolicy.legacy);
-        eventLocations[event.id] = HistoryVerificationFailure(
-          info.name,
-          event.sequence,
-          record.byteOffset,
-          'Invalid semantic history.',
-        );
-        auditedEntities.add(event.entity);
-        if (replay || record.byteOffset >= offset) {
-          newEvents.add(event);
-          newEventRaws.add(record.raw);
-        }
-      }
-      if (!rangeCapable &&
-          (replay || verify || forceOwnedFull) &&
-          observedSize != null &&
-          bytes.length == observedSize &&
-          folder is RangeLogFolder) {
-        final probe = await (folder as RangeLogFolder).readFrom(
-          info.name,
-          bytes.length,
-        );
-        if (probe != null && probe.isEmpty) rangeCapable = true;
-      }
-      checkedBytes += bytes.length;
-      final checkpoint = <Object?>[
-        info.name,
-        end,
-        full
-            ? sha256
-                  .convert(Uint8List.sublistView(bytes, 0, completeLength))
-                  .toString()
-            : row['hash'],
-        completeLength == bytes.length ? info.stamp : '',
-        full ? end : row['hash_offset'],
-        rangeCapable
-            ? 1
-            : ((verify || replay || forceOwnedFull) && row != null
-                  ? row['range_capable']
-                  : 0),
-        chainHead,
-        lastSeq,
-        lastClock?.value.toInt(),
-      ];
-      if (!replay &&
-          row != null &&
-          row['offset'] == checkpoint[1] &&
-          row['hash'] == checkpoint[2] &&
-          row['stamp'] == checkpoint[3] &&
-          row['hash_offset'] == checkpoint[4] &&
-          row['range_capable'] == checkpoint[5] &&
-          row['chain_head'] == checkpoint[6] &&
-          row['last_seq'] == checkpoint[7] &&
-          row['last_clock'] == checkpoint[8]) {
-        continue;
-      }
-      checkpoints.add(checkpoint);
-      if (full) {
-        fullCheckpoints.add(info.name);
-      } else if (end > offset) {
-        rangeCheckpoints.add([
-          info.name,
-          offset,
-          end,
-          sha256
-              .convert(Uint8List.sublistView(bytes, 0, completeLength))
-              .toString(),
-        ]);
-      }
-    }
-    // The private checkpoint survives data-folder aliases and cache replacement.
-    // Pending attempts read actual canonical suffixes (or the full unchanged log).
-    final ownedCheckpoint = checkpoints.where(
-      (checkpoint) => checkpoint[0] == '$writer.jsonl',
-    );
-    final savedOwned = db.select(
-      'SELECT last_seq,chain_head FROM ${tables.streams} WHERE name=?',
-      ['$writer.jsonl'],
-    );
-    final ownedSequence = ownedCheckpoint.isNotEmpty
-        ? ownedCheckpoint.single[7] as int
-        : savedOwned.isEmpty
-        ? 0
-        : savedOwned.single['last_seq'] as int;
-    final ownedHash = ownedCheckpoint.isNotEmpty
-        ? ownedCheckpoint.single[6] as String
-        : savedOwned.isEmpty
-        ? eventGenesisHash(space, writer)
-        : savedOwned.single['chain_head'] as String;
-    _validateOwnedWriterGuard(guardState, ownedSequence, newEvents);
-
-    HistoryVerificationReport? verificationReport;
+    final before = _unifiedTaskRevision;
+    final snapshot = await unified!.refreshInProfileQueue();
     if (verify) {
-      verificationReport = HistoryVerificationReport(
-        checkedLogCount: logs.length,
-        checkedRecordCount: checkedRecords,
-        checkedByteCount: checkedBytes,
-        importedEventCount: newEvents.length,
+      _lastHistoryVerification = HistoryVerificationReport(
+        checkedLogCount: snapshot.physical.length,
+        checkedRecordCount: snapshot.records.length,
+        checkedByteCount: snapshot.physical.values.fold(
+          0,
+          (n, b) => n + b.length,
+        ),
+        importedEventCount: snapshot.tasks.length,
       );
     }
-    if (checkpoints.isEmpty) {
-      if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
-      if (profileDatabase != null) {
-        profileDatabase!.transaction(() {
-          (writerGuard as SqliteWriterGuard).acknowledgeInTransaction(
-            space,
-            writer,
-            ownedSequence,
-            ownedHash,
-          );
-          _retireProfileIntentsInTransaction();
-          if (replay) {
-            db.execute(
-              "DELETE FROM ${tables.metadata} WHERE key='replay_pending'",
-            );
-          }
-        });
-        _publishWriterHead(guardState, ownedSequence);
-      } else {
-        await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
-        if (replay) {
-          db.execute(
-            "DELETE FROM ${tables.metadata} WHERE key='replay_pending'",
-          );
-        }
-      }
-      if (verify) _lastHistoryVerification = verificationReport;
-      await _retireConfirmedTextIntents();
-      return false;
-    }
-    final originalBaseline = _textBaseline;
-    final originalTextBlocked = textWriteBlocked;
-    var committed = false;
-    TextCache? transactionTextCache;
-    db.execute('BEGIN IMMEDIATE');
-    try {
-      if (textEngine != null) {
-        transactionTextCache = TextCache.forTransaction(
-          db,
-          textEngine!,
-          memo: _recurringTextMemo,
-          tables: tables,
-        );
-      }
-      for (final (index, e) in newEvents.indexed) {
-        if (_textTypes.contains(e.type) && textEngine == null) {
-          throw FormatFailure(
-            'Native text support is required. Update the app; history was preserved.',
-          );
-        }
-        db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?)', [
-          e.id,
-          e.entity,
-          e.writer,
-          e.sequence,
-          e.clock.value.toInt(),
-          newEventRaws[index],
-        ]);
-        db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
-          e.id,
-          newEventRaws[index],
-        ]);
-      }
-      final oldBaseline = _textBaseline?.id;
-      if (newEvents.isNotEmpty) {
-        if (textEngine != null) {
-          transactionTextCache!.validatePackets(newEvents);
-        }
-        _validateTextBaseline();
-        _validateUndoReferences();
-        _validateMoves();
-        _validateTagReferences();
-        _validateHistoricalCompletions();
-        _validateChecklistReferences();
-        _validateChecklistCompletions();
-      }
-      if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
-      final affected = newEvents.map((e) => e.entity).toSet();
-      if (newEvents.any((event) => event.type == 'text.baselineInitialized') ||
-          oldBaseline != _textBaseline?.id) {
-        affected.addAll(
-          db
-              .select('SELECT id FROM ${tables.views}')
-              .map((row) => row['id'] as String),
-        );
-      }
-      for (final e in newEvents) {
-        if (isTaskCompletion(e.type) && e.data['successor'] != null) {
-          affected.add((e.data['successor'] as Map)['id'] as String);
-        }
-        if (e.type == 'task.completedWithChecklist') {
-          for (final item in (e.data['checklist'] as Map)['items'] as List) {
-            affected.add((item as Map)['id'] as String);
-          }
-        }
-        final checklistParent = _checklistParent(e.entity);
-        if (checklistParent != null) affected.add(checklistParent);
-      }
-      for (final e in newEvents) {
-        if (e.type == 'task.recurringCompletionUndone') {
-          affected.add(const Uuid().v5(e.entity, 'successor'));
-        }
-        if (e.type == 'task.moved' && e.data['before'] is String) {
-          affected.add(e.data['before'] as String);
-        }
-      }
-      affected.addAll(
-        db
-            .select(
-              "SELECT id FROM ${tables.views} WHERE json_extract(raw,'\$.textInheritancePending')=1",
-            )
-            .map((row) => row['id'] as String),
-      );
-      // Pending copied fields can settle when another writer's source arrives.
-      // Reconcile their containing task's cached checklist in the same commit.
-      for (final entity in affected.toList()) {
-        final parent = _checklistParent(entity);
-        if (parent != null) affected.add(parent);
-      }
-      // This transaction has one admitted canonical record set. Reuse its pure
-      // resolver across affected projections, rather than selecting/copying all
-      // original records again for every historical occurrence during rebuild.
-      final resolution = textEngine != null && affected.any(_hasInheritedText)
-          ? _textResolution()
-          : null;
-      for (final entity in affected) {
-        final state = _projectEntity(
-          entity,
-          resolution: resolution,
-          textCache: transactionTextCache,
-        );
-        if (state != null) {
-          db.execute('INSERT OR REPLACE INTO ${tables.views} VALUES (?,?)', [
-            entity,
-            jsonEncode(state),
-          ]);
-        }
-      }
-      if (affected.any(
-            (entity) => db.select(
-              "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
-              [entity],
-            ).isNotEmpty,
-          ) ||
-          newEvents.any(
-            (e) =>
-                {
-                  'task.created',
-                  'task.createdWithText',
-                  'user.created',
-                  'task.completed',
-                  'task.completedWithText',
-                  'task.completedWithChecklist',
-                  'checklist.itemCreated',
-                  'task.moved',
-                }.contains(e.type) ||
-                (e.type == 'task.operationUndone' &&
-                    db.select(
-                      "SELECT 1 FROM ${tables.events} WHERE id=? AND json_extract(raw,'\$.type')='task.moved'",
-                      [e.data['operation']],
-                    ).isNotEmpty),
-          )) {
-        _rebuildOrder();
-      }
-      for (final c in checkpoints) {
-        db.execute(
-          'INSERT OR REPLACE INTO ${tables.streams} (name,offset,hash,stamp,hash_offset,range_capable,chain_head,last_seq,last_clock) VALUES (?,?,?,?,?,?,?,?,?)',
-          c,
-        );
-      }
-      for (final name in fullCheckpoints) {
-        db.execute('DELETE FROM ${tables.streamRanges} WHERE name=?', [name]);
-      }
-      for (final range in rangeCheckpoints) {
-        db.execute(
-          'INSERT INTO ${tables.streamRanges} VALUES (?,?,?,?)',
-          range,
-        );
-      }
-      db.execute("DELETE FROM ${tables.metadata} WHERE key='replay_pending'");
-      if (profileDatabase != null) {
-        (writerGuard as SqliteWriterGuard).acknowledgeInTransaction(
-          space,
-          writer,
-          ownedSequence,
-          ownedHash,
-        );
-        _retireProfileIntentsInTransaction();
-      } else {
-        await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
-      }
-      db.execute('COMMIT');
-      committed = true;
-      _publishWriterHead(guardState, ownedSequence);
-      cacheTransactions++;
-      _updateCapturedTextDocuments(newEvents, affected);
-      _updateNativeUndoOwners(newEvents, affected);
-      // Cleanup is dispensable: exact canonical receipts are already committed.
-      // A failed deletion leaves the immutable intent available next startup.
-      try {
-        await _retireConfirmedTextIntents();
-      } on FileSystemException {
-        // Preserve the file; it cannot authorize a different prepared event.
-      }
-      _updateClockWarning(_maximumClock(), _nowNs());
-      if (verify) _lastHistoryVerification = verificationReport;
-      return newEvents.isNotEmpty;
-    } catch (failure) {
-      if (committed) rethrow;
-      _rollback(db, profileDatabase, failure);
-      try {
-        _recurringTextMemo.clear();
-      } catch (_) {
-        /* Authority was discarded; preserve the located ingestion failure. */
-      }
-      _textBaseline = originalBaseline;
-      textWriteBlocked = originalTextBlocked;
-      if (verify) _lastHistoryVerification = null;
-      if (failure is FormatFailure &&
-          failure is! HistoryVerificationFailure &&
-          newEvents.isNotEmpty) {
-        throw _locatedHistoryFailure(
-          failure,
-          eventLocations,
-          eventLocations[newEvents.last.id]!,
-        );
-      }
-      rethrow;
-    } finally {
-      transactionTextCache?.close();
-    }
+    return before != _unifiedTaskRevision;
   }
 
   bool hasEntity(String id) =>
@@ -2304,6 +916,24 @@ class TaskStore {
     await _refresh();
     if (textEngine == null) {
       throw FormatFailure('Native text support is unavailable.');
+    }
+    final common = unified;
+    if (common != null &&
+        common.snapshot.records.any((r) {
+          if (r.sequence <= (common.snapshot.published[r.writer] ?? 0)) {
+            return false;
+          }
+          return r.effects.any((effect) {
+            final e = effect.task;
+            return e != null &&
+                e.entity == entity &&
+                (e.type == 'task.textEdited' ||
+                    e.type == 'task.textEditUndone');
+          });
+        })) {
+      throw FormatFailure(
+        'This task is waiting for its complete text history before editing.',
+      );
     }
     final history = _entityEvents(entity);
     final task = project(history);
@@ -2833,7 +1463,7 @@ class TaskStore {
     final retracted = retractedOperationIds(
       db
           .select(
-            "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.operationUndone'",
+            "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.operationUndone'",
           )
           .map((r) => LogEvent.decode(r['raw'] as String)),
     );
@@ -2843,13 +1473,13 @@ class TaskStore {
     // successor's history again while rebuilding global manual order.
     final selectedSeedIds = <String, String>{
       for (final row in db.select(
-        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM ${tables.events} e JOIN ${tables.views} v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')",
+        "SELECT e.id,json_extract(e.semantic,'\$.data.successor.id') AS successor FROM ${tables.events} e JOIN ${tables.views} v ON v.id=json_extract(e.semantic,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.semantic,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')",
       ))
         row['successor'] as String: row['id'] as String,
     };
     final actions = db
         .select(
-          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
+          "SELECT id,entity,json_extract(semantic,'\$.type') AS type,json_extract(semantic,'\$.data.before') AS before_id,json_extract(semantic,'\$.data.successor.id') AS successor FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
         )
         .where((row) {
           if (row['type'] == 'task.moved') {
@@ -2945,13 +1575,6 @@ class TaskStore {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) async {
-    if (unified == null) {
-      await WorkspaceUpgradeGuard.assertWritable(
-        folder: folder,
-        space: space,
-        profile: profileDatabase,
-      );
-    }
     await _refresh();
     _requireWriterAppendReady();
     if (expectedTaskSnapshot != null &&
@@ -2961,42 +1584,12 @@ class TaskStore {
             : expectedTaskSnapshot != taskSnapshot)) {
       throw StaleTaskSnapshot();
     }
-    if (unified != null) {
-      final receipts = await _appendUnifiedCommands(
-        [(entity, type, data)],
-        canCommit: canCommit,
-        onPrepared: onPrepared,
-      );
-      return LogEvent.decode(receipts.single.raw);
-    }
-    final seq =
-        (db.select(
-              'SELECT COALESCE(MAX(seq),0) AS n FROM ${tables.events} WHERE writer=?',
-              [writer],
-            ).first['n']
-            as int) +
-        1;
-    final writeTime = _nowNs();
-    final maximum = _maximumClock();
-    _updateClockWarning(maximum, writeTime);
-    final clock = EventClock.next(writeTime, maximum);
-    final e = _prepareCommand(entity, type, data, seq, clock);
-    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
-    final raw = e.canonicalRaw!;
-    final receipt = OperationReceipt(e.id, raw, e.entity);
-    WorkspaceUpgradeGuard.assertLocalWritable(profileDatabase, space);
-    await _stageTextReceipt(e, receipt);
-    onPrepared?.call(receipt);
-    await _prepareWriterAppend([receipt]);
-    await folder.append(
-      '$writer.jsonl',
-      Uint8List.fromList(utf8.encode('$raw\n')),
+    final receipts = await _appendUnifiedCommands(
+      [(entity, type, data)],
+      canCommit: canCommit,
+      onPrepared: onPrepared,
     );
-    // Append alone cannot acknowledge a save: a provider replacement can keep
-    // the old committed prefix while dropping this new suffix before ingestion.
-    await _refresh();
-    _requireConfirmed([receipt]);
-    return e;
+    return LogEvent.decode(receipts.single.raw);
   }
 
   void _requireWriterAppendReady() {
@@ -3012,7 +1605,7 @@ class TaskStore {
 
   void _validateTextBaseline() {
     final roots = db.select(
-      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='text.baselineInitialized'",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='text.baselineInitialized'",
     );
     _textBaseline = null;
     textWriteBlocked = null;
@@ -3133,7 +1726,7 @@ class TaskStore {
 
   /// Historical fixture construction only. The application initializes empty
   /// workspaces through [open], and never adopts an existing legacy workspace.
-  Future<LogEvent> initializeSharedTextForHistoricalFixture({
+  Future<LogEvent> initializeSharedText({
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() => _initializeSharedText(onPrepared: onPrepared));
 
@@ -3153,7 +1746,7 @@ class TaskStore {
     }
     if (db
         .select(
-          "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type')='text.baselineInitialized' LIMIT 1",
+          "SELECT 1 FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='text.baselineInitialized' LIMIT 1",
         )
         .isNotEmpty) {
       throw FormatFailure(
@@ -3196,213 +1789,16 @@ class TaskStore {
     );
   }
 
-  File _textIntentFile(LogEvent event) =>
-      File('$privatePath/text-intents/${event.writer}-${event.sequence}.json');
-
-  Future<void> _stageTextReceipt(
-    LogEvent event,
-    OperationReceipt receipt,
-  ) async {
-    assertWorkspaceTaskTimeZonePolicy(event, timeZonePolicy);
-    if (!_textTypes.contains(event.type)) return;
-    if (textEngine == null) {
-      throw FormatFailure('Native text support is required before saving.');
-    }
-    if (profileDatabase != null) {
-      profileDatabase!.transaction(() {
-        ProfileTextIntents(profileDatabase!).stageInTransaction(
-          space,
-          writer,
-          Uint8List.fromList(utf8.encode(receipt.raw)),
-        );
-        db.execute(
-          'INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)',
-          [receipt.id, receipt.raw, receipt.entity],
-        );
-      });
-      _viewHasPendingSave = true;
-      _viewChanges.notify();
-      return;
-    }
-    final intent = _textIntentFile(event);
-    if (await intent.exists()) {
-      if (await intent.readAsString() != receipt.raw) {
-        throw FormatFailure(
-          'Prepared text intent differs from its immutable event bytes.',
-        );
-      }
-    } else {
-      await createFileDurable(intent, utf8.encode(receipt.raw));
-    }
-    _viewHasPendingSave = true;
-    _viewChanges.notify();
-    db.execute('INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)', [
-      receipt.id,
-      receipt.raw,
-      receipt.entity,
-    ]);
-  }
-
-  Future<void> _restoreTextIntents() async {
-    if (profileDatabase != null) {
-      final pending = ProfileTextIntents(
-        profileDatabase!,
-      ).pending(space, writer);
-      for (final bytes in pending) {
-        assertWorkspaceTaskTimeZonePolicy(
-          LogEvent.decode(utf8.decode(bytes)),
-          TimeZoneNamePolicy.legacy,
-        );
-      }
-      final byId = {
-        for (final bytes in pending)
-          LogEvent.decode(utf8.decode(bytes)).id: utf8.decode(bytes),
-      };
-      for (final row in db.select('SELECT id,raw FROM ${tables.textOutbox}')) {
-        final event = LogEvent.decode(row['raw'] as String);
-        if (event.id != row['id'] ||
-            event.space != space ||
-            event.writer != writer ||
-            !_textTypes.contains(event.type) ||
-            (byId.containsKey(row['id']) && byId[row['id']] != row['raw'])) {
-          throw FormatFailure(
-            'Disposable text outbox differs from protected intent evidence.',
-          );
-        }
-      }
-      profileDatabase!.transaction(() {
-        for (final entry in byId.entries) {
-          final event = LogEvent.decode(entry.value);
-          db.execute(
-            'INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)',
-            [event.id, entry.value, event.entity],
-          );
-        }
-      });
-      return;
-    }
-    final directory = Directory('$privatePath/text-intents');
-    if (!await directory.exists()) return;
-    await for (final file in directory.list()) {
-      if (file is! File || !file.path.endsWith('.json')) continue;
-      final raw = await file.readAsString();
-      final event = LogEvent.decode(raw);
-      assertWorkspaceTaskTimeZonePolicy(event, TimeZoneNamePolicy.legacy);
-      if (!_textTypes.contains(event.type) ||
-          event.writer != writer ||
-          event.space != space ||
-          file.absolute.uri.normalizePath() !=
-              _textIntentFile(event).absolute.uri.normalizePath()) {
-        throw FormatFailure(
-          'Invalid private prepared text intent; evidence was retained.',
-        );
-      }
-      db.execute('INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)', [
-        event.id,
-        raw,
-        event.entity,
-      ]);
-    }
-  }
-
-  Future<void> _retireConfirmedTextIntents() async {
-    if (profileDatabase != null) return;
-    final directory = Directory('$privatePath/text-intents');
-    if (!await directory.exists()) return;
-    await for (final file in directory.list()) {
-      if (file is! File || !file.path.endsWith('.json')) continue;
-      final raw = await file.readAsString();
-      final event = LogEvent.decode(raw);
-      final present = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
-        event.id,
-      ]);
-      if (present.isNotEmpty && present.single['raw'] == raw) {
-        db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
-          event.id,
-          raw,
-        ]);
-        await file.delete();
-        await syncParentAfterCreate(file);
-      }
-    }
-  }
-
-  void _retireProfileIntentsInTransaction() {
-    final intents = ProfileTextIntents(profileDatabase!);
-    for (final row in db.select('SELECT id,raw FROM ${tables.textOutbox}')) {
-      final event = LogEvent.decode(row['raw'] as String);
-      final protected = intents.atSequence(space, writer, event.sequence);
-      if (protected != null && utf8.decode(protected) == row['raw']) continue;
-      final canonical = db.select(
-        'SELECT raw FROM ${tables.events} WHERE id=?',
-        [row['id']],
-      );
-      if (canonical.length != 1 || canonical.single['raw'] != row['raw']) {
-        throw FormatFailure(
-          'Disposable text outbox differs from protected intent evidence.',
-        );
-      }
-      db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
-        row['id'],
-        row['raw'],
-      ]);
-    }
-    for (final bytes in intents.pending(space, writer)) {
-      final raw = utf8.decode(bytes);
-      final event = LogEvent.decode(raw);
-      final rows = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
-        event.id,
-      ]);
-      if (rows.isEmpty) continue;
-      if (rows.single['raw'] != raw) {
-        throw FormatFailure(
-          'Canonical receipt differs from the protected text intent.',
-        );
-      }
-      intents.retireInTransaction(space, writer, bytes);
-      db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
-        event.id,
-        raw,
-      ]);
-    }
-  }
-
-  /// Exact prepared bytes survive an unknown append outcome and process restart.
-  List<OperationReceipt> get pendingTextOperations {
-    if (unified != null) {
-      return unified!.pendingRecords
-          .where(
-            (r) =>
-                r.effect.task != null &&
-                _textTypes.contains(r.effect.task!.type),
-          )
+  /// Same-session bytes reconcile an uncertain append; nothing retries on restart.
+  List<OperationReceipt> get pendingTextOperations =>
+      (unified?.pendingRecords ?? const <UnifiedRecord>[])
+          .expand((r) => r.effects)
+          .where((r) => r.task != null && _textTypes.contains(r.task!.type))
           .map((r) {
-            final e = r.effect.task!;
+            final e = r.task!;
             return OperationReceipt(e.id, e.canonicalRaw!, e.entity);
           })
           .toList(growable: false);
-    }
-    if (profileDatabase != null) {
-      return ProfileTextIntents(profileDatabase!)
-          .pending(space, writer)
-          .map((bytes) {
-            final raw = utf8.decode(bytes);
-            final event = LogEvent.decode(raw);
-            return OperationReceipt(event.id, raw, event.entity);
-          })
-          .toList(growable: false);
-    }
-    return db
-        .select('SELECT id,raw,entity FROM ${tables.textOutbox} ORDER BY rowid')
-        .map(
-          (row) => OperationReceipt(
-            row['id'] as String,
-            row['raw'] as String,
-            row['entity'] as String,
-          ),
-        )
-        .toList(growable: false);
-  }
 
   Future<LogEvent> retryTextOperation(OperationReceipt receipt) =>
       _serialize(() => _retryTextOperation(receipt));
@@ -3426,76 +1822,16 @@ class TaskStore {
       _requireConfirmed([receipt]);
       return event;
     }
-    if (unified != null) {
-      if (!unified!.pendingRecords.any(
-        (r) => r.effect.task?.canonicalRaw == receipt.raw,
-      )) {
-        throw FormatFailure(
-          'Prepared native text receipt differs from the common app reservation.',
-        );
-      }
-      await unified!.recoverPreparedInProfileQueue();
-      _requireConfirmed([receipt]);
-      return event;
-    }
-    final staged = db.select(
-      'SELECT raw FROM ${tables.textOutbox} WHERE id=?',
-      [event.id],
-    );
-    if (staged.isEmpty ||
-        staged.single['raw'] != receipt.raw ||
-        event.sequence != _acknowledgedOwnedSequence + 1 ||
-        event.previousHash != _writerChainHead) {
+    if (!unified!.pendingRecords
+        .expand((r) => r.effects)
+        .any((r) => r.task?.canonicalRaw == receipt.raw)) {
       throw FormatFailure(
-        'Prepared native text bytes do not match the owned canonical prefix.',
+        'Prepared native text receipt differs from the common reservation.',
       );
     }
-    final guarded = await writerGuard.load(space, writer);
-    if (guarded == null || guarded.pending.isEmpty) {
-      await _prepareWriterAppend([receipt]);
-    } else if (guarded.pending.first.sequence != event.sequence ||
-        guarded.pending.first.hash != event.hash) {
-      throw FormatFailure(
-        'Prepared text receipt differs from the reserved writer append.',
-      );
-    }
-    await folder.append(
-      '$writer.jsonl',
-      Uint8List.fromList(utf8.encode('${receipt.raw}\n')),
-    );
-    await _refresh();
+    await unified!.recoverPreparedInProfileQueue();
     _requireConfirmed([receipt]);
     return event;
-  }
-
-  Future<void> _prepareWriterAppend(List<OperationReceipt> receipts) async {
-    final records = receipts
-        .map((receipt) => LogEvent.decode(receipt.raw))
-        .toList();
-    final base = records.first.sequence - 1;
-    await writerGuard.prepare(
-      space,
-      writer,
-      base,
-      records.first.previousHash!,
-      [
-        for (final event in records)
-          PreparedWriterRecord(event.sequence, event.hash!),
-      ],
-    );
-    _writerHasPendingAppend = true;
-    _viewHasPendingSave = true;
-    _viewChanges.notify();
-  }
-
-  String get _writerChainHead {
-    final rows = db.select(
-      'SELECT chain_head FROM ${tables.streams} WHERE name=?',
-      ['$writer.jsonl'],
-    );
-    return rows.isEmpty
-        ? eventGenesisHash(space, writer)
-        : rows.single['chain_head'] as String;
   }
 
   LogEvent _prepareCommand(
@@ -3533,15 +1869,11 @@ class TaskStore {
       throw FormatFailure(textWriteBlocked!);
     }
     final e = LogEvent.decode(
-      LogEvent(
-        space,
-        writer,
-        seq,
-        clock,
-        entity,
-        type,
-        data,
-      ).encode(previousHash: previousHash ?? _writerChainHead),
+      LogEvent(space, writer, seq, clock, entity, type, data).encode(
+        previousHash:
+            previousHash ??
+            (throw StateError('A common reservation is required.')),
+      ),
     );
     assertWorkspaceTaskTimeZonePolicy(e, timeZonePolicy);
     final prior = [
@@ -3589,13 +1921,14 @@ class TaskStore {
           tables: tables,
         ).validatePackets([e]);
         if (type == 'text.baselineInitialized') {
-          db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?)', [
+          db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?,?)', [
             e.id,
             e.entity,
             e.writer,
             e.sequence,
             e.clock.value.toInt(),
             e.canonicalRaw,
+            jsonEncode({'type': e.type, 'data': e.data}),
           ]);
           _validateTextBaseline();
           if (textWriteBlocked != null) throw FormatFailure(textWriteBlocked!);
@@ -3700,7 +2033,7 @@ class TaskStore {
       }
       final successorId = (data['successor'] as Map)['id'];
       if (db.select(
-        "SELECT id FROM ${tables.events} WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','task.createdWithText','user.created')",
+        "SELECT id FROM ${tables.events} WHERE entity=? AND json_extract(semantic,'\$.type') IN ('task.created','task.createdWithText','user.created')",
         [successorId],
       ).isNotEmpty) {
         throw FormatFailure(
@@ -3732,93 +2065,13 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
     bool reserveBeforeTextStaging = false,
   }) async {
-    if (unified == null) {
-      await WorkspaceUpgradeGuard.assertWritable(
-        folder: folder,
-        space: space,
-        profile: profileDatabase,
-      );
-    }
-    if (unified != null) {
-      return _appendUnifiedCommands(
-        commands,
-        canCommit: canCommit,
-        onPrepared: onPrepared,
-      );
-    }
-    if (commands.isEmpty) return [];
-    _requireWriterAppendReady();
-    final phase = Stopwatch()..start();
-    final transactions = cacheTransactions;
-    var seq =
-        (db.select(
-              'SELECT COALESCE(MAX(seq),0) AS n FROM ${tables.events} WHERE writer=?',
-              [writer],
-            ).first['n']
-            as int) +
-        1;
-    var maximum = _maximumClock();
-    final receipts = <OperationReceipt>[];
-    final creations = <String, LogEvent>{};
-    final bytes = BytesBuilder(copy: false);
-    var chainHead = _writerChainHead;
-    for (final (entity, type, data) in commands) {
-      final wall = _nowNs();
-      _updateClockWarning(maximum, wall);
-      final clock = EventClock.next(wall, maximum);
-      final event = _prepareCommand(
-        entity,
-        type,
-        data,
-        seq++,
-        clock,
-        previousHash: chainHead,
-        pendingCreation: type == 'task.moved' ? creations[entity] : null,
-      );
-      if (type == 'task.created' || type == 'task.createdWithText') {
-        creations[entity] = event;
-      }
-      final raw = event.canonicalRaw!;
-      chainHead = event.hash!;
-      receipts.add(OperationReceipt(event.id, raw, entity));
-      bytes.add(utf8.encode('$raw\n'));
-      maximum = clock;
-    }
-    final preparedUs = phase.elapsedMicroseconds;
-    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
-    WorkspaceUpgradeGuard.assertLocalWritable(profileDatabase, space);
-    for (final receipt in receipts) {
-      onPrepared?.call(receipt);
-    }
-    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
-    if (reserveBeforeTextStaging) await _prepareWriterAppend(receipts);
-    for (final receipt in receipts) {
-      await _stageTextReceipt(LogEvent.decode(receipt.raw), receipt);
-    }
-    if (!reserveBeforeTextStaging) await _prepareWriterAppend(receipts);
-    phase.reset();
-    try {
-      await folder.append('$writer.jsonl', bytes.takeBytes());
-    } finally {
-      lastBatchTiming = {
-        'tasks': commands.length,
-        'prepare_us': preparedUs,
-        'append_us': phase.elapsedMicroseconds,
-        'cache_transactions': 0,
-      };
-    }
-    phase.reset();
-    try {
-      await _refresh();
-    } finally {
-      lastBatchTiming!['reconcile_us'] = phase.elapsedMicroseconds;
-      lastBatchTiming!['cache_transactions'] = cacheTransactions - transactions;
-    }
-    _requireConfirmed(receipts);
-    return receipts;
+    return _appendUnifiedCommands(
+      commands,
+      canCommit: canCommit,
+      onPrepared: onPrepared,
+    );
   }
 
-  /// A durable creation alone cannot finish a capture with a reserved suffix.
   bool isCaptureConfirmed(String entity) =>
       !_writerHasPendingAppend && hasEntity(entity);
 
@@ -3923,7 +2176,7 @@ class TaskStore {
 
   void _validateUndoReferences([LogEvent? pending]) {
     final invalidText = db.select(
-      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=json_extract(u.raw,'\$.data.operation') WHERE json_extract(u.raw,'\$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.raw,'\$.type')<>'task.textEdited') LIMIT 1",
+      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=json_extract(u.semantic,'\$.data.operation') WHERE json_extract(u.semantic,'\$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.semantic,'\$.type')<>'task.textEdited') LIMIT 1",
     );
     if (invalidText.isNotEmpty) {
       throw FormatFailure(
@@ -3932,7 +2185,7 @@ class TaskStore {
     }
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
+      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=CASE WHEN json_extract(u.semantic,'\$.type')='task.operationUndone' THEN json_extract(u.semantic,'\$.data.operation') ELSE json_extract(u.semantic,'\$.data.completion') END WHERE json_extract(u.semantic,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.semantic,'\$.type')='task.completionUndone' AND json_extract(t.semantic,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.semantic,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.semantic,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.semantic,'\$.data.successor.id') IS NULL)) OR (json_extract(u.semantic,'\$.type')='task.operationUndone' AND (json_extract(t.semantic,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.semantic,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.semantic,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
@@ -3978,7 +2231,7 @@ class TaskStore {
       }
     }
     for (final row in db.select(
-      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('task.textEditUndone','task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('task.textEditUndone','task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(semantic,'\$.data.operation'),json_extract(semantic,'\$.data.completion'))=?",
       [pending.id],
     )) {
       validate(LogEvent.decode(row['raw'] as String), pending);
@@ -3989,8 +2242,8 @@ class TaskStore {
     final moves = db
         .select(
           pending == null
-              ? "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved'"
-              : "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
+              ? "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved'"
+              : "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved' AND json_extract(semantic,'\$.data.before')=?",
           pending == null ? [] : [pending.entity],
         )
         .map((r) => LogEvent.decode(r['raw'] as String))
@@ -4024,8 +2277,8 @@ class TaskStore {
     final mutations = db
         .select(
           pending == null
-              ? "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.tagChanges') IS NOT NULL"
-              : "SELECT raw FROM ${tables.events} e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.raw,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
+              ? "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.tagChanges') IS NOT NULL"
+              : "SELECT raw FROM ${tables.events} e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.semantic,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
           pending == null ? [] : ['${pending.id}:%', successor],
         )
         .map((r) => LogEvent.decode(r['raw'] as String))
@@ -4048,7 +2301,7 @@ class TaskStore {
             : LogEvent.decode(rows.first['raw'] as String);
         if (target == null) {
           final seeds = db.select(
-            "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=?",
+            "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=?",
             [mutation.entity],
           );
           final matches = <LogEvent>[];
@@ -4116,7 +2369,7 @@ class TaskStore {
         .map((r) => LogEvent.decode(r['raw'] as String))
         .toList();
     final seeds = db.select(
-      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
     );
     if (seeds.isNotEmpty) {
@@ -4162,7 +2415,7 @@ class TaskStore {
         .select('SELECT raw FROM ${tables.events} WHERE entity=?', [parent])
         .map((r) => LogEvent.decode(r['raw'] as String));
     final anchored = db.select(
-      "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
+      "SELECT 1 FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved' AND json_extract(semantic,'\$.data.before')=? LIMIT 1",
       [entity],
     ).isNotEmpty;
     return selectSuccessor(
@@ -4211,7 +2464,7 @@ class TaskStore {
   void _attachSuccessorSuppression(Map<String, dynamic> state) {
     final entity = state['id'] as String;
     final seeds = db.select(
-      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
     );
     if (seeds.isNotEmpty) {
@@ -4332,7 +2585,7 @@ class TaskStore {
 
   bool _hasInheritedText(String entity) =>
       db.select(
-        "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('task.completedWithText','task.completedWithChecklist') AND json_extract(raw,'\$.data.inheritance') IS NOT NULL AND json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
+        "SELECT 1 FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('task.completedWithText','task.completedWithChecklist') AND json_extract(semantic,'\$.data.inheritance') IS NOT NULL AND json_extract(semantic,'\$.data.successor.id')=? LIMIT 1",
         [entity],
       ).isNotEmpty ||
       _itemCopySeeds(entity).isNotEmpty;
@@ -4444,7 +2697,7 @@ class TaskStore {
         .toList();
     final seeds = db
         .select(
-          "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=?",
+          "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=?",
           [entity],
         )
         .map((row) => LogEvent.decode(row['raw'] as String))
@@ -4459,7 +2712,7 @@ class TaskStore {
           .where((event) => _baselineIncludes(event, baseline));
       final anchors = db
           .select(
-            "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
+            "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved' AND json_extract(semantic,'\$.data.before')=?",
             [entity],
           )
           .map((row) => LogEvent.decode(row['raw'] as String))
@@ -4512,7 +2765,7 @@ class TaskStore {
             child,
           ]).isNotEmpty ||
           db.select(
-            "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
+            "SELECT 1 FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved' AND json_extract(semantic,'\$.data.before')=? LIMIT 1",
             [child],
           ).isNotEmpty ||
           _hasChecklistActivity(child);
@@ -4539,7 +2792,7 @@ class TaskStore {
   void _validateHistoricalCompletions([LogEvent? pending]) {
     final markers = <LogEvent>[
       for (final row in db.select(
-        "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.completedKeepingSuccessor'",
+        "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedKeepingSuccessor'",
       ))
         LogEvent.decode(row['raw'] as String),
       if (pending?.type == 'task.completedKeepingSuccessor') pending!,
@@ -4911,14 +3164,11 @@ class TaskStore {
     onPrepared: onPrepared,
   );
 
-  /// A receipt requires its exact canonical bytes and a durable private
-  /// acknowledgment. Unobserved prepared records retain their reserved sequence.
+  /// Exact admitted effect bytes acknowledge a save. Logical effect IDs
+  /// are independent of physical action positions.
   Set<String> confirmedOperations(Iterable<OperationReceipt> receipts) => {
     for (final r in receipts)
       if (r.id.startsWith('$writer:') &&
-          (int.tryParse(r.id.substring(writer.length + 1)) ??
-                  9007199254740991) <=
-              _acknowledgedOwnedSequence &&
           db.select('SELECT 1 FROM ${tables.events} WHERE id=? AND raw=?', [
             r.id,
             r.raw,
@@ -4935,7 +3185,7 @@ class TaskStore {
   }
 
   bool _operationUndone(String id) => db.select(
-    "SELECT 1 FROM ${tables.events} WHERE (json_extract(raw,'\$.type') IN ('task.operationUndone','task.textEditUndone') AND json_extract(raw,'\$.data.operation')=?) OR (json_extract(raw,'\$.type')='task.recurringCompletionUndone' AND json_extract(raw,'\$.data.completion')=?)",
+    "SELECT 1 FROM ${tables.events} WHERE (json_extract(semantic,'\$.type') IN ('task.operationUndone','task.textEditUndone') AND json_extract(semantic,'\$.data.operation')=?) OR (json_extract(semantic,'\$.type')='task.recurringCompletionUndone' AND json_extract(semantic,'\$.data.completion')=?)",
     [id, id],
   ).isNotEmpty;
 
@@ -5261,29 +3511,10 @@ class TaskStore {
         if (_locationKey != null) {
           profileDatabase!.releaseWorkspace(_locationKey);
         }
+        await _closeOwnedResources?.call();
       }
     });
   }
-}
-
-class _LocatedWriterRecord {
-  final LogEvent event;
-  final String raw;
-  final int byteOffset;
-  const _LocatedWriterRecord(this.event, this.raw, this.byteOffset);
-}
-
-class _VerifiedWriterRecords {
-  final int sequence;
-  final EventClock? clock;
-  final String hash;
-  final List<_LocatedWriterRecord> records;
-  const _VerifiedWriterRecords(
-    this.sequence,
-    this.clock,
-    this.hash,
-    this.records,
-  );
 }
 
 class _DiscardTextValidation implements Exception {
@@ -5305,39 +3536,4 @@ class _SemanticValidationFolder implements LogFolder {
   @override
   Future<void> create(String name, Uint8List bytes) async =>
       throw StateError('Preflight cannot write.');
-}
-
-class _SemanticValidationGuard implements WriterGuard {
-  @override
-  Future<WriterGuardState?> load(String space, String writer) async =>
-      throw StateError('Preflight has no writer.');
-  @override
-  Future<void> prepare(
-    String space,
-    String writer,
-    int sequence,
-    String hash,
-    List<PreparedWriterRecord> records,
-  ) async => throw StateError('Preflight has no writer.');
-  @override
-  Future<void> acknowledge(
-    String space,
-    String writer,
-    int sequence,
-    String hash,
-  ) async => throw StateError('Preflight has no writer.');
-}
-
-class _ConvertedLegacyProofFolder extends _SemanticValidationFolder {
-  _ConvertedLegacyProofFolder(Map<String, Uint8List> sources)
-    : sources = Map.unmodifiable(
-        sources.map(
-          (k, v) => MapEntry(k, Uint8List.fromList(v).asUnmodifiableView()),
-        ),
-      );
-  final Map<String, Uint8List> sources;
-  @override
-  Future<Uint8List> read(String name) async =>
-      sources[name] ??
-      (throw FormatFailure('Converted history omits a trusted legacy source.'));
 }

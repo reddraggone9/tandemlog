@@ -10,6 +10,7 @@ import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/domain/text_context.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:tandemlog/text/recurring_text.dart';
 import 'package:tandemlog/text/shared_text_history.dart';
@@ -28,7 +29,7 @@ class _DeliveryFixture {
   final NativeTextEngine engine;
   TaskStore store;
   final String user, parent;
-  final _streams = <String, List<LogEvent>>{};
+  final _streams = <String, List<UnifiedRecord>>{};
   int _remoteClock = 1000;
   static Future<_DeliveryFixture> create() async {
     final root = await Directory.systemTemp.createTemp('checklist-delivery-');
@@ -83,38 +84,68 @@ class _DeliveryFixture {
     final author = writer ?? const Uuid().v4();
     final stream = _streams.putIfAbsent(author, () => []);
     final maximum =
-        store.db.select('SELECT MAX(clock) AS n FROM events').single['n']
+        store.db
+                .select('SELECT MAX(clock) AS n FROM ${store.tables.events}')
+                .single['n']
             as int? ??
         0;
     if (_remoteClock <= maximum) _remoteClock = maximum + 1;
-    final event = LogEvent.decode(
+    final epoch = store.unified!.manifest.epoch;
+    if (stream.isEmpty) {
+      final genesis = unifiedGenesis(store.space, epoch, author);
+      stream.add(
+        UnifiedRecord(
+          space: store.space,
+          epoch: epoch,
+          writer: author,
+          sequence: 1,
+          clock: EventClock(BigInt.zero),
+          previousHash: genesis,
+          effect: UnifiedEffect.joined(),
+          observed: {author: UnifiedFrontier(0, genesis)},
+        ),
+      );
+    }
+    final sequence = stream.length + 1,
+        head = stream.last.hash,
+        clock = EventClock(BigInt.from(_remoteClock++));
+    final effect = UnifiedEffect(
+      'task',
       LogEvent(
         store.space,
         author,
-        stream.length + 1,
-        EventClock(BigInt.from(_remoteClock++)),
+        sequence,
+        clock,
         entity,
         type,
         data,
-      ).encode(
-        previousHash: stream.isEmpty
-            ? eventGenesisHash(store.space, author)
-            : stream.last.hash,
-      ),
+      ).encode(previousHash: head),
     );
-    stream.add(event);
-    return event;
+    final record = UnifiedRecord(
+      space: store.space,
+      epoch: epoch,
+      writer: author,
+      sequence: sequence,
+      clock: clock,
+      previousHash: head,
+      effect: effect,
+      observed: {author: UnifiedFrontier(sequence - 1, head)},
+    );
+    stream.add(record);
+    return effect.task!;
   }
 
   Future<void> deliver(LogEvent event) async {
-    await File('${folder.location}/${event.writer}.jsonl').writeAsString(
-      '${_streams[event.writer]!.map((record) => record.canonicalRaw!).join('\n')}\n',
+    await File('${folder.location}/${event.writer}.applog').writeAsString(
+      '${_streams[event.writer]!.map((record) => record.encode()).join('\n')}\n',
     );
     await store.refresh();
   }
 
   List<LogEvent> get records => store.db
-      .select('SELECT raw FROM events ORDER BY clock,writer,seq')
+      .select(
+        'SELECT raw FROM ${store.tables.events} ORDER BY clock,writer,seq',
+      )
       .map((row) => LogEvent.decode(row['raw'] as String))
       .toList();
   Map<String, dynamic> get frontiers {
@@ -137,16 +168,16 @@ class _DeliveryFixture {
           .cast<Map<String, dynamic>>();
   Map<String, dynamic> cached() => {
     'views': store.db
-        .select('SELECT id,raw FROM views ORDER BY id')
+        .select('SELECT id,raw FROM ${store.tables.views} ORDER BY id')
         .map((row) => Map<String, dynamic>.from(row))
         .toList(),
     'events': store.db
-        .select('SELECT id,raw FROM events ORDER BY id')
+        .select('SELECT id,raw FROM ${store.tables.events} ORDER BY id')
         .map((row) => Map<String, dynamic>.from(row))
         .toList(),
     'streams': store.db
         .select(
-          'SELECT name,offset,hash,chain_head,last_seq,last_clock FROM streams ORDER BY name',
+          'SELECT name,offset,hash,chain_head,last_seq,last_clock FROM ${store.tables.streams} ORDER BY name',
         )
         .map((row) => Map<String, dynamic>.from(row))
         .toList(),
@@ -400,9 +431,10 @@ void main() {
       );
       // No native text context is guessed from a missing source proof.
       expect(
-        f.store.db.select('SELECT 1 FROM text_fields WHERE entity=?', [
-          copy['id'],
-        ]),
+        f.store.db.select(
+          'SELECT 1 FROM ${f.store.tables.textFields} WHERE entity=?',
+          [copy['id']],
+        ),
         isEmpty,
       );
       await f.deliver(source);
@@ -414,10 +446,12 @@ void main() {
       expect(capture.fields['title']!.document.read().text, 'Deferred source');
       f.store.releaseTextCapture(capture);
       final warm = jsonEncode(f.store.rows), bytes = await f.canonical();
+      final writer = f.store.writer;
       await f.store.close();
       f.store = await TaskStore.open(
         f.folder,
         '${f.root.path}/cold',
+        writerIdentity: writer,
         textEngine: f.engine,
       );
       expect(jsonEncode(f.store.rows), warm);
@@ -484,7 +518,10 @@ void main() {
         expect(prepared, false);
         expect(jsonEncode(f.cached()), cache);
         expect(await f.canonical(), bytes);
-        expect(f.store.db.select('SELECT * FROM text_outbox'), isEmpty);
+        expect(
+          f.store.db.select('SELECT * FROM ${f.store.tables.textOutbox}'),
+          isEmpty,
+        );
       },
     );
   }
@@ -573,7 +610,17 @@ void main() {
           late.data,
         ).encode(previousHash: late.previousHash!),
       );
-      f._streams[late.writer] = [corrected];
+      final stream = f._streams[late.writer]!, original = stream.last;
+      stream[stream.length - 1] = UnifiedRecord(
+        space: original.space,
+        epoch: original.epoch,
+        writer: original.writer,
+        sequence: original.sequence,
+        clock: corrected.clock,
+        previousHash: original.previousHash,
+        effect: UnifiedEffect('task', corrected.canonicalRaw!),
+        observed: original.observed,
+      );
       expect(heads, isNotEmpty);
       await f.deliver(corrected);
       expect(f.items(child).map((row) => row['id']), [copySecond, copyFirst]);

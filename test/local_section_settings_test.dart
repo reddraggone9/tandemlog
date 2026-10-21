@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
-import 'package:tandemlog/storage/local_profile_migration.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 
 void main() {
@@ -15,7 +14,7 @@ void main() {
       LocalProfileDatabase? profile;
       try {
         profile = await LocalProfileDatabase.open(root.path);
-        await LocalProfileMigration(profile).run();
+        await LocalSettings.initialize(profile);
         final settings = LocalSettings(root.path, profileDatabase: profile);
         await settings.load();
         final before = LocalSettings.protectedValues(profile),
@@ -62,7 +61,7 @@ void main() {
       );
       final profile = await LocalProfileDatabase.open(root.path);
       try {
-        await LocalProfileMigration(profile).run();
+        await LocalSettings.initialize(profile);
         for (final unknown in [
           'future-section',
           42,

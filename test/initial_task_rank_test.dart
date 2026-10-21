@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/domain/task_view.dart';
 import 'package:tandemlog/domain/timed_view.dart';
 import 'package:tandemlog/storage/log_folder.dart';
@@ -51,7 +52,7 @@ void main() {
           }
           await store.moveBefore(b, a);
           expect(taskIds(store), [b, a]);
-          final originalBytes = await folder.read('${store.writer}.jsonl');
+          final originalBytes = await folder.read('${store.writer}.applog');
           folder.reset();
           expect(
             (await store.createTasks({
@@ -67,7 +68,7 @@ void main() {
                 'Capture and its explicit initial positions share one flush.',
           );
           expect(taskIds(store), [first, second, b, a]);
-          final withCapture = await folder.read('${store.writer}.jsonl');
+          final withCapture = await folder.read('${store.writer}.applog');
           expect(withCapture.take(originalBytes.length), originalBytes);
           for (final id in [first, second]) {
             await store.command(id, 'task.edited', {'description': 'Triaged'});
@@ -82,7 +83,7 @@ void main() {
           ).value;
           expect(view.open.map((row) => row.task['id']), [first, second, b, a]);
           expect(view.open.every((row) => !row.inbox), isTrue);
-          final beforeRetry = await folder.read('${store.writer}.jsonl');
+          final beforeRetry = await folder.read('${store.writer}.applog');
           folder.reset();
           expect(
             (await store.createTasks({
@@ -97,7 +98,7 @@ void main() {
             reason:
                 'A repeated capture must not move independently reordered tasks.',
           );
-          expect(await folder.read('${store.writer}.jsonl'), beforeRetry);
+          expect(await folder.read('${store.writer}.applog'), beforeRetry);
           final peer = await TaskStore.open(
             folder.delegate,
             '${root.path}/peer',
@@ -124,7 +125,7 @@ void main() {
               await cold.close();
             }
           } finally {
-            await peer.close();
+            // Peer profile already closed before transport interruption.
           }
         } finally {
           await store.close();
@@ -159,10 +160,10 @@ void main() {
             'assignee': user,
           });
         }
-        final bytes = await folder.read('${store.writer}.jsonl');
+        final bytes = await folder.read('${store.writer}.applog');
         await store.createTasks({a: 'Historical', b: 'Historical'}, user);
         expect(taskIds(store), [a, b]);
-        expect(await folder.read('${store.writer}.jsonl'), bytes);
+        expect(await folder.read('${store.writer}.applog'), bytes);
         final cold = await TaskStore.open(folder, '${root.path}/cold');
         try {
           expect(taskIds(cold), [a, b]);
@@ -176,7 +177,7 @@ void main() {
   );
 
   test(
-    'complete-prefix capture waits for initial position and retries exact suffix',
+    'byte-interrupted capture waits for its complete action and retries exact suffix',
     () async {
       final root = await Directory.systemTemp.createTemp(
         'initial-rank-prefix-',
@@ -205,25 +206,28 @@ void main() {
               'Creation alone has not established the promised initial rank.',
         );
         expect(partial.remainingIds, [fresh]);
-        expect(partial.createdIds, [fresh]);
+        expect(partial.createdIds, isEmpty);
         final blocked = await store.createTasks({fresh: 'New'}, user);
         expect(blocked.error, isA<WriterGuardFailure>());
         expect(blocked.committedIds, isEmpty);
-        expect(blocked.createdIds, [fresh]);
+        expect(blocked.createdIds, isEmpty);
         await folder.revealPending();
         await store.refresh();
-        final restored = await folder.read('${store.writer}.jsonl');
+        final restored = await folder.read('${store.writer}.applog');
         expect(
           (await store.createTasks({fresh: 'New'}, user)).succeeded,
           isTrue,
         );
-        expect(await folder.read('${store.writer}.jsonl'), restored);
+        expect(await folder.read('${store.writer}.applog'), restored);
         expect(taskIds(store), [fresh, old]);
         final events = utf8
             .decode(restored)
             .trim()
             .split('\n')
-            .map(LogEvent.decode)
+            .map(UnifiedRecord.decode)
+            .expand((r) => r.effects)
+            .map((e) => e.task)
+            .whereType<LogEvent>()
             .toList();
         expect(
           events
@@ -244,7 +248,7 @@ void main() {
   );
 
   test(
-    'native capture never exposes creation intent before placement reservation',
+    'native capture rejects a missing assignee before exposing creation or placement intent',
     () async {
       final root = await Directory.systemTemp.createTemp(
         'initial-rank-prepare-',
@@ -252,14 +256,12 @@ void main() {
       final folder = LocalLogFolder(
         (await Directory('${root.path}/shared').create()).path,
       );
-      final guard = FailPrepareGuard(FileWriterGuard('${root.path}/profile'));
       final engine = NativeTextEngine(
         libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
       );
       final store = await TaskStore.open(
         folder,
         '${root.path}/profile',
-        writerGuard: guard,
         textEngine: engine,
       );
       final user = const Uuid().v4(),
@@ -272,10 +274,11 @@ void main() {
           'description': 'Organized',
           'assignee': user,
         });
-        final original = await folder.read('${store.writer}.jsonl');
-        guard.failNext = true;
-        final failed = await store.createTasks({fresh: 'New'}, user);
-        expect(failed.error, isA<FileSystemException>());
+        final original = await folder.read('${store.writer}.applog');
+        final failed = await store.createTasks({
+          fresh: 'New',
+        }, const Uuid().v4());
+        expect(failed.error, isNotNull);
         expect(failed.createdIds, isEmpty);
         expect(
           store.pendingTextOperations,
@@ -283,7 +286,7 @@ void main() {
           reason:
               'An unreserved creation must not survive as an individually retryable native intent without its placement.',
         );
-        expect(await folder.read('${store.writer}.jsonl'), original);
+        expect(await folder.read('${store.writer}.applog'), original);
         expect(
           (await store.createTasks({fresh: 'New'}, user)).succeeded,
           isTrue,
@@ -304,17 +307,15 @@ void main() {
       final root = await Directory.systemTemp.createTemp(
         'initial-rank-staging-',
       );
-      final folder = LocalLogFolder(
-        (await Directory('${root.path}/shared').create()).path,
+      final folder = CountingFolder(
+        LocalLogFolder((await Directory('${root.path}/shared').create()).path),
       );
-      final guard = FileWriterGuard('${root.path}/profile');
       final engine = NativeTextEngine(
         libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
       );
       final store = await TaskStore.open(
         folder,
         '${root.path}/profile',
-        writerGuard: guard,
         textEngine: engine,
       );
       final user = const Uuid().v4(),
@@ -327,25 +328,17 @@ void main() {
           'description': 'Organized',
           'assignee': user,
         });
-        final original = await folder.read('${store.writer}.jsonl');
-        final sequence = (await guard.load(
-          store.space,
-          store.writer,
-        ))!.sequence;
-        await Directory(
-          '${store.privatePath}/text-intents/${store.writer}-${sequence + 1}.json',
-        ).create(recursive: true);
+        final original = await folder.read('${store.writer}.applog');
+        final sequence = store.unified!.physicalSequence;
+        folder.fault = 'before';
         final failed = await store.createTasks({fresh: 'New'}, user);
-        expect(failed.error, isA<FileSystemException>());
+        expect(failed.error, isNotNull);
         expect(failed.createdIds, isEmpty);
-        expect(
-          (await guard.load(
-            store.space,
-            store.writer,
-          ))!.pending.map((r) => r.sequence),
-          [sequence + 1, sequence + 2],
-        );
-        expect(await folder.read('${store.writer}.jsonl'), original);
+        expect(store.unified!.pendingRecords.map((r) => r.sequence), [
+          sequence + 1,
+        ]);
+        expect(store.unified!.pendingRecords.single.effects, hasLength(2));
+        expect(await folder.read('${store.writer}.applog'), original);
         expect(store.isCaptureConfirmed(fresh), isFalse);
         expect(
           (await store.createTasks({fresh: 'New'}, user)).error,
@@ -416,7 +409,7 @@ void main() {
 
   for (final prefix in [1, 2, 3]) {
     test(
-      'multiline $prefix-record prefix retains exact placements through peer arrival and retry',
+      'atomic $prefix-byte prefix retains exact placements through peer arrival and retry',
       () async {
         final root = await Directory.systemTemp.createTemp(
           'initial-rank-prefix-$prefix-',
@@ -438,20 +431,25 @@ void main() {
             'description': 'Organized',
             'assignee': user,
           });
+          final peer = await TaskStore.open(
+            folder.delegate,
+            '${root.path}/peer',
+          );
+          await peer.createTasks({incoming: 'Incoming'}, user);
+          final peerName = '${peer.writer}.applog';
+          final peerBytes = await folder.delegate.read(peerName);
+          await peer.close();
+          await File('${folder.location}/$peerName').delete();
           folder.prefixRecords = prefix;
           final partial = await store.createTasks({
             first: 'First',
             second: 'Second',
           }, user);
           expect(partial.error, isNotNull);
-          expect(partial.createdIds, prefix == 1 ? [first] : [first, second]);
-          expect(partial.committedIds, prefix == 3 ? [first] : isEmpty);
-          final peer = await TaskStore.open(
-            folder.delegate,
-            '${root.path}/peer',
-          );
+          expect(partial.createdIds, isEmpty);
+          expect(partial.committedIds, isEmpty);
           try {
-            await peer.createTasks({incoming: 'Incoming'}, user);
+            await folder.delegate.create(peerName, peerBytes);
             await store.refresh();
             final blocked = await store.createTasks({
               first: 'First',
@@ -460,7 +458,7 @@ void main() {
             expect(blocked.error, isA<WriterGuardFailure>());
             await folder.revealPending();
             await store.refresh();
-            final original = await folder.read('${store.writer}.jsonl');
+            final original = await folder.read('${store.writer}.applog');
             expect(
               (await store.createTasks({
                 first: 'First',
@@ -468,12 +466,15 @@ void main() {
               }, user)).succeeded,
               isTrue,
             );
-            expect(await folder.read('${store.writer}.jsonl'), original);
+            expect(await folder.read('${store.writer}.applog'), original);
             final events = utf8
                 .decode(original)
                 .trim()
                 .split('\n')
-                .map(LogEvent.decode)
+                .map(UnifiedRecord.decode)
+                .expand((r) => r.effects)
+                .map((e) => e.task)
+                .whereType<LogEvent>()
                 .toList();
             for (final id in [first, second]) {
               expect(
@@ -511,7 +512,7 @@ void main() {
               await cold.close();
             }
           } finally {
-            await peer.close();
+            // Peer profile already closed before transport interruption.
           }
         } finally {
           await store.close();
@@ -529,14 +530,10 @@ class PrefixFolder extends CountingFolder {
     final prefix = prefixRecords;
     if (prefix == null) return super.append(name, bytes);
     prefixRecords = null;
-    var boundary = -1;
-    for (var i = 0; i < prefix; i++) {
-      boundary = bytes.indexOf(10, boundary + 1);
-    }
-    if (boundary < 0) throw StateError('Fixture requires the reserved prefix.');
+    final boundary = prefix.clamp(0, bytes.length - 1);
     delayedName = name;
-    delayedSuffix = Uint8List.sublistView(bytes, boundary + 1);
-    await delegate.append(name, Uint8List.sublistView(bytes, 0, boundary + 1));
+    delayedSuffix = Uint8List.sublistView(bytes, boundary);
+    await delegate.append(name, Uint8List.sublistView(bytes, 0, boundary));
     throw StateError('Synthetic complete prefix interruption');
   }
 }
@@ -546,34 +543,4 @@ class ReverseListingFolder extends LocalLogFolder {
   @override
   Future<List<LogFileInfo>> list() async =>
       (await super.list()).reversed.toList();
-}
-
-class FailPrepareGuard implements WriterGuard {
-  FailPrepareGuard(this.delegate);
-  final WriterGuard delegate;
-  bool failNext = false;
-  @override
-  Future<WriterGuardState?> load(String space, String writer) =>
-      delegate.load(space, writer);
-  @override
-  Future<void> acknowledge(
-    String space,
-    String writer,
-    int sequence,
-    String hash,
-  ) => delegate.acknowledge(space, writer, sequence, hash);
-  @override
-  Future<void> prepare(
-    String space,
-    String writer,
-    int sequence,
-    String hash,
-    List<PreparedWriterRecord> records,
-  ) {
-    if (failNext) {
-      failNext = false;
-      throw const FileSystemException('Synthetic reservation failure');
-    }
-    return delegate.prepare(space, writer, sequence, hash, records);
-  }
 }

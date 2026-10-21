@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'current_operation.dart';
 import 'event_chain.dart';
 export 'event_chain.dart';
 import 'event_clock.dart';
@@ -70,6 +71,8 @@ class LogEvent {
   final EventClock clock;
   final Map<String, dynamic> data;
   final String? previousHash, hash;
+  final String? attributedWriter, integrityHash;
+  final int? operationRevision;
   final String? canonicalRaw;
   LogEvent(
     this.space,
@@ -82,52 +85,77 @@ class LogEvent {
     this.previousHash,
     this.hash,
     this.canonicalRaw,
+    this.attributedWriter,
+    this.integrityHash,
+    this.operationRevision,
   });
   String get id => '$writer:$sequence';
-  Map<String, dynamic> toJson({String? previousHash}) {
+  String get author => attributedWriter ?? writer;
+  CurrentOperation currentOperation({String? previousHash}) {
     final predecessor =
         previousHash ??
         this.previousHash ??
         (sequence == 1 ? eventGenesisHash(space, writer) : null);
     if (!isEventHash(predecessor)) {
-      throw FormatFailure('A valid previous hash is required for this event.');
+      throw FormatFailure(
+        'A valid predecessor is required for this operation.',
+      );
     }
-    final record = <String, dynamic>{
-      'v': protocolVersion,
-      'space': space,
-      'writer': writer,
-      'seq': sequence,
-      'clock': clock.toJson(),
-      'entity': entity,
-      'type': type,
-      'data': data,
-      'previousHash': predecessor,
-    };
+    final payload = normalizeTaskAction(type, data);
+    return CurrentOperation(
+      module: 'tasks',
+      space: space,
+      author: author,
+      writer: writer,
+      sequence: sequence,
+      clock: clock.toJson(),
+      subject: entity,
+      family: payload.family,
+      revision:
+          operationRevision ??
+          (operationUsesAdditionalZone(payload.value) ? 2 : 1),
+      value: payload.value,
+      predecessor: predecessor!,
+      referenceHash: hash,
+    );
+  }
+
+  Map<String, dynamic> toJson({String? previousHash}) {
     try {
-      record['hash'] = eventRecordHash(record);
-      return record;
+      return currentOperation(previousHash: previousHash).toJson();
     } on FormatException catch (error) {
       throw FormatFailure(error.message);
     }
   }
 
-  String encode({String? previousHash}) =>
-      canonicalEventJson(toJson(previousHash: previousHash));
+  String encode({String? previousHash}) {
+    try {
+      return currentOperation(previousHash: previousHash).encode();
+    } on FormatException catch (error) {
+      throw FormatFailure(error.message);
+    }
+  }
+
   factory LogEvent.decode(String raw) {
     try {
       if (raw.length > 1024 * 1024 || utf8.encode(raw).length > 1024 * 1024) {
         throw FormatFailure('Oversized event.');
       }
-      final j = jsonDecode(raw) as Map<String, dynamic>;
-      if (j['v'] == 1 || j['v'] == 2) {
-        throw FormatFailure(
-          'This history uses an older prerelease format (v${j['v']}). Preserve it and choose a new data folder for this prerelease.',
-        );
-      }
-      if (j['v'] != protocolVersion) {
-        throw FormatFailure(
-          'Unsupported event version ${j['v']}. Update the app; history was preserved.',
-        );
+      final operation = CurrentOperation.decode(raw, module: 'tasks');
+      final (action, payload) = taskActionFromCurrent(operation);
+      final j = <String, dynamic>{
+        'space': operation.space,
+        'writer': operation.writer,
+        'seq': operation.sequence,
+        'clock': operation.clock,
+        'entity': operation.subject,
+        'type': action,
+        'data': payload,
+        'previousHash': operation.predecessor,
+        'hash': operation.referenceHash,
+      };
+      if (!isCanonicalId(operation.author)) {
+        throw FormatFailure('Invalid operation author.');
       }
       for (final key in ['space', 'writer', 'entity']) {
         if (j[key] is! String || !isCanonicalId(j[key])) {
@@ -328,96 +356,9 @@ class LogEvent {
         validateSchedule(d['schedule']);
       }
       if (d.containsKey('tagChanges')) validateTagChanges(d['tagChanges']);
-      final allowed = switch (j['type']) {
-        'user.created' => {'name'},
-        'task.created' => {
-          'title',
-          'description',
-          'assignee',
-          'schedule',
-          'tags',
-        },
-        'task.createdWithText' => {
-          'title',
-          'description',
-          'assignee',
-          'schedule',
-          'tags',
-          'text',
-        },
-        'task.edited' => {
-          'title',
-          'description',
-          'schedule',
-          'tagChanges',
-          'assignee',
-        },
-        'task.textEdited' => {
-          'changes',
-          'intent',
-          'schedule',
-          'tagChanges',
-          'assignee',
-        },
-        'task.textEditUndone' => {'operation', 'changes'},
-        'checklist.itemCreated' => {
-          'parent',
-          'title',
-          'description',
-          'before',
-          'text',
-        },
-        'checklist.itemEdited' => {'completed'},
-        'checklist.itemMoved' => {'before'},
-        'checklist.itemDeleted' => <String>{},
-        'text.baselineInitialized' => {
-          'codec',
-          'adapter',
-          'frontiers',
-          'seedDigest',
-        },
-        'task.deleted' => <String>{},
-        'task.moved' => {'before'},
-        'task.completed' => {'completedAt', 'successor'},
-        'task.completedWithText' => {'completedAt', 'successor', 'inheritance'},
-        'task.completedWithChecklist' => {
-          'completedAt',
-          'successor',
-          'inheritance',
-          'checklist',
-        },
-        'task.completedKeepingSuccessor' => {
-          'completedAt',
-          'retainedSuccessor',
-        },
-        'task.operationUndone' => {'operation'},
-        _ => {'completion'},
-      };
-      if (d.keys.any((k) => !allowed.contains(k)) ||
-          j.keys.any(
-            (k) => !{
-              'v',
-              'space',
-              'writer',
-              'seq',
-              'clock',
-              'entity',
-              'type',
-              'data',
-              'previousHash',
-              'hash',
-            }.contains(k),
-          )) {
-        throw FormatFailure('Unknown fields require a newer format version.');
-      }
+      validateTaskActionFields(j['type'] as String, d);
       if (!isEventHash(j['previousHash']) || !isEventHash(j['hash'])) {
         throw FormatFailure('Invalid event chain hash.');
-      }
-      if (canonicalEventJson(j) != raw) {
-        throw FormatFailure('Noncanonical event JSON. History was preserved.');
-      }
-      if (eventRecordHash(j) != j['hash']) {
-        throw FormatFailure('Event hash mismatch. History was preserved.');
       }
       return LogEvent(
         j['space'],
@@ -430,6 +371,9 @@ class LogEvent {
         previousHash: j['previousHash'],
         hash: j['hash'],
         canonicalRaw: raw,
+        attributedWriter: operation.author,
+        integrityHash: operation.contentHash,
+        operationRevision: operation.revision,
       );
     } on FormatFailure {
       rethrow;

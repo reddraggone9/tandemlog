@@ -12,6 +12,7 @@ import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:uuid/uuid.dart';
 
@@ -718,7 +719,6 @@ Future<void> _withWorkspace(
     'description': '',
     'assignee': blair,
   });
-  final space = seed.space;
   await seed.close();
   final second = await openNativeFixtureStore(
     LocalLogFolder(other.path),
@@ -735,12 +735,14 @@ Future<void> _withWorkspace(
   final peerProfile = await LocalProfileDatabase.open(
     '${root.path}/peer-profile',
   );
-  final peer = await FoodStore.open(
+  final peerTasks = await TaskStore.open(
     folder.delegate,
-    profile: peerProfile,
-    installationWriter: const Uuid().v4(),
-    space: space,
+    peerProfile.root,
+    profileDatabase: peerProfile,
+    writerIdentity: const Uuid().v4(),
+    textEngine: seed.textEngine,
   );
+  final peer = await FoodStore.openUnified(peerTasks.unified!);
   await peer.add(
     const FoodDetails(
       name: 'Synthetic baseline beans',
@@ -778,6 +780,7 @@ Future<void> _withWorkspace(
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
     await peer.close();
+    await peerTasks.close();
     await peerProfile.close();
     await root.delete(recursive: true);
   }

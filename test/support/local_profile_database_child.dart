@@ -1,7 +1,21 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:tandemlog/storage/local_profile_database.dart';
 
 Future<void> main(List<String> args) async {
+  if (args.length != 2 ||
+      !{'commit', 'rollback', 'uncommitted'}.contains(args[1])) {
+    throw ArgumentError(
+      'Supply an empty synthetic directory and commit/rollback/uncommitted.',
+    );
+  }
+  final root = Directory(args[0]);
+  if (!await root.exists() || !await root.list().isEmpty) {
+    throw StateError(
+      'Process harness requires an existing empty synthetic directory.',
+    );
+  }
+  final watchdog = Timer(const Duration(seconds: 60), () => exit(124));
   final profile = await LocalProfileDatabase.open(args[0]);
   final db = profile.database;
   db.execute('CREATE TABLE evidence (value TEXT NOT NULL)');
@@ -14,4 +28,5 @@ Future<void> main(List<String> args) async {
   stdout.writeln('ready');
   await stdin.drain<void>();
   await profile.close();
+  watchdog.cancel();
 }

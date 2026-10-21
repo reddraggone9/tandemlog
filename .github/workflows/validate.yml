@@ -116,13 +116,13 @@ jobs:
       - run: python tool/app_version.py
       - run: flutter build windows --release
       - run: python tool/native_build_gates.py verify_payload --platform windows --payload build/windows/x64/runner/Release
-      - name: Compile exact-source synthetic migration process harness
+      - name: Compile exact-source synthetic profile process harness
         shell: pwsh
         run: |
-          dart build cli --target test/support/local_profile_migration_child.dart --output build/storage-harness
-          if ($LASTEXITCODE -ne 0) { throw 'Native migration harness compilation failed' }
+          dart build cli --target test/support/local_profile_database_child.dart --output build/storage-harness
+          if ($LASTEXITCODE -ne 0) { throw 'Native profile harness compilation failed' }
           python tool/package_storage_harness.py --bundle build/storage-harness/bundle --app-bundle build/windows/x64/runner/Release --output storage-harness-dist --source "$env:GITHUB_SHA" --run "$env:GITHUB_RUN_ID"
-          if ($LASTEXITCODE -ne 0) { throw 'Native migration harness provenance failed' }
+          if ($LASTEXITCODE -ne 0) { throw 'Native profile harness provenance failed' }
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: windows-storage-harness

@@ -6,6 +6,7 @@ import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -135,7 +136,7 @@ void main() {
   );
 
   test(
-    'cache 9 replays Inbox classification without changing canonical bytes',
+    'a stale current projection replays Inbox classification without changing canonical bytes',
     () async {
       final folder = LocalLogFolder('${root.path}/space');
       await Directory(folder.location).create();
@@ -148,15 +149,17 @@ void main() {
         'description': 'Imported detail',
         'assignee': user,
       });
-      final bytes = await folder.read('$first.jsonl');
+      final bytes = await folder.read('$first.applog');
       final stale = Map<String, dynamic>.from(
         store.rows.firstWhere((row) => row['id'] == task),
       )..['inbox'] = true;
-      store.db.execute('UPDATE views SET raw=? WHERE id=?', [
+      store.db.execute('UPDATE ${store.tables.views} SET raw=? WHERE id=?', [
         jsonEncode(stale),
         task,
       ]);
-      store.db.execute('PRAGMA user_version=9');
+      store.db.execute(
+        "UPDATE ${store.tables.metadata} SET value='0' WHERE key='projection_schema'",
+      );
       await store.close();
       final replayed = await TaskStore.open(
         folder,
@@ -166,19 +169,13 @@ void main() {
       try {
         expect(
           replayed.db.select('PRAGMA user_version').single['user_version'],
-          13,
+          LocalProfileDatabase.schemaVersion,
         );
         expect(
           replayed.rows.firstWhere((row) => row['id'] == task)['inbox'],
           isFalse,
         );
-        expect(await folder.read('$first.jsonl'), bytes);
-        expect(
-          await Directory(
-            cache,
-          ).list().where((entry) => entry.path.contains('cache-v9-')).length,
-          1,
-        );
+        expect(await folder.read('$first.applog'), bytes);
       } finally {
         await replayed.close();
       }
@@ -278,24 +275,29 @@ void main() {
           await store.close();
         }
       }
-      expect((await folderA.read('$writer.jsonl')).isNotEmpty, isTrue);
-      expect((await folderB.read('$writer.jsonl')).isNotEmpty, isTrue);
+      expect((await folderA.read('$writer.applog')).isNotEmpty, isTrue);
+      expect((await folderB.read('$writer.applog')).isNotEmpty, isTrue);
     },
   );
 
   test(
-    'explicit identity preserves old stream and uses a fresh stream',
+    'identity override refuses; a separately protected installation preserves the old stream',
     () async {
       final folder = LocalLogFolder('${root.path}/space');
       await Directory(folder.location).create();
       final cache = '${root.path}/cache';
       final old = await TaskStore.open(folder, cache, writerIdentity: first);
       await old.command(const Uuid().v4(), 'user.created', {'name': 'Old'});
-      final bytes = await folder.read('$first.jsonl');
+      final bytes = await folder.read('$first.applog');
       await old.close();
+      await expectLater(
+        TaskStore.open(folder, cache, writerIdentity: selected),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await folder.read('$first.applog'), bytes);
       final fresh = await TaskStore.open(
         folder,
-        cache,
+        '${root.path}/fresh-profile',
         writerIdentity: selected,
       );
       try {
@@ -304,7 +306,7 @@ void main() {
           'name': 'New',
         });
         expect(event.sequence, 1);
-        expect(await folder.read('$first.jsonl'), bytes);
+        expect(await folder.read('$first.applog'), bytes);
         expect(fresh.rows, hasLength(2));
       } finally {
         await fresh.close();

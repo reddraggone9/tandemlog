@@ -33,3 +33,6 @@ evidence/toolbar-2026.10.4-rc.3/candidate/** -text -whitespace
 lib/domain/timezone_data/** -text
 test/fixtures/timezone-2025c/** -text
 test/fixtures/timezone-additional-2026e/** -text
+
+# Independent current-operation golden bytes must survive Windows checkouts.
+test/fixtures/current-operation-v1/** -text

@@ -29,5 +29,24 @@ class FoodFixtureCheckout(unittest.TestCase):
                              (ROOT / packet).read_bytes())
 
 
+    def test_current_operation_golden_bytes_survive_windows_checkout(self):
+        fixture = Path('test/fixtures/current-operation-v1')
+        provenance = json.loads((ROOT/fixture/'provenance.json').read_text())
+        files = [fixture/name for name in provenance['files']]
+        files.append(fixture/'provenance.json')
+        with tempfile.TemporaryDirectory(prefix='current-fixture-checkout-') as directory:
+            subprocess.run([
+                'git', '-C', str(ROOT), '-c', 'core.autocrlf=true',
+                'checkout-index', f'--prefix={Path(directory).as_posix()}/',
+                '--', *(path.as_posix() for path in files),
+            ], check=True, capture_output=True)
+            for name, metadata in provenance['files'].items():
+                data=(Path(directory)/fixture/name).read_bytes()
+                self.assertEqual(hashlib.sha256(data).hexdigest(),metadata['sha256'])
+                self.assertEqual(data,(ROOT/fixture/name).read_bytes())
+            self.assertEqual((Path(directory)/fixture/'provenance.json').read_bytes(),
+                             (ROOT/fixture/'provenance.json').read_bytes())
+
+
 if __name__ == '__main__':
     unittest.main()

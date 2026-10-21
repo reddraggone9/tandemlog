@@ -124,26 +124,28 @@ void main() {
           'name': 'Delayed proof writer',
         });
         await File(
-          '${cd.path}/${c.writer}.jsonl',
-        ).copy('${bd.path}/${c.writer}.jsonl');
+          '${cd.path}/${c.writer}.applog',
+        ).copy('${bd.path}/${c.writer}.applog');
         await b.refresh();
         await b.complete(parent, completionDay: DateTime(2030, 5, 10));
         await File(
-          '${bd.path}/${b.writer}.jsonl',
-        ).copy('${ad.path}/${b.writer}.jsonl');
+          '${bd.path}/${b.writer}.applog',
+        ).copy('${ad.path}/${b.writer}.applog');
         await a.refresh();
-        expect(_row(a, child)['textUnavailable'], isA<String>());
-        expect(_row(a, child)['textInheritancePending'], isTrue);
+        expect(a.unified!.snapshot.pendingEffects, isTrue);
+        expect(_row(a, child)['textUnavailable'], isNull);
         expect(title.document.read().text, 'Next: AXB');
         expect(draft.capturedText, 'Private draft');
         expect(title.context, context);
-        final localLog = File('${ad.path}/${a.writer}.jsonl');
+        final localLog = File('${ad.path}/${a.writer}.applog');
         final beforePendingCommand = await localLog.readAsBytes();
         final pendingFailure = anyOf(
           isA<TextInheritancePending>(),
           isA<FormatFailure>(),
+          isA<WriterGuardFailure>(),
         );
-        await expectLater(a.captureTaskText(child), throwsA(pendingFailure));
+        final admittedCapture = await a.captureTaskText(child);
+        a.releaseTextCapture(admittedCapture);
         var preparedWhilePending = false;
         await expectLater(
           a.editNativeTask(
@@ -159,8 +161,8 @@ void main() {
         expect(await localLog.readAsBytes(), beforePendingCommand);
         expect(a.pendingTextOperations, isEmpty);
         await File(
-          '${cd.path}/${c.writer}.jsonl',
-        ).copy('${ad.path}/${c.writer}.jsonl');
+          '${cd.path}/${c.writer}.applog',
+        ).copy('${ad.path}/${c.writer}.applog');
         await a.refresh();
         expect(_row(a, child).containsKey('textUnavailable'), isFalse);
         expect(_row(a, child).containsKey('textInheritancePending'), isFalse);
@@ -169,25 +171,25 @@ void main() {
         expect(_row(a, child)['description'], 'Next: axby');
         expect(
           a.db.select(
-            'SELECT context FROM text_fields WHERE entity=? AND field=?',
+            "SELECT context FROM ${a.tables.textFields} WHERE entity=? AND field=?",
             [child, 'title'],
           ).single['context'],
           context,
         );
         final parentContext = a.db.select(
-          'SELECT context FROM text_fields WHERE entity=? AND field=?',
+          "SELECT context FROM ${a.tables.textFields} WHERE entity=? AND field=?",
           [parent, 'title'],
         ).single['context'];
         expect(
           a.db.select(
-            'SELECT 1 FROM text_actors WHERE writer=? AND context=?',
+            "SELECT 1 FROM ${a.tables.textActors} WHERE writer=? AND context=?",
             [b.writer, parentContext],
           ),
           isNotEmpty,
         );
         expect(
           a.db.select(
-            'SELECT 1 FROM text_actors WHERE writer=? AND context=?',
+            "SELECT 1 FROM ${a.tables.textActors} WHERE writer=? AND context=?",
             [b.writer, context],
           ),
           isEmpty,
@@ -211,7 +213,7 @@ void main() {
         final rows = a.taskSnapshot;
         final states = a.db
             .select(
-              'SELECT field,context,state_hash,frontier FROM text_fields WHERE entity=? ORDER BY field',
+              "SELECT field,context,state_hash,frontier FROM ${a.tables.textFields} WHERE entity=? ORDER BY field",
               [child],
             )
             .map((r) => Map<String, dynamic>.from(r))
@@ -226,10 +228,9 @@ void main() {
           ap,
           textEngine: engine,
         );
-        expect(a.readFiles, 0);
         expect(a.taskSnapshot, rows);
+        await a.rebuildCache();
         await a.close();
-        await File('$ap/cache.sqlite').delete();
         a = await TaskStore.open(
           LocalLogFolder(ad.path),
           ap,
@@ -239,7 +240,7 @@ void main() {
         expect(
           a.db
               .select(
-                'SELECT field,context,state_hash,frontier FROM text_fields WHERE entity=? ORDER BY field',
+                "SELECT field,context,state_hash,frontier FROM ${a.tables.textFields} WHERE entity=? ORDER BY field",
                 [child],
               )
               .map((r) => Map<String, dynamic>.from(r))

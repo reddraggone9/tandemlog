@@ -12,6 +12,10 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     # Separate experimental packages run their own pinned analysis/test gates.
+    # Byte-frozen build60 reader uses retired backends; executable compatibility
+    # controls bind its frozen dependencies outside this current-only package.
+    # tool/test_food_fixture_checkout.py still checks original checkout bytes.
+    - test/fixtures/food-undo/released-build60/**
     - experiments/**
     - build/**
     - android/**

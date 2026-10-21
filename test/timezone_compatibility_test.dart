@@ -29,9 +29,13 @@ const _task = '44444444-4444-4444-8444-444444444444';
 const _oldDataHash =
     'e67e57be5d320b54e96381b59fdc2e7b0ec803b7e1be98621e445312cf5f295e';
 
-class _CountingFolder implements LogFolder {
+class _CountingFolder implements LogFolder, BoundedLogFolder {
   _CountingFolder(this.inner);
   final LocalLogFolder inner;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
+
   int appends = 0;
   @override
   String get location => inner.location;
@@ -47,34 +51,6 @@ class _CountingFolder implements LogFolder {
     appends++;
     return inner.append(name, bytes);
   }
-}
-
-class _CountingGuard extends WriterGuard {
-  _CountingGuard(this.inner);
-  final FileWriterGuard inner;
-  int reservations = 0;
-  @override
-  Future<WriterGuardState?> load(String space, String writer) =>
-      inner.load(space, writer);
-  @override
-  Future<void> prepare(
-    String space,
-    String writer,
-    int sequence,
-    String hash,
-    List<PreparedWriterRecord> records,
-  ) {
-    reservations++;
-    return inner.prepare(space, writer, sequence, hash, records);
-  }
-
-  @override
-  Future<void> acknowledge(
-    String space,
-    String writer,
-    int sequence,
-    String hash,
-  ) => inner.acknowledge(space, writer, sequence, hash);
 }
 
 Map<String, dynamic> _editorTask() => {
@@ -537,126 +513,110 @@ void main() {
     },
   );
 
-  test(
-    'closed names cannot reserve or append through direct or bulk commands',
-    () async {
-      final root = await Directory.systemTemp.createTemp(
-        'timezone-closed-gate-',
-      );
-      TaskStore? store;
-      try {
-        final shared = await Directory('${root.path}/shared').create();
-        final folder = _CountingFolder(LocalLogFolder(shared.path));
-        final guard = _CountingGuard(
-          FileWriterGuard('${root.path}/installation'),
+  for (final bulk in [false, true]) {
+    test(
+      'first-use timezone revisions persist automatically bulk=$bulk',
+      () async {
+        final root = await Directory.systemTemp.createTemp(
+          'timezone-first-use-',
         );
-        store = await TaskStore.open(
-          folder,
-          '${root.path}/cache',
-          writerIdentity: _writer,
-          writerGuard: guard,
-        );
-        await store.command(_user, 'user.created', {'name': 'Synthetic user'});
-        await store.command(_task, 'task.created', {
-          'title': 'Existing task',
-          'description': '',
-          'assignee': _user,
-          'schedule': {
-            'dueDate': '2026-11-02',
-            'dueTime': '09:00',
-            'timeZone': 'America/Winnipeg',
-          },
-        });
-        final before = await folder.read('$_writer.jsonl');
-        final previousReservations = guard.reservations;
-        final previousAppends = folder.appends;
-        final snapshot = store.taskSnapshot;
-        final guardBefore = (await guard.load(store.space, _writer))!;
-        expect(guardBefore.pending, isEmpty);
-        Future<Map<String, String>> privateBytes() async {
-          final result = <String, String>{};
-          await for (final entry in Directory(
-            '${root.path}/installation',
-          ).list(recursive: true)) {
-            if (entry is File) {
-              result[entry.path] = base64Encode(await entry.readAsBytes());
+        TaskStore? store;
+        try {
+          final folder = _CountingFolder(
+            LocalLogFolder(
+              (await Directory('${root.path}/shared').create()).path,
+            ),
+          );
+          store = await TaskStore.open(
+            folder,
+            '${root.path}/profile',
+            writerIdentity: _writer,
+          );
+          await store.command(_user, 'user.created', {
+            'name': 'Synthetic user',
+          });
+          await store.command(_task, 'task.created', {
+            'title': 'Existing task',
+            'description': '',
+            'assignee': _user,
+            'schedule': {
+              'dueDate': '2026-11-02',
+              'dueTime': '09:00',
+              'timeZone': 'America/Winnipeg',
+            },
+          });
+          final manifest = await folder.read('tandemlog-space.json');
+          for (final zone in _blocked) {
+            final appends = folder.appends;
+            var prepared = 0;
+            if (bulk) {
+              final result = await store.bulkEdit(
+                [_task],
+                BulkTaskEdit(schedulePatch: {'timeZone': zone}),
+                expectedTaskSnapshot: store.taskSnapshot,
+                onPrepared: (_) => prepared++,
+              );
+              expect(
+                result.succeeded,
+                isTrue,
+                reason: result.error?.toString(),
+              );
+            } else {
+              await store.command(_task, 'task.edited', {
+                'schedule': {
+                  'dueDate': '2026-11-02',
+                  'dueTime': '09:00',
+                  'timeZone': zone,
+                },
+              }, onPrepared: (_) => prepared++);
             }
+            expect(prepared, 1);
+            expect(folder.appends, appends + 1);
+            final action = store.unified!.snapshot.records.last;
+            final operation = jsonDecode(action.effects.single.raw) as Map;
+            expect(operation['operation'], {
+              'family': 'task.update',
+              'revision': 2,
+            });
+            expect(
+              store.rows.singleWhere(
+                (r) => r['id'] == _task,
+              )['schedule']['timeZone'],
+              zone,
+            );
+            expect(await folder.read('tandemlog-space.json'), manifest);
           }
-          return result;
-        }
-
-        final installationBefore = await privateBytes();
-        var preparedCallbacks = 0;
-        for (final zone in _blocked) {
-          final schedule = {
-            'dueDate': '2026-11-02',
-            'dueTime': '09:00',
-            'timeZone': zone,
-          };
+          final before = await folder.read('$_writer.applog'),
+              appends = folder.appends;
           await expectLater(
             store.command(_task, 'task.edited', {
-              'schedule': schedule,
-            }, onPrepared: (_) => preparedCallbacks++),
-            throwsA(
-              isA<FormatFailure>().having(
-                (error) => error.message,
-                'message',
-                timeZoneUpgradeRequiredMessage,
-              ),
-            ),
+              'schedule': {'timeZone': 'Mars/Olympus'},
+            }),
+            throwsA(isA<FormatFailure>()),
           );
-          // Bulk commands report per-task durable progress rather than throwing
-          // errors caught at the common command-admission boundary.
-          final result = await store.bulkEdit(
-            [_task],
-            BulkTaskEdit(schedulePatch: {'timeZone': zone}),
-            expectedTaskSnapshot: snapshot,
-            onPrepared: (_) => preparedCallbacks++,
+          expect(folder.appends, appends);
+          expect(await folder.read('$_writer.applog'), before);
+          await store.close();
+          store = await TaskStore.open(
+            folder,
+            '${root.path}/profile',
+            writerIdentity: _writer,
           );
-          expect(result.succeeded, isFalse, reason: zone);
           expect(
-            result.error,
-            isA<FormatFailure>().having(
-              (error) => error.message,
-              'message',
-              timeZoneUpgradeRequiredMessage,
-            ),
+            store.rows.singleWhere(
+              (r) => r['id'] == _task,
+            )['schedule']['timeZone'],
+            'PST8PDT',
           );
-          expect(result.committedIds, isEmpty, reason: zone);
-          expect(result.remainingIds, [_task], reason: zone);
-          expect(preparedCallbacks, 0, reason: zone);
-          final guardAfter = (await guard.load(store.space, _writer))!;
-          expect(guardAfter.sequence, guardBefore.sequence, reason: zone);
-          expect(guardAfter.hash, guardBefore.hash, reason: zone);
-          expect(guardAfter.pending, isEmpty, reason: zone);
-          expect(await privateBytes(), installationBefore, reason: zone);
-          expect(guard.reservations, previousReservations, reason: zone);
-          expect(folder.appends, previousAppends, reason: zone);
-          expect(await folder.read('$_writer.jsonl'), before, reason: zone);
-          expect(store.taskSnapshot, snapshot, reason: zone);
+          expect(await folder.read('$_writer.applog'), before);
+          expect(await folder.read('tandemlog-space.json'), manifest);
+        } finally {
+          await store?.close();
+          await root.delete(recursive: true);
         }
-        await store.close();
-        store = await TaskStore.open(
-          folder,
-          '${root.path}/cache',
-          writerIdentity: _writer,
-          writerGuard: guard,
-        );
-        final reopenedTasks = store.rows
-            .where((row) => row['id'] == _task)
-            .toList();
-        expect(reopenedTasks, hasLength(1));
-        expect(
-          reopenedTasks.single['schedule']['timeZone'],
-          'America/Winnipeg',
-        );
-        expect(await folder.read('$_writer.jsonl'), before);
-      } finally {
-        await store?.close();
-        await root.delete(recursive: true);
-      }
-    },
-  );
+      },
+    );
+  }
 
   for (final bulk in [false, true]) {
     testWidgets('editor bulk=$bulk policy change invalidates a held Save', (

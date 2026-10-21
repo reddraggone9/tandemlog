@@ -11,7 +11,6 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/section_menu.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
-import 'package:tandemlog/storage/local_profile_migration.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
@@ -63,7 +62,7 @@ class _Peer {
     UnifiedHistory? history;
     TaskStore? tasks;
     try {
-      await LocalProfileMigration(profile).run();
+      await LocalSettings.initialize(profile);
       final settings = LocalSettings(root, profileDatabase: profile);
       await settings.load();
       await settings.save();

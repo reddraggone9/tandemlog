@@ -134,7 +134,7 @@ void main() {
   test('new append barriers and existing stream first-use barrier', () async {
     final calls = _Calls();
     final durability = await forFiles(calls);
-    final file = File('${root.path}/writer.jsonl');
+    final file = File('${root.path}/writer.applog');
     await durability.appendFileDurable(file, [1]);
     expect(
       calls.operations.where((op) => op.startsWith('fsync:directory')),
@@ -446,9 +446,9 @@ void main() {
       ]);
       expect(results.where((created) => created), hasLength(1));
       expect(await folder.read('race.json'), [results.first ? 8 : 9]);
-      await folder.append('writer.jsonl', Uint8List.fromList([3]));
-      await folder.append('writer.jsonl', Uint8List.fromList([4]));
-      expect(await folder.read('writer.jsonl'), [3, 4]);
+      await folder.append('writer.applog', Uint8List.fromList([3]));
+      await folder.append('writer.applog', Uint8List.fromList([4]));
+      expect(await folder.read('writer.applog'), [3, 4]);
       final nested = File('${root.path}/profile/inner/settings.json');
       await durability.writeAtomicDurable(nested, utf8.encode('saved'));
       expect(await nested.readAsString(), 'saved');

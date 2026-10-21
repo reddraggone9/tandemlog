@@ -2,15 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/food/food_import.dart';
-import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/food_record.dart';
+import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/log_folder.dart';
-import 'package:tandemlog/storage/profile_food_intents.dart';
 import 'package:tandemlog/storage/task_store.dart';
-import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/storage/unified_manifest.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 
 const space = '00000000-0000-4000-8000-000000000001';
 const installation = '00000000-0000-4000-8000-000000000002';
@@ -34,7 +35,6 @@ FoodImportPlan plan({
           name: name,
           brand: 'Example',
           expiry: '2027-03-01',
-          estimated: null,
           retention: 'Fridge',
         ),
         contents: n == 1
@@ -45,81 +45,66 @@ FoodImportPlan plan({
   ],
 );
 
-class ImportFaultFolder implements LogFolder, BoundedLogFolder {
-  ImportFaultFolder(this.inner);
-  final LocalLogFolder inner;
+class ImportFaultFolder extends LocalLogFolder {
+  ImportFaultFolder(super.location);
   int? cut;
   bool failAfter = false;
   int writes = 0;
   @override
-  String get location => inner.location;
-  @override
-  Future<List<LogFileInfo>> list() => inner.list();
-  @override
-  Future<Uint8List> read(String n) => inner.read(n);
-  @override
-  Future<Uint8List> readBounded(String n, int max) => inner.readBounded(n, max);
-  Future<void> write(String n, Uint8List b, bool create) async {
+  Future<void> append(String name, Uint8List bytes) async {
     writes++;
-    final prefix = cut;
+    final n = cut;
     cut = null;
-    final bytes = prefix == null
-        ? b
-        : Uint8List.sublistView(b, 0, prefix.clamp(0, b.length));
-    if (create) {
-      await inner.create(n, bytes);
-    } else {
-      await inner.append(n, bytes);
-    }
-    if (prefix != null || failAfter) {
+    await super.append(
+      name,
+      n == null ? bytes : Uint8List.fromList(bytes.take(n).toList()),
+    );
+    if (n != null || failAfter) {
       failAfter = false;
       throw StateError('Synthetic uncertain append');
     }
   }
-
-  @override
-  Future<void> create(String n, Uint8List b) => write(n, b, true);
-  @override
-  Future<void> append(String n, Uint8List b) => write(n, b, false);
 }
 
 void main() {
   late Directory root;
   late LocalProfileDatabase db;
   late ImportFaultFolder folder;
-  late FoodStore store;
   late TaskStore tasks;
-  late String taskBytes;
-  Future<void> reopen() async {
+  late FoodStore store;
+  late String taskPrefix;
+  Future<String> bytes() =>
+      File('${folder.location}/$installation.applog').readAsString();
+  Future<void> reopen({bool fresh = false}) async {
     await store.close();
     await tasks.close();
     await db.close();
-    db = await LocalProfileDatabase.open('${root.path}/profile');
+    db = await LocalProfileDatabase.open(
+      '${root.path}/${fresh ? 'fresh' : 'profile'}',
+    );
     tasks = await TaskStore.open(
       folder,
       db.root,
       profileDatabase: db,
       writerIdentity: installation,
     );
-    store = await FoodStore.open(
-      folder,
-      profile: db,
-      installationWriter: installation,
-      space: space,
-    );
+    store = await FoodStore.openUnified(tasks.unified!);
   }
 
-  Future<String> bytes() =>
-      File('${folder.location}/${foodLogName(store.writer)}').readAsString();
   setUp(() async {
-    root = await Directory.systemTemp.createTemp('synthetic-food-import-');
+    root = await Directory.systemTemp.createTemp(
+      'synthetic-current-food-import-',
+    );
     db = await LocalProfileDatabase.open('${root.path}/profile');
     folder = ImportFaultFolder(
-      LocalLogFolder((await Directory('${root.path}/data').create()).path),
+      (await Directory('${root.path}/data').create()).path,
     );
-    await File(
-      '${folder.location}/tandemlog-space.json',
-    ).writeAsString('{"v":3,"id":"$space"}');
+    await folder.create(
+      'tandemlog-space.json',
+      Uint8List.fromList(
+        utf8.encode(UnifiedManifest.empty(space, installation).encode()),
+      ),
+    );
     tasks = await TaskStore.open(
       folder,
       db.root,
@@ -128,24 +113,13 @@ void main() {
     );
     await tasks.command(namespace, 'user.created', {'name': 'Synthetic owner'});
     await tasks.command(otherNamespace, 'task.created', {
-      'title': 'Preserved scalar v3 task',
+      'title': 'Preserved task',
       'description': 'Exact notes',
       'assignee': namespace,
     });
-    taskBytes = await File(
-      '${folder.location}/$installation.jsonl',
-    ).readAsString();
+    taskPrefix = await bytes();
+    store = await FoodStore.openUnified(tasks.unified!);
     folder.writes = 0;
-    db.database.execute("INSERT INTO protected_settings VALUES (1,?,?)", [
-      installation,
-      utf8.encode(jsonEncode({'writer': installation, 'appearance': 'dark'})),
-    ]);
-    store = await FoodStore.open(
-      folder,
-      profile: db,
-      installationWriter: installation,
-      space: space,
-    );
   });
   tearDown(() async {
     await store.close();
@@ -153,6 +127,21 @@ void main() {
     await db.close();
     await root.delete(recursive: true);
   });
+  void noPrivateIntent() {
+    expect(
+      db.database.select(
+        "SELECT name FROM sqlite_schema WHERE type='table' AND name IN ('protected_app_outbox','protected_food_intents')",
+      ),
+      isEmpty,
+    );
+    expect(
+      db.database.select(
+        "SELECT * FROM profile_metadata WHERE key LIKE 'food.import.%'",
+      ),
+      isEmpty,
+    );
+  }
+
   test(
     'strict v1 contract canonical fractions stable identities and invalid inputs',
     () {
@@ -194,61 +183,57 @@ void main() {
       );
     },
   );
+
   test(
-    'dry run stages nothing and explicit commit preserves physical Full and partial contents',
+    'dry run writes nothing; one commit preserves Full partial contents and task prefix',
     () async {
       final p = plan();
-      final report = await store.dryRunImport(p);
-      expect(report.status, FoodImportStatus.ready);
+      expect((await store.dryRunImport(p)).status, FoodImportStatus.ready);
       expect(folder.writes, 0);
-      expect(ProfileFoodIntents(db).pending(space, store.writer), isEmpty);
-      expect(
-        db.database.select(
-          "SELECT * FROM profile_metadata WHERE key LIKE 'food.import.%'",
-        ),
-        isEmpty,
-      );
+      expect(await bytes(), taskPrefix);
+      noPrivateIntent();
       final done = await store.commitImport(p);
       expect(done.status, FoodImportStatus.committed);
       expect(
         store.state.containers.map((c) => c.id).toSet(),
         p.targetIds.toSet(),
       );
-      for (var n = 0; n < 3; n++) {
+      for (var i = 0; i < p.containers.length; i++) {
         final c = store.state.containers.singleWhere(
-          (c) => c.id == p.targetIds[n],
+          (c) => c.id == p.targetIds[i],
         );
-        expect(c.createdAt, p.containers[n].createdAt);
-        expect(c.details.toJson(), p.containers[n].details.toJson());
-        expect(c.contents.toJson(), p.containers[n].contents.toJson());
+        expect(c.createdAt, p.containers[i].createdAt);
+        expect(c.details.toJson(), p.containers[i].details.toJson());
+        expect(c.contents.toJson(), p.containers[i].contents.toJson());
       }
+      expect(folder.writes, 1);
+      expect((await bytes()).startsWith(taskPrefix), isTrue);
       expect(
-        await File('${folder.location}/$installation.jsonl').readAsString(),
-        taskBytes,
+        (await bytes())
+            .substring(taskPrefix.length)
+            .split('\n')
+            .where((l) => l.isNotEmpty),
+        hasLength(1),
       );
       expect(
-        utf8.decode(
-          db.database.select("SELECT raw FROM protected_settings").single['raw']
-              as List<int>,
-        ),
-        jsonEncode({'writer': installation, 'appearance': 'dark'}),
+        tasks.unified!.snapshot.records.last.provenance!['planHash'],
+        p.planHash,
       );
+      noPrivateIntent();
     },
   );
   test(
-    'cold retry after later edit and deletion uses original admission not projection',
+    'cold retry after later edits and deletion uses canonical provenance',
     () async {
-      final p = plan();
-      final first = await store.commitImport(p);
+      final p = plan(), first = await store.commitImport(plan());
       await store.changeDetails(
         [p.targetIds.first],
         const FoodDetails(name: 'Later edit'),
         ['name'],
       );
       await store.remove([p.targetIds.last]);
-      final prior = await bytes();
-      final writes = folder.writes;
-      await reopen();
+      final prior = await bytes(), writes = folder.writes;
+      await reopen(fresh: true);
       final repeated = await store.commitImport(p);
       expect(repeated.recordIds, first.recordIds);
       expect(await bytes(), prior);
@@ -269,201 +254,225 @@ void main() {
     },
   );
   test(
-    'partial append cold retry recovers exact reserved bytes without fresh IDs',
+    'same-session partial retry uses only memory and publishes all containers together',
     () async {
       final p = plan();
       folder.cut = 71;
       await expectLater(store.commitImport(p), throwsStateError);
-      final prepared = ProfileFoodIntents(db)
-          .pending(space, store.writer)
-          .map((b) => FoodRecord.decode(utf8.decode(b)))
-          .toList();
-      final expected = prepared.map((r) => '${r.encode()}\n').join();
-      expect(prepared.length, 3);
-      await reopen();
+      final pending = tasks.unified!.pendingRecords.single,
+          partial = await bytes();
+      expect(store.state.containers, isEmpty);
+      noPrivateIntent();
       expect(
         (await store.dryRunImport(p)).status,
         FoodImportStatus.pendingRecovery,
       );
+      expect(await bytes(), partial);
       final done = await store.commitImport(p);
-      expect(done.recordIds, prepared.map((r) => r.id).toList());
-      expect(await bytes(), expected);
-      expect(ProfileFoodIntents(db).pending(space, store.writer), isEmpty);
-      await reopen();
-      expect((await store.commitImport(p)).status, FoodImportStatus.committed);
-      expect(await bytes(), expected);
-    },
-  );
-  test(
-    'uncertain full append cold retry admits originals without second append',
-    () async {
-      final p = plan();
-      folder.failAfter = true;
-      await expectLater(store.commitImport(p), throwsStateError);
-      final prior = await bytes();
+      expect(done.recordIds, pending.effects.map((e) => e.food!.id).toList());
+      expect(await bytes(), '$taskPrefix${pending.encode()}\n');
+      expect(store.state.containers, hasLength(3));
       final writes = folder.writes;
-      await reopen();
-      expect((await store.commitImport(p)).status, FoodImportStatus.committed);
+      await store.commitImport(p);
       expect(folder.writes, writes);
+    },
+  );
+  for (final cut in [0, 71]) {
+    test(
+      'restart abandons incomplete import cut=$cut; preview is read-only and explicit commit replaces it',
+      () async {
+        final p = plan();
+        folder.cut = cut;
+        await expectLater(store.commitImport(p), throwsStateError);
+        final partial = await bytes(), writes = folder.writes;
+        await reopen();
+        expect(store.hasPreparedAppend, isFalse);
+        expect(store.state.containers, isEmpty);
+        expect((await store.dryRunImport(p)).status, FoodImportStatus.ready);
+        expect(await bytes(), partial);
+        expect(folder.writes, writes);
+        expect(
+          (await store.commitImport(p)).status,
+          FoodImportStatus.committed,
+        );
+        expect(
+          store.state.containers.map((c) => c.id).toSet(),
+          p.targetIds.toSet(),
+        );
+        expect((await bytes()).startsWith(taskPrefix), isTrue);
+        expect(
+          (await bytes())
+              .substring(taskPrefix.length)
+              .split('\n')
+              .where((l) => l.isNotEmpty),
+          hasLength(1),
+        );
+        noPrivateIntent();
+      },
+    );
+  }
+  test(
+    'complete uncertain append survives without any private import ledger or second append',
+    () async {
+      folder.failAfter = true;
+      await expectLater(store.commitImport(plan()), throwsStateError);
+      final prior = await bytes(), writes = folder.writes;
+      await reopen(fresh: true);
+      expect(
+        (await store.commitImport(plan())).status,
+        FoodImportStatus.committed,
+      );
       expect(await bytes(), prior);
+      expect(folder.writes, writes);
+      noPrivateIntent();
     },
   );
   test(
-    'changed count source payload and namespace refuse after attempt',
+    'changed count source payload and source namespace refuse after canonical commit',
     () async {
-      final p = plan();
-      await store.commitImport(p);
+      await store.commitImport(plan());
       final prior = await bytes();
-      for (final changed in [
+      for (final p in [
         plan(count: 2),
         plan(name: 'Changed'),
         plan(source: List.filled(64, 'b').join()),
         plan(importId: otherNamespace),
       ]) {
-        await expectLater(store.commitImport(changed), throwsFormatException);
+        await expectLater(store.commitImport(p), throwsFormatException);
       }
       expect(await bytes(), prior);
     },
   );
   test(
-    'atomic ledger staging failure preserves canonical guard and intents',
-    () async {
-      final guardBefore = List<int>.from(
-        db.database.select(
-              'SELECT raw FROM protected_writer_guards WHERE writer=?',
-              [store.writer],
-            ).single['raw']
-            as List<int>,
-      );
-      db.database.execute(
-        "CREATE TRIGGER import_fail BEFORE INSERT ON profile_metadata WHEN NEW.key LIKE 'food.import.%' BEGIN SELECT RAISE(ABORT,'synthetic import ledger fault'); END",
-      );
-      await expectLater(store.commitImport(plan()), throwsA(anything));
-      expect(folder.writes, 0);
-      expect(ProfileFoodIntents(db).pending(space, store.writer), isEmpty);
-      expect(
-        db.database.select(
-          "SELECT * FROM profile_metadata WHERE key LIKE 'food.import.%'",
-        ),
-        isEmpty,
-      );
-      expect(
-        db.database.select('SELECT * FROM protected_food_import_witnesses'),
-        isEmpty,
-      );
-      expect(
-        db.database.select(
-          'SELECT raw FROM protected_writer_guards WHERE writer=?',
-          [store.writer],
-        ).single['raw'],
-        guardBefore,
-      );
-      db.database.execute('DROP TRIGGER import_fail');
-      expect(
-        (await store.commitImport(plan())).status,
-        FoodImportStatus.committed,
-      );
-    },
-  );
-  test('missing attempt or source witness fails closed', () async {
-    final p = plan();
-    await store.commitImport(p);
-    final prior = await bytes();
-    db.database.execute(
-      "DELETE FROM profile_metadata WHERE key LIKE 'food.import.%attempt.%'",
-    );
-    await expectLater(store.commitImport(p), throwsFormatException);
-    expect(await bytes(), prior);
-  });
-  test('unrelated pending receipt is not recovered as import', () async {
-    final p = plan();
-    await store.commitImport(p);
-    folder.cut = 3;
-    await expectLater(
-      store.add(const FoodDetails(name: 'Unrelated'), 1),
-      throwsStateError,
-    );
-    final pending = ProfileFoodIntents(db).pending(space, store.writer);
-    final prior = await bytes();
-    final writes = folder.writes;
-    expect((await store.commitImport(p)).status, FoodImportStatus.committed);
-    expect(
-      ProfileFoodIntents(
-        db,
-      ).pending(space, store.writer).map((v) => utf8.decode(v)).toList(),
-      pending.map((v) => utf8.decode(v)).toList(),
-    );
-    expect(await bytes(), prior);
-    expect(folder.writes, writes);
-  });
-  test('wrong workspace refuses without reserving or appending', () async {
-    final p = plan();
-    final wrong = FoodImportPlan(
-      space: otherNamespace,
-      importId: p.importId,
-      sourceSha256: p.sourceSha256,
-      containers: p.containers,
-    );
-    await expectLater(store.dryRunImport(wrong), throwsFormatException);
-    await expectLater(store.commitImport(wrong), throwsFormatException);
-    expect(folder.writes, 0);
-  });
-  test(
-    'missing index with retained attempt refuses a new source namespace',
+    'a different source with a new namespace remains a distinct explicit import',
     () async {
       await store.commitImport(plan());
-      final prior = await bytes();
-      db.database.execute(
-        "DELETE FROM profile_metadata WHERE key LIKE 'food.import.%index'",
+      final second = plan(
+        importId: otherNamespace,
+        source: List.filled(64, 'b').join(),
       );
+      expect(
+        (await store.commitImport(second)).status,
+        FoodImportStatus.committed,
+      );
+      expect(store.state.containers, hasLength(6));
+    },
+  );
+  test(
+    'unrelated in-memory pending save is not retried by a completed import',
+    () async {
+      final p = plan();
+      await store.commitImport(p);
+      folder.cut = 3;
       await expectLater(
-        store.commitImport(
-          plan(importId: otherNamespace, source: List.filled(64, 'b').join()),
-        ),
-        throwsFormatException,
+        store.add(const FoodDetails(name: 'Unrelated'), 1),
+        throwsStateError,
+      );
+      final pending = tasks.unified!.pendingRecords.single.encode(),
+          prior = await bytes(),
+          writes = folder.writes;
+      expect((await store.commitImport(p)).status, FoodImportStatus.committed);
+      expect(tasks.unified!.pendingRecords.single.encode(), pending);
+      expect(await bytes(), prior);
+      expect(folder.writes, writes);
+    },
+  );
+  test(
+    'concurrent identical callbacks serialize into one canonical action',
+    () async {
+      final reports = await Future.wait([
+        store.commitImport(plan()),
+        store.commitImport(plan()),
+      ]);
+      expect(reports.first.recordIds, reports.last.recordIds);
+      expect(folder.writes, 1);
+      expect(
+        (await bytes())
+            .substring(taskPrefix.length)
+            .split('\n')
+            .where((l) => l.isNotEmpty),
+        hasLength(1),
+      );
+    },
+  );
+  test(
+    'maximum 1000-container import retains all IDs and cold retry does not append',
+    () async {
+      final p = plan(count: 1000),
+          done = await store.commitImport(plan(count: 1000));
+      final prior = await bytes(), writes = folder.writes;
+      expect(done.recordIds, hasLength(1000));
+      await reopen();
+      expect((await store.commitImport(p)).recordIds, done.recordIds);
+      expect(
+        store.state.containers.map((c) => c.id).toSet(),
+        p.targetIds.toSet(),
       );
       expect(await bytes(), prior);
+      expect(folder.writes, writes);
     },
   );
+  test('wrong workspace and protected writer refuse before append', () async {
+    final p = plan(),
+        wrong = FoodImportPlan(
+          space: otherNamespace,
+          importId: p.importId,
+          sourceSha256: p.sourceSha256,
+          containers: p.containers,
+        );
+    await expectLater(store.dryRunImport(wrong), throwsFormatException);
+    await expectLater(store.commitImport(wrong), throwsFormatException);
+    db.database.execute('UPDATE protected_settings SET writer=?,raw=?', [
+      otherNamespace,
+      utf8.encode(
+        jsonEncode({'writer': otherNamespace, 'appearance': 'system'}),
+      ),
+    ]);
+    await expectLater(store.commitImport(p), throwsFormatException);
+    expect(folder.writes, 0);
+    expect(await bytes(), taskPrefix);
+  });
   test(
-    'pre-byte crash changed plan and missing ledger cannot restamp prepared receipts',
+    'shared manifest change remains fatal and leaves import unstaged',
     () async {
-      final p = plan();
-      folder.cut = 0;
-      await expectLater(store.commitImport(p), throwsStateError);
-      final intents = ProfileFoodIntents(
-        db,
-      ).pending(space, store.writer).map(utf8.decode).toList();
+      await File(
+        '${folder.location}/tandemlog-space.json',
+      ).writeAsString('{"v":3,"id":"$otherNamespace"}');
       await expectLater(
-        store.commitImport(plan(count: 2)),
-        throwsFormatException,
+        store.commitImport(plan()),
+        throwsA(isA<FormatFailure>()),
       );
-      db.database.execute(
-        "DELETE FROM profile_metadata WHERE key LIKE 'food.import.%attempt.%'",
-      );
-      await expectLater(store.commitImport(p), throwsFormatException);
-      expect(
-        ProfileFoodIntents(
-          db,
-        ).pending(space, store.writer).map(utf8.decode).toList(),
-        intents,
-      );
-      expect(await bytes(), '');
+      expect(folder.writes, 0);
+      expect(await bytes(), taskPrefix);
+      noPrivateIntent();
     },
   );
   test(
-    'physical collision with remote birth without local ledger refuses',
+    'physical collision from a valid remote common action refuses before import',
     () async {
-      final p = plan();
+      final p = plan(),
+          peer = otherNamespace,
+          epoch = tasks.unified!.manifest.epoch;
+      final genesis = unifiedGenesis(space, epoch, peer);
+      final header = UnifiedRecord(
+        space: space,
+        epoch: epoch,
+        writer: peer,
+        sequence: 1,
+        clock: EventClock(BigInt.zero),
+        previousHash: genesis,
+        effect: UnifiedEffect.joined(),
+        observed: {peer: UnifiedFrontier(0, genesis)},
+      );
       final clock = EventClock(BigInt.one);
-      final remote = foodWriter(otherNamespace);
       final birth = FoodRecord(
         space: space,
-        writer: remote,
+        writer: peer,
         sequence: 1,
         clock: clock,
+        previousHash: header.hash,
         operation: FoodOperation(
-          id: '$remote:1',
+          id: '$peer:1',
           order: 1,
           action: FoodAction.add,
           targets: [p.targetIds.first],
@@ -471,208 +480,40 @@ void main() {
           contents: p.containers.first.contents,
           createdAt: p.containers.first.createdAt,
         ),
-        previousHash: eventGenesisHash(space, remote),
       );
-      await folder.inner.create(
-        foodLogName(remote),
-        Uint8List.fromList(utf8.encode('${birth.encode()}\n')),
-      );
-      await expectLater(store.commitImport(p), throwsFormatException);
-      expect(folder.writes, 0);
-      expect(
-        db.database.select(
-          "SELECT * FROM profile_metadata WHERE key LIKE 'food.import.%'",
-        ),
-        isEmpty,
-      );
-    },
-  );
-  test(
-    'concurrent identical commit callbacks serialize into one original batch',
-    () async {
-      final p = plan();
-      final reports = await Future.wait([
-        store.commitImport(p),
-        store.commitImport(p),
-      ]);
-      expect(reports.first.recordIds, reports.last.recordIds);
-      expect(folder.writes, 1);
-      expect(
-        (await bytes()).split('\n').where((line) => line.isNotEmpty).length,
-        3,
-      );
-    },
-  );
-  test(
-    'fully staged maximum batch preserves all 1000 physical identities',
-    () async {
-      final p = plan(count: 1000);
-      expect((await store.dryRunImport(p)).targetIds.length, 1000);
-      final result = await store.commitImport(p);
-      expect(result.recordIds.length, 1000);
-      await reopen();
-      expect((await store.commitImport(p)).recordIds, result.recordIds);
-      expect(store.state.containers.length, 1000);
-      expect(
-        await File('${folder.location}/$installation.jsonl').readAsString(),
-        taskBytes,
-      );
-    },
-  );
-  test(
-    'shared manifest change remains hard and leaves import unstaged',
-    () async {
-      await File(
-        '${folder.location}/tandemlog-space.json',
-      ).writeAsString('{"v":3,"id":"$otherNamespace"}');
-      await expectLater(
-        store.commitImport(plan()),
-        throwsA(
-          isA<FormatException>().having(
-            (e) => e is FoodHistoryFailure,
-            'module-only',
-            false,
-          ),
-        ),
-      );
-      expect(folder.writes, 0);
-      expect(
-        db.database.select(
-          "SELECT * FROM profile_metadata WHERE key LIKE 'food.import.%'",
-        ),
-        isEmpty,
-      );
-    },
-  );
-  test(
-    'import cannot select a writer different from protected settings',
-    () async {
-      await store.close();
-      // Fresh Food initialization: no canonical stream or reservation exists.
-      db.database.execute('DELETE FROM protected_food_heads WHERE space=?', [
-        space,
-      ]);
-      store = await FoodStore.open(
-        folder,
-        profile: db,
-        installationWriter: otherNamespace,
+      final action = UnifiedRecord(
         space: space,
+        epoch: epoch,
+        writer: peer,
+        sequence: 2,
+        clock: clock,
+        previousHash: header.hash,
+        effect: UnifiedEffect('food', birth.encode()),
+        observed: {peer: UnifiedFrontier(1, header.hash)},
       );
-      await expectLater(store.commitImport(plan()), throwsFormatException);
-      expect(folder.writes, 0);
-      expect(
-        db.database.select(
-          "SELECT * FROM profile_metadata WHERE key LIKE 'food.import.%'",
+      await folder.create(
+        unifiedLogName(peer),
+        Uint8List.fromList(
+          utf8.encode('${header.encode()}\n${action.encode()}\n'),
         ),
-        isEmpty,
-      );
-    },
-  );
-  test(
-    'oversized local import metadata is refused before ledger materialization',
-    () async {
-      db.database.execute(
-        "INSERT INTO profile_metadata VALUES (?,CAST(zeroblob(1048576) AS TEXT))",
-        ['food.import.v1.$space.index'],
-      );
-      await expectLater(store.dryRunImport(plan()), throwsFormatException);
-      expect(folder.writes, 0);
-    },
-  );
-
-  test(
-    'all metadata ledger loss with surviving initialization refuses new namespace',
-    () async {
-      await store.commitImport(plan());
-      final prior = await bytes();
-      db.database.execute(
-        "DELETE FROM profile_metadata WHERE key LIKE 'food.import.%'",
-      );
-      await expectLater(
-        store.commitImport(plan(importId: otherNamespace)),
-        throwsFormatException,
-      );
-      expect(await bytes(), prior);
-    },
-  );
-  test(
-    'malformed Food cannot mask lost protected import evidence on refresh',
-    () async {
-      await store.commitImport(plan());
-      db.database.execute(
-        "DELETE FROM profile_metadata WHERE key LIKE 'food.import.%attempt.%'",
-      );
-      await File(
-        '${folder.location}/${foodLogName(foodWriter(otherNamespace))}',
-      ).writeAsString('synthetic malformed Food\n');
-      await expectLater(
-        store.refresh(),
-        throwsA(
-          isA<FormatException>().having(
-            (e) => e is FoodHistoryFailure,
-            'module-only',
-            false,
-          ),
-        ),
-      );
-    },
-  );
-  test(
-    'malformed Food cannot mask protected settings binding on import',
-    () async {
-      db.database.execute('UPDATE protected_settings SET raw=?', [
-        utf8.encode(jsonEncode({'writer': otherNamespace})),
-      ]);
-      await File(
-        '${folder.location}/${foodLogName(foodWriter(otherNamespace))}',
-      ).writeAsString('synthetic malformed Food\n');
-      await expectLater(
-        store.dryRunImport(plan()),
-        throwsA(isA<LocalDatabaseFailure>()),
-      );
-      await expectLater(
-        store.commitImport(plan()),
-        throwsA(isA<LocalDatabaseFailure>()),
-      );
-      expect(folder.writes, 0);
-    },
-  );
-
-  test(
-    'zero-byte attempt all metadata loss refuses original and new namespace',
-    () async {
-      folder.cut = 0;
-      await expectLater(store.commitImport(plan()), throwsStateError);
-      final pending = ProfileFoodIntents(
-        db,
-      ).pending(space, store.writer).map(utf8.decode).toList();
-      db.database.execute(
-        "DELETE FROM profile_metadata WHERE key LIKE 'food.import.%'",
-      );
-      for (final p in [plan(), plan(importId: otherNamespace)]) {
-        await expectLater(store.commitImport(p), throwsFormatException);
-      }
-      expect(
-        ProfileFoodIntents(
-          db,
-        ).pending(space, store.writer).map(utf8.decode).toList(),
-        pending,
-      );
-      expect(await bytes(), '');
-    },
-  );
-  test(
-    'missing initialization witness with retained ledgers fails closed',
-    () async {
-      final p = plan();
-      await store.commitImport(p);
-      final prior = await bytes();
-      db.database.execute(
-        'DELETE FROM protected_food_import_witnesses WHERE space=?',
-        [space],
       );
       await expectLater(store.commitImport(p), throwsFormatException);
-      expect(await bytes(), prior);
+      expect(folder.writes, 0);
+      expect(await bytes(), taskPrefix);
+    },
+  );
+  test(
+    'malformed complete common record blocks import and retains all bytes',
+    () async {
+      final peer = File('${folder.location}/$otherNamespace.applog');
+      await peer.writeAsString('synthetic malformed common record\n');
+      await expectLater(
+        store.commitImport(plan()),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await peer.readAsString(), 'synthetic malformed common record\n');
+      expect(await bytes(), taskPrefix);
+      expect(folder.writes, 0);
     },
   );
 }

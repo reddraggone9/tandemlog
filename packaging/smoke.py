@@ -29,7 +29,8 @@ def hashes(folder):
 
 
 def projection_location(profile, folder):
-    key = hashlib.sha256(str(folder).encode()).hexdigest()
+    epoch = json.loads((folder/'tandemlog-space.json').read_text())['epoch']
+    key = hashlib.sha256(f'{folder}#app5:{epoch}'.encode()).hexdigest()
     if (profile/'local.sqlite').exists():
         return profile/'local.sqlite', f'tasks_{key}_'
     return profile/'spaces'/key/'cache.sqlite', ''
@@ -60,6 +61,8 @@ def reset_projection(profile, folder):
         return
     with closing(sqlite3.connect(str(database), timeout=0)) as db:
         db.execute('PRAGMA locking_mode=EXCLUSIVE')
+        if not db.execute("SELECT 1 FROM sqlite_schema WHERE type='table' AND name=?", (prefix+'events',)).fetchone():
+            return
         for table in ('events', 'views', 'positions', 'text_fields', 'text_actors', 'text_outbox'):
             db.execute(f'DELETE FROM {prefix}{table}')
         db.execute(f"DELETE FROM {prefix}metadata WHERE key='order_projection'")
@@ -120,38 +123,17 @@ def main():
             raise RuntimeError('Refusing to overwrite an existing QA fixture')
         profile.mkdir(parents=True)
         folder.mkdir()
-        space, writer, user, task = (str(uuid.uuid4()) for _ in range(4))
-        (folder/'tandemlog-space.json').write_text(json.dumps({'v': 3, 'id': space}))
-        events = []
-        previous = hashlib.sha256(f'tandemlog:genesis:v3\n{space}\n{writer}\n'.encode()).hexdigest()
-        created_ns = time.time_ns()
-        for seq, entity, kind, data in (
-                (1, user, 'user.created', {'name': 'Installer QA user'}),
-                (2, task, 'task.created', {'title': 'Installer retained task',
-                                         'description': 'Synthetic state only', 'assignee': user})):
-            # Fixed v3 envelope order and scalar-sorted ASCII payload keys.
-            # Validate through the production app below, not just this generator.
-            record = dict(v=3, space=space, writer=writer, seq=seq,
-                          clock=str(created_ns+seq), entity=entity,
-                          type=kind, data=dict(sorted(data.items())), previousHash=previous)
-            unsigned = json.dumps(record, ensure_ascii=False, separators=(',', ':'))
-            record['hash'] = hashlib.sha256(('tandemlog:event:v3\n'+unsigned).encode()).hexdigest()
-            previous = record['hash']
-            events.append(json.dumps(record, ensure_ascii=False, separators=(',', ':')))
-        # Canonical LF framing must survive Windows text-mode CRLF translation.
-        (folder/f'{writer}.jsonl').write_bytes(('\n'.join(events)+'\n').encode('utf-8'))
+        writer, user, task = (str(uuid.uuid4()) for _ in range(3))
+        (root/'synthetic-workload.json').write_text(json.dumps({
+            'synthetic': True, 'version': 1, 'writer': writer, 'user': user,
+            'userName': 'Installer QA user', 'profile': str(profile),
+            'tasks': [{'id': task, 'title': 'Installer retained task',
+                       'description': 'Synthetic state only'}]}))
         if not args.native_library:
             raise RuntimeError('Synthetic installer seed requires its pinned native library')
-        initialize_fixture(folder, root, args.native_library)
-        # Lifecycle replacement tests start with current preferences. Legacy
-        # settings legitimately gain a writer during their separately tested
-        # migration; arbitrary preference changes must still fail this gate.
-        installation_writer = str(uuid.uuid4())
-        (profile/'settings.json').write_text(json.dumps({
-            'folder': str(folder), 'user': user, 'appearance': 'system',
-            'writer': installation_writer}))
+        receipt = initialize_fixture(folder, root, args.native_library)
         (root/'expected.json').write_text(json.dumps({'canonical': hashes(folder),
-                                                    'settings': hashes(profile)['settings.json']}))
+                                                    'settings': receipt['settings_sha256']}))
     expected = json.loads((root/'expected.json').read_text())
     if hashes(folder) != expected['canonical']:
         raise RuntimeError('Canonical data changed during installer lifecycle')

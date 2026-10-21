@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:uuid/uuid.dart';
 import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/inventory.dart';
@@ -63,33 +65,200 @@ List<FoodRecord> foodHistory() {
   return [add, edit, undo];
 }
 
-Map<String, List<int>> sources() => {
-  '$owner.jsonl': File('test/fixtures/event_chain_v3.jsonl').readAsBytesSync(),
-  foodLogName(foodWriter(owner)): utf8.encode(
-    '${foodHistory().map((r) => r.encode()).join('\n')}\n',
-  ),
-};
-UnifiedCutoverPlan plan({
-  Map<String, List<int>>? input,
-  bool pending = false,
-}) => UnifiedCutoverPlan.inspect(
-  space: space,
-  owners: {owner, peer},
-  participants: {owner, peer},
-  sources: input ?? sources(),
-  hasUnresolvedPreparedWrites: pending,
-);
-List<CutoverAcknowledgement> ack(UnifiedCutoverPlan p) => [owner, peer]
-    .map(
-      (o) => CutoverAcknowledgement(
-        o,
-        p.sourceDigest,
-        quiesced: true,
-        pendingResolved: true,
+Map<String, List<int>> sources() {
+  final person = LogEvent.decode(
+    LogEvent(
+      space,
+      owner,
+      1,
+      EventClock(BigInt.from(1000000000)),
+      peer,
+      'user.created',
+      {'name': 'Synthetic'},
+    ).encode(),
+  );
+  final task = LogEvent.decode(
+    LogEvent(
+      space,
+      owner,
+      2,
+      EventClock(BigInt.from(2000000000)),
+      container,
+      'task.created',
+      {
+        'title': 'Synthetic task',
+        'description': 'Preserved notes',
+        'assignee': peer,
+      },
+    ).encode(previousHash: person.hash),
+  );
+  return {
+    '$owner.applog': utf8.encode('${person.encode()}\n${task.encode()}\n'),
+    foodLogName(foodWriter(owner)): utf8.encode(
+      '${foodHistory().map((r) => r.encode()).join('\n')}\n',
+    ),
+  };
+}
+
+class FixtureConversion {
+  FixtureConversion(this.manifest, this.files, this.originalEffects);
+  final UnifiedManifest manifest;
+  final Map<String, List<int>> files;
+  final List<UnifiedEffect> originalEffects;
+}
+
+/// Test-only bootstrap data from CURRENT operations. It cannot decode old wire
+/// envelopes. Actual historical normalization lives outside the repository.
+class FixturePlan {
+  FixturePlan._(this.space, this.owners, this.effects, this.sourceDigest);
+  final String space, sourceDigest;
+  final Set<String> owners;
+  final Map<String, List<UnifiedEffect>> effects;
+  factory FixturePlan.inspect({
+    required String space,
+    required Set<String> owners,
+    Set<String> participants = const {},
+    required Map<String, List<int>> sources,
+    required bool hasUnresolvedPreparedWrites,
+  }) {
+    if (hasUnresolvedPreparedWrites) {
+      throw FormatFailure('Resolve pending writes.');
+    }
+    final effects = {for (final o in owners) o: <UnifiedEffect>[]};
+    for (final e in sources.entries) {
+      final task = e.key.endsWith('.applog');
+      final matches = owners
+          .where(
+            (o) => e.key == (task ? '$o.applog' : foodLogName(foodWriter(o))),
+          )
+          .toList();
+      if (matches.length != 1 || e.value.isNotEmpty && e.value.last != 10) {
+        throw FormatFailure('Invalid current fixture source.');
+      }
+      final author = matches.single;
+      final lines = utf8.decode(e.value).split('\n');
+      for (final raw in lines.take(lines.length - 1)) {
+        if (task) {
+          final event = LogEvent.decode(raw);
+          effects[author]!.add(
+            UnifiedEffect(
+              'history.task',
+              LogEvent.decode(
+                LogEvent(
+                  event.space,
+                  event.writer,
+                  event.sequence,
+                  event.clock,
+                  event.entity,
+                  event.type,
+                  event.data,
+                  previousHash: event.previousHash,
+                  hash: event.hash,
+                  attributedWriter: author,
+                ).encode(),
+              ).encode(),
+            ),
+          );
+        } else {
+          final event = FoodRecord.decode(raw);
+          effects[author]!.add(
+            UnifiedEffect(
+              'history.food',
+              FoodRecord(
+                space: event.space,
+                writer: event.writer,
+                sequence: event.sequence,
+                clock: event.clock,
+                operation: event.operation,
+                previousHash: event.previousHash,
+                createdWith: event.createdWith,
+                attributedWriter: author,
+                retainedReferenceHash: event.hash,
+              ).encode(),
+            ),
+          );
+        }
+      }
+    }
+    final digest = bytesDigest(
+      utf8.encode(
+        canonicalDataJson({
+          'space': space,
+          'sources': {
+            for (final e in sources.entries) e.key: bytesDigest(e.value),
+          },
+        }),
       ),
-    )
-    .toList();
-List<UnifiedRecord> records(UnifiedConversion c) => c.files.values
+    );
+    return FixturePlan._(
+      space,
+      Set.unmodifiable(owners),
+      Map.unmodifiable(
+        effects.map((k, v) => MapEntry(k, List<UnifiedEffect>.unmodifiable(v))),
+      ),
+      digest,
+    );
+  }
+  FixtureConversion convert(Object? _) => prepareConversion();
+  FixtureConversion prepareConversion() {
+    final epoch = const Uuid().v5(
+      space,
+      'current-test-bootstrap:$sourceDigest',
+    );
+    final files = <String, List<int>>{},
+        heads = <String, Map<String, dynamic>>{},
+        authors = <String, String>{};
+    final originals = <UnifiedEffect>[];
+    for (final owner in owners.toList()..sort()) {
+      final ordered = effects[owner]!.toList()
+        ..sort((a, b) {
+          final c = a.clock.compareTo(b.clock);
+          if (c != 0) return c;
+          final w = a.writer.compareTo(b.writer);
+          return w != 0 ? w : a.sequence.compareTo(b.sequence);
+        });
+      var seq = 0, head = unifiedGenesis(space, epoch, owner);
+      EventClock? clock;
+      final out = StringBuffer();
+      for (final effect in ordered) {
+        authors[effect.writer] = owner;
+        clock = EventClock.next(effect.clock.value, clock);
+        final r = UnifiedRecord(
+          space: space,
+          epoch: epoch,
+          writer: owner,
+          sequence: ++seq,
+          clock: clock,
+          previousHash: head,
+          effect: effect,
+        );
+        out.writeln(r.encode());
+        head = r.hash;
+        originals.add(effect);
+      }
+      final bytes = Uint8List.fromList(
+        utf8.encode(out.toString()),
+      ).asUnmodifiableView();
+      files[unifiedLogName(owner)] = bytes;
+      heads[owner] = {'count': seq, 'head': head, 'digest': bytesDigest(bytes)};
+    }
+    return FixtureConversion(
+      UnifiedManifest(space, epoch, sourceDigest, heads, authors),
+      Map.unmodifiable(files),
+      List.unmodifiable(originals),
+    );
+  }
+}
+
+FixturePlan plan({Map<String, List<int>>? input, bool pending = false}) =>
+    FixturePlan.inspect(
+      space: space,
+      owners: {owner, peer},
+      sources: input ?? sources(),
+      hasUnresolvedPreparedWrites: pending,
+    );
+List<Object> ack(FixturePlan _) => const [];
+List<UnifiedRecord> records(FixtureConversion c) => c.files.values
     .expand(
       (bytes) => utf8
           .decode(bytes)
@@ -103,181 +272,38 @@ List<String> foodState(Iterable<FoodOperation> ops) => projectFood(
 ).containers.map((c) => canonicalDataJson(c.toJson())).toList();
 
 void main() {
-  test('sealed conversion collections cannot be changed after inspection', () {
-    final p = plan();
-    expect(() => p.effects[owner]!.clear(), throwsUnsupportedError);
-    expect(() => p.effects.clear(), throwsUnsupportedError);
-  });
-
   test(
-    'complete conversion is repeatable and preserves frozen semantic bytes',
+    'current bootstrap is deterministic, sealed and contains only normalized operations',
     () {
-      final p = plan(), a = p.convert(ack(p)), b = p.convert(ack(p));
+      final p = plan(), a = p.prepareConversion(), b = p.prepareConversion();
       expect(a.manifest.encode(), b.manifest.encode());
       expect(a.files, b.files);
-      final decoded = records(a);
-      expect(decoded, hasLength(5));
-      expect(decoded.map((r) => r.sequence), [1, 2, 3, 4, 5]);
-      expect(decoded.map((r) => r.recordId).toSet(), hasLength(5));
-      expect(decoded.map((r) => r.effect.key).toSet(), hasLength(5));
-      expect(
-        decoded.map((r) => r.effect.raw).toSet(),
-        a.originalEffects.map((e) => e.raw).toSet(),
-      );
-      expect(a.files.keys.toSet(), {
-        unifiedLogName(owner),
-        unifiedLogName(peer),
-      });
-      expect(
-        a.files.keys.any((n) => n.endsWith('.foodlog') || n.endsWith('.jsonl')),
-        isFalse,
-      );
-      var head = unifiedGenesis(space, a.manifest.epoch, owner);
-      for (final r in decoded) {
-        expect(r.previousHash, head);
-        head = r.hash;
-        expect(r.effect.historical, isTrue);
-      }
+      expect(records(a), hasLength(5));
+      expect(records(a).every((r) => r.effect.historical), isTrue);
+      expect(() => p.effects[owner]!.clear(), throwsUnsupportedError);
+      expect(() => a.files.clear(), throwsUnsupportedError);
       expect(
         UnifiedManifest.decode(a.manifest.encode()).digest,
         a.manifest.digest,
       );
-      final originalTasks = a.originalEffects
-          .where((e) => e.task != null)
-          .map((e) => e.raw)
-          .toList();
-      expect(
-        originalTasks,
-        File('test/fixtures/event_chain_v3.jsonl').readAsLinesSync(),
-      );
     },
   );
-
   test(
-    'unchanged peer conflict and Undo results survive interleave and duplicates',
+    'retired envelope input is rejected by the current fixture reader too',
     () {
-      final p = plan(), c = p.convert(ack(p));
-      final old = foodHistory().map((r) => r.operation).toList();
-      final migrated = records(c)
-          .where((r) => r.effect.food != null)
-          .map((r) => r.effect.food!.operation)
-          .toList();
-      final writer = foodWriter(peer);
-      for (final clock in [2, 10, 12]) {
-        final other = FoodOperation(
-          id: '$writer:1',
-          order: clock,
-          action: FoodAction.edit,
-          targets: [container],
-          details: const FoodDetails(name: 'Peer name'),
-          fields: ['name'],
-        );
-        expect(foodState([...migrated, other]), foodState([...old, other]));
-        expect(
-          foodState([other, ...migrated.reversed, ...migrated]),
-          foodState([...old, other]),
-        );
-      }
-      expect(foodState(migrated), foodState(old));
-    },
-  );
-
-  test(
-    'missing, stale and non-quiescent participant reports block conversion',
-    () {
-      final p = plan();
-      expect(() => p.convert(ack(p).take(1)), throwsA(isA<FormatFailure>()));
       expect(
-        () => p.convert([
-          ...ack(p).take(1),
-          CutoverAcknowledgement(
-            peer,
-            '0' * 64,
-            quiesced: true,
-            pendingResolved: true,
-          ),
-        ]),
+        () => plan(
+          input: {
+            '$owner.applog': File(
+              'test/fixtures/event_chain_v3.jsonl',
+            ).readAsBytesSync(),
+          },
+        ),
         throwsA(isA<FormatFailure>()),
       );
-      expect(
-        () => p.convert([
-          CutoverAcknowledgement(
-            owner,
-            p.sourceDigest,
-            quiesced: false,
-            pendingResolved: true,
-          ),
-          ack(p).last,
-        ]),
-        throwsA(isA<FormatFailure>()),
-      );
-      expect(() => plan(pending: true), throwsA(isA<FormatFailure>()));
     },
   );
-
-  test(
-    'late source changes require a new snapshot and fresh acknowledgements',
-    () {
-      final first = plan(), changed = sources();
-      changed['$peer.jsonl'] = utf8.encode(
-        '${LogEvent(space, peer, 1, EventClock(BigInt.from(20)), container, 'user.created', {'name': 'Peer'}).encode()}\n',
-      );
-      final newer = plan(input: changed);
-      expect(newer.sourceDigest, isNot(first.sourceDigest));
-      expect(() => newer.convert(ack(first)), throwsA(isA<FormatFailure>()));
-      expect(
-        newer.convert(ack(newer)).manifest.epoch,
-        isNot(first.convert(ack(first)).manifest.epoch),
-      );
-    },
-  );
-
-  for (final mutation in ['partial', 'conflict', 'identity', 'hash']) {
-    test('reject malformed or unowned source $mutation before conversion', () {
-      final input = sources();
-      if (mutation == 'partial') {
-        input['$owner.jsonl'] = input['$owner.jsonl']!.sublist(0, 20);
-      }
-      if (mutation == 'conflict') {
-        input['$owner.sync-conflict-x.jsonl'] = input['$owner.jsonl']!;
-      }
-      if (mutation == 'identity') {
-        input['$peer.jsonl'] = input.remove('$owner.jsonl')!;
-      }
-      if (mutation == 'hash') {
-        input['$owner.jsonl'] = utf8.encode(
-          utf8.decode(input['$owner.jsonl']!).replaceFirst('Zoë', 'Zoe'),
-        );
-      }
-      expect(() => plan(input: input), throwsA(isA<FormatFailure>()));
-    });
-  }
-
-  test('unknown app kinds and unknown closed fields demand an update', () {
-    final p = plan(), r = records(p.convert(ack(p))).first;
-    final j = jsonDecode(r.encode()) as Map<String, dynamic>;
-    (j['effect'] as Map)['kind'] = 'future.unknown';
-    expect(
-      () => UnifiedRecord.decode(canonicalDataJson(j)),
-      throwsA(isA<FormatFailure>()),
-    );
-    j['extra'] = true;
-    expect(
-      () => UnifiedRecord.decode(canonicalDataJson(j)),
-      throwsA(isA<FormatFailure>()),
-    );
+  test('bootstrap cannot be created from unresolved prepared operations', () {
+    expect(() => plan(pending: true), throwsA(isA<FormatFailure>()));
   });
-
-  test(
-    'outer record identity cannot substitute for original semantic identity',
-    () {
-      final p = plan(), all = records(p.convert(ack(p)));
-      expect(all.any((r) => r.effect.sequence != r.sequence), isTrue);
-      for (final r in all.where((r) => r.effect.food != null)) {
-        expect(r.effect.writer, foodWriter(owner));
-        expect(r.writer, owner);
-        expect(r.effect.id, isNot(r.recordId));
-      }
-    },
-  );
 }

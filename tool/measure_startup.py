@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import queue
+import re
 import sqlite3
 import subprocess
 import threading
@@ -29,27 +30,13 @@ def seed_fixture(root, tasks, library):
     profile.mkdir(exist_ok=True)
     if any(profile.iterdir()) or any(folder.iterdir()):
         raise RuntimeError('Benchmark requires fresh empty profile/shared directories; existing state retained')
-    space, writer, user = (str(uuid.uuid4()) for _ in range(3))
-    (folder/'tandemlog-space.json').write_text(json.dumps({'v': 3, 'id': space}))
-    events = []
-    batch_ns = time.time_ns()
-    previous = hashlib.sha256(f'tandemlog:genesis:v3\n{space}\n{writer}\n'.encode()).hexdigest()
-    for n in range(tasks+1):
-        entity = user if n == 0 else str(uuid.uuid4())
-        data = {'name': 'Benchmark user'} if n == 0 else {
-            'title': f'Task {n:04d}', 'description': 'Synthetic startup workload', 'assignee': user}
-        # Preserve the original scalar workload and fixed v3 envelope ordering.
-        record = dict(v=3, space=space, writer=writer, seq=n+1,
-                      clock=str(batch_ns+n), entity=entity,
-                      type='user.created' if n == 0 else 'task.created',
-                      data=dict(sorted(data.items())), previousHash=previous)
-        unsigned = json.dumps(record, ensure_ascii=False, separators=(',', ':'))
-        record['hash'] = hashlib.sha256(('tandemlog:event:v3\n'+unsigned).encode()).hexdigest()
-        previous = record['hash']
-        events.append(json.dumps(record, ensure_ascii=False, separators=(',', ':')))
-    (folder/f'{writer}.jsonl').write_bytes(('\n'.join(events)+'\n').encode('utf-8'))
+    writer, user = (str(uuid.uuid4()) for _ in range(2))
+    (root/'synthetic-workload.json').write_text(json.dumps({
+        'synthetic': True, 'version': 1, 'writer': writer, 'user': user,
+        'userName': 'Benchmark user', 'profile': str(profile.resolve()),
+        'tasks': [{'id': str(uuid.uuid4()), 'title': f'Task {n:04d}',
+                   'description': 'Synthetic startup workload'} for n in range(1, tasks+1)]}))
     receipt = initialize_fixture(folder, root, library)
-    (profile/'settings.json').write_text(json.dumps({'folder': str(folder), 'user': user}))
     return folder, profile, receipt
 
 
@@ -131,7 +118,8 @@ def launch(binary, profile, diagnostics, run):
 def verify_loaded(profile, folder, tasks, result, warm):
     if not any(line.startswith('TANDEMLOG_ROWS ') for line in result['phases']):
         raise RuntimeError('Ready marker was emitted without a successful model load')
-    key = hashlib.sha256(str(folder).encode()).hexdigest()
+    epoch = json.loads((folder/'tandemlog-space.json').read_text())['epoch']
+    key = hashlib.sha256(f'{folder}#app5:{epoch}'.encode()).hexdigest()
     database = profile/'local.sqlite'
     if database.exists():
         table = f'tasks_{key}_views'
@@ -142,8 +130,16 @@ def verify_loaded(profile, folder, tasks, result, warm):
         projected = [json.loads(row[0]) for row in db.execute(f'SELECT raw FROM {table}')]
     if len(projected) != tasks+1 or sum(row['kind'] == 'task' for row in projected) != tasks:
         raise RuntimeError('Loaded cache does not contain the complete synthetic workload')
-    if warm and not result['marker'].endswith('FILES_READ=0'):
-        raise RuntimeError('Warm cache unexpectedly replayed canonical log contents')
+    match = re.search(r'FILES_READ=(\d+)$', result['marker'])
+    canonical_files = len(list(folder.glob('*.applog')))
+    if not match or not canonical_files:
+        raise RuntimeError('Ready marker lacks truthful canonical-read attribution')
+    reads = int(match[1])
+    result.update(canonical_payload_reads=reads, canonical_files=canonical_files)
+    # Current common admission scans payloads before exposing either module.
+    # Bound repeated startup stages; do not claim the retired incremental path.
+    if not canonical_files <= reads <= 8*canonical_files:
+        raise RuntimeError('Startup canonical admission exceeded its bounded scan stages')
 
 
 def main():

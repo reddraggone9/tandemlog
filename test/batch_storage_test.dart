@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -7,6 +6,7 @@ import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
+import 'current_history_fixture.dart';
 
 void main() {
   for (final count in [1, 30, 100]) {
@@ -31,10 +31,10 @@ void main() {
             final before = store.cacheTransactions;
             await operation();
             expect(folder.appends, 1);
-            // Two ingestion listings plus one fresh shared-upgrade fence,
-            // independent of the number of tasks in the batch.
-            expect(folder.lists, 3);
-            expect(folder.reads, 3);
+            // The common authority revalidates all canonical bytes before/after
+            // append; the number of provider calls is independent of batch size.
+            expect(folder.lists, 5);
+            expect(folder.reads, 9);
             expect(store.cacheTransactions - before, 1);
           }
 
@@ -103,12 +103,12 @@ void main() {
               isNull,
             );
           });
-          final before = await folder.delegate.read('${store.writer}.jsonl');
+          final before = await folder.delegate.read('${store.writer}.applog');
           folder.reset();
           final retry = await store.createTasks(titles, user);
           expect(retry.committedIds, tasks);
           expect(folder.appends, 0);
-          expect(await folder.delegate.read('${store.writer}.jsonl'), before);
+          expect(await folder.delegate.read('${store.writer}.applog'), before);
           final expected = store.rows;
           await store.close();
           final replay = await TaskStore.open(
@@ -145,29 +145,23 @@ void main() {
           folder.fault = fault;
           final result = await store.createTasks(titles, user);
           expect(result.error, isNotNull);
-          final raw = await folder.delegate.read('${store.writer}.jsonl');
+          final raw = await folder.delegate.read('${store.writer}.applog');
           if (fault == 'tail') {
             expect(result.committedIds, isEmpty);
             expect(result.remainingIds, titles.keys);
             expect(raw.last, isNot(10));
-            await expectLater(
-              store.createTasks(titles, user),
-              throwsA(isA<FormatFailure>()),
-            );
-            expect(await folder.delegate.read('${store.writer}.jsonl'), raw);
+            final blocked = await store.createTasks(titles, user);
+            expect(blocked.error, isA<WriterGuardFailure>());
+            expect(await folder.delegate.read('${store.writer}.applog'), raw);
             // A peer can ingest the complete prefix while this owner fails closed.
             final peer = await TaskStore.open(
               folder.delegate,
               '${root.path}/peer',
             );
-            expect(peer.rows.where((r) => r['kind'] == 'task').length, 1);
+            expect(peer.rows.where((r) => r['kind'] == 'task'), isEmpty);
             await peer.close();
           } else {
-            final acknowledged = fault == 'before'
-                ? 0
-                : fault == 'prefix'
-                ? 1
-                : 2;
+            final acknowledged = fault == 'before' || fault == 'prefix' ? 0 : 2;
             expect(result.committedIds.length, acknowledged);
             expect(result.remainingIds.length, 2 - acknowledged);
             if (fault == 'before' || fault == 'prefix') {
@@ -180,7 +174,7 @@ void main() {
             expect(retry.succeeded, isTrue);
             expect(store.rows.where((r) => r['kind'] == 'task').length, 2);
             final events = store.db.select(
-              "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.created'",
+              "SELECT raw FROM ${store.tables.events} WHERE json_extract(semantic,'\$.type')='task.created'",
             );
             expect(
               events.length,
@@ -223,19 +217,16 @@ void main() {
           'task.operationUndone',
           {'operation': '${store.writer}:3'},
         );
-        await folder.create(
-          '$remote.jsonl',
-          Uint8List.fromList(utf8.encode('${event.encode()}\n')),
-        );
+        await folder.create('$remote.applog', peerBytesFor(store, event));
         await store.refresh();
-        final before = await folder.delegate.read('${store.writer}.jsonl');
+        final before = await folder.delegate.read('${store.writer}.applog');
         final result = await store.createTasks({
           first: 'First',
           second: 'Second',
         }, user);
         expect(result.error, isA<FormatFailure>());
         expect(result.committedIds, isEmpty);
-        expect(await folder.delegate.read('${store.writer}.jsonl'), before);
+        expect(await folder.delegate.read('${store.writer}.applog'), before);
       } finally {
         await store.close();
         await root.delete(recursive: true);
@@ -260,7 +251,7 @@ void main() {
         await store.createTasks({first: 'First', second: 'Second'}, user);
         final next =
             (store.db.select(
-                  'SELECT MAX(seq) AS n FROM events WHERE writer=?',
+                  'SELECT MAX(seq) AS n FROM ${store.tables.events} WHERE writer=?',
                   [store.writer],
                 ).single['n']
                 as int) +
@@ -280,12 +271,9 @@ void main() {
             },
           },
         );
-        await folder.create(
-          '$remote.jsonl',
-          Uint8List.fromList(utf8.encode('${event.encode()}\n')),
-        );
+        await folder.create('$remote.applog', peerBytesFor(store, event));
         await store.refresh();
-        final before = await folder.delegate.read('${store.writer}.jsonl');
+        final before = await folder.delegate.read('${store.writer}.applog');
         final result = await store.bulkEdit(
           [first, second],
           BulkTaskEdit(addTags: ['Reviewed']),
@@ -293,7 +281,7 @@ void main() {
         );
         expect(result.error, isA<FormatFailure>());
         expect(result.committedIds, isEmpty);
-        expect(await folder.delegate.read('${store.writer}.jsonl'), before);
+        expect(await folder.delegate.read('${store.writer}.applog'), before);
       } finally {
         await store.close();
         await root.delete(recursive: true);
@@ -333,8 +321,11 @@ class CountingFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   }
 
   @override
-  Future<Uint8List> readBounded(String name, int maximumBytes) =>
-      delegate.readBounded(name, maximumBytes);
+  Future<Uint8List> readBounded(String name, int maximumBytes) {
+    reads++;
+    return delegate.readBounded(name, maximumBytes);
+  }
+
   @override
   Future<Uint8List> read(String name) {
     reads++;
@@ -361,19 +352,10 @@ class CountingFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
       throw StateError('Injected before write');
     }
     if (current == 'prefix' || current == 'tail') {
-      final end = bytes.indexOf(10) + 1;
-      if (current == 'prefix') {
-        delayedName = name;
-        delayedSuffix = Uint8List.sublistView(bytes, end);
-      }
-      await delegate.append(
-        name,
-        Uint8List.sublistView(
-          bytes,
-          0,
-          current == 'prefix' ? end : end + (bytes.length - end) ~/ 2,
-        ),
-      );
+      final end = bytes.length ~/ 2;
+      delayedName = name;
+      delayedSuffix = Uint8List.sublistView(bytes, end);
+      await delegate.append(name, Uint8List.sublistView(bytes, 0, end));
       throw StateError('Injected interrupted append');
     }
     await delegate.append(name, bytes);

@@ -40,8 +40,6 @@ import 'presentation/task_editor.dart';
 import 'presentation/form_validation.dart';
 import 'presentation/name_entry_dialog.dart';
 import 'presentation/device_name_dialog.dart';
-import 'presentation/time_zone_upgrade_dialog.dart';
-import 'presentation/workspace_upgrade.dart';
 import 'presentation/checklist_panel.dart';
 import 'presentation/checklist_disclosure_ink_border.dart';
 import 'presentation/task_actions_menu.dart';
@@ -56,13 +54,9 @@ import 'platform/android_section_navigation.dart';
 import 'storage/local_settings.dart';
 import 'storage/local_durability.dart';
 import 'storage/local_profile_database.dart';
-import 'storage/local_profile_migration.dart';
 import 'storage/task_store.dart';
 import 'storage/unified_history.dart';
 import 'storage/workspace_state.dart';
-import 'storage/workspace_capabilities.dart';
-import 'storage/workspace_upgrade.dart';
-import 'storage/workspace_upgrade_recovery.dart';
 import 'storage/checklist_expansion_store.dart';
 import 'food/food_page.dart';
 import 'food/food_store.dart';
@@ -187,13 +181,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<void>? sectionWork;
   String? foodError, sharedSafetyError;
   String? occurrenceMigrationError;
-  WorkspaceUpgrade? workspaceUpgrade;
-  LogFolder? upgradeFolder;
-  String? upgradeError;
-  bool upgradeScreen = false, preparingUpgrade = false;
-  Future<void>? upgradeWork;
-  Timer? upgradePoll;
-  bool get _upgradeActive => upgradeFolder != null || workspaceUpgrade != null;
 
   final foodPageKey = GlobalKey<FoodInventoryPageState>();
   final foodUndoHistory = FoodUndoHistory();
@@ -258,7 +245,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool choosingFolder = false;
   // Keep private setup input mounted and focused during additive metadata I/O.
   // This does not grant workspace permission or bypass busy command guards.
-  bool _changingTimeZoneMetadata = false;
   // Consent retains command admission/lifecycle ownership without displaying
   // a running operation while the user is deciding.
   bool awaitingCompletionConfirmation = false;
@@ -323,7 +309,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   TimeZoneNamePolicy get _timeZonePolicy =>
-      workspaceState?.current.timeZonePolicy ?? TimeZoneNamePolicy.legacy;
+      workspaceState?.current.timeZonePolicy ??
+      TimeZoneNamePolicy.additional2026eV1;
 
   void _bindWorkspaceState() {
     final tasks = store, food = foodStore;
@@ -540,7 +527,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           (await getApplicationSupportDirectory()).path;
       profileDatabase ??= await LocalProfileDatabase.open(privateRoot!);
       privateRoot = profileDatabase!.root;
-      await LocalProfileMigration(profileDatabase!).run();
+      await LocalSettings.initialize(profileDatabase!);
       if (!mounted) return;
       settings = LocalSettings(privateRoot!, profileDatabase: profileDatabase);
       await settings!.load();
@@ -587,82 +574,26 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             : LocalLogFolder(location));
     final engine = textEngine ??=
         widget.textEngineFactory?.call() ?? NativeTextEngine();
-    await resumeOwnedWorkspaceCapabilitiesBeforeOpen(
-      profile: profileDatabase!,
-      folder: folder,
-      writer: settings!.writer,
-    );
-    // Detect shared sessions before store opening can initialize text or
-    // automatically append occurrence-to-Due changes.
-    try {
-      final upgrade = await WorkspaceUpgrade.open(
-        folder: folder,
-        profile: profileDatabase!,
-        writer: settings!.writer,
-        textEngine: engine,
-      );
-      if (upgrade != null && upgrade.phase != 'complete') {
-        workspaceUpgrade = upgrade;
-        upgradeFolder = folder;
-        upgradeError = null;
-        upgradeScreen = true;
-        store = null;
-        foodStore = null;
-        _bindWorkspaceState();
-        return true;
-      }
-      workspaceUpgrade = null;
-      upgradeFolder = null;
-      upgradeError = null;
-      upgradeScreen = false;
-    } catch (failure) {
-      if (!await _hasWorkspaceUpgradeEvidence(folder)) rethrow;
-      // Partial manifest/session never falls through to empty-workspace setup.
-      workspaceUpgrade = null;
-      upgradeFolder = folder;
-      upgradeError = failureMessage(failure);
-      upgradeScreen = true;
-      store = null;
-      foodStore = null;
-      _bindWorkspaceState();
-      return true;
-    }
     UnifiedHistory? unified;
     late TaskStore opened;
     try {
       final names = await folder.list();
-      final hasManifest = names.any((f) => f.name == 'tandemlog-space.json');
-      final isUnified =
-          hasManifest &&
-          folder is BoundedLogFolder &&
-          (jsonDecode(
-                    utf8.decode(
-                      await (folder as BoundedLogFolder).readBounded(
-                        'tandemlog-space.json',
-                        1024 * 1024,
-                      ),
-                    ),
-                  )
-                  as Map)['v'] ==
-              4;
-      if (isUnified) {
-        unified = await UnifiedHistory.open(
-          folder,
-          profile: profileDatabase!,
-          writer: settings!.writer,
-          textEngine: engine,
-        );
-        opened = await TaskStore.openUnified(unified);
-      } else {
-        opened = await TaskStore.open(
-          folder,
-          privateRoot!,
-          profileDatabase: profileDatabase,
-          writerIdentity: settings!.writer,
-          textEngine: engine,
-          initializeNewWorkspaceText: true,
-          onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
-        );
+      unified = names.isEmpty
+          ? await UnifiedHistory.create(
+              folder,
+              profile: profileDatabase!,
+              writer: settings!.writer,
+              textEngine: engine,
+            )
+          : await UnifiedHistory.open(
+              folder,
+              profile: profileDatabase!,
+              writer: settings!.writer,
+              textEngine: engine,
+            );
+      opened = await TaskStore.openUnified(unified);
+      if (!opened.sharedTextInitialized && unified.snapshot.tasks.isEmpty) {
+        await opened.initializeSharedText();
       }
     } catch (_) {
       await unified?.close();
@@ -670,7 +601,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     if (!mounted) {
       await opened.close();
-      await unified?.close();
+      await unified.close();
       return false;
     }
     Set<String> expanded;
@@ -683,25 +614,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             'This folder cannot enforce safe Food reads. Tasks remain available.',
           );
         }
-        openedFood = unified != null
-            ? await FoodStore.openUnified(unified)
-            : await FoodStore.open(
-                folder,
-                profile: profileDatabase!,
-                installationWriter: settings!.writer,
-                space: opened.space,
-              );
-      } on FoodHistoryFailure catch (failure) {
-        if (unified != null) rethrow;
-        // FoodStore has already revalidated shared profile/workspace identity.
-        // Recheck Tasks before publishing a module-degraded workspace.
-        await opened.refresh();
-        openedFoodError = failure.message;
+        openedFood = await FoodStore.openUnified(unified);
+      } on FoodHistoryFailure {
+        rethrow;
       }
       if (!mounted) {
-        await openedFood?.close();
+        await openedFood.close();
         await opened.close();
-        await unified?.close();
+        await unified.close();
         return false;
       }
       final migration = await opened.migrateOccurrenceDates(
@@ -711,9 +631,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ? null
           : failureMessage(migration.error!);
       if (!mounted) {
-        await openedFood?.close();
+        await openedFood.close();
         await opened.close();
-        await unified?.close();
+        await unified.close();
         return false;
       }
 
@@ -725,7 +645,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     } catch (_) {
       await openedFood?.close();
       await opened.close();
-      await unified?.close();
+      await unified.close();
       rethrow;
     }
     store = opened;
@@ -802,8 +722,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       settingsLoaded &&
       store != null &&
       user != null &&
-      sharedSafetyError == null &&
-      !_upgradeActive;
+      sharedSafetyError == null;
 
   bool get _sectionRequestReady =>
       _sectionReady &&
@@ -876,7 +795,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!mounted ||
         busy ||
         sharedSafetyError != null ||
-        _upgradeActive ||
         origin == null ||
         !identical(origin, expected)) {
       throw StateError('Food is busy; try again.');
@@ -1037,14 +955,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             'This folder cannot enforce safe Food reads. Tasks remain available.',
           );
         }
-        opened = expected.unified != null
-            ? await FoodStore.openUnified(expected.unified!)
-            : await FoodStore.open(
-                expected.folder,
-                profile: profileDatabase!,
-                installationWriter: settings!.writer,
-                space: expected.space,
-              );
+        opened = await FoodStore.openUnified(expected.unified!);
         if (!mounted || !identical(store, expected)) {
           await opened.close();
           return;
@@ -1230,8 +1141,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _saveSettings() async {
     final preferences = settings!;
-    preferences.folder =
-        upgradeFolder?.location ?? store?.folder.location ?? preferences.folder;
+    preferences.folder = store?.folder.location ?? preferences.folder;
     preferences.user = user;
     await preferences.save();
   }
@@ -1296,42 +1206,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       settings!.appearance = previous;
       rethrow;
     }
-  }, allowDuringUpgrade: true);
+  });
 
   Future<void> _showSettings() async {
     final origin = store, owner = profileDatabase, preferences = settings;
-    final location =
-        upgradeFolder?.location ??
-        origin?.folder.location ??
-        preferences?.folder;
+    final location = origin?.folder.location ?? preferences?.folder;
     bool current() =>
         mounted &&
         identical(store, origin) &&
         identical(profileDatabase, owner) &&
         identical(settings, preferences) &&
-        location ==
-            (upgradeFolder?.location ??
-                store?.folder.location ??
-                settings?.folder);
+        location == (store?.folder.location ?? settings?.folder);
     bool canOpen = false;
     if (location != null) {
       try {
         canOpen = await widget.folderActions.canOpen(location);
       } catch (_) {
         /* unavailable */
-      }
-    }
-    if (!current()) return;
-    var timeZoneRecovery = false;
-    if (location != null && owner != null && preferences != null) {
-      try {
-        timeZoneRecovery = await hasOwnedPendingWorkspaceCapabilities(
-          profile: owner,
-          writer: preferences.writer,
-          location: location,
-        );
-      } catch (failure) {
-        if (current()) _stopForSharedSafety(failure);
       }
     }
     if (!mounted || !current()) return;
@@ -1403,26 +1294,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         }
                       : null,
                 ),
-                if (store != null || _upgradeActive) ...[
+                if (store != null) ...[
                   const Divider(height: 32),
                   const Text('This installation'),
                   SelectableText(settings!.writer),
-                  if (store?.unified == null || _upgradeActive)
-                    ListTile(
-                      key: const ValueKey('workspace-upgrade-setting'),
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        _upgradeActive
-                            ? 'Resume workspace upgrade'
-                            : 'Upgrade shared workspace…',
-                      ),
-                      subtitle: const Text(
-                        'Guided Tasks and Food history upgrade',
-                      ),
-                      trailing: const Icon(Icons.chevron_right),
-                      enabled: !busy,
-                      onTap: () => Navigator.pop(ctx, 'upgrade'),
-                    ),
                 ],
                 if (store?.unified != null) ...[
                   const Divider(height: 32),
@@ -1441,49 +1316,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     onTap: () => Navigator.pop(ctx, 'device-name'),
                   ),
                 ],
-                if (store != null || timeZoneRecovery) ...[
-                  ListTile(
-                    key: const ValueKey('additional-time-zones-setting'),
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      timeZoneRecovery
-                          ? 'Resume time zone update…'
-                          : 'Additional time zones',
-                    ),
-                    subtitle: Text(
-                      timeZoneRecovery
-                          ? 'Finish the update already started on this device'
-                          : store?.unified == null
-                          ? 'Upgrade the shared workspace first'
-                          : _timeZonePolicy.allowsAdditionalTimeZones
-                          ? 'Enabled · requires build 98 or newer on every device'
-                          : 'Requires updated apps on every device',
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    enabled:
-                        !busy &&
-                        (timeZoneRecovery ||
-                            (sharedSafetyError == null &&
-                                !_upgradeActive &&
-                                !_timeZonePolicy.allowsAdditionalTimeZones &&
-                                (store == null ||
-                                    !_hasPendingOperation(store!)))),
-                    onTap: () {
-                      if (!ctx.mounted ||
-                          ModalRoute.of(ctx)?.isCurrent != true) {
-                        return;
-                      }
-                      Navigator.pop(
-                        ctx,
-                        timeZoneRecovery
-                            ? 'resume-time-zones'
-                            : store?.unified == null
-                            ? 'upgrade'
-                            : 'additional-time-zones',
-                      );
-                    },
-                  ),
-                ],
                 const Divider(height: 32),
                 const Text('Data folder'),
                 const SizedBox(height: 8),
@@ -1500,34 +1332,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       : 'Tasks are stored in this folder. Use your sync app to share changes between devices, and back up the folder before removing app data. Switching folders does not move or delete tasks.',
                 ),
                 const SizedBox(height: 12),
-                if (timeZoneRecovery && widget.folderActions.requiresPicker)
-                  OutlinedButton.icon(
-                    key: const ValueKey(
-                      'restore-time-zone-folder-access-setting',
-                    ),
-                    onPressed: busy
-                        ? null
-                        : () {
-                            if (!ctx.mounted ||
-                                ModalRoute.of(ctx)?.isCurrent != true) {
-                              return;
-                            }
-                            Navigator.pop(ctx, 'restore-time-zone-access');
-                          },
-                    icon: const Icon(Icons.folder_open),
-                    label: const Text('Restore access to this folder'),
-                  ),
-                if (_upgradeActive)
-                  OutlinedButton.icon(
-                    key: const ValueKey(
-                      'restore-upgrade-folder-access-setting',
-                    ),
-                    onPressed: busy
-                        ? null
-                        : () => Navigator.pop(ctx, 'restore-upgrade-access'),
-                    icon: const Icon(Icons.folder_open),
-                    label: const Text('Restore access to this folder'),
-                  ),
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
@@ -1555,7 +1359,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           settingsLoaded &&
                               !busy &&
                               !choosingFolder &&
-                              !_upgradeActive &&
                               sharedSafetyError == null
                           ? () => Navigator.pop(ctx, 'choose')
                           : null,
@@ -1572,10 +1375,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         visualDensity: VisualDensity.standard,
                       ),
                       onPressed:
-                          store != null &&
-                              !busy &&
-                              !_upgradeActive &&
-                              sharedSafetyError == null
+                          store != null && !busy && sharedSafetyError == null
                           ? () => Navigator.pop(ctx, 'verify')
                           : null,
                       icon: const Icon(Icons.fact_check_outlined),
@@ -1613,48 +1413,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       ),
     );
     if (!current() || action == null) return;
-    if (action == 'restore-upgrade-access') {
-      await _restoreWorkspaceUpgradeAccess();
-    } else if (action == 'upgrade') {
-      if (_upgradeActive) {
-        await _continueWorkspaceUpgrade();
-      } else {
-        await _prepareWorkspaceUpgrade();
-      }
-    } else if (action == 'additional-time-zones') {
-      await _enableAdditionalTimeZones();
-    } else if (action == 'resume-time-zones') {
-      await _resumeAdditionalTimeZones(location!);
-    } else if (action == 'restore-time-zone-access') {
-      final origin = store, owner = profileDatabase, preferences = settings;
-      try {
-        final restored = await widget.folderActions.restoreAccess(location!);
-        if (restored != null &&
-            mounted &&
-            identical(store, origin) &&
-            identical(profileDatabase, owner) &&
-            identical(settings, preferences)) {
-          if (restored != location) {
-            throw StateError(
-              'Choose the same data folder to resume this update.',
-            );
-          }
-          await _resumeAdditionalTimeZones(location);
-        }
-      } catch (failure) {
-        if (mounted && identical(store, origin)) {
-          setState(() => error = failureMessage(failure));
-        }
-      }
-    } else if (action == 'device-name') {
+    if (action == 'device-name') {
       await _editDeviceName();
     } else if (action == 'choose') {
       await _chooseFolder();
     } else if (action == 'open') {
-      await _act(
-        () => widget.folderActions.open(location!),
-        allowDuringUpgrade: true,
-      );
+      await _act(() => widget.folderActions.open(location!));
     } else if (action == 'verify') {
       await _checkDataIntegrity();
     } else if (action == 'licenses') {
@@ -1663,592 +1427,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
     } else {
       await _setAppearance(Appearance.values.byName(action));
-    }
-  }
-
-  Future<bool> _hasWorkspaceUpgradeEvidence(LogFolder folder) async {
-    // Only an actual shared session or this profile's journal should turn an
-    // ordinary unavailable-folder error into upgrade recovery.
-    for (final row in profileDatabase!.database.select(
-      'SELECT plan,state FROM protected_app_migrations',
-    )) {
-      final Object? state;
-      try {
-        state = jsonDecode(utf8.decode(row['plan'] as List<int>));
-      } catch (_) {
-        // An unreadable protected journal is recovery evidence, never absence
-        // of an upgrade or permission to initialize a blank workspace.
-        return true;
-      }
-      if (state is Map &&
-          state['kind'] == 'workspace-upgrade-v1' &&
-          state['location'] == folder.location &&
-          row['state'] != 'complete' &&
-          row['state'] != 'aborted') {
-        return true;
-      }
-    }
-    try {
-      return (await folder.list()).any(
-        (file) =>
-            file.name == workspaceUpgradeSessionName ||
-            file.name.contains('.applog') ||
-            (file.name.startsWith('upgrade-') && file.name.endsWith('.json')),
-      );
-    } catch (_) {
-      return false;
-    }
-  }
-
-  Future<bool> _releaseUpgradeDrafts() async {
-    if (!await _closeEditor() || !await _closeFoodEditor() || !mounted) {
-      return false;
-    }
-    // Nonmodal inputs keep their controllers. Never silently discard capture
-    // or setup text merely to begin an upgrade.
-    if (capture.text.trim().isNotEmpty ||
-        (user == null && firstName.text.trim().isNotEmpty)) {
-      setState(() {
-        error =
-            'Finish or clear the current input before upgrading the workspace.';
-        errorFromRefresh = false;
-      });
-      return false;
-    }
-    return true;
-  }
-
-  bool get _upgradeHasPending =>
-      (store != null && _hasPendingOperation(store!)) ||
-      pendingCapture.isNotEmpty ||
-      pendingUserId != null ||
-      pendingFoodCommand != null ||
-      (foodStore?.hasPreparedAppend ?? false) ||
-      (foodStore?.pendingReferences ?? 0) > 0;
-
-  Future<void> _prepareWorkspaceUpgrade() async {
-    final origin = store, owner = profileDatabase;
-    if (!mounted ||
-        busy ||
-        origin == null ||
-        owner == null ||
-        origin.unified != null ||
-        _upgradeActive ||
-        preparingUpgrade ||
-        sharedSafetyError != null) {
-      return;
-    }
-    preparingUpgrade = true;
-    try {
-      if (!await _releaseUpgradeDrafts() || !identical(store, origin) || busy) {
-        return;
-      }
-      await syncing;
-      if (_upgradeHasPending) {
-        throw StateError(
-          'Finish the earlier saved operation with Retry before beginning the upgrade.',
-        );
-      }
-      final inventory = await WorkspaceUpgrade.inspect(
-        origin.folder,
-        writer: settings!.writer,
-      );
-      if (!mounted || !identical(store, origin) || busy) return;
-      final choice = await showDialog<WorkspaceUpgradeChoice>(
-        context: context,
-        builder: (_) => WorkspaceUpgradeDialog(
-          writer: settings!.writer,
-          inventory: inventory,
-          inspect: (owners) => WorkspaceUpgrade.inspect(
-            origin.folder,
-            writer: settings!.writer,
-            knownOwners: owners,
-          ),
-        ),
-      );
-      if (choice == null ||
-          !mounted ||
-          !identical(store, origin) ||
-          busy ||
-          !await _releaseUpgradeDrafts()) {
-        return;
-      }
-      await _runWorkspaceUpgrade(() async {
-        await syncing;
-        if (!identical(store, origin) || _upgradeHasPending) {
-          throw StateError(
-            'Resolve earlier saves before beginning the upgrade.',
-          );
-        }
-        // start() durably freezes this real profile before exposing its shared
-        // session. No ACK is created by opening or confirming this dialog.
-        final upgrade = await WorkspaceUpgrade.start(
-          folder: origin.folder,
-          profile: owner,
-          writer: settings!.writer,
-          participants: choice.participants,
-          knownOwners: choice.knownOwners,
-          textEngine: textEngine,
-        );
-        workspaceUpgrade = upgrade;
-        upgradeFolder = origin.folder;
-        upgradeScreen = true;
-        await _advanceWorkspaceUpgrade(upgrade);
-      });
-    } catch (failure) {
-      if (mounted) setState(() => error = failureMessage(failure));
-    } finally {
-      preparingUpgrade = false;
-    }
-  }
-
-  Future<void> _continueWorkspaceUpgrade() async {
-    if (!mounted || busy || !_upgradeActive) return;
-    if (!await _releaseUpgradeDrafts()) return;
-    if (!mounted) return;
-    setState(() => upgradeScreen = true);
-    _configureUpgradePolling();
-  }
-
-  Future<void> _runWorkspaceUpgrade(Future<void> Function() work) {
-    final existing = upgradeWork;
-    if (existing != null) return existing;
-    if (!mounted || busy) return Future<void>.value();
-    final completion = Completer<void>();
-    upgradeWork = completion.future;
-    final action = activeActionDone = Completer<void>();
-    importer?.stop();
-    setState(() {
-      busy = true;
-      upgradeError = null;
-    });
-    unawaited(() async {
-      try {
-        await work();
-      } catch (failure) {
-        // start() may have durably frozen before a provider write failed.
-        // Retain that journal and route to Resume instead of returning to edits.
-        final folder = upgradeFolder ?? store?.folder;
-        if (folder != null && await _hasWorkspaceUpgradeEvidence(folder)) {
-          upgradeFolder = folder;
-          upgradeScreen = true;
-        }
-        if (mounted) {
-          setState(() => upgradeError = failureMessage(failure));
-          if (!_upgradeActive) {
-            setState(() => error = failureMessage(failure));
-          }
-        }
-      } finally {
-        action.complete();
-        if (identical(activeActionDone, action)) activeActionDone = null;
-        if (identical(upgradeWork, completion.future)) upgradeWork = null;
-        completion.complete();
-        if (mounted) {
-          setState(() => busy = false);
-          _configureImporter();
-          _wakeSectionRequests();
-        }
-      }
-    }());
-    return completion.future;
-  }
-
-  Future<void> _restoreWorkspaceUpgradeAccess() async {
-    if (!mounted || busy || !_upgradeActive) return;
-    // A peer can finish while this device keeps a dirty editor mounted. The
-    // grant picker must not bypass that draft's existing close decision.
-    if (!upgradeScreen) {
-      if (!await _releaseUpgradeDrafts() || !mounted || busy) return;
-      setState(() => upgradeScreen = true);
-    }
-    final originalError = upgradeError;
-    return _runWorkspaceUpgrade(() async {
-      final folder = upgradeFolder;
-      if (folder == null) return;
-      final selected = await widget.folderActions.restoreAccess(
-        folder.location,
-      );
-      if (selected == null) {
-        upgradeError = originalError;
-        return;
-      }
-      if (selected != folder.location) {
-        throw StateError(
-          'Choose the original data folder. A different folder cannot resume '
-          'this upgrade; its data has not been opened.',
-        );
-      }
-      final upgrade = await WorkspaceUpgrade.open(
-        folder: folder,
-        profile: profileDatabase!,
-        writer: settings!.writer,
-        textEngine: textEngine,
-      );
-      workspaceUpgrade = upgrade;
-      if (upgrade == null || upgrade.phase == 'complete') {
-        await _reopenUpgradedWorkspace(folder);
-      } else if (upgrade.hasLocalConsent && upgradeScreen) {
-        await _advanceWorkspaceUpgrade(upgrade);
-      }
-    });
-  }
-
-  Future<void> _workspaceUpgradeAction(String action) {
-    if (action == 'restore-access') return _restoreWorkspaceUpgradeAccess();
-    return _runWorkspaceUpgrade(() async {
-      final folder = upgradeFolder;
-      if (folder == null) return;
-      var upgrade = workspaceUpgrade;
-      if (action == 'refresh' || action == 'resume' || upgrade == null) {
-        if (upgrade == null) {
-          upgrade = await WorkspaceUpgrade.open(
-            folder: folder,
-            profile: profileDatabase!,
-            writer: settings!.writer,
-            textEngine: textEngine,
-          );
-        } else {
-          try {
-            await upgrade.refresh();
-          } catch (_) {
-            // An aborted session can legitimately disappear from active state;
-            // open() validates its marker and the local journal before thawing.
-            upgrade = await WorkspaceUpgrade.open(
-              folder: folder,
-              profile: profileDatabase!,
-              writer: settings!.writer,
-              textEngine: textEngine,
-            );
-          }
-        }
-        workspaceUpgrade = upgrade;
-        if (upgrade == null) {
-          await _reopenUpgradedWorkspace(folder);
-          return;
-        }
-        if (upgrade.hasLocalConsent && upgradeScreen) {
-          await _advanceWorkspaceUpgrade(upgrade);
-          return;
-        }
-      } else {
-        switch (action) {
-          case 'join':
-            await upgrade.consentToUpgrade();
-            await _advanceWorkspaceUpgrade(upgrade);
-            return;
-          case 'recover':
-            await finishWorkspaceUpgradeSaves(
-              folder: folder,
-              profile: profileDatabase!,
-              writer: settings!.writer,
-              textEngine: textEngine,
-              tasks: store,
-              food: foodStore,
-            );
-            final taskOrigin = store;
-            if (taskOrigin != null && captureFailure) {
-              final unsaved = pendingCapture
-                  .where((entry) => !taskOrigin.isCaptureConfirmed(entry.id))
-                  .toList();
-              capture.text = unsaved.map((entry) => entry.title).join('\n');
-              pendingCapture
-                ..clear()
-                ..addAll(unsaved);
-              captureFailure = unsaved.isNotEmpty;
-            }
-            final pending = pendingFoodCommand, foodOrigin = foodStore;
-            if (pending != null &&
-                foodOrigin != null &&
-                identical(pending.origin, foodOrigin) &&
-                pending.records.every(foodOrigin.isAdmitted)) {
-              _confirmFoodAction(
-                foodOrigin,
-                pending.records,
-                verb: pending.verb,
-                undoEntry: pending.undoEntry,
-              );
-              pendingFoodCommand = null;
-            }
-          case 'input':
-            if (_upgradeHasPending) {
-              throw StateError(
-                'An earlier save must be recovered before this device can acknowledge the upgrade.',
-              );
-            }
-            await upgrade.acknowledgeInput();
-          case 'stage':
-            await upgrade.stage();
-          case 'output':
-            await upgrade.acknowledgeOutput();
-          case 'activate':
-            await upgrade.activate();
-          case 'complete':
-            await upgrade.complete();
-          case 'abort':
-            await upgrade.abort();
-            workspaceUpgrade = null;
-            await _reopenUpgradedWorkspace(folder);
-            return;
-          case 'open':
-            await _reopenUpgradedWorkspace(folder);
-            return;
-        }
-        await upgrade.refresh();
-      }
-      if (upgrade.phase == 'complete') {
-        await _reopenUpgradedWorkspace(folder);
-      }
-    });
-  }
-
-  Future<void> _advanceWorkspaceUpgrade(WorkspaceUpgrade upgrade) async {
-    // The local journal records explicit consent. Shared receipts alone never
-    // authorize this installation to acknowledge or resume an upgrade.
-    if (!upgrade.hasLocalConsent || !upgradeScreen || !mounted) return;
-    for (var step = 0; step < 8 && mounted && foreground; step++) {
-      await upgrade.refresh();
-      if (mounted) setState(() {});
-      switch (upgrade.phase) {
-        case 'input':
-          if (!upgrade.inputAcknowledged.contains(upgrade.writer)) {
-            if (_upgradeHasPending) {
-              throw StateError(
-                'Finish the earlier saves before this device can join the snapshot.',
-              );
-            }
-            await upgrade.acknowledgeInput();
-            continue;
-          }
-          if (upgrade.isCoordinator &&
-              upgrade.inputAcknowledged.containsAll(upgrade.participants)) {
-            await upgrade.stage();
-            continue;
-          }
-          return;
-        case 'staging':
-          if (!upgrade.isCoordinator) return;
-          await upgrade.stage();
-          continue;
-        case 'staged':
-          if (!upgrade.inputAcknowledged.contains(upgrade.writer)) {
-            if (_upgradeHasPending) {
-              throw StateError(
-                'Finish earlier saves before this device can verify the sealed input.',
-              );
-            }
-            // A shared receipt with our UUID is not this profile's proof.
-            // Revalidate actual protected state before acknowledging output.
-            await upgrade.acknowledgeInput();
-            continue;
-          }
-          if (upgrade.canResumeStaging) {
-            await upgrade.stage();
-            continue;
-          }
-          if (!upgrade.outputAcknowledged.contains(upgrade.writer)) {
-            await upgrade.acknowledgeOutput();
-            continue;
-          }
-          if (upgrade.isCoordinator &&
-              upgrade.outputAcknowledged.containsAll(upgrade.participants)) {
-            await upgrade.activate();
-            continue;
-          }
-          return;
-        case 'activating':
-          if (!upgrade.isCoordinator) return;
-          await upgrade.activate();
-          continue;
-        case 'ready':
-          await upgrade.complete();
-          await _reopenUpgradedWorkspace(upgrade.folder);
-          return;
-        case 'complete':
-          await _reopenUpgradedWorkspace(upgrade.folder);
-          return;
-        default:
-          // Invalidated inputs require a real new snapshot, never a fresh ACK
-          // over a changed plan or an automatic return to v3.
-          return;
-      }
-    }
-  }
-
-  void _configureUpgradePolling() {
-    upgradePoll?.cancel();
-    upgradePoll = null;
-    final upgrade = workspaceUpgrade;
-    if (!mounted ||
-        !foreground ||
-        !upgradeScreen ||
-        upgrade == null ||
-        !upgrade.hasLocalConsent ||
-        upgradeError != null ||
-        upgrade.phase == 'complete' ||
-        upgrade.phase == 'invalidated') {
-      return;
-    }
-    // Only a consented active upgrade waits for device receipts. No polling or
-    // progression runs behind a cancelled unsaved-draft guard.
-    upgradePoll = Timer.periodic(const Duration(seconds: 2), (_) {
-      if (mounted && foreground && !busy && upgradeWork == null) {
-        unawaited(_workspaceUpgradeAction('resume'));
-      }
-    });
-  }
-
-  Future<void> _reopenUpgradedWorkspace(LogFolder folder) async {
-    final previous = store, previousFood = foodStore;
-    final expectedSpace = previous?.space ?? workspaceUpgrade?.space;
-    final expectedWriter = settings!.writer;
-    _detachWorkspaceState();
-    await previousFood?.close();
-    await previous?.close();
-    await previous?.unified?.close();
-    store = null;
-    foodStore = null;
-    _bindWorkspaceState();
-    await _open(folder.location, closeEditors: false);
-    if (!_upgradeActive && mounted) {
-      final reopened = store;
-      if (reopened == null ||
-          (expectedSpace != null && reopened.space != expectedSpace) ||
-          reopened.writer != expectedWriter ||
-          settings!.writer != expectedWriter ||
-          LocalSettings.protectedValues(profileDatabase!)['writer'] !=
-              expectedWriter) {
-        throw StateError(
-          'Workspace or installation identity changed during upgrade recovery. '
-          'Keep this profile and folder before continuing.',
-        );
-      }
-      final history = reopened.unified;
-      if (history != null && previousFood != null) {
-        // Legacy Food receipts may bridge only this immutable installation's
-        // deterministic module writer. This neither adopts another writer nor
-        // changes the exact receipts retained by session Undo.
-        if (previousFood.space != history.manifest.space ||
-            previousFood.writer != foodWriter(expectedWriter) ||
-            (foodStore?.writer != expectedWriter) ||
-            foodStore!.space != previousFood.space) {
-          throw StateError('Food Undo identity cannot be preserved safely.');
-        }
-        final retainedFoodUndo = foodUndoHistory.latest;
-        if (retainedFoodUndo != null &&
-            (history.manifest.ownerOfLegacy(
-                      previousFood.writer,
-                      'legacy.food',
-                    ) !=
-                    expectedWriter ||
-                !retainedFoodUndo.records.every(foodStore!.isAdmitted))) {
-          throw StateError(
-            'The converted workspace does not preserve exact local Food Undo receipts.',
-          );
-        }
-      }
-      undoHistory.reconcile(reopened.confirmedOperations);
-      sharedSafetyError = null;
-      error = null;
-      _invalidateView();
-    }
-  }
-
-  Future<void> _enableAdditionalTimeZones() async {
-    final origin = store, history = store?.unified;
-    if (!mounted ||
-        busy ||
-        origin == null ||
-        history == null ||
-        sharedSafetyError != null ||
-        _upgradeActive ||
-        _hasPendingOperation(origin) ||
-        _timeZonePolicy.allowsAdditionalTimeZones) {
-      return;
-    }
-    final confirmed = await confirmAdditionalTimeZones(context);
-    if (!confirmed ||
-        !mounted ||
-        !identical(store, origin) ||
-        !identical(origin.unified, history)) {
-      return;
-    }
-    // This adds reader support in the same workspace/epoch. Draft controllers,
-    // captures and baselines remain owned by their existing editor sessions.
-    setState(() => _changingTimeZoneMetadata = true);
-    try {
-      await _act(() async {
-        if (!mounted || !identical(store, origin) || _upgradeActive) return;
-        await history.enableAdditionalTimeZones(confirmed: true);
-      });
-    } finally {
-      _changingTimeZoneMetadata = false;
-      if (mounted) setState(() {});
-    }
-  }
-
-  Future<void> _resumeAdditionalTimeZones(String location) async {
-    final origin = store, foodOrigin = foodStore, owner = profileDatabase;
-    final preferences = settings;
-    if (!mounted ||
-        busy ||
-        owner == null ||
-        preferences == null ||
-        (origin != null && origin.folder.location != location)) {
-      return;
-    }
-    final writer = preferences.writer;
-    bool current() =>
-        mounted &&
-        identical(store, origin) &&
-        identical(foodStore, foodOrigin) &&
-        identical(profileDatabase, owner) &&
-        identical(settings, preferences) &&
-        preferences.writer == writer;
-    final completion = activeActionDone = Completer<void>();
-    importer?.stop();
-    setState(() {
-      _changingTimeZoneMetadata = true;
-      busy = true;
-    });
-    try {
-      await syncing;
-      if (!current()) return;
-      await resumeOwnedWorkspaceCapabilitiesBeforeOpen(
-        profile: owner,
-        folder:
-            origin?.folder ??
-            widget.folderFactory?.call(location) ??
-            (Platform.isAndroid
-                ? AndroidLogFolder(location)
-                : LocalLogFolder(location)),
-        writer: writer,
-      );
-      if (!current()) return;
-      if (origin == null) {
-        await _open(location, closeEditors: false);
-      } else {
-        await workspaceState!.refresh();
-      }
-      if (mounted && (origin == null || identical(store, origin))) {
-        setState(() {
-          sharedSafetyError = null;
-          if (!captureFailure) error = null;
-          errorFromRefresh = false;
-        });
-      }
-    } catch (failure) {
-      if (current()) _stopForSharedSafety(failure);
-    } finally {
-      completion.complete();
-      if (identical(activeActionDone, completion)) activeActionDone = null;
-      _changingTimeZoneMetadata = false;
-      if (mounted) {
-        setState(() => busy = false);
-        _configureImporter();
-        if (sharedSafetyError == null) importer?.request();
-        _wakeSectionRequests();
-      }
     }
   }
 
@@ -2365,14 +1543,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> _act(
-    Future<void> Function() action, {
-    bool allowDuringUpgrade = false,
-  }) async {
-    if (!mounted ||
-        busy ||
-        sharedSafetyError != null ||
-        (_upgradeActive && !allowDuringUpgrade)) {
+  Future<void> _act(Future<void> Function() action) async {
+    if (!mounted || busy || sharedSafetyError != null) {
       return;
     }
     final completion = activeActionDone = Completer<void>();
@@ -2614,7 +1786,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   void _configureImporter() {
-    _configureUpgradePolling();
     _bindWorkspaceState();
     if (_taskProjectionDirty) _invalidateView();
     if (!identical(watchedStore, store)) {
@@ -2634,7 +1805,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               reconcile: _refresh,
             );
     }
-    if (foreground && sharedSafetyError == null && !_upgradeActive) {
+    if (foreground && sharedSafetyError == null) {
       importer?.start();
     } else {
       importer?.stop();
@@ -2653,28 +1824,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final origin = store!;
     syncing = () async {
       try {
-        // Discover a peer's session before normal reconciliation and its
-        // automatic append. Keep editor widgets until their guards succeed.
-        final upgrade = origin.unified == null
-            ? await WorkspaceUpgrade.open(
-                folder: origin.folder,
-                profile: profileDatabase!,
-                writer: settings!.writer,
-                textEngine: textEngine,
-              )
-            : null;
-        if (upgrade != null && upgrade.phase != 'complete') {
-          if (mounted && identical(store, origin)) {
-            setState(() {
-              workspaceUpgrade = upgrade;
-              upgradeFolder = origin.folder;
-              upgradeError = null;
-              upgradeScreen = false;
-            });
-            importer?.stop();
-          }
-          return;
-        }
         final previousClockWarning = origin.clockWarning;
         final previousMigrationError = occurrenceMigrationError;
         final session = workspaceState!;
@@ -2697,8 +1846,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               checklistEditorDone == null &&
               pendingCapture.isEmpty &&
               foreground &&
-              sharedSafetyError == null &&
-              !_upgradeActive,
+              sharedSafetyError == null,
         );
         final changed = !identical(previousTasks, result.snapshot.tasks);
         final nextFoodError = result.snapshot.health.foodFailure;
@@ -2754,16 +1902,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
       } catch (e) {
         if (mounted && identical(store, origin)) {
-          if (origin.unified == null &&
-              await _hasWorkspaceUpgradeEvidence(origin.folder)) {
-            setState(() {
-              upgradeFolder = origin.folder;
-              upgradeError = failureMessage(e);
-              upgradeScreen = false;
-            });
-            importer?.stop();
-            return;
-          }
           if (origin.unified != null) {
             _stopForSharedSafety(e);
             return;
@@ -2834,11 +1972,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           settings?.writer != writer ||
           LocalSettings.protectedValues(owner)['writer'] != writer ||
           (foodOrigin != null &&
-              (foodOrigin.space != space ||
-                  foodOrigin.writer !=
-                      (origin.unified != null
-                          ? writer
-                          : foodWriter(writer))))) {
+              (foodOrigin.space != space || foodOrigin.writer != writer))) {
         throw StateError(
           'The workspace identity changed. Preserve the profile before recovery.',
         );
@@ -2850,12 +1984,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       checkOrigin();
       // This is admission only: no canonical append, pending-operation retry,
       // settings reload, owner reset, or editor close occurs during recovery.
-      if (origin.unified == null &&
-          await origin.writerGuard.load(space, writer) == null) {
-        throw StateError(
-          'The task writer has lost its safety reservation. Preserve the profile before recovery.',
-        );
-      }
       checkOrigin();
       await origin.refresh();
       checkOrigin();
@@ -2868,14 +1996,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               'This folder cannot enforce safe Food reads. Tasks remain available.',
             );
           }
-          openedFood = origin.unified != null
-              ? await FoodStore.openUnified(origin.unified!)
-              : await FoodStore.open(
-                  origin.folder,
-                  profile: owner,
-                  installationWriter: writer,
-                  space: space,
-                );
+          openedFood = await FoodStore.openUnified(origin.unified!);
         }
       } on FoodHistoryFailure catch (failure) {
         isolatedFoodError = failure.message;
@@ -2933,11 +2054,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     _configureImporter();
     if (state == AppLifecycleState.resumed) {
-      if (_upgradeActive && upgradeScreen) {
-        unawaited(_workspaceUpgradeAction('refresh'));
-      } else {
-        importer?.request();
-      }
+      importer?.request();
     }
   }
 
@@ -5210,7 +4327,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _detachWorkspaceState();
     FocusManager.instance.removeListener(_focusChanged);
     sectionNavigation?.dispose();
-    upgradePoll?.cancel();
     requestedSection = null;
     _stopDragScroll();
     taskScroll.dispose();
@@ -5245,7 +4361,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await starting;
     await sectionWork;
     await activeActionDone?.future;
-    await upgradeWork;
     await syncing;
     await checklistEditorDone?.future;
     await foodEditorDone;
@@ -5272,63 +4387,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if (_upgradeActive && upgradeScreen) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Tandemlog'),
-          actions: [
-            IconButton(
-              tooltip: 'Settings',
-              onPressed: busy ? null : _showSettings,
-              icon: const Icon(Icons.settings_outlined),
-            ),
-          ],
-        ),
-        body: SafeArea(
-          child: workspaceUpgrade != null
-              ? WorkspaceUpgradePanel(
-                  upgrade: workspaceUpgrade!,
-                  busy: busy,
-                  error: upgradeError,
-                  onAction: _workspaceUpgradeAction,
-                )
-              : Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text('Workspace upgrade needs attention'),
-                        const SizedBox(height: 12),
-                        Text(
-                          upgradeError ?? 'The upgrade could not be checked.',
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          'Keep this profile and folder. Restore access or '
-                          'folder sync, then retry. Do not replace the manifest '
-                          'or delete upgrade files.',
-                        ),
-                        TextButton(
-                          onPressed: busy
-                              ? null
-                              : () => _workspaceUpgradeAction('refresh'),
-                          child: const Text('Retry upgrade'),
-                        ),
-                        OutlinedButton(
-                          key: const ValueKey('restore-upgrade-folder-access'),
-                          onPressed: busy
-                              ? null
-                              : _restoreWorkspaceUpgradeAccess,
-                          child: const Text('Restore access to this folder'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-        ),
-      );
-    }
     final users = rows.where((r) => r['kind'] == 'user').toList();
     // Setup keeps its private name/focus and established Continue retry. That
     // callback revalidates shared authority before any user creation; other
@@ -5378,38 +4436,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   constraints: sectionContentConstraints,
                   child: Column(
                     children: [
-                      // Keep the optional upgrade notice out of the reduced
-                      // keyboard viewport, including an editor's close frame.
-                      if (store != null &&
-                          store?.unified == null &&
-                          sharedSafetyError == null &&
-                          MediaQuery.viewInsetsOf(context).bottom == 0)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton.icon(
-                              key: const ValueKey(
-                                'workspace-upgrade-available',
-                              ),
-                              onPressed: busy
-                                  ? null
-                                  : _upgradeActive
-                                  ? _continueWorkspaceUpgrade
-                                  : _prepareWorkspaceUpgrade,
-                              icon: Icon(
-                                _upgradeActive
-                                    ? Icons.pause_circle_outline
-                                    : Icons.upgrade,
-                              ),
-                              label: Text(
-                                _upgradeActive
-                                    ? 'Upgrade waiting · continue'
-                                    : 'Workspace upgrade available',
-                              ),
-                            ),
-                          ),
-                        ),
                       if (sharedSafetyError != null && keepSetupInputs)
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -5775,7 +4801,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       focusNode: firstNameFocus,
                       readOnly: pendingUserName != null,
                       autofocus: true,
-                      enabled: !busy || _changingTimeZoneMetadata,
+                      enabled: !busy,
                       maxLength: 100,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(

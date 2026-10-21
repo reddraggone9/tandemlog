@@ -1,7 +1,5 @@
 import 'unified_history_workflow_test.dart'
     show registerUnifiedHistoryWorkflowTests;
-import 'workspace_upgrade_workflow_test.dart'
-    show registerWorkspaceUpgradeWorkflowTests;
 import '../test/support/toolbar_button.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -315,7 +313,6 @@ void main() {
   registerCompletionConfirmationProgressTests();
   registerHeaderSelectionTests();
   registerUnifiedHistoryWorkflowTests();
-  registerWorkspaceUpgradeWorkflowTests();
   registerHistoricalChecklistRecompletionTests();
   registerBulkFailureVisibilityTests();
   registerHeaderSearchTests();

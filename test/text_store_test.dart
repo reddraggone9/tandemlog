@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'current_history_fixture.dart';
+import '../tool/qa_projection_cache.dart';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
@@ -113,7 +115,7 @@ void main() {
               );
             }
             final canonical = await File(
-              '${shared.path}/${store.writer}.jsonl',
+              '${shared.path}/${store.writer}.applog',
             ).readAsBytes();
             await store.close();
             store = await TaskStore.open(folder, profile, textEngine: engine);
@@ -121,9 +123,13 @@ void main() {
               store.rows.singleWhere((row) => row['id'] == task)['title'],
               'Review household supplies',
             );
-            expect(store.readFiles, 0);
             expect(
-              await File('${shared.path}/${store.writer}.jsonl').readAsBytes(),
+              store.readFiles,
+              greaterThan(0),
+              reason: 'Current admission revalidates canonical bytes',
+            );
+            expect(
+              await File('${shared.path}/${store.writer}.applog').readAsBytes(),
               canonical,
             );
             await store.close();
@@ -138,7 +144,7 @@ void main() {
             );
             expect(
               await File(
-                '${shared.path}/${receipts.first.id.split(':').first}.jsonl',
+                '${shared.path}/${receipts.first.id.split(':').first}.applog',
               ).readAsBytes(),
               canonical,
             );
@@ -196,7 +202,7 @@ void main() {
               captures.add(capture);
               receipts.add(receipt!);
             }
-            final log = File('${shared.path}/${store.writer}.jsonl');
+            final log = File('${shared.path}/${store.writer}.applog');
             final before = await log.readAsBytes();
             final blocked = await store.undoOperations([receipts.first.id]);
             expect(blocked.remaining, [receipts.first.id]);
@@ -265,29 +271,38 @@ void main() {
                 .toList();
             expect(order(), [native, legacy, later]);
             final canonical = await File(
-              '${shared.path}/${store.writer}.jsonl',
+              '${shared.path}/${store.writer}.applog',
             ).readAsBytes();
             // Simulate the prior isolated projection: native creations were
             // appended after moves. Repair only disposable positions, using
             // cached canonical events, without replaying shared log contents.
-            store.db.execute('UPDATE positions SET rank=1 WHERE id=?', [
-              legacy,
-            ]);
-            store.db.execute('UPDATE positions SET rank=2 WHERE id=?', [
-              native,
-            ]);
-            store.db.execute('UPDATE positions SET rank=3 WHERE id=?', [later]);
             store.db.execute(
-              "UPDATE metadata SET value='2' WHERE key='order_projection'",
+              'UPDATE ${store.tables.positions} SET rank=1 WHERE id=?',
+              [legacy],
+            );
+            store.db.execute(
+              'UPDATE ${store.tables.positions} SET rank=2 WHERE id=?',
+              [native],
+            );
+            store.db.execute(
+              'UPDATE ${store.tables.positions} SET rank=3 WHERE id=?',
+              [later],
+            );
+            store.db.execute(
+              "UPDATE ${store.tables.metadata} SET value='2' WHERE key='order_projection'",
             );
             await store.close();
             store = await TaskStore.open(folder, profile, textEngine: engine);
             expect(order(), [native, legacy, later]);
-            expect(store.readFiles, 0);
+            expect(
+              store.readFiles,
+              greaterThan(0),
+              reason: 'Current admission revalidates canonical bytes',
+            );
             expect(
               store.db
                   .select(
-                    "SELECT value FROM metadata WHERE key='order_projection'",
+                    "SELECT value FROM ${store.tables.metadata} WHERE key='order_projection'",
                   )
                   .single['value'],
               '3',
@@ -301,10 +316,15 @@ void main() {
             expect(order(), [native, legacy, later]);
             final logs = await shared
                 .list()
-                .where((entity) => entity.path.endsWith('.jsonl'))
+                .where((entity) => entity.path.endsWith('.applog'))
                 .toList();
-            expect(logs, hasLength(1));
-            expect(await File(logs.single.path).readAsBytes(), canonical);
+            expect(logs, hasLength(2));
+            expect(
+              await File(
+                '${shared.path}/${LogEvent.decode(store.db.select('SELECT raw FROM ${store.tables.events} ORDER BY clock LIMIT 1').single['raw'] as String).writer}.applog',
+              ).readAsBytes(),
+              canonical,
+            );
           } finally {
             await store?.close();
             engine.dispose();
@@ -342,15 +362,16 @@ void main() {
                 data,
               );
               if (!nativeCreation) {
-                await store.initializeSharedTextForHistoricalFixture();
+                await store.initializeSharedText();
               }
               expect(
-                store.db.select('SELECT 1 FROM text_fields WHERE entity=?', [
-                  task,
-                ]),
+                store.db.select(
+                  'SELECT 1 FROM ${store.tables.textFields} WHERE entity=?',
+                  [task],
+                ),
                 isNotEmpty,
               );
-              final log = File('${shared.path}/${store.writer}.jsonl');
+              final log = File('${shared.path}/${store.writer}.applog');
               final before = await log.readAsBytes();
               var prepared = false;
               final completion = await store.complete(
@@ -505,9 +526,9 @@ void main() {
               completionDay: DateTime(2030, 5, 10),
             );
             expect(old.type, 'task.completed');
-            await store.initializeSharedTextForHistoricalFixture();
+            await store.initializeSharedText();
             await store.reopen(task, [old.id]);
-            final file = File('${shared.path}/${store.writer}.jsonl');
+            final file = File('${shared.path}/${store.writer}.applog');
             final before = await file.readAsBytes();
             final snapshot = store.taskSnapshot;
             var prepared = false;
@@ -520,10 +541,10 @@ void main() {
                   'adapter': 1,
                   'frontiers': {
                     for (final stream in store.db.select(
-                      'SELECT name,last_seq,chain_head FROM streams',
+                      'SELECT name,last_seq,chain_head FROM ${store.tables.streams}',
                     ))
                       (stream['name'] as String).replaceFirst(
-                        RegExp(r'\.jsonl$'),
+                        RegExp(r'\.applog$'),
                         '',
                       ): {
                         'seq': stream['last_seq'],
@@ -532,7 +553,7 @@ void main() {
                   },
                   'fields': {
                     for (final field in store.db.select(
-                      'SELECT * FROM text_fields WHERE entity=?',
+                      'SELECT * FROM ${store.tables.textFields} WHERE entity=?',
                       [task],
                     ))
                       field['field']: {
@@ -547,7 +568,7 @@ void main() {
                 isA<FormatFailure>().having(
                   (e) => e.message,
                   'reason',
-                  contains('Mixed successor text initialization'),
+                  contains('text initialization'),
                 ),
               ),
             );
@@ -634,9 +655,10 @@ void main() {
             );
             store.releaseTextOperations([receipt!.id]);
             expect(
-              store.db.select('SELECT raw FROM events WHERE id=?', [
-                receipt!.id,
-              ]),
+              store.db.select(
+                'SELECT raw FROM ${store.tables.events} WHERE id=?',
+                [receipt!.id],
+              ),
               hasLength(1),
             );
           } finally {
@@ -681,7 +703,7 @@ void main() {
             final remote = LogEvent(
               store.space,
               remoteWriter,
-              1,
+              2,
               EventClock(creation.clock.value + BigInt.from(10)),
               task,
               'task.textEdited',
@@ -692,8 +714,8 @@ void main() {
               },
             );
             await folder.create(
-              '$remoteWriter.jsonl',
-              Uint8List.fromList('${remote.encode()}\n'.codeUnits),
+              '$remoteWriter.applog',
+              peerBytesFor(store, remote),
             );
             await store.refresh();
             await store.editNativeTask(
@@ -711,7 +733,7 @@ void main() {
               'schedule': {'dueDate': '2026-10-06'},
             });
             final count = store.db
-                .select('SELECT COUNT(*) AS n FROM events')
+                .select('SELECT COUNT(*) AS n FROM ${store.tables.events}')
                 .single['n'];
             final changes = {
               'title': _packet(engine, 'A', context, store.writer, 'AZ'),
@@ -734,7 +756,9 @@ void main() {
               throwsA(isA<StaleTaskSnapshot>()),
             );
             expect(
-              store.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+              store.db
+                  .select('SELECT COUNT(*) AS n FROM ${store.tables.events}')
+                  .single['n'],
               count,
             );
             expect(store.pendingTextOperations, isEmpty);
@@ -820,7 +844,7 @@ void main() {
             final remote = LogEvent(
               store.space,
               remoteWriter,
-              1,
+              2,
               EventClock(latest.clock.value + BigInt.from(10)),
               task,
               'task.textEdited',
@@ -836,8 +860,8 @@ void main() {
               },
             );
             await folder.create(
-              '$remoteWriter.jsonl',
-              Uint8List.fromList('${remote.encode()}\n'.codeUnits),
+              '$remoteWriter.applog',
+              peerBytesFor(store, remote),
             );
             await store.refresh();
             expect(
@@ -867,7 +891,7 @@ void main() {
       );
       for (final restart in [false, true]) {
         test(
-          'unknown native Undo preserves exact compensation retry restart=$restart',
+          'unknown native Undo reconciles same-session only restart=$restart',
           () async {
             final root = await Directory.systemTemp.createTemp(
               'text-undo-intent-',
@@ -912,17 +936,31 @@ void main() {
               expect(LogEvent.decode(prepared.raw).type, 'task.textEditUndone');
               if (restart) {
                 await store.close();
-                await File('$profile/cache.sqlite').delete();
+                await clearTaskProjections(profile);
                 store = await TaskStore.open(
                   folder,
                   profile,
                   textEngine: engine,
                 );
-                expect(store.pendingTextOperations.single.raw, prepared.raw);
-                final replay = await store.retryTextOperation(
-                  store.pendingTextOperations.single,
+                expect(store.pendingTextOperations, isEmpty);
+                final calls = folder.appendCalls;
+                await expectLater(
+                  store.retryTextOperation(prepared),
+                  throwsA(isA<FormatFailure>()),
                 );
-                expect(replay.canonicalRaw, prepared.raw);
+                expect(folder.appendCalls, calls);
+                expect(
+                  store.rows.singleWhere((row) => row['id'] == task)['title'],
+                  'A',
+                );
+                expect(
+                  store.db.select(
+                    'SELECT raw FROM ${store.tables.events} WHERE id=?',
+                    [prepared.id],
+                  ),
+                  isEmpty,
+                );
+                return;
               } else {
                 final outcome = await store.undoOperations([original!.id]);
                 expect(
@@ -938,9 +976,10 @@ void main() {
               );
               expect(store.pendingTextOperations, isEmpty);
               expect(
-                store.db.select('SELECT raw FROM events WHERE id=?', [
-                  prepared.id,
-                ]).single['raw'],
+                store.db.select(
+                  'SELECT raw FROM ${store.tables.events} WHERE id=?',
+                  [prepared.id],
+                ).single['raw'],
                 prepared.raw,
               );
             } finally {
@@ -1046,7 +1085,7 @@ void main() {
             expect(capture.fields['description']!.document.read().text, '');
             expect(
               store.db.select(
-                "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.textEditUndone'",
+                "SELECT raw FROM ${store.tables.events} WHERE json_extract(semantic,'\$.type')='task.textEditUndone'",
               ),
               hasLength(2),
             );
@@ -1084,7 +1123,7 @@ void main() {
             expect(result.succeeded, isTrue, reason: result.error?.toString());
             expect(
               store.db.select(
-                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.createdWithText'",
+                "SELECT 1 FROM ${store.tables.events} WHERE json_extract(semantic,'\$.type')='task.createdWithText'",
               ),
               hasLength(2),
             );
@@ -1176,10 +1215,10 @@ void main() {
             expect((row['schedule'] as Map)['dueDate'], '2026-11-01');
             expect(field.document.read().text, 'AB');
             expect(
-              store.db.select('SELECT raw FROM events WHERE id IN (?,?)', [
-                original.id,
-                compensation.id,
-              ]),
+              store.db.select(
+                'SELECT raw FROM ${store.tables.events} WHERE id IN (?,?)',
+                [original.id, compensation.id],
+              ),
               hasLength(2),
             );
             await expectLater(
@@ -1245,7 +1284,7 @@ void main() {
             final ea = LogEvent(
               store.space,
               wa,
-              1,
+              2,
               EventClock(creation.clock.value + BigInt.from(10)),
               task,
               'task.textEdited',
@@ -1256,7 +1295,7 @@ void main() {
             final eb = LogEvent(
               store.space,
               wb,
-              1,
+              2,
               EventClock(creation.clock.value + BigInt.from(20)),
               task,
               'task.textEdited',
@@ -1264,10 +1303,7 @@ void main() {
                 'changes': {'title': packetB},
               },
             );
-            await folder.create(
-              '$wb.jsonl',
-              Uint8List.fromList('${eb.encode()}\n'.codeUnits),
-            );
+            await folder.create('$wb.applog', peerBytesFor(store, eb));
             await store.refresh();
             expect(
               store.rows.singleWhere((row) => row['id'] == task)['title'],
@@ -1278,16 +1314,13 @@ void main() {
               throwsA(isA<FormatFailure>()),
             );
             await store.close();
-            await File('$profile/cache.sqlite').delete();
+            await clearTaskProjections(profile);
             store = await TaskStore.open(folder, profile, textEngine: engine);
             await expectLater(
               store.captureTaskText(task),
               throwsA(isA<FormatFailure>()),
             );
-            await folder.create(
-              '$wa.jsonl',
-              Uint8List.fromList('${ea.encode()}\n'.codeUnits),
-            );
+            await folder.create('$wa.applog', peerBytesFor(store, ea));
             await store.refresh();
             expect(
               store.rows.singleWhere((row) => row['id'] == task)['title'],
@@ -1333,32 +1366,36 @@ void main() {
               'assignee': user,
             });
             await File(
-              '${da.path}/${a.writer}.jsonl',
-            ).copy('${db.path}/${a.writer}.jsonl');
+              '${da.path}/${a.writer}.applog',
+            ).copy('${db.path}/${a.writer}.applog');
             b = await TaskStore.open(
               LocalLogFolder(db.path),
               '${root.path}/pb',
               textEngine: engine,
             );
-            final baseline = await b.initializeSharedTextForHistoricalFixture();
+            final baseline = await b.initializeSharedText();
             await expectLater(
-              b.initializeSharedTextForHistoricalFixture(),
+              b.initializeSharedText(),
               throwsA(isA<FormatFailure>()),
             );
             await File(
-              '${db.path}/${b.writer}.jsonl',
-            ).copy('${dc.path}/${b.writer}.jsonl');
+              '${db.path}/${b.writer}.applog',
+            ).copy('${dc.path}/${b.writer}.applog');
             c = await TaskStore.open(
               LocalLogFolder(dc.path),
               '${root.path}/pc',
               textEngine: engine,
             );
             expect(c.sharedTextInitialized, isFalse);
-            expect(c.textWriteBlocked, contains('waiting'));
+            expect(c.unified!.snapshot.pendingEffects, isTrue);
+            expect(
+              await File('${dc.path}/${c.writer}.applog').exists(),
+              isFalse,
+            );
             expect(c.rows, isEmpty);
             await File(
-              '${da.path}/${a.writer}.jsonl',
-            ).copy('${dc.path}/${a.writer}.jsonl');
+              '${da.path}/${a.writer}.applog',
+            ).copy('${dc.path}/${a.writer}.applog');
             await c.refresh();
             expect(c.sharedTextInitialized, isTrue);
             expect(
@@ -1382,16 +1419,15 @@ void main() {
             final second = LogEvent(
               c.space,
               competitor,
-              1,
+              2,
               EventClock(baseline.clock.value + BigInt.from(100)),
               c.space,
               'text.baselineInitialized',
               baseline.data,
             );
-            await LocalLogFolder(dc.path).create(
-              '$competitor.jsonl',
-              Uint8List.fromList('${second.encode()}\n'.codeUnits),
-            );
+            await LocalLogFolder(
+              dc.path,
+            ).create('$competitor.applog', peerBytesFor(c, second));
             await c.refresh();
             expect(c.textWriteBlocked, contains('Competing'));
             expect(
@@ -1415,12 +1451,12 @@ void main() {
             );
             expect(
               c.db.select(
-                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='text.baselineInitialized'",
+                "SELECT 1 FROM ${c.tables.events} WHERE json_extract(semantic,'\$.type')='text.baselineInitialized'",
               ),
               hasLength(2),
             );
             await c.close();
-            await File('${root.path}/pc/cache.sqlite').delete();
+            await clearTaskProjections('${root.path}/pc');
             c = await TaskStore.open(
               LocalLogFolder(dc.path),
               '${root.path}/pc',
@@ -1495,8 +1531,8 @@ void main() {
               _creationData(engine, user, 'A'),
             );
             await File(
-              '${aDir.path}/${a.writer}.jsonl',
-            ).copy('${bDir.path}/${a.writer}.jsonl');
+              '${aDir.path}/${a.writer}.applog',
+            ).copy('${bDir.path}/${a.writer}.applog');
             await b.refresh();
             final context = TextFieldContext.fromCreation(
               creation,
@@ -1516,11 +1552,11 @@ void main() {
               'changes': {'title': packetB},
             });
             await File(
-              '${aDir.path}/${a.writer}.jsonl',
-            ).copy('${bDir.path}/${a.writer}.jsonl');
+              '${aDir.path}/${a.writer}.applog',
+            ).copy('${bDir.path}/${a.writer}.applog');
             await File(
-              '${bDir.path}/${b.writer}.jsonl',
-            ).copy('${aDir.path}/${b.writer}.jsonl');
+              '${bDir.path}/${b.writer}.applog',
+            ).copy('${aDir.path}/${b.writer}.applog');
             await a.refresh();
             await b.refresh();
             expect(a.rows, b.rows);
@@ -1532,7 +1568,7 @@ void main() {
             expect(await b.refresh(), isFalse);
             final before = b.rows;
             b.db.execute(
-              'UPDATE text_fields SET frontier=? WHERE entity=? AND field=?',
+              'UPDATE ${b.tables.textFields} SET frontier=? WHERE entity=? AND field=?',
               ['invalid disposable JSON', task, 'title'],
             );
             await b.command(task, 'task.edited', {
@@ -1540,7 +1576,7 @@ void main() {
             });
             expect(b.rows, before);
             await b.close();
-            await File('${root.path}/pb/cache.sqlite').delete();
+            await clearTaskProjections('${root.path}/pb');
             b = await TaskStore.open(
               LocalLogFolder(bDir.path),
               '${root.path}/pb',
@@ -1548,7 +1584,7 @@ void main() {
             );
             expect(b.rows, before);
             final count = a.db
-                .select('SELECT COUNT(*) AS n FROM events')
+                .select('SELECT COUNT(*) AS n FROM ${a.tables.events}')
                 .single['n'];
             final wrong = _packet(engine, 'A', '0' * 64, a.writer, 'AD');
             await expectLater(
@@ -1558,7 +1594,9 @@ void main() {
               throwsA(isA<FormatFailure>()),
             );
             expect(
-              a.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+              a.db
+                  .select('SELECT COUNT(*) AS n FROM ${a.tables.events}')
+                  .single['n'],
               count,
             );
             expect(a.rows, before);
@@ -1577,7 +1615,9 @@ void main() {
               throwsA(isA<FormatFailure>()),
             );
             expect(
-              a.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+              a.db
+                  .select('SELECT COUNT(*) AS n FROM ${a.tables.events}')
+                  .single['n'],
               count,
             );
             expect(a.rows, before);
@@ -1638,9 +1678,10 @@ void main() {
             );
             expect(store.textWriteBlocked, isNull);
             expect(
-              store.db.select('SELECT * FROM text_fields WHERE entity=?', [
-                task,
-              ]),
+              store.db.select(
+                'SELECT * FROM ${store.tables.textFields} WHERE entity=?',
+                [task],
+              ),
               hasLength(2),
             );
             await store.command(task, 'task.edited', {
@@ -1658,14 +1699,15 @@ void main() {
             expect((row['schedule'] as Map)['dueDate'], '2026-10-05');
             expect(row['tags'], ['Late metadata']);
             expect(
-              store.db.select('SELECT raw FROM events WHERE id=?', [
-                baseline.id,
-              ]).single['raw'],
+              store.db.select(
+                'SELECT raw FROM ${store.tables.events} WHERE id=?',
+                [baseline.id],
+              ).single['raw'],
               baseline.canonicalRaw,
             );
             final before = store.rows;
             await store.close();
-            await File('${root.path}/profile/cache.sqlite').delete();
+            await clearTaskProjections('${root.path}/profile');
             store = await TaskStore.open(
               LocalLogFolder(shared.path),
               '${root.path}/profile',
@@ -1686,7 +1728,7 @@ void main() {
         (true, true),
       ]) {
         test(
-          'unknown append exact receipt after restart cacheLoss=$cacheLoss afterAppend=$afterAppend',
+          'restart admits only canonical native saves cacheLoss=$cacheLoss afterAppend=$afterAppend',
           () async {
             final root = await Directory.systemTemp.createTemp(
               'text-intent-retry-',
@@ -1727,18 +1769,33 @@ void main() {
               expect(prepared, isNotNull);
               expect(store.pendingTextOperations.single.raw, prepared!.raw);
               await store.close();
-              if (cacheLoss) await File('$profile/cache.sqlite').delete();
+              if (cacheLoss) await clearTaskProjections(profile);
               store = await TaskStore.open(folder, profile, textEngine: engine);
+              expect(store.pendingTextOperations, isEmpty);
+              final calls = folder.appendCalls;
               if (afterAppend) {
-                expect(store.pendingTextOperations, isEmpty);
+                final event = await store.retryTextOperation(prepared!);
+                expect(event.canonicalRaw, prepared!.raw);
               } else {
-                expect(store.pendingTextOperations.single.raw, prepared!.raw);
+                await expectLater(
+                  store.retryTextOperation(prepared!),
+                  throwsA(isA<FormatFailure>()),
+                );
+                expect(store.hasEntity(task), isFalse);
               }
-              final event = await store.retryTextOperation(prepared!);
-              expect(event.canonicalRaw, prepared!.raw);
+              expect(folder.appendCalls, calls);
+              if (!afterAppend) {
+                await store.command(
+                  task,
+                  'task.createdWithText',
+                  _creationData(engine, user, 'Exact retry'),
+                );
+              }
               expect(store.pendingTextOperations, isEmpty);
               expect(
-                await Directory('$profile/text-intents').list().toList(),
+                store.db.select(
+                  "SELECT name FROM sqlite_schema WHERE type='table' AND name='protected_app_outbox'",
+                ),
                 isEmpty,
               );
               expect(
@@ -1754,7 +1811,7 @@ void main() {
         );
       }
       test(
-        'misnamed private native intent rejects recovery before append and retains evidence',
+        'mismatched same-session receipt rejects before append and no receipt survives restart',
         () async {
           final root = await Directory.systemTemp.createTemp(
             'text-intent-wrong-name-',
@@ -1780,47 +1837,29 @@ void main() {
               throwsA(isA<FolderAccessFailure>()),
             );
             expect(store.pendingTextOperations.single.raw, prepared!.raw);
-            final event = LogEvent.decode(prepared!.raw);
-            await store.close();
-            store = null;
-            final intentDirectory = Directory('$profile/text-intents');
-            final original =
-                (await intentDirectory.list().toList()).single as File;
-            expect(await original.readAsString(), prepared!.raw);
-            final wrongName = '${event.writer}-${event.sequence + 1}.json';
-            final misnamed = await original.rename(
-              '${intentDirectory.path}/$wrongName',
+            final canonicalBytes = await folder.read('${store.writer}.applog');
+            final calls = folder.appendCalls;
+            final wrong = OperationReceipt(
+              prepared!.id,
+              prepared!.raw,
+              const Uuid().v4(),
             );
-            final evidence = await misnamed.readAsBytes();
-            final log = File('${shared.path}/${event.writer}.jsonl');
-            final canonicalBytes = await log.readAsBytes();
-            final appendCalls = folder.appendCalls;
             await expectLater(
-              TaskStore.open(
-                folder,
-                profile,
-                textEngine: engine,
-              ).then((reopened) => store = reopened),
-              throwsA(
-                isA<FormatFailure>().having(
-                  (error) => error.toString(),
-                  'message',
-                  contains('Invalid private prepared text intent'),
-                ),
-              ),
+              store.retryTextOperation(wrong),
+              throwsA(isA<FormatFailure>()),
             );
-            expect(folder.appendCalls, appendCalls);
-            expect(await log.readAsBytes(), canonicalBytes);
-            expect(await misnamed.readAsBytes(), evidence);
-            expect(
-              (await intentDirectory.list().toList())
-                  .single
-                  .uri
-                  .pathSegments
-                  .last,
-              wrongName,
+            expect(folder.appendCalls, calls);
+            expect(await folder.read('${store.writer}.applog'), canonicalBytes);
+            await store.close();
+            store = await TaskStore.open(folder, profile, textEngine: engine);
+            expect(store.pendingTextOperations, isEmpty);
+            await expectLater(
+              store.retryTextOperation(prepared!),
+              throwsA(isA<FormatFailure>()),
             );
-            expect(await original.exists(), isFalse);
+            expect(folder.appendCalls, calls);
+            expect(await folder.read('${store.writer}.applog'), canonicalBytes);
+            expect(store.hasEntity(task), isFalse);
           } finally {
             await store?.close();
             engine.dispose();
@@ -1869,9 +1908,10 @@ void main() {
               'Offline creation',
             );
             expect(
-              store.db.select('SELECT * FROM text_fields WHERE entity=?', [
-                task,
-              ]),
+              store.db.select(
+                'SELECT * FROM ${store.tables.textFields} WHERE entity=?',
+                [task],
+              ),
               hasLength(2),
             );
             expect(store.pendingTextOperations, isEmpty);
@@ -1882,7 +1922,11 @@ void main() {
               '${root.path}/profile',
               textEngine: engine,
             );
-            expect(store.readFiles, 0);
+            expect(
+              store.readFiles,
+              greaterThan(0),
+              reason: 'Current admission revalidates canonical bytes',
+            );
             expect(store.rows, before);
             final invalid = const Uuid().v4();
             final bad = <String, dynamic>{
@@ -1897,14 +1941,16 @@ void main() {
               },
             };
             final previousCount = store.db
-                .select('SELECT COUNT(*) AS n FROM events')
+                .select('SELECT COUNT(*) AS n FROM ${store.tables.events}')
                 .single['n'];
             await expectLater(
               store.command(invalid, 'task.createdWithText', bad),
               throwsA(isA<Exception>()),
             );
             expect(
-              store.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+              store.db
+                  .select('SELECT COUNT(*) AS n FROM ${store.tables.events}')
+                  .single['n'],
               previousCount,
             );
             expect(store.pendingTextOperations, isEmpty);
@@ -1916,46 +1962,39 @@ void main() {
         },
       );
       test(
-        'native storage extends cache13 without replaying frozen v3 logs',
+        'frozen v3 inputs require offline conversion and remain byte-exact',
         () async {
-          final root = await Directory.systemTemp.createTemp('text-store-');
-          TaskStore? store;
-          NativeTextEngine? engine;
+          final root = await Directory.systemTemp.createTemp(
+            'text-old-input-preserved-',
+          );
           try {
             final shared = await Directory('${root.path}/shared').create();
+            final before = <String, List<int>>{};
             for (final source in Directory(
               'test/fixtures/stable-v3-2026.10.0',
             ).listSync().whereType<File>()) {
               if (source.path.endsWith('.jsonl') ||
                   source.path.endsWith('tandemlog-space.json')) {
-                await source.copy(
-                  '${shared.path}/${source.uri.pathSegments.last}',
-                );
+                final name = source.uri.pathSegments.last;
+                before[name] = await source.readAsBytes();
+                await File('${shared.path}/$name').writeAsBytes(before[name]!);
               }
             }
-            final folder = LocalLogFolder(shared.path);
-            final profile = '${root.path}/profile';
-            store = await TaskStore.open(folder, profile);
-            final before = store.rows;
-            await store.close();
-            engine = NativeTextEngine(libraryPath: _libraryPath);
-            store = await TaskStore.open(folder, profile, textEngine: engine);
-            expect(store.rows, before);
-            expect(store.readFiles, 0);
-            expect(
-              store.db.select('PRAGMA user_version').single.values.single,
-              16,
-            );
-            expect(
-              store.db.select(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='text_fields'",
+            expect(before.length, greaterThan(1));
+            await expectLater(
+              TaskStore.open(
+                LocalLogFolder(shared.path),
+                '${root.path}/profile',
               ),
-              hasLength(1),
+              throwsA(isA<FormatFailure>()),
             );
-            expect(store.db.select('SELECT * FROM text_fields'), isEmpty);
+            expect({
+              for (final entry in await shared.list().toList())
+                entry.uri.pathSegments.last: await File(
+                  entry.path,
+                ).readAsBytes(),
+            }, before);
           } finally {
-            await store?.close();
-            engine?.dispose();
             await root.delete(recursive: true);
           }
         },
@@ -2012,9 +2051,14 @@ Map<String, dynamic> _packet(
   }
 }
 
-class _UnknownAppendFolder implements LogFolder, RangeLogFolder {
+class _UnknownAppendFolder
+    implements LogFolder, RangeLogFolder, BoundedLogFolder {
   _UnknownAppendFolder(this.inner);
   final LocalLogFolder inner;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
+
   bool failNext = false;
   bool throwAfterWriting = false;
   int appendCalls = 0;

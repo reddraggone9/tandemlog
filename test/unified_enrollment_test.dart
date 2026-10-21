@@ -134,7 +134,7 @@ void main() {
       expect(first.physicalSequence, 3);
       expect(
         first.snapshot.tasks.where((t) => t.writer == newcomer).single.sequence,
-        3,
+        1,
       );
       expect(await folder.read('tandemlog-space.json'), manifest);
       expect(await folder.read(unifiedLogName(fixture.owner)), oldBytes);
@@ -146,7 +146,7 @@ void main() {
 
   for (final cut in [0, 20, 1000000]) {
     test(
-      'interrupted installation header recovers exact reserved bytes once, cut=$cut',
+      'interrupted installation header cut=$cut admits canonical completion or creates a new header',
       () async {
         final p = await profile(newcomer);
         folder.cut = cut;
@@ -154,17 +154,29 @@ void main() {
           open(newcomer, p: p),
           throwsA(isA<FileSystemException>()),
         );
-        final row = p.database
-            .select('SELECT * FROM protected_app_outbox')
-            .single;
-        final expected = Uint8List.fromList(row['raw'] as List<int>);
+        final exists = await folder.file(unifiedLogName(newcomer)).exists();
+        final partial = exists
+            ? await folder.read(unifiedLogName(newcomer))
+            : Uint8List(0);
+        final complete = partial.isNotEmpty && partial.last == 10;
+        expect(
+          p.database.select(
+            "SELECT name FROM sqlite_schema WHERE name='protected_app_outbox'",
+          ),
+          isEmpty,
+        );
         final h = await open(newcomer, p: p);
-        await h.recoverPrepared();
         expect(h.physicalSequence, 1);
         expect(h.hasPending, isFalse);
-        expect(await folder.read(unifiedLogName(newcomer)), expected);
+        final bytes = await folder.read(unifiedLogName(newcomer));
+        expect(const LineSplitter().convert(utf8.decode(bytes)), hasLength(1));
+        expect(
+          UnifiedRecord.decode(utf8.decode(bytes).trim()).effects.single.kind,
+          'writer.joined',
+        );
+        if (complete) expect(bytes, partial);
         await h.recoverPrepared();
-        expect(await folder.read(unifiedLogName(newcomer)), expected);
+        expect(await folder.read(unifiedLogName(newcomer)), bytes);
       },
     );
   }
@@ -203,9 +215,6 @@ void main() {
       clock: EventClock(BigInt.from(1000000000000000000)),
       previousHash: genesis,
       effect: UnifiedEffect.named('Unproven installation'),
-      transactionStart: 1,
-      transactionCount: 1,
-      transactionIndex: 0,
       observed: {newcomer: UnifiedFrontier(0, genesis)},
     );
     await folder.create(

@@ -9,7 +9,6 @@ import 'package:tandemlog/food/food_editor.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/food_store.dart';
-import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:uuid/uuid.dart';
@@ -82,15 +81,7 @@ void registerFoodAddAnotherTests() {
         await seed.createTasks({
           const Uuid().v4(): 'Independent synthetic task',
         }, user);
-        final legacyProfile = await LocalProfileDatabase.open(
-          '${root.path}/legacy-seed',
-        );
-        final legacyFood = await FoodStore.open(
-          folder,
-          profile: legacyProfile,
-          installationWriter: const Uuid().v4(),
-          space: seed.space,
-        );
+        final legacyFood = await FoodStore.openUnified(seed.unified!);
         await legacyFood.add(
           const FoodDetails(
             name: 'Synthetic repurchase beans',
@@ -108,7 +99,6 @@ void registerFoodAddAnotherTests() {
           const Contents.fraction(1, 3),
         );
         await legacyFood.close();
-        await legacyProfile.close();
         await seed.close();
         await File('${profile.path}/settings.json').writeAsString(
           jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),

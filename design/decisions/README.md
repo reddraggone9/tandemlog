@@ -1,5 +1,7 @@
 # Decision records
 
+- [0031 - Coordinated unified cutover](0031-coordinated-unified-cutover.md): approved current-only client, external historical normalization, atomic actions, first-use required revisions and memory-only unfinished intent; validation ongoing, live cutover/release held.
+
 - [0017 — Food Stock and toolbar refinements](0017-food-stock-and-toolbar-refinements.md): accepted combined Stock/Inbox, calendar urgency and action-bar parity; implementation and native acceptance pending.
 - [0016 — Task Search and Add input](0016-task-search-and-add-input.md): accepted next Food preview scope; implementation and new native acceptance pending.
 - [0015 — Toolbar section navigation](0015-toolbar-section-navigation.md): accepted next Food preview scope; focused native acceptance pending.

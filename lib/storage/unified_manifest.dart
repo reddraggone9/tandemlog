@@ -1,497 +1,121 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
+import 'package:crypto/crypto.dart';
 import '../domain/event.dart';
 import '../domain/time_zone_policy.dart';
-import '../domain/wall_time.dart'
-    show additionalTimeZoneCapabilityDescriptor, additionalTimeZoneFeature;
-import '../food/food_record.dart';
 import 'unified_record.dart';
 
 String bytesDigest(List<int> bytes) => sha256.convert(bytes).toString();
 
-const additionalTimeZonesCapability = additionalTimeZoneFeature;
-
-/// Pure vocabulary errors become the established durable-admission error type.
 void assertWorkspaceTaskTimeZonePolicy(
   LogEvent event,
   TimeZoneNamePolicy policy,
 ) {
   try {
     policy.assertTaskEventAllowed(event);
-  } on FormatException catch (error) {
-    throw FormatFailure(error.message.toString());
+  } on FormatException catch (e) {
+    throw FormatFailure(e.message.toString());
   }
 }
 
-class SupportedTimeZoneExtension {
-  const SupportedTimeZoneExtension._(
-    this.baseRaw,
-    this.targetRaw,
-    this.space,
-    this.epoch,
-  );
-  final String baseRaw, targetRaw, space, epoch;
-}
-
-/// Only the fixed known extension may advance an already protected manifest.
-SupportedTimeZoneExtension? validateTimeZoneExtension(
-  String exactProtectedBaseRaw,
-  String actualDesiredRaw,
-) {
-  final base = UnifiedManifest.decode(exactProtectedBaseRaw);
-  final target = UnifiedManifest.decode(actualDesiredRaw);
-  if (!base.ready ||
-      base.additionalTimeZonesEnabled ||
-      !target.ready ||
-      !target.additionalTimeZonesEnabled) {
-    return null;
-  }
-  final stripped = UnifiedManifest(
-    target.space,
-    target.epoch,
-    target.sourceDigest,
-    target.owners,
-    target.seals,
-    ready: target.ready,
-  );
-  if (stripped.encode() != exactProtectedBaseRaw) return null;
-  return SupportedTimeZoneExtension._(
-    exactProtectedBaseRaw,
-    actualDesiredRaw,
-    base.space,
-    base.epoch,
-  );
-}
-
-class LegacySeal {
-  LegacySeal(
-    this.name,
-    this.owner,
-    this.kind,
-    this.length,
-    this.digest,
-    this.count,
-    this.head,
-  );
-  final String name, owner, kind, digest, head;
-  final int length, count;
-  Map<String, dynamic> toJson() => {
-    'name': name,
-    'owner': owner,
-    'kind': kind,
-    'length': length,
-    'digest': digest,
-    'count': count,
-    'head': head,
-  };
-  factory LegacySeal.fromJson(Map<String, dynamic> j) {
-    if (j.length != 7) throw FormatFailure('Unknown legacy seal fields.');
-    return LegacySeal(
-      j['name'] as String,
-      j['owner'] as String,
-      j['kind'] as String,
-      j['length'] as int,
-      j['digest'] as String,
-      j['count'] as int,
-      j['head'] as String,
-    );
-  }
-}
-
-/// The activation manifest binds the exact migration prefix; later events grow
-/// the same file. Source seals are proofs, not live module streams.
+/// Immutable normalized bootstrap. Source bytes and conversion proofs belong to
+/// the offline conversion report, never to a second runtime storage backend.
 class UnifiedManifest {
   UnifiedManifest(
     this.space,
     this.epoch,
     this.sourceDigest,
     Map<String, Map<String, dynamic>> owners,
-    Iterable<LegacySeal> seals, {
-    this.ready = true,
-    this.additionalTimeZonesEnabled = false,
-  }) : owners = Map.unmodifiable(
-         owners.map(
-           (k, v) => MapEntry(k, Map<String, dynamic>.unmodifiable(v)),
-         ),
-       ),
-       seals = List.unmodifiable(seals) {
+    Map<String, String> referenceAuthors,
+  ) : owners = Map.unmodifiable(
+        owners.map((k, v) => MapEntry(k, Map<String, dynamic>.unmodifiable(v))),
+      ),
+      referenceAuthors = Map.unmodifiable(referenceAuthors) {
     if (!isCanonicalId(space) ||
         !isCanonicalId(epoch) ||
         !isEventHash(sourceDigest) ||
         owners.isEmpty ||
         owners.length > 256 ||
-        owners.keys.any((id) => !isCanonicalId(id))) {
-      throw FormatFailure('Invalid app activation manifest.');
-    }
-    if (additionalTimeZonesEnabled && !ready) {
-      throw FormatFailure(
-        'Additional time zones require an active v4 workspace.',
-      );
+        owners.keys.any((id) => !isCanonicalId(id)) ||
+        referenceAuthors.length > 512 ||
+        referenceAuthors.entries.any(
+          (e) => !isCanonicalId(e.key) || !owners.containsKey(e.value),
+        )) {
+      throw FormatFailure('Invalid normalized workspace manifest.');
     }
     for (final entry in owners.entries) {
-      final j = entry.value;
-      if (j.length != 3 ||
-          j['count'] is! int ||
-          (j['count'] as int) < 0 ||
-          !isEventHash(j['head']) ||
-          !isEventHash(j['digest'])) {
-        throw FormatFailure('Invalid app migration prefix.');
-      }
-    }
-    final names = <String>{};
-    for (final seal in this.seals) {
-      if (!owners.containsKey(seal.owner) ||
-          !names.add(seal.name) ||
-          !{'legacy.task', 'legacy.food'}.contains(seal.kind) ||
-          seal.length < 0 ||
-          seal.count < 0 ||
-          !isEventHash(seal.digest) ||
-          !isEventHash(seal.head) ||
-          seal.name !=
-              (seal.kind == 'legacy.task'
-                  ? '${seal.owner}.jsonl'
-                  : foodLogName(foodWriter(seal.owner)))) {
-        throw FormatFailure('Invalid app legacy source seal.');
+      final p = entry.value;
+      if (p.length != 3 ||
+          p['count'] is! int ||
+          p['count'] < 0 ||
+          p['count'] > 9007199254740991 ||
+          !isEventHash(p['head']) ||
+          !isEventHash(p['digest']) ||
+          p['count'] == 0 &&
+              (p['head'] != unifiedGenesis(space, epoch, entry.key) ||
+                  p['digest'] != bytesDigest(const []))) {
+        throw FormatFailure('Invalid normalized bootstrap prefix.');
       }
     }
   }
   final String space, epoch, sourceDigest;
-  final bool ready;
-  final bool additionalTimeZonesEnabled;
-  TimeZoneNamePolicy get timeZonePolicy => additionalTimeZonesEnabled
-      ? TimeZoneNamePolicy.additional2026eV1
-      : TimeZoneNamePolicy.legacy;
-
-  UnifiedManifest withAdditionalTimeZones() {
-    if (!ready) {
-      throw FormatFailure('Finish the shared workspace upgrade first.');
-    }
-    if (additionalTimeZonesEnabled) return this;
-    return UnifiedManifest(
-      space,
-      epoch,
-      sourceDigest,
-      owners,
-      seals,
-      additionalTimeZonesEnabled: true,
-    );
-  }
-
   final Map<String, Map<String, dynamic>> owners;
-  final List<LegacySeal> seals;
+  final Map<String, String> referenceAuthors;
+  TimeZoneNamePolicy get timeZonePolicy => TimeZoneNamePolicy.additional2026eV1;
   String get digest => bytesDigest(utf8.encode(encode()));
-  String ownerOfLegacy(String semanticWriter, String kind) {
-    if (kind.endsWith('task') && owners.containsKey(semanticWriter)) {
-      return semanticWriter;
-    }
-    final matches = owners.keys.where(
-      (owner) => foodWriter(owner) == semanticWriter,
-    );
-    if (kind.endsWith('food') && matches.length == 1) return matches.single;
-    throw FormatFailure(
-      'Historical writer has no authorized installation mapping.',
-    );
-  }
-
+  String authorOfReference(String writer) =>
+      referenceAuthors[writer] ??
+      (throw FormatFailure('Unmapped historical reference namespace.'));
   Map<String, dynamic> toJson() => {
     'v': unifiedProtocol,
-    'ready': ready,
     'id': space,
     'epoch': epoch,
     'sourceDigest': sourceDigest,
     'owners': owners,
-    'legacySeals': seals.map((s) => s.toJson()).toList(),
-    if (additionalTimeZonesEnabled)
-      'requiredCapabilities': {
-        additionalTimeZonesCapability: additionalTimeZoneCapabilityDescriptor,
-      },
+    'referenceAuthors': referenceAuthors,
   };
-  UnifiedManifest staged() => UnifiedManifest(
-    space,
-    epoch,
-    sourceDigest,
-    owners,
-    seals,
-    ready: false,
-    additionalTimeZonesEnabled: additionalTimeZonesEnabled,
-  );
   String encode() => canonicalDataJson(toJson());
+  factory UnifiedManifest.empty(String space, String writer) {
+    final epoch = const Uuid().v4();
+    return UnifiedManifest(
+      space,
+      epoch,
+      bytesDigest(const []),
+      {
+        writer: {
+          'count': 0,
+          'head': unifiedGenesis(space, epoch, writer),
+          'digest': bytesDigest(const []),
+        },
+      },
+      {writer: writer},
+    );
+  }
   factory UnifiedManifest.decode(String raw) {
     try {
       final j = jsonDecode(raw) as Map<String, dynamic>;
-      final hasCapability = j.containsKey('requiredCapabilities');
-      if (j.length != (hasCapability ? 8 : 7) ||
-          j['v'] != unifiedProtocol ||
-          j['ready'] is! bool ||
-          hasCapability &&
-              canonicalDataJson(j['requiredCapabilities']) !=
-                  canonicalDataJson({
-                    additionalTimeZonesCapability:
-                        additionalTimeZoneCapabilityDescriptor,
-                  })) {
+      if (j.length != 6 || j['v'] != unifiedProtocol) {
         throw FormatFailure(
-          'Unknown app manifest. Update the app; history was preserved.',
+          'Unsupported workspace. Use the coordinated offline conversion before opening it.',
         );
       }
-      final result = UnifiedManifest(
+      final m = UnifiedManifest(
         j['id'] as String,
         j['epoch'] as String,
         j['sourceDigest'] as String,
         (j['owners'] as Map<String, dynamic>).map(
           (k, v) => MapEntry(k, Map<String, dynamic>.from(v as Map)),
         ),
-        (j['legacySeals'] as List).map(
-          (v) => LegacySeal.fromJson(Map<String, dynamic>.from(v as Map)),
-        ),
-        ready: j['ready'] as bool,
-        additionalTimeZonesEnabled: hasCapability,
+        Map<String, String>.from(j['referenceAuthors'] as Map),
       );
-      if (result.encode() != raw) {
-        throw FormatFailure('Noncanonical app manifest.');
+      if (m.encode() != raw) {
+        throw FormatFailure('Noncanonical workspace manifest.');
       }
-      return result;
+      return m;
     } on FormatFailure {
       rethrow;
     } catch (e) {
-      throw FormatFailure('Invalid app manifest: $e');
+      throw FormatFailure('Invalid normalized manifest: $e');
     }
-  }
-}
-
-class CutoverAcknowledgement {
-  const CutoverAcknowledgement(
-    this.writer,
-    this.snapshotDigest, {
-    required this.quiesced,
-    required this.pendingResolved,
-    this.readerVersion = unifiedProtocol,
-  });
-  final String writer, snapshotDigest;
-  final bool quiesced, pendingResolved;
-  final int readerVersion;
-}
-
-class UnifiedConversion {
-  UnifiedConversion(this.manifest, this.files, this.originalEffects);
-  final UnifiedManifest manifest;
-  final Map<String, List<int>> files;
-  final List<UnifiedEffect> originalEffects;
-}
-
-/// Pure, repeatable conversion. Callers must validate protected observations and
-/// collect explicit participant attestations; this routine does not pause peers.
-class UnifiedCutoverPlan {
-  UnifiedCutoverPlan._(
-    this.space,
-    this.owners,
-    this.participants,
-    this.effects,
-    this.seals,
-    this.sourceDigest,
-  );
-  final String space, sourceDigest;
-  final Set<String> owners, participants;
-  final Map<String, List<UnifiedEffect>> effects;
-  final List<LegacySeal> seals;
-
-  factory UnifiedCutoverPlan.inspect({
-    required String space,
-    required Set<String> owners,
-    required Set<String> participants,
-    required Map<String, List<int>> sources,
-    required bool hasUnresolvedPreparedWrites,
-  }) {
-    if (!isCanonicalId(space) ||
-        owners.isEmpty ||
-        owners.length > 256 ||
-        owners.any((o) => !isCanonicalId(o)) ||
-        participants.isEmpty ||
-        participants.any((o) => !isCanonicalId(o)) ||
-        hasUnresolvedPreparedWrites) {
-      throw FormatFailure(
-        'Cutover requires known owners and resolved prepared writes.',
-      );
-    }
-    final effects = {for (final o in owners) o: <UnifiedEffect>[]};
-    final seals = <LegacySeal>[];
-    var totalBytes = 0;
-    final names = sources.keys.toList()..sort();
-    for (final name in names) {
-      final task = name.endsWith('.jsonl');
-      final matches = owners
-          .where(
-            (o) => name == (task ? '$o.jsonl' : foodLogName(foodWriter(o))),
-          )
-          .toList();
-      if (matches.length != 1) {
-        throw FormatFailure(
-          'Unrecognized, conflicting or unowned legacy file $name.',
-        );
-      }
-      final owner = matches.single, bytes = sources[name]!;
-      totalBytes += bytes.length;
-      if (totalBytes > maximumUnifiedWorkspaceBytes) {
-        throw FormatFailure(
-          'Legacy sources exceed the safe app workspace budget.',
-        );
-      }
-      if (bytes.length > 64 * 1024 * 1024 ||
-          (bytes.isNotEmpty && bytes.last != 10)) {
-        throw FormatFailure(
-          'Legacy file is incomplete or exceeds safe limits.',
-        );
-      }
-      final kind = task ? 'legacy.task' : 'legacy.food';
-      var sequence = 0;
-      EventClock? clock;
-      var head = eventGenesisHash(space, task ? owner : foodWriter(owner));
-      final lines = utf8.decode(bytes).split('\n');
-      for (final raw in lines.take(lines.length - 1)) {
-        final e = UnifiedEffect(kind, raw);
-        final taskEvent = e.task;
-        if (taskEvent != null) {
-          assertWorkspaceTaskTimeZonePolicy(
-            taskEvent,
-            TimeZoneNamePolicy.legacy,
-          );
-        }
-        if (e.space != space ||
-            e.writer != (task ? owner : foodWriter(owner)) ||
-            e.sequence != sequence + 1 ||
-            e.previousHash != head ||
-            (clock != null && e.clock <= clock)) {
-          throw FormatFailure(
-            'Legacy chain, identity or clock differs in $name.',
-          );
-        }
-        sequence++;
-        clock = e.clock;
-        head = e.semanticHash;
-        effects[owner]!.add(e);
-      }
-      seals.add(
-        LegacySeal(
-          name,
-          owner,
-          kind,
-          bytes.length,
-          bytesDigest(bytes),
-          sequence,
-          head,
-        ),
-      );
-    }
-    final root = bytesDigest(
-      utf8.encode(
-        canonicalDataJson({
-          'v': 1,
-          'space': space,
-          'owners': owners.toList()..sort(),
-          'participants': participants.toList()..sort(),
-          'sources': seals.map((s) => s.toJson()).toList(),
-        }),
-      ),
-    );
-    return UnifiedCutoverPlan._(
-      space,
-      Set.unmodifiable(owners),
-      Set.unmodifiable(participants),
-      Map.unmodifiable(
-        effects.map((k, v) => MapEntry(k, List<UnifiedEffect>.unmodifiable(v))),
-      ),
-      List.unmodifiable(seals),
-      root,
-    );
-  }
-
-  UnifiedConversion convert(Iterable<CutoverAcknowledgement> acknowledgements) {
-    final acknowledgementsByWriter = <String, CutoverAcknowledgement>{};
-    for (final a in acknowledgements) {
-      if (!participants.contains(a.writer) ||
-          acknowledgementsByWriter.containsKey(a.writer) ||
-          !a.quiesced ||
-          !a.pendingResolved ||
-          a.readerVersion != unifiedProtocol ||
-          a.snapshotDigest != sourceDigest) {
-        throw FormatFailure(
-          'Participant is not upgraded, quiesced or synchronized.',
-        );
-      }
-      acknowledgementsByWriter[a.writer] = a;
-    }
-    if (!acknowledgementsByWriter.keys.toSet().containsAll(participants)) {
-      throw FormatFailure(
-        'Missing/offline participant: coordinate or explicitly retire it.',
-      );
-    }
-    return prepareConversion();
-  }
-
-  /// Prospective deterministic bytes only. This does not authorize staging or
-  /// activation; callers must separately collect real participant receipts.
-  UnifiedConversion prepareConversion() {
-    final epoch = const Uuid().v5(
-      space,
-      'tandemlog:app-cutover:v4:$sourceDigest',
-    );
-    final files = <String, List<int>>{},
-        heads = <String, Map<String, dynamic>>{};
-    final originals = <UnifiedEffect>[];
-    final orderedOwners = owners.toList()..sort();
-    for (final owner in orderedOwners) {
-      final ordered = List<UnifiedEffect>.of(effects[owner]!)
-        ..sort((a, b) {
-          final clock = a.clock.compareTo(b.clock);
-          if (clock != 0) return clock;
-          final kind = a.kind.compareTo(b.kind);
-          if (kind != 0) return kind;
-          final writer = a.writer.compareTo(b.writer);
-          return writer != 0 ? writer : a.sequence.compareTo(b.sequence);
-        });
-      var head = unifiedGenesis(space, epoch, owner), sequence = 0;
-      EventClock? clock;
-      final output = StringBuffer();
-      for (final e in ordered) {
-        clock = EventClock.next(e.clock.value, clock);
-        final record = UnifiedRecord(
-          space: space,
-          epoch: epoch,
-          writer: owner,
-          sequence: ++sequence,
-          clock: clock,
-          previousHash: head,
-          effect: e,
-          transactionStart: sequence,
-          transactionCount: 1,
-          transactionIndex: 0,
-        );
-        output.writeln(record.encode());
-        head = record.hash;
-        originals.add(e);
-      }
-      final bytes = utf8.encode(output.toString());
-      if (bytes.length > maximumUnifiedFileBytes ||
-          files.values.fold<int>(0, (n, b) => n + b.length) + bytes.length >
-              maximumUnifiedWorkspaceBytes) {
-        throw FormatFailure(
-          'Converted history exceeds safe app read budgets; originals remain intact.',
-        );
-      }
-      files[unifiedLogName(owner)] = Uint8List.fromList(
-        bytes,
-      ).asUnmodifiableView();
-      heads[owner] = {
-        'count': sequence,
-        'head': head,
-        'digest': bytesDigest(bytes),
-      };
-    }
-    return UnifiedConversion(
-      UnifiedManifest(space, epoch, sourceDigest, heads, seals),
-      Map.unmodifiable(files),
-      List.unmodifiable(originals),
-    );
   }
 }

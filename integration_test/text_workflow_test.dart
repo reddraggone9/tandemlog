@@ -219,7 +219,7 @@ void registerTextWorkflowTests() {
         textEngine: engine,
       );
       try {
-        await peer.initializeSharedTextForHistoricalFixture();
+        await peer.initializeSharedText();
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -384,7 +384,7 @@ void registerTextWorkflowTests() {
           'title': 'Existing next occurrence',
           'description': 'Independent child notes',
         });
-        await store.initializeSharedTextForHistoricalFixture();
+        await store.initializeSharedText();
         await store.reopen(task, [completion.id]);
         await File('${profile.path}/settings.json').writeAsString(
           jsonEncode({

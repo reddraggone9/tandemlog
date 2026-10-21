@@ -1,122 +1,19 @@
-# Storage and sync contract
+# Storage and sync
 
-## V4 history and app-owned workspace upgrade
+[ADR0031](decisions/0031-coordinated-unified-cutover.md) and the [current schema](schema.md) specify the implemented current-only boundary. Validation is ongoing. Earlier released formats remain in [historical documentation](archive/storage-and-sync-before-coordinated-cutover.md) and external frozen readers.
 
-RC.2 published the isolated v4 runtime. [ADR0028](decisions/0028-app-owned-workspace-upgrade.md) now authorizes the app-owned upgrade flow for existing v3 folders; implementation and synthetic native acceptance are in progress. No production conversion has occurred. [ADR 0027](decisions/0027-unified-writer-history.md)
-owns the format and installation identity; ADR0028 owns app-controlled upgrade. Released v3 bytes and semantics remain readable.
+UnifiedHistory is the sole append allocator and common admission owner. TaskStore and FoodStore retain domain APIs over the same admitted revision. The provider transports immutable bootstrap metadata and per-installation append histories with delayed/reordered/repeated delivery; it decides neither authorship nor merge meaning. Sync only the selected canonical folder, never the private app profile.
 
-The v4 manifest seals every original Task/Food source and a deterministic
-conversion epoch. Each installation has one complete .applog: exact historical
-semantic records plus future app-wide sequence, clock, hash chain, transaction
-frame and observed frontiers. Outer positions never replace original semantic
-IDs, hashes, clocks, Undo references or native text lineage. Unknown required
-data stops both projections. Physical observations are protected even when a
-complete transaction waits for missing semantic prerequisites.
+One atomic action/Save contains its typed effects in one physical record. Bulk capture/placement, edits, deletion/Undo, recurrence and checklist writes use this boundary. Native Undo targets one saved text action; earlier saves are separate actions. Bounded Food imports carry canonical provenance. Historical conversion retains old committed boundaries.
 
-One coordinator serializes both stores on the existing profile queue. Schema4
-adds protected epoch/writer inventory, heads, one exact common outbox and a
-migration journal in local.sqlite. Reservation precedes native receipt binding;
-recovery appends only the exact missing reserved suffix. Readback precedes
-retirement. Both projections stage within the admission transaction and publish
-memory after commit. Rebuild retains all protected authority and canonical bytes.
+The private profile owns one exclusive SQLite connection and serialized queue. Complete candidate heads and both projections commit before publication. Exact admitted effect bytes acknowledge saves independently of physical line numbers. Unfinished bytes/native handles remain in memory only; startup admits canonical history without replaying unfinished private intent. Partial tails wait or receive owner-only safe suffix cleanup before new writes. Complete corruption, conflict copies and unknown complete semantics fail closed.
 
-Original conversion owners remain fixed. A new installation begins its own
-standalone writer.joined header, then uses its distinct immutable UUID. Previously
-observed writer files cannot disappear. Optional writer.named events carry only
-a display label; duplicate labels never merge ownership. Inputs are bounded to
-32MiB per app file, 256MiB per workspace and 4MiB per record. Refresh rereads and
-hashes actual provider bytes; a bounded successful Task-validation cache skips
-replaying native Tasks for unchanged semantic bytes.
+Current admission uses bounded payload scans and truthful read counters; it does not claim the retired incremental backend's zero-read warm path. Startup tooling retains workload, read counts and measured latency. A shared poll performs common admission for both adapters; unchanged semantic slices retain identity.
 
-UnifiedTrial creates or resumes only its owned direct system-temp directory,
-rejects links, stores exact source backups/output recipes and acknowledgements
-in its protected journal, and keeps ready=false until every participant has
-validated the exact output against retained local authority. Late legacy writes
-block activation and cleanup. Crash recovery resumes exact prefixes and phase
-intents. Only this synthetic capability may retire its own copied old source
-files. The original helper has no production cleanup action; ADR0028 adds a distinct app-owned coordinator with real-profile consent and retained source snapshots.
+## External coordinated cutover
 
+The one-time converter stays outside the repository. Its input is an accepted frozen canonical copy after all apps stop and sync settles, with immutable originals and an explicit historical-to-current writer mapping. Compare every historical prefix through frozen/current and native replay, preserving text lineage, references, Undo, recurrence, tombstones and ordering. Final rows alone do not prove equivalence.
 
-Approved foundation: canonical per-device JSON logs and one SQLite cache. [Protocol v3](schema.md) describes the implemented subset and [recovery](recovery.md) its limits. This document explains the larger contract.
+Retain continuing installation IDs and folder selections plus simple preferences. Other private state may reset, including drafts and unfinished saves; full profile export is not required. Sync-node count does not determine historical authors. Missing mappings stop conversion.
 
-
-## Required time-zone reader capability
-
-Build98 adds the protected capability journal through strict LOCAL profile
-schema4-to-5 migration. The shared v4 manifest stays byte-identical until the
-user explicitly enables the four additional names. The deterministic supported
-extension, per-workspace permission, full-admission transactional promotion,
-old-reader delivery-order barriers and forward recovery are specified in
-[ADR0030](decisions/0030-required-time-zone-reader-capability.md). Opening the
-new local profile is forward-only even before shared activation; this is not a
-canonical-log migration or permission to recreate missing private authority.
-
-## Device-local section preference
-
-The following RC stores optional `lastSection` (`tasks`/`food`) in the existing LocalSettings JSON in `protected_settings.raw` of `local.sqlite`. Missing, unknown and malformed optional values default to Tasks. Other preference saves preserve unrelated JSON fields and the protected writer binding. Save the section only after navigation succeeds through setup and draft guards. This adds no schema version, canonical event, synced preference or new file. [ADR 0021](decisions/0021-local-sections-and-launcher-shortcuts.md) owns navigation rationale.
-
-## Canonical data and local cache
-
-Retain per-writer append-only JSONL as the initial format for any compatible folder-sync transport. Only the owning install writes its stream. Writer identity belongs to the installation's private settings; sequence and event identity are interpreted within each workspace. An installation-wide lease protects preferences and writing, with a defensive per-cache store lease. Keep identities outside synced data and do not clone them through backup/restore. [ADR 0006](decisions/0006-installation-identity-and-instance-lock.md) specifies legacy migration and settings reset. Duplicate IDs with different payloads are corruption, not ignorable duplicates. Use lowercase filename-safe IDs to avoid case-sensitive naming assumptions.
-
-Separate event identity `(writer ID, durable sequence)` from logical order and occurrence time. Use the original wall-clock/causal scalar specified in the schema: max(current UTC nanoseconds, observed maximum + 1), serialized as an exact decimal string, with writer/sequence tie-breaking. The earlier pure Lamport implementation converged but lost the original approximate-recency intent for offline edits; [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md) records the correction and nonblocking future-clock warning. Clock order preserves causality but cannot establish true human recency between unsynchronized devices. Persist/recover sequence and clock before another write; rescan owned history and available imported records on cache rebuild. Bound counters and reject malformed values. No global sync barrier is needed to work offline.
-
-Append and ingest/project into **one private SQLite transaction** containing event rows, affected projections and per-stream checkpoints, then require the exact prepared `(event ID, raw bytes)` receipts before acknowledging a command. Append success alone is insufficient: a provider replacement can preserve older committed history while dropping the new suffix before ingestion. Missing receipts produce a visible failure; editors retain drafts and batches report only confirmed progress. Durability beyond process interruption still depends on platform/provider guarantees; see [stable readiness findings](stable-readiness-review-2026-10-02.md). If the process dies between append and cache commit, re-ingest; command/event IDs make retries idempotent. If the cache is gone, rebuild from logs. An in-memory view is fine; an independently persisted JSON snapshot is unnecessary initially. Provider-specific durability must be demonstrated, not inferred from POSIX APIs.
-
-## Ingestion and corruption
-
-Reopen replaced files and reconcile on resume, notifications, foreground polling and contextual error retry; watchers are hints. Lee approved persisted byte checkpoints: ordinary startup/resume/commands do not reread historical bytes when current size is available and the adapter can seek. Unchanged logs read zero bytes; growth admits only the new complete suffix against its cached chain head. V3 records carry their SHA-256 hash and predecessor; cache 13 retains chain checkpoints and previous prefix/range byte receipts. Settings **Check data integrity** invokes a full current-chain audit with retained-baseline comparison and selectable/copyable diagnostics. Unknown-size or unseekable providers conservatively full-read and verify. [ADR 0007](decisions/0007-canonical-history-integrity.md) specifies encoding and limits; [the reconciliation review](android-reconciliation-review.md) records measurements of the prior v2 checkpoint implementation separately.
-
-Missing known streams, truncation, manifest replacement, conflict copies and invalid new records still fail immediately. A same-length historical rewrite, or a rewritten prefix followed by valid growth, can remain unseen until an explicit full audit. A fresh/cache-rebuilt installation reads and checks current chains but loses a discarded cache's previous baseline. A fully recomputed chain or removal of final records can pass a fresh scan without a separately trusted head; hashes do not authenticate writers. Never treat missing history as entity deletion, rewrite timestamps, or silently reset a known integrity warning.
-
-Read only complete newline-terminated records. Temporarily ignore an incomplete trailing record on a remote stream and retry. Repair an owned incomplete tail only under exclusive access after confirming interrupted append and preserving recovery evidence. A complete invalid record, conflicting event ID or unsupported required version gets diagnostics and write blocking for the affected scope; never truncate it as a “broken tail.” Bound input sizes and validate workspace IDs, filenames and payloads.
-
-Syncthing [replaces destinations via temporary files](https://docs.syncthing.net/users/syncing.html), can generate conflict copies, and recommends rescans alongside watchers. Single-writer ownership reduces ordinary conflicts; it does not prevent cloned identities, manual edits or restores. Detect conflict filenames and stop treating transport as healthy until reconciled.
-
-## Convergence semantics
-
-Same validated event set plus the same projection version must produce identical state, regardless of arrival order or batching. Missing referenced events may arrive later: retain pending dependencies and rerun; do not permanently reject based only on arrival order. Released scalar task text uses per-field last-writer-wins with a stable causal tie-break. The authorized, unreleased [text extension](decisions/0010-collaborative-text-adoption.md) adds captured character operations without changing those historical scalar meanings. Neither scalar LWW nor text merging is suitable for inventory consumption or coupled date fields.
-
-Undo must target an operation and be repeat-safe. For M1 completion, preserve completion IDs so undoing one's own completion does not erase another user's independent completion. Task deletion uses an identity-preserving canonical tombstone, recoverable through named session Undo while preserving independent newer writes; broader restore/copy workflows remain deferred. Do not generate new authoritative events as a side effect of replay.
-
-## Compatibility and recovery
-
-The unreleased [Food module](decisions/0014-food-inventory.md) uses separate
-versioned `.foodlog` streams and schema3 protected recovery authority on the
-existing local DB owner. Its bounded full replay and typed failure isolation do
-not change task v3 bytes or task checkpoint behavior. The ADR specifies exact
-append recovery, identity/reference validation and shared-safety admission.
-
-The combined release candidate's app-wide local DB implementation moves installation preferences, writer safety, pending intents and scoped workspace projections into one private SQLite owner. Verified legacy activation and resumable exact-file cleanup preserve every canonical byte and trusted observation; they do not migrate the shared logs. See [ADR0013](decisions/0013-app-wide-local-database.md) for ownership, receipt proofs, recovery sidecars and rollout gates. Exact Windows/Android native acceptance and parent publication gates remain pending; live-data operations are outside this preparation.
-
-From stable 2026.10.0 onward, future versions must read existing durable v3 histories with their original meaning. Preserve record bytes/hash canonicalization, workspace/writer/entity identities, immutable clocks and Undo semantics. Version the workspace protocol/envelope and each event meaning. New meaning gets a new version/type; never reinterpret old payloads in place. Use deterministic decoders/upcasters and frozen fixtures spanning versions. Cache migrations are disposable: rebuild when incompatible. A changed projection algorithm still needs a compatibility decision to prevent two app versions producing different outcomes.
-
-Preserve unknown records. Fail closed for unknown required semantics; independently versioned optional modules may remain unavailable while compatible tasks work only if dependency isolation is proven. Otherwise open safe read-only diagnostics and explain upgrade needs. Do not silently skip an unknown event and report a complete view.
-
-Retain canonical history for M1; backup separately from sync and test restore with a fresh writer identity. Health/photo data will require a retention/privacy decision before adoption: indefinite logs make true erasure harder. Keep large attachments outside JSONL, linked by stable identifiers when introduced.
-
-## Alternatives to evaluate only if needed
-
-Sealed immutable event batches avoid repeatedly replacing growing logs and may fit document providers better, at the cost of file counts, publishing/recovery rules and more scanning. Benchmark/prove providers before changing format. A private durable outbox exported to a shared folder can improve availability when permissions vanish, but changes which data is authoritative; it needs an ADR. A service-based outbox sync can simplify setup but changes the no-server premise. No change to the canonical log foundation is implicitly approved here.
-
-
-## Validated local batches
-
-Capture and bulk edit/tag/move/delete/Undo/reopen commands validate their complete event set against one reconciled cache before append. Sequence numbers and approved wall-clock causal values increase for every unchanged JSONL record. The serialized store queue prevents another local writer command from entering between preparation and append. Reference checks include delayed incoming dependencies on later prepared IDs. Caller snapshot/context guards run at the batch commit boundary, rather than suggesting a separate user permission check between every line.
-
-One transport append still flushes; then one ingestion/cache transaction materializes all complete records. A batch is not crash atomic: complete prefix records can persist, an acknowledgement can fail after the full write, or an owned tail can be incomplete. Exact `(event ID, raw bytes)` receipts acknowledge only confirmed records. Retry preserves capture identities and skips already materialized creations/retractions. New captures append ordinary `task.moved` intents before the observed first task in the same batch as their creations (no move is needed in an empty task sequence). Their entered order is preserved. Historical creation replay stays unchanged. A complete prefix can acknowledge creation before initial placement: report confirmed creations separately and retain unfinished capture IDs until both records are confirmed. An unresolved reserved suffix blocks regeneration of the move or its anchor. Capture reserves the whole append before staging native creation intents, so a preparation failure cannot expose a standalone creation retry without its placement. If later staging fails after reservation and the complete suffix never reached the provider, writing remains blocked under the existing manual writer-recovery policy; this does not automatically reconstruct or resend that missing suffix. A complete-prefix failure can reconcile immediately; an incomplete owned tail remains preserved and blocks writing under the existing recovery policy. Do not truncate it or claim success. Cache failure never makes SQLite authoritative. No protocol/cache projection version change is needed for grouping unchanged records into one append.
-
-Local event preparation checks only historical references affected by that proposed event; canonical ingestion still validates the full joined reference set. This removes repeated decoding of unrelated history without weakening late-dependency admission.
-
-See [batch performance evidence](../evidence/rc5-batch-performance.json) and the reusable synthetic `tool/measure_batches.dart`. Its storage phases/counters are separate from perceived UI latency and Android document-provider behavior.
-
-
-## Conditional recurring-completion Undo
-
-RC8 adds one explicit cleanup-retraction meaning; existing completion retraction and checkbox Reopen retain their meanings. The [schema](schema.md#rc8-conditional-recurring-completion-undo) defines untouched-successor suppression, conservative independent-work/dependency protection, late-arrival restoration, surviving-seed selection and peer upgrades. Suppression is derived from immutable canonical records, not a deletion tombstone or canonical rewrite. Cache 9 rebuilds supported older materializations while retaining the established backup and integrity guards. A mixed Undo action still uses one flushed append, per-record exact confirmation and one cache transaction; complete-prefix and interruption behavior is unchanged.
-
-The flat Food whole-container interface ([ADR 0022](decisions/0022-food-whole-container-rows.md)) removes contents controls only. Existing fractions, amounts, conflict alternatives, certainty fields, prepared contents receipts and additive Undo remain readable and recoverable without canonical conversion. Displayed counts count physical IDs, never inferred fullness. No schema or durable format changes accompany this interface.
-
-## Occurrence-to-Due compatibility edits
-
-[ADR 0026](decisions/0026-field-help-validation-and-occurrence-due.md) uses the existing guarded v3 task.edited schedule command for an absent-Due occurrence conversion. It appends after explicit application admission/refresh, preserves prior canonical bytes and existing Due, skips conflicts without blocking startup, and replans after observed changes. Replay never converts data. Whole-schedule v3 last-writer semantics remain unchanged for unseen offline edits; no schema, replay rule or synced migration marker is added.
+Only a separate live-cutover approval can adopt converted history. Old applications must remain stopped afterward. Reverting after new-format writes requires reconciliation rather than copying old files over new work. No development test opens, resets or converts a production profile/workspace.

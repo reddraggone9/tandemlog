@@ -70,7 +70,7 @@ void main() {
       );
       final raw = event.encode();
       expect(utf8.encode(raw).length, lessThan(1024 * 1024));
-      final originalHash = (jsonDecode(raw) as Map)['hash'];
+      final originalHash = (jsonDecode(raw) as Map)['referenceHash'];
       // Warm ordinary codec work before measuring the one adversarial frame.
       LogEvent.decode(
         LogEvent(
@@ -136,7 +136,10 @@ void main() {
         await store.undoOperations([original.id]);
         expect(store.sharedTextInitialized, false);
         expect(
-          store.db.select('SELECT 1 FROM text_fields WHERE entity=?', [parent]),
+          store.db.select(
+            'SELECT 1 FROM ${store.tables.textFields} WHERE entity=?',
+            [parent],
+          ),
           isEmpty,
         );
         final before = jsonEncode(store.checklistItems(child));

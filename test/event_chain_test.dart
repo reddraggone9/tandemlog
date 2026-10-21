@@ -1,341 +1,253 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
 
 const space = '11111111-1111-4111-8111-111111111111';
 const writer = '22222222-2222-4222-8222-222222222222';
 const entity = '33333333-3333-4333-8333-333333333333';
-const genesis =
-    '45f93a5918726c4021803b86223e37965d486fd10c851c9499e615b55b5ef453';
-
-LogEvent example({int sequence = 1, Map<String, dynamic>? data}) => LogEvent(
-  space,
-  writer,
-  sequence,
-  EventClock(BigInt.from(sequence)),
-  entity,
-  'user.created',
-  data ?? {'name': 'Example'},
-);
-
-String sealed(Map<String, dynamic> record) {
-  record['hash'] = eventRecordHash(record);
-  return canonicalEventJson(record);
+const fixture = 'test/fixtures/current-operation-v1/persons.operations';
+List<String> lines() => File(fixture).readAsLinesSync();
+Map<String, dynamic> body() =>
+    jsonDecode(lines().first) as Map<String, dynamic>;
+String seal(Map<String, dynamic> record) {
+  record.remove('contentHash');
+  record.remove('referenceHash');
+  final hash = sha256
+      .convert(
+        utf8.encode('tandemlog:operation:v1\n${canonicalDataJson(record)}'),
+      )
+      .toString();
+  return canonicalDataJson({
+    ...record,
+    'contentHash': hash,
+    'referenceHash': hash,
+  });
 }
 
 void main() {
-  test('independent Python SHA256 golden JSONL is byte-exact on re-encode', () {
-    // Fixture generated with Python hashlib.sha256 and compact json.dumps,
-    // recursively sorted data keys, ensure_ascii=False; never the Dart codec.
-    final lines = File('test/fixtures/event_chain_v3.jsonl').readAsLinesSync();
-    expect(lines, hasLength(2));
-    expect(eventGenesisHash(space, writer), genesis);
-    final first = LogEvent.decode(lines[0]);
-    final second = LogEvent.decode(lines[1]);
-    expect(first.previousHash, genesis);
+  test(
+    'Python SHA256 current fixture is byte-exact including UTF-8 and predecessor chaining',
+    () {
+      expect(
+        sha256.convert(File(fixture).readAsBytesSync()).toString(),
+        '4c8c32877d15e520e510a8d96d4b38fb9cd16787f9a15c1875e010f3e52b741d',
+      );
+      final raw = lines(),
+          first = LogEvent.decode(lines().first),
+          second = LogEvent.decode(lines().last);
+      expect(
+        first.hash,
+        '25a67b512527e909844484da57c0bdda5b3f4f03374aa88556b700b8a9a8ef5b',
+      );
+      expect(
+        second.hash,
+        'bcb71086bd14d5d96d5682657b928d388326361b9bdf236eedb962d483664e08',
+      );
+      expect(first.previousHash, '0' * 64);
+      expect(second.previousHash, first.hash);
+      expect(first.encode(), raw.first);
+      expect(second.encode(), raw.last);
+      expect(second.data['name'], 'Second ${String.fromCharCode(0x20ac)}');
+      expect(
+        LogEvent(
+          space,
+          writer,
+          1,
+          EventClock(BigInt.one),
+          entity,
+          'user.created',
+          {'name': 'Example'},
+        ).encode(previousHash: '0' * 64),
+        raw.first,
+      );
+    },
+  );
+  test('recursive object keys sort while array order remains meaningful', () {
     expect(
-      first.hash,
-      'b57729257a72d096db9a8d026bb898bc23300de70e8d7a4c1174b2a8f591256e',
-    );
-    expect(second.previousHash, first.hash);
-    expect(
-      second.hash,
-      'a3faa7052ed9607b32bba52a69b419e314eaee69b2cc3910b69e179f6d65031b',
-    );
-    for (final (event, raw) in [(first, lines[0]), (second, lines[1])]) {
-      expect(event.encode(), raw);
-      expect(event.canonicalRaw, raw);
-      expect(event.toJson()['hash'], event.hash);
-    }
-    expect(first.data['name'], 'Zoë 🧭\n"\\\t');
-    expect(second.data['title'], 'Café é');
-    expect(() => first.data['name'] = 'Edited', throwsUnsupportedError);
-    expect(
-      () => (second.data['schedule'] as Map)['dueDate'] = '2040-01-01',
-      throwsUnsupportedError,
+      canonicalDataJson({
+        'z': {'b': 2, 'a': 1},
+        'a': [2, 1],
+      }),
+      '{"a":[2,1],"z":{"a":1,"b":2}}',
     );
     expect(
-      () => (second.data['tags'] as List).add('tag'),
-      throwsUnsupportedError,
-    );
-  });
-
-  test('new records require an explicit predecessor beyond genesis', () {
-    final first = LogEvent.decode(example().encode());
-    expect(first.previousHash, genesis);
-    expect(() => example(sequence: 2).encode(), throwsA(isA<FormatFailure>()));
-    expect(() => example(sequence: 2).toJson(), throwsA(isA<FormatFailure>()));
-    final second = LogEvent.decode(
-      example(sequence: 2).encode(previousHash: first.hash),
-    );
-    expect(second.previousHash, first.hash);
-    expect(second.hash, isNot(first.hash));
-    expect(second.encode(), second.canonicalRaw);
-    expect(eventGenesisHash(writer, space), isNot(genesis));
-    expect(eventGenesisHash(space, entity), isNot(genesis));
-  });
-
-  test('canonical bytes reject alternate spellings and duplicate fields', () {
-    final raw = example().encode();
-    final record = example().toJson();
-    final reordered = <String, dynamic>{
-      'hash': record['hash'],
-      ...record..remove('hash'),
-    };
-    for (final changed in [
-      ' $raw',
-      '$raw ',
-      '$raw\n',
-      '$raw\r',
-      raw.replaceFirst(':3,', ': 3,'),
-      raw.replaceFirst('"v":3', '"v":3,"v":3'),
-      raw.replaceFirst('"Example"', r'"\u0045xample"'),
-      raw.replaceFirst('"seq":1', '"seq":1.0'),
-      jsonEncode(reordered),
-    ]) {
-      expect(() => LogEvent.decode(changed), throwsA(isA<FormatFailure>()));
-    }
-  });
-
-  test('data key order is recursive and array order remains significant', () {
-    final record = example().toJson();
-    record['data'] = {
-      'z': [3, 2, 1],
-      'a': {'z': true, 'a': null},
-      '\u{10000}': 'supplementary',
-      '\ue000': 'BMP',
-    };
-    final canonical = canonicalEventJson(record);
-    expect(
-      canonical,
-      contains(
-        '"data":{"a":{"a":null,"z":true},"z":[3,2,1],"\ue000":"BMP","\u{10000}":"supplementary"}',
+      canonicalDataJson({
+        'a': [1, 2],
+      }),
+      isNot(
+        canonicalDataJson({
+          'a': [2, 1],
+        }),
       ),
     );
-    final hash = eventRecordHash(record);
-    record['data'] = {
-      '\ue000': 'BMP',
-      'a': {'a': null, 'z': true},
-      '\u{10000}': 'supplementary',
-      'z': [3, 2, 1],
-    };
-    expect(eventRecordHash(record), hash);
-    record['data']['z'] = [1, 2, 3];
-    expect(eventRecordHash(record), isNot(hash));
   });
-
-  test('altering any envelope field or content breaks the retained hash', () {
-    final record = example().toJson();
-    for (final (key, value) in [
-      ('space', writer),
-      ('writer', space),
-      ('seq', 2),
-      ('clock', '2'),
-      ('entity', writer),
-      ('type', 'task.deleted'),
-      ('data', {'name': 'Altered'}),
-      ('previousHash', '0' * 64),
-      ('hash', '0' * 64),
-    ]) {
-      final changed = {...record, key: value};
-      expect(
-        () => LogEvent.decode(canonicalEventJson(changed)),
-        throwsA(isA<FormatFailure>()),
-      );
-    }
-    // Codec checks a self hash; stream admission checks the expected predecessor.
-    final rebound = {...record, 'previousHash': '0' * 64};
-    expect(LogEvent.decode(sealed(rebound)).previousHash, '0' * 64);
-  });
-
-  test('hash fields must be full lowercase hex and are mandatory', () {
-    final record = example().toJson();
-    for (final key in ['hash', 'previousHash']) {
-      for (final bad in [
-        null,
-        3,
-        '',
-        'f' * 63,
-        'G' * 64,
-        genesis.toUpperCase(),
+  test(
+    'alternate spelling whitespace and duplicate fields cannot masquerade as canonical bytes',
+    () {
+      final raw = lines().first;
+      for (final changed in [
+        ' $raw',
+        '$raw ',
+        raw.replaceFirst('"name":"Example"', '"name": "Example"'),
+        raw.replaceFirst('"clock":"1"', '"clock":"1","clock":"1"'),
+        raw.replaceFirst('Example', '${String.fromCharCode(92)}u0045xample'),
       ]) {
         expect(
-          () => LogEvent.decode(jsonEncode({...record, key: bad})),
+          () => LogEvent.decode(changed),
           throwsA(isA<FormatFailure>()),
+          reason: changed,
         );
       }
-      expect(
-        () => LogEvent.decode(jsonEncode({...record}..remove(key))),
-        throwsA(isA<FormatFailure>()),
-      );
-    }
-  });
-
-  test(
-    'literal Unicode survives, malformed surrogates never become replacements',
-    () {
-      final text = 'é é 🧭 / \u2028\u2029\u0000\u001f\b\f\n\r\t"\\';
-      final raw = example(data: {'name': text}).encode();
-      expect(LogEvent.decode(raw).data['name'], text);
-      expect(raw, contains('é é 🧭 / \u2028\u2029'));
-      expect(raw, contains(r'\u0000\u001f\b\f\n\r\t\"\\'));
-      for (final surrogate in [0xd800, 0xdbff, 0xdc00, 0xdfff]) {
-        final bad = String.fromCharCode(surrogate);
-        expect(
-          () => example(data: {'name': 'bad$bad'}).encode(),
-          throwsA(isA<FormatFailure>()),
-        );
-        final escaped = surrogate.toRadixString(16);
-        expect(
-          () => LogEvent.decode(raw.replaceFirst('é é 🧭', '\\u$escaped')),
-          throwsA(isA<FormatFailure>()),
-        );
-      }
-      expect(
-        () => LogEvent.decode(raw.replaceFirst('🧭', r'\ud83e\udded')),
-        throwsA(isA<FormatFailure>()),
-      );
     },
   );
-
-  test('canonical numeric grammar is plain safe integers, never floats', () {
-    final record = example().toJson();
-    record['data'] = {
-      'number': 9007199254740991,
-      'negative': -9007199254740991,
-    };
-    expect(canonicalEventJson(record), contains('9007199254740991'));
-    for (final unsupported in [
-      9007199254740992,
-      -9007199254740992,
-      1.0,
-      double.nan,
-      double.infinity,
+  test('altering any current envelope field invalidates its retained hash', () {
+    for (final key in [
+      'space',
+      'author',
+      'subject',
+      'predecessor',
+      'clock',
+      'value',
+      'identity',
+      'operation',
+      'referenceHash',
+      'contentHash',
     ]) {
-      record['data'] = {'number': unsupported};
-      expect(() => canonicalEventJson(record), throwsFormatException);
+      final record = body();
+      switch (key) {
+        case 'value':
+          record[key] = {'name': 'Changed'};
+        case 'identity':
+          record[key] = {'writer': writer, 'sequence': 2};
+        case 'operation':
+          record[key] = {'family': 'person.create', 'revision': 2};
+        case 'clock':
+          record[key] = '2';
+        case 'referenceHash':
+          record[key] = 'invalid-hash';
+        case 'contentHash':
+          record[key] = 'f' * 64;
+        case 'predecessor':
+          record[key] = 'f' * 64;
+        default:
+          record[key] = '99999999-9999-4999-8999-999999999999';
+      }
+      expect(
+        () => LogEvent.decode(canonicalDataJson(record)),
+        throwsA(isA<FormatFailure>()),
+        reason: key,
+      );
     }
   });
-
   test(
-    'obsolete separate tag events are rejected rather than reinterpreted',
+    'unknown required family and revision fail closed even with independently recomputed hashes',
     () {
-      final obsolete = LogEvent(
-        space,
-        writer,
-        1,
-        EventClock(BigInt.one),
-        entity,
-        'task.tagsChanged',
-        {
-          'add': ['home'],
-          'remove': <String>[],
-        },
-      );
-      expect(
-        () => LogEvent.decode(obsolete.encode()),
-        throwsA(
-          isA<FormatFailure>().having(
-            (error) => error.message,
-            'message',
-            allOf(
-              contains('Unknown event task.tagsChanged'),
-              contains('preserved'),
-            ),
-          ),
-        ),
-      );
-      final supported = LogEvent(
-        space,
-        writer,
-        1,
-        EventClock(BigInt.one),
-        entity,
-        'task.edited',
-        {
-          'tagChanges': {
-            'add': ['home'],
-            'remove': <String>[],
-          },
-        },
-      );
-      expect(LogEvent.decode(supported.encode()).data, supported.data);
+      for (final operation in [
+        {'family': 'person.create', 'revision': 99},
+        {'family': 'future.person', 'revision': 1},
+      ]) {
+        final record = body()..['operation'] = operation;
+        expect(
+          () => LogEvent.decode(seal(record)),
+          throwsA(isA<FormatFailure>()),
+        );
+      }
     },
   );
-
   test(
-    'event size admission counts UTF-8 bytes with an inclusive 1 MiB limit',
+    'closed required field sets reject extras and missing keys at every envelope level',
     () {
-      const maximum = 1024 * 1024;
-      final canonical = example().encode();
-      final atLimit =
-          '${' ' * (maximum - utf8.encode(canonical).length)}$canonical';
-      expect(utf8.encode(atLimit), hasLength(maximum));
+      for (final change in [0, 1, 2, 3]) {
+        final record = body();
+        if (change == 0) record['future'] = true;
+        if (change == 1) record.remove('author');
+        if (change == 2) (record['identity'] as Map)['future'] = true;
+        if (change == 3) (record['operation'] as Map)['future'] = true;
+        expect(
+          () => LogEvent.decode(canonicalDataJson(record)),
+          throwsA(isA<FormatFailure>()),
+        );
+      }
+    },
+  );
+  test(
+    'canonical numeric grammar accepts safe plain integers and rejects floats and unsafe integers',
+    () {
       expect(
-        () => LogEvent.decode(atLimit),
-        throwsA(
-          isA<FormatFailure>().having(
-            (error) => error.message,
-            'message',
-            contains('Noncanonical event JSON'),
-          ),
-        ),
+        canonicalDataJson([0, -1, 9007199254740991]),
+        '[0,-1,9007199254740991]',
       );
-      final oversized = canonical.replaceFirst('Example', 'é' * (maximum ~/ 2));
-      expect(oversized.length, lessThan(maximum));
-      expect(utf8.encode(oversized).length, greaterThan(maximum));
+      for (final value in [
+        1.0,
+        0.5,
+        double.nan,
+        double.infinity,
+        9007199254740992,
+      ]) {
+        expect(() => canonicalDataJson(value), throwsFormatException);
+      }
+    },
+  );
+  test(
+    'native and Task action input cannot add ignored fields or shadow current identity',
+    () {
+      for (final data in [
+        {'name': 'Example', 'future': true},
+        {
+          'name': 'Example',
+          'identity': {'writer': entity, 'sequence': 1},
+        },
+      ]) {
+        expect(
+          () => LogEvent(
+            space,
+            writer,
+            1,
+            EventClock(BigInt.one),
+            entity,
+            'user.created',
+            data,
+          ).encode(),
+          throwsA(isA<FormatFailure>()),
+        );
+      }
+    },
+  );
+  test(
+    'old v1 v2 and v3 fixture bytes remain explicit preserved failures in the app',
+    () {
+      final frozen = File(
+        'test/fixtures/event_chain_v3.jsonl',
+      ).readAsBytesSync();
+      for (final raw in const LineSplitter().convert(utf8.decode(frozen))) {
+        expect(() => LogEvent.decode(raw), throwsA(isA<FormatFailure>()));
+        final j = jsonDecode(raw) as Map;
+        for (final version in [1, 2]) {
+          expect(
+            () => LogEvent.decode(jsonEncode({...j, 'v': version})),
+            throwsA(isA<FormatFailure>()),
+          );
+        }
+      }
       expect(
-        () => LogEvent.decode(oversized),
-        throwsA(
-          isA<FormatFailure>().having(
-            (error) => error.message,
-            'message',
-            'Oversized event.',
-          ),
-        ),
+        File('test/fixtures/event_chain_v3.jsonl').readAsBytesSync(),
+        frozen,
       );
     },
   );
-
-  test('v1 and v2 prerelease histories remain explicit preserved failures', () {
-    for (final version in [1, 2]) {
-      expect(
-        () => LogEvent.decode('{"v":$version}'),
-        throwsA(
-          isA<FormatFailure>().having(
-            (error) => error.message,
-            'message',
-            allOf(
-              contains('older prerelease format (v$version)'),
-              contains('Preserve'),
-            ),
-          ),
-        ),
-      );
-    }
-    for (final line in File(
-      'test/fixtures/recurring_operation_undone_v2.jsonl',
-    ).readAsLinesSync()) {
-      expect(
-        () => LogEvent.decode(line),
-        throwsA(
-          isA<FormatFailure>().having(
-            (error) => error.message,
-            'message',
-            contains('(v2)'),
-          ),
-        ),
-      );
-    }
+  test('UTF-8 byte budget rejects oversized input before interpretation', () {
+    final raw = lines().first;
+    final padding = String.fromCharCode(0x20ac) * (1024 * 1024 ~/ 3 + 1);
+    expect(utf8.encode(padding + raw).length, greaterThan(1024 * 1024));
     expect(
-      () => LogEvent.decode('{"v":99}'),
+      () => LogEvent.decode(padding + raw),
       throwsA(
         isA<FormatFailure>().having(
-          (error) => error.message,
-          'message',
-          contains('Unsupported event version 99'),
+          (e) => e.message,
+          'budget',
+          contains('Oversized'),
         ),
       ),
     );

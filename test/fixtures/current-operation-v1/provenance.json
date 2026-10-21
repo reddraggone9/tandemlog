@@ -1,0 +1,21 @@
+{
+  "generator": "Python stdlib json.dumps(sort_keys=True,ensure_ascii=False,separators=compact,allow_nan=False) and hashlib.sha256; no Dart encoder used.",
+  "format": 1,
+  "domain": "tandemlog:operation:v1\\n",
+  "files": {
+    "persons.operations": {
+      "sha256": "4c8c32877d15e520e510a8d96d4b38fb9cd16787f9a15c1875e010f3e52b741d",
+      "contentHashes": [
+        "25a67b512527e909844484da57c0bdda5b3f4f03374aa88556b700b8a9a8ef5b",
+        "bcb71086bd14d5d96d5682657b928d388326361b9bdf236eedb962d483664e08"
+      ]
+    },
+    "food.operations": {
+      "sha256": "79de9af9c528fafebea549beb95397d15b0549d05412eb106e379cb9933d369f",
+      "contentHashes": [
+        "00249487efdb903e7757553f7d3c1f858700f48e6df904b9659fc2d09585c250",
+        "fe4b83c285343a4e7b99bd32151b33fb5446169730e4036797bdfa8ea6ff6f6d"
+      ]
+    }
+  }
+}

@@ -66,8 +66,7 @@ void main() {
           'user.created',
           {'name': 'Example'},
         ).toJson()..['clock'] = clock;
-        record['hash'] = eventRecordHash(record);
-        final raw = canonicalEventJson(record);
+        final raw = canonicalDataJson(record);
         expect(
           () => LogEvent.decode(raw),
           throwsA(

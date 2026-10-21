@@ -92,7 +92,7 @@ class _CompletionFixture {
           .toString(),
   };
   List<LogEvent> get completions => a.db
-      .select('SELECT raw FROM events WHERE entity=?', [parent])
+      .select('SELECT raw FROM ${a.tables.events} WHERE entity=?', [parent])
       .map((row) => LogEvent.decode(row['raw'] as String))
       .where((event) => isTaskCompletion(event.type))
       .toList();
@@ -227,7 +227,7 @@ void main() {
       expect(prepared, 0);
       expect(await f.canonical(), before);
       expect(f.completions, isEmpty);
-      expect(f.a.db.select('SELECT * FROM text_outbox'), isEmpty);
+      expect(f.a.db.select('SELECT * FROM ${f.a.tables.textOutbox}'), isEmpty);
     },
   );
 

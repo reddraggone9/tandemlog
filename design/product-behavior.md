@@ -1,26 +1,14 @@
 # Product behavior and milestones
 
-## Optional device names in the isolated unified-history trial
+## Current workspace and device names
 
-In an explicitly converted v4 trial, Settings offers **Device name** for this
-installation. It is optional, up to 80 characters, and blank clears it. Settings
-shows the immutable short ID beside the label. Equal names are allowed; a
-reinstall, replacement OS or new computer keeps a new installation identity.
-Original histories stay attributed to their original writers. Names never
-determine identity, deduplication or ownership.
+[The coordinated-cutover decision](decisions/0031-coordinated-unified-cutover.md) is implemented under validation. Current workspaces have no in-app upgrade wizard or timezone opt-in. Newly supported timezone names establish their required operation revision when first saved. Startup, draft selection and Cancel write no compatibility metadata; incompatible older readers must update.
 
-The dialog follows shared Review-errors, IME, stable-action and one-shot route
-rules. After keyboard or viewport changes it reveals the focused input and full
-validation message, including on narrow phones at larger text sizes. Tasks and Food use one shared admitted revision; an unknown required
-record stops both sections and keeps drafts. Pending commands, including a
-device-name change, retain their exact retry across restart. Shared safety Retry
-reads and validates without silently committing pending commands.
+Settings offers an optional Device name, up to80characters; blank clears it. The immutable short installation ID remains visible. Equal labels are allowed and do not decide ownership/deduplication. Existing validation, IME, keyboard/viewport reveal and one-shot route rules remain.
 
-[ADR 0027](decisions/0027-unified-writer-history.md) records approved scope and
-tradeoffs. Automatic production conversion, abandoned-writer adoption,
-consolidation, history browsing and a separate large-log performance project
-are deferred. Native trial acceptance remains pending.
+Tasks/Food share one admitted revision. Unknown complete required effects or corruption stop both sections. The current session retains exact uncertain-write/native ownership; restart forgets unfinished intent. Fully appended valid actions remain canonical. Drafts and session Undo stacks do not survive restart; recorded Undo and native text lineage do.
 
+Live conversion is coordinated externally with frozen accepted copies, explicit writer mapping and immutable originals. Implementation approval does not authorize adoption of converted production data. New exact native acceptance remains pending.
 
 ## Released local sections and Food refinements
 

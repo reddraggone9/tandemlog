@@ -250,17 +250,17 @@ void main() {
         expect(call.method, 'readFrom');
         return seekable ? Uint8List.fromList([4, 5]) : null;
       });
-      expect(await folder.readFrom('writer.jsonl', 3), [4, 5]);
+      expect(await folder.readFrom('writer.applog', 3), [4, 5]);
       expect(calls.single.arguments, {
         'tree': folder.location,
-        'name': 'writer.jsonl',
+        'name': 'writer.applog',
         'offset': 3,
       });
       seekable = false;
-      expect(await folder.readFrom('writer.jsonl', 3), isNull);
+      expect(await folder.readFrom('writer.applog', 3), isNull);
       expect(calls, hasLength(2));
       await expectLater(
-        folder.readFrom('writer.jsonl', -1),
+        folder.readFrom('writer.applog', -1),
         throwsArgumentError,
       );
       expect(calls, hasLength(2));
@@ -278,7 +278,7 @@ void main() {
         ),
       );
       await expectLater(
-        folder.readFrom('writer.jsonl', 3),
+        folder.readFrom('writer.applog', 3),
         throwsA(isA<FolderAccessFailure>()),
       );
     },
@@ -328,19 +328,19 @@ void main() {
         AndroidLogFolder.channel,
         (_) async => [
           {
-            'name': 'writer.jsonl',
+            'name': 'writer.applog',
             'documentId': identity,
             'size': 42,
             'modifiedMillis': 1000,
           },
           {
-            'name': 'unknown.jsonl',
+            'name': 'unknown.applog',
             'documentId': '',
             'size': null,
             'modifiedMillis': null,
           },
           {
-            'name': 'invalid.jsonl',
+            'name': 'invalid.applog',
             'size': -1,
             'modifiedMillis': 'unavailable',
           },
@@ -370,7 +370,7 @@ void main() {
 
   for (final name in [
     'tandemlog-space.json',
-    'writer.jsonl',
+    'writer.applog',
     'writer.applog',
   ]) {
     for (final repeatedIdentity in [false, true]) {
@@ -419,7 +419,7 @@ void main() {
         {'name': 'writer.JSONL', 'documentId': 'unrelated-one'},
         {'name': 'writer.JSONL', 'documentId': 'unrelated-two'},
         {'name': 'tandemlog-space.json', 'documentId': 'manifest'},
-        {'name': 'writer.jsonl', 'documentId': 'log'},
+        {'name': 'writer.applog', 'documentId': 'log'},
       ],
     );
     final entries = await folder.list();
@@ -439,16 +439,16 @@ void main() {
           throw PlatformException(
             code: 'duplicate_file',
             message:
-                'Folder access failed: Duplicate canonical filename writer.jsonl',
-            details: {'name': 'writer.jsonl'},
+                'Folder access failed: Duplicate canonical filename writer.applog',
+            details: {'name': 'writer.applog'},
           );
         });
         final operation = switch (method) {
           'list' => folder.list(),
-          'read' => folder.read('writer.jsonl'),
-          'readFrom' => folder.readFrom('writer.jsonl', 10),
-          'append' => folder.append('writer.jsonl', Uint8List.fromList([1])),
-          _ => folder.create('writer.jsonl', Uint8List.fromList([1])),
+          'read' => folder.read('writer.applog'),
+          'readFrom' => folder.readFrom('writer.applog', 10),
+          'append' => folder.append('writer.applog', Uint8List.fromList([1])),
+          _ => folder.create('writer.applog', Uint8List.fromList([1])),
         };
         await expectLater(
           operation,
@@ -457,7 +457,7 @@ void main() {
                 .having(
                   (e) => e.message,
                   'affected name',
-                  contains('writer.jsonl'),
+                  contains('writer.applog'),
                 )
                 .having(
                   (e) => e.message,
@@ -614,9 +614,9 @@ void main() {
       final entries = await folder.list();
       expect(entries.single.name, 'tandemlog-space.json');
       expect(entries.single.stamp, '');
-      expect(await folder.read('test.jsonl'), [1, 2, 3]);
-      await folder.append('test.jsonl', Uint8List.fromList([4, 5]));
-      await folder.create('test.jsonl', Uint8List.fromList([6]));
+      expect(await folder.read('test.applog'), [1, 2, 3]);
+      await folder.append('test.applog', Uint8List.fromList([4, 5]));
+      await folder.create('test.applog', Uint8List.fromList([6]));
       expect(calls.map((c) => c.method), [
         'pick',
         'list',
@@ -686,9 +686,9 @@ void main() {
         );
         final operation = switch (method) {
           'list' => folder.list(),
-          'read' => folder.read('test.jsonl'),
-          'append' => folder.append('test.jsonl', Uint8List(0)),
-          _ => folder.create('test.jsonl', Uint8List(0)),
+          'read' => folder.read('test.applog'),
+          'append' => folder.append('test.applog', Uint8List(0)),
+          _ => folder.create('test.applog', Uint8List(0)),
         };
         await expectLater(
           operation,

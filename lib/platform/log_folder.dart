@@ -20,7 +20,8 @@ class AndroidLogFolder
         LogFolder,
         RangeLogFolder,
         BoundedLogFolder,
-        CheckedReplaceLogFolder {
+        CheckedReplaceLogFolder,
+        TailTruncateLogFolder {
   static const channel = MethodChannel('tandemlog/folders');
   static const eventsChannel = EventChannel('tandemlog/folder-events');
   static const _watchMethods = MethodChannel('tandemlog/folder-events');
@@ -210,6 +211,18 @@ class AndroidLogFolder
     );
     return controller.stream;
   }
+
+  @override
+  Future<void> truncateOwnedTail(
+    String name,
+    Uint8List expected,
+    int keepBytes,
+  ) => _invoke<void>('truncateOwnedTail', {
+    'tree': location,
+    'name': name,
+    'expected': expected,
+    'keepBytes': keepBytes,
+  });
 
   @override
   Future<Uint8List> read(String name) async =>

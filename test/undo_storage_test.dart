@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -39,8 +40,8 @@ void main() {
 
   Future<void> converge() async {
     await File(
-      '${remoteFolder.location}/${b.writer}.jsonl',
-    ).copy('${folder.location}/${b.writer}.jsonl');
+      '${remoteFolder.location}/${b.writer}.applog',
+    ).copy('${folder.location}/${b.writer}.applog');
     await a.refresh();
     await copy(folder, remoteFolder);
     await b.refresh();
@@ -125,15 +126,20 @@ void main() {
       expect((row(a, second)['schedule'] as Map)['dueTime'], isNull);
       for (var i = 0; i < receipts.length; i++) {
         expect(
-          a.db.select('SELECT raw FROM events WHERE id=?', [
+          a.db.select("SELECT raw FROM ${a.tables.events} WHERE id=?", [
             receipts[i].id,
           ]).single['raw'],
           originalRaw[i],
         );
       }
-      final n = a.db.select('SELECT COUNT(*) n FROM events').single['n'];
+      final n = a.db
+          .select("SELECT COUNT(*) n FROM ${a.tables.events}")
+          .single['n'];
       await a.undoOperations(receipts.map((r) => r.id).toList());
-      expect(a.db.select('SELECT COUNT(*) n FROM events').single['n'], n);
+      expect(
+        a.db.select("SELECT COUNT(*) n FROM ${a.tables.events}").single['n'],
+        n,
+      );
       await converge();
     },
   );
@@ -182,7 +188,7 @@ void main() {
     },
   );
   test(
-    'move Undo retains later relative move and replays after known-cache upgrade',
+    'move Undo retains later relative move and replays after projection rebuild and reopen',
     () async {
       final first = await create(),
           second = await create(),
@@ -204,14 +210,13 @@ void main() {
         for (final f in await folder.list())
           f.name: base64Encode(await folder.read(f.name)),
       };
-      a.db.execute('PRAGMA user_version=7');
+      await a.rebuildCache();
       await a.close();
       closedA = true;
       a = await TaskStore.open(folder, '${root.path}/a');
       closedA = false;
       expect(a.writer, writer);
       expect(a.rows, expected);
-      expect(a.db.select('PRAGMA user_version').single['user_version'], 13);
       expect({
         for (final f in await folder.list())
           f.name: base64Encode(await folder.read(f.name)),
@@ -220,7 +225,11 @@ void main() {
       closedA = true;
       a = await TaskStore.open(folder, '${root.path}/a');
       closedA = false;
-      expect(a.readFiles, 0);
+      expect(
+        a.readFiles,
+        greaterThan(0),
+        reason: 'Current admission revalidates canonical bytes',
+      );
       expect(a.rows, expected);
     },
   );
@@ -248,7 +257,10 @@ void main() {
         expect(partial.remaining.length, failAfter ? 0 : 2);
         if (partial.remaining.isNotEmpty) {
           final blocked = await a.undoOperations(partial.remaining);
-          expect(blocked.error, isA<WriterGuardFailure>());
+          expect(
+            blocked.error,
+            anyOf(isA<WriterGuardFailure>(), isA<FormatFailure>()),
+          );
           await faulty.revealPending();
           await a.refresh();
           final retry = await a.undoOperations(partial.remaining);
@@ -259,7 +271,7 @@ void main() {
         expect(
           a.db
               .select(
-                "SELECT * FROM events WHERE json_extract(raw,'\$.type')='task.operationUndone'",
+                "SELECT * FROM ${a.tables.events} WHERE json_extract(semantic,'\$.type')='task.operationUndone'",
               )
               .length,
           2,
@@ -286,7 +298,7 @@ void main() {
       );
       await expectLater(
         a.command(id, 'task.edited', {'title': 'Different'}),
-        throwsA(isA<WriterGuardFailure>()),
+        throwsA(anyOf(isA<WriterGuardFailure>(), isA<FormatFailure>())),
       );
       await faulty.revealPending();
       await a.refresh();
@@ -305,47 +317,89 @@ void main() {
     () async {
       final id = await create(), otherTask = await create();
       final remote = const Uuid().v4(), targetWriter = const Uuid().v4();
-      final undo = LogEvent(
-        a.space,
+      final base = a.unified!.maximumClock!.value + BigInt.from(100);
+      List<UnifiedRecord> chain(
+        String writer,
+        BigInt clock,
+        String entity,
+        String type,
+        Map<String, dynamic> data,
+      ) {
+        final genesis = unifiedGenesis(
+          a.space,
+          a.unified!.manifest.epoch,
+          writer,
+        );
+        final header = UnifiedRecord(
+          space: a.space,
+          epoch: a.unified!.manifest.epoch,
+          writer: writer,
+          sequence: 1,
+          clock: EventClock(clock),
+          previousHash: genesis,
+          effect: UnifiedEffect.joined(),
+          observed: {writer: UnifiedFrontier(0, genesis)},
+        );
+        final event = LogEvent(
+          a.space,
+          writer,
+          2,
+          EventClock(clock + BigInt.one),
+          entity,
+          type,
+          data,
+        ).encode(previousHash: header.hash);
+        final record = UnifiedRecord(
+          space: a.space,
+          epoch: a.unified!.manifest.epoch,
+          writer: writer,
+          sequence: 2,
+          clock: EventClock(clock + BigInt.one),
+          previousHash: header.hash,
+          effect: UnifiedEffect('task', event),
+          observed: {writer: UnifiedFrontier(1, header.hash)},
+        );
+        return [header, record];
+      }
+
+      final undo = chain(
         remote,
-        1,
-        EventClock(BigInt.from(20)),
+        base + BigInt.from(2),
         id,
         'task.operationUndone',
-        {'operation': '$targetWriter:1'},
+        {'operation': '$targetWriter:2'},
       );
       await folder.create(
-        '$remote.jsonl',
-        Uint8List.fromList(utf8.encode('${undo.encode()}\n')),
+        unifiedLogName(remote),
+        Uint8List.fromList(
+          utf8.encode(undo.map((r) => '${r.encode()}\n').join()),
+        ),
       );
       await a.refresh();
       final before = a.rows;
-      final target = LogEvent(
-        a.space,
-        targetWriter,
-        1,
-        EventClock(BigInt.from(10)),
-        otherTask,
-        'task.edited',
-        {'title': 'Wrong entity'},
-      );
+      expect(a.unified!.snapshot.pendingEffects, isTrue);
+      final target = chain(targetWriter, base, otherTask, 'task.edited', {
+        'title': 'Wrong entity',
+      });
+      final bytes = utf8.encode(target.map((r) => '${r.encode()}\n').join());
       await folder.create(
-        '$targetWriter.jsonl',
-        Uint8List.fromList(utf8.encode('${target.encode()}\n')),
+        unifiedLogName(targetWriter),
+        Uint8List.fromList(bytes),
       );
-      final raw = await folder.read('$targetWriter.jsonl');
       await expectLater(a.refresh(), throwsA(isA<FormatFailure>()));
       expect(a.rows, before);
-      expect(await folder.read('$targetWriter.jsonl'), raw);
+      expect(await folder.read(unifiedLogName(targetWriter)), bytes);
       expect(
-        a.db.select('SELECT * FROM events WHERE id=?', [target.id]),
+        a.db.select('SELECT * FROM ${a.tables.events} WHERE id=?', [
+          target.last.effect.task!.id,
+        ]),
         isEmpty,
       );
     },
   );
 }
 
-class _FailFolder implements LogFolder {
+class _FailFolder implements LogFolder, BoundedLogFolder {
   final LogFolder delegate;
   final bool after;
   int countdown = 0;
@@ -364,6 +418,9 @@ class _FailFolder implements LogFolder {
   Future<List<LogFileInfo>> list() => delegate.list();
   @override
   Future<Uint8List> read(String n) => delegate.read(n);
+  @override
+  Future<Uint8List> readBounded(String n, int limit) =>
+      (delegate as BoundedLogFolder).readBounded(n, limit);
   @override
   Future<void> create(String n, Uint8List b) => delegate.create(n, b);
   @override

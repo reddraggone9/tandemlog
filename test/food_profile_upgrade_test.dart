@@ -84,185 +84,122 @@ void main() {
     db.close();
   }
 
+  for (final version in [2, 3]) {
+    test(
+      'released schema$version keeps valid settings and intentionally resets old Food/private state',
+      () async {
+        writeReleasedProfile();
+        final old = sqlite3.open('${root.path}/local.sqlite');
+        final settings = utf8.encode(
+          jsonEncode({
+            'writer': '22222222-2222-4222-8222-222222222222',
+            'folder': 'synthetic://workspace',
+            'appearance': 'dark',
+            'lastSection': 'food',
+          }),
+        );
+        old.execute('UPDATE protected_settings SET writer=?,raw=?', [
+          '22222222-2222-4222-8222-222222222222',
+          settings,
+        ]);
+        if (version == 3) {
+          for (final sql in releasedFoodSchema3) {
+            old.execute(sql);
+          }
+          old.execute('INSERT INTO protected_food_intents VALUES(?,?,?,?,?)', [
+            'old-space',
+            'old-writer',
+            17,
+            'old-writer:17',
+            utf8.encode('abandoned Food intent'),
+          ]);
+          old.execute('PRAGMA user_version=3');
+        }
+        old.close();
+        profile = await LocalProfileDatabase.open(root.path);
+        expect(
+          profile!.database.select('PRAGMA user_version').single.values.single,
+          6,
+        );
+        expect(
+          profile!.database
+              .select('SELECT raw FROM protected_settings')
+              .single['raw'],
+          settings,
+        );
+        expect(
+          profile!.database.select(
+            "SELECT name FROM sqlite_schema WHERE name LIKE 'protected_food_%'",
+          ),
+          isEmpty,
+        );
+        expect(
+          profile!.database.select(
+            "SELECT name FROM sqlite_schema WHERE name LIKE 'migration_%'",
+          ),
+          isEmpty,
+        );
+        expect(
+          profile!.database.select('SELECT * FROM protected_app_heads'),
+          isEmpty,
+        );
+        expect(
+          profile!.database.select('SELECT * FROM protected_app_workspaces'),
+          isEmpty,
+        );
+      },
+    );
+  }
   test(
-    'released schema2 upgrades additively and retains all protected bytes',
+    'opaque or invalid old settings refuse without discarding old private evidence',
     () async {
       writeReleasedProfile();
-      profile = await LocalProfileDatabase.open(root.path);
-      final db = profile!.database;
-      // Opening the new reader upgrades local authority additively to schema5.
-      expect(db.select('PRAGMA user_version').single.values.single, 5);
-      expect(
-        db.select('SELECT * FROM protected_workspace_capabilities'),
-        isEmpty,
+      await expectLater(
+        LocalProfileDatabase.open(root.path),
+        throwsA(isA<LocalDatabaseFailure>()),
       );
-      expect(
-        db.select('SELECT raw FROM protected_writer_guards').single['raw'],
-        utf8.encode('synthetic guard bytes'),
-      );
-      expect(
-        db.select('SELECT raw FROM protected_text_intents').single['raw'],
-        utf8.encode('exact pending text'),
-      );
-      expect(
-        db.select('SELECT raw FROM protected_settings').single['raw'],
-        utf8.encode('exact settings bytes'),
-      );
-      expect(
-        db.select('SELECT raw FROM protected_cache_imports').single['raw'],
-        utf8.encode('exact imported cache'),
-      );
-      expect(
-        db.select('SELECT state FROM migration_cleanup').single['state'],
-        'deleting',
-      );
-      expect(
-        db
-            .select(
-              "SELECT value FROM profile_metadata WHERE key='migration.active'",
-            )
-            .single['value'],
-        'keep',
-      );
-      for (final table in [
-        'protected_food_intents',
-        'protected_food_heads',
-        'protected_food_locations',
-        'protected_food_import_witnesses',
-        'protected_app_workspaces',
-        'protected_app_heads',
-        'protected_app_outbox',
-        'protected_app_migrations',
-      ]) {
-        expect(db.select('SELECT * FROM $table'), isEmpty);
+      final old = sqlite3.open('${root.path}/local.sqlite');
+      try {
+        expect(old.select('PRAGMA user_version').single.values.single, 2);
+        expect(
+          old.select('SELECT raw FROM protected_text_intents').single['raw'],
+          utf8.encode('exact pending text'),
+        );
+        expect(
+          old.select('SELECT raw FROM protected_settings').single['raw'],
+          utf8.encode('exact settings bytes'),
+        );
+      } finally {
+        old.close();
       }
     },
   );
   test(
-    'released schema3 retains exact Food authority while adding app tables',
+    'weakened old settings authority refuses before resetting any table',
     () async {
       writeReleasedProfile();
       final old = sqlite3.open('${root.path}/local.sqlite');
-      for (final sql in releasedFoodSchema3) {
-        old.execute(sql);
-      }
-      old.execute("UPDATE profile_metadata SET value='3' WHERE key='schema'");
-      old.execute('PRAGMA user_version=3');
-      final receipt = utf8.encode('exact prepared Food bytes');
-      old.execute('INSERT INTO protected_food_intents VALUES (?,?,?,?,?)', [
-        'space',
-        'writer',
-        17,
-        'writer:17',
-        receipt,
-      ]);
-      old.execute('INSERT INTO protected_food_heads VALUES (?,?,?,?)', [
-        'space',
-        'writer',
-        16,
-        List.filled(64, 'a').join(),
-      ]);
-      old.execute('INSERT INTO protected_food_locations VALUES (?,?)', [
-        'location',
-        'space',
-      ]);
-      old.execute('INSERT INTO protected_food_import_witnesses VALUES (?,1)', [
-        'space',
-      ]);
+      old.execute('DROP TABLE protected_settings');
+      old.execute(
+        'CREATE TABLE protected_settings(singleton INTEGER,writer TEXT,raw BLOB)',
+      );
       old.close();
-      profile = await LocalProfileDatabase.open(root.path);
-      final db = profile!.database;
-      // Opening the new reader upgrades local authority additively to schema5.
-      expect(db.select('PRAGMA user_version').single.values.single, 5);
-      expect(
-        db.select('SELECT * FROM protected_workspace_capabilities'),
-        isEmpty,
-      );
-      expect(
-        db.select('SELECT raw FROM protected_food_intents').single['raw'],
-        receipt,
-      );
-      expect(
-        db
-            .select('SELECT sequence,hash FROM protected_food_heads')
-            .single
-            .values
-            .toList(),
-        [16, List.filled(64, 'a').join()],
-      );
-      expect(
-        db.select('SELECT space FROM protected_food_locations').single['space'],
-        'space',
-      );
-      expect(
-        db
-            .select('SELECT version FROM protected_food_import_witnesses')
-            .single['version'],
-        1,
-      );
-      for (final table in [
-        'protected_app_workspaces',
-        'protected_app_heads',
-        'protected_app_outbox',
-        'protected_app_migrations',
-      ]) {
-        expect(db.select('SELECT * FROM $table'), isEmpty);
-      }
-    },
-  );
-
-  test('weakened released authority prevents any new schema creation', () async {
-    writeReleasedProfile();
-    final damaged = sqlite3.open('${root.path}/local.sqlite');
-    damaged.execute('DROP TABLE protected_writer_guards');
-    damaged.execute(
-      'CREATE TABLE protected_writer_guards (space TEXT, writer TEXT, raw BLOB)',
-    );
-    damaged.close();
-    await expectLater(
-      LocalProfileDatabase.open(root.path),
-      throwsA(isA<LocalDatabaseFailure>()),
-    );
-    final retained = sqlite3.open('${root.path}/local.sqlite');
-    expect(retained.select('PRAGMA user_version').single.values.single, 2);
-    expect(
-      retained.select(
-        "SELECT name FROM sqlite_schema WHERE name LIKE 'protected_food_%'",
-      ),
-      isEmpty,
-    );
-    retained.close();
-  });
-  test(
-    'halfway additive upgrade failure rolls back all new authority',
-    () async {
-      writeReleasedProfile();
-      final db = sqlite3.open('${root.path}/local.sqlite');
-      db.execute('CREATE TABLE protected_food_heads (collision TEXT)');
-      db.close();
       await expectLater(
         LocalProfileDatabase.open(root.path),
-        throwsA(isA<Exception>()),
+        throwsA(isA<LocalDatabaseFailure>()),
       );
       final retained = sqlite3.open('${root.path}/local.sqlite');
-      expect(retained.select('PRAGMA user_version').single.values.single, 2);
-      expect(
-        retained.select(
-          "SELECT name FROM sqlite_schema WHERE name='protected_food_intents'",
-        ),
-        isEmpty,
-      );
-      expect(
-        retained
-            .select("SELECT value FROM profile_metadata WHERE key='schema'")
-            .single['value'],
-        '2',
-      );
-      expect(
-        retained.select('SELECT raw FROM protected_text_intents').single['raw'],
-        utf8.encode('exact pending text'),
-      );
-      retained.close();
+      try {
+        expect(retained.select('PRAGMA user_version').single.values.single, 2);
+        expect(
+          retained
+              .select('SELECT raw FROM protected_text_intents')
+              .single['raw'],
+          utf8.encode('exact pending text'),
+        );
+      } finally {
+        retained.close();
+      }
     },
   );
 }

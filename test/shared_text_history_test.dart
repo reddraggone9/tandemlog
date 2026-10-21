@@ -270,8 +270,7 @@ void main() {
         event.clock,
         event.entity,
         event.type,
-        (jsonDecode(event.canonicalRaw!) as Map)['data']
-            as Map<String, dynamic>,
+        jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>,
         previousHash: event.previousHash,
         hash: event.hash,
         canonicalRaw: event.canonicalRaw,

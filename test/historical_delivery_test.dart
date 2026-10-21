@@ -9,6 +9,7 @@ import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 
 Future<Directory> copyFolder(
   Directory from,
@@ -85,8 +86,8 @@ void main() {
             completionDay: DateTime(2030, 5, 10),
           );
           await File(
-            '${fb.path}/${b.writer}.jsonl',
-          ).copy('${fa.path}/${b.writer}.jsonl');
+            '${fb.path}/${b.writer}.applog',
+          ).copy('${fa.path}/${b.writer}.applog');
           await a.refresh();
           if (native) {
             final capture = await a.captureTaskText(child);
@@ -111,7 +112,7 @@ void main() {
             await a.command(child, 'task.edited', {
               'title': 'Independent child',
             });
-            await a.initializeSharedTextForHistoricalFixture();
+            await a.initializeSharedText();
           }
           await a.reopen(parent, [original.id]);
           final fc = await copyFolder(fa, '${root.path}/c'),
@@ -133,7 +134,7 @@ void main() {
           final receiverFolder = await copyFolder(
             fd,
             '${root.path}/receiver',
-            omit: {'${b.writer}.jsonl', '${c.writer}.jsonl'},
+            omit: {'${b.writer}.applog', '${c.writer}.applog'},
           );
           final receiver = await open(receiverFolder, 'pr');
           expect(
@@ -141,36 +142,38 @@ void main() {
             false,
           );
           await File(
-            '${fc.path}/${c.writer}.jsonl',
-          ).copy('${receiverFolder.path}/${c.writer}.jsonl');
+            '${fc.path}/${c.writer}.applog',
+          ).copy('${receiverFolder.path}/${c.writer}.applog');
           await receiver.refresh();
           expect(
             receiver.rows.singleWhere((r) => r['id'] == parent)['completed'],
             false,
           );
           await File(
-            '${fb.path}/${b.writer}.jsonl',
-          ).copy('${receiverFolder.path}/${b.writer}.jsonl');
+            '${fb.path}/${b.writer}.applog',
+          ).copy('${receiverFolder.path}/${b.writer}.applog');
           await receiver.refresh();
           expect(jsonEncode(receiver.taskSnapshot), expected);
           final eventCount = receiver.db
-              .select('SELECT count(*) AS n FROM events')
+              .select('SELECT count(*) AS n FROM ${receiver.tables.events}')
               .single['n'];
           await receiver.refresh();
           expect(
-            receiver.db.select('SELECT count(*) AS n FROM events').single['n'],
+            receiver.db
+                .select('SELECT count(*) AS n FROM ${receiver.tables.events}')
+                .single['n'],
             eventCount,
           );
           // Marker before original source, with no Undo: exact final convergence.
           final lateSourceFolder = await copyFolder(
             fc,
             '${root.path}/late-source',
-            omit: {'${b.writer}.jsonl'},
+            omit: {'${b.writer}.applog'},
           );
           final lateSource = await open(lateSourceFolder, 'pls');
           await File(
-            '${fb.path}/${b.writer}.jsonl',
-          ).copy('${lateSourceFolder.path}/${b.writer}.jsonl');
+            '${fb.path}/${b.writer}.applog',
+          ).copy('${lateSourceFolder.path}/${b.writer}.applog');
           await lateSource.refresh();
           expect(
             jsonEncode(lateSource.taskSnapshot),
@@ -180,15 +183,15 @@ void main() {
           final lateMarkerFolder = await copyFolder(
             fc,
             '${root.path}/late-marker',
-            omit: {'${c.writer}.jsonl'},
+            omit: {'${c.writer}.applog'},
           );
           final lateMarker = await open(lateMarkerFolder, 'plm');
           final childBefore = jsonEncode(
             lateMarker.rows.singleWhere((r) => r['id'] == child),
           );
           await File(
-            '${fc.path}/${c.writer}.jsonl',
-          ).copy('${lateMarkerFolder.path}/${c.writer}.jsonl');
+            '${fc.path}/${c.writer}.applog',
+          ).copy('${lateMarkerFolder.path}/${c.writer}.applog');
           await lateMarker.refresh();
           expect(
             jsonEncode(lateMarker.taskSnapshot),
@@ -203,7 +206,7 @@ void main() {
           final invalidFolder = await copyFolder(
             fc,
             '${root.path}/invalid-late-source',
-            omit: {'${b.writer}.jsonl'},
+            omit: {'${b.writer}.applog'},
           );
           final invalidData =
               jsonDecode(jsonEncode(marker.data)) as Map<String, dynamic>;
@@ -217,17 +220,32 @@ void main() {
             marker.type,
             invalidData,
           ).encode(previousHash: marker.previousHash!);
-          await File(
-            '${invalidFolder.path}/${c.writer}.jsonl',
-          ).writeAsString('$invalid\n');
+          final canonical = File('${invalidFolder.path}/${c.writer}.applog');
+          final lines = await canonical.readAsLines();
+          final originalAction = UnifiedRecord.decode(lines.last);
+          final invalidAction = UnifiedRecord(
+            space: originalAction.space,
+            epoch: originalAction.epoch,
+            writer: originalAction.writer,
+            sequence: originalAction.sequence,
+            clock: originalAction.clock,
+            previousHash: originalAction.previousHash,
+            effects: [UnifiedEffect('task', invalid)],
+            observed: originalAction.observed,
+          );
+          await canonical.writeAsString(
+            '${[...lines.take(lines.length - 1), invalidAction.encode()].join('\n')}\n',
+          );
           final invalidReceiver = await open(invalidFolder, 'pi');
           final before = jsonEncode(invalidReceiver.taskSnapshot),
               beforeEvents = invalidReceiver.db
-                  .select('SELECT count(*) AS n FROM events')
+                  .select(
+                    'SELECT count(*) AS n FROM ${invalidReceiver.tables.events}',
+                  )
                   .single['n'];
           await File(
-            '${fb.path}/${b.writer}.jsonl',
-          ).copy('${invalidFolder.path}/${b.writer}.jsonl');
+            '${fb.path}/${b.writer}.applog',
+          ).copy('${invalidFolder.path}/${b.writer}.applog');
           await expectLater(
             invalidReceiver.refresh(),
             throwsA(
@@ -241,7 +259,9 @@ void main() {
           expect(jsonEncode(invalidReceiver.taskSnapshot), before);
           expect(
             invalidReceiver.db
-                .select('SELECT count(*) AS n FROM events')
+                .select(
+                  'SELECT count(*) AS n FROM ${invalidReceiver.tables.events}',
+                )
                 .single['n'],
             beforeEvents,
           );

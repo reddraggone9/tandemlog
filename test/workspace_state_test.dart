@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
-import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
@@ -63,25 +62,6 @@ Future<void> _settings(LocalProfileDatabase profile) async {
       ],
     ),
   );
-}
-
-Future<HistoryVerificationFailure> _expectTaskHistoryFailure(
-  WorkspaceState session,
-  String fileName,
-) async {
-  Object? original;
-  try {
-    await session.refresh();
-  } catch (error) {
-    original = error;
-  }
-  expect(original, isA<HistoryVerificationFailure>());
-  final failure = original! as HistoryVerificationFailure;
-  expect(failure.fileName, fileName);
-  expect(failure.recordNumber, 1);
-  expect(failure.byteOffset, 0);
-  expect(identical(session.health.taskFailure, failure), isTrue);
-  return failure;
 }
 
 void main() {
@@ -304,203 +284,6 @@ void main() {
     expect(workspaceValuesEqual(1, 1.0), isFalse);
   });
 
-  test('legacy corrupt Tasks do not starve independent valid Food', () async {
-    final legacyRoot = await Directory('${root.path}/legacy').create();
-    final legacyFolder = LocalLogFolder(
-      (await Directory('${legacyRoot.path}/shared').create()).path,
-    );
-    await legacyFolder.create(
-      'tandemlog-space.json',
-      Uint8List.fromList(
-        utf8.encode(jsonEncode({'v': 3, 'id': fixture.space})),
-      ),
-    );
-    for (final entry in fixture.sources().entries) {
-      await legacyFolder.create(entry.key, Uint8List.fromList(entry.value));
-    }
-    final p = await LocalProfileDatabase.open('${legacyRoot.path}/profile');
-    await _settings(p);
-    final t = await TaskStore.open(
-      legacyFolder,
-      p.root,
-      writerIdentity: fixture.owner,
-      profileDatabase: p,
-    );
-    final f = await FoodStore.open(
-      legacyFolder,
-      profile: p,
-      installationWriter: fixture.owner,
-      space: fixture.space,
-    );
-    final session = WorkspaceState(tasks: t, food: f);
-    try {
-      await legacyFolder.create(
-        '${fixture.peer}.jsonl',
-        Uint8List.fromList(utf8.encode('invalid complete record\n')),
-      );
-      final previous = fixture.foodHistory().last;
-      final record = FoodRecord(
-        space: fixture.space,
-        writer: previous.writer,
-        sequence: 4,
-        clock: EventClock(BigInt.from(20)),
-        previousHash: previous.hash,
-        operation: FoodOperation(
-          id: '${previous.writer}:4',
-          order: 20,
-          action: FoodAction.add,
-          targets: [builders.newFood],
-          details: const FoodDetails(name: 'Independent Food'),
-          createdAt: '2026-10-20T12:00:00Z',
-        ),
-      );
-      await legacyFolder.append(
-        foodLogName(previous.writer),
-        Uint8List.fromList(utf8.encode('${record.encode()}\n')),
-      );
-      await _expectTaskHistoryFailure(session, '${fixture.peer}.jsonl');
-      expect(session.health.taskFailure, isNotNull);
-      expect(session.health.sharedFailure, isNull);
-      expect(
-        session.current.food!.state.containers.any(
-          (item) => item.id == builders.newFood,
-        ),
-        isTrue,
-      );
-      await legacyFolder.file('${fixture.peer}.jsonl').delete();
-      await legacyFolder
-          .file('tandemlog-space.json')
-          .writeAsString(jsonEncode({'v': 3, 'id': builders.newTask}));
-      final tasksOnly = WorkspaceState(tasks: t);
-      try {
-        Object? original;
-        try {
-          await tasksOnly.refresh();
-        } catch (error) {
-          original = error;
-        }
-        expect(
-          original,
-          isA<FormatFailure>().having(
-            (error) => error.toString(),
-            'identity diagnostic',
-            contains('Workspace identity changed at this location'),
-          ),
-        );
-        expect(identical(tasksOnly.health.sharedFailure, original), isTrue);
-        expect(session.health.sharedFailure, isNotNull);
-        await legacyFolder
-            .file('tandemlog-space.json')
-            .writeAsString(jsonEncode({'v': 3, 'id': fixture.space}));
-        await legacyFolder.create(
-          '${fixture.peer}.jsonl',
-          Uint8List.fromList(utf8.encode('independent invalid Task stream\n')),
-        );
-        final later = FoodRecord(
-          space: fixture.space,
-          writer: previous.writer,
-          sequence: 5,
-          clock: EventClock(BigInt.from(21)),
-          previousHash: record.hash,
-          createdWith: {builders.newFood: record.id},
-          operation: FoodOperation(
-            id: '${previous.writer}:5',
-            order: 21,
-            action: FoodAction.edit,
-            targets: [builders.newFood],
-            details: const FoodDetails(name: 'Food after manifest repair'),
-            fields: ['name'],
-          ),
-        );
-        await legacyFolder.append(
-          foodLogName(previous.writer),
-          Uint8List.fromList(utf8.encode('${later.encode()}\n')),
-        );
-        await _expectTaskHistoryFailure(session, '${fixture.peer}.jsonl');
-        expect(tasksOnly.health.sharedFailure, isNull);
-        expect(session.health.sharedFailure, isNull);
-        expect(session.health.taskFailure, isNotNull);
-        expect(
-          session.current.food!.state.containers
-              .singleWhere((item) => item.id == builders.newFood)
-              .details
-              .name,
-          'Food after manifest repair',
-        );
-      } finally {
-        tasksOnly.close();
-      }
-    } finally {
-      session.close();
-      await f.close();
-      await t.close();
-      await p.close();
-    }
-  });
-
-  test(
-    'legacy pending Food does not block the independent Task writer',
-    () async {
-      final shared = _Folder(
-        (await Directory('${root.path}/independent-shared').create()).path,
-      );
-      await shared.create(
-        'tandemlog-space.json',
-        Uint8List.fromList(
-          utf8.encode(jsonEncode({'v': 3, 'id': fixture.space})),
-        ),
-      );
-      for (final entry in fixture.sources().entries) {
-        await shared.create(entry.key, Uint8List.fromList(entry.value));
-      }
-      final p = await LocalProfileDatabase.open(
-        '${root.path}/independent-profile',
-      );
-      await _settings(p);
-      final t = await TaskStore.open(
-        shared,
-        p.root,
-        writerIdentity: fixture.owner,
-        profileDatabase: p,
-      );
-      final f = await FoodStore.open(
-        shared,
-        profile: p,
-        installationWriter: fixture.owner,
-        space: fixture.space,
-      );
-      final session = WorkspaceState(tasks: t, food: f);
-      try {
-        shared.failAppend = true;
-        await expectLater(
-          f.add(const FoodDetails(name: 'Pending Food'), 1),
-          throwsA(isA<FileSystemException>()),
-        );
-        expect(session.health.hasPendingFoodSave, isTrue);
-        expect(session.health.foodWriteReady, isFalse);
-        expect(session.health.hasPendingTaskSave, isFalse);
-        expect(session.health.taskWriteReady, isTrue);
-        await t.command(builders.newTask, 'user.created', {
-          'name': 'Independent Tasks',
-        });
-        expect(
-          session.current.tasks.users.any(
-            (row) => row['id'] == builders.newTask,
-          ),
-          isTrue,
-        );
-        expect(session.health.hasPendingFoodSave, isTrue);
-        await f.recoverPrepared();
-        expect(session.health.hasPendingFoodSave, isFalse);
-      } finally {
-        session.close();
-        await f.close();
-        await t.close();
-        await p.close();
-      }
-    },
-  );
-
   test(
     'reservation SQL poisoning immediately publishes the original shared failure',
     () async {
@@ -531,7 +314,7 @@ void main() {
   );
 
   test(
-    'legacy native intent exposes pending before throwing callback and recovers once',
+    'common native intent exposes pending before throwing callback and recovers once',
     () async {
       final engine = NativeTextEngine(libraryPath: nativeLibrary);
       final p = await LocalProfileDatabase.open('${root.path}/native-profile');
@@ -554,12 +337,7 @@ void main() {
         await t.command(builders.newTask, 'user.created', {
           'name': 'Synthetic native user',
         });
-        nativeFood = await FoodStore.open(
-          shared,
-          profile: p,
-          installationWriter: fixture.owner,
-          space: t.space,
-        );
+        nativeFood = await FoodStore.openUnified(t.unified!);
         session = WorkspaceState(tasks: t, food: nativeFood);
         final before = session.current.tasks;
         OperationReceipt? receipt;
@@ -596,22 +374,23 @@ void main() {
         );
         expect(session.health.hasPendingTaskSave, isTrue);
         expect(t.pendingTextOperations.single.raw, receipt!.raw);
-        expect(session.health.foodWriteReady, isTrue);
-        await nativeFood.add(
-          const FoodDetails(name: "Independent native Food"),
-          1,
+        expect(session.health.foodWriteReady, isFalse);
+        await expectLater(
+          nativeFood.add(const FoodDetails(name: "Blocked pending Food"), 1),
+          throwsA(anyOf(isA<FormatFailure>(), isA<WriterGuardFailure>())),
         );
+
         expect(session.health.hasPendingTaskSave, isTrue);
-        expect(session.current.food!.state.containers, hasLength(1));
+        expect(session.current.food!.state.containers, isEmpty);
         await t.retryTextOperation(receipt!);
         expect(session.health.hasPendingTaskSave, isFalse);
         expect(
           session.current.tasks.rows.where((row) => row['id'] == id),
           hasLength(1),
         );
-        final bytes = await shared.read('${fixture.owner}.jsonl');
+        final bytes = await shared.read('${fixture.owner}.applog');
         await t.retryTextOperation(receipt!);
-        expect(await shared.read('${fixture.owner}.jsonl'), bytes);
+        expect(await shared.read('${fixture.owner}.applog'), bytes);
       } finally {
         session?.close();
         await nativeFood?.close();

@@ -1,35 +1,14 @@
 # Architecture
 
-## Unified writer history: isolated implementation
+## Unified action authority
 
-[Observable workspace state](decisions/0029-observable-workspace-state.md)
-adds a focused immutable in-memory session above the two adapters. The host
-observes the committed Task/Food publication and separate health changes;
-it does not maintain detached SQL row copies. Unchanged semantic slices keep
-their identity, supporting selective view invalidation and bounded Food
-grouping reuse. Command admission and durable authority remain in the stores.
+[ADR0031](decisions/0031-coordinated-unified-cutover.md) replaces old live Task/Food backends, in-app conversion and a separate timezone floor. UnifiedHistory owns current admission and writes; TaskStore/FoodStore stage both projections in one private transaction before publication. Physical action positions and logical effect IDs are distinct.
 
+The host observes one committed revision and shared health; unknown complete semantics, conflicts and corruption stop both sections. Unchanged semantic slices retain identity. Native text owns character identity/selective Undo, not sync or durable unfinished intent.
 
-[ADR 0027](decisions/0027-unified-writer-history.md) adds a v4 persistence
-coordinator shared by the existing TaskStore and FoodStore APIs. Pure wire,
-conversion and Food-admission rules remain separate from providers and UI.
-The coordinator validates native Task semantics through the existing engine,
-protects physical evidence and readiness, stages both derived projections in
-one profile transaction, and owns future sequence/reservation/recovery.
-There is one active append authority per installation; preserved legacy
-records do not retain separate active Task/Food writers.
+Canonical records decide what survived restart. Exact unfinished bytes and prepared native handles remain process memory only. Read-only probes do not clean tails; provider adapters expose explicit safe owner-suffix truncation without replacing a committed prefix. [Storage](storage-and-sync.md) and [schema](schema.md) specify that boundary.
 
-A read-only prospective preflight checks retained profile authority without
-binding an active epoch. The trial-only activation capability owns a synthetic
-system-temp tree and a durable phase journal; the host only opens already-active
-v4 manifests. Released v3 workspaces retain their existing adapters and behavior.
-SQL poisoning still permits ordered handle cleanup and lease release.
-
-The host shares stopped-state, retry and handle lifetime across both projections.
-Optional device naming is a small metadata command using existing form controls.
-No sync service, extra permission, identity based on labels, or production
-migration path is introduced. Full native acceptance is an outstanding gate.
-
+Historical normalization stays in an external one-time tool with frozen readers and prefix replay-equivalence checks. Current profile adoption preserves simple settings and resets other local state; it does not rescue intent or orchestrate live conversion. Exact native acceptance and independent review remain pending.
 
 Status: accepted direction; see [ADR 0001](decisions/0001-client-and-storage.md) and [implemented schema](schema.md).
 
@@ -47,7 +26,7 @@ Use a modular monolith. Start with ordinary Dart modules; extract packages only 
 
 Inject time, IDs, storage and platform services at boundaries. Commands produce validated domain events; incoming events use the same versioned deterministic projection semantics, not current UI validation or current wall time. Keep diagnostics available even if a workspace cannot safely open for writing.
 
-RC4 extracts single/bulk editor draft ownership into `presentation/task_editor.dart`; host navigation owns editor-session identity and dirty-close routing. Shared `presentation/tag_input.dart` owns focus and anchored suggestion geometry; its host owns selected values and query drafts. `presentation/tag_filter_picker.dart` is the thin Filter policy wrapper. `domain/bulk_task_edit.dart` describes explicit functional patches and per-task results, while `TaskStore` serializes validation/durable writes. UI passes target/context guards, never writes SQL/logs. Per-task partial durability is explicit; do not hide it behind an apparent multi-task transaction. Main still combines workspace/filter/selection/drag orchestration; extract a focused controller when concrete duplication or another workflow warrants it, rather than a generic framework during this candidate.
+RC4 extracts single/bulk editor draft ownership into `presentation/task_editor.dart`; host navigation owns editor-session identity and dirty-close routing. Shared `presentation/tag_input.dart` owns focus and anchored suggestion geometry; its host owns selected values and query drafts. `presentation/tag_filter_picker.dart` is the thin Filter policy wrapper. `domain/bulk_task_edit.dart` describes explicit functional patches and per-task results, while `TaskStore` serializes validation/durable writes. UI passes target/context guards, never writes SQL/logs. A validated bulk command commits its effects in one canonical action; incomplete bytes expose no subset. Main still combines workspace/filter/selection/drag orchestration; extract a focused controller when concrete duplication or another workflow warrants it, rather than a generic framework during this candidate.
 
 Food's page owns one keyed session and captured command/target origin.
 FoodEditor owns controllers, validation, one-shot Save and coalesced close through
@@ -81,7 +60,7 @@ Domain context/actor claims and required event validation stay in Dart. See
 [ADR 0010](decisions/0010-collaborative-text-adoption.md) for the legacy baseline,
 offline new-task exception and historically attributed implementation gates.
 
-The approved [Food inventory module](decisions/0014-food-inventory.md) uses its own canonical Food streams and pure physical-container projection, with recovery authority on the same app-owned SQLite connection and queue. Tasks retain their released v3 history. Future games and nutrition remain separate domain modules with explicit integration commands. A food entry that deducts stock is one logical operation, with linked idempotency and reversal rules, rather than two UI callbacks. Shared foundations should stay small: workspace/user identity, event envelope, quantities where needed, and adapter contracts. No plugin engine, universal entity/field store, generalized CRDT framework or microservices now.
+The approved [Food inventory module](decisions/0014-food-inventory.md) retains its pure physical-container projection and shares current canonical action history and the app-owned SQLite queue with Tasks. Future games and nutrition remain separate domain modules with explicit integration commands. A food entry that deducts stock is one logical operation, with linked idempotency and reversal rules, rather than two UI callbacks. Shared foundations should stay small: workspace/user identity, event envelope, quantities where needed, and adapter contracts. No plugin engine, universal entity/field store, generalized CRDT framework or microservices now.
 
 `application/food_undo_history.dart` owns bounded session-local original receipts;
 the host records/pops complete confirmed actions and retains pending save/inverse
@@ -134,7 +113,7 @@ Model-derived content is untrusted input. A later ingestion adapter produces a p
 
 ## Growth and review
 
-The app-wide profile owner released in stable2026.10.3 serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup performs source-backed migration before opening adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and completed acceptance. The next preview's Flatpak packaging correction uses its private XDG profile by default, with no automatic host-profile migration.
+The app-wide profile owner released in stable2026.10.3 serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup retains simple settings from recognized old profiles and resets disposable state before opening current adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and completed acceptance. The next preview's Flatpak packaging correction uses its private XDG profile by default, with no automatic host-profile migration.
 
 At each milestone, review dependencies, duplicated rules, error/recovery paths, UX consistency and actual performance. For every module addition, review cross-module transactions and compatibility before UI expansion. Record refactors and bounded debt; do not use “future flexibility” to justify unused infrastructure.
 

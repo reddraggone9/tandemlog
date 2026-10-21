@@ -6,11 +6,12 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:tandemlog/application/task_text_session.dart';
 import 'package:tandemlog/application/text_save_command.dart';
-import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:uuid/uuid.dart';
+import '../qa_projection_cache.dart';
 
 void check(bool condition, String message) {
   if (!condition) throw StateError(message);
@@ -146,45 +147,52 @@ Future<Map<String, Object?>> runRecoveryHarness(
             receipt = prepared!;
             check(
               store.pendingTextOperations.single.raw == receipt.raw,
-              'private pending intent contains exact receipt',
+              'same-session memory holds the exact uncertain receipt',
             );
+            final interrupted = await folder.read('$writer.applog');
             await store.close();
             store = null;
-            if (cacheLoss) {
-              for (final suffix in ['', '-wal', '-shm']) {
-                final file = File('$profile/cache.sqlite$suffix');
-                if (await file.exists()) await file.delete();
-              }
-            }
+            if (cacheLoss) await clearTaskProjections(profile);
             store = await TaskStore.open(folder, profile, textEngine: engine);
             check(
               store.writer == writer,
               'writer identity survives SQLite restart',
             );
             check(
-              afterWrite
-                  ? store.pendingTextOperations.isEmpty
-                  : store.pendingTextOperations.single.raw == receipt.raw,
-              'restart reconciles canonical acknowledgement',
-            );
-            final event = await store.retryTextOperation(receipt);
-            check(
-              event.canonicalRaw == receipt.raw,
-              'restarted retry uses exact bytes',
+              store.pendingTextOperations.isEmpty,
+              'restart does not restore unfinished Save intent',
             );
             check(
-              store.pendingTextOperations.isEmpty &&
-                  (await Directory(
-                    '$profile/text-intents',
-                  ).list().toList()).isEmpty,
-              'acknowledged private intent removed',
+              base64Encode(await folder.read('$writer.applog')) ==
+                  base64Encode(interrupted),
+              'restart admits canonical bytes without retry or tail cleanup',
             );
+            check(
+              store.db
+                  .select(
+                    "SELECT name FROM sqlite_schema WHERE name='protected_app_outbox'",
+                  )
+                  .isEmpty,
+              'there is no durable unfinished-save outbox',
+            );
+            if (!afterWrite) {
+              check(
+                !store.rows.any((r) => r['id'] == task),
+                'incomplete action exposes no creation',
+              );
+              // This is a new explicit Save, not automatic replay of private intent.
+              await store.command(task, 'task.createdWithText', {
+                ..._creation(engine, user, 'Exact retry'),
+                'schedule': {'dueDate': '2026-10-07'},
+                'tags': ['new'],
+              }, onPrepared: (value) => receipt = value);
+            }
             final row = _row(store, task);
             check(
               row['title'] == 'Exact retry' &&
                   jsonEncode(row['schedule']) == '{"dueDate":"2026-10-07"}' &&
                   jsonEncode(row['tags']) == '["new"]',
-              'creation and nontext intent survive restart',
+              'completed canonical creation or a new explicit Save retains nontext fields',
             );
             await _oneCanonical(folder, writer, receipt);
           }
@@ -281,17 +289,23 @@ Future<void> _oneCanonical(
   OperationReceipt receipt,
 ) async {
   final matching = const LineSplitter()
-      .convert(utf8.decode(await folder.read('$writer.jsonl')))
-      .where((line) => LogEvent.decode(line).id == receipt.id)
+      .convert(utf8.decode(await folder.read('$writer.applog')))
+      .expand((line) => UnifiedRecord.decode(line).effects)
+      .where((effect) => effect.task?.id == receipt.id)
       .toList();
   check(
-    matching.length == 1 && matching.single == receipt.raw,
-    'exactly one canonical event with unchanged receipt',
+    matching.length == 1 && matching.single.raw == receipt.raw,
+    'exactly one canonical effect with unchanged receipt',
   );
 }
 
 // Fault injection lives exclusively in this test target.
-class _FaultFolder implements LogFolder, RangeLogFolder {
+class _FaultFolder
+    implements
+        LogFolder,
+        RangeLogFolder,
+        BoundedLogFolder,
+        TailTruncateLogFolder {
   _FaultFolder(this.inner);
   final LogFolder inner;
   bool _fail = false, _afterWrite = false;
@@ -301,11 +315,32 @@ class _FaultFolder implements LogFolder, RangeLogFolder {
   }
 
   @override
+  Future<void> truncateOwnedTail(
+    String name,
+    Uint8List expected,
+    int length,
+  ) async {
+    if (inner is! TailTruncateLogFolder) {
+      throw FolderAccessFailure(
+        'Provider cannot discard incomplete owned save safely.',
+      );
+    }
+    await (inner as TailTruncateLogFolder).truncateOwnedTail(
+      name,
+      expected,
+      length,
+    );
+  }
+
+  @override
   String get location => inner.location;
   @override
   Future<List<LogFileInfo>> list() => inner.list();
   @override
   Future<Uint8List> read(String name) => inner.read(name);
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      (inner as BoundedLogFolder).readBounded(name, maximumBytes);
   @override
   Future<Uint8List?> readFrom(String name, int offset) =>
       inner is RangeLogFolder
@@ -318,7 +353,12 @@ class _FaultFolder implements LogFolder, RangeLogFolder {
   Future<void> append(String name, Uint8List bytes) async {
     if (_fail) {
       _fail = false;
-      if (_afterWrite) await inner.append(name, bytes);
+      if (_afterWrite) {
+        await inner.append(name, bytes);
+      } else {
+        // A byte prefix within the ONE physical action, never an effect prefix.
+        await inner.append(name, Uint8List.sublistView(bytes, 0, 20));
+      }
       throw FolderAccessFailure('TEST ONLY synthetic unknown append outcome');
     }
     await inner.append(name, bytes);

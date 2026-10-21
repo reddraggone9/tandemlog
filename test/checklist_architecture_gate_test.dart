@@ -59,7 +59,12 @@ class _Fixture {
   };
 
   String cached() => jsonEncode({
-    for (final table in ['events', 'views', 'text_fields', 'text_outbox'])
+    for (final table in [
+      store.tables.events,
+      store.tables.views,
+      store.tables.textFields,
+      store.tables.textOutbox,
+    ])
       table: store.db
           .select('SELECT * FROM $table')
           .map((row) => Map<String, dynamic>.from(row))
@@ -116,8 +121,8 @@ void main() {
         );
         expect(f.store.rows.any((row) => row['id'] == child), false);
         await File(
-          '${peerDirectory.path}/${peer.writer}.jsonl',
-        ).copy('${f.folder.location}/${peer.writer}.jsonl');
+          '${peerDirectory.path}/${peer.writer}.applog',
+        ).copy('${f.folder.location}/${peer.writer}.applog');
         await f.store.refresh();
         expect(f.store.rows.any((row) => row['id'] == child), true);
         expect(f.store.checklistItems(child).single['completed'], true);

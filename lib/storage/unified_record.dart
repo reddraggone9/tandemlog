@@ -5,13 +5,13 @@ import 'package:crypto/crypto.dart';
 import '../domain/event.dart';
 import '../food/food_record.dart';
 
-const unifiedProtocol = 4;
+const unifiedProtocol = 5;
 const maximumUnifiedFileBytes = 32 * 1024 * 1024;
 const maximumUnifiedWorkspaceBytes = 256 * 1024 * 1024;
-const maximumUnifiedRecordBytes = 4 * 1024 * 1024;
+const maximumUnifiedRecordBytes = 16 * 1024 * 1024;
 
 String unifiedGenesis(String space, String epoch, String writer) => sha256
-    .convert(utf8.encode('tandemlog:app-genesis:v4\n$space\n$epoch\n$writer'))
+    .convert(utf8.encode('tandemlog:app-genesis:v5\n$space\n$epoch\n$writer'))
     .toString();
 
 /// An immutable semantic event. Historical bytes are evidence, never a second
@@ -19,8 +19,8 @@ String unifiedGenesis(String space, String epoch, String writer) => sha256
 class UnifiedEffect {
   UnifiedEffect(this.kind, this.raw) {
     if (!{
-      'legacy.task',
-      'legacy.food',
+      'history.task',
+      'history.food',
       'task',
       'food',
       'writer.named',
@@ -56,11 +56,6 @@ class UnifiedEffect {
       _task = LogEvent.decode(raw);
     } else {
       _food = FoodRecord.decode(raw);
-      if (_food!.unified == historical) {
-        throw FormatFailure(
-          'Food event format differs from its app history epoch.',
-        );
-      }
     }
   }
   final String kind, raw;
@@ -79,12 +74,14 @@ class UnifiedEffect {
   FoodRecord? _food;
   LogEvent? get task => _task;
   FoodRecord? get food => _food;
-  bool get historical => kind.startsWith('legacy.');
+  bool get historical => kind.startsWith('history.');
   String get space => task?.space ?? food!.space;
   String get writer => task?.writer ?? food!.writer;
   int get sequence => task?.sequence ?? food!.sequence;
   EventClock get clock => task?.clock ?? food!.clock;
   String get id => task?.id ?? food!.id;
+  String get author => task?.author ?? food!.author;
+  String get integrityHash => task?.integrityHash ?? food!.integrityHash;
   String get semanticHash => task?.hash ?? food!.hash;
   String get previousHash => task?.previousHash ?? food!.previousHash;
   String get key => '${task == null ? 'food:' : 'task:'}$space:$id';
@@ -106,13 +103,22 @@ class UnifiedRecord {
     required this.sequence,
     required this.clock,
     required this.previousHash,
-    required this.effect,
-    required this.transactionStart,
-    required this.transactionCount,
-    required this.transactionIndex,
+    UnifiedEffect? effect,
+    List<UnifiedEffect>? effects,
     Map<String, UnifiedFrontier> observed = const {},
-  }) : observed = Map.unmodifiable(observed) {
-    if (observed.length > 256 ||
+    Map<String, dynamic>? provenance,
+  }) : effects = List.unmodifiable(effects ?? [effect!]),
+       observed = Map.unmodifiable(observed),
+       provenance = provenance == null ? null : Map.unmodifiable(provenance) {
+    if ((effect == null) == (effects == null) ||
+        this.effects.isEmpty ||
+        this.effects.length > 10000) {
+      throw FormatFailure('Choose one bounded atomic action.');
+    }
+    final historical = this.effects.every((e) => e.historical);
+    if (this.effects.any((e) => e.historical) && !historical ||
+        historical && this.effects.length != 1 ||
+        observed.length > 256 ||
         observed.entries.any(
           (e) =>
               !isCanonicalId(e.key) ||
@@ -120,56 +126,83 @@ class UnifiedRecord {
               e.value.sequence > 9007199254740991 ||
               !isEventHash(e.value.hash),
         ) ||
-        (effect.historical && observed.isNotEmpty) ||
-        (!effect.historical &&
-            (observed[writer]?.sequence != transactionStart - 1 ||
-                transactionIndex == 0 &&
-                    observed[writer]?.hash != previousHash))) {
-      throw FormatFailure('Invalid app command observed history.');
+        historical && observed.isNotEmpty ||
+        !historical &&
+            (observed[writer]?.sequence != sequence - 1 ||
+                observed[writer]?.hash != previousHash)) {
+      throw FormatFailure('Invalid action observed history.');
     }
     if (![space, epoch, writer].every(isCanonicalId) ||
         sequence < 1 ||
         sequence > 9007199254740991 ||
         !isEventHash(previousHash) ||
         clock.value.isNegative ||
-        clock.value > EventClock.maximum ||
-        transactionStart < 1 ||
-        transactionCount < 1 ||
-        transactionCount > 10000 ||
-        transactionIndex < 0 ||
-        transactionIndex >= transactionCount ||
-        transactionStart + transactionIndex != sequence ||
-        (effect.isData && effect.space != space)) {
-      throw FormatFailure('Invalid unified identity, clock or transaction.');
+        clock.value > EventClock.maximum) {
+      throw FormatFailure('Invalid action identity, clock or predecessor.');
     }
-    if (effect.isData &&
-        !effect.historical &&
-        (effect.writer != writer ||
-            effect.sequence != sequence ||
-            effect.clock != clock ||
-            effect.previousHash != previousHash)) {
-      throw FormatFailure(
-        'App event differs from its common writer reservation.',
-      );
+    String semanticHead = previousHash;
+    EventClock? previousClock;
+    int? previousSequence;
+    for (final e in this.effects) {
+      if (!e.isData) {
+        if (this.effects.length != 1 || provenance != null) {
+          throw FormatFailure('Installation metadata must be its own action.');
+        }
+        continue;
+      }
+      if (e.space != space ||
+          e.author != writer ||
+          e.clock > clock ||
+          !historical &&
+              (e.semanticHash != e.integrityHash ||
+                  e.writer != writer ||
+                  e.previousHash != semanticHead ||
+                  previousClock != null && e.clock <= previousClock ||
+                  previousSequence != null &&
+                      e.sequence != previousSequence + 1)) {
+        throw FormatFailure('Effect differs from its atomic action.');
+      }
+      semanticHead = e.integrityHash;
+      previousClock = e.clock;
+      previousSequence = e.sequence;
+    }
+    if (provenance != null) {
+      _keys(provenance, {'kind', 'namespace', 'planHash', 'sourceSha256'});
+      if (historical ||
+          provenance['kind'] != 'food.import' ||
+          !isCanonicalId(provenance['namespace']) ||
+          !isEventHash(provenance['planHash']) ||
+          !isEventHash(provenance['sourceSha256']) ||
+          this.effects.any((e) => e.food?.operation.action.name != 'add')) {
+        throw FormatFailure('Invalid canonical import provenance.');
+      }
     }
     hash = sha256
         .convert(
-          utf8.encode('tandemlog:app-record:v4\n${canonicalDataJson(_body())}'),
+          utf8.encode('tandemlog:app-action:v5\n${canonicalDataJson(_body())}'),
         )
         .toString();
     if (utf8.encode(encode()).length > maximumUnifiedRecordBytes) {
-      throw FormatFailure('Unified event exceeds safe read limits.');
+      throw FormatFailure(
+        'Action exceeds safe record size; nothing was written.',
+      );
     }
   }
   final String space, epoch, writer, previousHash;
-  final int sequence, transactionStart, transactionCount, transactionIndex;
+  final int sequence;
   final EventClock clock;
-  final UnifiedEffect effect;
+  final List<UnifiedEffect> effects;
   final Map<String, UnifiedFrontier> observed;
+  final Map<String, dynamic>? provenance;
   late final String hash;
+  // Single-effect convenience; action consumers must iterate effects.
+  UnifiedEffect get effect => effects.single;
+  bool get historical => effects.every((e) => e.historical);
+  // Sealed historical bodies retain original clocks while their consolidated
+  // physical chain is monotonic. Live effects must follow every observed head.
+  EventClock get firstClock =>
+      !historical && effects.first.isData ? effects.first.clock : clock;
   String get recordId => 'app:$epoch:$writer:$sequence';
-  bool get completesTransaction => transactionIndex + 1 == transactionCount;
-
   Map<String, dynamic> _body() => {
     'v': unifiedProtocol,
     'space': space,
@@ -178,20 +211,15 @@ class UnifiedRecord {
     'seq': sequence,
     'clock': clock.toJson(),
     'previousHash': previousHash,
-    'transaction': {
-      'start': transactionStart,
-      'count': transactionCount,
-      'index': transactionIndex,
-    },
     'observed': observed.map((k, v) => MapEntry(k, v.toJson())),
-    'effect': effect.toJson(),
+    'effects': effects.map((e) => e.toJson()).toList(),
+    'provenance': provenance,
   };
   String encode() => canonicalDataJson({..._body(), 'hash': hash});
-
   factory UnifiedRecord.decode(String raw) {
     try {
       if (utf8.encode(raw).length > maximumUnifiedRecordBytes) {
-        throw FormatFailure('Unified record exceeds safe read limits.');
+        throw FormatFailure('Action exceeds safe read limits.');
       }
       final j = jsonDecode(raw);
       if (j is! Map<String, dynamic> || j['v'] != unifiedProtocol) {
@@ -207,15 +235,11 @@ class UnifiedRecord {
         'seq',
         'clock',
         'previousHash',
-        'transaction',
-        'effect',
         'observed',
+        'effects',
+        'provenance',
         'hash',
       });
-      final t = j['transaction'] as Map<String, dynamic>,
-          e = j['effect'] as Map<String, dynamic>;
-      _keys(t, {'start', 'count', 'index'});
-      _keys(e, {'kind', 'raw'});
       final record = UnifiedRecord(
         space: j['space'] as String,
         epoch: j['epoch'] as String,
@@ -223,10 +247,12 @@ class UnifiedRecord {
         sequence: j['seq'] as int,
         clock: EventClock.fromJson(j['clock']),
         previousHash: j['previousHash'] as String,
-        effect: UnifiedEffect(e['kind'] as String, e['raw'] as String),
-        transactionStart: t['start'] as int,
-        transactionCount: t['count'] as int,
-        transactionIndex: t['index'] as int,
+        effects: (j['effects'] as List).map((v) {
+          final e = v as Map<String, dynamic>;
+          _keys(e, {'kind', 'raw'});
+          return UnifiedEffect(e['kind'] as String, e['raw'] as String);
+        }).toList(),
+        provenance: j['provenance'] as Map<String, dynamic>?,
         observed: (j['observed'] as Map<String, dynamic>).map((k, v) {
           final f = v as Map<String, dynamic>;
           _keys(f, {'seq', 'hash'});
@@ -237,21 +263,20 @@ class UnifiedRecord {
         }),
       );
       if (record.hash != j['hash'] || record.encode() != raw) {
-        throw FormatFailure('Unified record hash or canonical bytes differ.');
+        throw FormatFailure('Action hash or canonical bytes differ.');
       }
       return record;
     } on FormatFailure {
       rethrow;
     } catch (e) {
-      throw FormatFailure('Invalid unified event: $e');
+      throw FormatFailure('Invalid atomic action: $e');
     }
   }
-
   static void _keys(Map<String, dynamic> value, Set<String> keys) {
     if (value.length != keys.length ||
-        value.keys.any((key) => !keys.contains(key))) {
+        value.keys.any((k) => !keys.contains(k))) {
       throw FormatFailure(
-        'Unknown app fields. Update the app; history was preserved.',
+        'Unknown action fields. Update the app; history was preserved.',
       );
     }
   }

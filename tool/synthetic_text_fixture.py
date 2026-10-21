@@ -1,7 +1,6 @@
-"""QA-only baseline construction for newly generated disposable scalar logs.
+"""QA-only current-format synthetic workload construction with native baseline.
 
-Uses production native seed digests/frontiers through the established historical
-fixture API. Its cache is separate from the app profile being measured.
+The fresh seed cache is separate from the preferences-only measured profile.
 """
 import json
 from pathlib import Path

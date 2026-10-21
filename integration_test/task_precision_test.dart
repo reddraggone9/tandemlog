@@ -58,7 +58,7 @@ void registerTaskPrecisionTests() {
       const historical = 'Historical title\nwith a retained second line';
       await add(historical, {});
       // Preserve legacy record meaning, then establish its shared native basis.
-      await writer.initializeSharedTextForHistoricalFixture();
+      await writer.initializeSharedText();
       await File(
         '${profile.path}/settings.json',
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));

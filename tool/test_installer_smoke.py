@@ -48,7 +48,10 @@ class SharedProfileProjection(unittest.TestCase):
     def test_rebuild_clears_only_derived_namespace_and_preserves_authorities(self):
         with tempfile.TemporaryDirectory() as directory:
             profile, folder = Path(directory), Path(directory)/'synthetic-shared'
-            key = hashlib.sha256(str(folder).encode()).hexdigest()
+            folder.mkdir()
+            epoch='22222222-2222-4222-8222-222222222222'
+            (folder/'tandemlog-space.json').write_text(json.dumps({'v':5,'epoch':epoch}))
+            key = hashlib.sha256(f'{folder}#app5:{epoch}'.encode()).hexdigest()
             prefix = f'tasks_{key}_'
             raw = b'{"writer":"synthetic","folder":"unchanged"}'
             with closing(sqlite3.connect(str(profile/'local.sqlite'))) as db, db:
@@ -60,7 +63,7 @@ class SharedProfileProjection(unittest.TestCase):
                     db.execute(f'INSERT INTO {prefix}{table} VALUES (?)', ('{"kind":"task"}',))
                 db.execute(f'CREATE TABLE {prefix}metadata(key TEXT PRIMARY KEY,value TEXT)')
                 db.execute(f"INSERT INTO {prefix}metadata VALUES ('ui.preference','retained')")
-                for table in ('protected_writer_guards','protected_text_intents','another_workspace_views'):
+                for table in ('protected_app_workspaces','protected_app_heads','another_workspace_views'):
                     db.execute(f'CREATE TABLE {table}(value TEXT)')
                     db.execute(f'INSERT INTO {table} VALUES (?)',('retained',))
             self.assertEqual(smoke.read_settings_bytes(profile),raw)
@@ -68,7 +71,7 @@ class SharedProfileProjection(unittest.TestCase):
             smoke.reset_projection(profile,folder)
             self.assertEqual(smoke.read_projection(profile,folder),[])
             with closing(sqlite3.connect(str(profile/'local.sqlite'))) as db, db:
-                for table in (prefix+'streams','protected_writer_guards','protected_text_intents','another_workspace_views'):
+                for table in (prefix+'streams','protected_app_workspaces','protected_app_heads','another_workspace_views'):
                     self.assertEqual(db.execute(f'SELECT count(*) FROM {table}').fetchone()[0],1)
                 self.assertEqual(db.execute(f"SELECT value FROM {prefix}metadata WHERE key='replay_pending'").fetchone()[0],'1')
                 self.assertEqual(db.execute(f"SELECT value FROM {prefix}metadata WHERE key='ui.preference'").fetchone()[0],'retained')

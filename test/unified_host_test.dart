@@ -1,70 +1,40 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/local_settings.dart';
-import 'package:tandemlog/storage/unified_trial.dart';
 import 'package:tandemlog/storage/unified_history.dart';
 import 'package:tandemlog/presentation/device_name_dialog.dart';
 import 'package:tandemlog/presentation/section_menu.dart';
 import 'package:tandemlog/food/food_page.dart';
-import 'package:tandemlog/text/native_text_engine.dart';
 import 'section_navigation_host_test.dart' as host;
 import 'unified_history_test.dart' show FaultFolder;
 import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 
-Future<({UnifiedTrial trial, String profile, String writer})>
+class SyntheticWorkspace {
+  SyntheticWorkspace(this.root, this.folder);
+  final Directory root;
+  final LocalLogFolder folder;
+  Future<void> close() async {}
+}
+
+Future<({SyntheticWorkspace trial, String profile, String writer})>
 unifiedFixture() async {
   final source = await host.fixture();
   final p = await LocalProfileDatabase.open(source.profile);
-  final settings = LocalSettings(source.profile, profileDatabase: p);
-  await settings.load();
-  final writer = settings.writer;
-  await p.close();
-  final sources = <String, List<int>>{};
-  for (final info in await source.folder.list()) {
-    if (info.name.endsWith('.jsonl') || info.name.endsWith('.foodlog')) {
-      sources[info.name] = await source.folder.read(info.name);
-    }
-  }
-  final owners = {
-    writer,
-    ...sources.keys
-        .where((n) => n.endsWith('.jsonl'))
-        .map((n) => n.substring(0, n.length - 6)),
-  };
-  final taskManifest = await source.folder.read('tandemlog-space.json');
-  // Read the already-created synthetic workspace ID.
-  final space = (jsonDecode(utf8.decode(taskManifest)) as Map)['id'] as String;
-  final trial = await UnifiedTrial.createSynthetic(
-    space: space,
-    owners: owners,
-    participants: {writer},
-    sources: sources,
-  );
-  final engine = NativeTextEngine(libraryPath: host.nativeHostLibraryPath);
   try {
-    await trial.acknowledgeInput(writer, textEngine: engine);
-    await trial.stage();
-    await trial.acknowledgeOutput(writer, textEngine: engine);
-    await trial.activate(textEngine: engine);
-    await trial.retireSyntheticSources();
+    final settings = LocalSettings(source.profile, profileDatabase: p);
+    await settings.load();
+    return (
+      trial: SyntheticWorkspace(source.root, source.folder),
+      profile: source.profile,
+      writer: settings.writer,
+    );
   } finally {
-    engine.dispose();
+    await p.close();
   }
-  final profile = trial.profileRoot(writer),
-      preferences = await trial.openParticipant(writer);
-  final local = LocalSettings(profile, profileDatabase: preferences);
-  await local.load();
-  local.folder = trial.folder.location;
-  local.user = source.user;
-  await local.save();
-  await preferences.close();
-  await source.root.delete(recursive: true);
-  return (trial: trial, profile: profile, writer: writer);
 }
 
 void main() {
@@ -202,7 +172,7 @@ void main() {
   );
 
   testWidgets(
-    'cold reopen exposes generic name receipt and Retry completes exact bytes',
+    'cold reopen forgets unfinished name intent; a new Save cleans the owned tail',
     (tester) async {
       final data = (await tester.runAsync(unifiedFixture))!;
       final folder = FaultFolder(data.trial.folder.location);
@@ -231,28 +201,63 @@ void main() {
         );
         await tester.tap(find.text('Save'));
         await host.ready(tester, () => state.busy == false && h.hasPending);
-        final expected = h.pendingRecords.single.encode();
+        final partial = (await tester.runAsync(
+          () => folder.read(unifiedLogName(data.writer)),
+        ))!;
         expect(state.store.pendingTextOperations, isEmpty);
         await stop(tester);
         await start(tester, data.profile, folder: folder, pending: true);
         final reopened = tester.state(find.byType(TasksPage)) as dynamic;
         final recovered = reopened.store.unified as UnifiedHistory;
-        expect(recovered.hasPending, isTrue);
+        expect(recovered.hasPending, isFalse);
         expect(recovered.snapshot.deviceName(data.writer), isNull);
-        await tester.tap(find.widgetWithText(TextButton, 'Retry').first);
+        expect(
+          await tester.runAsync(() => folder.read(unifiedLogName(data.writer))),
+          partial,
+        );
+        var recoveryDone = false;
+        final recovery = recovered.recoverPrepared().whenComplete(
+          () => recoveryDone = true,
+        );
+        await host.ready(tester, () => recoveryDone);
+        await recovery;
+        expect(
+          await tester.runAsync(() => folder.read(unifiedLogName(data.writer))),
+          partial,
+        );
+        tester
+            .widget<PopupMenuButton<String>>(
+              find.byKey(const ValueKey('identity-menu')),
+            )
+            .onSelected!('settings');
         await host.ready(
           tester,
-          () => !recovered.hasPending && reopened.busy == false,
+          () => find
+              .byKey(const ValueKey('device-name-setting'))
+              .evaluate()
+              .isNotEmpty,
         );
-        expect(recovered.snapshot.deviceName(data.writer), 'Interrupted label');
+        await tester.tap(find.byKey(const ValueKey('device-name-setting')));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.byKey(const ValueKey('device-name-field')),
+          'New label',
+        );
+        await tester.tap(find.text('Save'));
+        await host.ready(
+          tester,
+          () =>
+              recovered.snapshot.deviceName(data.writer) == 'New label' &&
+              reopened.busy == false,
+        );
+        expect(recovered.hasPending, isFalse);
         expect(
-          recovered.snapshot.records
-              .singleWhere(
-                (r) =>
-                    r.writer == data.writer && r.effect.kind == 'writer.named',
-              )
-              .encode(),
-          expected,
+          recovered.snapshot.records.where(
+            (r) =>
+                r.writer == data.writer &&
+                r.effects.any((e) => e.kind == 'writer.named'),
+          ),
+          hasLength(1),
         );
         await stop(tester);
       } finally {
@@ -278,9 +283,7 @@ void main() {
           tester,
           () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
         );
-        final name = h.manifest.owners.entries
-            .firstWhere((e) => (e.value['count'] as int) > 0)
-            .key;
+        final name = h.snapshot.records.first.writer;
         final file = data.trial.folder.file(unifiedLogName(name));
         final bytes = (await tester.runAsync(() => file.readAsBytes()))!;
         await tester.runAsync(

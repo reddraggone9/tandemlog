@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'dart:convert';
+
+import '../domain/event.dart' show isCanonicalId;
 
 import 'package:sqlite3/sqlite3.dart';
 
@@ -12,62 +15,25 @@ class LocalDatabaseFailure implements Exception {
   String toString() => message;
 }
 
-/// App-owned local connection and database-file lease. Startup completes
-/// verified legacy activation before admitting preferences/workspace adapters.
+/// App-owned local connection and database-file lease. At coordinated cutover,
+/// old local state is reset transactionally while retaining device preferences.
 /// Callers must not open/close a separate raw file handle to this database.
 class LocalProfileDatabase {
   LocalProfileDatabase._(this.root, this._database);
   static const fileName = 'local.sqlite';
   static const _applicationId =
       0x544c4442; // TLDB; local, not canonical format.
-  static const schemaVersion = 5;
+  static const schemaVersion = 6;
   static const _version = schemaVersion;
   static const _schema = {
-    'protected_workspace_capabilities':
-        'CREATE TABLE protected_workspace_capabilities (space TEXT NOT NULL, epoch TEXT NOT NULL, feature TEXT NOT NULL, state TEXT NOT NULL, journal BLOB NOT NULL, PRIMARY KEY(space,epoch,feature))',
     'protected_app_workspaces':
         'CREATE TABLE protected_app_workspaces (space TEXT PRIMARY KEY, epoch TEXT NOT NULL, manifest TEXT NOT NULL, observed TEXT NOT NULL)',
     'protected_app_heads':
         'CREATE TABLE protected_app_heads (space TEXT NOT NULL, epoch TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, hash TEXT NOT NULL, bytes INTEGER NOT NULL, digest TEXT NOT NULL, published INTEGER NOT NULL, PRIMARY KEY(space,epoch,writer))',
-    'protected_app_outbox':
-        'CREATE TABLE protected_app_outbox (space TEXT NOT NULL, epoch TEXT NOT NULL, writer TEXT NOT NULL, base_sequence INTEGER NOT NULL, base_hash TEXT NOT NULL, base_bytes INTEGER NOT NULL, base_digest TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,epoch,writer))',
-    'protected_app_migrations':
-        'CREATE TABLE protected_app_migrations (space TEXT NOT NULL, epoch TEXT NOT NULL, plan BLOB NOT NULL, state TEXT NOT NULL, PRIMARY KEY(space,epoch))',
     'profile_metadata':
         'CREATE TABLE profile_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
-    'protected_writer_guards':
-        'CREATE TABLE protected_writer_guards (space TEXT NOT NULL, writer TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,writer))',
-    'protected_text_intents':
-        'CREATE TABLE protected_text_intents (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, id TEXT NOT NULL, entity TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,writer,sequence), UNIQUE(space,id))',
     'protected_settings':
         'CREATE TABLE protected_settings (singleton INTEGER PRIMARY KEY CHECK(singleton=1), writer TEXT NOT NULL, raw BLOB NOT NULL)',
-    'migration_file_imports':
-        'CREATE TABLE migration_file_imports (path TEXT PRIMARY KEY, kind TEXT NOT NULL, hash TEXT NOT NULL)',
-    'protected_cache_imports':
-        'CREATE TABLE protected_cache_imports (path TEXT PRIMARY KEY, location TEXT NOT NULL, space TEXT NOT NULL, raw BLOB NOT NULL, hash TEXT NOT NULL)',
-    'migration_cleanup':
-        "CREATE TABLE migration_cleanup (path TEXT PRIMARY KEY, kind TEXT NOT NULL, hash TEXT NOT NULL, state TEXT NOT NULL CHECK(state IN ('ready','deleting','deleted')))",
-    'protected_food_intents':
-        'CREATE TABLE protected_food_intents (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, id TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,writer,sequence), UNIQUE(space,id))',
-    'protected_food_heads':
-        'CREATE TABLE protected_food_heads (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(space,writer))',
-    'protected_food_locations':
-        'CREATE TABLE protected_food_locations (location TEXT PRIMARY KEY, space TEXT NOT NULL)',
-    'protected_food_import_witnesses':
-        'CREATE TABLE protected_food_import_witnesses (space TEXT PRIMARY KEY NOT NULL, version INTEGER NOT NULL CHECK(version=1))',
-  };
-  static const _introduced = {
-    'protected_workspace_capabilities': 5,
-    'protected_app_workspaces': 4,
-    'protected_app_heads': 4,
-    'protected_app_outbox': 4,
-    'protected_app_migrations': 4,
-    'protected_cache_imports': 2,
-    'migration_cleanup': 2,
-    'protected_food_intents': 3,
-    'protected_food_heads': 3,
-    'protected_food_locations': 3,
-    'protected_food_import_witnesses': 3,
   };
   static final _held = <String>{};
   final String root;
@@ -180,29 +146,80 @@ class LocalProfileDatabase {
         );
         db.execute('PRAGMA application_id=$_applicationId');
         db.execute('PRAGMA user_version=$_version');
-      } else if ((version == 1 ||
-              version == 2 ||
-              version == 3 ||
-              version == 4) &&
+      } else if (version is int &&
+          version >= 1 &&
+          version <= 5 &&
           application == _applicationId) {
-        // Only an exact known schema may advance. Never
-        // rebuild missing authority tables as an empty new installation.
-        _verifyOwnedSchema(db, version: version as int);
-        final prior = db.select(
-          "SELECT value FROM profile_metadata WHERE key='schema'",
+        // The coordinated cutover deliberately abandons old caches, local
+        // drafts and unfinished intent. Preserve the small preferences row;
+        // never run the retired legacy file/event importers.
+        final settingsSchema = db.select(
+          "SELECT sql FROM sqlite_schema WHERE type='table' AND name='protected_settings'",
         );
-        if (prior.length != 1 || prior.single['value'] != '$version') {
+        if (settingsSchema.length != 1 ||
+            settingsSchema.single['sql'] != _schema['protected_settings']) {
           throw const LocalDatabaseFailure(
-            'Invalid local database metadata; retained.',
+            'Cannot preserve installation settings from this old profile.',
           );
         }
-        for (final entry in _schema.entries) {
-          if ((_introduced[entry.key] ?? 1) > version) {
-            db.execute(entry.value);
-          }
+        final rows = db.select(
+          'SELECT writer,typeof(raw) AS kind,length(raw) AS size,raw FROM protected_settings',
+        );
+        if (rows.length != 1 ||
+            rows.single['kind'] != 'blob' ||
+            rows.single['size'] is! int ||
+            (rows.single['size'] as int) > 65536) {
+          throw const LocalDatabaseFailure(
+            'Old installation settings are missing or invalid.',
+          );
         }
+        final Object? value;
+        try {
+          value = jsonDecode(utf8.decode(rows.single['raw'] as List<int>));
+        } on FormatException {
+          throw const LocalDatabaseFailure(
+            'Old installation settings are not valid UTF-8 JSON.',
+          );
+        }
+        if (value is! Map<String, dynamic> ||
+            !isCanonicalId(value['writer']) ||
+            value['writer'] != rows.single['writer'] ||
+            value['folder'] != null && value['folder'] is! String ||
+            value['user'] != null && value['user'] is! String ||
+            value['appearance'] != null &&
+                !{'system', 'light', 'dark'}.contains(value['appearance'])) {
+          throw const LocalDatabaseFailure(
+            'Old installation settings binding is invalid.',
+          );
+        }
+        final kept = {
+          for (final key in [
+            'writer',
+            'folder',
+            'user',
+            'appearance',
+            'lastSection',
+          ])
+            if (value.containsKey(key)) key: value[key],
+        };
+        final tables = db
+            .select(
+              "SELECT name FROM sqlite_schema WHERE type='table' AND name NOT LIKE 'sqlite_%'",
+            )
+            .map((r) => r['name'] as String)
+            .toList();
+        for (final table in tables) {
+          db.execute('DROP TABLE "${table.replaceAll('"', '""')}"');
+        }
+        for (final sql in _schema.values) {
+          db.execute(sql);
+        }
+        db.execute('INSERT INTO protected_settings VALUES (1,?,?)', [
+          kept['writer'],
+          utf8.encode(jsonEncode(kept)),
+        ]);
         db.execute(
-          "UPDATE profile_metadata SET value='$_version' WHERE key='schema'",
+          "INSERT INTO profile_metadata VALUES ('schema','$_version')",
         );
         db.execute('PRAGMA user_version=$_version');
       } else if (version != _version || application != _applicationId) {
@@ -263,9 +280,8 @@ class LocalProfileDatabase {
   static const _inUse =
       'This profile is already open in another TandemLog instance. Close that instance, then try again.';
 
-  static void _verifyOwnedSchema(Database db, {int version = _version}) {
+  static void _verifyOwnedSchema(Database db) {
     for (final entry in _schema.entries) {
-      if ((_introduced[entry.key] ?? 1) > version) continue;
       final actual = db.select(
         "SELECT sql FROM sqlite_schema WHERE type='table' AND name=?",
         [entry.key],

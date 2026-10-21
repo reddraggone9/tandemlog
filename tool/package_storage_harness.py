@@ -1,4 +1,4 @@
-"""Package the existing migration child as isolated native Windows QA tooling."""
+"""Package the current profile/WAL child as isolated native Windows QA tooling."""
 import argparse
 import hashlib
 import json
@@ -23,10 +23,10 @@ def main():
     if subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() != args.source:
         raise ValueError('Harness source must be the checked-out candidate')
     files = sorted(path for path in args.bundle.rglob('*') if path.is_file())
-    executable = args.bundle / 'bin/local_profile_migration_child.exe'
+    executable = args.bundle / 'bin/local_profile_database_child.exe'
     libraries = [path for path in files if path.suffix.lower() == '.dll' and 'sqlite3' in path.name.lower()]
     if not executable.is_file() or len(libraries) != 1:
-        raise ValueError('Expected compiled migration child and one SQLite DLL')
+        raise ValueError('Expected compiled profile child and one SQLite DLL')
     sqlite_hash = sha(libraries[0])
     matches = [path for path in args.app_bundle.rglob('*')
                if path.is_file() and path.suffix.lower() == '.dll' and sha(path) == sqlite_hash]
@@ -45,7 +45,7 @@ def main():
             if hashlib.sha256(zipped.read(name)).hexdigest() != expected:
                 raise ValueError('Harness archive member changed')
     root = Path(__file__).resolve().parents[1]
-    target = root / 'test/support/local_profile_migration_child.dart'
+    target = root / 'test/support/local_profile_database_child.dart'
     dart = shutil.which('dart')
     if dart is None:
         raise ValueError('Pinned Dart executable is unavailable')
@@ -61,7 +61,7 @@ def main():
                'archive': archive.name, 'archive_sha256': sha(archive),
                'payload_sha256': hashes, 'sqlite_sha256': sqlite_hash,
                'matching_release_sqlite': matches[0].relative_to(args.app_bundle).as_posix(),
-               'scope': 'Existing frozen migration child compiled for synthetic native QA; not installed-application evidence'}
+               'scope': 'Current exclusive-profile/WAL child compiled for synthetic native QA; not installed-application evidence'}
     (args.output / 'windows-storage-harness-provenance.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps(receipt, indent=2))
 

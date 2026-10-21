@@ -11,7 +11,6 @@ import 'package:tandemlog/storage/profile_lock.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/task_tables.dart';
 import 'package:tandemlog/storage/checklist_expansion_store.dart';
-import 'package:tandemlog/storage/profile_text_intents.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 
 const owner = '00000000-0000-4000-8000-000000000001';
@@ -113,12 +112,18 @@ void main() {
         'Task 1',
       );
       expect(
-        await SqliteWriterGuard(profile).load(first.space, owner),
-        isNotNull,
+        profile.database.select(
+          'SELECT * FROM protected_app_heads WHERE space=? AND writer=?',
+          [first.space, owner],
+        ),
+        isNotEmpty,
       );
       expect(
-        await SqliteWriterGuard(profile).load(second.space, owner),
-        isNotNull,
+        profile.database.select(
+          'SELECT * FROM protected_app_heads WHERE space=? AND writer=?',
+          [second.space, owner],
+        ),
+        isNotEmpty,
       );
       await first.close();
       await second.command(entity, 'task.edited', {'title': 'Still open'});
@@ -175,7 +180,7 @@ void main() {
     profile.database.execute(
       "UPDATE ${store.tables.metadata} SET value='12' WHERE key='projection_schema'",
     );
-    await expectLater(open('legacy-version'), throwsA(isA<Exception>()));
+    await open('legacy-version');
     expect(
       profile.database.select('PRAGMA user_version').single.values.single,
       LocalProfileDatabase.schemaVersion,
@@ -184,13 +189,13 @@ void main() {
       profile.database.select(
         "SELECT 1 FROM sqlite_schema WHERE name='protected_text_intents'",
       ),
-      isNotEmpty,
+      isEmpty,
     );
   });
 
   for (final appended in [false, true]) {
     test(
-      'protected native receipt survives alias confirmation/rebuild appended=$appended',
+      'alias observations retain canonical native work; restart abandons unfinished work appended=$appended',
       () async {
         final engine = NativeTextEngine(
           libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
@@ -249,17 +254,35 @@ void main() {
             textEngine: engine,
           );
           handles.add(store);
-          if (appended) {
-            expect(store.pendingTextOperations, isEmpty);
-          } else {
-            expect(store.pendingTextOperations.single.raw, receipt!.raw);
-          }
-          await store.rebuildCache();
-          final event = await store.retryTextOperation(receipt!);
-          expect(event.canonicalRaw, receipt!.raw);
           expect(store.pendingTextOperations, isEmpty);
+          await store.rebuildCache();
+          final canonical = await folder.read('$owner.applog');
+          await store.refresh();
+          expect(await folder.read('$owner.applog'), canonical);
+          if (!appended) {
+            expect(store.rows.where((r) => r['id'] == entity), isEmpty);
+            await store.command(entity, 'task.createdWithText', {
+              'title': 'Exact receipt',
+              'description': '',
+              'assignee': user,
+              'text': {
+                'codec': 'yrs-v1',
+                'adapter': 1,
+                'seeds': {
+                  'title': sha256
+                      .convert(engine.seedText('Exact receipt').bytes)
+                      .toString(),
+                  'description': sha256
+                      .convert(engine.seedText('').bytes)
+                      .toString(),
+                },
+              },
+            });
+          }
           expect(
-            profile.database.select('SELECT * FROM protected_text_intents'),
+            profile.database.select(
+              "SELECT name FROM sqlite_schema WHERE name='protected_text_intents'",
+            ),
             isEmpty,
           );
           expect(
@@ -300,9 +323,14 @@ void main() {
         handles.add(store);
         await store.command(user, 'user.created', {'name': 'Synthetic'});
         final before = jsonEncode(store.rows);
-        final guard = await SqliteWriterGuard(profile).load(store.space, owner);
+        final guard = Map<String, dynamic>.from(
+          profile.database.select(
+            'SELECT * FROM protected_app_heads WHERE space=? AND writer=?',
+            [store.space, owner],
+          ).single,
+        );
         profile.database.execute(
-          "CREATE TRIGGER reject_ack BEFORE UPDATE ON protected_writer_guards WHEN NEW.space='${store.space}' AND json_extract(NEW.raw,'\$.sequence')>json_extract(OLD.raw,'\$.sequence') BEGIN SELECT RAISE(ABORT,'synthetic acknowledgement failure'); END",
+          "CREATE TRIGGER reject_ack BEFORE INSERT ON protected_app_heads WHEN NEW.space='${store.space}' AND NEW.sequence>${guard['sequence']} BEGIN SELECT RAISE(ABORT,'synthetic acknowledgement failure'); END",
         );
         OperationReceipt? receipt;
         await expectLater(
@@ -332,24 +360,20 @@ void main() {
           ]),
           isEmpty,
         );
-        final retained = await SqliteWriterGuard(
-          profile,
-        ).load(store.space, owner);
-        expect(retained!.sequence, guard!.sequence);
-        expect(retained.hash, guard.hash);
-        expect(retained.pending, hasLength(1));
-        expect(
-          utf8.decode(
-            ProfileTextIntents(profile).pending(store.space, owner).single,
-          ),
-          receipt!.raw,
-        );
+        final retained = profile.database.select(
+          'SELECT * FROM protected_app_heads WHERE space=? AND writer=?',
+          [store.space, owner],
+        ).single;
+        expect(retained['sequence'], guard['sequence']);
+        expect(retained['hash'], guard['hash']);
+        expect(store.unified!.hasPending, isTrue);
+        expect(store.pendingTextOperations.single.raw, receipt!.raw);
         expect(profile.database.autocommit, isTrue);
-        final canonical = await folder.read('$owner.jsonl');
+        final canonical = await folder.read('$owner.applog');
         profile.database.execute('DROP TRIGGER reject_ack');
         await store.refresh();
         expect(store.pendingTextOperations, isEmpty);
-        expect(await folder.read('$owner.jsonl'), canonical);
+        expect(await folder.read('$owner.applog'), canonical);
         expect(
           store.rows.firstWhere((row) => row['id'] == entity)['title'],
           'Exact intent',
@@ -374,10 +398,7 @@ void main() {
       ]);
       expect(profile.database.autocommit, isTrue);
       for (final store in [first, second]) {
-        final key = sha256
-            .convert(utf8.encode(store.folder.location))
-            .toString();
-        final tables = TaskTables.forLocation(key);
+        final tables = store.tables;
         expect(
           profile.database
               .select('SELECT COUNT(*) AS n FROM ${tables.events}')
@@ -389,9 +410,13 @@ void main() {
   );
 }
 
-class _AliasFolder implements LogFolder, RangeLogFolder {
+class _AliasFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   _AliasFolder(this.inner, this.alias);
   final LocalLogFolder inner;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
+
   final String alias;
   bool failNext = false, writeBeforeFailure = false;
   @override

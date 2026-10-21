@@ -12,10 +12,10 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/presentation/section_menu.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
-import 'package:tandemlog/storage/local_profile_migration.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 
 import 'batch_storage_test.dart' show CountingFolder;
@@ -47,7 +47,7 @@ void registerFoodBulkDetailsUndoReviewTests({
         LocalLogFolder((await Directory('${root.path}/data').create()).path),
       );
       profile = await LocalProfileDatabase.open('${root.path}/local');
-      await LocalProfileMigration(profile).run();
+      await LocalSettings.initialize(profile);
       installation = LocalSettings.protectedValues(profile)['writer'] as String;
       final library = Platform.environment['TANDEMLOG_TEXT_LIBRARY'];
       engine = library == null && !actualHost
@@ -61,15 +61,9 @@ void registerFoodBulkDetailsUndoReviewTests({
         textEngine: engine,
         initializeNewWorkspaceText: engine != null,
       );
-      food = await FoodStore.open(
-        folder,
-        profile: profile,
-        installationWriter: installation,
-        space: tasks.space,
-        now: () => DateTime.utc(2026, 10, 11),
-      );
+      food = await FoodStore.openUnified(tasks.unified!);
       peerProfile = await LocalProfileDatabase.open('${root.path}/peer');
-      await LocalProfileMigration(peerProfile).run();
+      await LocalSettings.initialize(peerProfile);
       peerInstallation =
           LocalSettings.protectedValues(peerProfile)['writer'] as String;
       peerTasks = await TaskStore.open(
@@ -80,13 +74,7 @@ void registerFoodBulkDetailsUndoReviewTests({
         textEngine: engine,
         initializeNewWorkspaceText: engine != null,
       );
-      peer = await FoodStore.open(
-        folder,
-        profile: peerProfile,
-        installationWriter: peerInstallation,
-        space: tasks.space,
-        now: () => DateTime.utc(2026, 10, 11),
-      );
+      peer = await FoodStore.openUnified(peerTasks.unified!);
       history = FoodUndoHistory()
         ..setWorkspace(jsonEncode([folder.location, food.space, food.writer]));
 
@@ -180,7 +168,7 @@ void registerFoodBulkDetailsUndoReviewTests({
             1,
           );
           final before = _snapshot(food);
-          final originalBytes = await folder.read(foodLogName(food.writer));
+          final originalBytes = await folder.read(unifiedLogName(food.writer));
           folder.reset();
           await food.changeDetails(
             selected,
@@ -213,21 +201,16 @@ void registerFoodBulkDetailsUndoReviewTests({
           expect(history.length, 0);
           expect(_snapshot(food), before);
           expect(folder.appends, 2);
-          final after = await folder.read(foodLogName(food.writer));
+          final after = await folder.read(unifiedLogName(food.writer));
           expect(after.take(originalBytes.length).toList(), originalBytes);
           final calls = folder.appends;
           expect(await food.undoOperations(entry.records), isEmpty);
           expect(folder.appends, calls);
-          expect(await folder.read(foodLogName(food.writer)), after);
+          expect(await folder.read(unifiedLogName(food.writer)), after);
           await food.close();
-          food = await FoodStore.open(
-            folder,
-            profile: profile,
-            installationWriter: installation,
-            space: tasks.space,
-          );
+          food = await FoodStore.openUnified(tasks.unified!);
           expect(_snapshot(food), before);
-          expect(await folder.read(foodLogName(food.writer)), after);
+          expect(await folder.read(unifiedLogName(food.writer)), after);
         },
       );
 
@@ -268,24 +251,24 @@ void registerFoodBulkDetailsUndoReviewTests({
           final preparedInverse = food.lastPreparedRecords;
           _expectExactInverse(preparedInverse, originals);
           await food.refresh();
-          expect(preparedInverse.map(food.isAdmitted), [true, false, false]);
+          expect(preparedInverse.map(food.isAdmitted), [false, false, false]);
           expect(history.latest, same(entry));
           expect(history.length, 1);
           expect(entry.records, originals);
           expect(() => entry.records.clear(), throwsUnsupportedError);
-          final partial = await folder.read(foodLogName(food.writer));
+          final partial = await folder.read(unifiedLogName(food.writer));
           await food.recoverPrepared();
           expect(preparedInverse.every(food.isAdmitted), true);
           history.complete(entry);
           expect(history.latest, isNull);
           expect(history.length, 0);
           expect(_snapshot(food), before);
-          final recovered = await folder.read(foodLogName(food.writer));
+          final recovered = await folder.read(unifiedLogName(food.writer));
           expect(recovered.take(partial.length).toList(), partial);
           final calls = folder.appends;
           expect(await food.undoOperations(entry.records), isEmpty);
           expect(folder.appends, calls);
-          expect(await folder.read(foodLogName(food.writer)), recovered);
+          expect(await folder.read(unifiedLogName(food.writer)), recovered);
         },
       );
 
@@ -361,8 +344,8 @@ void registerFoodBulkDetailsUndoReviewTests({
           await food.refresh();
           expect(_item(food, selected[0]).details.brand, 'Peer brand');
           expect(_item(food, selected[100]).details.location, 'Peer shelf');
-          final peerBytes = await folder.read(foodLogName(peer.writer));
-          final localBytes = await folder.read(foodLogName(food.writer));
+          final peerBytes = await folder.read(unifiedLogName(peer.writer));
+          final localBytes = await folder.read(unifiedLogName(food.writer));
           folder.reset();
           final inverse = await food.undoOperations(entry.records);
           _expectExactInverse(inverse, originals);
@@ -378,8 +361,8 @@ void registerFoodBulkDetailsUndoReviewTests({
             }
           }
           expect(_snapshot(food), before);
-          expect(await folder.read(foodLogName(peer.writer)), peerBytes);
-          final after = await folder.read(foodLogName(food.writer));
+          expect(await folder.read(unifiedLogName(peer.writer)), peerBytes);
+          final after = await folder.read(unifiedLogName(food.writer));
           expect(after.take(localBytes.length).toList(), localBytes);
           await peer.refresh();
           expect(_snapshot(peer), before);
@@ -483,7 +466,7 @@ void registerFoodBulkDetailsUndoReviewTests({
               );
             });
             final peerBytes = await tester.runAsync(
-              () => folder.read(foodLogName(peer.writer)),
+              () => folder.read(unifiedLogName(peer.writer)),
             );
             final currentPage = tester.widget<FoodInventoryPage>(
               find.byType(FoodInventoryPage),
@@ -499,7 +482,7 @@ void registerFoodBulkDetailsUndoReviewTests({
             expect(_snapshot(origin), before);
             expect(
               await tester.runAsync(
-                () => folder.read(foodLogName(peer.writer)),
+                () => folder.read(unifiedLogName(peer.writer)),
               ),
               peerBytes,
             );

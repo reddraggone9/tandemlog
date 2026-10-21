@@ -44,6 +44,41 @@ class LocalSettings {
     return preferred.path;
   }
 
+  static Future<void> initialize(
+    LocalProfileDatabase profile,
+  ) => profile.serialize(() async {
+    if (profile.database
+        .select('SELECT 1 FROM protected_settings')
+        .isNotEmpty) {
+      protectedValues(profile);
+      return;
+    }
+    // A pre-database installation requires explicit settings adoption; never
+    // silently mint a replacement ID over its old settings file.
+    if (await File('${profile.root}/settings.json').exists()) {
+      throw const LocalDatabaseFailure(
+        'This profile needs its installation settings copied before use.',
+      );
+    }
+    final writer = const Uuid().v4();
+    profile.transaction(
+      () => profile.database.execute(
+        'INSERT INTO protected_settings VALUES (1,?,?)',
+        [
+          writer,
+          utf8.encode(
+            jsonEncode({
+              'writer': writer,
+              'folder': null,
+              'user': null,
+              'appearance': 'system',
+            }),
+          ),
+        ],
+      ),
+    );
+  });
+
   Future<void> load() async {
     folder = user = _writer = null;
     appearance = Appearance.system;

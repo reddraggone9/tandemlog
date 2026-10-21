@@ -1,3 +1,9 @@
+# Coordinated cutover RC.4/build99 - current native acceptance pending
+
+The development source passes1304 unit/host tests and86 tooling checks, both analyzers, full formatting, converter continuation/prefix checks and the compiled profile/WAL helper. These are source/host gates, not application GUI acceptance. Local Linux native integration did not launch because xvfb-run was absent; build tools are also unavailable locally. A fresh hosted development build and actual current Linux/Android pixels/provider workflows remain pending. No new native lab has started or device setting changed. Earlier build98 receipts below keep their exact attribution.
+
+No release or live cutover is authorized. Actual historical-to-physical writer mapping remains incomplete; a sync peer count is not author identity. Full profile collection is not mandatory: retain simple settings and accepted canonical originals, deliberately reset other local state as approved.
+
 # Experimental 2026.10.7-rc.3/build98 - accepted and published
 
 [RC.3](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.3) is published from accepted source `5358967e9c3c97dabd914acd5ca59fd5f15317c3`. [Acceptance and public receipts](../evidence/prerelease-2026.10.7-rc.3/publication/README.md) bind successful signed candidate39454347693 and promotion39488138047 to the original three installers without rebuilding. Exact native GTK Save/peer incoming-while-Food and owner-APK Android workflows, canonical audits, visible-input media and separate editorial review completed. Android01's failed independent cleanup remains unwaived; a fresh distinct Android02 completed guided/native-IME and independent settings-restoration/cleanup acceptance. All labs stopped.

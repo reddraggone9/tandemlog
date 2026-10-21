@@ -9,6 +9,7 @@ import 'package:tandemlog/application/text_save_command.dart';
 import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:uuid/uuid.dart';
 
@@ -116,11 +117,14 @@ void main() {
             expect(result.currentRow!['tags'], ['new']);
             final lines = const LineSplitter().convert(
               utf8.decode(
-                await fixture.folder.read('${fixture.store.writer}.jsonl'),
+                await fixture.folder.read('${fixture.store.writer}.applog'),
               ),
             );
             expect(
-              lines.where((line) => LogEvent.decode(line).id == receipt.id),
+              lines
+                  .map(UnifiedRecord.decode)
+                  .where((r) => r.effect.task?.id == receipt.id)
+                  .map((r) => r.effect.raw),
               [receipt.raw],
             );
             expect(session.frozen, isFalse);
@@ -192,7 +196,9 @@ void main() {
           final command = TextSaveCommand(fixture.store, session);
           final originalActor = session.capture.fields['title']!.actor;
           final count = fixture.store.db
-              .select('SELECT COUNT(*) AS n FROM events')
+              .select(
+                "SELECT COUNT(*) AS n FROM ${fixture.store.tables.events}",
+              )
               .single['n'];
           final unchanged = await command.save(
             fields: {},
@@ -203,7 +209,9 @@ void main() {
           expect(unchanged.receipt, isNull);
           expect(
             fixture.store.db
-                .select('SELECT COUNT(*) AS n FROM events')
+                .select(
+                  "SELECT COUNT(*) AS n FROM ${fixture.store.tables.events}",
+                )
                 .single['n'],
             count,
           );
@@ -497,7 +505,7 @@ class _Fixture {
   }
 }
 
-class _AppendFolder implements LogFolder, RangeLogFolder {
+class _AppendFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   _AppendFolder(this.inner);
   final LocalLogFolder inner;
   bool failNext = false, throwAfterWriting = false;
@@ -508,6 +516,9 @@ class _AppendFolder implements LogFolder, RangeLogFolder {
   Future<List<LogFileInfo>> list() => inner.list();
   @override
   Future<Uint8List> read(String name) => inner.read(name);
+  @override
+  Future<Uint8List> readBounded(String name, int limit) =>
+      inner.readBounded(name, limit);
   @override
   Future<Uint8List?> readFrom(String name, int offset) =>
       inner.readFrom(name, offset);

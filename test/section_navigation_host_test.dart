@@ -15,9 +15,9 @@ import 'package:tandemlog/presentation/section_menu.dart';
 import 'package:tandemlog/presentation/checklist_panel.dart';
 import 'package:tandemlog/presentation/checklist_item_editor.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
-import 'package:tandemlog/storage/local_profile_migration.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/unified_history.dart';
 import 'package:uuid/uuid.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 
@@ -157,13 +157,28 @@ fixture({bool selectUser = true, AppSection section = AppSection.tasks}) async {
   });
   await seed.close();
   final db = await LocalProfileDatabase.open(profile);
-  await LocalProfileMigration(db).run();
+  await LocalSettings.initialize(db);
   final settings = LocalSettings(profile, profileDatabase: db);
   await settings.load();
   settings.folder = folder.location;
   settings.user = selectUser ? user : null;
   await settings.save();
   if (section != AppSection.tasks) await settings.saveSection(section);
+  // Complete ordinary installation enrollment before tests seal their
+  // no-user-action-write baseline. Opening a new unified reader adds a header.
+  final enrollmentEngine = NativeTextEngine(libraryPath: nativeHostLibraryPath);
+  UnifiedHistory? enrolled;
+  try {
+    enrolled = await UnifiedHistory.open(
+      folder,
+      profile: db,
+      writer: settings.writer,
+      textEngine: enrollmentEngine,
+    );
+  } finally {
+    await enrolled?.close();
+    enrollmentEngine.dispose();
+  }
   await db.close();
   return (root: root, profile: profile, folder: folder, user: user);
 }
@@ -814,6 +829,27 @@ void main() {
     final nextFolder = FaultingFolder(second.folder)
       ..heldRead = Completer<void>();
     final picker = HeldPicker();
+    // Folder switching enrolls the current installation in the destination.
+    // Seal the no-navigation-write baseline after that legitimate header.
+    await tester.runAsync(() async {
+      final db = await LocalProfileDatabase.open(first.profile);
+      final settings = LocalSettings(first.profile, profileDatabase: db);
+      await settings.load();
+      final engine = createHostTextEngine();
+      UnifiedHistory? enrollment;
+      try {
+        enrollment = await UnifiedHistory.open(
+          second.folder,
+          profile: db,
+          writer: settings.writer,
+          textEngine: engine,
+        );
+      } finally {
+        await enrollment?.close();
+        engine.dispose();
+        await db.close();
+      }
+    });
     try {
       final beforeFirst = (await tester.runAsync(
         () => canonical(first.folder),

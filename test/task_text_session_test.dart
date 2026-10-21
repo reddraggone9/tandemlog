@@ -119,7 +119,7 @@ void main() {
         id,
         'task.textEdited',
         {'changes': second.changes},
-        previousHash: event.toJson()['hash'] as String,
+        previousHash: event.toJson()['referenceHash'] as String,
       );
       second.commitReceipt(
         OperationReceipt(secondEvent.id, secondEvent.encode(), id),
@@ -211,7 +211,7 @@ void main() {
                   previousHash: previous,
                 );
                 final receipt = OperationReceipt(event.id, event.encode(), id);
-                previous = event.toJson()['hash'] as String;
+                previous = event.toJson()['referenceHash'] as String;
                 prepared.bindReceipt(receipt);
                 if (failNext) {
                   failNext = false;

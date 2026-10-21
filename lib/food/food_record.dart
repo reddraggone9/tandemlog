@@ -1,6 +1,6 @@
 import 'dart:convert';
+import '../domain/current_operation.dart';
 
-import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
 import 'inventory.dart';
@@ -35,7 +35,9 @@ class FoodRecord {
     required this.clock,
     required this.operation,
     required this.previousHash,
-    this.unified = false,
+    this.unified = true,
+    this.attributedWriter,
+    this.retainedReferenceHash,
     Map<String, String> createdWith = const {},
   }) : createdWith = Map.unmodifiable(createdWith) {
     if (!isCanonicalId(space) ||
@@ -55,11 +57,6 @@ class FoodRecord {
       );
     }
     operation.validate();
-    if (!unified && operation.undoOwner != null) {
-      throw const FormatException(
-        'Legacy Food cannot claim unified ownership.',
-      );
-    }
     if (operation.action == FoodAction.add) {
       if (this.createdWith.isNotEmpty) {
         throw const FormatException(
@@ -79,22 +76,20 @@ class FoodRecord {
         throw const FormatException('Food creation basis is not causal.');
       }
     }
-    hash = sha256
-        .convert(
-          utf8.encode(
-            '${version == 3
-                ? unifiedFoodRecordHashDomain
-                : version == 1
-                ? foodRecordHashDomain
-                : foodUndoRecordHashDomain}${canonicalDataJson(_body())}',
-          ),
-        )
-        .toString();
+    hash = retainedReferenceHash ?? currentOperation.contentHash;
+    if (!isEventHash(hash) || !isCanonicalId(author)) {
+      throw const FormatException(
+        'Invalid Food operation reference or author.',
+      );
+    }
     if (utf8.encode(encode()).length > maximumFoodRecordBytes) {
       throw const FormatException('Food record is too large.');
     }
   }
   final bool unified;
+  final String? attributedWriter, retainedReferenceHash;
+  String get author => attributedWriter ?? writer;
+  String get integrityHash => currentOperation.contentHash;
   final String space, writer, previousHash;
   final int sequence;
   final EventClock clock;
@@ -102,92 +97,76 @@ class FoodRecord {
   final Map<String, String> createdWith;
   late final String hash;
   String get id => '$writer:$sequence';
-  int get version => unified
-      ? 3
-      : operation.action == FoodAction.undo
-      ? 2
-      : 1;
-
-  Map<String, dynamic> _body() {
-    final payload = operation.toJson()
+  int get version => currentOperationFormat;
+  CurrentOperation get currentOperation {
+    final values = operation.toJson()
       ..remove('id')
-      ..remove('order');
-    return {
-      'v': version,
-      'module': 'food',
-      'space': space,
-      'writer': writer,
-      'seq': sequence,
-      'clock': clock.toJson(),
-      'operation': payload,
-      'createdWith': createdWith,
-      'previousHash': previousHash,
-    };
+      ..remove('order')
+      ..remove('action');
+    return CurrentOperation(
+      module: 'food',
+      space: space,
+      author: author,
+      writer: writer,
+      sequence: sequence,
+      clock: clock.toJson(),
+      subject: space,
+      family: 'container.${operation.action.name}',
+      revision: 1,
+      value: {'values': values, 'creationBasis': createdWith},
+      predecessor: previousHash,
+      referenceHash: retainedReferenceHash,
+    );
   }
 
-  String encode() => canonicalDataJson({..._body(), 'hash': hash});
+  Map<String, dynamic> toJson() => currentOperation.toJson();
+  String encode() => currentOperation.encode();
 
   factory FoodRecord.decode(String raw) {
     try {
-      if (raw.length > maximumFoodRecordBytes ||
-          utf8.encode(raw).length > maximumFoodRecordBytes) {
-        throw const FormatException('Food record is too large.');
-      }
-      final j = jsonDecode(raw) as Map<String, dynamic>;
-      const keys = {
-        'v',
-        'module',
-        'space',
-        'writer',
-        'seq',
-        'clock',
-        'operation',
-        'createdWith',
-        'previousHash',
-        'hash',
-      };
-      if (j.length != keys.length ||
-          !j.keys.every(keys.contains) ||
-          (j['v'] != 1 && j['v'] != 2 && j['v'] != 3) ||
-          j['module'] != 'food' ||
-          j['clock'] is! String ||
-          (j['clock'] as String).length > 19) {
-        throw const FormatException('Unsupported or malformed food record.');
-      }
-      final clock = EventClock.fromJson(j['clock']);
-      final payload = j['operation'] as Map<String, dynamic>;
-      if (j['v'] != 3 &&
-          (j['v'] == 2) != (payload['action'] == FoodAction.undo.name)) {
-        throw const FormatException('Unsupported Food operation version.');
-      }
-      if (payload.containsKey('id') || payload.containsKey('order')) {
-        throw const FormatException('Food payload cannot override identity.');
-      }
-      final record = FoodRecord(
-        unified: j['v'] == 3,
-        space: j['space'] as String,
-        writer: j['writer'] as String,
-        sequence: j['seq'] as int,
-        clock: clock,
-        previousHash: j['previousHash'] as String,
-        createdWith: (j['createdWith'] as Map<String, dynamic>)
-            .cast<String, String>(),
-        operation: FoodOperation.fromJson({
-          ...payload,
-          'id': '${j['writer']}:${j['seq']}',
-          'order': clock.toJson(),
-        }, unified: j['v'] == 3),
-      );
-      if (j['hash'] != record.hash || raw != record.encode()) {
+      final current = CurrentOperation.decode(raw, module: 'food');
+      final actions = FoodAction.values
+          .where((action) => current.family == 'container.${action.name}')
+          .toList();
+      if (actions.length != 1 ||
+          current.revision != 1 ||
+          current.subject != current.space ||
+          current.value.length != 2 ||
+          !current.value.containsKey('values') ||
+          !current.value.containsKey('creationBasis')) {
         throw const FormatException(
-          'Food record hash or canonical bytes differ.',
+          'Unknown Food operation. Update the app; history was preserved.',
         );
       }
-      return record;
+      final values = Map<String, dynamic>.from(current.value['values'] as Map);
+      if (values.keys.any((key) => {'action', 'id', 'order'}.contains(key))) {
+        throw const FormatException(
+          'Food payload cannot override its identity.',
+        );
+      }
+      return FoodRecord(
+        unified: true,
+        space: current.space,
+        writer: current.writer,
+        sequence: current.sequence,
+        clock: EventClock.fromJson(current.clock),
+        previousHash: current.predecessor,
+        attributedWriter: current.author,
+        retainedReferenceHash: current.referenceHash,
+        createdWith: Map<String, String>.from(
+          current.value['creationBasis'] as Map,
+        ),
+        operation: FoodOperation.fromJson({
+          ...values,
+          'action': actions.single.name,
+          'id': '${current.writer}:${current.sequence}',
+          'order': current.clock,
+        }, unified: true),
+      );
     } on FormatException {
       rethrow;
     } catch (_) {
-      throw const FormatException('Invalid food record.');
+      throw const FormatException('Malformed current Food operation.');
     }
   }
 }

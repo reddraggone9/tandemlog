@@ -1,5 +1,7 @@
 # ADR 0028: App-owned shared workspace upgrade
 
+Current-client supersession: [ADR0031](0031-coordinated-unified-cutover.md) replaces this transition/reader mechanism. This record remains historical rationale and released-source attribution; it does not require current live old decoders, conversion UI or durable unfinished intent.
+
 Status: implementation approved by Lee on 2026-10-18; implementation and synthetic
 acceptance in progress. Production conversion and stable publication have not
 been authorized for this engineering task.

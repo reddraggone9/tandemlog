@@ -1,0 +1,263 @@
+Historical specification from commit 7fde6742f011f8245427c1b5735cab39b8098be3. Prose is retained; relative links resolve to that original source. See [current schema](../schema.md) and [ADR0031](../decisions/0031-coordinated-unified-cutover.md).
+
+# Task protocol v3
+
+This document specifies the released task protocol. The released-preview Food
+envelope and additive private-profile schema3 are specified in
+[ADR0014](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0014-food-inventory.md); Food records are outside task JSONL
+discovery and do not change task v3 encoding or meanings.
+
+## V4 capability and local schema5
+
+The following RC understands one fixed requiredCapabilities extension of the
+ready v4 manifest, enabling exactly four additional time-zone names while
+preserving released2025c rules. V3 never gains this permission. Exact descriptor,
+byte equality, old-reader rejection and strict additive profile schema5 are
+specified in [ADR0030](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0030-required-time-zone-reader-capability.md).
+The protected_workspace_capabilities table is local authority, not a disposable
+projection. Frozen prior local schemas must validate before migration; missing
+or modified authority remains an error. Existing canonical v3 bytes and meanings
+remain unchanged.
+
+## Food Undo envelope
+
+The next preview adds a closed Food envelope version2 solely for `undo`.
+Its operation contains `action: undo`, exact physical `targets` and a
+`retracts` reference to one earlier same-writer, non-Undo operation. The existing
+`createdWith` envelope retains each target's observed birth. Version1 remains
+required for all original Food operations and preserves its canonical bytes and
+hash domain. Undo version2 uses`tandemlog:food-record:v2\n`; writer derivation,
+genesis, clocks, per-writer chain and the shared v3 manifest remain unchanged.
+References and bases validate before retraction filtering. See
+[ADR0018](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0018-food-session-undo.md) for selective replay, frozen actual
+build60-reader tests and the unresolved-v2 protected-receipt downgrade recovery
+boundary. No task v3 format or historical meaning changes.
+
+Implementation: `lib/domain/event.dart`, `lib/domain/event_chain.dart`, `lib/storage/task_store.dart`. The first stable 2026.10.0 format explicitly rejects prerelease-only v1/v2 canonical manifests and events, preserving them without rewriting or deleting data. Existing v3 folders remain supported unchanged; backward readability and meaning are durable from this stable boundary. The [chain decision](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0007-canonical-history-integrity.md) specifies exact encoding and integrity limits.
+
+## Data space and files
+
+A selected canonical folder contains `tandemlog-space.json` (`v: 3`, UUID `id`) and `<writer UUID>.jsonl`. Initialize once and transport the manifest to joining devices. SQLite is the sole rebuildable cache; never sync the private profile or writer identity.
+
+Each event has exactly `v`, `space`, `writer`, positive contiguous `seq`, `clock` (exact decimal nanosecond string), `entity`, `type`, `data`, `previousHash`, `hash`, in that canonical order. Nested payload maps sort their keys; the record hash covers the canonical UTF-8 event including its predecessor, with domain separation. The first predecessor binds the workspace and writer; later predecessors equal the previous record's hash. Exact serialization and golden hashes are specified in [ADR 0007](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0007-canonical-history-integrity.md#wire-contract). Counters fit the exactly representable JSON integer range. Total replay order is `(numeric clock, writer, seq)`; chain order is per-writer sequence. Every writer clock strictly increases numerically. The clock approximates concurrent human recency using wall time while preserving observed causality; it does not establish true recency between clocks that disagree. Unknown active fields/types/versions fail explicitly. Complete records are bounded to 1 MiB.
+
+| Event | Payload |
+| --- | --- |
+| `user.created` | name |
+| `task.created` | title, description, assignee; optional schedule, tags |
+| `task.edited` | changed title/description/schedule/assignee; optional observed tagChanges |
+| `task.deleted` | empty payload; task tombstone, with its contribution retractable through session Undo |
+| `task.moved` | before task ID, or null for end |
+| `task.completed` | optional completedAt ISO date/time; optional complete successor snapshot |
+| `task.completionUndone` | completion event ID |
+| `task.operationUndone` | earlier reversible operation event ID; recurring completion with a successor excluded |
+| `task.recurringCompletionUndone` | earlier recurring completion event ID; conditional untouched-successor suppression |
+
+Identifiers must be canonical lowercase RFC UUIDs accepted by the same validator used for UUIDv5 successor derivation; malformed shapes/variants fail before append. Creation is unique. Missing remote dependencies remain recorded and are revalidated when they arrive. Local commands require an existing task/user and valid known references before append. Users are attribution choices, not authentication.
+
+## Wall-time-aware nanosecond clock
+
+The user confirmed the [original design](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/archive/storage-and-sync.md): on a command after reconciliation, `clock = max(now_ns, max_seen_clock + 1)`. This supersedes the temporary pure-Lamport and HLC proposals. `now_ns` is computed exactly as `BigInt.from(DateTime.now().microsecondsSinceEpoch) * 1000`: microsecond wall-clock resolution represented in nanosecond units, with borrowed nanoseconds when necessary.
+
+Canonical JSON encodes the clock as a decimal string without sign, exponent, whitespace or leading zeros (except `"0"`). Domain arithmetic/comparison uses BigInt. Values are bounded to nonnegative signed-64-bit range, up to `9223372036854775807`. SQLite stores the validated value as a native exact 64-bit integer; conversion happens only after range validation. View sort keys use 19-digit zero padding. No JSON numeric conversion is involved. Unknown draft numeric/tuple encodings fail explicitly rather than being reinterpreted.
+
+An older offline edit with a high sequence count cannot dominate a later wall-time edit merely because it performed more unrelated operations. Equal or backward wall time borrows one nanosecond beyond the highest observed clock. The canonical timestamp and replay comparison never change with arrival time or cache rebuild. Occurrence dates and completion civil days remain separate domain data.
+
+If the maximum event clock is more than five minutes ahead of this device, `clockWarning` supplies a nonblocking diagnostic. **Clock skew never blocks opening, ingestion or writes.** Future-dated canonical records are imported unchanged; subsequent writes advance beyond them. The warning is recomputed on refresh and after writes and disappears once the wall clock is sufficiently close again. The UI presents it separately from actionable errors and leaves ordinary task controls enabled.
+
+A wrong forward clock can therefore influence later conflict ordering, including other devices that observe it. This availability-first tradeoff is explicitly accepted; recovery tooling is deferred. No timestamp clamping, silent record omission, background repair or history rewrite is implemented. Malformed values, unsupported formats and signed-64-bit exhaustion still fail explicitly; these are format/range errors, not skew admission gates.
+
+The unpublished scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. The current SQLite cache is format 13; its replay/in-place upgrade rules are described below. Unknown future layouts remain explicit errors. Current closed-schema validation still rejects source-map rehearsal events, invalid UUIDs and opaque reserved schedule tags in canonical history; a cache rebuild never makes incompatible logs acceptable. Published v1/v2 folders remain untouched and unsupported by this prerelease. Earlier RC history below explains operation meanings; v3 changes their envelope integrity rather than reinterpreting those meanings.
+
+## Fields, dates and tags
+
+RC4 adds `task.deleted` and assignee edits within protocol v2; every participating app must be updated before using them because older readers reject unknown active types/fields. An active tombstone hides its task regardless of later edit/completion delivery; the canonical record and independent successor remain. Assignee uses an independent last-writer-wins register and local commands require an existing user. Bulk patches merge only explicit fields into each task's full validated schedule, use observed tag deltas and prevalidate the whole selection. Per-task appends are independently durable: report partial progress and reconcile uncertain acknowledgement failures before retry. No cache-layout change or history rewrite is needed.
+
+Title and description use independent last-writer-wins registers. Schedule is one atomic register: `startDate`, `scheduledDate`, `dueDate`, `startTime`, `scheduledTime`, `dueTime`, `timeZone`, `recurrence`, and optional integer `dueMinDays`/`dueMaxDays`. Bounds are integer calendar-day offsets from 0 through 365000 (a finite supported horizon) with minimum no greater than maximum; they affect only derived sort/group dates and are inherited by recurring successors. Dates are strict civil YYYY-MM-DD values; time is HH:mm and requires its corresponding date. Start cannot be later than due; a date-only due date includes the whole civil day. Null zone means floating local time; named zones must exist in the pinned timezone database. No absent date is invented. Recurrence date arithmetic is separate from resolving a wall time into an instant.
+
+Tags use observed-remove membership. Each addition has a token `<event-id>:<index>`; edits remove only tokens observed when the form opened, preserving unseen concurrent same-name additions. Tags retain exact case/spelling and display deterministically sorted. Reserved lowercase schedule-tag spellings are rejected in app history; use functional schedule fields instead. The private importer maps these semantic tags before creating events. A single edit event commits text, schedule and tag changes together. Resolved removal references must identify an earlier addition for the same task and valid index; delayed references are checked on arrival, including prospective local appends.
+
+## Manual order and recurrence
+
+Creation order initializes one shared task sequence. Relative moves replay in total event order, remove the moved task and insert it before the anchor (or at the end). Missing remote anchors defer their effect; known non-task anchors fail. Local moves require a known task anchor. Cyclic/concurrent move intentions therefore produce a deterministic order without fractional-rank exhaustion or replacing the entire sequence.
+
+Completing a repeating task appends **one** completion event containing the full next-occurrence snapshot (title, description, assignee, tags, schedule). The successor ID is UUIDv5(parent occurrence ID, `successor`). Replay materializes it without writing canonical events. Concurrent completions select the earliest total-order seed for that one successor; later edits/completions of the successor remain independent. Creation, selected-seed completion and move actions replay interleaved in total event order. At the selected completion, the successor is inserted immediately before its predecessor’s current position. Later moves of either occurrence remain independent; later duplicate completions do not reposition the existing successor.
+
+Derived initial tag tokens are UUIDv5(successor ID, `tag:<exact tag>`), followed by `:1:0`. They are stable across competing seed snapshots, so late seed selection cannot resurrect observed removed tags. Validation resolves them against completion snapshots and checks causal clock order.
+
+Reopening history uses `task.completionUndone` to retract only observed completion IDs. **It always retains the successor, including its work; it does not cancel the next occurrence.** Recompletion reuses that same successor identity. True Undo of a recurring completion uses `task.recurringCompletionUndone`; generic `task.operationUndone` cannot target a completion containing a successor in v3. Imported completed recurrence rows are historical completions without generated successor snapshots or guessed series links.
+
+Completion accepts an explicitly captured instant and computes its civil day from the freshly reconciled task zone inside the serialized command. Tests/imports may supply an explicit day instead. Replay never reads the clock. The recurrence engine handles the observed 37 rule forms; configured scheduled-date removal and calendar/completion anchors are documented in the parity decision.
+
+## External migration
+
+The data-only importer emits ordinary user/task events. There is no import.document event, task import reference, source template, original-text snapshot or formatting sidecar in the app protocol. Superseded private rehearsal histories containing those removed fields fail explicit closed-schema validation; no live conversion is needed because none was authorized or performed. Source hashes, private diffs and import reports remain external audit outputs. Private one-off migration tooling lives outside this repository and is not shipped or supported as an application feature. Generic domain validation, ordering and persistence remain app responsibilities.
+
+## Unreleased required text extension
+
+The authorized branch adds `task.createdWithText`, `text.baselineInitialized`,
+`task.textEdited` and `task.textEditUndone` within the unchanged v3 envelope.
+These are required meanings: older readers fail explicitly instead of ignoring
+the packets or treating them as scalar edits. Creation seeds and field context,
+exact shared baseline frontiers, actor admission, receipt-gated native Save and
+compensation are specified in [ADR 0010](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0010-collaborative-text-adoption.md).
+Original v3 scalar records, canonical hashes, clocks and historical Undo retain
+their original meaning. Frozen stable histories remain unchanged.
+
+Branch cache 14 adds verified native field checkpoints, actor claims and pending
+receipt indexing to SQLite. Order-projection revision3 recognizes native creations
+in the chronological move sequence. A prior revision2 positions cache rebuilds
+from its cached canonical events on open, atomically and without shared-log
+replay or history changes; this does not change the SQLite layout or v3 wire. Existing current cache 13 upgrades additively without
+full-log replay; older supported cache rebuild and integrity guards still apply.
+Installation-private exact text intent files survive disposable cache loss and
+are retired only after matching canonical acknowledgement. They are never shared
+or treated as accepted task state. Missing native engine support fails explicitly
+if required native records are present. The extension is not released; native
+recurring successor semantics and platform acceptance remain gates.
+
+## Unreleased native successor text
+
+`task.completedWithText` is additive to the existing v3 envelope and completion
+snapshot; older readers explicitly reject its required type. Its payload is
+`completedAt`, `successor`, and `inheritance`. Inheritance has exactly
+`codec: "yrs-v1"`, integer `adapter: 1`, `frontiers`, and `fields`. Frontiers map
+writer UUIDs to exact `{seq, hash}` heads, including bound genesis for seq zero.
+Both `title` and `description` declare exactly `parentContext`, `seedHash`, and
+`stateHash` SHA-256 values. Known heads must match admitted hashes, precede the
+completion clock, and never point forward in its writer's sequence.
+
+The native adapter resolves the parent at exactly those immutable prefixes,
+verifies declared context/seed/full-state hashes and snapshot strings, then
+contributes original native packets to the child's fixed lineage. Packets retain
+their original actor context, writer and allocation. Child context uses
+`basisKind: "recurring-successor"` and its parent's context hash as basis, with
+unchanged root seed hash. Child edits bind only that child context. No raw source,
+formatting provenance or new canonical checkpoint is introduced.
+
+Missing heads/current ungranted dependencies are pending; an incomplete closed
+proof is invalid. Cache flags never authorize new native capture/Save before
+proof verification. Completion Undo does not retract inherited text. Old
+`task.completed` retains its exact scalar snapshot semantics; mixed historical
+scalar/new native initialization is rejected explicitly, preserving both data
+and identities. See [ADR 0010](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0010-collaborative-text-adoption.md).
+
+The 2026-10-08 redesign adds explicit inheritance adapter2 for new prototype
+completions. It retains the same exact frontiers, parent context, seed hash and
+successor strings, but each field declares `historyHash` instead of `stateHash`.
+Adapter1 remains readable and verifies its original exact native-state hash.
+Unknown adapters and mixed proof keys are rejected; old bytes are not rewritten.
+
+`historyHash` is SHA-256 of canonical JSON with domain
+`tandemlog.text.history.reference.v1`, original `rootContext`, `seedHash`, and
+`parents` (reference hashes). A root has no parents. An original operation node
+has one parent plus `operation: {space,id,hash,field}`. A union has sorted unique
+parent hashes and no operation. The resolver builds nodes deterministically from
+the exact observed prefix, preserves original authorship, verifies the field
+context and compares the declared reference and visible text. References identify
+the construction graph, not a flattened unordered packet-set digest.
+
+Native-enabled disposable cache version15 uses `text_fields.adapter=2` for
+resolver-verified references: empty `state`, reference hash in `state_hash`, and
+compact `frontier: {history: hash}`. These are not native checkpoints. Ordinary
+adapter1 rows keep their previous state/hash/list meanings. Capture reconstructs
+exact state and original operation IDs from canonical history for editor and Undo
+receipt use, without persisting another inherited BLOB. Older cache readers reject
+version15 explicitly. Cache loss replays originals; no canonical migration occurs.
+
+### Unreleased one-level checklist extension
+
+The isolated checklist branch adds required event meanings; released scalar v3
+records and both existing inheritance adapters keep their original contracts.
+Older peers explicitly reject these unknown event types. Native-enabled cache16
+adds checklist kind/projection handling to cache15; scalar-only histories retain
+cache13. Canonical history is never rewritten by this disposable cache change.
+
+| Event | Exact payload |
+| --- | --- |
+| `checklist.itemCreated` | `parent`, `title`, `description`, `before`, `text` (ordinary adapter1 native creation seed hashes) |
+| `checklist.itemEdited` | `completed` boolean |
+| `checklist.itemMoved` | `before` same-parent item UUID, or null for end |
+| `checklist.itemDeleted` | empty payload |
+| `task.completedWithChecklist` | `completedAt`, `successor`, `checklist`; optional ordinary parent-text `inheritance` |
+
+Items have distinct UUIDs and `checklistItem` kind. Their native title/notes use
+the existing `task.textEdited`/`task.textEditUndone` adapter with item-only admission;
+task schedule, tags, assignee, recurrence and nested items are invalid. Items are
+hidden from the ordinary task sequence and projected under their parent. Known
+wrong kinds/cross-parent anchors fail; missing remote dependencies remain pending.
+
+`checklist` has exactly `codec: yrs-v1`, integer `adapter: 2`, shared `frontiers`,
+and ordered `items`. Each entry has exactly `id`, `source`, `title`, `description`,
+and the ordinary two-field adapter2 proof map `fields`. The copied ID is
+UUIDv5(successor, `checklist:<source UUID>`). Validate common frontiers once and
+each item proof independently. Copies are capped at1000 items within the existing
+one-MiB complete-record limit; aggregate bytes are checked before preparing a
+local receipt. Verify exact source membership/order, native context/history hashes
+and rendered strings at the immutable prefix. Copied field history shares original
+operation references, including sources copied through previous generations.
+
+Concurrent contributions union source items/native histories, initialize copied
+checks false and apply child-owned order/check/deletion actions afterwards. Later
+old-parent edits do not enter an existing copy. Any canonical child-item activity,
+even undone/deleted, protects the containing successor; synthetic seeds/private
+drafts alone do not. All scalar baseline selectors use that rule only within their
+declared prefix. Local item commands/captures require an available parent; genuine
+late remote descendant activity still restores its protected parent. Historical
+`task.completedKeepingSuccessor` also accepts an earlier hash-matched scalar-mode
+`task.completedWithChecklist` initializer or a native initializer with durable
+successor task/checklist activity, and leaves its independently owned child
+unchanged. Untouched native successors retain forward/concurrent inheritance.
+Released `task.completed` historical guards remain unchanged.
+
+The domain/storage component, item UI and completion warning are implemented;
+exact replacement-candidate Android acceptance remains pending after the historical
+recompletion finding. See [ADR0011](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0011-one-level-checklists.md).
+
+`task.completedKeepingSuccessor` adds the accepted historical-recompletion edge.
+Its exact keys are `completedAt` and `retainedSuccessor`; the latter has exactly
+`id`, `completion` (original writer:sequence) and `hash`. The child ID remains
+UUIDv5(parent, `successor`). Known sources must be the earlier hash-matched scalar
+`task.completed`, scalar-mode `task.completedWithChecklist`, or native successor
+initializer of that parent, whose successor has this ID. No successor snapshot
+or inheritance contribution is created. Parent completion/Undo projection includes
+the new type; original scalar/native completion meanings remain unchanged. See the
+[accepted policy](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/historical-recurring-text-policy.md).
+
+## Durability and recovery
+
+Commands and ingestion share one queue. Durable canonical append is the commit point. Events, affected materialized views and stream checkpoints commit in one SQLite transaction. A failed cache update or process interruption after append is recoverable by ingestion; no second authoritative successor record is needed. Untouched desktop logs are stamp-cached and skip parsing/projection. Android scans revalidate because provider metadata can be unreliable. Derived seed lookup is indexed; only affected entities are projected on ingestion. Shared sequence positions are cached transactionally after order-affecting ingestion; the order-projection marker permits a one-time cache-only rebuild when ordering semantics change, without touching canonical history; ordinary row reads and untouched startup do not replay move history.
+
+Fresh replay and Settings **Check data integrity** verify complete record hashes and chain continuity. The explicit check also compares retained private byte receipts. Ordinary size/seek-capable reconciliation validates only new records against its saved chain head, not the current old prefix. Unknown-size/nonseekable providers full-read. Hashes are not authentication: a fresh device cannot detect a fully recomputed chain or removed final records without a trusted head. Incomplete remote tails retry; owned incomplete tails, invalid full records, unsupported formats, missing known logs, conflict copies and changed space identity stop writes without discarding history. Keep canonical files and writer identity when rebuilding only SQLite/WAL/SHM. Never rebuild to conceal missing history. See [recovery](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/recovery.md).
+
+Store shutdown rejects new commands, drains accepted operations, then closes SQLite and releases the writer lock. Capture retries retain task IDs within the running UI; this is not a durable draft queue across process termination. Undo actions retain their originating store and are discarded when switching folders or restarting.
+
+RC5 adds `task.operationUndone` with exactly `operation: <writer UUID>:<seq>`. It targets an earlier same-entity `task.edited`, `task.moved`, `task.deleted`, `task.completed` or `task.completionUndone`; Undo itself is not retractable. Replay omits only the target contribution. Later scalar/schedule registers, independent tag tokens, completion/deletion and relative moves remain. Recurrence successor seeds remain materialized even if their completion is retracted. Missing remote targets wait for arrival, then entity/type/strict earlier-clock checks run transactionally. Update all peers before using this additive closed-schema type. [Rationale and session limits](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0005-session-undo-and-toolbar.md).
+
+
+## RC8 conditional recurring-completion Undo
+
+`task.recurringCompletionUndone` has exactly `completion: <writer UUID>:<seq>` and names a strictly earlier, same-task `task.completed` containing a successor snapshot. It retracts that completion contribution and conditionally suppresses its untouched successor. It is not itself an Undo target. Known invalid targets fail before append or transactionally on ingestion; missing remote targets remain pending and are revalidated when they arrive. Plain completions and other reversible operations still use `task.operationUndone`. No old event is reinterpreted or rewritten.
+
+An untouched successor uses the earliest total-order seed not named by this new cleanup type. If all seeds are cleanup-retracted, the identity remains internally materialized with `successorSuppressed: true` but is absent from task rows. This is a cache projection flag, never a canonical deletion event. Recompletion reuses the deterministic successor identity with the new surviving snapshot and inserts it at that selected completion's parent position.
+
+Conservatively, any direct canonical history on the successor or any incoming relative-move anchor preserves its earliest historical seed, even when that work was subsequently undone or deleted. Such activity includes edits, tags, moves, completion and descendants. A second completion seed not cleanup-retracted independently supports the successor. Late arrival of protected activity or another supporting seed restores the successor deterministically; ordinary tombstones and independent newer work remain effective. Cleanup delivery, selected-seed changes and late anchor/activity delivery reproject the affected successor and its ordering in the same cache transaction.
+
+Mixed Undo batches append unchanged per-record envelopes together. Exact confirmed receipts determine undone/remaining operations and retained/removed successor counts; a partial prefix does not claim tail success. One recurring cleanup record couples its completion reversal with its derived suppression, avoiding a separately durable unconditional successor deletion.
+
+The RC8 v2 transition is historical: older peers rejected its additive cleanup type. Current v3 rejects all v2 envelopes without converting them. The historical fixture `test/fixtures/recurring_operation_undone_v2.jsonl` verifies explicit unsupported-version preservation; `test/recurring_completion_undo_test.dart` covers current cleanup, protection, recompletion, delayed references, convergence and partial retries.
+
+
+## Released cache 13 and installation identity
+
+Canonical workspace/event protocol is v3. The accepted Inbox classification is derived from existing functional task fields and surviving edits/tags, not a new event or stored `neverEdited` flag. Supported old projection caches rebuild only against supported v3 canonical logs with a private backup and existing identity/committed-history guards; caches newer than 13 remain untouched with an explicit compatible-app error. A real v2 folder is rejected before private cache migration. Supported prior caches replay v3 records after preserving a private backup and integrity guards, so retired draft meanings cannot survive a cached fast path. This never converts canonical files; warmed current caches retain incremental reads.
+
+`streams` retains complete byte `offset`, prior-prefix `hash` and its `hash_offset`, adapter observation `stamp`, cached `range_capable`, `chain_head`, `last_seq` and `last_clock`. `stream_ranges(name,start_offset,end_offset,hash)` records exact SHA256 digests of subsequently admitted complete byte ranges. Explicit full verification requires contiguous observed-byte coverage through `offset` and compares the current bytes as well as checking the complete canonical chain. SHA digest concatenation is not used as resumable hash state. Checkpoints, newly admitted literal event lines and affected projections commit together; receipts compare exact admitted raw bytes rather than reserialized JSON. Ordinary cache reopen and size/seek-capable reconciliation skip historical bytes. See [ADR 0007](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0007-canonical-history-integrity.md).
+
+Production stores receive the installation writer from settings under the profile-wide lease; per-workspace sequence/clock and stream identity semantics remain unchanged. See [ADR 0006](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0006-installation-identity-and-instance-lock.md). Low-level standalone store clients may still omit that optional argument and retain their existing local writer file.
+
+The installation also retains a private writer guard keyed by workspace UUID and writer UUID, independent of selected path and disposable SQLite. Before append it durably prepares exact candidate sequence/hash pairs; before confirming a command it durably acknowledges the observed complete prefix. A restored backup at another path cannot reuse an already acknowledged sequence under the same installation identity. A pending interrupted append reconciles its exact contiguous prefix; missing history blocks rather than skipping sequence numbers or choosing a new writer silently.
+
+## Stable compatibility promise
+
+Compatibility begins with first stable 2026.10.0. Retain v3 decoders, frozen historical fixtures and the exact canonical hash preimages for every format shipped as stable. The synthetic `test/fixtures/stable-v3-2026.10.0` history freezes all supported event types, identities, clocks, field/Undo/successor meaning and order; its regression exercises both stream arrival orders, cache reopen/rebuild and new-writer extension without rewriting history. The independent `event_chain_v3.jsonl` golden retains exact Unicode/hash encoding coverage. New meanings receive new versioned admission; deterministic upcasting may change only the projection. Never rewrite old canonical bytes or recompute historical hashes as a cache upgrade. Known disposable-cache upgrades retain backup/identity/guard checks; unknown future layouts and unsupported required semantics preserve files and fail explicitly. Prerelease-only v1/v2 and removed draft fields remain explicitly unsupported. [ADR 0008](https://github.com/reddraggone9/tandemlog/blob/7fde6742f011f8245427c1b5735cab39b8098be3/design/decisions/0008-calver-and-release-promotion.md) separates release naming from protocol/cache versions.

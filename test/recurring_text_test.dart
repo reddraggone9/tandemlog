@@ -392,8 +392,8 @@ void main() {
               .map((event) => event.canonicalRaw!)
               .toList();
           corrupted[1] = corrupted[1].replaceFirst(
-            '"type":"task.textEdited"',
-            '"type":"task.deleted"',
+            '"family":"task.update"',
+            '"family":"task.delete"',
           );
           expect(corrupted[1], isNot(complete[1].canonicalRaw));
           expect(

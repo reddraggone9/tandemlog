@@ -161,8 +161,8 @@ void main() {
           expect(frontiers[a.writer]['seq'], lessThan(first.sequence));
           final editedChild = jsonEncode(_childRow(a));
           await File(
-            '${offline.location}/${b.writer}.jsonl',
-          ).copy('${folder.location}/${b.writer}.jsonl');
+            '${offline.location}/${b.writer}.applog',
+          ).copy('${folder.location}/${b.writer}.applog');
           await a.refresh();
           expect(jsonEncode(_childRow(a)), editedChild);
 

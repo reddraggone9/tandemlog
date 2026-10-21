@@ -68,7 +68,7 @@ void main() {
         expect(store.rows.any((row) => row['id'] == child), false);
         final views = jsonEncode(
           store.db
-              .select('SELECT id,raw FROM views ORDER BY id')
+              .select('SELECT id,raw FROM ${store.tables.views} ORDER BY id')
               .map((row) => Map<String, dynamic>.from(row))
               .toList(),
         );
@@ -88,7 +88,7 @@ void main() {
         expect(
           jsonEncode(
             store.db
-                .select('SELECT id,raw FROM views ORDER BY id')
+                .select('SELECT id,raw FROM ${store.tables.views} ORDER BY id')
                 .map((row) => Map<String, dynamic>.from(row))
                 .toList(),
           ),

@@ -8,46 +8,72 @@ import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/log_folder.dart';
-import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_history.dart';
+import 'package:tandemlog/storage/unified_manifest.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 
 void main() {
   test(
-    'wide-target thousand-reference history has a bounded replay budget',
+    'wide-target thousand-reference normalized history has a bounded replay budget',
     () async {
-      const writer = '00000000-0000-4000-8000-000000000001';
-      final root = await Directory.systemTemp.createTemp('food-replay-budget-');
-      final profile = await LocalProfileDatabase.open('${root.path}/profile');
-      final data = await Directory('${root.path}/data').create();
-      final folder = LocalLogFolder(data.path);
-      final tasks = await TaskStore.open(
-        folder,
-        profile.root,
-        profileDatabase: profile,
-        writerIdentity: writer,
+      const writer = '00000000-0000-4000-8000-000000000001',
+          space = '00000000-0000-4000-8000-000000000002',
+          epoch = '00000000-0000-4000-8000-000000000003';
+      final root = await Directory.systemTemp.createTemp(
+        'food-current-replay-budget-',
       );
+      final profile = await LocalProfileDatabase.open('${root.path}/profile');
+      final folder = LocalLogFolder(
+        (await Directory('${root.path}/data').create()).path,
+      );
+      UnifiedHistory? history;
       FoodStore? food;
       try {
+        profile.transaction(
+          () => profile.database.execute(
+            'INSERT INTO protected_settings VALUES (1,?,?)',
+            [
+              writer,
+              utf8.encode(
+                jsonEncode({'writer': writer, 'appearance': 'system'}),
+              ),
+            ],
+          ),
+        );
         final targets = List.generate(
           100,
           (i) =>
               '00000000-0000-4000-8001-${i.toRadixString(16).padLeft(12, '0')}',
         );
         final lines = <String>[];
-        var hash = eventGenesisHash(tasks.space, writer);
-        void append(FoodOperation operation, {bool creation = false}) {
-          final record = FoodRecord(
-            space: tasks.space,
+        var anchor = eventGenesisHash(space, writer),
+            head = unifiedGenesis(space, epoch, writer);
+        void append(FoodOperation op, {bool creation = false}) {
+          final seq = lines.length + 1,
+              clock = EventClock(BigInt.from(lines.length + 1));
+          final food = FoodRecord(
+            space: space,
             writer: writer,
-            sequence: lines.length + 1,
-            clock: EventClock(BigInt.from(lines.length + 1)),
-            operation: operation,
-            previousHash: hash,
+            sequence: seq,
+            clock: clock,
+            operation: op,
+            previousHash: anchor,
             createdWith: creation
                 ? {}
                 : {for (final id in targets) id: '$writer:1'},
           );
-          lines.add(record.encode());
-          hash = record.hash;
+          final r = UnifiedRecord(
+            space: space,
+            epoch: epoch,
+            writer: writer,
+            sequence: seq,
+            clock: clock,
+            previousHash: head,
+            effect: UnifiedEffect('history.food', food.encode()),
+          );
+          anchor = food.hash;
+          head = r.hash;
+          lines.add(r.encode());
         }
 
         append(
@@ -81,27 +107,43 @@ void main() {
             observedDeletes: List.generate(1000, (i) => '$writer:${i + 2}'),
           ),
         );
-        final bytes = utf8.encode('${lines.join('\n')}\n');
-        await File('${data.path}/${foodLogName(writer)}').writeAsBytes(bytes);
+        final bytes = Uint8List.fromList(utf8.encode('${lines.join('\n')}\n'));
+        final manifest = UnifiedManifest(
+          space,
+          epoch,
+          bytesDigest(utf8.encode('synthetic-current-food-budget-v1')),
+          {
+            writer: {
+              'count': lines.length,
+              'head': head,
+              'digest': bytesDigest(bytes),
+            },
+          },
+          {writer: writer},
+        );
+        await folder.create(unifiedLogName(writer), bytes);
+        await folder.create(
+          'tandemlog-space.json',
+          Uint8List.fromList(utf8.encode(manifest.encode())),
+        );
         final timer = Stopwatch()..start();
-        food = await FoodStore.open(
+        history = await UnifiedHistory.open(
           folder,
           profile: profile,
-          installationWriter: writer,
-          space: tasks.space,
+          writer: writer,
         );
+        food = await FoodStore.openUnified(history);
         timer.stop();
         expect(food.state.active, hasLength(100));
         expect(food.state.deleted, isEmpty);
         expect(food.pendingReferences, 0);
-        // Generous Linux regression ceiling, not a mobile responsiveness claim.
         expect(timer.elapsedMilliseconds, lessThan(12000));
         debugPrint(
           'FOOD_REPLAY_BUDGET bytes=${bytes.length} records=${lines.length} targets=100 refs=1000 elapsed_ms=${timer.elapsedMilliseconds}',
         );
       } finally {
         await food?.close();
-        await tasks.close();
+        await history?.close();
         await profile.close();
         await root.delete(recursive: true);
       }

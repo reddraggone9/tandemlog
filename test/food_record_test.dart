@@ -19,18 +19,14 @@ FoodOperation seed() => FoodOperation(
 );
 void main() {
   // Frozen independently with Python json/SHA256/UUID-v5, not the Dart codec.
-  test('literal canonical food wire/hash and module writer fixture', () {
-    const raw =
-        r'{"clock":"1","createdWith":{},"hash":"6648ddb329d58e21703e9670df883866fae0865f2dfca6ffb07604d97cf97901","module":"food","operation":{"action":"add","contents":{"denominator":1,"numerator":1,"unit":null},"createdAt":"2026-10-10T00:00:00Z","details":{"brand":"","estimated":false,"expiry":"2026-10-15","location":"","name":"Rice","retention":"","size":""},"fields":[],"observedDeletes":[],"observedEdits":[],"targets":["00000000-0000-4000-8000-000000000002"]},"previousHash":"7be6c79ffd50fb16f6d6c38680415eafdd4c6633c0e86dbb79b4117018e713ca","seq":1,"space":"00000000-0000-4000-8000-000000000001","v":1,"writer":"00000000-0000-4000-8000-000000000010"}';
-    final record = FoodRecord.decode(raw);
-    expect(
-      record.hash,
-      '6648ddb329d58e21703e9670df883866fae0865f2dfca6ffb07604d97cf97901',
-    );
-    expect(record.operation.toJson(), seed().toJson());
-    expect(record.encode(), raw);
-    expect(foodWriter(writer), 'ef7de7ae-f895-59f0-9090-8480d065bcd4');
-  });
+  test(
+    'literal legacy Food wire is preserved and refused by the current reader',
+    () {
+      const raw =
+          r'{"clock":"1","createdWith":{},"hash":"6648ddb329d58e21703e9670df883866fae0865f2dfca6ffb07604d97cf97901","module":"food","operation":{"action":"add","contents":{"denominator":1,"numerator":1,"unit":null},"createdAt":"2026-10-10T00:00:00Z","details":{"brand":"","estimated":false,"expiry":"2026-10-15","location":"","name":"Rice","retention":"","size":""},"fields":[],"observedDeletes":[],"observedEdits":[],"targets":["00000000-0000-4000-8000-000000000002"]},"previousHash":"7be6c79ffd50fb16f6d6c38680415eafdd4c6633c0e86dbb79b4117018e713ca","seq":1,"space":"00000000-0000-4000-8000-000000000001","v":1,"writer":"00000000-0000-4000-8000-000000000010"}';
+      expect(() => FoodRecord.decode(raw), throwsFormatException);
+    },
+  );
 
   test('separate food hash domain and immutable envelope bindings', () {
     final record = FoodRecord(

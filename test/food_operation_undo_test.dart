@@ -325,29 +325,42 @@ void main() {
     );
   });
 
-  test('frozen v1 bytes and independently hashed v2 Undo share one chain', () {
-    final lines = File(
-      'test/fixtures/food-undo/mixed-v1-v2.foodlog',
-    ).readAsLinesSync();
-    final add = FoodRecord.decode(lines.first);
-    final inverse = FoodRecord.decode(lines.last);
-    expect(
-      add.hash,
-      '6648ddb329d58e21703e9670df883866fae0865f2dfca6ffb07604d97cf97901',
-    );
-    expect(add.encode(), lines.first);
-    expect(inverse.encode(), lines.last);
-    expect(jsonDecode(lines.first)['v'], 1);
-    expect(jsonDecode(lines.last)['v'], 2);
-    expect(inverse.previousHash, add.hash);
-    expect(inverse.writer, add.writer);
-    expect(inverse.operation.toJson()['retracts'], add.id);
-    expect(projectFood([add.operation, inverse.operation]).containers, isEmpty);
-    expect(foodWriter(owner), 'ef7de7ae-f895-59f0-9090-8480d065bcd4');
-  });
+  test(
+    'independently hashed current Food Add and Undo preserve one reference chain',
+    () {
+      final lines = File(
+        'test/fixtures/current-operation-v1/food.operations',
+      ).readAsLinesSync();
+      final add = FoodRecord.decode(lines.first),
+          inverse = FoodRecord.decode(lines.last);
+      expect(
+        add.hash,
+        '00249487efdb903e7757553f7d3c1f858700f48e6df904b9659fc2d09585c250',
+      );
+      expect(
+        inverse.hash,
+        'fe4b83c285343a4e7b99bd32151b33fb5446169730e4036797bdfa8ea6ff6f6d',
+      );
+      expect(add.encode(), lines.first);
+      expect(inverse.encode(), lines.last);
+      expect(inverse.previousHash, add.hash);
+      expect(inverse.writer, add.writer);
+      expect(inverse.operation.retracts, add.id);
+      expect(
+        projectFood([add.operation, inverse.operation]).containers,
+        isEmpty,
+      );
+      // Frozen historical byte fixtures remain unchanged and execute externally.
+      for (final raw in File(
+        'test/fixtures/food-undo/mixed-v1-v2.foodlog',
+      ).readAsLinesSync()) {
+        expect(() => FoodRecord.decode(raw), throwsFormatException);
+      }
+    },
+  );
 
   test(
-    'v2 is closed Undo only; v1 cannot carry Undo or future payload keys',
+    'pre-cutover Food envelope variants are refused without reinterpretation',
     () {
       final lines = File(
         'test/fixtures/food-undo/mixed-v1-v2.foodlog',

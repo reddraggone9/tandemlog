@@ -12,7 +12,7 @@ import 'package:tandemlog/storage/local_settings.dart';
 import 'section_navigation_host_test.dart' as host;
 import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
 
-class _FailingUpgradeNoticePicker extends FolderActions {
+class _FailingFolderPicker extends FolderActions {
   int calls = 0;
 
   @override
@@ -34,7 +34,7 @@ void main() {
 
   for (final appearance in [Appearance.light, Appearance.dark]) {
     testWidgets(
-      'upgrade notice yields to retained picker diagnostic after discard at 320dp 200% ${appearance.name}',
+      'picker diagnostic survives editor discard at 320dp 200% ${appearance.name}',
       (tester) async {
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(320, 640);
@@ -67,7 +67,7 @@ void main() {
               await profile.close();
             }
           });
-          final picker = _FailingUpgradeNoticePicker();
+          final picker = _FailingFolderPicker();
           await tester.pumpWidget(
             TandemlogApp(
               profilePath: data.profile,
@@ -81,10 +81,6 @@ void main() {
             tester,
             () => state.store != null && state.busy == false,
           );
-          final notice = find.byKey(
-            const ValueKey('workspace-upgrade-available'),
-          );
-          expect(notice, findsOneWidget);
           final before = (await tester.runAsync(
             () => host.canonical(data.folder),
           ))!;
@@ -98,7 +94,6 @@ void main() {
             await tester.tap(find.text('Settings').last);
           }
           await tester.pumpAndSettle();
-          expect(find.text('Upgrade shared workspace…'), findsOneWidget);
           final choose = find.widgetWithText(
             TextButton,
             'Use a different folder',
@@ -144,7 +139,6 @@ void main() {
             findsOneWidget,
           );
           expect(tester.takeException(), isNull);
-          expect(notice, findsNothing);
           expect(
             await tester.runAsync(() => host.canonical(data.folder)),
             before,
@@ -153,8 +147,6 @@ void main() {
           tester.view.resetViewInsets();
           tester.view.padding = const FakeViewPadding(top: 24, bottom: 24);
           await tester.pumpAndSettle();
-          expect(notice, findsOneWidget);
-          expect(notice.hitTestable(), findsOneWidget);
           expect(state.error, contains('Could not open the folder picker'));
           expect(tester.takeException(), isNull);
           expect(

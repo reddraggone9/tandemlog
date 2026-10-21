@@ -27,6 +27,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Coordinated unified-only cutover](decisions/0031-coordinated-unified-cutover.md): approved successor to the transition mechanisms below. Current action records, required revisions on first persistence, settings-only local reset and external normalization are under validation. Full regression, independent review, native acceptance and explicit physical mapping remain gates. No live conversion or release is implied; earlier build98 evidence retains its original attribution.
+
 - [Required support for additional time zone names](decisions/0030-required-time-zone-reader-capability.md):
   accepted explicit reader-floor design with exact legacy rules and owned
   recovery. Implemented and accepted in [RC.3/build98](../evidence/prerelease-2026.10.7-rc.3/publication/README.md),

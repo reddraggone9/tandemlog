@@ -75,8 +75,8 @@ void main() {
 
   Future<void> converge() async {
     await File(
-      '${remote.location}/${b.writer}.jsonl',
-    ).copy('${folder.location}/${b.writer}.jsonl');
+      '${remote.location}/${b.writer}.applog',
+    ).copy('${folder.location}/${b.writer}.applog');
     await a.refresh();
     await copy(folder, remote);
     await b.refresh();
@@ -93,10 +93,10 @@ void main() {
       final snapshot = a.checklistSnapshot(parent);
       await b.addChecklistItem(parent, 'Incoming third');
       await File(
-        '${remote.location}/${b.writer}.jsonl',
-      ).copy('${folder.location}/${b.writer}.jsonl');
+        '${remote.location}/${b.writer}.applog',
+      ).copy('${folder.location}/${b.writer}.applog');
       final before = await File(
-        '${folder.location}/${a.writer}.jsonl',
+        '${folder.location}/${a.writer}.applog',
       ).readAsBytes();
       var prepared = 0;
       await expectLater(
@@ -110,7 +110,7 @@ void main() {
       );
       expect(prepared, 0);
       expect(
-        await File('${folder.location}/${a.writer}.jsonl').readAsBytes(),
+        await File('${folder.location}/${a.writer}.applog').readAsBytes(),
         before,
       );
       expect(items(a, parent).map((item) => item['title']), [
@@ -197,7 +197,7 @@ void main() {
     () async {
       final first = await add('First');
       final before = a.db
-          .select('SELECT COUNT(*) AS n FROM events')
+          .select('SELECT COUNT(*) AS n FROM ${a.tables.events}')
           .single['n'];
       for (final invalidParent in [first, user]) {
         await expectLater(
@@ -205,7 +205,9 @@ void main() {
           throwsA(isA<FormatFailure>()),
         );
         expect(
-          a.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+          a.db
+              .select('SELECT COUNT(*) AS n FROM ${a.tables.events}')
+              .single['n'],
           before,
         );
       }
@@ -224,13 +226,15 @@ void main() {
         'assignee': user,
       });
       final foreign = await add('Foreign', owner: other);
-      final count = a.db.select('SELECT COUNT(*) AS n FROM events').single['n'];
+      final count = a.db
+          .select('SELECT COUNT(*) AS n FROM ${a.tables.events}')
+          .single['n'];
       await expectLater(
         a.command(first, 'checklist.itemMoved', {'before': foreign}),
         throwsA(isA<FormatFailure>()),
       );
       expect(
-        a.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+        a.db.select('SELECT COUNT(*) AS n FROM ${a.tables.events}').single['n'],
         count,
       );
       await expectLater(
@@ -241,7 +245,7 @@ void main() {
         throwsA(isA<FormatFailure>()),
       );
       expect(
-        a.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+        a.db.select('SELECT COUNT(*) AS n FROM ${a.tables.events}').single['n'],
         count,
       );
     },
@@ -379,7 +383,7 @@ void main() {
         completionDay: DateTime(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
-      await a.initializeSharedTextForHistoricalFixture();
+      await a.initializeSharedText();
       final childItem = await add('Existing child work', owner: child);
       await a.command(childItem, 'checklist.itemEdited', {'completed': true});
       await a.undoOperations([original.id]);
@@ -467,7 +471,7 @@ void main() {
         completionDay: DateTime(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
-      await a.initializeSharedTextForHistoricalFixture();
+      await a.initializeSharedText();
       final copied = const Uuid().v5(child, 'checklist:$originalItem');
       await saveText(a, copied, 'title', 'Independent child');
       await a.undoOperations([original.id]);
@@ -501,7 +505,9 @@ void main() {
       final malformed =
           jsonDecode(jsonEncode(completion!.data)) as Map<String, dynamic>;
       (malformed['checklist'] as Map)['items'] = [];
-      final count = a.db.select('SELECT COUNT(*) AS n FROM events').single['n'];
+      final count = a.db
+          .select('SELECT COUNT(*) AS n FROM ${a.tables.events}')
+          .single['n'];
       var prepared = false;
       await expectLater(
         a.command(
@@ -514,7 +520,7 @@ void main() {
       );
       expect(prepared, isFalse);
       expect(
-        a.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+        a.db.select('SELECT COUNT(*) AS n FROM ${a.tables.events}').single['n'],
         count,
       );
       final sourceCapture = await a.captureTaskText(original);
@@ -557,7 +563,11 @@ void main() {
       closedA = true;
       a = await TaskStore.open(folder, '${root.path}/a', textEngine: engine);
       closedA = false;
-      expect(a.readFiles, 0);
+      expect(
+        a.readFiles,
+        greaterThan(0),
+        reason: 'Current admission revalidates canonical bytes',
+      );
       expect(a.rows, before);
       await a.close();
       closedA = true;

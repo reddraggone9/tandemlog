@@ -71,7 +71,7 @@ void main() {
       final before = {
         for (final n in [2, 3, 4, 5]) n: jsonDecode(jsonEncode(row(s, id(n)))),
       };
-      final log = File('${folder.path}/${s.writer}.jsonl');
+      final log = File('${folder.path}/${s.writer}.applog');
       final prefix = await log.readAsBytes();
       final result = await s.migrateOccurrenceDates();
       expect(result.migrated, 2);
@@ -83,12 +83,13 @@ void main() {
           .decode(bytes.sublist(prefix.length))
           .trim()
           .split('\n')
-          .map(jsonDecode)
+          .expand((raw) => (jsonDecode(raw)['effects'] as List))
+          .map((effect) => jsonDecode((effect as Map)['raw'] as String))
           .toList();
       expect(appended.length, 2);
       for (final event in appended) {
-        expect(event['type'], 'task.edited');
-        expect((event['data'] as Map).keys, ['schedule']);
+        expect(event['operation'], {'family': 'task.update', 'revision': 1});
+        expect(((event['value'] as Map)['values'] as Map).keys, ['schedule']);
       }
       for (final n in [2, 5]) {
         final task = row(s, id(n)), old = before[n] as Map;
@@ -132,7 +133,7 @@ void main() {
         'recurrence': 'every week',
       });
       final b = await open('b');
-      final initial = File('${folder.path}/${a.writer}.jsonl');
+      final initial = File('${folder.path}/${a.writer}.applog');
       final prefix = await initial.readAsBytes();
       expect(
         (await a.migrateOccurrenceDates(canCommit: () => false)).migrated,
@@ -166,7 +167,7 @@ void main() {
       'scheduledDate': '2030-10-05',
       'recurrence': 'every week',
     });
-    final log = File('${folder.path}/${s.writer}.jsonl');
+    final log = File('${folder.path}/${s.writer}.applog');
     final prefix = await log.readAsBytes();
     final before = jsonDecode(jsonEncode(row(s, id(2))));
     var admissionChecks = 0;

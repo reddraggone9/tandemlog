@@ -1,15 +1,17 @@
 import 'dart:convert';
+import 'current_history_fixture.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/domain/projection.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
-class _PrefixReplacement implements LogFolder {
+class _PrefixReplacement implements LogFolder, BoundedLogFolder {
   _PrefixReplacement(this.inner);
   final LocalLogFolder inner;
   int? keep;
@@ -30,6 +32,9 @@ class _PrefixReplacement implements LogFolder {
   @override
   Future<Uint8List> read(String name) => inner.read(name);
   @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
+  @override
   Future<void> create(String name, Uint8List bytes) =>
       inner.create(name, bytes);
   @override
@@ -39,15 +44,13 @@ class _PrefixReplacement implements LogFolder {
     if (count == null) return inner.append(name, bytes);
     final previous = await inner.read(name);
     await inner.append(name, bytes);
-    final lines = utf8.decode(bytes).split('\n')..removeLast();
+    final prefix = count.clamp(0, bytes.length - 1);
     delayedName = name;
-    delayedSuffix = Uint8List.fromList(
-      utf8.encode(lines.skip(count).map((line) => '$line\n').join()),
-    );
+    delayedSuffix = Uint8List.sublistView(bytes, prefix);
     final temporary = File('$location/replacement.tmp');
     await temporary.writeAsBytes([
       ...previous,
-      ...utf8.encode(lines.take(count).map((line) => '$line\n').join()),
+      ...bytes.take(prefix),
     ], flush: true);
     await temporary.rename('$location/$name');
   }
@@ -85,8 +88,8 @@ void main() {
 
   Future<void> converge() async {
     await File(
-      '${remote.location}/${b.writer}.jsonl',
-    ).copy('${folder.location}/${b.writer}.jsonl');
+      '${remote.location}/${b.writer}.applog',
+    ).copy('${folder.location}/${b.writer}.applog');
     await a.refresh();
     await join();
     expect(a.rows, b.rows);
@@ -137,12 +140,13 @@ void main() {
     await root.delete(recursive: true);
   });
 
+  Uint8List peerBytes(LogEvent event) => peerBytesFor(a, event);
   test(
     'true Undo suppresses untouched successor, preserves bytes, and survives rebuild',
     () async {
       final id = await task(), completion = await complete(id);
       final next = const Uuid().v5(id, 'successor');
-      final before = await folder.read('${a.writer}.jsonl');
+      final before = await folder.read('${a.writer}.applog');
       expect(visible(a, next), isTrue);
       final result = await a.undoOperations([completion.id]);
       expect(result.error, isNull);
@@ -155,27 +159,29 @@ void main() {
         isTrue,
         reason: 'Canonical dependency identity remains materialized.',
       );
-      final after = await folder.read('${a.writer}.jsonl');
+      final after = await folder.read('${a.writer}.applog');
       expect(after.sublist(0, before.length), before);
       expect(
-        LogEvent.decode(utf8.decode(after.sublist(before.length)).trim()).type,
+        UnifiedRecord.decode(
+          utf8.decode(after.sublist(before.length)).trim(),
+        ).effect.task!.type,
         'task.recurringCompletionUndone',
       );
       await a.undoOperations([completion.id]);
-      expect(await folder.read('${a.writer}.jsonl'), after);
-      a.db.execute('PRAGMA user_version=8');
+      expect(await folder.read('${a.writer}.applog'), after);
+      a.db.execute('DELETE FROM ${a.tables.views}');
       await a.close();
       closed = true;
       a = await TaskStore.open(transport, '${root.path}/a');
       closed = false;
-      expect(a.db.select('PRAGMA user_version').single['user_version'], 13);
+      expect(a.rows, isNotEmpty);
       expect(visible(a, next), isFalse);
-      expect(await folder.read('${a.writer}.jsonl'), after);
+      expect(await folder.read('${a.writer}.applog'), after);
       expect(
         await Directory(
           '${root.path}/a',
         ).list().where((f) => f.path.contains('cache-v8-')).length,
-        1,
+        0,
       );
     },
   );
@@ -275,7 +281,7 @@ void main() {
         }
         if (late == 'completion') expect(row(a, id)['completed'], isTrue);
         final expected = a.rows;
-        a.db.execute('PRAGMA user_version=8');
+        a.db.execute('DELETE FROM ${a.tables.views}');
         await a.close();
         closed = true;
         a = await TaskStore.open(transport, '${root.path}/a');
@@ -315,7 +321,7 @@ void main() {
 
   for (final keep in [0, 1]) {
     test(
-      'mixed Undo confirms only prefix and retries cleanup ($keep retained)',
+      'mixed Undo publishes no partial action and retries cleanup ($keep bytes)',
       () async {
         final id = await task(),
             completion = await complete(id),
@@ -324,10 +330,10 @@ void main() {
         transport.keep = keep;
         final result = await a.undoOperations([completion.id, edit.id]);
         expect(result.error, isNotNull);
-        expect(result.undone, [completion.id, edit.id].take(keep));
-        expect(result.remaining, [completion.id, edit.id].skip(keep));
-        expect(result.removedSuccessorCount, keep);
-        expect(visible(a, const Uuid().v5(id, 'successor')), keep == 0);
+        expect(result.undone, <String>[]);
+        expect(result.remaining, [completion.id, edit.id]);
+        expect(result.removedSuccessorCount, 0);
+        expect(visible(a, const Uuid().v5(id, 'successor')), isTrue);
         final blocked = await a.undoOperations(result.remaining);
         expect(blocked.error, isA<WriterGuardFailure>());
         await transport.revealPending();
@@ -346,7 +352,7 @@ void main() {
       final id = await task(repeating: false),
           completion = await complete(id),
           other = await task();
-      final before = await folder.read('${a.writer}.jsonl');
+      final before = await folder.read('${a.writer}.applog');
       for (final entity in [id, other]) {
         await expectLater(
           a.command(entity, 'task.recurringCompletionUndone', {
@@ -355,7 +361,7 @@ void main() {
           throwsA(isA<FormatFailure>()),
         );
       }
-      expect(await folder.read('${a.writer}.jsonl'), before);
+      expect(await folder.read('${a.writer}.applog'), before);
     },
   );
 
@@ -375,7 +381,7 @@ void main() {
       final seed = LogEvent(
         a.space,
         writer,
-        1,
+        2,
         EventClock(BigInt.from(10)),
         id,
         'task.completed',
@@ -391,21 +397,15 @@ void main() {
       final cleanup = LogEvent(
         a.space,
         cleanupWriter,
-        1,
+        2,
         EventClock(BigInt.from(20)),
         id,
         'task.recurringCompletionUndone',
         {'completion': seed.id},
       );
-      await folder.create(
-        '$cleanupWriter.jsonl',
-        Uint8List.fromList(utf8.encode('${cleanup.encode()}\n')),
-      );
+      await folder.create('$cleanupWriter.applog', peerBytes(cleanup));
       await a.refresh();
-      await folder.create(
-        '$writer.jsonl',
-        Uint8List.fromList(utf8.encode('${seed.encode()}\n')),
-      );
+      await folder.create('$writer.applog', peerBytes(seed));
       await a.refresh();
       expect(row(a, id)['completed'], isFalse);
       expect(visible(a, const Uuid().v5(id, 'successor')), isFalse);
@@ -422,7 +422,7 @@ void main() {
         final target = LogEvent(
           a.space,
           targetWriter,
-          1,
+          2,
           EventClock(BigInt.from(forward ? 30 : 10)),
           id,
           'task.completed',
@@ -444,30 +444,21 @@ void main() {
         final cleanup = LogEvent(
           a.space,
           cleanupWriter,
-          1,
+          2,
           EventClock(BigInt.from(20)),
           id,
           'task.recurringCompletionUndone',
           {'completion': target.id},
         );
-        await folder.create(
-          '$cleanupWriter.jsonl',
-          Uint8List.fromList(utf8.encode('${cleanup.encode()}\n')),
-        );
+        await folder.create('$cleanupWriter.applog', peerBytes(cleanup));
         await a.refresh();
         final before = a.rows;
-        await folder.create(
-          '$targetWriter.jsonl',
-          Uint8List.fromList(utf8.encode('${target.encode()}\n')),
-        );
+        await folder.create('$targetWriter.applog', peerBytes(target));
         await expectLater(a.refresh(), throwsA(isA<FormatFailure>()));
         expect(a.rows, before);
-        expect(
-          await folder.read('$targetWriter.jsonl'),
-          utf8.encode('${target.encode()}\n'),
-        );
+        expect(await folder.read('$targetWriter.applog'), peerBytes(target));
         // Remove only this disposable uncommitted test stream for the next case.
-        await File('${folder.location}/$targetWriter.jsonl').delete();
+        await File('${folder.location}/$targetWriter.applog').delete();
       }
     },
   );
@@ -481,7 +472,7 @@ void main() {
       final completion = LogEvent(
         a.space,
         completionWriter,
-        1,
+        2,
         EventClock(BigInt.from(10)),
         id,
         'task.completed',
@@ -499,27 +490,22 @@ void main() {
       final undo = LogEvent(
         a.space,
         undoWriter,
-        1,
+        2,
         EventClock(BigInt.from(20)),
         id,
         'task.operationUndone',
         {'operation': completion.id},
       );
-      await folder.create(
-        '$undoWriter.jsonl',
-        Uint8List.fromList(utf8.encode('${undo.encode()}\n')),
-      );
+      await folder.create('$undoWriter.applog', peerBytes(undo));
       await a.refresh();
       final before = a.rows;
-      final canonical = Uint8List.fromList(
-        utf8.encode('${completion.encode()}\n'),
-      );
-      await folder.create('$completionWriter.jsonl', canonical);
+      final canonical = peerBytes(completion);
+      await folder.create('$completionWriter.applog', canonical);
       await expectLater(
         a.refresh(),
         throwsA(
-          isA<HistoryVerificationFailure>().having(
-            (error) => error.reason,
+          isA<FormatFailure>().having(
+            (error) => error.message,
             'reference',
             contains('Invalid undo reference'),
           ),
@@ -527,10 +513,12 @@ void main() {
       );
       expect(a.rows, before);
       expect(
-        a.db.select('SELECT raw FROM events WHERE id=?', [completion.id]),
+        a.db.select('SELECT raw FROM ${a.tables.events} WHERE id=?', [
+          completion.id,
+        ]),
         isEmpty,
       );
-      expect(await folder.read('$completionWriter.jsonl'), canonical);
+      expect(await folder.read('$completionWriter.applog'), canonical);
     },
   );
 

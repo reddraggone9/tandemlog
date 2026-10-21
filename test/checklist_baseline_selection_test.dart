@@ -110,8 +110,8 @@ void main() {
           expect(compareEvents(earliest, later), lessThan(0));
           expect(later.data.containsKey('inheritance'), false);
           await File(
-            '${peerFolder.location}/${b.writer}.jsonl',
-          ).copy('${folder.location}/${b.writer}.jsonl');
+            '${peerFolder.location}/${b.writer}.applog',
+          ).copy('${folder.location}/${b.writer}.applog');
           await a.refresh();
           expect(
             (await a.undoOperations([earliest.id])).retainedSuccessorCount,
@@ -128,7 +128,7 @@ void main() {
           expect(retained['description'], expectedNotes);
           final beforeChecklist = jsonEncode(retained['checklist']);
           expect(a.sharedTextInitialized, false);
-          await a.initializeSharedTextForHistoricalFixture();
+          await a.initializeSharedText();
           final initialized = a.rows.singleWhere((row) => row['id'] == child);
           expect(
             initialized['title'],

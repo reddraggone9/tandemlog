@@ -30,7 +30,8 @@ void main() {
         expect(project(reordered), expected);
         expect(project(reordered)!['deleted'], isTrue);
       }
-      expect(events[1].toJson()['v'], 3);
+      expect(events[1].toJson()['version'], 1);
+      expect(events[1].toJson()['format'], 'tandemlog.operation');
       expect(
         () => LogEvent.decode(
           LogEvent(space, writer, 5, testClock(5, 0), id, 'task.deleted', {

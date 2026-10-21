@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crypto/crypto.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
@@ -12,7 +13,8 @@ import 'package:tandemlog/text/native_text_engine.dart';
 
 const _writer = '00000000-0000-4000-8000-000000000001';
 
-class _FaultFolder implements LogFolder, BoundedLogFolder {
+class _FaultFolder
+    implements LogFolder, BoundedLogFolder, TailTruncateLogFolder {
   _FaultFolder(this.inner);
   final LocalLogFolder inner;
   int? failAfterBytes;
@@ -25,6 +27,9 @@ class _FaultFolder implements LogFolder, BoundedLogFolder {
   @override
   Future<Uint8List> readBounded(String name, int maximumBytes) =>
       inner.readBounded(name, maximumBytes);
+  @override
+  Future<void> truncateOwnedTail(String name, Uint8List expected, int length) =>
+      inner.truncateOwnedTail(name, expected, length);
   Future<void> _write(String name, Uint8List bytes, bool create) async {
     final cut = failAfterBytes;
     failAfterBytes = null;
@@ -85,8 +90,10 @@ void main() {
     () async {
       store = await open();
       expect(store!.sharedTextInitialized, isTrue);
-      final bytes = await folder.read('$_writer.jsonl');
-      final event = LogEvent.decode(utf8.decode(bytes).trim());
+      final bytes = await folder.read('$_writer.applog');
+      final event = UnifiedRecord.decode(
+        utf8.decode(bytes).trim(),
+      ).effect.task!;
       expect(event.type, 'text.baselineInitialized');
       expect(event.entity, store!.space);
       expect(event.data['frontiers'], isEmpty);
@@ -97,7 +104,7 @@ void main() {
       profile = await LocalProfileDatabase.open('${root.path}/cold-profile');
       store = await open();
       expect(store!.sharedTextInitialized, isTrue);
-      expect(await folder.read('$_writer.jsonl'), bytes);
+      expect(await folder.read('$_writer.applog'), bytes);
       expect(store!.pendingTextOperations, isEmpty);
     },
   );
@@ -117,7 +124,7 @@ void main() {
             'description': '',
             'assignee': '00000000-0000-4000-8000-000000000003',
           });
-      final bytes = await folder.read('$_writer.jsonl');
+      final bytes = await folder.read('$_writer.applog');
       final manifest = await folder.read('tandemlog-space.json');
       await store!.close();
       store = null;
@@ -132,24 +139,22 @@ void main() {
         store!.rows.singleWhere((row) => row['kind'] == 'task')['title'],
         'Historical scalar',
       );
-      expect(await folder.read('$_writer.jsonl'), bytes);
+      expect(await folder.read('$_writer.applog'), bytes);
       expect(await folder.read('tandemlog-space.json'), manifest);
     },
   );
 
   test(
-    'an existing empty manifest is not proof of a fresh bootstrap',
+    'an empty current workspace initializes without private bootstrap state',
     () async {
       store = await open(initialize: false);
       final manifest = await folder.read('tandemlog-space.json');
       await store!.close();
       store = null;
-      await expectLater(
-        open().then((value) => store = value),
-        throwsA(isA<FormatFailure>()),
-      );
+      store = await open();
+      expect(store!.sharedTextInitialized, isTrue);
       expect(await folder.read('tandemlog-space.json'), manifest);
-      expect(await folder.list(), hasLength(1));
+      expect(store!.unified!.physicalSequence, 1);
     },
   );
 
@@ -276,11 +281,10 @@ void main() {
     },
   );
 
-  for (final cut in [0, 71]) {
+  for (final cut in [0, 71, 1000000]) {
     test(
-      'uncertain bootstrap at $cut bytes resumes its exact protected receipt',
+      'uncertain bootstrap cut=$cut restarts from canonical bytes without saved intent',
       () async {
-        // Fail the first canonical record, not the manifest creation.
         final fault = _RecordFaultFolder(folder.inner, cut);
         await expectLater(
           TaskStore.open(
@@ -293,33 +297,38 @@ void main() {
           ).then((value) => store = value),
           throwsStateError,
         );
-        final pending = profile.database.select(
-          'SELECT raw FROM protected_text_intents',
+        final partial = await folder.read('$_writer.applog');
+        final complete = partial.isNotEmpty && partial.last == 10;
+        expect(
+          profile.database.select(
+            "SELECT name FROM sqlite_schema WHERE name='protected_app_outbox'",
+          ),
+          isEmpty,
         );
-        expect(pending, hasLength(1));
-        final receipt = List<int>.from(pending.single['raw'] as List);
         await profile.close();
         profile = await LocalProfileDatabase.open('${root.path}/profile');
-        if (cut > 0) {
-          await expectLater(open(), throwsA(isA<HistoryVerificationFailure>()));
-          expect(await folder.read('$_writer.jsonl'), receipt.sublist(0, cut));
-          expect(
-            profile.database
-                .select('SELECT raw FROM protected_text_intents')
-                .single['raw'],
-            receipt,
-          );
-          // Synthetic recovery restores only the missing exact tail; opening
-          // itself must never rewrite an incomplete canonical record.
-          await folder.append(
-            '$_writer.jsonl',
-            Uint8List.fromList([...receipt.sublist(cut), 10]),
-          );
-        }
+        store = await open(initialize: false);
+        expect(
+          await folder.read('$_writer.applog'),
+          partial,
+          reason:
+              'Read-only open cannot resume or clean an abandoned root write.',
+        );
+        expect(store!.sharedTextInitialized, complete);
+        expect(store!.pendingTextOperations, isEmpty);
+        await store!.close();
+        store = null;
         store = await open();
         expect(store!.sharedTextInitialized, isTrue);
-        expect(await folder.read('$_writer.jsonl'), [...receipt, 10]);
-        expect(store!.pendingTextOperations, isEmpty);
+        final records = const LineSplitter().convert(
+          utf8.decode(await folder.read('$_writer.applog')),
+        );
+        expect(records, hasLength(1));
+        expect(
+          UnifiedRecord.decode(records.single).effects.single.task!.type,
+          'text.baselineInitialized',
+        );
+        if (complete) expect(await folder.read('$_writer.applog'), partial);
       },
     );
   }
@@ -330,13 +339,13 @@ class _RecordFaultFolder extends _FaultFolder {
   final int cut;
   @override
   Future<void> create(String name, Uint8List bytes) {
-    if (name.endsWith('.jsonl')) failAfterBytes = cut;
+    if (name.endsWith('.applog')) failAfterBytes = cut;
     return super.create(name, bytes);
   }
 
   @override
   Future<void> append(String name, Uint8List bytes) {
-    if (name.endsWith('.jsonl')) failAfterBytes = cut;
+    if (name.endsWith('.applog')) failAfterBytes = cut;
     return super.append(name, bytes);
   }
 }

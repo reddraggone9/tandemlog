@@ -86,7 +86,9 @@ void main() {
         );
         final bytes =
             store.db
-                    .select('SELECT SUM(length(state)) AS n FROM text_fields')
+                    .select(
+                      'SELECT SUM(length(state)) AS n FROM ${store.tables.textFields}',
+                    )
                     .single['n']
                 as int;
         expect(
@@ -110,7 +112,11 @@ void main() {
           '${root.path}/profile',
           textEngine: engine,
         );
-        expect(store.readFiles, 0);
+        expect(
+          store.readFiles,
+          greaterThan(0),
+          reason: 'Current admission revalidates canonical bytes',
+        );
         expect(jsonEncode(store.taskSnapshot), snapshot);
         await store.close();
         store = await TaskStore.open(

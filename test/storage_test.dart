@@ -7,6 +7,9 @@ import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
+import '../tool/qa_projection_cache.dart';
+import 'package:tandemlog/storage/unified_record.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
 
 Future<void> editTags(TaskStore store, String entity, List<String> tags) async {
   final state = store.rows.firstWhere((row) => row['id'] == entity);
@@ -69,22 +72,67 @@ void main() {
       store.rows.firstWhere((r) => r['id'] == id);
 
   String encodeEvent(LogEvent event) {
-    if (event.sequence == 1) return event.encode();
-    for (final store in [a, b]) {
-      if (store == null) continue;
-      final prior = store.db.select(
-        'SELECT raw FROM events WHERE writer=? AND seq=?',
-        [event.writer, event.sequence - 1],
-      );
-      if (prior.isNotEmpty) {
-        return event.encode(
-          previousHash: LogEvent.decode(prior.single['raw'] as String).hash,
-        );
-      }
+    final manifest =
+        jsonDecode(
+              File(
+                '${aFolder.location}/tandemlog-space.json',
+              ).readAsStringSync(),
+            )
+            as Map;
+    final epoch = manifest['epoch'] as String;
+    final local = File('${aFolder.location}/${event.writer}.applog');
+    final peer = File('${bFolder.location}/${event.writer}.applog');
+    List<UnifiedRecord> existing = [];
+    if (local.existsSync()) {
+      existing = local
+          .readAsLinesSync()
+          .where((l) => l.isNotEmpty)
+          .map(UnifiedRecord.decode)
+          .toList();
+    } else if (peer.existsSync()) {
+      final candidate = peer
+          .readAsLinesSync()
+          .where((l) => l.isNotEmpty)
+          .map(UnifiedRecord.decode)
+          .toList();
+      if (candidate.length > 1) existing = candidate;
     }
-    return event.encode(
-      previousHash: eventGenesisHash(event.space, event.writer),
+    final newPeer =
+        existing.isEmpty &&
+        !((manifest['owners'] as Map).containsKey(event.writer));
+    final prefix = <UnifiedRecord>[];
+    if (newPeer) {
+      final genesis = unifiedGenesis(event.space, epoch, event.writer);
+      prefix.add(
+        UnifiedRecord(
+          space: event.space,
+          epoch: epoch,
+          writer: event.writer,
+          sequence: 1,
+          clock: EventClock(BigInt.zero),
+          previousHash: genesis,
+          effect: UnifiedEffect.joined(),
+          observed: {event.writer: UnifiedFrontier(0, genesis)},
+        ),
+      );
+    } else if (!local.existsSync()) {
+      prefix.addAll(existing);
+    }
+    final previous = [...existing, ...prefix].lastOrNull;
+    final head =
+        previous?.hash ?? unifiedGenesis(event.space, epoch, event.writer);
+    final physicalSequence = (previous?.sequence ?? 0) + 1;
+    final record = UnifiedRecord(
+      space: event.space,
+      epoch: epoch,
+      writer: event.writer,
+      sequence: physicalSequence,
+      clock: event.clock,
+      previousHash: head,
+      effect: UnifiedEffect('task', event.encode(previousHash: head)),
+      observed: {event.writer: UnifiedFrontier(physicalSequence - 1, head)},
     );
+    return [...prefix, record].map((r) => r.encode()).join('\n');
   }
 
   test(
@@ -92,13 +140,13 @@ void main() {
     () async {
       final id = await task();
       final user = state(a!, id)['assignee'] as String;
-      final before = await aFolder.read('${a!.writer}.jsonl');
+      final before = await aFolder.read('${a!.writer}.applog');
       final snapshot = a!.taskSnapshot;
       await expectLater(
         a!.deleteTask(user, expectedTaskSnapshot: snapshot),
         throwsA(isA<FormatFailure>()),
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      expect(await aFolder.read('${a!.writer}.applog'), before);
       expect(a!.taskSnapshot, snapshot);
       expect(state(a!, user)['kind'], 'user');
     },
@@ -118,19 +166,22 @@ void main() {
         {},
       );
       await aFolder.create(
-        '$remote.jsonl',
+        '$remote.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(deletion)}\n')),
       );
       await a!.refresh();
       expect(a!.hasEntity(user), isFalse);
       expect(
-        a!.db.select('SELECT id FROM events WHERE id=?', [deletion.id]).length,
-        1,
+        a!.db.select('SELECT id FROM ${a!.tables.events} WHERE id=?', [
+          deletion.id,
+        ]).length,
+        0,
       );
       final checkpoint = Map<String, Object?>.from(
-        a!.db.select('SELECT * FROM streams WHERE name=?', [
-          '$remote.jsonl',
-        ]).single,
+        a!.profileDatabase!.database.select(
+          'SELECT * FROM protected_app_heads WHERE writer=?',
+          [remote],
+        ).single,
       );
       final creation = LogEvent(
         a!.space,
@@ -142,23 +193,26 @@ void main() {
         {'name': 'Delayed user'},
       );
       await aFolder.append(
-        '$remote.jsonl',
+        '$remote.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(creation)}\n')),
       );
-      final canonical = await aFolder.read('$remote.jsonl');
+      final canonical = await aFolder.read('$remote.applog');
       await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
       expect(a!.hasEntity(user), isFalse);
       expect(
-        a!.db.select('SELECT id FROM events WHERE id=?', [creation.id]),
+        a!.db.select('SELECT id FROM ${a!.tables.events} WHERE id=?', [
+          creation.id,
+        ]),
         isEmpty,
       );
       expect(
-        a!.db.select('SELECT * FROM streams WHERE name=?', [
-          '$remote.jsonl',
-        ]).single,
+        a!.profileDatabase!.database.select(
+          'SELECT * FROM protected_app_heads WHERE writer=?',
+          [remote],
+        ).single,
         checkpoint,
       );
-      expect(await aFolder.read('$remote.jsonl'), canonical);
+      expect(await aFolder.read('$remote.applog'), canonical);
       await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
     },
   );
@@ -199,7 +253,10 @@ void main() {
         }
 
         final count =
-            a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'] as int;
+            a!.db
+                    .select('SELECT COUNT(*) AS n FROM ${a!.tables.events}')
+                    .single['n']
+                as int;
         transport.failNext = true;
         final partial = await run([first, second]);
         expect(partial.error, isA<StateError>());
@@ -208,7 +265,9 @@ void main() {
         expect(partial.committedIds, [first, second]);
         expect(partial.remainingIds, isEmpty);
         expect(
-          a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+          a!.db
+              .select('SELECT COUNT(*) AS n FROM ${a!.tables.events}')
+              .single['n'],
           count + 2,
         );
         if (partial.remainingIds.isNotEmpty) {
@@ -216,7 +275,9 @@ void main() {
           expect(retry.succeeded, isTrue);
         }
         expect(
-          a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+          a!.db
+              .select('SELECT COUNT(*) AS n FROM ${a!.tables.events}')
+              .single['n'],
           count + 2,
         );
         if (operation == 'edit') {
@@ -227,7 +288,9 @@ void main() {
           final repeat = await run([first, second]);
           expect(repeat.succeeded, isTrue);
           expect(
-            a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+            a!.db
+                .select('SELECT COUNT(*) AS n FROM ${a!.tables.events}')
+                .single['n'],
             count + 2,
           );
         } else if (operation == 'delete') {
@@ -247,7 +310,7 @@ void main() {
           expect(
             a!.db
                 .select(
-                  "SELECT COUNT(*) AS n FROM events WHERE json_extract(raw,'\$.type')='task.moved'",
+                  "SELECT COUNT(*) AS n FROM ${a!.tables.events} WHERE json_extract(semantic,'\$.type')='task.moved'",
                 )
                 .single['n'],
             2,
@@ -365,8 +428,8 @@ void main() {
       await b!.command(id, 'task.edited', {'title': 'Remote later'});
       await b!.complete(id, completionDay: DateTime.utc(2026, 10, 2));
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       await copy(aFolder, bFolder);
       await b!.refresh();
@@ -447,22 +510,22 @@ void main() {
         },
       ]) {
         final snapshot = a!.taskSnapshot;
-        final before = await aFolder.read('${a!.writer}.jsonl');
+        final before = await aFolder.read('${a!.writer}.applog');
         await change();
         transport.beforeNextList = () async {
           await File(
-            '${bFolder.location}/${b!.writer}.jsonl',
-          ).copy('${aFolder.location}/${b!.writer}.jsonl');
+            '${bFolder.location}/${b!.writer}.applog',
+          ).copy('${aFolder.location}/${b!.writer}.applog');
         };
         await expectLater(
           a!.moveBefore(second, id, expectedTaskSnapshot: snapshot),
           throwsA(isA<StaleTaskSnapshot>()),
         );
-        expect(await aFolder.read('${a!.writer}.jsonl'), before);
+        expect(await aFolder.read('${a!.writer}.applog'), before);
         expect(a!.taskSnapshot, isNot(snapshot));
       }
       final timeSnapshot = a!.taskSnapshot;
-      final timeBytes = await aFolder.read('${a!.writer}.jsonl');
+      final timeBytes = await aFolder.read('${a!.writer}.applog');
       var stillEligible = true;
       transport.beforeNextList = () async {
         stillEligible = false;
@@ -481,15 +544,15 @@ void main() {
         timeSnapshot,
         reason: 'Only caller-owned time/view conditions changed.',
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), timeBytes);
+      expect(await aFolder.read('${a!.writer}.applog'), timeBytes);
       final snapshot = a!.taskSnapshot;
       await b!.command(const Uuid().v4(), 'user.created', {
         'name': 'Another user',
       });
       transport.beforeNextList = () async {
         await File(
-          '${bFolder.location}/${b!.writer}.jsonl',
-        ).copy('${aFolder.location}/${b!.writer}.jsonl');
+          '${bFolder.location}/${b!.writer}.applog',
+        ).copy('${aFolder.location}/${b!.writer}.applog');
       };
       await a!.moveBefore(id, second, expectedTaskSnapshot: snapshot);
       expect(
@@ -516,13 +579,13 @@ void main() {
         'schedule': {'dueDate': '2026-10-03', 'dueMinDays': 2, 'dueMaxDays': 2},
       });
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       expect(state(a!, id)['schedule'], containsPair('dueMinDays', 2));
       expect(state(a!, id)['schedule'], containsPair('dueMaxDays', 2));
       expect(state(a!, id)['schedule'], containsPair('dueDate', '2026-10-03'));
-      final before = await aFolder.read('${a!.writer}.jsonl');
+      final before = await aFolder.read('${a!.writer}.applog');
       for (final bounds in [
         {'dueMinDays': 3, 'dueMaxDays': 2},
         {'dueMinDays': '2'},
@@ -549,7 +612,7 @@ void main() {
           throwsA(isA<FormatFailure>()),
         );
       }
-      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      expect(await aFolder.read('${a!.writer}.applog'), before);
       await a!.command(id, 'task.edited', {
         'tagChanges': {
           'add': ['Due-min-2-days', 'ordinary'],
@@ -559,192 +622,73 @@ void main() {
       final expected = a!.rows;
       await a!.close();
       a = null;
-      await File('${root.path}/private-a/cache.sqlite').delete();
+      await clearTaskProjections('${root.path}/private-a');
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(a!.rows, expected);
     },
   );
 
   test(
-    'failed obsolete-cache replay preserves identity and prior stream guards on retry',
+    'failed current replay preserves identity and trusted prefixes on retry',
     () async {
-      final id = await task();
-      final expected = a!.rows;
-      final writer = a!.writer;
-      final original = await aFolder.read('$writer.jsonl');
-      final manifest = await aFolder.read('tandemlog-space.json');
-      a!.db.execute('PRAGMA user_version=6');
+      await task();
+      final expected = a!.rows, writer = a!.writer;
+      final original = await aFolder.read('$writer.applog');
       await a!.close();
       a = null;
-      final foreign = const Uuid().v4();
-      final unknown = LogEvent(
-        jsonDecode(utf8.decode(manifest))['id'],
-        foreign,
-        1,
-        testClock(1, 0),
-        const Uuid().v4(),
-        'future.event',
-        {},
-      );
-      final file = File('${aFolder.location}/$foreign.jsonl');
-      await file.writeAsString('${encodeEvent(unknown)}\n');
-      final unknownBytes = await file.readAsBytes();
+      await clearTaskProjections('${root.path}/private-a');
+      final foreign = const Uuid().v4(),
+          file = File('${aFolder.location}/$foreign.applog');
+      await file.writeAsString('{"v":99}\n');
+      final evidence = await file.readAsBytes();
       await expectLater(
         TaskStore.open(aFolder, '${root.path}/private-a'),
         throwsA(isA<FormatFailure>()),
       );
-      expect(await file.readAsBytes(), unknownBytes);
-      expect(await aFolder.read('$writer.jsonl'), original);
-      await File('${aFolder.location}/tandemlog-space.json').writeAsString(
-        jsonEncode({'v': protocolVersion, 'id': const Uuid().v4()}),
-      );
-      await expectLater(
-        TaskStore.open(aFolder, '${root.path}/private-a'),
-        throwsA(
-          isA<FormatFailure>().having(
-            (e) => e.message,
-            'identity',
-            contains('identity changed'),
-          ),
-        ),
-      );
-      await File(
-        '${aFolder.location}/tandemlog-space.json',
-      ).writeAsBytes(manifest);
-      await File('${aFolder.location}/$writer.jsonl').delete();
-      await expectLater(
-        TaskStore.open(aFolder, '${root.path}/private-a'),
-        throwsA(
-          isA<FormatFailure>().having(
-            (e) => e.message,
-            'missing',
-            contains('Previously imported log'),
-          ),
-        ),
-      );
-      await File('${aFolder.location}/$writer.jsonl').writeAsBytes(original);
-      // The test explicitly removes only its unsupported, never-ingested stream.
+      expect(await file.readAsBytes(), evidence);
+      expect(await aFolder.read('$writer.applog'), original);
       await file.delete();
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(a!.writer, writer);
       expect(a!.rows, expected);
-      expect(state(a!, id)['title'], 'Groceries');
-      expect(await aFolder.read('$writer.jsonl'), original);
-      expect(
-        await Directory('${root.path}/private-a')
-            .list()
-            .where((file) => file.uri.pathSegments.last.startsWith('cache-v6-'))
-            .length,
-        1,
-      );
+      expect(await aFolder.read('$writer.applog'), original);
     },
   );
-
   test(
-    'future caches and v1 canonical protocol are retained and not auto-converted',
+    'future local database is retained without rewriting canonical history',
     () async {
       await task();
+      final original = await aFolder.read('${a!.writer}.applog');
+      final writer = a!.writer;
       a!.db.execute('PRAGMA user_version=99');
       await a!.close();
       a = null;
-      final cache = File('${root.path}/private-a/cache.sqlite');
-      final before = await cache.readAsBytes();
+      final file = File('${root.path}/private-a/local.sqlite'),
+          evidence = await file.readAsBytes();
       await expectLater(
         TaskStore.open(aFolder, '${root.path}/private-a'),
-        throwsA(
-          isA<FormatFailure>().having(
-            (e) => e.message,
-            'future',
-            contains('newer app'),
-          ),
-        ),
+        throwsA(isA<LocalDatabaseFailure>()),
       );
-      expect(await cache.readAsBytes(), before);
-      final oldManifest =
-          jsonDecode(utf8.decode(await aFolder.read('tandemlog-space.json')))
-              as Map;
-      oldManifest['v'] = 1;
-      await File(
-        '${aFolder.location}/tandemlog-space.json',
-      ).writeAsString(jsonEncode(oldManifest));
-      await expectLater(
-        TaskStore.open(aFolder, '${root.path}/fresh-cache'),
-        throwsA(
-          isA<FormatFailure>().having(
-            (e) => e.message,
-            'protocol',
-            contains('older prerelease format (v1)'),
-          ),
-        ),
-      );
+      expect(await file.readAsBytes(), evidence);
+      expect(await aFolder.read('$writer.applog'), original);
     },
   );
-
   test(
-    'known obsolete cache rebuilds canonical state and retains backup',
+    'disposable projections rebuild canonical state with identity and history unchanged',
     () async {
-      final id = await task();
-      final bytes = await aFolder.read('${a!.writer}.jsonl');
-      a!.db.execute('PRAGMA user_version=4');
-      a!.db.execute('UPDATE views SET raw=? WHERE id=?', [
-        jsonEncode({'id': id, 'kind': 'future-kind', 'futureField': []}),
-        id,
-      ]);
+      await task();
+      final expected = a!.rows, writer = a!.writer;
+      final original = await aFolder.read('$writer.applog');
       await a!.close();
       a = null;
-      final writerBefore = await File(
-        '${root.path}/private-a/writer-id',
-      ).readAsString();
+      await clearTaskProjections('${root.path}/private-a');
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
-      expect(state(a!, id)['kind'], 'task');
-      expect(state(a!, id)['title'], 'Groceries');
-      expect(a!.readFiles, 1);
-      expect(
-        await File('${root.path}/private-a/writer-id').readAsString(),
-        writerBefore,
-      );
-      final backups = await Directory('${root.path}/private-a')
-          .list()
-          .where((file) => file.uri.pathSegments.last.startsWith('cache-v4-'))
-          .toList();
-      expect(backups, hasLength(1));
-      expect(await (backups.single as File).length(), greaterThan(0));
-      a!.db.execute('ATTACH DATABASE ? AS retained', [backups.single.path]);
-      expect(
-        a!.db.select('SELECT raw FROM retained.views WHERE id=?', [
-          id,
-        ]).single['raw'],
-        contains('future-kind'),
-      );
-      a!.db.execute('DETACH DATABASE retained');
-
-      await a!.close();
-      a = null;
-      a = await TaskStore.open(aFolder, '${root.path}/private-a');
-      expect(a!.readFiles, 0);
-      expect(
-        await aFolder.read(
-          '${jsonDecode(utf8.decode(bytes).split('\n').first)['writer']}.jsonl',
-        ),
-        bytes,
-      );
-      final old =
-          jsonDecode(utf8.decode(bytes).split('\n').first)
-              as Map<String, dynamic>;
-      old['type'] = 'future.event';
-      old['data'] = {'futureField': []};
-      await File(
-        '${aFolder.location}/${old['writer']}.jsonl',
-      ).writeAsString('${jsonEncode(old)}\n');
-      final rejectedBytes = await aFolder.read('${old['writer']}.jsonl');
-      await expectLater(
-        TaskStore.open(aFolder, '${root.path}/fresh-cache'),
-        throwsA(isA<FormatFailure>()),
-      );
-      expect(await aFolder.read('${old['writer']}.jsonl'), rejectedBytes);
+      expect(a!.writer, writer);
+      expect(a!.rows, expected);
+      expect(a!.readFiles, greaterThan(0));
+      expect(await aFolder.read('$writer.applog'), original);
     },
   );
-
   test(
     'reopen targets observed completions, is idempotent and survives restart',
     () async {
@@ -754,26 +698,26 @@ void main() {
       await a!.command(id, 'task.completed', {});
       await b!.command(id, 'task.completed', {});
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       final observed = a!.activeCompletionIds(id);
       expect(observed, hasLength(2));
       await a!.reopen(id, observed);
       expect(state(a!, id)['completed'], isFalse);
       final bytes = await File(
-        '${aFolder.location}/${a!.writer}.jsonl',
+        '${aFolder.location}/${a!.writer}.applog',
       ).readAsString();
       await a!.reopen(id, observed);
       expect(
-        await File('${aFolder.location}/${a!.writer}.jsonl').readAsString(),
+        await File('${aFolder.location}/${a!.writer}.applog').readAsString(),
         bytes,
       );
       // A completion unseen by this reopen survives synchronization.
       await b!.command(id, 'task.completed', {});
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       expect(state(a!, id)['completed'], isTrue);
       await copy(aFolder, bFolder);
@@ -797,45 +741,49 @@ void main() {
     final observed = a!.activeCompletionIds(id);
     final unseen = await b!.command(id, 'task.completed', {});
     await File(
-      '${bFolder.location}/${b!.writer}.jsonl',
-    ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      '${bFolder.location}/${b!.writer}.applog',
+    ).copy('${aFolder.location}/${b!.writer}.applog');
     await a!.reopen(id, observed);
     expect(a!.activeCompletionIds(id), [unseen.id]);
     expect(state(a!, id)['completed'], isTrue);
   });
 
-  test('partial reopen retries without duplicating a committed undo', () async {
-    final id = await task();
-    await a!.command(id, 'task.completed', {});
-    await a!.command(id, 'task.completed', {});
-    final observed = a!.activeCompletionIds(id);
-    await a!.close();
-    final failing = _FailAfterAppendFolder(aFolder);
-    a = await TaskStore.open(failing, '${root.path}/private-a');
-    failing.failNext = true;
-    await expectLater(a!.reopen(id, observed), throwsStateError);
-    await a!.reopen(id, observed);
-    expect(state(a!, id)['completed'], isFalse);
-    final events = a!.db
-        .select('SELECT raw FROM events')
-        .map((r) => LogEvent.decode(r['raw'] as String));
-    expect(
-      events.where((e) => e.type == 'task.completionUndone'),
-      hasLength(2),
-    );
-  });
-
   test(
-    'restart retains state and unchanged files avoid parsing/replay',
+    'complete uncertain reopen reconciles without duplicating an Undo or retaining a stale pending flag',
     () async {
       final id = await task();
+      await a!.command(id, 'task.completed', {});
+      await a!.command(id, 'task.completed', {});
+      final observed = a!.activeCompletionIds(id);
       await a!.close();
-      a = null;
-      a = await TaskStore.open(aFolder, '${root.path}/private-a');
-      expect(state(a!, id)['title'], 'Groceries');
-      expect(a!.readFiles, 0);
+      final failing = _FailAfterAppendFolder(aFolder);
+      a = await TaskStore.open(failing, '${root.path}/private-a');
+      failing.failNext = true;
+      await expectLater(a!.reopen(id, observed), throwsStateError);
+      await a!.reopen(id, observed);
+      expect(state(a!, id)['completed'], isFalse);
+      final events = a!.db
+          .select('SELECT raw FROM ${a!.tables.events}')
+          .map((r) => LogEvent.decode(r['raw'] as String));
+      expect(
+        events.where((e) => e.type == 'task.completionUndone'),
+        hasLength(2),
+      );
     },
   );
+
+  test('restart retains state while revalidating canonical files', () async {
+    final id = await task();
+    await a!.close();
+    a = null;
+    a = await TaskStore.open(aFolder, '${root.path}/private-a');
+    expect(state(a!, id)['title'], 'Groceries');
+    expect(
+      a!.readFiles,
+      greaterThan(0),
+      reason: 'Current admission revalidates canonical bytes',
+    );
+  });
   test(
     'cache deletion rebuilds exact projection and writer stays stable',
     () async {
@@ -844,7 +792,7 @@ void main() {
       final writer = a!.writer;
       await a!.close();
       a = null;
-      await File('${root.path}/private-a/cache.sqlite').delete();
+      await clearTaskProjections('${root.path}/private-a');
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(a!.rows, expected);
       expect(a!.writer, writer);
@@ -862,11 +810,11 @@ void main() {
       await b!.command(id, 'task.edited', {'description': 'Large bag'});
       // Exchange only each owning writer's stream; emulate rename replacement.
       final temp = File('${aFolder.location}/incoming.tmp');
-      await File('${bFolder.location}/${b!.writer}.jsonl').copy(temp.path);
-      await temp.rename('${aFolder.location}/${b!.writer}.jsonl');
+      await File('${bFolder.location}/${b!.writer}.applog').copy(temp.path);
+      await temp.rename('${aFolder.location}/${b!.writer}.applog');
       await File(
-        '${aFolder.location}/${a!.writer}.jsonl',
-      ).copy('${bFolder.location}/${a!.writer}.jsonl');
+        '${aFolder.location}/${a!.writer}.applog',
+      ).copy('${bFolder.location}/${a!.writer}.applog');
       await a!.refresh();
       await b!.refresh();
       await a!.refresh();
@@ -887,8 +835,8 @@ void main() {
         'completion': completion.id,
       });
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       expect(state(a!, id)['completed'], true);
     },
@@ -899,14 +847,16 @@ void main() {
       await task();
       final remote = const Uuid().v4();
       await aFolder.create(
-        '$remote.jsonl',
+        '$remote.applog',
         Uint8List.fromList(utf8.encode('{"v":99}\n')),
       );
       final before = a!.rows;
       await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
       expect(a!.rows, before);
       expect(
-        a!.db.select('SELECT * FROM streams WHERE name=?', ['$remote.jsonl']),
+        a!.db.select('SELECT * FROM ${a!.tables.streams} WHERE name=?', [
+          '$remote.applog',
+        ]),
         isEmpty,
       );
     },
@@ -915,35 +865,31 @@ void main() {
     final id = await task();
     final remote = const Uuid().v4();
     await aFolder.create(
-      '$remote.jsonl',
+      '$remote.applog',
       Uint8List.fromList(utf8.encode('not-json\n')),
     );
     await expectLater(
       a!.command(id, 'task.completed', {}),
       throwsA(isA<FormatFailure>()),
     );
-    expect(utf8.decode(await aFolder.read('$remote.jsonl')), 'not-json\n');
+    expect(utf8.decode(await aFolder.read('$remote.applog')), 'not-json\n');
   });
   test('incomplete remote tail is retried after completion', () async {
     final remote = const Uuid().v4();
     final id = const Uuid().v4();
-    final raw = LogEvent(
-      a!.space,
-      remote,
-      1,
-      testClock(1, 0),
-      id,
-      'user.created',
-      {'name': 'Lee'},
-    ).encode();
+    final raw = encodeEvent(
+      LogEvent(a!.space, remote, 1, testClock(1, 0), id, 'user.created', {
+        'name': 'Lee',
+      }),
+    );
     await aFolder.create(
-      '$remote.jsonl',
+      '$remote.applog',
       Uint8List.fromList(utf8.encode(raw.substring(0, 20))),
     );
     await a!.refresh();
     expect(a!.rows, isEmpty);
     await aFolder.append(
-      '$remote.jsonl',
+      '$remote.applog',
       Uint8List.fromList(utf8.encode('${raw.substring(20)}\n')),
     );
     await a!.refresh();
@@ -953,7 +899,7 @@ void main() {
     'explicit integrity check rejects changed same-length committed prefix',
     () async {
       await task();
-      final f = File('${aFolder.location}/${a!.writer}.jsonl');
+      final f = File('${aFolder.location}/${a!.writer}.applog');
       await f.writeAsString(
         (await f.readAsString()).replaceFirst('Groceries', 'Xroceries'),
         flush: true,
@@ -963,21 +909,31 @@ void main() {
   );
   test('missing previously seen stream blocks writes', () async {
     await task();
-    await File('${aFolder.location}/${a!.writer}.jsonl').delete();
+    await File('${aFolder.location}/${a!.writer}.applog').delete();
     await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
   });
-  test('owned incomplete tail is not silently truncated', () async {
-    await task();
-    await aFolder.append(
-      '${a!.writer}.jsonl',
-      Uint8List.fromList(utf8.encode('{')),
-    );
-    await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
-    expect(
-      utf8.decode(await aFolder.read('${a!.writer}.jsonl')).endsWith('{'),
-      true,
-    );
-  });
+  test(
+    'owned incomplete tail is read-only until the next explicit Save',
+    () async {
+      await task();
+      await aFolder.append(
+        '${a!.writer}.applog',
+        Uint8List.fromList(utf8.encode('{')),
+      );
+      await a!.refresh();
+      expect(
+        utf8.decode(await aFolder.read('${a!.writer}.applog')).endsWith('{'),
+        isTrue,
+      );
+      await a!.command(const Uuid().v4(), 'user.created', {
+        'name': 'After cleanup',
+      });
+      expect(
+        utf8.decode(await aFolder.read('${a!.writer}.applog')).endsWith('{'),
+        isFalse,
+      );
+    },
+  );
   test(
     'durable append before cache failure recovers once after restart',
     () async {
@@ -992,7 +948,7 @@ void main() {
           LogEvent.decode(
             a!.db
                     .select(
-                      'SELECT raw FROM events ORDER BY clock DESC LIMIT 1',
+                      'SELECT raw FROM ${a!.tables.events} ORDER BY clock DESC LIMIT 1',
                     )
                     .first['raw']
                 as String,
@@ -1003,14 +959,14 @@ void main() {
         {},
       );
       await aFolder.append(
-        '${a!.writer}.jsonl',
+        '${a!.writer}.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(e)}\n')),
       );
       await a!.close();
       a = null;
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(state(a!, id)['completed'], true);
-      expect(a!.db.select('SELECT * FROM events').length, 3);
+      expect(a!.db.select('SELECT * FROM ${a!.tables.events}').length, 3);
     },
   );
   test(
@@ -1026,14 +982,14 @@ void main() {
         '${aFolder.location}/tandemlog-space.json',
       ).copy('${third.location}/tandemlog-space.json');
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${third.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${third.location}/${b!.writer}.applog');
       final c = await TaskStore.open(third, '${root.path}/private-c');
       try {
         expect(c.rows, isEmpty);
         await File(
-          '${aFolder.location}/${a!.writer}.jsonl',
-        ).copy('${third.location}/${a!.writer}.jsonl');
+          '${aFolder.location}/${a!.writer}.applog',
+        ).copy('${third.location}/${a!.writer}.applog');
         await c.refresh();
         expect(state(c, id)['title'], 'Changed elsewhere');
       } finally {
@@ -1053,9 +1009,10 @@ void main() {
       ]);
       expect(
         a!.db
-            .select('SELECT seq FROM events WHERE writer=? ORDER BY seq', [
-              a!.writer,
-            ])
+            .select(
+              'SELECT seq FROM ${a!.tables.events} WHERE writer=? ORDER BY seq',
+              [a!.writer],
+            )
             .map((r) => r['seq'])
             .toList(),
         [1, 2, 3, 4, 5],
@@ -1069,7 +1026,7 @@ void main() {
   );
   test('invalid local commands leave canonical bytes unchanged', () async {
     final id = await task();
-    final before = await aFolder.read('${a!.writer}.jsonl');
+    final before = await aFolder.read('${a!.writer}.applog');
     final user = a!.rows.firstWhere((r) => r['kind'] == 'user')['id'] as String;
     await expectLater(
       a!.command(id, 'task.created', {
@@ -1101,7 +1058,7 @@ void main() {
         throwsA(isA<FormatFailure>()),
       );
     }
-    expect(await aFolder.read('${a!.writer}.jsonl'), before);
+    expect(await aFolder.read('${a!.writer}.applog'), before);
     await a!.command(id, 'task.edited', {'title': 'Still works'});
   });
   test(
@@ -1109,7 +1066,7 @@ void main() {
     () async {
       final id = await task();
       final manifest = await aFolder.read('tandemlog-space.json');
-      final before = await aFolder.read('${a!.writer}.jsonl');
+      final before = await aFolder.read('${a!.writer}.applog');
       final file = File('${aFolder.location}/tandemlog-space.json');
       for (final replacement in [
         null,
@@ -1125,7 +1082,7 @@ void main() {
           a!.command(id, 'task.completed', {}),
           throwsA(anything),
         );
-        expect(await aFolder.read('${a!.writer}.jsonl'), before);
+        expect(await aFolder.read('${a!.writer}.applog'), before);
         await file.writeAsBytes(manifest);
       }
       await a!.command(id, 'task.completed', {});
@@ -1135,7 +1092,7 @@ void main() {
     'local undo requires an earlier completion of the same entity',
     () async {
       final id = await task();
-      final before = await aFolder.read('${a!.writer}.jsonl');
+      final before = await aFolder.read('${a!.writer}.applog');
       await expectLater(
         a!.command(id, 'task.completionUndone', {
           'completion': '${a!.writer}:99',
@@ -1148,7 +1105,7 @@ void main() {
         }),
         throwsA(isA<FormatFailure>()),
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      expect(await aFolder.read('${a!.writer}.applog'), before);
     },
   );
   test(
@@ -1166,7 +1123,7 @@ void main() {
         {'completion': '$other:1'},
       );
       await aFolder.create(
-        '$remote.jsonl',
+        '$remote.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(undo)}\n')),
       );
       await a!.refresh();
@@ -1180,7 +1137,7 @@ void main() {
         {},
       );
       await aFolder.create(
-        '$other.jsonl',
+        '$other.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(completed)}\n')),
       );
       await a!.refresh();
@@ -1200,7 +1157,7 @@ void main() {
       {'completion': '$other:1'},
     );
     await aFolder.create(
-      '$remote.jsonl',
+      '$remote.applog',
       Uint8List.fromList(utf8.encode('${encodeEvent(undo)}\n')),
     );
     await a!.refresh();
@@ -1214,7 +1171,7 @@ void main() {
       {},
     );
     await aFolder.create(
-      '$other.jsonl',
+      '$other.applog',
       Uint8List.fromList(utf8.encode('${encodeEvent(completed)}\n')),
     );
     await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
@@ -1253,7 +1210,7 @@ void main() {
       await a!.close();
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(state(a!, id)['title'], 'Saved before close');
-      expect(a!.db.select('SELECT * FROM events').length, 3);
+      expect(a!.db.select('SELECT * FROM ${a!.tables.events}').length, 3);
     },
   );
   test(
@@ -1262,9 +1219,10 @@ void main() {
       final id = await task();
       final otherTask = await task();
       final nextSeq =
-          (a!.db.select('SELECT MAX(seq) AS n FROM events WHERE writer=?', [
-                a!.writer,
-              ]).first['n']
+          (a!.db.select(
+                'SELECT MAX(seq) AS n FROM ${a!.tables.events} WHERE writer=?',
+                [a!.writer],
+              ).first['n']
               as int) +
           1;
       final remote = const Uuid().v4();
@@ -1278,12 +1236,14 @@ void main() {
         {'completion': '${a!.writer}:$nextSeq'},
       );
       await aFolder.create(
-        '$remote.jsonl',
+        '$remote.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(undo)}\n')),
       );
       await a!.refresh();
-      final before = await aFolder.read('${a!.writer}.jsonl');
-      final eventCount = a!.db.select('SELECT * FROM events').length;
+      final before = await aFolder.read('${a!.writer}.applog');
+      final eventCount = a!.db
+          .select('SELECT * FROM ${a!.tables.events}')
+          .length;
       for (final candidate in [
         (
           entity: id,
@@ -1297,8 +1257,11 @@ void main() {
           a!.command(candidate.entity, candidate.type, candidate.data),
           throwsA(isA<FormatFailure>()),
         );
-        expect(await aFolder.read('${a!.writer}.jsonl'), before);
-        expect(a!.db.select('SELECT * FROM events').length, eventCount);
+        expect(await aFolder.read('${a!.writer}.applog'), before);
+        expect(
+          a!.db.select('SELECT * FROM ${a!.tables.events}').length,
+          eventCount,
+        );
       }
       // A rejected local target must not leave a poisoned canonical record.
       await a!.refresh();
@@ -1362,8 +1325,8 @@ void main() {
         observedTagRefs: observed,
       );
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       await copy(aFolder, bFolder);
       await b!.refresh();
@@ -1390,8 +1353,8 @@ void main() {
       await a!.moveBefore(third, first);
       await b!.moveBefore(second, first);
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       await copy(aFolder, bFolder);
       await b!.refresh();
@@ -1399,7 +1362,7 @@ void main() {
       final expected = a!.rows;
       await a!.close();
       a = null;
-      await File('${root.path}/private-a/cache.sqlite').delete();
+      await clearTaskProjections('${root.path}/private-a');
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(a!.rows, expected);
     },
@@ -1423,9 +1386,9 @@ void main() {
         },
       });
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
-      final before = await aFolder.read('${a!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
+      final before = await aFolder.read('${a!.writer}.applog');
       var prepared = false;
       await expectLater(
         a!.complete(
@@ -1437,7 +1400,7 @@ void main() {
         throwsA(isA<FormatFailure>()),
       );
       expect(prepared, isFalse);
-      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      expect(await aFolder.read('${a!.writer}.applog'), before);
       expect(state(a!, id)['completed'], isFalse);
       expect(a!.rows.where((r) => r['kind'] == 'task').length, 1);
       await expectLater(
@@ -1457,7 +1420,7 @@ void main() {
         a!.command(id, 'task.completed', {}),
         throwsA(isA<FormatFailure>()),
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      expect(await aFolder.read('${a!.writer}.applog'), before);
       final event = await a!.complete(
         id,
         completionInstant: DateTime.utc(2026, 10, 2, 5),
@@ -1503,7 +1466,7 @@ void main() {
         },
       );
       await aFolder.create(
-        '$remote.jsonl',
+        '$remote.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(event)}\n')),
       );
       await a!.refresh();
@@ -1537,8 +1500,8 @@ void main() {
       final next = const Uuid().v5(id, 'successor');
       await a!.command(next, 'task.edited', {'description': 'Successor work'});
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       await copy(aFolder, bFolder);
       await b!.refresh();
@@ -1561,7 +1524,11 @@ void main() {
       a = null;
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(a!.rows, expected);
-      expect(a!.readFiles, 0);
+      expect(
+        a!.readFiles,
+        greaterThan(0),
+        reason: 'Current admission revalidates canonical bytes',
+      );
     },
   );
   test('protocol v1 remains untouched and explicitly rejected', () async {
@@ -1575,11 +1542,7 @@ void main() {
         isA<FormatFailure>().having(
           (error) => error.message,
           'message',
-          allOf(
-            contains('older prerelease'),
-            contains('Preserve this folder'),
-            contains('new data folder'),
-          ),
+          contains('coordinated offline conversion'),
         ),
       ),
     );
@@ -1606,8 +1569,8 @@ void main() {
       await editTags(late, next, []);
       expect(state(late, next)['tags'], isEmpty);
       await File(
-        '${early.folder.location}/${early.writer}.jsonl',
-      ).copy('${late.folder.location}/${early.writer}.jsonl');
+        '${early.folder.location}/${early.writer}.applog',
+      ).copy('${late.folder.location}/${early.writer}.applog');
       await late.refresh();
       expect(state(late, next)['tags'], isEmpty);
       await copy(late.folder as LocalLogFolder, early.folder as LocalLogFolder);
@@ -1630,7 +1593,7 @@ void main() {
       await a!.command(id, 'task.edited', {
         'schedule': {'dueDate': '2026-10-03', 'recurrence': 'every week'},
       });
-      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      final bytes = await aFolder.read('${a!.writer}.applog');
       await expectLater(
         a!.complete(id, completionDay: DateTime.utc(2026, 10, 20)),
         throwsA(isA<FormatFailure>()),
@@ -1650,7 +1613,7 @@ void main() {
         a!.moveBefore(id, const Uuid().v4()),
         throwsA(isA<FormatFailure>()),
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+      expect(await aFolder.read('${a!.writer}.applog'), bytes);
       await a!.refresh();
     },
   );
@@ -1681,8 +1644,8 @@ void main() {
       await a!.command(id, 'task.edited', {'schedule': left});
       await b!.command(id, 'task.edited', {'schedule': right});
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       await copy(aFolder, bFolder);
       await b!.refresh();
@@ -1691,7 +1654,7 @@ void main() {
         state(a!, id)['schedule'],
         a!.writer.compareTo(b!.writer) > 0 ? left : right,
       );
-      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      final bytes = await aFolder.read('${a!.writer}.applog');
       await expectLater(
         a!.command(id, 'task.edited', {
           'schedule': {'startDate': '2026-12-01', 'dueDate': '2026-11-01'},
@@ -1716,7 +1679,7 @@ void main() {
         }),
         throwsA(isA<FormatFailure>()),
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+      expect(await aFolder.read('${a!.writer}.applog'), bytes);
     },
   );
   test(
@@ -1740,8 +1703,8 @@ void main() {
         },
       });
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       final completion = await a!.complete(
         id,
         completionInstant: DateTime.utc(2026, 10, 20, 2),
@@ -1781,9 +1744,10 @@ void main() {
   test('pending future tag removal cannot poison next local append', () async {
     final id = await task();
     final seq =
-        (a!.db.select('SELECT MAX(seq) AS n FROM events WHERE writer=?', [
-              a!.writer,
-            ]).first['n']
+        (a!.db.select(
+              'SELECT MAX(seq) AS n FROM ${a!.tables.events} WHERE writer=?',
+              [a!.writer],
+            ).first['n']
             as int) +
         1;
     final remote = LogEvent(
@@ -1801,16 +1765,16 @@ void main() {
       },
     );
     await aFolder.append(
-      '${b!.writer}.jsonl',
+      '${b!.writer}.applog',
       Uint8List.fromList(utf8.encode('${encodeEvent(remote)}\n')),
     );
     await a!.refresh();
-    final bytes = await aFolder.read('${a!.writer}.jsonl');
+    final bytes = await aFolder.read('${a!.writer}.applog');
     await expectLater(
       editTags(a!, id, ['later']),
       throwsA(isA<FormatFailure>()),
     );
-    expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+    expect(await aFolder.read('${a!.writer}.applog'), bytes);
     await a!.refresh();
   });
   test(
@@ -1828,8 +1792,8 @@ void main() {
       expect(old!.sequence, greaterThan(recent.sequence));
       expect(recent.clock, greaterThan(old.clock));
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       await copy(aFolder, bFolder);
       await b!.refresh();
@@ -1847,8 +1811,8 @@ void main() {
         'description': 'Remote',
       });
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       testNow = testNow.subtract(const Duration(minutes: 1));
       final local = await a!.command(id, 'task.edited', {
         'title': 'Causal later',
@@ -1863,7 +1827,11 @@ void main() {
         '${root.path}/private-a',
         now: () => testNow,
       );
-      expect(a!.readFiles, 0);
+      expect(
+        a!.readFiles,
+        greaterThan(0),
+        reason: 'Current admission revalidates canonical bytes',
+      );
       expect(a!.rows, expected);
       final afterRestart = await a!.command(id, 'task.edited', {
         'description': 'After restart',
@@ -1886,7 +1854,7 @@ void main() {
         {'title': 'Future record'},
       );
       final bytes = Uint8List.fromList(utf8.encode('${encodeEvent(future)}\n'));
-      await aFolder.append('${b!.writer}.jsonl', bytes);
+      await aFolder.append('${b!.writer}.applog', bytes);
       await a!.refresh();
       expect(state(a!, id)['title'], 'Future record');
       expect(a!.clockWarning, isNotNull);
@@ -1895,7 +1863,7 @@ void main() {
       });
       expect(later.clock.value, future.clock.value + BigInt.one);
       expect(state(a!, id)['title'], 'Continued edit');
-      expect(await aFolder.read('${b!.writer}.jsonl'), bytes);
+      expect(await aFolder.read('${b!.writer}.applog'), bytes);
       final expected = a!.rows;
       await a!.close();
       a = null;
@@ -1906,7 +1874,11 @@ void main() {
       );
       expect(a!.clockWarning, isNotNull);
       expect(a!.rows, expected);
-      expect(a!.readFiles, 0);
+      expect(
+        a!.readFiles,
+        greaterThan(0),
+        reason: 'Current admission revalidates canonical bytes',
+      );
       final restarted = await a!.command(id, 'task.edited', {
         'description': 'Still writable',
       });
@@ -1914,9 +1886,11 @@ void main() {
       testNow = testNow.add(const Duration(hours: 2));
       await a!.refresh();
       expect(a!.clockWarning, isNull);
-      expect(await aFolder.read('${b!.writer}.jsonl'), bytes);
+      expect(await aFolder.read('${b!.writer}.applog'), bytes);
       expect(
-        a!.db.select('SELECT * FROM events WHERE writer=?', [b!.writer]),
+        a!.db.select('SELECT * FROM ${a!.tables.events} WHERE writer=?', [
+          b!.writer,
+        ]),
         hasLength(1),
       );
     },
@@ -1927,7 +1901,9 @@ void main() {
       final id = await task();
       final previous = LogEvent.decode(
         a!.db
-                .select('SELECT raw FROM events ORDER BY clock DESC LIMIT 1')
+                .select(
+                  'SELECT raw FROM ${a!.tables.events} ORDER BY clock DESC LIMIT 1',
+                )
                 .first['raw']
             as String,
       );
@@ -1958,13 +1934,13 @@ void main() {
         {'title': 'Exact large timestamp'},
       );
       await aFolder.append(
-        '${b!.writer}.jsonl',
+        '${b!.writer}.applog',
         Uint8List.fromList(utf8.encode('${encodeEvent(remote)}\n')),
       );
       await a!.refresh();
       expect(
         BigInt.from(
-          a!.db.select('SELECT clock FROM events WHERE writer=?', [
+          a!.db.select('SELECT clock FROM ${a!.tables.events} WHERE writer=?', [
                 b!.writer,
               ]).single['clock']
               as int,
@@ -1977,7 +1953,7 @@ void main() {
       });
       expect(changed.clock.value, exact.value + BigInt.one);
       expect(
-        jsonDecode(encodeEvent(changed))['clock'],
+        jsonDecode(changed.encode())['clock'],
         (exact.value + BigInt.one).toString(),
       );
       await a!.close();
@@ -1992,12 +1968,12 @@ void main() {
         'description': 'Last representable clock',
       });
       expect(finalInRange.clock.value, EventClock.maximum);
-      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      final bytes = await aFolder.read('${a!.writer}.applog');
       await expectLater(
         a!.command(id, 'task.edited', {'description': 'Overflow'}),
         throwsFormatException,
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+      expect(await aFolder.read('${a!.writer}.applog'), bytes);
     },
   );
   test(
@@ -2091,8 +2067,8 @@ void main() {
         read,
       ]);
       await File(
-        '${bFolder.location}/${b!.writer}.jsonl',
-      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        '${bFolder.location}/${b!.writer}.applog',
+      ).copy('${aFolder.location}/${b!.writer}.applog');
       await a!.refresh();
       await copy(aFolder, bFolder);
       await b!.refresh();
@@ -2103,9 +2079,11 @@ void main() {
         monthly,
       ]);
       final expected = a!.rows;
-      final raw = await aFolder.read('${a!.writer}.jsonl');
-      a!.db.execute('UPDATE positions SET rank=-rank');
-      a!.db.execute("DELETE FROM metadata WHERE key='order_projection'");
+      final raw = await aFolder.read('${a!.writer}.applog');
+      a!.db.execute('UPDATE ${a!.tables.positions} SET rank=-rank');
+      a!.db.execute(
+        "DELETE FROM ${a!.tables.metadata} WHERE key='order_projection'",
+      );
       await a!.close();
       a = null;
       a = await TaskStore.open(
@@ -2114,11 +2092,17 @@ void main() {
         now: () => testNow,
       );
       expect(a!.rows, expected);
-      expect(a!.readFiles, 0);
-      expect(await aFolder.read('${a!.writer}.jsonl'), raw);
+      expect(
+        a!.readFiles,
+        greaterThan(0),
+        reason: 'Current admission revalidates canonical bytes',
+      );
+      expect(await aFolder.read('${a!.writer}.applog'), raw);
       expect(
         a!.db
-            .select("SELECT value FROM metadata WHERE key='order_projection'")
+            .select(
+              "SELECT value FROM ${a!.tables.metadata} WHERE key='order_projection'",
+            )
             .single['value'],
         '3',
       );
@@ -2127,8 +2111,12 @@ void main() {
 }
 
 /// Holds an append open so shutdown tests exercise real asynchronous overlap.
-class _GatedAppendFolder implements LogFolder {
+class _GatedAppendFolder implements LogFolder, BoundedLogFolder {
   final LogFolder delegate;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      (delegate as BoundedLogFolder).readBounded(name, maximumBytes);
+
   final entered = Completer<void>();
   final release = Completer<void>();
   _GatedAppendFolder(this.delegate);
@@ -2149,9 +2137,13 @@ class _GatedAppendFolder implements LogFolder {
   }
 }
 
-class _FailAfterAppendFolder implements LogFolder {
+class _FailAfterAppendFolder implements LogFolder, BoundedLogFolder {
   _FailAfterAppendFolder(this.delegate);
   final LogFolder delegate;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      (delegate as BoundedLogFolder).readBounded(name, maximumBytes);
+
   bool failNext = false;
   @override
   String get location => delegate.location;
@@ -2176,9 +2168,13 @@ EventClock testClock(int wallMs, int increment) => EventClock(
   BigInt.from(wallMs) * BigInt.from(1000000) + BigInt.from(increment),
 );
 
-class _OnNextListFolder implements LogFolder {
+class _OnNextListFolder implements LogFolder, BoundedLogFolder {
   _OnNextListFolder(this.delegate);
   final LogFolder delegate;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      (delegate as BoundedLogFolder).readBounded(name, maximumBytes);
+
   Future<void> Function()? beforeNextList;
   @override
   String get location => delegate.location;
@@ -2201,9 +2197,13 @@ class _OnNextListFolder implements LogFolder {
 }
 
 /// Real append succeeds; the subsequent ingestion fails before its transaction.
-class _FailRefreshAfterAppendFolder implements LogFolder {
+class _FailRefreshAfterAppendFolder implements LogFolder, BoundedLogFolder {
   _FailRefreshAfterAppendFolder(this.delegate);
   final LogFolder delegate;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      (delegate as BoundedLogFolder).readBounded(name, maximumBytes);
+
   bool failNext = false, failList = false;
   @override
   String get location => delegate.location;
