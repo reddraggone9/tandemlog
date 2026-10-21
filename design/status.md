@@ -1,4 +1,10 @@
-# Coordinated cutover implementation under validation
+# Coordinated cutover development validation complete
+
+## Latest development result - 2026-10-21
+
+[Current acceptance](../evidence/coordinated-cutover-build99/README.md) records source0acfb3b and CI39633973437: all three jobs green,203 native Linux cases passed,1314 current unit/host cases,89 tooling checks and8 external-copy controls. Exact original-payload GTK Save/peer-while-Food/restart and200-percent Light/Dark checks passed. Android06 independently accepted the affected source243d253 debug-APK modal/restart flows; earlier source-specific peer/tail coverage retains its attribution. All temporary labs stopped with settings restoration and independent process checks. Local desktop and Android demonstrations retain their exact source labels.
+
+This completes the scoped development/native validation, not release or live-cutover approval. Actual physical-writer mapping and a fresh frozen real-copy conversion/replay remain prerequisites. No production data/profile, published release, Latest stable or held dependency changed. The following entries preserve the chronology and qualifications of earlier trials.
 
 [ADR0031](decisions/0031-coordinated-unified-cutover.md) is the approved scope: unified-only action histories, external historical normalization, required operation revisions on persistence and memory-only unfinished-save intent. Known older local profiles retain simple settings and reset other private state.
 

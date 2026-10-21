@@ -1,0 +1,46 @@
+{
+  "format": "tandemlog.development-acceptance",
+  "version": 1,
+  "applicationVersion": "2026.10.7-rc.4+99",
+  "acceptedSource": "0acfb3b0e2e8e3f2ed92b92f5e276ae061948133",
+  "sourceManifestSHA256": "0a2388b3e0bd44c5b1fe8cda1f607aa32b731f2a30507ee6770affe40c32fedb",
+  "ciRun": 39633973437,
+  "ciConclusion": "success",
+  "linuxNativePassed": 203,
+  "linuxNativeFailed": 0,
+  "currentUnitHostPassed": 1314,
+  "toolingPassed": 89,
+  "externalCopyControlsPassed": 8,
+  "linux": {
+    "githubArtifactId": 12360688790,
+    "archiveSHA256": "965cfb269f865d68e0f15dbe85ef9eb6d19f02c56be345679f4aed73c935672b",
+    "flatpakSHA256": "2b1004301079ec34803598c6656717c1f40db34eb41462f00d442fb3bfa55c96",
+    "ostreeCommit": "8f915cbf7598867c20332d157126d479426cbe50b94ed57263c61b96ca789630",
+    "manualKind": "exact-extracted-payload-host-GTK",
+    "cleanupUtc": "2026-10-21T17:48:48.154231+00:00"
+  },
+  "android": {
+    "source": "243d253f2be7a699d178e9dd016d366472048339",
+    "ciRun": 39611408787,
+    "apkSHA256": "a5dca31b631b6b5bdf47a2bcfafdb3896f359881ead38aa4ac8f8d96f6dc7f04",
+    "platform": "Android11 API30 x86_64 emulator",
+    "signing": "debug",
+    "affectedReplacementLab": "Android99-06",
+    "cleanupUtc": "2026-10-21T14:31:14.876+00:00"
+  },
+  "demonstrations": {
+    "linux": {
+      "sha256": "c57cc3be5faab8b9f9869163e9740bb0d9873c4aae595fcfe0e6154010970876",
+      "bytes": 48166,
+      "seconds": 20.5
+    },
+    "android": {
+      "sha256": "53f61711258317f1b5beb4ad66c9913b4241b8b56951d75a57e052ae4c1f1324",
+      "bytes": 207619,
+      "seconds": 16.933333
+    }
+  },
+  "productionChanged": false,
+  "releasePublished": false,
+  "realCopyConversionAccepted": false
+}
