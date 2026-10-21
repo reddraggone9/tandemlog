@@ -101,6 +101,42 @@ def stop_flatpak_instance(executable, instance_file):
     return instance
 
 
+def seed_fixture(folder, profile, workspace, native_library):
+    # The installed app must still discover its real default sandbox profile.
+    # Stage only the fresh settings database inside the QA workspace so the
+    # initializer's containment guard also applies to this default-profile test.
+    staged = workspace/'installer-profile-stage'
+    if profile.exists() or folder.exists() or staged.exists():
+        raise RuntimeError('Refusing to overwrite an existing QA fixture')
+    if (workspace/'text-seed-private').exists() or (workspace/'synthetic-workload.json').exists():
+        raise RuntimeError('Synthetic installer seed must be fresh')
+    if not native_library:
+        raise RuntimeError('Synthetic installer seed requires its pinned native library')
+    profile.mkdir(parents=True)
+    folder.mkdir()
+    writer, user, task = (str(uuid.uuid4()) for _ in range(3))
+    (workspace/'synthetic-workload.json').write_text(json.dumps({
+        'synthetic': True, 'version': 1, 'writer': writer, 'user': user,
+        'userName': 'Installer QA user', 'profile': str(staged),
+        'tasks': [{'id': task, 'title': 'Installer retained task',
+                   'description': 'Synthetic state only'}]}))
+    receipt = initialize_fixture(folder, workspace, native_library)
+    source = staged/'local.sqlite'
+    if source.is_symlink() or not source.is_file() or any(
+            Path(str(source)+suffix).exists() for suffix in ('-wal', '-shm')):
+        raise RuntimeError('Synthetic staged profile is not a closed database')
+    settings = read_settings_bytes(staged)
+    if hashlib.sha256(settings).hexdigest() != receipt['settings_sha256']:
+        raise RuntimeError('Synthetic staged settings do not match their receipt')
+    raw = source.read_bytes()
+    # Never replace an existing installed profile. No old user state is copied.
+    with (profile/'local.sqlite').open('xb') as output:
+        output.write(raw)
+    if read_settings_bytes(profile) != settings:
+        raise RuntimeError('Synthetic default-profile settings changed during staging')
+    return receipt
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--workspace', required=True)
@@ -119,19 +155,7 @@ def main():
     profile = Path(args.profile).resolve() if args.profile else root/'profile'
     folder = Path(args.folder).resolve() if args.folder else root/'shared'
     if args.seed:
-        if profile.exists() or folder.exists():
-            raise RuntimeError('Refusing to overwrite an existing QA fixture')
-        profile.mkdir(parents=True)
-        folder.mkdir()
-        writer, user, task = (str(uuid.uuid4()) for _ in range(3))
-        (root/'synthetic-workload.json').write_text(json.dumps({
-            'synthetic': True, 'version': 1, 'writer': writer, 'user': user,
-            'userName': 'Installer QA user', 'profile': str(profile),
-            'tasks': [{'id': task, 'title': 'Installer retained task',
-                       'description': 'Synthetic state only'}]}))
-        if not args.native_library:
-            raise RuntimeError('Synthetic installer seed requires its pinned native library')
-        receipt = initialize_fixture(folder, root, args.native_library)
+        receipt = seed_fixture(folder, profile, root, args.native_library)
         (root/'expected.json').write_text(json.dumps({'canonical': hashes(folder),
                                                     'settings': receipt['settings_sha256']}))
     expected = json.loads((root/'expected.json').read_text())
