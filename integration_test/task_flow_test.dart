@@ -3635,12 +3635,16 @@ void main() {
     );
     await tester.tap(find.text('Hidden future'));
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Notes'),
+    final notes = find.widgetWithText(TextField, 'Notes');
+    await tester.enterText(notes, 'Edited before availability');
+    expect(
+      tester.widget<TextField>(notes).controller!.text,
       'Edited before availability',
     );
     await tester.tap(find.text('Save changes'));
-    await tester.pumpAndSettle();
+    // Settled frames alone do not acknowledge asynchronous native/file work.
+    await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
+    expect(tester.takeException(), isNull);
     await writer.refresh();
     expect(
       writer.rows.firstWhere(

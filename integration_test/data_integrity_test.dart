@@ -190,8 +190,9 @@ void registerDataIntegrityTests() {
             (name) => name.endsWith('${writer.writer}.applog'),
           ),
         );
-        final offset = await log.length();
-        final record = '\n'.allMatches(await log.readAsString()).length + 1;
+        final goodBytes = await log.readAsBytes();
+        final offset = goodBytes.length;
+        final record = goodBytes.where((byte) => byte == 10).length + 1;
         await log.writeAsString('{"damaged":true}\n', mode: FileMode.append);
         final damaged = await _logs(shared);
         await _check(tester);
@@ -203,14 +204,22 @@ void registerDataIntegrityTests() {
         await tester.tap(find.text('Done').last);
         await tester.pumpAndSettle();
         await flows.openSettings(tester);
-        expect(
-          tester
-              .widget<OutlinedButton>(
-                find.byKey(const ValueKey('check-data-integrity')),
-              )
-              .onPressed,
-          isNotNull,
-        );
+        final check = find.byKey(const ValueKey('check-data-integrity'));
+        expect(tester.widget<OutlinedButton>(check).onPressed, isNull);
+        expect(state.sharedSafetyError, isNotNull);
+        expect(await _logs(shared), damaged);
+        await tester.tap(find.text('Done').last);
+        await tester.pumpAndSettle();
+        // Restore only the exact synthetic fault added above. Diagnostics do
+        // not clear the common command fence or repair canonical history.
+        expect(await log.readAsString(), damaged[log.path]);
+        await log.writeAsBytes(goodBytes, flush: true);
+        expect(await _logs(shared), grown);
+        await flows.recoverSharedReadForTest(tester);
+        expect(state.sharedSafetyError, isNull);
+        expect(await _logs(shared), grown);
+        await flows.openSettings(tester);
+        expect(tester.widget<OutlinedButton>(check).onPressed, isNotNull);
         expect(tester.takeException(), isNull);
 
         // A manual check waits for existing ingestion. Disposing while it is
