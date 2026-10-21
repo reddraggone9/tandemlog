@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -47,9 +48,7 @@ void main() {
       });
       if (missing) {
         final profile = await Directory('$root/profile').create();
-        await File(
-          '${profile.path}/settings.json',
-        ).writeAsString(jsonEncode({'folder': folder.path}));
+        await seedNativeProfile(profile.path, {'folder': folder.path});
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
         await tester.pumpAndSettle();
         // First opening a new synthetic workspace creates its space/user log.

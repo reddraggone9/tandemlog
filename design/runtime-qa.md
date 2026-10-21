@@ -1,6 +1,10 @@
 # Coordinated cutover RC.4/build99 - current native acceptance pending
 
-The development source passes1304 unit/host tests and86 tooling checks, both analyzers, full formatting, converter continuation/prefix checks and the compiled profile/WAL helper. These are source/host gates, not application GUI acceptance. Local Linux native integration did not launch because xvfb-run was absent; build tools are also unavailable locally. A fresh hosted development build and actual current Linux/Android pixels/provider workflows remain pending. No new native lab has started or device setting changed. Earlier build98 receipts below keep their exact attribution.
+Commit [5ede6c4](https://github.com/reddraggone9/tandemlog/commit/5ede6c4ed6c8d62ce277e0536effc21ed0f39988) passes1304 unit/host tests and86 tooling checks, both analyzers, full formatting, converter continuation/prefix checks and the compiled profile/WAL helper. [Development CI39552456268](https://github.com/reddraggone9/tandemlog/actions/runs/39552456268) passed Windows unit/build/installer lifecycle and the Android debug build/payload gates. The original Android debug APK's bytes, package/version, debug certificate, native libraries, notices and alignment verify; it is not an owner-signed release candidate.
+
+Linux native integration and actual current Linux/Android GUI/provider workflows remain pending. A fixture-only follow-up replaces retired settings-file seeds and separate Task/Food log assumptions with schema6 settings, ordinary writer enrollment and typed effects in one app log. It retains Save/Undo/recurrence/account coverage, replaces the obsolete separate-Food corruption expectation with the common fail-closed contract, and bounds future native cases/runs. Three focused real-IO fixture controls, analysis, formatting and86 tooling checks pass. Headless harness attempts retain their failures and do not establish native acceptance.
+
+No new native GUI/emulator lab has started or device setting changed. Earlier build98 receipts below keep their exact attribution.
 
 No release or live cutover is authorized. Actual historical-to-physical writer mapping remains incomplete; a sync peer count is not author identity. Full profile collection is not mandatory: retain simple settings and accepted canonical originals, deliberately reset other local state as approved.
 

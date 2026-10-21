@@ -1,5 +1,5 @@
+import 'profile_fixture.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +40,7 @@ String _report(WidgetTester tester) => tester
 
 Future<Map<String, String>> _logs(Directory folder) async => {
   for (final file
-      in await folder.list().where((f) => f.path.endsWith('.jsonl')).toList())
+      in await folder.list().where((f) => f.path.endsWith('.applog')).toList())
     file.path: await File(file.path).readAsString(),
 };
 
@@ -88,9 +88,10 @@ void registerDataIntegrityTests() {
         'assignee': user,
         'tags': ['home', 'planning'],
       });
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': shared.path,
+        'user': user,
+      });
       tester.view.physicalSize = const Size(1200, 820);
       tester.view.devicePixelRatio = 1;
       try {
@@ -186,7 +187,7 @@ void registerDataIntegrityTests() {
 
         final log = File(
           grown.keys.firstWhere(
-            (name) => name.endsWith('${writer.writer}.jsonl'),
+            (name) => name.endsWith('${writer.writer}.applog'),
           ),
         );
         final offset = await log.length();

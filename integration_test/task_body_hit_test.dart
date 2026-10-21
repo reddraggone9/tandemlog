@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -294,7 +295,7 @@ Offset _blankMiddle(WidgetTester tester, String id) {
 
 Future<Map<String, List<int>>> _records(Directory data) async => {
   await for (final entry in data.list())
-    if (entry is File && entry.path.endsWith('.jsonl'))
+    if (entry is File && entry.path.endsWith('.applog'))
       entry.path: await entry.readAsBytes(),
 };
 
@@ -329,9 +330,11 @@ Future<void> _withInbox(
       await seed.addChecklistItem(ids.first, 'Synthetic inline note');
     }
     await seed.close();
-    await File('${profile.path}/settings.json').writeAsString(
-      jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
-    );
+    await seedNativeProfile(profile.path, {
+      'folder': data.path,
+      'user': user,
+      'appearance': 'dark',
+    });
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = Size(width, 850);
     tester.platformDispatcher.textScaleFactorTestValue = scale;

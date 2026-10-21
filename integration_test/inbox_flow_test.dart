@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -98,9 +98,10 @@ void registerInboxFlowTests() {
       'assignee': user,
     });
     await writer.close();
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': shared.path,
+      'user': user,
+    });
     tester.view.physicalSize = const Size(1000, 820);
     tester.view.devicePixelRatio = 1;
     try {
@@ -209,9 +210,10 @@ void registerInboxFlowTests() {
         'assignee': user,
       });
       await writer.close();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': shared.path,
+        'user': user,
+      });
       final folder = CountingFolder(LocalLogFolder(shared.path));
       tester.view.physicalSize = const Size(1000, 820);
       tester.view.devicePixelRatio = 1;

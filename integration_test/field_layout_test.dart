@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -48,13 +49,11 @@ void registerFieldLayoutTests() {
           'schedule': {'dueMinDays': 0},
         });
         await peer.edit(task, {}, tags: ['backlog'], observedTagRefs: {});
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': shared.path,
-            'user': user,
-            'appearance': variant.theme,
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': shared.path,
+          'user': user,
+          'appearance': variant.theme,
+        });
         final before = await canonical();
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = Size(variant.width, 850);

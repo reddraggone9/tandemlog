@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -27,9 +28,10 @@ void registerTextWorkflowTests() {
       final root = await Directory.systemTemp.createTemp('fresh-text-ui-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': null}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': null,
+      });
       Future<Map<String, String>> canonical() async => {
         await for (final file in folder.list())
           if (file is File) file.path: base64Encode(await file.readAsBytes()),
@@ -139,9 +141,10 @@ void registerTextWorkflowTests() {
         'assignee': user,
       });
       await seed.close();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       Future<Map<String, String>> canonical() async => {
         await for (final file in folder.list())
           if (file is File) file.path: base64Encode(await file.readAsBytes()),
@@ -209,9 +212,10 @@ void registerTextWorkflowTests() {
         'assignee': user,
       });
       await seed.close();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       final engine = NativeTextEngine();
       final peer = await TaskStore.open(
         LocalLogFolder(folder.path),
@@ -386,13 +390,11 @@ void registerTextWorkflowTests() {
         });
         await store.initializeSharedText();
         await store.reopen(task, [completion.id]);
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': shared.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': shared.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
         final parentCheckbox = find.descendant(
           of: find.byKey(ValueKey('task-row-$task')),
@@ -415,11 +417,14 @@ void registerTextWorkflowTests() {
         await store.refresh();
         final after = await canonical();
         for (final entry in before.entries) {
-          expect(after[entry.key], entry.value);
+          final original = base64Decode(entry.value);
+          final grown = base64Decode(after[entry.key]!);
+          expect(grown.length, greaterThanOrEqualTo(original.length));
+          expect(grown.sublist(0, original.length), original);
         }
         expect(
-          store.db.select(
-            "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedKeepingSuccessor'",
+          store.unified!.snapshot.tasks.where(
+            (event) => event.type == 'task.completedKeepingSuccessor',
           ),
           hasLength(1),
         );

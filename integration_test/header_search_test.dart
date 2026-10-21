@@ -1,6 +1,6 @@
+import 'profile_fixture.dart';
 import '../test/support/toolbar_button.dart';
 import 'package:flutter/services.dart';
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,13 +36,11 @@ void registerHeaderSearchTests() {
           for (var i = 0; i < 4; i++) const Uuid().v4(): 'Reference $i',
         }, user);
         await seed.close();
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': folder.path,
-            'user': user,
-            'appearance': variant.theme,
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+          'appearance': variant.theme,
+        });
         tester.view.physicalSize = Size(variant.width, 820);
         tester.view.devicePixelRatio = 1;
         tester.platformDispatcher.textScaleFactorTestValue = variant.scale;

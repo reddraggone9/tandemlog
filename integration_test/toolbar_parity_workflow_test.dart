@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -40,13 +40,11 @@ void registerToolbarParityTests() {
       await seed.command(user, 'user.created', {'name': 'Synthetic household'});
       await seed.createTasks({const Uuid().v4(): 'Parity reference'}, user);
       await seed.close();
-      await File('${profile.path}/settings.json').writeAsString(
-        jsonEncode({
-          'folder': folder.path,
-          'user': user,
-          'appearance': brightness.name,
-        }),
-      );
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+        'appearance': brightness.name,
+      });
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -62,12 +60,7 @@ void registerToolbarParityTests() {
           for (final file
               in await folder
                   .list(recursive: true)
-                  .where(
-                    (e) =>
-                        e is File &&
-                        (e.path.endsWith('.jsonl') ||
-                            e.path.endsWith('.foodlog')),
-                  )
+                  .where((e) => e is File && e.path.endsWith('.applog'))
                   .cast<File>()
                   .toList())
             file.path: await file.readAsBytes(),
@@ -287,13 +280,11 @@ void registerSectionWidthTests() {
       await seed.command(user, 'user.created', {'name': 'Synthetic household'});
       await seed.createTasks({const Uuid().v4(): 'Width reference task'}, user);
       await seed.close();
-      await File('${profile.path}/settings.json').writeAsString(
-        jsonEncode({
-          'folder': folder.path,
-          'user': user,
-          'appearance': brightness.name,
-        }),
-      );
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+        'appearance': brightness.name,
+      });
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -305,7 +296,7 @@ void registerSectionWidthTests() {
                 .where(
                   (e) =>
                       e is File &&
-                      (e.path.endsWith('.jsonl') ||
+                      (e.path.endsWith('.applog') ||
                           e.path.endsWith('.foodlog')),
                 )
                 .cast<File>()

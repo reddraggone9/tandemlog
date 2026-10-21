@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -44,13 +44,11 @@ void registerRecurringTextWorkflowTests() {
             'recurrence': 'every week when done',
           },
         });
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': folder.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         await tester.pumpWidget(
@@ -86,19 +84,18 @@ void registerRecurringTextWorkflowTests() {
         final inherited = peer.rows.singleWhere((row) => row['id'] == child);
         expect(inherited['title'], 'AB');
         expect(inherited['description'], 'AB notes');
-        final completions = peer.db.select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedWithText'",
-        );
+        final completions = peer.unified!.snapshot.tasks
+            .where((event) => event.type == 'task.completedWithText')
+            .toList();
         expect(completions, hasLength(1));
-        final completion =
-            jsonDecode(completions.single['raw'] as String) as Map;
-        expect((completion['data'] as Map)['successor']['id'], child);
+        final completion = completions.single;
+        expect(completion.data['successor']['id'], child);
         final parentFields = peer.db.select(
-          'SELECT field,context FROM text_fields WHERE entity=?',
+          'SELECT field,context FROM ${peer.tables.textFields} WHERE entity=?',
           [parent],
         );
         final childFields = peer.db.select(
-          'SELECT field,context FROM text_fields WHERE entity=?',
+          'SELECT field,context FROM ${peer.tables.textFields} WHERE entity=?',
           [child],
         );
         expect(childFields, hasLength(2));
@@ -148,9 +145,8 @@ void registerRecurringTextWorkflowTests() {
           'AXB',
         );
         expect(
-          peer.db.select(
-            "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type')='task.textEdited'",
-            [child],
+          peer.unified!.snapshot.tasks.where(
+            (event) => event.entity == child && event.type == 'task.textEdited',
           ),
           hasLength(1),
         );
@@ -176,9 +172,9 @@ void registerRecurringTextWorkflowTests() {
         );
         expect(peer.rows.where((row) => row['id'] == child), hasLength(1));
         expect(
-          peer.db.select(
-            "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type')='task.textEditUndone'",
-            [child],
+          peer.unified!.snapshot.tasks.where(
+            (event) =>
+                event.entity == child && event.type == 'task.textEditUndone',
           ),
           hasLength(1),
         );

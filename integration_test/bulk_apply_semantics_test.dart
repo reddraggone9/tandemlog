@@ -1,5 +1,5 @@
+import 'profile_fixture.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' show SemanticsAction;
 
@@ -119,9 +119,10 @@ void registerBulkApplySemanticsTests() {
             },
           });
         }
-        await File(
-          '${profile.path}/settings.json',
-        ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+        });
         final originalSchedules = {
           for (final row in peer.rows.where((row) => ids.contains(row['id'])))
             row['id']: Map<String, dynamic>.from(row['schedule'] as Map),

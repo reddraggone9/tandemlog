@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -44,13 +44,11 @@ void registerSectionNavigationTests() {
           'assignee': user,
         });
         await seed.close();
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': data.path,
-            'user': user,
-            'appearance': brightness.name,
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': data.path,
+          'user': user,
+          'appearance': brightness.name,
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         addTearDown(tester.view.resetPhysicalSize);
@@ -60,11 +58,7 @@ void registerSectionNavigationTests() {
           for (final file
               in await data
                   .list()
-                  .where(
-                    (e) =>
-                        e.path.endsWith('.jsonl') ||
-                        e.path.endsWith('.foodlog'),
-                  )
+                  .where((e) => e.path.endsWith('.applog'))
                   .cast<File>()
                   .toList())
             file.path: await file.readAsBytes(),

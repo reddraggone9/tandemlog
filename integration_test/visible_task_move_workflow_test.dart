@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -56,9 +57,10 @@ void registerVisibleTaskMoveWorkflowTests() {
           for (final id in initial) {
             await peer.moveBefore(id, null);
           }
-          await File(
-            '${profile.path}/settings.json',
-          ).writeAsString(jsonEncode({'folder': data.path, 'user': user}));
+          await seedNativeProfile(profile.path, {
+            'folder': data.path,
+            'user': user,
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = const Size(1200, 900);
           await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -175,9 +177,10 @@ void registerVisibleTaskMoveWorkflowTests() {
         for (final id in ids) {
           await peer.moveBefore(id, null);
         }
-        await File(
-          '${profile.path}/settings.json',
-        ).writeAsString(jsonEncode({'folder': data.path, 'user': user}));
+        await seedNativeProfile(profile.path, {
+          'folder': data.path,
+          'user': user,
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 900);
         await tester.pumpWidget(

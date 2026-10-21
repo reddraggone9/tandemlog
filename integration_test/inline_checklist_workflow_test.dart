@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -99,13 +100,11 @@ void registerInlineChecklistWorkflowTests() {
           second,
           'Second item',
         )).entity;
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': shared.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': shared.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(390, 850);
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -231,9 +230,11 @@ void registerInlineChecklistWorkflowTests() {
       )).entity;
       await peer.addChecklistItem(parent, 'Second item');
       await peer.addChecklistItem(other, 'Collapsed item');
-      await File('${profile.path}/settings.json').writeAsString(
-        jsonEncode({'folder': shared.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(profile.path, {
+        'folder': shared.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -395,9 +396,11 @@ void registerInlineChecklistWorkflowTests() {
         'description': '',
         'assignee': user,
       });
-      await File('${profile.path}/settings.json').writeAsString(
-        jsonEncode({'folder': shared.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(profile.path, {
+        'folder': shared.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -526,13 +529,11 @@ void registerInlineChecklistWorkflowTests() {
           'description': '',
           'assignee': user,
         });
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': shared.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': shared.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         await tester.pumpWidget(
@@ -679,13 +680,11 @@ void registerInlineChecklistWorkflowTests() {
             'Water bottle',
           )).entity;
           await peer.addChecklistItem(parent, 'Map', notes: 'Printed route');
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': shared.path,
-              'user': user,
-              'appearance': narrow ? 'light' : 'dark',
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': shared.path,
+            'user': user,
+            'appearance': narrow ? 'light' : 'dark',
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = narrow
               ? const Size(390, 820)

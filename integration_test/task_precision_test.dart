@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -59,9 +60,10 @@ void registerTaskPrecisionTests() {
       await add(historical, {});
       // Preserve legacy record meaning, then establish its shared native basis.
       await writer.initializeSharedText();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       Future<Map<String, String>> logs() async => {
         await for (final file in folder.list())
           if (file is File) file.path: base64Encode(await file.readAsBytes()),
@@ -163,7 +165,7 @@ void registerTaskPrecisionTests() {
           'Edited notes keep historical title semantics.',
         );
         for (final old in beforeEditor.entries.where(
-          (entry) => entry.key.endsWith('.jsonl'),
+          (entry) => entry.key.endsWith('.applog'),
         )) {
           expect(
             base64Encode(

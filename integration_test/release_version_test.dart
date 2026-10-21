@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -32,9 +33,10 @@ void registerReleaseVersionTests() {
       await seed.command(user, 'user.created', {'name': 'Alex Example'});
       await seed.createTasks({const Uuid().v4(): 'Reference task'}, user);
       await seed.close();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       Future<Map<String, String>> canonical() async => {
         await for (final file in folder.list())
           if (file is File) file.path: base64Encode(await file.readAsBytes()),

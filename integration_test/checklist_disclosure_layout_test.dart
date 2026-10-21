@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -88,9 +88,11 @@ void registerChecklistDisclosureLayoutTests() {
           await peer.addChecklistItem(pair.$1, 'Item ${item + 1}');
         }
       }
-      await File('${profile.path}/settings.json').writeAsString(
-        jsonEncode({'folder': shared.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(profile.path, {
+        'folder': shared.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 1000);
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));

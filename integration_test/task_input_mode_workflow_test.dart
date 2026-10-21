@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -46,13 +46,11 @@ void registerTaskInputModeTests() {
           const Uuid().v4(): 'Other task',
         }, user);
         await seed.close();
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': folder.path,
-            'user': user,
-            'appearance': variant.theme,
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+          'appearance': variant.theme,
+        });
         tester.view.physicalSize = Size(variant.width, 850);
         tester.view.devicePixelRatio = 1;
         tester.platformDispatcher.textScaleFactorTestValue = variant.scale;

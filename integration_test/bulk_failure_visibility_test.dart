@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
@@ -25,7 +25,7 @@ void main() {
 
 Future<Map<String, String>> canonicalHashes(Directory folder) async => {
   await for (final file in folder.list())
-    if (file is File && file.path.endsWith('.jsonl'))
+    if (file is File && file.path.endsWith('.applog'))
       file.path: sha256.convert(await file.readAsBytes()).toString(),
 };
 
@@ -100,9 +100,10 @@ void registerBulkFailureVisibilityTests() {
           'schedule': <String, dynamic>{},
         });
       }
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       Process? recording;
       final previousPlatform = debugDefaultTargetPlatformOverride;
       try {

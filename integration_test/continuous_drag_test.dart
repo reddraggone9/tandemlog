@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -76,13 +77,11 @@ void registerContinuousDragTests() {
           for (final id in initial) {
             await peer.moveBefore(id, null);
           }
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': data.path,
-              'user': user,
-              'appearance': 'dark',
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': data.path,
+            'user': user,
+            'appearance': 'dark',
+          });
           tester.view.devicePixelRatio = 1;
           //620x415 including the31px desktop decoration in the supplied report.
           tester.view.physicalSize = const Size(620, 384);

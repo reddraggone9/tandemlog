@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -80,13 +81,11 @@ void registerChecklistWorkflowTests() {
           });
           final first = await peer.addChecklistItem(parent, 'Water bottle');
           await peer.addChecklistItem(parent, 'Map', notes: 'Printed route');
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': folder.path,
-              'user': user,
-              'appearance': narrow ? 'light' : 'dark',
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': folder.path,
+            'user': user,
+            'appearance': narrow ? 'light' : 'dark',
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = narrow
               ? const Size(390, 820)

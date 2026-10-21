@@ -35,7 +35,9 @@ jobs:
           export SPIKE_LIBRARY="$TANDEMLOG_TEXT_LIBRARY"
           python -m unittest discover -s experiments/yrs-spike/tests -v
       - run: python3 -m unittest discover -s tool -p 'test_*.py'
-      - run: xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux
+      - name: Run bounded native Linux workflows
+        timeout-minutes: 35
+        run: xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux --reporter expanded --timeout 120s
       - run: flutter build linux --release
       - run: python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle
       - name: Smoke-test native release startup with fresh and warm cache

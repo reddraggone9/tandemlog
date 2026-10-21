@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -114,13 +115,11 @@ void registerInlineChecklistWorkspaceTests() {
             id: anchor,
           );
         }
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': firstDirectory.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': firstDirectory.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         await tester.pumpWidget(

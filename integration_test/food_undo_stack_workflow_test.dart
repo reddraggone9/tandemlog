@@ -1,3 +1,5 @@
+import 'package:tandemlog/storage/unified_record.dart';
+import 'profile_fixture.dart';
 import '../test/support/toolbar_button.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -309,7 +311,7 @@ void registerFoodUndoStackWorkflowTests() {
           'Peer shelf',
         );
         final peerBytes = await fixture.folder.delegate.read(
-          foodLogName(fixture.peer.writer),
+          unifiedLogName(fixture.peer.unified!.writer),
         );
         await _undo(
           tester,
@@ -321,7 +323,9 @@ void registerFoodUndoStackWorkflowTests() {
         expect(restored.id, beforePeer.id);
         expect(restored.details.location, 'Peer shelf');
         expect(
-          await fixture.folder.delegate.read(foodLogName(fixture.peer.writer)),
+          await fixture.folder.delegate.read(
+            unifiedLogName(fixture.peer.unified!.writer),
+          ),
           peerBytes,
         );
         expect(restored.details.expiry, '2027-06-01');
@@ -347,7 +351,7 @@ void registerFoodUndoStackWorkflowTests() {
           'Newer peer brand',
         );
         final newerPeerBytes = await fixture.folder.delegate.read(
-          foodLogName(fixture.peer.writer),
+          unifiedLogName(fixture.peer.unified!.writer),
         );
         final appendedBeforeUndo = fixture.folder.appends;
         _expectUndo(tester, contains('editing'));
@@ -366,7 +370,9 @@ void registerFoodUndoStackWorkflowTests() {
               'Withdrawing a superseded local edit cannot overwrite the newer peer',
         );
         expect(
-          await fixture.folder.delegate.read(foodLogName(fixture.peer.writer)),
+          await fixture.folder.delegate.read(
+            unifiedLogName(fixture.peer.unified!.writer),
+          ),
           newerPeerBytes,
         );
         expect(
@@ -671,11 +677,11 @@ List<FoodRecord> _decodeRecords(List<int> raw) => utf8
     .decode(raw)
     .split('\n')
     .where((line) => line.isNotEmpty)
-    .map(FoodRecord.decode)
+    .expand(foodEffectsFromAction)
     .toList();
 Future<List<FoodRecord>> _foodRecords(LocalLogFolder folder) async => [
   for (final file in await folder.list())
-    if (file.name.endsWith('.foodlog'))
+    if (file.name.endsWith('.applog'))
       ..._decodeRecords(await folder.read(file.name)),
 ];
 Future<Map<String, List<int>>> _records(
@@ -683,9 +689,15 @@ Future<Map<String, List<int>>> _records(
   bool tasksOnly = false,
 }) async => {
   for (final file in await folder.list())
-    if (file.name.endsWith('.jsonl') ||
-        !tasksOnly && file.name.endsWith('.foodlog'))
-      file.name: await folder.read(file.name),
+    if (file.name.endsWith('.applog'))
+      if (!tasksOnly)
+        file.name: await folder.read(file.name)
+      else
+        for (final line in const LineSplitter().convert(
+          utf8.decode(await folder.read(file.name)),
+        ))
+          for (final event in taskEffectsFromAction(line))
+            event.id: utf8.encode(event.canonicalRaw!),
 };
 
 Future<void> _withWorkspace(
@@ -752,9 +764,11 @@ Future<void> _withWorkspace(
     ),
     1,
   );
-  await File('${profile.path}/settings.json').writeAsString(
-    jsonEncode({'folder': data.path, 'user': alex, 'appearance': 'dark'}),
-  );
+  await seedNativeProfile(profile.path, {
+    'folder': data.path,
+    'user': alex,
+    'appearance': 'dark',
+  });
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = const Size(1200, 850);
   addTearDown(tester.view.resetPhysicalSize);
@@ -802,16 +816,4 @@ class _Fixture {
 
 class _FoodFaultFolder extends CountingFolder {
   _FoodFaultFolder(super.delegate);
-  @override
-  Future<void> create(String name, Uint8List bytes) async {
-    if (!name.endsWith('.foodlog')) return super.create(name, bytes);
-    appends++;
-    if (fault == 'before') {
-      fault = null;
-      delayedName = name;
-      delayedSuffix = Uint8List.fromList(bytes);
-      throw StateError('Synthetic Food create failed before write');
-    }
-    await delegate.create(name, bytes);
-  }
 }

@@ -1,5 +1,5 @@
+import 'profile_fixture.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -324,7 +324,7 @@ void _resume(WidgetTester tester) {
 
 Future<Map<String, List<int>>> _records(LocalLogFolder folder) async => {
   for (final info in await folder.list())
-    if (info.name.endsWith('.jsonl')) info.name: await folder.read(info.name),
+    if (info.name.endsWith('.applog')) info.name: await folder.read(info.name),
 };
 
 class _GatedFolder extends CountingFolder {
@@ -375,9 +375,11 @@ Future<void> _withWorkspace(
       'assignee': user,
     });
     await seed.close();
-    await File('${profile.path}/settings.json').writeAsString(
-      jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
-    );
+    await seedNativeProfile(profile.path, {
+      'folder': data.path,
+      'user': user,
+      'appearance': 'dark',
+    });
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = Size(width, 850);
     await tester.pumpWidget(

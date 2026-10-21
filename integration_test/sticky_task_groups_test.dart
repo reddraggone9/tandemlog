@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -53,9 +54,10 @@ void registerStickyTaskGroupTests() {
       }
     }
     await writer.command(ids.last, 'task.completed', {});
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     Future<Map<String, String>> logs() async => {
       await for (final entry in folder.list())
         if (entry is File) entry.path: base64Encode(await entry.readAsBytes()),

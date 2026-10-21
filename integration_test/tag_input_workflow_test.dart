@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -120,13 +121,11 @@ void registerTagInputWorkflowTests() {
           observedTagRefs: {},
         );
         await peer.command(completed, 'task.completed', {});
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': shared.path,
-            'user': user,
-            'appearance': variant.theme,
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': shared.path,
+          'user': user,
+          'appearance': variant.theme,
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = Size(variant.width, 850);
         tester.platformDispatcher.textScaleFactorTestValue = variant.scale;

@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -83,13 +84,11 @@ void registerCompletionConfirmationProgressTests() {
         for (var item = 1; item <= 6; item++) {
           await peer.addChecklistItem(parent, 'Unchecked item $item');
         }
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': shared.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': shared.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         await tester.pumpWidget(

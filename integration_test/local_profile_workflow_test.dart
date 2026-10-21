@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -54,9 +54,11 @@ void main() {
         await seed.addChecklistItem(task, 'Shared display state', id: item);
         await seed.close();
       }
-      await File('${private.path}/settings.json').writeAsString(
-        jsonEncode({'folder': first.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(private.path, {
+        'folder': first.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       final picker = _Picker(second.path), boundary = GlobalKey();
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);

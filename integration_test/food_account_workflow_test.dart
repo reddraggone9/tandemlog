@@ -1,13 +1,13 @@
+import 'package:tandemlog/food/food_store.dart';
+import 'profile_fixture.dart';
 import '../test/support/toolbar_button.dart';
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/inventory.dart';
@@ -77,7 +77,7 @@ void registerFoodAccountWorkflowTests() {
         final recordChanged = !_sameBytes(after, completedBytes);
         final appendedTypes = <String>[
           for (final entry in after.entries)
-            if (entry.key.endsWith('.jsonl') &&
+            if (entry.key.endsWith('.applog') &&
                 entry.value.length > (completedBytes[entry.key]?.length ?? 0))
               for (final line
                   in utf8
@@ -88,7 +88,7 @@ void registerFoodAccountWorkflowTests() {
                       )
                       .split('\n')
                       .where((line) => line.isNotEmpty))
-                (jsonDecode(line) as Map)['type'] as String,
+                ...taskEffectsFromAction(line).map((event) => event.type),
         ];
         final completed =
             (host.rows as Iterable).singleWhere(
@@ -411,8 +411,7 @@ Future<void> _chooseAccount(WidgetTester tester, String label) async {
 
 Future<Map<String, List<int>>> _records(LocalLogFolder folder) async => {
   for (final file in await folder.list())
-    if (file.name.endsWith('.jsonl') || file.name.endsWith('.foodlog'))
-      file.name: await folder.read(file.name),
+    if (file.name.endsWith('.applog')) file.name: await folder.read(file.name),
 };
 
 bool _sameBytes(Map<String, List<int>> left, Map<String, List<int>> right) =>
@@ -455,9 +454,7 @@ Future<void> _withWorkspace(
     'description': '',
     'assignee': blair,
   });
-  final writer = const Uuid().v4();
-  var previous = eventGenesisHash(seed.space, writer);
-  final foodRecords = <FoodRecord>[];
+  final food = await FoodStore.openUnified(seed.unified!);
   for (final details in [
     const FoodDetails(name: 'Synthetic stock rice', expiry: '2026-11-03'),
     const FoodDetails(
@@ -466,37 +463,15 @@ Future<void> _withWorkspace(
       retention: 'Freezer',
     ),
   ]) {
-    final sequence = foodRecords.length + 1;
-    final record = FoodRecord(
-      space: seed.space,
-      writer: writer,
-      sequence: sequence,
-      clock: EventClock(BigInt.from(sequence)),
-      previousHash: previous,
-      operation: FoodOperation(
-        id: '$writer:$sequence',
-        order: sequence,
-        action: FoodAction.add,
-        targets: [const Uuid().v4()],
-        details: details,
-        contents: const Contents.fraction(1, 1),
-        createdAt: '2026-10-11T00:00:00Z',
-      ),
-    );
-    foodRecords.add(record);
-    previous = record.hash;
+    await food.add(details, 1);
   }
-  await File('${data.path}/${foodLogName(writer)}').writeAsString(
-    '${foodRecords.map((record) => record.encode()).join('\n')}\n',
-  );
+  await food.close();
   await seed.close();
-  await File('${profile.path}/settings.json').writeAsString(
-    jsonEncode({
-      'folder': data.path,
-      'user': alex,
-      'appearance': brightness.name,
-    }),
-  );
+  await seedNativeProfile(profile.path, {
+    'folder': data.path,
+    'user': alex,
+    'appearance': brightness.name,
+  });
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
   tester.platformDispatcher.textScaleFactorTestValue = scale;
@@ -527,27 +502,8 @@ class _Fixture {
   final String alex, blair;
 }
 
-// Food creates its first owned stream instead of appending to a missing file.
-// Keep the bounded adapter used by production, and inject the same before-write
-// failure into that first create. Recovery can then write only its retained
-// bytes; it cannot silently allocate replacement container identities.
+// Current enrollment creates the app stream; ordinary appends use the common
+// before-write fault adapter and retain exact same-session bytes.
 class _FoodFaultFolder extends CountingFolder {
   _FoodFaultFolder(super.delegate);
-
-  @override
-  Future<void> create(String name, Uint8List bytes) async {
-    if (!name.endsWith('.foodlog')) return super.create(name, bytes);
-    appends++;
-    if (fault == 'before') {
-      fault = null;
-      delayedName = name;
-      delayedSuffix = Uint8List.fromList(bytes);
-      throw StateError('Injected before Food stream creation');
-    }
-    await delegate.create(name, bytes);
-    if (name == delayedName) {
-      delayedName = null;
-      delayedSuffix = null;
-    }
-  }
 }

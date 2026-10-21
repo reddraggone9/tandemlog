@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'unified_history_workflow_test.dart'
     show registerUnifiedHistoryWorkflowTests;
 import '../test/support/toolbar_button.dart';
@@ -303,8 +304,13 @@ Future<void> waitForCaptureAction(WidgetTester tester) async {
   expect(action.hitTestable(), findsOneWidget);
 }
 
+class BoundedNativeTestBinding extends IntegrationTestWidgetsFlutterBinding {
+  @override
+  Timeout get defaultTestTimeout => const Timeout(Duration(minutes: 2));
+}
+
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  BoundedNativeTestBinding();
   registerStickyTaskGroupTests();
   registerStartHintTests();
   registerSaveAcknowledgementTests();
@@ -387,9 +393,10 @@ void main() {
           },
         });
       }
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       tester.view.devicePixelRatio = 1.5;
@@ -585,9 +592,10 @@ void main() {
       tags: ['edgeqa', 'Other', ...List.generate(9, (i) => 'size-tag-$i')],
       observedTagRefs: {},
     );
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     final before = {
       await for (final f in folder.list())
         if (f is File) f.path: base64Encode(await f.readAsBytes()),
@@ -741,9 +749,10 @@ void main() {
       await add('Arrange reference shelf', ['Home', 'Planning']);
       await add('Other user review', ['Home'], assigned: other);
       await add('Finished planning', ['Planning'], done: true);
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       tester.view.devicePixelRatio = 1;
@@ -1232,9 +1241,10 @@ void main() {
       await add('Planning future', upcoming: true);
       await add('Planning finished', done: true);
       await add('Unrelated task');
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       await filterChoice(tester, 'Completed');
@@ -1393,9 +1403,10 @@ void main() {
       final root = await Directory.systemTemp.createTemp('tandemlog-ui');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/private').create();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': null}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': null,
+      });
       Future<void> closeApp() async {
         final retired = tester.state(find.byType(TasksPage)) as dynamic;
         await tester.pumpWidget(const SizedBox());
@@ -1503,17 +1514,20 @@ void main() {
       expect(find.text('Buy oats'), findsOneWidget);
       expect(find.text('Large bag'), findsOneWidget);
       final bad = File(
-        '${folder.path}/11111111-1111-4111-8111-111111111111.jsonl',
+        '${folder.path}/11111111-1111-4111-8111-111111111111.applog',
       );
       await bad.writeAsString('{"v":99}\n');
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
-      expect(find.textContaining('Unsupported event version'), findsOneWidget);
+      expect(
+        find.textContaining('Unknown app history version'),
+        findsOneWidget,
+      );
       expect(find.text('Buy oats'), findsOneWidget);
       await bad.delete();
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
-      expect(find.textContaining('Unsupported event version'), findsNothing);
+      expect(find.textContaining('Unknown app history version'), findsNothing);
       await closeApp();
       await root.delete(recursive: true);
     },
@@ -1658,8 +1672,10 @@ void main() {
     expect(find.text('No open tasks'), findsOneWidget);
     final records = <dynamic>[];
     await for (final f in Directory('${profile.path}/shared-data').list()) {
-      if (f.path.endsWith('.jsonl')) {
-        records.addAll((await File(f.path).readAsLines()).map(jsonDecode));
+      if (f.path.endsWith('.applog')) {
+        records.addAll(
+          (await File(f.path).readAsLines()).expand(taskEffectMapsFromAction),
+        );
       }
     }
     expect(records.where((r) => r['type'] == 'user.created').length, 1);
@@ -1716,9 +1732,10 @@ void main() {
       );
       final user = const Uuid().v4();
       await writer.command(user, 'user.created', {'name': 'Example'});
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       final previousPlatform = debugDefaultTargetPlatformOverride;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       try {
@@ -1835,7 +1852,7 @@ void main() {
         expect(find.text('Review errors'), findsNothing);
         expect(controller.value, corrected);
         expect((await titles()).length, 5);
-        final broken = File('${folder.path}/${const Uuid().v4()}.jsonl');
+        final broken = File('${folder.path}/${const Uuid().v4()}.applog');
         await broken.writeAsString('{"version":999}\n', flush: true);
         await tester.tap(primary);
         await tester.pumpAndSettle();
@@ -1893,9 +1910,10 @@ void main() {
         'description': 'Original notes',
         'assignee': user,
       });
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
@@ -2136,9 +2154,10 @@ void main() {
     tester,
   ) async {
     final root = await Directory.systemTemp.createTemp('tandemlog-missing');
-    await File('${root.path}/settings.json').writeAsString(
-      jsonEncode({'folder': '${root.path}/absent', 'user': null}),
-    );
+    await seedNativeProfile(root.path, {
+      'folder': '${root.path}/absent',
+      'user': null,
+    });
     await tester.pumpWidget(TandemlogApp(profilePath: root.path));
     await tester.pumpAndSettle();
     expect(find.text('Start'), findsNothing);
@@ -2183,9 +2202,10 @@ void main() {
     );
     await store.command(user, 'user.created', {'name': 'Test user'});
     await store.close();
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     await openCaptureForTest(tester);
@@ -2285,9 +2305,10 @@ void main() {
     await add('Other household task', other);
     await add('Completed household task', other, done: true);
     await add('Different tag task', user, tag: 'home');
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     await openCaptureForTest(tester);
@@ -2523,9 +2544,10 @@ void main() {
             'Planning/LongOrdinaryTagForSearchAndAccessibility${i.toString().padLeft(3, '0')}',
       ),
     );
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     await tester.pumpWidget(
       TandemlogApp(
         profilePath: profile.path,
@@ -2740,9 +2762,10 @@ void main() {
       if (i == 0) await store.command(id, 'task.completed', {});
     }
     await store.close();
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     for (final sample in [
@@ -2845,9 +2868,10 @@ void main() {
         'assignee': user,
         'schedule': {'scheduledDate': '2026-01-30', 'scheduledTime': '08:00'},
       });
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       await tester.pumpWidget(
         TandemlogApp(
           profilePath: profile.path,
@@ -2962,7 +2986,7 @@ void main() {
         await remote.refresh();
         debugPrint('TANDEMLOG_PARITY_ORDER_ROWS=${jsonEncode(remote.rows)}');
         debugPrint(
-          'TANDEMLOG_PARITY_ORDER_MOVES=${jsonEncode(remote.db.select("SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved'").map((row) => row['raw']).toList())}',
+          'TANDEMLOG_PARITY_ORDER_MOVES=${jsonEncode(remote.unified!.snapshot.tasks.where((event) => event.type == 'task.moved').map((event) => event.canonicalRaw).toList())}',
         );
         debugPrint(
           'TANDEMLOG_PARITY_ORDER_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
@@ -3027,9 +3051,10 @@ void main() {
       now: () => DateTime.now().add(const Duration(minutes: 10)),
     );
     await remote.command(user, 'user.created', {'name': 'Example user'});
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     expect(find.textContaining('ahead of this device'), findsOneWidget);
@@ -3081,9 +3106,10 @@ void main() {
         );
       }
       await writer.command(ids[4], 'task.completed', {});
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       await openCaptureForTest(tester);
@@ -3251,9 +3277,10 @@ void main() {
       await for (final entry in folder.list())
         if (entry is File) entry.path: await entry.readAsBytes(),
     };
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     var viewNow = DateTime.utc(2026, 10, 1);
     late ViewTimeSource source;
     await tester.pumpWidget(
@@ -3351,7 +3378,7 @@ void main() {
     final before = order();
     final bytes = await folder
         .list()
-        .where((f) => f.path.endsWith('.jsonl'))
+        .where((f) => f.path.endsWith('.applog'))
         .asyncMap((f) => File(f.path).readAsString())
         .toList();
     await drag('Dated', 'Different time');
@@ -3366,7 +3393,7 @@ void main() {
     expect(
       await folder
           .list()
-          .where((f) => f.path.endsWith('.jsonl'))
+          .where((f) => f.path.endsWith('.applog'))
           .asyncMap((f) => File(f.path).readAsString())
           .toList(),
       bytes,
@@ -3533,9 +3560,10 @@ void main() {
       },
     });
     await writer.close();
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await seedNativeProfile(profile.path, {
+      'folder': folder.path,
+      'user': user,
+    });
     final printed = <String>[];
     final originalPrint = debugPrint;
     debugPrint = (message, {wrapWidth}) {
@@ -3647,14 +3675,15 @@ void main() {
         ids['Completed future history']!,
         completionDay: DateTime.utc(2026, 9, 30),
       );
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       Future<Map<String, String>> logs() async => {
         for (final file
             in await folder
                 .list()
-                .where((entry) => entry.path.endsWith('.jsonl'))
+                .where((entry) => entry.path.endsWith('.applog'))
                 .toList())
           file.path: await File(file.path).readAsString(),
       };
@@ -3776,9 +3805,11 @@ void main() {
         'assignee': user,
         'schedule': {'dueDate': '2030-05-01'},
       });
-      await File('${profile.path}/settings.json').writeAsString(
-        jsonEncode({'folder': folder.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
@@ -3851,7 +3882,7 @@ void main() {
         await writer.refresh();
         debugPrint('TANDEMLOG_SESSION_UNDO_ROWS=${jsonEncode(writer.rows)}');
         debugPrint(
-          'TANDEMLOG_SESSION_UNDO_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM events WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
+          'TANDEMLOG_SESSION_UNDO_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM ${writer.tables.events} WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
         );
         debugPrint(
           'TANDEMLOG_SESSION_UNDO_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
@@ -3878,7 +3909,7 @@ void main() {
           'TANDEMLOG_SESSION_UNDO_SECOND_ROWS=${jsonEncode(writer.rows)}',
         );
         debugPrint(
-          'TANDEMLOG_SESSION_UNDO_SECOND_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM events WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
+          'TANDEMLOG_SESSION_UNDO_SECOND_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM ${writer.tables.events} WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
         );
         debugPrint(
           'TANDEMLOG_SESSION_UNDO_SECOND_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
@@ -4035,7 +4066,7 @@ void main() {
           'TANDEMLOG_SESSION_NEWER_UNDO_ROWS=${jsonEncode(writer.rows)}',
         );
         debugPrint(
-          'TANDEMLOG_SESSION_NEWER_UNDO_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM events WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
+          'TANDEMLOG_SESSION_NEWER_UNDO_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM ${writer.tables.events} WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
         );
         debugPrint(
           'TANDEMLOG_SESSION_NEWER_UNDO_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
@@ -4100,9 +4131,11 @@ void main() {
           'recurrence': 'every day when done',
         },
       });
-      await File('${profile.path}/settings.json').writeAsString(
-        jsonEncode({'folder': folder.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       var base = DateTime.utc(2026, 10, 1, 23, 59, 55);
       final elapsed = Stopwatch()..start();
       late ViewTimeSource source;
@@ -4126,7 +4159,7 @@ void main() {
             .isNotEmpty,
       );
       final before = await File(
-        '${folder.path}/${writer.writer}.jsonl',
+        '${folder.path}/${writer.writer}.applog',
       ).readAsString();
       await openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
@@ -4140,7 +4173,7 @@ void main() {
       );
       expect(find.byType(TaskEditor), findsNothing);
       expect(
-        await File('${folder.path}/${writer.writer}.jsonl').readAsString(),
+        await File('${folder.path}/${writer.writer}.applog').readAsString(),
         before,
       );
       // Native timer, without another edit or invalidation, must enable at midnight.
@@ -4222,9 +4255,10 @@ void main() {
         // notes save. Inbox departure is covered by the dedicated flow.
         await writer.editNativeFixtureTask(id, {'title': title});
       }
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -4397,9 +4431,10 @@ void main() {
       );
       final user = const Uuid().v4();
       await writer.command(user, 'user.created', {'name': 'Example'});
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -4475,9 +4510,10 @@ void main() {
       await writer.createTasks({
         for (var i = 0; i < ids.length; i++) ids[i]: 'Reference task ${i + 1}',
       }, user);
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
       tester.view.physicalSize = const Size(390, 800);
       tester.view.devicePixelRatio = 1;
       tester.view.viewPadding = const FakeViewPadding(top: 24, bottom: 24);

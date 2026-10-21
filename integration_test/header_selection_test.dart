@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -49,13 +50,11 @@ void registerHeaderSelectionTests() {
               'tags': ['reference'],
             });
           }
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': folder.path,
-              'user': user,
-              'appearance': variant.theme,
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': folder.path,
+            'user': user,
+            'appearance': variant.theme,
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = Size(variant.width, 820);
           tester.platformDispatcher.textScaleFactorTestValue = variant.scale;
@@ -354,13 +353,11 @@ void registerHeaderSelectionTests() {
               'tags': <String>[],
             });
           }
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': folder.path,
-              'user': user,
-              'appearance': 'dark',
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': folder.path,
+            'user': user,
+            'appearance': 'dark',
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = const Size(1200, 820);
           await tester.pumpWidget(

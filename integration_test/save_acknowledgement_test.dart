@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -59,7 +60,7 @@ void main() {
 
 void registerSaveAcknowledgementTests() {
   testWidgets(
-    'legacy v3 provider replacement blocks retry until exact pending history recovery',
+    'atomic action provider replacement blocks retry until exact pending history recovery',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('save-ack-native-');
       final folder = _ReplacingFolder(
@@ -68,7 +69,6 @@ void registerSaveAcknowledgementTests() {
       final store = await TaskStore.open(folder, '${root.path}/private');
       var closes = 0;
       try {
-        await folder.create('${store.writer}.jsonl', Uint8List(0));
         final user = const Uuid().v4(), id = const Uuid().v4();
         await store.command(user, 'user.created', {'name': 'Alex Example'});
         await store.command(id, 'task.created', {
@@ -76,7 +76,7 @@ void registerSaveAcknowledgementTests() {
           'description': 'Original notes',
           'assignee': user,
         });
-        final before = await folder.read('${store.writer}.jsonl');
+        final before = await folder.read('${store.writer}.applog');
         Map<String, dynamic> row() =>
             store.rows.firstWhere((r) => r['id'] == id);
         final task = row();
@@ -119,7 +119,7 @@ void registerSaveAcknowledgementTests() {
           expect(field.enabled, isTrue);
         }
         expect(row()['title'], 'Original task');
-        expect(await folder.read('${store.writer}.jsonl'), before);
+        expect(await folder.read('${store.writer}.applog'), before);
         final appendCalls = folder.appendCalls;
         await tester.tap(find.text('Save changes'));
         await tester.pumpAndSettle();
@@ -129,7 +129,7 @@ void registerSaveAcknowledgementTests() {
           findsOneWidget,
         );
         expect(folder.appendCalls, appendCalls);
-        expect(await folder.read('${store.writer}.jsonl'), before);
+        expect(await folder.read('${store.writer}.applog'), before);
         expect(row()['title'], 'Original task');
         for (final entry in {
           'title': 'Retained draft',
@@ -147,10 +147,10 @@ void registerSaveAcknowledgementTests() {
         // The provider restores the bytes of the original attempted append,
         // including its original event ID, clock and chain hash. A retry must
         // never manufacture another payload at that reserved writer sequence.
-        expect(folder.droppedName, '${store.writer}.jsonl');
+        expect(folder.droppedName, '${store.writer}.applog');
         expect(folder.droppedSuffix, isNotNull);
         await folder.restoreDroppedSuffix();
-        final recovered = await folder.read('${store.writer}.jsonl');
+        final recovered = await folder.read('${store.writer}.applog');
         expect(recovered, [...before, ...folder.droppedSuffix!]);
         expect(await store.refresh(), isTrue);
         expect(row()['title'], 'Retained draft');
@@ -183,13 +183,13 @@ void registerSaveAcknowledgementTests() {
               .text,
           'Unsaved details remain available for retry.',
         );
-        expect(await folder.read('${store.writer}.jsonl'), recovered);
+        expect(await folder.read('${store.writer}.applog'), recovered);
         expect(folder.appendCalls, appendCalls);
         final events = utf8
-            .decode(await folder.read('${store.writer}.jsonl'))
+            .decode(await folder.read('${store.writer}.applog'))
             .trim()
             .split('\n')
-            .map((line) => jsonDecode(line) as Map);
+            .expand(taskEffectMapsFromAction);
         expect(
           events.where((event) => event['type'] == 'task.edited').length,
           1,
@@ -220,7 +220,6 @@ void registerSaveAcknowledgementTests() {
       TaskTextSession? session;
       var closes = 0;
       try {
-        await folder.create('${store.writer}.jsonl', Uint8List(0));
         final user = const Uuid().v4(), id = const Uuid().v4();
         await store.command(user, 'user.created', {'name': 'Synthetic'});
         await store.createNativeFixtureTask(id, {
@@ -264,7 +263,7 @@ void registerSaveAcknowledgementTests() {
           find.byKey(const ValueKey('description')),
           'Retained native notes',
         );
-        final before = await folder.read('${store.writer}.jsonl');
+        final before = await folder.read('${store.writer}.applog');
         folder.replaceAfterAppend = true;
         await tester.tap(find.text('Save changes'));
         await tester.pumpAndSettle();
@@ -272,7 +271,7 @@ void registerSaveAcknowledgementTests() {
         expect(prepared.committed, isFalse);
         expect(session.hasPendingReceipt, isTrue);
         expect(closes, 0);
-        expect(await folder.read('${store.writer}.jsonl'), before);
+        expect(await folder.read('${store.writer}.applog'), before);
         expect(
           store.rows.singleWhere((row) => row['id'] == id)['title'],
           'Original task',
@@ -298,7 +297,7 @@ void registerSaveAcknowledgementTests() {
         await tester.pumpAndSettle();
         expect(session.hasPendingReceipt, isFalse);
         expect(prepared.committed, isTrue);
-        expect(await folder.read('${store.writer}.jsonl'), [
+        expect(await folder.read('${store.writer}.applog'), [
           ...before,
           ...attempted,
         ]);
@@ -308,8 +307,8 @@ void registerSaveAcknowledgementTests() {
           'Retained native draft',
         );
         final events = const LineSplitter()
-            .convert(utf8.decode(await folder.read('${store.writer}.jsonl')))
-            .map((line) => jsonDecode(line) as Map);
+            .convert(utf8.decode(await folder.read('${store.writer}.applog')))
+            .expand(taskEffectMapsFromAction);
         expect(
           events.where((event) => event['type'] == 'task.textEdited'),
           hasLength(1),

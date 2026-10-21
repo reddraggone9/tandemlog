@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import '../test/support/toolbar_button.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -102,9 +103,10 @@ void registerChecklistLifecycleTests() {
             'assignee': user,
           });
           final item = await peer.addChecklistItem(parent, 'Original');
-          await File(
-            '${profile.path}/settings.json',
-          ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+          await seedNativeProfile(profile.path, {
+            'folder': shared.path,
+            'user': user,
+          });
           await tester.pumpWidget(
             TandemlogApp(
               profilePath: profile.path,
@@ -199,9 +201,10 @@ void registerChecklistLifecycleTests() {
         'assignee': user,
       });
       final item = await peer.addChecklistItem(parent, 'Original');
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+      await seedNativeProfile(profile.path, {
+        'folder': shared.path,
+        'user': user,
+      });
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await flows.waitForUi(
         tester,
@@ -272,13 +275,11 @@ void registerChecklistLifecycleTests() {
           final original = unknownAppend
               ? null
               : await peer.addChecklistItem(parent, 'Original');
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': inner.location,
-              'user': user,
-              'appearance': 'dark',
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': inner.location,
+            'user': user,
+            'appearance': 'dark',
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = const Size(1200, 850);
           await tester.pumpWidget(

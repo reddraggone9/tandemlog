@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -48,13 +48,11 @@ void registerCompletionFocusTests() {
               if (variant.repeating) 'recurrence': 'every week when done',
             },
           });
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': folder.path,
-              'user': user,
-              'appearance': variant.appearance,
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': folder.path,
+            'user': user,
+            'appearance': variant.appearance,
+          });
           tester.view.physicalSize = variant.size;
           tester.platformDispatcher.textScaleFactorTestValue = variant.scale;
           tester.view.devicePixelRatio = 1;
@@ -131,17 +129,18 @@ void registerCompletionFocusTests() {
           Future<int> completionCount() async {
             var count = 0;
             await for (final file in folder.list()) {
-              if (file is! File || !file.path.endsWith('.jsonl')) continue;
+              if (file is! File || !file.path.endsWith('.applog')) continue;
               for (final line in await file.readAsLines()) {
-                final event = jsonDecode(line) as Map;
-                if (event['entity'] == task &&
-                    const {
-                      'task.completed',
-                      'task.completedWithText',
-                      'task.completedWithChecklist',
-                      'task.completedKeepingSuccessor',
-                    }.contains(event['type'])) {
-                  count++;
+                for (final event in taskEffectsFromAction(line)) {
+                  if (event.entity == task &&
+                      const {
+                        'task.completed',
+                        'task.completedWithText',
+                        'task.completedWithChecklist',
+                        'task.completedKeepingSuccessor',
+                      }.contains(event.type)) {
+                    count++;
+                  }
                 }
               }
             }

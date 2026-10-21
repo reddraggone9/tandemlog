@@ -1,7 +1,9 @@
+import 'package:tandemlog/domain/event.dart' show FormatFailure;
+import 'package:tandemlog/food/food_store.dart';
+import 'profile_fixture.dart';
 import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,9 +84,11 @@ void registerFoodProductionTests() {
         'assignee': user,
       });
       await seed.close();
-      await File('${private.path}/settings.json').writeAsString(
-        jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(private.path, {
+        'folder': data.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       final gate = _HeldFoodManifestFolder(LocalLogFolder(data.path));
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
@@ -94,7 +98,7 @@ void registerFoodProductionTests() {
         for (final file
             in await data
                 .list()
-                .where((e) => e.path.endsWith('.jsonl'))
+                .where((e) => e.path.endsWith('.applog'))
                 .cast<File>()
                 .toList())
           file.path: await file.readAsBytes(),
@@ -178,9 +182,11 @@ void registerFoodProductionTests() {
           'assignee': user,
         });
         await seed.close();
-        await File('${private.path}/settings.json').writeAsString(
-          jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
-        );
+        await seedNativeProfile(private.path, {
+          'folder': data.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         final gate = _HeldFoodManifestFolder(LocalLogFolder(data.path));
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
@@ -190,7 +196,7 @@ void registerFoodProductionTests() {
           for (final file
               in await data
                   .list()
-                  .where((e) => e.path.endsWith('.jsonl'))
+                  .where((e) => e.path.endsWith('.applog'))
                   .cast<File>()
                   .toList())
             file.path: await file.readAsBytes(),
@@ -344,69 +350,84 @@ void registerFoodProductionTests() {
   }
 
   testWidgets(
-    'isolated Food startup failure keeps Tasks writable and retries only Food',
+    'unknown complete shared record blocks both modules and preserves their last views',
     (tester) async {
       final root = await Directory.systemTemp.createTemp(
-        'food-isolation-native-',
+        'shared-corruption-native-',
       );
-      final data = await Directory('${root.path}/data').create(),
-          private = await Directory('${root.path}/profile').create();
+      final data = await Directory('${root.path}/data').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final folder = LocalLogFolder(data.path);
+      final seed = await openNativeFixtureStore(folder, '${root.path}/seed');
       final user = const Uuid().v4(), task = const Uuid().v4();
-      final seed = await openNativeFixtureStore(
-        LocalLogFolder(data.path),
-        '${root.path}/seed',
-      );
       await seed.command(user, 'user.created', {'name': 'Synthetic household'});
       await seed.createNativeFixtureTask(task, {
         'title': 'Preserved synthetic task',
         'description': '',
         'assignee': user,
       });
+      final food = await FoodStore.openUnified(seed.unified!);
+      await food.add(
+        const FoodDetails(
+          name: 'Preserved synthetic rice',
+          expiry: '2026-11-03',
+        ),
+        1,
+      );
+      await food.close();
       await seed.close();
+      await seedNativeProfile(profile.path, {
+        'folder': data.path,
+        'user': user,
+      });
       final malformed = File(
-        '${data.path}/food-00000000-0000-4000-8000-000000000010.foodlog',
+        '${data.path}/00000000-0000-4000-8000-000000000010.applog',
       );
-      await malformed.writeAsString('not-json\n');
-      await File('${private.path}/settings.json').writeAsString(
-        jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
-      );
-      tester.view.devicePixelRatio = 1;
-      tester.view.physicalSize = const Size(1200, 850);
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
       try {
-        await tester.pumpWidget(TandemlogApp(profilePath: private.path));
+        await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
         await flows.waitForUi(
           tester,
           () => find.text('Preserved synthetic task').evaluate().isNotEmpty,
         );
-        await tester.tap(find.byKey(const ValueKey('open-capture')));
-        await tester.pumpAndSettle();
-        await tester.enterText(
-          find.widgetWithText(TextField, 'What needs doing?'),
-          'Added while Food unavailable',
+        final host = tester.state(find.byType(TasksPage)) as dynamic;
+        final before = {
+          for (final file in await folder.list())
+            file.name: await folder.read(file.name),
+        };
+        await malformed.writeAsString('{"v":99}\n', flush: true);
+        host.importer.request();
+        await flows.waitForUi(tester, () => host.error != null);
+        expect(find.text('Preserved synthetic task'), findsOneWidget);
+        await expectLater(
+          host.store.edit(
+            task,
+            {'assignee': user},
+            tags: <String>[],
+            observedTagRefs: <String, String>{},
+          ),
+          throwsA(isA<FormatFailure>()),
         );
-        await flows.waitForCaptureAction(tester);
-        await tester.tap(find.byTooltip('Add tasks'));
+        await expectLater(
+          host.foodStore.add(
+            const FoodDetails(name: 'Must not append', expiry: '2026-11-03'),
+            1,
+          ),
+          throwsA(isA<FormatFailure>()),
+        );
+        for (final entry in before.entries) {
+          expect(await folder.read(entry.key), entry.value);
+        }
+        expect(await malformed.readAsString(), '{"v":99}\n');
+        await malformed.delete();
+        host.importer.request();
         await flows.waitForUi(
           tester,
-          () => find.text('Added while Food unavailable').evaluate().isNotEmpty,
+          () => host.error == null && host.busy == false,
         );
         await switchSection(tester, food: true);
-        await tester.pumpAndSettle();
-        expect(find.text('Food is unavailable'), findsOneWidget);
-        expect(find.byTooltip('Add food'), findsNothing);
-        await malformed.writeAsBytes([]);
-        await tester.tap(find.widgetWithText(TextButton, 'Retry food'));
-        await flows.waitForUi(
-          tester,
-          () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
-        );
-        expect(find.text('Food is unavailable'), findsNothing);
+        expect(find.text('Preserved synthetic rice'), findsOneWidget);
         await switchSection(tester, food: false);
-        await tester.pumpAndSettle();
         expect(find.text('Preserved synthetic task'), findsOneWidget);
-        expect(find.text('Added while Food unavailable'), findsOneWidget);
         expect(tester.takeException(), isNull);
       } finally {
         await tester.pumpWidget(const SizedBox.shrink());
@@ -436,9 +457,11 @@ void registerFoodProductionTests() {
         'assignee': user,
       });
       await seed.close();
-      await File('${private.path}/settings.json').writeAsString(
-        jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
-      );
+      await seedNativeProfile(private.path, {
+        'folder': data.path,
+        'user': user,
+        'appearance': 'dark',
+      });
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
       addTearDown(tester.view.resetPhysicalSize);

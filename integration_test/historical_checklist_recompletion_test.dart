@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -91,13 +92,11 @@ void registerHistoricalChecklistRecompletionTests() {
           '${root.path}/offline-profile',
         );
         addTearDown(offline.close);
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': folder.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         await tester.pumpWidget(
@@ -197,8 +196,8 @@ void registerHistoricalChecklistRecompletionTests() {
 
         await offline.complete(parent, completionDay: DateTime(2026, 10, 8));
         await File(
-          '${offlineFolder.path}/${offline.writer}.jsonl',
-        ).copy('${folder.path}/${offline.writer}.jsonl');
+          '${offlineFolder.path}/${offline.writer}.applog',
+        ).copy('${folder.path}/${offline.writer}.applog');
         await peer.refresh();
         expect(jsonEncode(peer.currentTextRow(child)), before);
         await flows.filterChoice(tester, 'Completed');

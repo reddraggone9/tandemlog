@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -69,13 +70,11 @@ void registerTaskDragBoundaryTests() {
           for (final id in initial) {
             await writer.moveBefore(id, null);
           }
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': data.path,
-              'user': user,
-              'appearance': 'dark',
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': data.path,
+            'user': user,
+            'appearance': 'dark',
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = const Size(390, 1000);
           tester.platformDispatcher.textScaleFactorTestValue = scale;
@@ -345,13 +344,11 @@ void _registerDragBoundaryEdgeTests() {
           for (final id in initial) {
             await peer.moveBefore(id, null);
           }
-          await File('${profile.path}/settings.json').writeAsString(
-            jsonEncode({
-              'folder': data.path,
-              'user': user,
-              'appearance': 'dark',
-            }),
-          );
+          await seedNativeProfile(profile.path, {
+            'folder': data.path,
+            'user': user,
+            'appearance': 'dark',
+          });
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = const Size(390, 850);
           await tester.pumpWidget(

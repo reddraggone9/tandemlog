@@ -1,5 +1,5 @@
+import 'profile_fixture.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -112,13 +112,11 @@ void registerFolderPickerProgressTests() {
         final b = _FixtureFolder(alias(second, 'second'), second.path);
         final broken = _FixtureFolder(alias(bad, 'bad'), bad.path);
         final folders = {a.location: a, b.location: b, broken.location: broken};
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': a.location,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': a.location,
+          'user': user,
+          'appearance': 'dark',
+        });
         final picker = _HeldPicker(android);
         final messenger =
             TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;

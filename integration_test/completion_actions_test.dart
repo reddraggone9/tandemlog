@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -93,13 +94,11 @@ void registerCompletionActionTests() {
           });
         }
         await writer.complete(plain, completionDay: DateTime.utc(2026, 10, 2));
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': folder.path,
-            'user': user,
-            'appearance': 'dark',
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.physicalSize = const Size(390, 800);
         tester.view.devicePixelRatio = 1;
         tester.platformDispatcher.textScaleFactorTestValue = 2;
@@ -182,7 +181,7 @@ void registerCompletionActionTests() {
 
         // A task-local failure still admits the independent Food read. Hold
         // that read to inspect the ordinary diagnostic with real keyboard input.
-        final failedTaskFile = '${writer.writer}.jsonl';
+        final failedTaskFile = '${writer.writer}.applog';
         transport.failedTaskFile = failedTaskFile;
         transport.pause = true;
         await tester.tap(check(repeat));

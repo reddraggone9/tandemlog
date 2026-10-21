@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'profile_fixture.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -87,13 +87,11 @@ void registerTaskEditorErrorKeyboardTests() {
         });
         await seed.createTasks({task: 'RC68 capture edited'}, user);
         await seed.close();
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': folder.path,
-            'user': user,
-            'appearance': appearance,
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+          'appearance': appearance,
+        });
         Future<Map<String, List<int>>> canonical() async => {
           for (final file in folder.listSync().whereType<File>())
             file.path: file.readAsBytesSync(),
@@ -386,13 +384,11 @@ void registerTaskEditorResizeTests() {
         });
         await seed.createTasks({task: 'RC68 capture edited'}, user);
         await seed.close();
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({
-            'folder': folder.path,
-            'user': user,
-            'appearance': appearance,
-          }),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': folder.path,
+          'user': user,
+          'appearance': appearance,
+        });
         Map<String, List<int>> canonical() => {
           for (final file in folder.listSync().whereType<File>())
             file.path: file.readAsBytesSync(),

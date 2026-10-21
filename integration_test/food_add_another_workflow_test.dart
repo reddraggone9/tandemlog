@@ -1,3 +1,4 @@
+import 'profile_fixture.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/gestures.dart';
@@ -100,9 +101,11 @@ void registerFoodAddAnotherTests() {
         );
         await legacyFood.close();
         await seed.close();
-        await File('${profile.path}/settings.json').writeAsString(
-          jsonEncode({'folder': data.path, 'user': user, 'appearance': 'dark'}),
-        );
+        await seedNativeProfile(profile.path, {
+          'folder': data.path,
+          'user': user,
+          'appearance': 'dark',
+        });
         tester.view.physicalSize = Size(
           1200,
           Platform.environment['FOOD_PREVIEW_RECORD'] == '1' ? 850 : 1000,
@@ -118,12 +121,12 @@ void registerFoodAddAnotherTests() {
         };
         Future<List<FoodRecord>> records() async => [
           for (final file in await folder.list())
-            if (file.name.endsWith('.foodlog'))
+            if (file.name.endsWith('.applog'))
               ...utf8
                   .decode(await folder.read(file.name))
                   .split('\n')
                   .where((line) => line.isNotEmpty)
-                  .map(FoodRecord.decode),
+                  .expand(foodEffectsFromAction),
         ];
         try {
           await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
