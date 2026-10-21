@@ -371,7 +371,11 @@ void registerFoodAccountWorkflowTests() {
         );
         await tester.pumpAndSettle();
         expect(host.foodStore.hasPreparedAppend, false);
-        expect(await fixture.folder.delegate.read(reservedName), reservedBytes);
+        final prefix = before[reservedName] ?? const <int>[];
+        expect(await fixture.folder.delegate.read(reservedName), [
+          ...prefix,
+          ...reservedBytes,
+        ]);
         expect(fixture.folder.appends, appendCount + 1);
         final added = tester
             .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))

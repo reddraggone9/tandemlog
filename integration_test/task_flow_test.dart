@@ -22,6 +22,7 @@ import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/unified_record.dart';
+import 'package:tandemlog/storage/task_store.dart';
 
 import 'native_text_fixtures.dart';
 import 'task_editor_error_keyboard_workflow_test.dart'
@@ -207,8 +208,12 @@ Future<void> filterChoice(WidgetTester tester, String label) async {
 }
 
 Future<void> openSettings(WidgetTester tester) async {
+  final recovery = find.byKey(const ValueKey('shared-recovery-settings'));
   final direct = find.byTooltip('Settings');
-  if (direct.evaluate().isNotEmpty) {
+  if (recovery.evaluate().isNotEmpty) {
+    await tester.ensureVisible(recovery);
+    await tester.tap(recovery);
+  } else if (direct.evaluate().isNotEmpty) {
     await tester.tap(direct);
   } else {
     await tester.tap(find.byKey(const ValueKey('identity-menu')));
@@ -2766,107 +2771,211 @@ void main() {
   testWidgets('header controls stay fixed between open and completed tabs', (
     tester,
   ) async {
-    final root = await Directory.systemTemp.createTemp('header-layout-');
-    final folder = await Directory('${root.path}/shared').create();
-    final profile = await Directory('${root.path}/profile').create();
-    final user = const Uuid().v4();
-    final store = await openNativeFixtureStore(
-      LocalLogFolder(folder.path),
-      '${root.path}/writer',
-    );
-    await store.command(user, 'user.created', {
-      'name': 'Alexandria Example Household Member',
-    });
-    final ids = List.generate(1001, (_) => const Uuid().v4());
     final setup = Stopwatch()..start();
-    // Keep the 1000-open/one-completed badge boundary without replaying the
-    // growing canonical history once per task. Use real bounded capture actions.
-    for (var first = 0; first < ids.length; first += 100) {
-      final end = (first + 100).clamp(0, ids.length);
+    final root = await Directory.systemTemp.createTemp('header-layout-');
+    TaskStore? store;
+    dynamic host;
+    dynamic connection;
+    // Leave time for app shutdown before the integration binding's three-minute
+    // deadline. Each UI wait uses the remaining body budget, never the SDK's
+    // default ten-minute settle timeout.
+    Duration bodyRemaining() {
+      final remaining = const Duration(seconds: 135) - setup.elapsed;
+      if (remaining <= Duration.zero) {
+        throw TestFailure('Header layout body exceeded its reserved budget.');
+      }
+      return remaining;
+    }
+
+    Future<void> settleHeader() async {
+      final remaining = bodyRemaining();
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        remaining < const Duration(seconds: 20)
+            ? remaining
+            : const Duration(seconds: 20),
+      );
+    }
+
+    Future<void> readyHeader(bool Function() ready) async {
+      while (!ready()) {
+        bodyRemaining();
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      await settleHeader();
+    }
+
+    Future<void> openHeaderCapture() async {
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      if (capture.evaluate().isNotEmpty) return;
+      final action = find.byKey(const ValueKey('open-capture'));
+      await readyHeader(() => _inputModeActionEnabled(tester, action));
+      await tester.ensureVisible(action);
+      await tester.tap(action);
+      await readyHeader(() => capture.evaluate().isNotEmpty);
+    }
+
+    Future<void> chooseHeaderFilter(String label) async {
+      final button = find.byKey(const ValueKey('task-filter'));
+      if (button.evaluate().isEmpty) {
+        tester.state<ScrollableState>(taskScrollable()).position.jumpTo(0);
+        await settleHeader();
+      }
+      await tester.ensureVisible(button);
+      await settleHeader();
+      await tester.tap(button);
+      await settleHeader();
+      final choice = find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.text(label),
+      );
+      await tester.ensureVisible(choice);
+      await settleHeader();
+      await tester.tap(choice);
+      await settleHeader();
+      await tester.tap(find.text('Done').last);
+      await settleHeader();
+    }
+
+    try {
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final user = const Uuid().v4();
+      store = await openNativeFixtureStore(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      await store.command(user, 'user.created', {
+        'name': 'Alexandria Example Household Member',
+      });
+      final ids = List.generate(1001, (_) => const Uuid().v4());
+      // Keep the full badge boundary in one bounded production capture action,
+      // avoiding repeated native replay of an increasingly large fixture.
       final result = await store.createTasks({
-        for (var i = first; i < end; i++) ids[i]: 'Example task $i',
+        for (var i = 0; i < ids.length; i++) ids[i]: 'Example task $i',
       }, user);
       expect(result.error, isNull);
-      debugPrint(
-        'HEADER_FIXTURE_TASKS=$end/1001 MS=${setup.elapsedMilliseconds}',
+      expect(result.committedIds.toSet(), ids.toSet());
+      expect(result.remainingIds, isEmpty);
+      debugPrint('HEADER_CAPTURE_TASKS=1001 MS=${setup.elapsedMilliseconds}');
+      await store.command(ids.first, 'task.completed', {});
+      final tasks = store.rows.where((row) => row['kind'] == 'task').toList();
+      expect(tasks, hasLength(1001));
+      expect(tasks.where((row) => row['completed'] == true), hasLength(1));
+      expect(tasks.where((row) => row['completed'] != true), hasLength(1000));
+      debugPrint('HEADER_COMPLETION_READY MS=${setup.elapsedMilliseconds}');
+      await store.close();
+      await seedNativeProfile(profile.path, {
+        'folder': folder.path,
+        'user': user,
+      });
+      debugPrint('HEADER_PROFILE_READY MS=${setup.elapsedMilliseconds}');
+      bodyRemaining();
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      host = tester.state(find.byType(TasksPage)) as dynamic;
+      await settleHeader();
+      debugPrint('HEADER_UI_READY MS=${setup.elapsedMilliseconds}');
+      for (final sample in [
+        (1000, 1.0),
+        (390, 1.0),
+        (320, 1.0),
+        (350, 2.0),
+        (390, 2.0),
+        (390, 2.5),
+      ]) {
+        debugPrint(
+          'HEADER_VIEWPORT=${sample.$1}/${sample.$2} MS=${setup.elapsedMilliseconds}',
+        );
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = Size(sample.$1.toDouble(), 820);
+        tester.platformDispatcher.textScaleFactorTestValue = sample.$2;
+        await settleHeader();
+        final userBefore = tester.getRect(
+          find.byKey(const ValueKey('identity-menu')),
+        );
+        final filterBefore = tester.getRect(
+          find.byKey(const ValueKey('task-filter')),
+        );
+        final headerBefore = tester.getRect(
+          find.byKey(const ValueKey('task-header')),
+        );
+        await openHeaderCapture();
+        final captureBefore = tester.getRect(
+          find.widgetWithText(TextField, 'What needs doing?'),
+        );
+        expect(find.text('Everyone'), findsNothing);
+        expect(find.text('Show upcoming'), findsNothing);
+        expect(
+          find.descendant(
+            of: find.byType(TaskToolbar),
+            matching: find.byType(SegmentedButton<bool>),
+          ),
+          findsNothing,
+        );
+        expect(find.byKey(const ValueKey('section-menu')), findsOneWidget);
+        expect(find.byType(SegmentedButton<bool>), findsNothing);
+        await chooseHeaderFilter('Completed');
+        expect(
+          tester.getRect(find.byKey(const ValueKey('identity-menu'))),
+          userBefore,
+        );
+        expect(
+          tester.getRect(find.byKey(const ValueKey('task-filter'))),
+          filterBefore,
+        );
+        expect(
+          tester.getRect(find.byKey(const ValueKey('task-header'))),
+          headerBefore,
+        );
+        expect(tester.takeException(), isNull);
+        await chooseHeaderFilter('Open');
+        expect(
+          tester.getRect(find.widgetWithText(TextField, 'What needs doing?')),
+          captureBefore,
+        );
+        expect(
+          tester.getRect(find.byKey(const ValueKey('task-filter'))),
+          filterBefore,
+        );
+        expect(tester.takeException(), isNull);
+      }
+    } finally {
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      // Capture the actual connection: the profile getter also rejects a
+      // poisoned profile, which would not prove its resources were released.
+      try {
+        if (host != null) {
+          await (host.starting as Future<void>?)?.timeout(
+            const Duration(seconds: 10),
+          );
+          connection = host.profileDatabase?.database;
+        }
+      } finally {
+        await tester.pumpWidget(const SizedBox.shrink());
+      }
+      expect(
+        host == null || connection != null,
+        isTrue,
+        reason: 'Header app connection was unavailable; fixture retained.',
       );
+      final cleanup = Stopwatch()..start();
+      var closed = connection == null;
+      while (!closed && cleanup.elapsed < const Duration(seconds: 20)) {
+        try {
+          connection.select('SELECT 1');
+          await tester.pump(const Duration(milliseconds: 100));
+        } on StateError catch (error) {
+          if (error.message != 'This database has already been closed') rethrow;
+          closed = true;
+        }
+      }
+      expect(closed, isTrue, reason: 'Header app profile did not close.');
+      await store?.close();
+      await root.delete(recursive: true);
     }
-    await store.command(ids.first, 'task.completed', {});
-    expect(store.rows.where((row) => row['kind'] == 'task'), hasLength(1001));
-    await store.close();
-    await seedNativeProfile(profile.path, {
-      'folder': folder.path,
-      'user': user,
-    });
-    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
-    await tester.pumpAndSettle();
-    for (final sample in [
-      (1000, 1.0),
-      (390, 1.0),
-      (320, 1.0),
-      (350, 2.0),
-      (390, 2.0),
-      (390, 2.5),
-    ]) {
-      tester.view.devicePixelRatio = 1;
-      tester.view.physicalSize = Size(sample.$1.toDouble(), 820);
-      tester.platformDispatcher.textScaleFactorTestValue = sample.$2;
-      await tester.pumpAndSettle();
-      final userBefore = tester.getRect(
-        find.byKey(const ValueKey('identity-menu')),
-      );
-      final filterBefore = tester.getRect(
-        find.byKey(const ValueKey('task-filter')),
-      );
-      final headerBefore = tester.getRect(
-        find.byKey(const ValueKey('task-header')),
-      );
-      await openCaptureForTest(tester);
-      final captureBefore = tester.getRect(
-        find.widgetWithText(TextField, 'What needs doing?'),
-      );
-      expect(find.text('Everyone'), findsNothing);
-      expect(find.text('Show upcoming'), findsNothing);
-      expect(
-        find.descendant(
-          of: find.byType(TaskToolbar),
-          matching: find.byType(SegmentedButton<bool>),
-        ),
-        findsNothing,
-      );
-      expect(find.byKey(const ValueKey('section-menu')), findsOneWidget);
-      expect(find.byType(SegmentedButton<bool>), findsNothing);
-      await filterChoice(tester, 'Completed');
-      expect(
-        tester.getRect(find.byKey(const ValueKey('identity-menu'))),
-        userBefore,
-      );
-      expect(
-        tester.getRect(find.byKey(const ValueKey('task-filter'))),
-        filterBefore,
-      );
-      expect(
-        tester.getRect(find.byKey(const ValueKey('task-header'))),
-        headerBefore,
-      );
-      expect(tester.takeException(), isNull);
-      await filterChoice(tester, 'Open');
-      expect(
-        tester.getRect(find.widgetWithText(TextField, 'What needs doing?')),
-        captureBefore,
-      );
-      expect(
-        tester.getRect(find.byKey(const ValueKey('task-filter'))),
-        filterBefore,
-      );
-      expect(tester.takeException(), isNull);
-    }
-    tester.platformDispatcher.clearTextScaleFactorTestValue();
-    tester.view.resetPhysicalSize();
-    tester.view.resetDevicePixelRatio();
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpAndSettle();
-    await root.delete(recursive: true);
   });
   testWidgets(
     'dates, zones, tags and order with historical v3 recurrence compatibility',
