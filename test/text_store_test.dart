@@ -1402,6 +1402,17 @@ void main() {
               c.rows.singleWhere((row) => row['id'] == task)['title'],
               'Shared legacy basis',
             );
+            final oracle = TaskStore.validateSemanticHistory(
+              c.unified!.snapshot.tasks,
+              space: c.space,
+              writer: c.writer,
+              textEngine: engine,
+            );
+            expect(
+              {for (final row in c.rows) row['id']: row},
+              {for (final row in oracle) row['id']: row},
+            );
+
             final lateTask = const Uuid().v4();
             await c.command(lateTask, 'task.created', {
               'title': 'Late old creation',

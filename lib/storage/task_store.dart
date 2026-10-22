@@ -318,7 +318,11 @@ class TaskStore {
     'CREATE TABLE IF NOT EXISTS ${tables.metadata} (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
   ];
 
-  void _replaySemanticEvents(List<LogEvent> events) {
+  void _replaySemanticEvents(
+    List<LogEvent> events, {
+    bool incremental = false,
+    bool settledTextDelta = false,
+  }) {
     TextCache? cache;
     try {
       for (final e in events) {
@@ -355,17 +359,20 @@ class TaskStore {
         final ordered = events.where((e) => e.writer == author).toList()
           ..sort((a, b) => a.sequence.compareTo(b.sequence));
         final last = ordered.last;
-        db.execute('INSERT INTO ${tables.streams} VALUES (?,?,?,?,?,?,?,?,?)', [
-          '$author.jsonl',
-          0,
-          '',
-          '',
-          0,
-          0,
-          last.hash,
-          last.sequence,
-          last.clock.value.toInt(),
-        ]);
+        db.execute(
+          'INSERT OR REPLACE INTO ${tables.streams} VALUES (?,?,?,?,?,?,?,?,?)',
+          [
+            '$author.jsonl',
+            0,
+            '',
+            '',
+            0,
+            0,
+            last.hash,
+            last.sequence,
+            last.clock.value.toInt(),
+          ],
+        );
       }
       if (textEngine != null) {
         cache = TextCache.forTransaction(
@@ -376,15 +383,57 @@ class TaskStore {
         );
         cache.validatePackets(events);
       }
+      final previousBaseline = _textBaseline?.id;
+      final previousTextBlocked = textWriteBlocked;
       _validateTextBaseline();
-      _validateUndoReferences();
-      _validateMoves();
-      _validateTagReferences();
-      _validateHistoricalCompletions();
-      _validateChecklistReferences();
-      _validateChecklistCompletions();
+      if (settledTextDelta) {
+        for (final event in events) {
+          _validateUndoReferences(event);
+        }
+      } else {
+        _validateSemanticReferences();
+      }
       final entities = events.map((e) => e.entity).toSet();
+      if (incremental) {
+        // Baseline selection affects every text field. A normal edit/completion
+        // changes only its entity, derived births and unresolved dependants.
+        if (events.any((e) => e.type == 'text.baselineInitialized') ||
+            previousBaseline != _textBaseline?.id ||
+            previousTextBlocked != textWriteBlocked) {
+          entities.addAll(
+            db
+                .select('SELECT id FROM ${tables.views}')
+                .map((r) => r['id'] as String),
+          );
+          entities.addAll(
+            db
+                .select('SELECT DISTINCT entity FROM ${tables.events}')
+                .map((r) => r['entity'] as String),
+          );
+        }
+        entities.addAll(
+          db
+              .select(
+                "SELECT id FROM ${tables.views} WHERE json_extract(raw,'\$.textInheritancePending')=1",
+              )
+              .map((r) => r['id'] as String),
+        );
+      }
       for (final e in events) {
+        if (e.type == 'task.moved' && e.data['before'] is String) {
+          entities.add(e.data['before'] as String);
+        }
+        entities.addAll(
+          db
+              .select(
+                "SELECT json_extract(semantic,'\$.data.successor.id') AS child FROM ${tables.events} WHERE entity=? AND json_extract(semantic,'\$.data.successor.id') IS NOT NULL",
+                [e.entity],
+              )
+              .map((r) => r['child'] as String),
+        );
+        if (e.type == 'task.recurringCompletionUndone') {
+          entities.add(const Uuid().v5(e.entity, 'successor'));
+        }
         if (isTaskCompletion(e.type) && e.data['successor'] is Map) {
           entities.add((e.data['successor'] as Map)['id'] as String);
         }
@@ -394,7 +443,15 @@ class TaskStore {
           }
         }
       }
-      final resolution = textEngine == null ? null : _textResolution();
+      for (final entity in entities.toList()) {
+        final parent = _checklistParent(entity);
+        if (parent != null) entities.add(parent);
+      }
+      final resolution =
+          textEngine != null &&
+              (!incremental || entities.any(_hasInheritedText))
+          ? _textResolution()
+          : null;
       for (final entity in entities) {
         final state = _projectEntity(
           entity,
@@ -406,12 +463,75 @@ class TaskStore {
             entity,
             jsonEncode(state),
           ]);
+        } else if (incremental) {
+          db.execute('DELETE FROM ${tables.views} WHERE id=?', [entity]);
         }
       }
-      _rebuildOrder();
+      if (!incremental ||
+          events.any(
+            (e) => const {
+              'task.created',
+              'task.createdWithText',
+              'user.created',
+              'task.completed',
+              'task.completedWithText',
+              'task.completedWithChecklist',
+              'checklist.itemCreated',
+              'task.moved',
+              'task.operationUndone',
+              'task.recurringCompletionUndone',
+            }.contains(e.type),
+          )) {
+        _rebuildOrder();
+      }
     } finally {
       cache?.close();
     }
+  }
+
+  void _validateSemanticReferences() {
+    _validateUndoReferences();
+    _validateMoves();
+    _validateTagReferences();
+    _validateHistoricalCompletions();
+    _validateChecklistReferences();
+    _validateChecklistCompletions();
+  }
+
+  bool _settledTextTargets(List<LogEvent> delta, Set<String> ready) {
+    if (delta.isEmpty ||
+        delta.any(
+          (e) =>
+              !(e.type == 'task.textEdited' &&
+                      e.data.keys.every((k) => k == 'changes') ||
+                  e.type == 'task.textEditUndone' &&
+                      e.data.keys.every(
+                        (k) => k == 'operation' || k == 'changes',
+                      ) &&
+                      ready.contains(e.data['operation'])),
+        )) {
+      return false;
+    }
+    for (final entity in delta.map((e) => e.entity).toSet()) {
+      final births = db.select(
+        "SELECT id FROM ${tables.events} WHERE entity=? AND json_extract(semantic,'\$.type') IN ('task.created','task.createdWithText','checklist.itemCreated')",
+        [entity],
+      );
+      if (!births.any((r) => ready.contains(r['id']))) return false;
+    }
+    return true;
+  }
+
+  String? _checklistParent(String entity) {
+    final own = db.select(
+      "SELECT json_extract(semantic,'\$.data.parent') AS parent FROM ${tables.events} WHERE entity=? AND json_extract(semantic,'\$.type')='checklist.itemCreated'",
+      [entity],
+    );
+    if (own.isNotEmpty) return own.first['parent'] as String;
+    final copies = _itemCopySeeds(entity);
+    return copies.isEmpty
+        ? null
+        : (copies.first.$1.data['successor'] as Map)['id'] as String;
   }
 
   Set<String> _semanticReadyIds(List<LogEvent> events) {
@@ -739,8 +859,23 @@ class TaskStore {
     }
   }
 
+  int warmProjectionReuses = 0;
   String? _unifiedTaskRevision;
+  UnifiedSnapshot? _stagedSnapshot;
+  EventClock? _stagedMaximumClock;
   void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
+    if (_unifiedTaskRevision != null && identical(snapshot, _stagedSnapshot)) {
+      final pending =
+          unified!.hasPendingAfter(snapshot) || snapshot.pendingEffects;
+      final oldWarning = clockWarning;
+      _updateClockWarning(_stagedMaximumClock, _nowNs());
+      final warning = clockWarning;
+      clockWarning = oldWarning;
+      return () {
+        _writerHasPendingAppend = pending;
+        clockWarning = warning;
+      };
+    }
     final events = snapshot.tasks.toList();
     final oldIds = db
         .select('SELECT id FROM ${tables.events}')
@@ -752,31 +887,47 @@ class TaskStore {
       if (added.isNotEmpty) ..._textCaptures.map((c) => c.entity),
       if (added.isNotEmpty) ..._nativeUndoFields.values.map((f) => f.entity),
     };
-    final revision = bytesDigest(
-      utf8.encode(events.map((e) => '${e.canonicalRaw!}\n').join()),
-    );
+    final revision = _taskProjectionRevision(events);
     final projectionChanged = revision != _unifiedTaskRevision;
     final oldBaseline = _textBaseline, oldBlocked = textWriteBlocked;
     LogEvent? newBaseline = oldBaseline;
     String? newBlocked = oldBlocked;
     if (revision != _unifiedTaskRevision) {
       try {
-        _textBaseline = null;
-        textWriteBlocked = null;
-        _recurringTextMemo.clear();
-        for (final table in [
-          tables.events,
-          tables.views,
-          tables.streams,
-          tables.streamRanges,
-          tables.textFields,
-          tables.textActors,
-          tables.textOutbox,
-          tables.positions,
-        ]) {
-          db.execute('DELETE FROM $table');
+        if (_unifiedTaskRevision == null &&
+            unified!.takeReusedTaskProjectionRevision() == revision) {
+          _validateTextBaseline();
+          warmProjectionReuses++;
+        } else if (_unifiedTaskRevision == null) {
+          _textBaseline = null;
+          textWriteBlocked = null;
+          _recurringTextMemo.clear();
+          for (final table in [
+            tables.events,
+            tables.views,
+            tables.streams,
+            tables.streamRanges,
+            tables.textFields,
+            tables.textActors,
+            tables.textOutbox,
+            tables.positions,
+          ]) {
+            db.execute('DELETE FROM $table');
+          }
+          _replaySemanticEvents(events);
+        } else {
+          final prior = _stagedSnapshot;
+          final settled =
+              prior != null &&
+              prior.tasks.every((e) => prior.readyTaskIds.contains(e.id)) &&
+              added.every((e) => snapshot.readyTaskIds.contains(e.id)) &&
+              _settledTextTargets(added, prior.readyTaskIds);
+          _replaySemanticEvents(
+            added,
+            incremental: true,
+            settledTextDelta: settled,
+          );
         }
-        _replaySemanticEvents(events);
         newBaseline = _textBaseline;
         newBlocked = textWriteBlocked;
       } finally {
@@ -801,6 +952,8 @@ class TaskStore {
       textWriteBlocked = newBlocked;
       if (projectionChanged) cacheTransactions++;
       _unifiedTaskRevision = revision;
+      _stagedSnapshot = snapshot;
+      _stagedMaximumClock = maximum;
       _writerHasPendingAppend = pending;
       clockWarning = warning;
       _currentView = candidateView;
@@ -2194,20 +2347,27 @@ class TaskStore {
   });
 
   void _validateUndoReferences([LogEvent? pending]) {
-    final invalidText = db.select(
-      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=json_extract(u.semantic,'\$.data.operation') WHERE json_extract(u.semantic,'\$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.semantic,'\$.type')<>'task.textEdited') LIMIT 1",
-    );
-    if (invalidText.isNotEmpty) {
-      throw FormatFailure(
-        'Invalid text Undo reference in ${invalidText.single['id']}.',
+    // The admitted graph is already checked. A local candidate can only
+    // introduce its own reference or resolve an existing reverse reference;
+    // both are checked below without scanning every unrelated Undo.
+    if (pending == null) {
+      final invalidText = db.select(
+        "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=json_extract(u.semantic,'\$.data.operation') WHERE json_extract(u.semantic,'\$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.semantic,'\$.type')<>'task.textEdited') LIMIT 1",
       );
-    }
-    // A join revalidates resolved references, including newly imported targets.
-    final invalid = db.select(
-      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=CASE WHEN json_extract(u.semantic,'\$.type')='task.operationUndone' THEN json_extract(u.semantic,'\$.data.operation') ELSE json_extract(u.semantic,'\$.data.completion') END WHERE json_extract(u.semantic,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.semantic,'\$.type')='task.completionUndone' AND json_extract(t.semantic,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.semantic,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.semantic,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.semantic,'\$.data.successor.id') IS NULL)) OR (json_extract(u.semantic,'\$.type')='task.operationUndone' AND (json_extract(t.semantic,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.semantic,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.semantic,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
-    );
-    if (invalid.isNotEmpty) {
-      throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
+      if (invalidText.isNotEmpty) {
+        throw FormatFailure(
+          'Invalid text Undo reference in ${invalidText.single['id']}.',
+        );
+      }
+      // A join revalidates resolved references, including newly imported targets.
+      final invalid = db.select(
+        "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=CASE WHEN json_extract(u.semantic,'\$.type')='task.operationUndone' THEN json_extract(u.semantic,'\$.data.operation') ELSE json_extract(u.semantic,'\$.data.completion') END WHERE json_extract(u.semantic,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.semantic,'\$.type')='task.completionUndone' AND json_extract(t.semantic,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.semantic,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.semantic,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.semantic,'\$.data.successor.id') IS NULL)) OR (json_extract(u.semantic,'\$.type')='task.operationUndone' AND (json_extract(t.semantic,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.semantic,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.semantic,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
+      );
+      if (invalid.isNotEmpty) {
+        throw FormatFailure(
+          'Invalid undo reference in ${invalid.single['id']}.',
+        );
+      }
     }
     if (pending == null) return;
     void validate(LogEvent undo, LogEvent target) {
@@ -3538,7 +3698,10 @@ class TaskStore {
   Future<void> close() {
     _closed = true;
     return _closing ??= _queue.then((_) async {
-      try {
+      var disposed = false;
+      void detachAndDispose() {
+        if (disposed) return;
+        unified?.detachProjectionInProfileQueue(this);
         for (final capture in _textCaptures) {
           for (final field in capture.fields.values) {
             field.document.dispose();
@@ -3547,11 +3710,42 @@ class TaskStore {
         for (final field in _nativeUndoFields.values) {
           field.document.dispose();
         }
-        if (profileDatabase == null) db.close();
+        disposed = true;
+      }
+
+      try {
+        if (profileDatabase == null) {
+          detachAndDispose();
+          db.close();
+        } else {
+          try {
+            await profileDatabase!.serialize(() async {
+              // Foreign module refreshes finish before their shared projection
+              // is detached; no publication can target disposed native owners.
+              detachAndDispose();
+              if (unified != null &&
+                  unified!.safetyFailure == null &&
+                  !unified!.hasPending &&
+                  !unified!.snapshot.pendingEffects) {
+                profileDatabase!.transaction(() {
+                  unified!.sealTaskProjectionCache(this);
+                });
+              }
+            });
+          } on StateError {
+            // A poisoned/closed queue cannot publish; cleanup still completes.
+            detachAndDispose();
+          } on SqliteException {
+            // Optional witness failure must not retain native documents.
+            detachAndDispose();
+          } on LocalDatabaseFailure {
+            detachAndDispose();
+          }
+        }
       } finally {
+        detachAndDispose();
         _recurringTextMemo.clear();
         _viewChanges.clear();
-        unified?.detachProjectionInProfileQueue(this);
         await lock?.close();
         if (_locationKey != null) {
           profileDatabase!.releaseWorkspace(_locationKey);
@@ -3581,4 +3775,347 @@ class _SemanticValidationFolder implements LogFolder {
   @override
   Future<void> create(String name, Uint8List bytes) async =>
       throw StateError('Preflight cannot write.');
+}
+
+String _taskProjectionRevision(Iterable<LogEvent> events) {
+  final ordered = events.toList()..sort(compareEvents);
+  return bytesDigest(
+    utf8.encode(ordered.map((e) => '${e.canonicalRaw!}\n').join()),
+  );
+}
+
+List<String> _taskCacheTables(TaskTables t) => [
+  t.events,
+  t.views,
+  t.streams,
+  t.streamRanges,
+  t.textFields,
+  t.textActors,
+  t.textOutbox,
+  t.positions,
+  t.metadata,
+];
+
+List<List<List<Object?>>> _taskCacheRows(Database db, TaskTables t) => [
+  for (final entry in _taskCacheTables(t).indexed)
+    // Deterministic primary-key order; checkpoint bytes remain byte arrays.
+    db
+        .select(
+          'SELECT * FROM ${entry.$2} ORDER BY ${const [1, 1, 1, 2, 2, 2, 1, 1, 1][entry.$1] == 2 ? '1,2' : '1'}',
+        )
+        .map((r) => r.values.toList())
+        .toList(),
+];
+
+String _taskCacheDigest(List<List<List<Object?>>> rows, List<String> ready) =>
+    bytesDigest(utf8.encode(jsonEncode({'rows': rows, 'ready': ready})));
+
+/// Disposable, process-local semantic admission oracle. Complete candidate
+/// batches are staged together; a failed or non-monotonic candidate rebuilds
+/// from canonical input rather than retaining partly validated SQL/native state.
+class TaskSemanticValidator {
+  TaskSemanticValidator({
+    required this.space,
+    required this.writer,
+    this.textEngine,
+    this.profile,
+    this.locationKey,
+    this.manifestDigest,
+  });
+  final String space, writer;
+  final NativeTextEngine? textEngine;
+  final LocalProfileDatabase? profile;
+  final String? locationKey, manifestDigest;
+  String? reusedProjectionRevision;
+  Set<String>? _ready;
+  bool _attemptedWarm = false;
+  String get _proofKey => 'app5.task.cache.$locationKey';
+  TaskStore? _store;
+  final _raws = <String, String>{};
+  int fullRebuilds = 0;
+  int projectedEvents = 0;
+  int fullReadinessRuns = 0;
+  int settledTextReadinessRuns = 0;
+  int warmCacheProofMicroseconds = 0;
+  int warmCacheRestoreMicroseconds = 0;
+
+  Set<String> validate(List<LogEvent> events) {
+    final incoming = {for (final e in events) e.id: e.canonicalRaw!};
+    if (_store != null &&
+        _raws.entries.any((e) => incoming[e.key] != e.value)) {
+      close();
+    }
+    if (_store == null) {
+      final db = sqlite3.openInMemory();
+      const tables = TaskTables.legacy();
+      try {
+        for (final sql in TaskStore._latestProjectionSchema(tables)) {
+          db.execute(sql);
+        }
+        _store = TaskStore._(
+          _SemanticValidationFolder(),
+          db,
+          writer,
+          null,
+          DateTime.now,
+          textEngine,
+          '',
+          null,
+          tables,
+          null,
+        )..space = space;
+      } catch (_) {
+        db.close();
+        rethrow;
+      }
+    }
+    final store = _store!, db = store.db;
+    if (!_attemptedWarm) {
+      _attemptedWarm = true;
+      _restoreCleanCache(events);
+    }
+    final delta = events.where((e) => !_raws.containsKey(e.id)).toList();
+    if (delta.isEmpty && _ready != null) return _ready!;
+    final incremental = _raws.isNotEmpty;
+    db.execute('BEGIN IMMEDIATE');
+    try {
+      final settledCandidate =
+          _ready != null &&
+          _ready!.length == _raws.length &&
+          store._settledTextTargets(delta, _ready!);
+      store._replaySemanticEvents(
+        delta,
+        incremental: incremental,
+        settledTextDelta: settledCandidate,
+      );
+      final settled = _settledTextReadiness(delta);
+      // Native dependencies may still make a pure-text candidate pending.
+      // Before accepting fallback readiness, restore every skipped global check.
+      if (settledCandidate && settled == null) {
+        store._validateSemanticReferences();
+      }
+      final Set<String> ready;
+      if (settled != null) {
+        settledTextReadinessRuns++;
+        ready = settled;
+      } else {
+        fullReadinessRuns++;
+        ready = Set<String>.unmodifiable(store._semanticReadyIds(events));
+      }
+      db.execute('COMMIT');
+      if (!incremental) fullRebuilds++;
+      projectedEvents += delta.length;
+      _ready = ready;
+      _raws
+        ..clear()
+        ..addAll(incoming);
+      return ready;
+    } catch (_) {
+      if (!db.autocommit) db.execute('ROLLBACK');
+      close();
+      rethrow;
+    }
+  }
+
+  Set<String>? _settledTextReadiness(List<LogEvent> delta) {
+    // In a completely published graph, an ordinary text update/Undo cannot
+    // introduce a new birth, baseline, order anchor or dependency for old ready
+    // actions. Check only its fields; uncertain native dependencies fall back.
+    if (_ready == null ||
+        _ready!.length != _raws.length ||
+        delta.isEmpty ||
+        delta.any(
+          (e) =>
+              !(e.type == 'task.textEdited' &&
+                      e.data.keys.every((k) => k == 'changes') ||
+                  e.type == 'task.textEditUndone' &&
+                      e.data.keys.every(
+                        (k) => k == 'operation' || k == 'changes',
+                      ) &&
+                      _ready!.contains(e.data['operation'])),
+        )) {
+      return null;
+    }
+    final store = _store!;
+    for (final entity in delta.map((e) => e.entity).toSet()) {
+      // It must already have an admitted birth; no guessed entity semantics.
+      if (!store.db.select(
+        "SELECT 1 FROM ${store.tables.events} WHERE entity=? AND json_extract(semantic,'\$.type') IN ('task.created','task.createdWithText','checklist.itemCreated') LIMIT 1",
+        [entity],
+      ).isNotEmpty) {
+        return null;
+      }
+      final rows = store.db.select(
+        'SELECT raw FROM ${store.tables.views} WHERE id=?',
+        [entity],
+      );
+      if (rows.isEmpty) return null;
+      final state = jsonDecode(rows.single['raw'] as String) as Map;
+      if (state['textUnavailable'] != null ||
+          state['textInheritancePending'] == true) {
+        return null;
+      }
+      if (store.textEngine != null) {
+        for (final field in store.db.select(
+          'SELECT * FROM ${store.tables.textFields} WHERE entity=?',
+          [entity],
+        )) {
+          if (field['adapter'] == 2) continue;
+          final doc = store.textEngine!.restoreDocument(
+            actorClientId: 2,
+            checkpoint: NativeTextCheckpoint(
+              NativeTextState.parse(base64Encode(field['state'] as Uint8List)),
+            ),
+            limits: NativeTextLimits(
+              visibleUtf16: field['field'] == 'title' ? 500 : 10000,
+            ),
+          );
+          try {
+            if (doc.read().pending) return null;
+          } finally {
+            doc.dispose();
+          }
+        }
+      }
+      final hasSeed = store.db.select(
+        "SELECT 1 FROM ${store.tables.events} WHERE entity=? AND json_extract(semantic,'\$.type') IN ('task.createdWithText','checklist.itemCreated') LIMIT 1",
+        [entity],
+      ).isNotEmpty;
+      if (!hasSeed &&
+          !store._hasInheritedText(entity) &&
+          (store._textBaseline == null ||
+              !_ready!.contains(store._textBaseline!.id))) {
+        return null;
+      }
+    }
+    return Set.unmodifiable({..._ready!, ...delta.map((e) => e.id)});
+  }
+
+  void _restoreCleanCache(List<LogEvent> candidate) {
+    if (profile == null || locationKey == null || manifestDigest == null) {
+      return;
+    }
+    final watch = Stopwatch()..start();
+    final source = profile!.database;
+    final proofRows = source.select(
+      'SELECT value FROM profile_metadata WHERE key=?',
+      [_proofKey],
+    );
+    if (proofRows.isEmpty) return;
+    // Consume the witness durably before any restored state can be exposed.
+    // A later crash then requires canonical rebuild, never retry of a Save.
+    profile!.transaction(
+      () => source.execute('DELETE FROM profile_metadata WHERE key=?', [
+        _proofKey,
+      ]),
+    );
+    try {
+      final proof = jsonDecode(proofRows.single['value'] as String) as Map;
+      if (proof['generation'] != 1 ||
+          proof['manifest'] != manifestDigest ||
+          proof['native'] != (textEngine != null)) {
+        return;
+      }
+      final tables = TaskTables.forLocation(locationKey!);
+      final rows = _taskCacheRows(source, tables);
+      final incoming = {for (final e in candidate) e.id: e};
+      final cachedEvents = <LogEvent>[];
+      for (final row in rows.first) {
+        final event = incoming[row[0]];
+        if (event == null || event.canonicalRaw != row[5]) {
+          return;
+        }
+        cachedEvents.add(event);
+      }
+      final ready = (proof['ready'] as List).cast<String>();
+      final ids = cachedEvents.map((e) => e.id).toSet();
+      if (ready.toSet().length != ready.length ||
+          !ready.every(ids.contains) ||
+          proof['revision'] != _taskProjectionRevision(cachedEvents) ||
+          proof['digest'] != _taskCacheDigest(rows, ready)) {
+        return;
+      }
+      warmCacheProofMicroseconds = watch.elapsedMicroseconds;
+      final target = _store!, names = _taskCacheTables(target.tables);
+      target.db.execute('BEGIN IMMEDIATE');
+      try {
+        for (var i = 0; i < names.length; i++) {
+          for (final row in rows[i]) {
+            target.db.execute(
+              'INSERT INTO ${names[i]} VALUES (${List.filled(row.length, '?').join(',')})',
+              row,
+            );
+          }
+        }
+        target._validateTextBaseline();
+        target.db.execute('COMMIT');
+      } catch (_) {
+        if (!target.db.autocommit) {
+          target.db.execute('ROLLBACK');
+        }
+        rethrow;
+      }
+      _raws.addAll({for (final e in cachedEvents) e.id: e.canonicalRaw!});
+      _ready = Set.unmodifiable(ready);
+      reusedProjectionRevision = proof['revision'] as String;
+      warmCacheRestoreMicroseconds =
+          watch.elapsedMicroseconds - warmCacheProofMicroseconds;
+    } on FormatException {
+      // A damaged/disposable witness is a rebuild hint only.
+    } on TypeError {
+      // Malformed disposable proof: replay canonical records.
+    } on SqliteException {
+      // Damaged/missing cache tables: replay canonical records.
+    } on FormatFailure {
+      // An invalid cached field cannot authorize a write.
+    }
+  }
+
+  void sealCleanCache(
+    Database source,
+    TaskTables tables,
+    Iterable<LogEvent> events,
+  ) {
+    if (profile == null ||
+        _store == null ||
+        _ready == null ||
+        locationKey == null ||
+        manifestDigest == null) {
+      return;
+    }
+    final canonical = {for (final e in events) e.id: e.canonicalRaw!};
+    if (canonical.length != _raws.length ||
+        canonical.entries.any((e) => _raws[e.key] != e.value)) {
+      return;
+    }
+    final ready = _ready!.toList()..sort();
+    final rows = _taskCacheRows(source, tables);
+    final expected = _taskCacheRows(_store!.db, _store!.tables);
+    final digest = _taskCacheDigest(rows, ready);
+    // Do not bless an unobserved change to the live disposable cache at close.
+    if (digest != _taskCacheDigest(expected, ready)) return;
+    source.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
+      _proofKey,
+      jsonEncode({
+        'generation': 1,
+        'manifest': manifestDigest,
+        'native': textEngine != null,
+        'revision': _taskProjectionRevision(events),
+        'digest': digest,
+        'ready': ready,
+      }),
+    ]);
+  }
+
+  void close() {
+    final store = _store;
+    _store = null;
+    _raws.clear();
+    _ready = null;
+    reusedProjectionRevision = null;
+    if (store != null) {
+      store._recurringTextMemo.clear();
+      store.db.close();
+    }
+  }
 }

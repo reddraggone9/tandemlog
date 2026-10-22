@@ -59,6 +59,11 @@ class UnifiedEffect {
     }
   }
   final String kind, raw;
+  // Exact source identity for pure admission memo keys. Compute once per
+  // immutable decoded effect instead of reserializing every prior payload.
+  late final String validationDigest = sha256
+      .convert(utf8.encode(raw))
+      .toString();
   String? _name;
   String? get name => _name;
   bool get isData => task != null || food != null;

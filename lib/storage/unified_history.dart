@@ -46,8 +46,10 @@ class UnifiedSnapshot {
     this.published,
     this.incomplete,
     this.foodAdmission,
-    this.pendingEffects,
-  );
+    this.pendingEffects, {
+    this.readyTaskIds = const {},
+  });
+  final Set<String> readyTaskIds;
   final String revision;
   final List<UnifiedRecord> records;
   final List<UnifiedEffect> effects;
@@ -56,6 +58,33 @@ class UnifiedSnapshot {
   final bool incomplete;
   final FoodAdmission foodAdmission;
   final bool pendingEffects;
+  late final Map<String, List<UnifiedRecord>> recordsByWriter = _indexRecords();
+  Map<String, List<UnifiedRecord>> _indexRecords() {
+    final grouped = <String, List<UnifiedRecord>>{};
+    for (final record in records) {
+      (grouped[record.writer] ??= []).add(record);
+    }
+    return Map.unmodifiable(
+      grouped.map((k, v) => MapEntry(k, List<UnifiedRecord>.unmodifiable(v))),
+    );
+  }
+
+  late final Map<String, int> logicalSequences = _logicalSequences();
+  Map<String, int> _logicalSequences() {
+    final result = <String, int>{};
+    for (final effect
+        in records.expand((r) => r.effects).where((e) => e.isData)) {
+      if (effect.sequence > (result[effect.writer] ?? 0)) {
+        result[effect.writer] = effect.sequence;
+      }
+    }
+    return Map.unmodifiable(result);
+  }
+
+  late final EventClock? maximumClock = records.isEmpty
+      ? null
+      : records.map((r) => r.clock).reduce((a, b) => a > b ? a : b);
+
   Iterable<LogEvent> get tasks =>
       effects.where((e) => e.task != null).map((e) => e.task!);
   Iterable<FoodOperation> get food => effects
@@ -98,6 +127,7 @@ class UnifiedHistory {
   final NativeTextEngine? textEngine;
   late UnifiedManifest manifest;
   UnifiedSnapshot? _snapshot;
+  String? _acceptedHeads;
   UnifiedSnapshot get snapshot =>
       _snapshot ?? (throw StateError('Unified history is not admitted.'));
   Object? safetyFailure;
@@ -133,6 +163,7 @@ class UnifiedHistory {
   // Real provider bytes, protected observations and SQL projections are still
   // checked on every refresh. No metadata-only freshness assumptions.
   final _taskValidation = <String, Set<String>>{};
+  final _foodValidation = <String, FoodAdmission>{};
   // Reuse decoding only for identical canonical source strings. File bytes,
   // trusted prefixes, manifest policy, chains and admission are still checked.
   // Bound retained strings independently of the workspace/file byte limits.
@@ -140,6 +171,22 @@ class UnifiedHistory {
   int _decodedRecordBytes = 0;
   int decodedRecords = 0;
   int semanticValidationRuns = 0;
+  TaskSemanticValidator? _semanticValidator;
+  int get warmTaskCacheProofMicroseconds =>
+      _semanticValidator?.warmCacheProofMicroseconds ?? 0;
+  int get warmTaskCacheRestoreMicroseconds =>
+      _semanticValidator?.warmCacheRestoreMicroseconds ?? 0;
+  int get fullTaskReadinessRuns => _semanticValidator?.fullReadinessRuns ?? 0;
+  int get settledTextReadinessRuns =>
+      _semanticValidator?.settledTextReadinessRuns ?? 0;
+  String? takeReusedTaskProjectionRevision() {
+    final revision = _semanticValidator?.reusedProjectionRevision;
+    _semanticValidator?.reusedProjectionRevision = null;
+    return revision;
+  }
+
+  void sealTaskProjectionCache(TaskStore store) => _semanticValidator
+      ?.sealCleanCache(store.db, store.tables, snapshot.tasks);
 
   UnifiedRecord _decodeRecord(String raw) {
     final remembered = _decodedRecords.remove(raw);
@@ -442,6 +489,56 @@ class UnifiedHistory {
     if (ownerSet.length > 256) {
       throw FormatFailure('Too many installation histories.');
     }
+    // Size/mtime are only hints. Read and compare every provider byte before
+    // reusing admission; unchanged content need not be decoded/replayed again.
+    final physicalNow = <String, Uint8List>{};
+    var physicalTotal = 0;
+    for (final owner in ownerSet) {
+      final name = unifiedLogName(owner);
+      final bytes = byName.containsKey(name)
+          ? await _read(name, maximumFileBytes)
+          : Uint8List(0);
+      physicalTotal += bytes.length;
+      if (physicalTotal > maximumTotalBytes) {
+        throw FormatFailure('App history exceeds safe limits.');
+      }
+      physicalNow[owner] = bytes;
+    }
+    final previous = _snapshot;
+    if (observe &&
+        previous != null &&
+        current.digest == manifest.digest &&
+        physicalNow.length == previous.physical.length &&
+        physicalNow.entries.every(
+          (e) =>
+              previous.physical.containsKey(e.key) &&
+              _sameBytes(e.value, previous.physical[e.key]!),
+        ) &&
+        _acceptedHeads == _protectedHeads(current)) {
+      // Preserve missing-file checks even for genuinely empty writer streams.
+      for (final owner in ownerSet) {
+        if (!byName.containsKey(unifiedLogName(owner)) &&
+            (previous.records.any((r) => r.writer == owner) ||
+                (current.owners[owner]?['count'] as int? ?? 0) > 0)) {
+          throw FormatFailure('Expected app writer file is missing.');
+        }
+      }
+      final pending = _outbox(current);
+      if (pending.isNotEmpty) {
+        _validatePreparedPrefix(current, previous, pending.single);
+      }
+      final publications = <void Function()>[];
+      profile.transaction(() {
+        for (final stage in _projections.values) {
+          publications.add(stage(previous));
+        }
+      });
+      _viewHasPending = pending.isNotEmpty;
+      for (final publish in publications) {
+        publish();
+      }
+      return previous;
+    }
     final observed = <String, Uint8List>{},
         all = <UnifiedRecord>[],
         admitted = <UnifiedEffect>[],
@@ -449,6 +546,26 @@ class UnifiedHistory {
         heads = <List<Object?>>[];
     final semantic = <String, UnifiedEffect>{};
     var incomplete = false, total = 0;
+    var reusedHistoricalCoverage =
+        previous != null && current.digest == manifest.digest;
+    void includeRecord(UnifiedRecord r) {
+      all.add(r);
+      for (final e in r.effects) {
+        if (e.isData) {
+          final existing = semantic[e.key];
+          if (existing != null && existing.raw != e.raw) {
+            throw FormatFailure('Conflicting semantic effect identity.');
+          }
+          if (existing == null) {
+            semantic[e.key] = e;
+            admitted.add(e);
+          }
+        } else {
+          admitted.add(e);
+        }
+      }
+    }
+
     final owners = ownerSet.toList()..sort();
     for (final owner in owners) {
       final name = unifiedLogName(owner);
@@ -466,7 +583,7 @@ class UnifiedHistory {
       if (!exists && !missingNewSelf) {
         throw FormatFailure('Expected app writer file is missing: $name');
       }
-      final bytes = exists ? await _read(name, maximumFileBytes) : Uint8List(0);
+      final bytes = physicalNow[owner]!;
       total += bytes.length;
       if (total > maximumTotalBytes) {
         throw FormatFailure('App history exceeds safe limits.');
@@ -491,7 +608,45 @@ class UnifiedHistory {
       var completeSequence = 0;
       var migrationEnd = 0;
       final historicalCount = current.owners[owner]?['count'] as int? ?? 0;
-      for (var i = 0; i < bytes.length; i++) {
+      final oldBytes = previous?.physical[owner];
+      final oldRecords =
+          previous?.recordsByWriter[owner] ?? const <UnifiedRecord>[];
+      final oldEnd = oldBytes == null ? 0 : oldBytes.lastIndexOf(10) + 1;
+      final reusePrefix =
+          previous != null &&
+          current.digest == manifest.digest &&
+          oldBytes != null &&
+          bytes.length >= oldEnd &&
+          _samePrefix(bytes, oldBytes, oldEnd);
+      if (reusePrefix) {
+        for (final record in oldRecords) {
+          includeRecord(record);
+          for (final e in record.effects.where(
+            (e) => e.isData && e.writer == owner,
+          )) {
+            if (e.sequence > semanticSequence) semanticSequence = e.sequence;
+          }
+        }
+        if (oldRecords.isNotEmpty) {
+          sequence = oldRecords.last.sequence;
+          head = oldRecords.last.hash;
+          clock = oldRecords.last.clock;
+          completeSequence = sequence;
+        }
+        start = oldEnd;
+        if (historicalCount > 0) {
+          var lines = 0;
+          for (var i = 0; i < oldEnd; i++) {
+            if (bytes[i] == 10 && ++lines == historicalCount) {
+              migrationEnd = i + 1;
+              break;
+            }
+          }
+        }
+      } else if (historicalCount > 0) {
+        reusedHistoricalCoverage = false;
+      }
+      for (var i = start; i < bytes.length; i++) {
         if (bytes[i] != 10) {
           if (i - start >= maximumUnifiedRecordBytes) {
             throw HistoryVerificationFailure(
@@ -547,7 +702,7 @@ class UnifiedHistory {
               'Unexpected late legacy event in the active writer chain.',
             );
           }
-          all.add(r);
+          includeRecord(r);
           sequence = r.sequence;
           head = r.hash;
           clock = r.clock;
@@ -565,18 +720,6 @@ class UnifiedHistory {
                 );
               }
               if (e.sequence > semanticSequence) semanticSequence = e.sequence;
-            }
-            if (e.isData) {
-              final existing = semantic[e.key];
-              if (existing != null && existing.raw != e.raw) {
-                throw FormatFailure('Conflicting semantic effect identity.');
-              }
-              if (existing == null) {
-                semantic[e.key] = e;
-                admitted.add(e);
-              }
-            } else {
-              admitted.add(e);
             }
           }
           completeSequence = sequence;
@@ -635,7 +778,9 @@ class UnifiedHistory {
         completeSequence,
       ]);
     }
-    _validateReferenceCoverage(all, current);
+    if (!reusedHistoricalCoverage) {
+      _validateReferenceCoverage(all, current);
+    }
     // Validate all physical evidence before deciding visibility. A blocked action
     // cannot conceal a malformed event or relax the app-wide format fence.
     var taskReady = <String>{};
@@ -677,6 +822,7 @@ class UnifiedHistory {
       incomplete,
       foodAdmission,
       pendingEffects,
+      readyTaskIds: Set.unmodifiable(publication.$3),
     );
     final pending = _outbox(current);
     if (pending.isNotEmpty) {
@@ -713,6 +859,7 @@ class UnifiedHistory {
     }
     manifest = current;
     _snapshot = result;
+    _acceptedHeads = _protectedHeads(current);
     _viewHasPending = pendingAfterCommit;
     for (final publish in publications) {
       publish();
@@ -720,9 +867,35 @@ class UnifiedHistory {
     return result;
   }
 
+  String _protectedHeads(UnifiedManifest m) => canonicalDataJson(
+    profile.database
+        .select(
+          'SELECT writer,sequence,hash,bytes,digest,published FROM protected_app_heads WHERE space=? AND epoch=? ORDER BY writer',
+          [m.space, m.epoch],
+        )
+        .map((r) => r.values.toList())
+        .toList(),
+  );
+
+  static bool _samePrefix(Uint8List a, Uint8List b, int length) {
+    if (a.length < length || b.length < length) return false;
+    for (var i = 0; i < length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static bool _sameBytes(Uint8List a, Uint8List b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
   /// Publish complete writer prefixes to a fixed point. A missing typed
   /// dependency holds the entire action and actions observing its frontier.
-  (List<UnifiedEffect>, FoodAdmission) _publishActions(
+  (List<UnifiedEffect>, FoodAdmission, Set<String>) _publishActions(
     List<UnifiedRecord> actions,
     Map<String, int> published,
     UnifiedManifest m,
@@ -778,7 +951,7 @@ class UnifiedHistory {
           a.effects.every((e) => ready(e, allAdmission, taskReady)),
     )) {
       published.addAll(complete);
-      return (admitted, allAdmission);
+      return (admitted, allAdmission, taskReady);
     }
     final visible = <UnifiedEffect>[], seen = <String>{};
     for (final action in actions) {
@@ -791,7 +964,12 @@ class UnifiedHistory {
         }
       }
     }
-    var admission = _validateEffects(visible, m);
+    var visibleReady = <String>{};
+    var admission = _validateEffects(
+      visible,
+      m,
+      onTaskReady: (ids) => visibleReady = ids,
+    );
     while (true) {
       var changed = false;
       for (final action in actions) {
@@ -815,10 +993,11 @@ class UnifiedHistory {
         published[action.writer] = action.sequence;
         visible.addAll(action.effects);
         admission = checked;
+        visibleReady = readyTasks;
         changed = true;
       }
       if (!changed) {
-        return (visible, admission);
+        return (visible, admission, visibleReady);
       }
     }
   }
@@ -861,16 +1040,21 @@ class UnifiedHistory {
     void Function(Set<String>)? onTaskReady,
   }) {
     final tasks = <String, List<LogEvent>>{}, food = <String, FoodRecord>{};
+    final foodRaw = <String, String>{};
+    final taskDigests = <String, String>{}, foodDigests = <String, String>{};
     for (final effect in effects.where((e) => e.isData)) {
       final e = effect.task;
       if (e != null) {
         tasks.putIfAbsent(e.entity, () => []).add(e);
+        taskDigests[e.id] = effect.validationDigest;
       } else {
         final r = effect.food!, previous = food[r.id];
-        if (previous != null && previous.encode() != r.encode()) {
+        if (previous != null && foodRaw[r.id] != effect.raw) {
           throw FormatFailure('Conflicting Food operation identity.');
         }
         food[r.id] = r;
+        foodRaw[r.id] = effect.raw;
+        foodDigests[r.id] = effect.validationDigest;
       }
     }
     final semanticTasks = tasks.values.expand((v) => v).toList()
@@ -879,31 +1063,47 @@ class UnifiedHistory {
       utf8.encode(
         canonicalDataJson([
           m.space,
-          ...semanticTasks.map((e) => e.canonicalRaw!),
+          ...semanticTasks.map((e) => taskDigests[e.id]),
         ]),
       ),
     );
     var ready = _taskValidation.remove(key);
     if (ready == null) {
       semanticValidationRuns++;
-      TaskStore.validateSemanticHistory(
-        semanticTasks,
+      final validator = _semanticValidator ??= TaskSemanticValidator(
         space: m.space,
         writer: writer,
         textEngine: textEngine,
-        onReady: (ids) => ready = Set.unmodifiable(ids),
+        profile: profile,
+        locationKey: bytesDigest(
+          utf8.encode('${folder.location}#app5:${m.epoch}'),
+        ),
+        manifestDigest: m.digest,
       );
-      ready ??= const <String>{};
+      ready = validator.validate(semanticTasks);
     }
-    _taskValidation[key] = ready!;
+    _taskValidation[key] = ready;
     if (_taskValidation.length > 4) {
       _taskValidation.remove(_taskValidation.keys.first);
     }
-    onTaskReady?.call(ready!);
-    return admitFoodRecords(
-      food.values.toList(),
-      legacyOwners: m.referenceAuthors,
+    onTaskReady?.call(ready);
+    final foodIds = foodRaw.keys.toList()..sort();
+    final foodKey = bytesDigest(
+      utf8.encode(
+        canonicalDataJson([m.digest, ...foodIds.map((id) => foodDigests[id])]),
+      ),
     );
+    final foodResult =
+        _foodValidation.remove(foodKey) ??
+        admitFoodRecords(
+          food.values.toList(),
+          legacyOwners: m.referenceAuthors,
+        );
+    _foodValidation[foodKey] = foodResult;
+    if (_foodValidation.length > 4) {
+      _foodValidation.remove(_foodValidation.keys.first);
+    }
+    return foodResult;
   }
 
   // Same-session only. Closing/crashing discards unacknowledged intent;
@@ -1003,33 +1203,20 @@ class UnifiedHistory {
       s.physical[writer]!.length ==
           (p['base_bytes'] as int) + (p['raw'] as List<int>).length;
 
-  int get physicalSequence => snapshot.records
-      .where((r) => r.writer == writer)
-      .fold(0, (a, r) => r.sequence > a ? r.sequence : a);
-  int get logicalSequence => snapshot.records
-      .expand((r) => r.effects)
-      .where((e) => e.isData && e.writer == writer)
-      .fold<int>(0, (n, e) => e.sequence > n ? e.sequence : n);
-  String get commonHead {
-    final own = snapshot.records.where((r) => r.writer == writer);
-    return own.isEmpty
-        ? unifiedGenesis(manifest.space, manifest.epoch, writer)
-        : own.last.hash;
-  }
-
-  EventClock? get maximumClock => snapshot.records.isEmpty
-      ? null
-      : snapshot.records.map((r) => r.clock).reduce((a, b) => a > b ? a : b);
-
+  int get physicalSequence =>
+      snapshot.recordsByWriter[writer]?.last.sequence ?? 0;
+  int get logicalSequence => snapshot.logicalSequences[writer] ?? 0;
+  String get commonHead =>
+      snapshot.recordsByWriter[writer]?.last.hash ??
+      unifiedGenesis(manifest.space, manifest.epoch, writer);
+  EventClock? get maximumClock => snapshot.maximumClock;
   Map<String, UnifiedFrontier> get _observedFrontier => {
     for (final e in snapshot.published.entries)
       e.key: UnifiedFrontier(
         e.value,
         e.value == 0
             ? unifiedGenesis(manifest.space, manifest.epoch, e.key)
-            : snapshot.records
-                  .firstWhere((r) => r.writer == e.key && r.sequence == e.value)
-                  .hash,
+            : snapshot.recordsByWriter[e.key]![e.value - 1].hash,
       ),
   };
 
@@ -1315,6 +1502,9 @@ class UnifiedHistory {
     _decodedRecords.clear();
     _decodedRecordBytes = 0;
     _taskValidation.clear();
+    _foodValidation.clear();
+    _semanticValidator?.close();
+    _semanticValidator = null;
     _changes.clear();
   });
 
