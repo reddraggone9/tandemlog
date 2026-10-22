@@ -133,6 +133,38 @@ class UnifiedHistory {
   // Real provider bytes, protected observations and SQL projections are still
   // checked on every refresh. No metadata-only freshness assumptions.
   final _taskValidation = <String, Set<String>>{};
+  // Reuse decoding only for identical canonical source strings. File bytes,
+  // trusted prefixes, manifest policy, chains and admission are still checked.
+  // Bound retained strings independently of the workspace/file byte limits.
+  final _decodedRecords = <String, UnifiedRecord>{};
+  int _decodedRecordBytes = 0;
+  int decodedRecords = 0;
+  int semanticValidationRuns = 0;
+
+  UnifiedRecord _decodeRecord(String raw) {
+    final remembered = _decodedRecords.remove(raw);
+    if (remembered != null) {
+      _decodedRecords[raw] = remembered;
+      return remembered;
+    }
+    final record = UnifiedRecord.decode(raw);
+    decodedRecords++;
+    final cost = raw.length * 4;
+    const budget = 16 * 1024 * 1024;
+    if (cost <= budget) {
+      while (_decodedRecords.isNotEmpty &&
+          (_decodedRecords.length >= 4096 ||
+              _decodedRecordBytes + cost > budget)) {
+        final oldest = _decodedRecords.keys.first;
+        _decodedRecords.remove(oldest);
+        _decodedRecordBytes -= oldest.length * 4;
+      }
+      _decodedRecords[raw] = record;
+      _decodedRecordBytes += cost;
+    }
+    return record;
+  }
+
   Map<String, Object?>? _pending;
   Map<String, dynamic>? _pendingProvenance;
 
@@ -474,7 +506,7 @@ class UnifiedHistory {
         final recordNumber = sequence + 1;
         try {
           final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
-          final r = UnifiedRecord.decode(raw);
+          final r = _decodeRecord(raw);
           for (final e in r.effects) {
             final task = e.task;
             if (task != null) {
@@ -841,17 +873,19 @@ class UnifiedHistory {
         food[r.id] = r;
       }
     }
-    final semanticTasks = tasks.values.expand((v) => v).toList();
+    final semanticTasks = tasks.values.expand((v) => v).toList()
+      ..sort(compareEvents);
     final key = bytesDigest(
       utf8.encode(
         canonicalDataJson([
           m.space,
-          ...effects.where((e) => e.task != null).map((e) => e.raw),
+          ...semanticTasks.map((e) => e.canonicalRaw!),
         ]),
       ),
     );
     var ready = _taskValidation.remove(key);
     if (ready == null) {
+      semanticValidationRuns++;
       TaskStore.validateSemanticHistory(
         semanticTasks,
         space: m.space,
@@ -1278,8 +1312,10 @@ class UnifiedHistory {
   Future<void> close() => _closing ??= profile.closeWorkspace(_lease, () {
     _closed = true;
     _projections.clear();
-    _changes.clear();
+    _decodedRecords.clear();
+    _decodedRecordBytes = 0;
     _taskValidation.clear();
+    _changes.clear();
   });
 
   Future<UnifiedSnapshot> renameDevice(String? name) =>

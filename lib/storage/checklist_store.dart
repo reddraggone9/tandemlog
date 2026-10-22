@@ -109,14 +109,14 @@ extension ChecklistStore on TaskStore {
           "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='checklist.itemCreated' AND json_extract(semantic,'\$.data.parent')=?",
           [parent],
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     final copies = db
         .select(
           "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedWithChecklist' AND json_extract(semantic,'\$.data.successor.id')=?",
           [parent],
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     final ids = <String>{
       ...creations.map((event) => event.entity),
@@ -132,7 +132,9 @@ extension ChecklistStore on TaskStore {
               'SELECT raw FROM ${tables.events} WHERE entity IN (${List.filled(ids.length, '?').join(',')})',
               ids.toList(),
             )
-            .map((row) => LogEvent.decode(row['raw'] as String)),
+            .map(
+              (row) => _recurringTextMemo.decodeCanonical(row['raw'] as String),
+            ),
     ];
   }
 
@@ -143,7 +145,7 @@ extension ChecklistStore on TaskStore {
       )
       .map(
         (row) => (
-          LogEvent.decode(row['raw'] as String),
+          _recurringTextMemo.decodeCanonical(row['raw'] as String),
           jsonDecode(row['value'] as String) as Map<String, dynamic>,
         ),
       )
@@ -182,7 +184,7 @@ extension ChecklistStore on TaskStore {
         .select(
           "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('checklist.itemCreated','checklist.itemMoved')",
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     if (pending != null &&
         {
@@ -256,7 +258,7 @@ extension ChecklistStore on TaskStore {
         .select(
           "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedWithChecklist'",
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     if (pending?.type == 'task.completedWithChecklist') {
       completions.add(pending!);
@@ -264,7 +266,7 @@ extension ChecklistStore on TaskStore {
     if (completions.isEmpty) return;
     final canonical = db
         .select('SELECT raw FROM ${tables.events}')
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     final resolution = _textResolution(
       pending: pending == null ? [] : [pending],

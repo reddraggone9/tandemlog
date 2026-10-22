@@ -340,6 +340,16 @@ class TaskStore {
           jsonEncode({'type': e.type, 'data': e.data}),
         ]);
       }
+      // Build expression indexes only after old disposable rows were cleared
+      // and known canonical events inserted. An old malformed cache must reach
+      // its normal canonical rebuild before JSON index expressions evaluate.
+      for (final sql in [
+        'CREATE INDEX IF NOT EXISTS ${tables.events}_entity ON ${tables.events}(entity)',
+        "CREATE INDEX IF NOT EXISTS ${tables.events}_successor ON ${tables.events}(json_extract(semantic,'\$.data.successor.id'))",
+        "CREATE INDEX IF NOT EXISTS ${tables.events}_type_parent ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.parent'))",
+      ]) {
+        db.execute(sql);
+      }
       final writers = events.map((e) => e.writer).toSet();
       for (final author in writers) {
         final ordered = events.where((e) => e.writer == author).toList()
@@ -1151,7 +1161,7 @@ class TaskStore {
     TaskTextCapture capture,
   ) {
     _requireConfirmed([receipt]);
-    final event = LogEvent.decode(receipt.raw);
+    final event = _recurringTextMemo.decodeCanonical(receipt.raw);
     if (!_textCaptures.contains(capture) ||
         event.type != 'task.textEdited' ||
         event.writer != writer ||
@@ -1283,7 +1293,7 @@ class TaskStore {
   void releaseTextCapture(TaskTextCapture capture) {
     if (!_textCaptures.contains(capture)) return;
     for (final receipt in pendingTextOperations) {
-      final event = LogEvent.decode(receipt.raw);
+      final event = _recurringTextMemo.decodeCanonical(receipt.raw);
       if (event.entity != capture.entity) continue;
       final changes = event.data['changes'] as Map?;
       if (changes != null &&
@@ -1470,7 +1480,7 @@ class TaskStore {
           .select(
             "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.operationUndone'",
           )
-          .map((r) => LogEvent.decode(r['raw'] as String)),
+          .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String)),
     );
     // Views already contain the selected derived creation's exact clock/writer
     // stamp. Strict per-writer clocks identify that completion uniquely. Reuse
@@ -1528,7 +1538,7 @@ class TaskStore {
   List<String> activeCompletionIds(String entity) {
     final events = db
         .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     final retracted = retractedOperationIds(events);
     final undone = events
@@ -1594,7 +1604,7 @@ class TaskStore {
       canCommit: canCommit,
       onPrepared: onPrepared,
     );
-    return LogEvent.decode(receipts.single.raw);
+    return _recurringTextMemo.decodeCanonical(receipts.single.raw);
   }
 
   void _requireWriterAppendReady() {
@@ -1620,7 +1630,9 @@ class TaskStore {
           'Competing text initialization records were retained. Text saving is blocked.';
       return;
     }
-    final root = LogEvent.decode(roots.single['raw'] as String);
+    final root = _recurringTextMemo.decodeCanonical(
+      roots.single['raw'] as String,
+    );
     if (root.entity != space) {
       throw FormatFailure(
         'Text initialization must reference its workspace in ${root.id}.',
@@ -1646,7 +1658,9 @@ class TaskStore {
             'Text initialization is waiting for its declared history.';
         return;
       }
-      final event = LogEvent.decode(record.single['raw'] as String);
+      final event = _recurringTextMemo.decodeCanonical(
+        record.single['raw'] as String,
+      );
       if (event.hash != head['hash'] ||
           event.clock.value >= root.clock.value ||
           (event.writer == root.writer && seq >= root.sequence)) {
@@ -1672,7 +1686,7 @@ class TaskStore {
   Map<String, Map<String, String>> _baselineSeedFields(LogEvent root) {
     final prefix = db
         .select('SELECT raw FROM ${tables.events}')
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .where((event) => _baselineIncludes(event, root))
         .toList();
     final grouped = <String, List<LogEvent>>{};
@@ -1810,7 +1824,7 @@ class TaskStore {
 
   Future<LogEvent> _retryTextOperation(OperationReceipt receipt) async {
     await _refresh();
-    final event = LogEvent.decode(receipt.raw);
+    final event = _recurringTextMemo.decodeCanonical(receipt.raw);
     assertWorkspaceTaskTimeZonePolicy(event, timeZonePolicy);
     if (!_textTypes.contains(event.type) ||
         event.writer != writer ||
@@ -1873,7 +1887,7 @@ class TaskStore {
         !_hasNativeTextRoot(entity, _entityEvents(entity))) {
       throw FormatFailure(textWriteBlocked!);
     }
-    final e = LogEvent.decode(
+    final e = _recurringTextMemo.decodeCanonical(
       LogEvent(space, writer, seq, clock, entity, type, data).encode(
         previousHash:
             previousHash ??
@@ -2162,7 +2176,7 @@ class TaskStore {
       for (final receipt in prepared.where(
         (r) =>
             confirmed.contains(r.id) &&
-            LogEvent.decode(r.raw).type != 'task.moved',
+            _recurringTextMemo.decodeCanonical(r.raw).type != 'task.moved',
       ))
         receipt.entity,
     };
@@ -2232,14 +2246,20 @@ class TaskStore {
         ref,
       ]);
       if (targets.isNotEmpty) {
-        validate(pending, LogEvent.decode(targets.single['raw'] as String));
+        validate(
+          pending,
+          _recurringTextMemo.decodeCanonical(targets.single['raw'] as String),
+        );
       }
     }
     for (final row in db.select(
       "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('task.textEditUndone','task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(semantic,'\$.data.operation'),json_extract(semantic,'\$.data.completion'))=?",
       [pending.id],
     )) {
-      validate(LogEvent.decode(row['raw'] as String), pending);
+      validate(
+        _recurringTextMemo.decodeCanonical(row['raw'] as String),
+        pending,
+      );
     }
   }
 
@@ -2251,7 +2271,7 @@ class TaskStore {
               : "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved' AND json_extract(semantic,'\$.data.before')=?",
           pending == null ? [] : [pending.entity],
         )
-        .map((r) => LogEvent.decode(r['raw'] as String))
+        .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String))
         .toList();
     if (pending?.type == 'task.moved') moves.add(pending!);
     for (final move in moves) {
@@ -2286,7 +2306,7 @@ class TaskStore {
               : "SELECT raw FROM ${tables.events} e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.semantic,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
           pending == null ? [] : ['${pending.id}:%', successor],
         )
-        .map((r) => LogEvent.decode(r['raw'] as String))
+        .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String))
         .toList();
     if (pending != null) mutations.add(pending);
     for (final mutation in mutations) {
@@ -2303,7 +2323,7 @@ class TaskStore {
             ? pending
             : rows.isEmpty
             ? null
-            : LogEvent.decode(rows.first['raw'] as String);
+            : _recurringTextMemo.decodeCanonical(rows.first['raw'] as String);
         if (target == null) {
           final seeds = db.select(
             "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=?",
@@ -2311,7 +2331,9 @@ class TaskStore {
           );
           final matches = <LogEvent>[];
           for (final row in seeds) {
-            final seed = LogEvent.decode(row['raw'] as String);
+            final seed = _recurringTextMemo.decodeCanonical(
+              row['raw'] as String,
+            );
             final tags = (seed.data['successor'] as Map)['tags'] as List? ?? [];
             if (tags.any(
               (tag) =>
@@ -2371,7 +2393,7 @@ class TaskStore {
   List<LogEvent> _entityEvents(String entity) {
     final own = db
         .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
-        .map((r) => LogEvent.decode(r['raw'] as String))
+        .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String))
         .toList();
     final seeds = db.select(
       "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
@@ -2392,7 +2414,9 @@ class TaskStore {
                   event.type == 'user.created',
             )
             .toList();
-        creations.add(LogEvent.decode(seeds.first['raw'] as String));
+        creations.add(
+          _recurringTextMemo.decodeCanonical(seeds.first['raw'] as String),
+        );
         creations.sort(compareEvents);
         throw FormatFailure(
           'Successor identifier collides with existing entity in ${creations.last.id}.',
@@ -2413,12 +2437,12 @@ class TaskStore {
     List<LogEvent> own,
   ) {
     final decoded = seeds
-        .map((r) => LogEvent.decode(r['raw'] as String))
+        .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String))
         .toList();
     final parent = decoded.first.entity;
     final parentHistory = db
         .select('SELECT raw FROM ${tables.events} WHERE entity=?', [parent])
-        .map((r) => LogEvent.decode(r['raw'] as String));
+        .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String));
     final anchored = db.select(
       "SELECT 1 FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved' AND json_extract(semantic,'\$.data.before')=? LIMIT 1",
       [entity],
@@ -2475,7 +2499,7 @@ class TaskStore {
     if (seeds.isNotEmpty) {
       final own = db
           .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
-          .map((r) => LogEvent.decode(r['raw'] as String))
+          .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String))
           .toList();
       state['successorSuppressed'] = _successorSelection(
         entity,
@@ -2697,7 +2721,7 @@ class TaskStore {
   List<LogEvent> _baselineEntityHistory(String entity, LogEvent baseline) {
     final own = db
         .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .where((event) => _baselineIncludes(event, baseline))
         .toList();
     final seeds = db
@@ -2705,7 +2729,7 @@ class TaskStore {
           "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=?",
           [entity],
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .where((event) => _baselineIncludes(event, baseline))
         .toList();
     if (seeds.isNotEmpty) {
@@ -2713,14 +2737,18 @@ class TaskStore {
           .select('SELECT raw FROM ${tables.events} WHERE entity=?', [
             seeds.first.entity,
           ])
-          .map((row) => LogEvent.decode(row['raw'] as String))
+          .map(
+            (row) => _recurringTextMemo.decodeCanonical(row['raw'] as String),
+          )
           .where((event) => _baselineIncludes(event, baseline));
       final anchors = db
           .select(
             "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.moved' AND json_extract(semantic,'\$.data.before')=?",
             [entity],
           )
-          .map((row) => LogEvent.decode(row['raw'] as String))
+          .map(
+            (row) => _recurringTextMemo.decodeCanonical(row['raw'] as String),
+          )
           .any((event) => _baselineIncludes(event, baseline));
       own.add(
         successorCreation(
@@ -2733,7 +2761,11 @@ class TaskStore {
                 hasDurableChecklistActivity(
                   db
                       .select('SELECT raw FROM ${tables.events}')
-                      .map((row) => LogEvent.decode(row['raw'] as String))
+                      .map(
+                        (row) => _recurringTextMemo.decodeCanonical(
+                          row['raw'] as String,
+                        ),
+                      )
                       .where((event) => _baselineIncludes(event, baseline))
                       .toList(),
                   entity,
@@ -2756,7 +2788,9 @@ class TaskStore {
       creations.single.id,
     ]);
     if (source.isEmpty) return null;
-    final event = LogEvent.decode(source.single['raw'] as String);
+    final event = _recurringTextMemo.decodeCanonical(
+      source.single['raw'] as String,
+    );
     if (!isHistoricalSuccessorInitialization(event) || event.entity != entity) {
       return null;
     }
@@ -2799,7 +2833,7 @@ class TaskStore {
       for (final row in db.select(
         "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedKeepingSuccessor'",
       ))
-        LogEvent.decode(row['raw'] as String),
+        _recurringTextMemo.decodeCanonical(row['raw'] as String),
       if (pending?.type == 'task.completedKeepingSuccessor') pending!,
     ];
     for (final marker in markers) {
@@ -2809,7 +2843,9 @@ class TaskStore {
       ]);
       final known = verifyHistoricalCompletion(
         marker,
-        rows.isEmpty ? null : LogEvent.decode(rows.single['raw'] as String),
+        rows.isEmpty
+            ? null
+            : _recurringTextMemo.decodeCanonical(rows.single['raw'] as String),
       );
       if (!known && identical(marker, pending)) {
         throw FormatFailure(
@@ -3352,7 +3388,9 @@ class TaskStore {
       if (found.isEmpty) {
         throw FormatFailure('The saved operation is unavailable.');
       }
-      final event = LogEvent.decode(found.single['raw'] as String);
+      final event = _recurringTextMemo.decodeCanonical(
+        found.single['raw'] as String,
+      );
       if (!reversibleTaskEvents.contains(event.type) &&
           event.type != 'task.textEdited') {
         throw FormatFailure('This operation cannot be undone.');
@@ -3406,8 +3444,10 @@ class TaskStore {
     final undone = {
       ...alreadyUndone,
       for (final receipt in prepared.where((r) => confirmed.contains(r.id)))
-        (LogEvent.decode(receipt.raw).data['operation'] ??
-                LogEvent.decode(receipt.raw).data['completion'])
+        (_recurringTextMemo.decodeCanonical(receipt.raw).data['operation'] ??
+                _recurringTextMemo
+                    .decodeCanonical(receipt.raw)
+                    .data['completion'])
             as String,
     };
     final successors = {
