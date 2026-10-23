@@ -354,7 +354,7 @@ class RecurringTextMemo {
     return !verified.isPending &&
         _get(
               _checklistCutKey(engine, baselineScope, completion),
-              verified.observedPrefix,
+              verified.recordsForResolution,
               verification: verified,
             ) !=
             null;
@@ -375,7 +375,7 @@ class RecurringTextMemo {
     _put(
       _checklistCutKey(engine, baselineScope, completion),
       const {},
-      verified.observedPrefix,
+      verified.recordsForResolution,
       verification: verified,
     );
   }
@@ -408,7 +408,7 @@ class RecurringTextMemo {
   Map<String, ResolvedTextField>? _get(
     String key,
     List<LogEvent> observedPrefix, {
-    TextInheritanceVerification? verification,
+    TextResolutionCut? verification,
   }) {
     final value = _entries[key];
     if (value == null || value.prefix.length != observedPrefix.length) {
@@ -420,8 +420,15 @@ class RecurringTextMemo {
     // verified ordered prefix, including unrelated and sparse interior records.
     final identicalVerifiedCut =
         verification != null &&
-        identical(verification.observedPrefix, observedPrefix) &&
+        identical(verification.recordsForResolution, observedPrefix) &&
         identical(value.verification?.target, verification);
+    // A selected dependency set is not a complete generic prefix. Its memo
+    // evidence can only be reused within the exact verified immutable cut.
+    if (!identicalVerifiedCut &&
+        (verification is SelectedTextInheritanceCut || value.selectedCut)) {
+      misses++;
+      return null;
+    }
     for (var i = 0; !identicalVerifiedCut && i < observedPrefix.length; i++) {
       final event = observedPrefix[i];
       final reference = event.hash, content = event.integrityHash;
@@ -467,10 +474,10 @@ class RecurringTextMemo {
     String key,
     Map<String, ResolvedTextField> fields,
     List<LogEvent> observedPrefix, {
-    TextInheritanceVerification? verification,
+    TextResolutionCut? verification,
   }) {
     if (verification != null &&
-        (!identical(verification.observedPrefix, observedPrefix) ||
+        (!identical(verification.recordsForResolution, observedPrefix) ||
             verification.isPending)) {
       throw StateError('Memo receipt must be the exact successful cut.');
     }
@@ -556,6 +563,7 @@ class RecurringTextMemo {
       events,
       prefix,
       verification == null ? null : WeakReference(verification),
+      verification is SelectedTextInheritanceCut,
     );
   }
 }
@@ -568,8 +576,12 @@ class _RememberedText {
     this.events,
     this.prefix,
     this.verification,
+    this.selectedCut,
   );
-  final WeakReference<TextInheritanceVerification>? verification;
+  final WeakReference<TextResolutionCut>? verification;
+  // Mode outlives the weak receipt: GC can never turn a selected dependency
+  // result into evidence for a generic complete-prefix caller.
+  final bool selectedCut;
   final Map<String, ResolvedTextField> fields;
   final int bytes;
   final Set<LineageTextOperation> packets;
@@ -726,6 +738,7 @@ final class RecurringTextInput {
     this.rawCost, [
     this._lookupCache,
     this._previous,
+    this._selectedIndex,
   ]);
   factory RecurringTextInput.fromCanonical(
     Iterable<String> history, {
@@ -766,17 +779,75 @@ final class RecurringTextInput {
   final Map<String, LogEvent> _records;
   final Map<String, int> _heads;
   final TextInheritanceIndex _inheritanceIndex;
+  final SelectedTextInheritanceIndex? _selectedIndex;
+
+  /// A dependency selection has distinct cut semantics. This never supplies a
+  /// complete-prefix receipt to the generic list oracle or its cross-call memo.
+  factory RecurringTextInput.fromSelectedCanonical(
+    Iterable<String> records,
+    Map<String, String> heads,
+    Map<String, int> availableSequences,
+  ) => RecurringTextInput._fromSelectedIndex(
+    SelectedTextInheritanceIndex.fromCanonical(
+      records,
+      heads,
+      availableSequences,
+    ),
+  );
+
+  factory RecurringTextInput._fromSelectedIndex(
+    SelectedTextInheritanceIndex index,
+  ) {
+    final input = RecurringTextInput._fromEvents(index.records);
+    return RecurringTextInput._(
+      input.history,
+      input._records,
+      input._heads,
+      input._inheritanceIndex,
+      input.rawCost,
+      null,
+      null,
+      index,
+    );
+  }
+  bool get isSelected => _selectedIndex != null;
+  int get selectedDecodedRecordCount => _selectedIndex?.decodedRecordCount ?? 0;
+
+  RecurringTextInput _forVerifiedCut(TextResolutionCut cut) => switch (cut) {
+    TextInheritanceVerification() => _forPrefix(cut.observedPrefix),
+    SelectedTextInheritanceCut() => RecurringTextInput._fromSelectedIndex(
+      _selectedIndex!.forCut(cut),
+    ),
+  };
   final int rawCost;
   final RecurringTextInput? _previous;
   _RecurringHistoryLookup? _lookupCache;
   _RecurringHistoryLookup get _lookup =>
       _lookupCache ??= _RecurringHistoryLookup(history);
-  bool get cacheable => history.length <= 4096 && rawCost <= 16 * 1024 * 1024;
+  bool get cacheable =>
+      !isSelected && history.length <= 4096 && rawCost <= 16 * 1024 * 1024;
 
   RecurringTextInput? appendedCanonical(
     Iterable<String> raw, {
     RecurringTextMemo? memo,
   }) {
+    // A preparation overlay does not advance this owning committed cut's
+    // available heads. Only actual inserted candidate SQL may do that.
+    if (_selectedIndex != null) {
+      final values = raw.toList();
+      final records = {..._records};
+      for (final value in values) {
+        final event = _freezeEvent(LogEvent.decode(value));
+        final old = records[event.id];
+        if (old != null && old.canonicalRaw != event.canonicalRaw) return null;
+        records[event.id] = event;
+      }
+      return RecurringTextInput.fromSelectedCanonical(
+        records.values.map((e) => e.canonicalRaw!),
+        _selectedIndex.headRaws,
+        _selectedIndex.availableSequences,
+      );
+    }
     final added =
         (memo?._decodeCanonicalBatch(raw) ??
                 raw.map((raw) => _freezeEvent(LogEvent.decode(raw))))
@@ -827,10 +898,12 @@ final class RecurringTextInput {
       event.canonicalRaw != null &&
       _records[event.id]?.canonicalRaw == event.canonicalRaw;
 
-  TextInheritanceVerification verifyInheritance(
+  TextResolutionCut verifyInheritance(
     Map<String, dynamic> descriptor, {
     required LogEvent completion,
-  }) => _inheritanceIndex.verify(descriptor, completion: completion);
+  }) =>
+      _selectedIndex?.verify(descriptor, completion: completion) ??
+      _inheritanceIndex.verify(descriptor, completion: completion);
 
   /// A declared cut is verified against this exact strictly decoded input
   /// before selecting parent-local membership records. Pending cuts stay pending.
@@ -845,7 +918,7 @@ final class RecurringTextInput {
         'Checklist is waiting for observed history.',
       );
     }
-    return _forPrefix(verified.observedPrefix).checklist(parent);
+    return _forVerifiedCut(verified).checklist(parent);
   }
 
   List<Map<String, dynamic>> checklist(String parent) =>
@@ -951,7 +1024,6 @@ class RecurringTextResolver {
   final RecurringTextInput input;
   List<LogEvent> get history => input.history;
   _RecurringHistoryLookup get _lookup => input._lookup;
-  TextInheritanceIndex get _inheritanceIndex => input._inheritanceIndex;
   final LegacyTextRoots? legacyRoots;
   final Set<String> ancestors;
   // One immutable completion proof has one parent snapshot. Share it across
@@ -1050,10 +1122,7 @@ class RecurringTextResolver {
           throw FormatFailure('Invalid recurring text identity.');
         }
         final proof = contribution.proof;
-        final verified = _inheritanceIndex.verify(
-          proof,
-          completion: completion,
-        );
+        final verified = input.verifyInheritance(proof, completion: completion);
         if (verified.isPending) {
           throw TextInheritancePending(
             'Recurring text is waiting for its declared canonical history.',
@@ -1073,13 +1142,13 @@ class RecurringTextResolver {
             if (contribution.checklist) key += '|${contribution.parent}';
             final remembered = memo?._get(
               key,
-              verified.observedPrefix,
+              verified.recordsForResolution,
               verification: verified,
             );
             if (remembered != null) return remembered;
             final result = RecurringTextResolver._(
               engine,
-              input._forPrefix(verified.observedPrefix),
+              input._forVerifiedCut(verified),
               legacyRoots,
               {...ancestors, entity},
               observedFields,
@@ -1091,7 +1160,7 @@ class RecurringTextResolver {
             memo?._put(
               key,
               result,
-              verified.observedPrefix,
+              verified.recordsForResolution,
               verification: verified,
             );
             return result;

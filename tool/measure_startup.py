@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import queue
 import re
+import shutil
 import sqlite3
 import subprocess
 import threading
@@ -40,14 +41,97 @@ def seed_fixture(root, tasks, library):
     return folder, profile, receipt
 
 
-def launch(binary, profile, diagnostics, run):
+def request_owned_window_close(proc, xdotool):
+    """Send WM_DELETE_WINDOW to one owned visible window; never focus/input."""
+    if proc.poll() is not None:
+        raise RuntimeError('Measured process exited before a normal window-close request')
+    status = Path(f'/proc/{proc.pid}/status').read_text()
+    uid = next(line for line in status.splitlines() if line.startswith('Uid:'))
+    if any(int(value) != os.getuid() for value in uid.split()[1:]):
+        raise RuntimeError('Measured window process UID changed')
+    def command(*args):
+        result = subprocess.run([str(xdotool), *args], stdin=subprocess.DEVNULL,
+                                capture_output=True, text=True, timeout=5)
+        if result.returncode:
+            raise RuntimeError(f'Owned window close command failed: {args[0]}')
+        return result.stdout.strip()
+    windows = command('search', '--onlyvisible', '--pid', str(proc.pid)).splitlines()
+    if len(windows) != 1 or not windows[0].isdigit() or not 0 < int(windows[0]) < 2**32:
+        raise RuntimeError('Normal close requires exactly one owned visible window')
+    window = windows[0]
+    if command('getwindowpid', window) != str(proc.pid) or proc.poll() is not None:
+        raise RuntimeError('Measured window/PID binding changed')
+    # windowclose destroys the X window; windowquit asks the client to close.
+    command('windowquit', window)
+    return {'method': 'owned-window-WM_DELETE_WINDOW', 'pid': proc.pid,
+            'window': window, 'globalFocusOrInput': False}
+
+
+def finish_process(proc, marker, close_mode, xdotool):
+    result = {'requestedMode': close_mode, 'normalExitVerified': False}
+    started = time.perf_counter()
+    if proc.poll() is None and marker and close_mode == 'normal':
+        try:
+            result.update(request_owned_window_close(proc, xdotool))
+            proc.wait(timeout=15)
+            result['normalExitVerified'] = proc.returncode == 0
+        except Exception as error:
+            result['normalCloseError'] = str(error)
+    if proc.poll() is None:
+        result['forcedTerminationUsed'] = True
+        result['method'] = 'SIGTERM'
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            result['method'] = 'SIGKILL-after-SIGTERM-timeout'
+            proc.kill()
+            proc.wait(timeout=5)
+    result.update(processExit=proc.returncode,
+                  elapsedMs=round((time.perf_counter()-started)*1000, 3))
+    return result
+
+
+def inspect_stopped_witness(profile, folder):
+    """Presence/hash evidence only; production reuse validates actual bindings."""
+    database = profile/'local.sqlite'
+    result = {'taskProofPresent': False, 'decodedProofPresent': False,
+              'taskProofShapeValid': False, 'decodedPayloadHashMatches': False,
+              'productionReuseVerified': False}
+    if not database.exists():
+        return result
+    epoch = json.loads((folder/'tandemlog-space.json').read_text())['epoch']
+    key = hashlib.sha256(f'{folder}#app5:{epoch}'.encode()).hexdigest()
+    names = [f'app5.task.cache.{key}', f'app5.decoded.proof.{key}',
+             f'app5.decoded.payload.{key}']
+    with closing(sqlite3.connect(database.resolve().as_uri()+'?mode=ro', uri=True, timeout=0)) as db:
+        db.execute('PRAGMA query_only=ON')
+        rows = dict(db.execute('SELECT key,value FROM profile_metadata WHERE key IN (?,?,?)', names))
+    task, proof, payload = (rows.get(name) for name in names)
+    result.update(taskProofPresent=task is not None, decodedProofPresent=proof is not None)
+    if task is not None:
+        result['taskProofSHA256'] = hashlib.sha256(task.encode()).hexdigest()
+        try:
+            value = json.loads(task)
+            result['taskProofShapeValid'] = (value.get('generation') == 3 and
+                value.get('native') is True and all(isinstance(value.get(field), str) and
+                re.fullmatch('[0-9a-f]{64}', value[field]) for field in ('manifest','revision','digest')))
+        except (ValueError, AttributeError):
+            pass
+    if payload is not None:
+        result['decodedPayloadSHA256'] = hashlib.sha256(payload.encode()).hexdigest()
+        result['decodedPayloadHashMatches'] = result['decodedPayloadSHA256'] == proof
+    return result
+
+
+def launch(binary, profile, diagnostics, run, *, close_mode="normal", xdotool="xdotool"):
     """Retain combined application stdout/stderr even without a ready marker."""
     start = time.perf_counter()
     proc = None
     marker, marks, lines, pending = None, {}, [], b''
     output_path = diagnostics/f'run-{run}.stdout-stderr.log'
     status_path = diagnostics/f'run-{run}.json'
-    status = {'run': run, 'passed': False}
+    status = {'run': run, 'passed': False, 'cleanWitnessVerified': False, 'closeMode': close_mode}
     try:
         with output_path.open('wb') as output:
             proc = subprocess.Popen(
@@ -94,19 +178,15 @@ def launch(binary, profile, diagnostics, run):
                 elapsed = round((time.perf_counter()-start)*1000)
                 status.update(external_ms=elapsed, marker=marker, phases=lines, **marks)
             finally:
-                if proc.poll() is None:
-                    proc.terminate()
-                try:
-                    proc.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    proc.kill()
-                    proc.wait()
+                status['shutdown'] = finish_process(proc, marker, close_mode, xdotool)
                 # The reader retains shutdown output and a final line without LF.
                 reader.join(timeout=1)
                 proc.stdout.close()
                 status['process_exit'] = proc.returncode
         if not marker:
             raise RuntimeError('No loaded-frame marker; see retained application stdout/stderr')
+        if close_mode == 'normal' and not status['shutdown']['normalExitVerified']:
+            raise RuntimeError('Normal owned window close was not verified; forced cleanup is not a clean-close benchmark')
         return status
     except Exception as error:
         status['error'] = str(error)
@@ -125,8 +205,8 @@ def verify_loaded(profile, folder, tasks, result, warm):
         table = f'tasks_{key}_views'
     else:
         database, table = profile/'spaces'/key/'cache.sqlite', 'views'
-    with closing(sqlite3.connect(str(database), timeout=0)) as db:
-        db.execute('PRAGMA locking_mode=EXCLUSIVE')
+    with closing(sqlite3.connect(database.resolve().as_uri()+'?mode=ro', uri=True, timeout=0)) as db:
+        db.execute('PRAGMA query_only=ON')
         projected = [json.loads(row[0]) for row in db.execute(f'SELECT raw FROM {table}')]
     if len(projected) != tasks+1 or sum(row['kind'] == 'task' for row in projected) != tasks:
         raise RuntimeError('Loaded cache does not contain the complete synthetic workload')
@@ -136,10 +216,28 @@ def verify_loaded(profile, folder, tasks, result, warm):
         raise RuntimeError('Ready marker lacks truthful canonical-read attribution')
     reads = int(match[1])
     result.update(canonical_payload_reads=reads, canonical_files=canonical_files)
-    # Current common admission scans payloads before exposing either module.
-    # Bound repeated startup stages; do not claim the retired incremental path.
+    # A new process reconstructs/admits canonical physical history. Normal
+    # in-process refresh uses ADR7 metadata/suffix reads, while explicit audit
+    # still rereads old prefixes. Cache reuse is not zero-read startup.
     if not canonical_files <= reads <= 8*canonical_files:
         raise RuntimeError('Startup canonical admission exceeded its bounded scan stages')
+
+    reuse = None
+    for line in result['phases']:
+        if line.startswith('TANDEMLOG_STARTUP_CACHE '):
+            reuse = json.loads(line.split(' ', 1)[1])
+    result['startupCacheCounters'] = reuse
+    before = result.get('witnessBeforeLaunch', {})
+    task_reused = bool(reuse and reuse.get('warmTaskProjectionReuses', 0) > 0)
+    decoded_reused = bool(reuse and reuse.get('decodedCacheReuses', 0) > 0)
+    clean_repeat = bool(warm and result.get('previousNormalExitVerified'))
+    if clean_repeat and before.get('taskProofShapeValid') and not task_reused:
+        raise RuntimeError('Prior sealed Task witness was not actually reused')
+    if clean_repeat and before.get('decodedPayloadHashMatches') and not decoded_reused:
+        raise RuntimeError('Prior sealed decoded witness was not actually reused')
+    result.update(cleanTaskWitnessVerified=clean_repeat and before.get('taskProofShapeValid', False) and task_reused,
+                  cleanDecodedWitnessVerified=clean_repeat and before.get('decodedPayloadHashMatches', False) and decoded_reused)
+    result['cleanWitnessVerified'] = result['cleanTaskWitnessVerified'] and result['cleanDecodedWitnessVerified']
 
 
 def main():
@@ -152,25 +250,39 @@ def main():
                         help='Dedicated disposable benchmark directory; never use a real profile')
     parser.add_argument('--native-library', help='Exact native library for synthetic initialization; defaults to measured Linux bundle')
     parser.add_argument('--diagnostics', help='Retained engineering diagnostics directory, outside publication assets')
+    parser.add_argument('--close-mode', choices=['normal', 'terminate'], default='normal',
+                        help='Normal owned-window close, or explicitly abrupt SIGTERM trials; SIGTERM never proves a clean witness')
+    parser.add_argument('--xdotool', default=shutil.which('xdotool') or 'xdotool',
+                        help='Reviewed xdotool with windowquit support; no focus/input is sent')
     args = parser.parse_args()
     if args.tasks < 0 or args.runs < 1:
         parser.error('tasks must be nonnegative and runs must be positive')
-    root = Path(args.workspace)
+    root = Path(args.workspace).resolve()
     diagnostics = Path(args.diagnostics) if args.diagnostics else root/'startup-diagnostics'
     diagnostics.mkdir(parents=True, exist_ok=True)
     report = dict(target='Linux x86_64 native / Xvfb', binary=args.binary,
-                  tasks=args.tasks, label=args.label, os_page_cache='not flushed', results=[])
+                  tasks=args.tasks, label=args.label, os_page_cache='not flushed', close_mode=args.close_mode, results=[])
     try:
         library = args.native_library or str(Path(args.binary).resolve().parent/'lib/libtandemlog_text.so')
         folder, profile, receipt = seed_fixture(root, args.tasks, library)
         report['fixture'] = receipt
+        previous = None
         for i in range(args.runs):
-            result = launch(args.binary, profile, diagnostics, i+1)
+            witness_before = inspect_stopped_witness(profile, folder)
+            result = launch(args.binary, profile, diagnostics, i+1,
+                            close_mode=args.close_mode, xdotool=args.xdotool)
+            result['witnessBeforeLaunch'] = witness_before
+            result['previousNormalExitVerified'] = bool(previous and previous['shutdown']['normalExitVerified'])
             report['results'].append(result)
             if not args.label.startswith('minimal'):
                 verify_loaded(profile, folder, args.tasks, result, i > 0)
+            result['witnessAfterClose'] = inspect_stopped_witness(profile, folder)
             result.update(passed=True, cache='not used' if args.label.startswith('minimal')
-                          else ('rebuild' if i == 0 else 'warm'))
+                          else ('verified-clean-repeat' if result.get('cleanWitnessVerified') else
+                                'first-launch-no-cold-boot-claim' if i == 0 else
+                                'repeat-after-normal-close-without-full-reuse-proof' if result['shutdown']['normalExitVerified'] else
+                                'repeat-after-SIGTERM-clean-witness-unverified'))
+            previous = result
             (diagnostics/f'run-{i+1}.json').write_text(
                 json.dumps(result, indent=2)+'\n', encoding='utf-8')
         report['passed'] = True

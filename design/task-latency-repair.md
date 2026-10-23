@@ -103,6 +103,15 @@ text_baseline_verified belong in this proof or projection copy. Checklist
 expansion preferences stay intact. No unfinished Save intent or restart replay
 is added.
 
+An accepted desktop close now awaits one idempotent shutdown future before
+returning the native exit response. Busy or canceled draft decisions do not
+start shutdown. Accepted closure quiesces new input and producers, drains existing
+work, and attempts every close in the existing owner order. Widget disposal joins
+the same future. Cleanup failure is reported once and explicitly exits the
+quiescent app rather than exposing half-closed resources. Host tests verify lease
+release, witness creation and actual proof reuse without relying on unmount;
+actual GTK/Windows native-close validation remains a separate gate.
+
 A separate layout2 decode cache stores exact outer record strings and their
 already validated typed Task/Food fields, bounded to 4,096 records and a 16 MiB
 payload. Its one-shot clean-close receipt binds location, installation, manifest,
@@ -145,7 +154,12 @@ Warm startup reuses decoded actions after checking actual canonical bytes and
 validates the separate clean projection witness; it does not promise a zero-read
 restart or a constant-time cache proof. These costs are
 reported rather than described as constant time. Full UI responsiveness, cold versus warm startup, action-specific limits
-and scaling need separate measurements. No performance limit may be loosened
+and scaling need separate measurements. The Linux startup tool requests graceful
+close only on the measured process's owned window and requires exit status zero.
+A clean-repeat label also requires prior stopped-witness checks and actual
+production Task/decode reuse counters. SIGTERM trials are explicitly abrupt and
+do not prove clean-witness reuse. OS page caches are not flushed.
+No performance limit may be loosened
 without the owner's approval, and no correctness failure qualifies for a noise
 rerun.
 
@@ -161,10 +175,18 @@ second copy of the already-owned concatenated immutable physical buffer.
 Remaining immutable physical/list/map/ready-set copies scale with retained
 history references. Current visible-row serialization scales with current
 entities. These are representation costs, not required durability guarantees.
-Above the bounded recurring-input retention budget, generic resolver
-reconstruction remains a known performance boundary; raising a cache cap alone
-does not solve history-scaled ordinary work. Current measurements do not prove
-constant-time behavior beyond the measured shapes.
+Above the whole-input budget of 4,096 Task records or 16 MiB raw cost,
+an actual owning history may synchronously select a detached text closure from
+its strictly admitted records and relation indexes. Selection requires its
+current committed key or the exact inserted candidate scope; general validator
+fallback cannot borrow old committed rows as candidate input. Declared cuts,
+competing seeds, copies, retractions, baseline and native collision checks remain
+separate. The selected-cut type cannot stand in for a generic complete prefix,
+and selected memo provenance survives weak-receipt collection. Selected cut
+retention has the same 128-entry/2 MiB accounting bound; oversized cuts are not
+cached. Generic, sparse, foreign and unready inputs keep the full oracle.
+Relevant lineage and required baseline work may still grow; this removes the
+unrelated-history cache cliff without raising caps or claiming constant time.
 
 The repair changes no canonical format, atomic action boundary, durable signing
 safeguard or live workspace. Stable publication and live cutover remain separate

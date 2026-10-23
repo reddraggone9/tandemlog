@@ -188,7 +188,12 @@ extension ChecklistStore on TaskStore {
     if (history.isEmpty) return;
     final items = projectChecklist(history, state['id'] as String);
     resolution ??= items.any((item) => _hasInheritedText(item['id'] as String))
-        ? _textResolution()
+        ? _textResolution(
+            entities: [
+              state['id'] as String,
+              ...items.map((item) => item['id'] as String),
+            ],
+          )
         : null;
     for (final item in items) {
       _materializeText(
@@ -365,10 +370,14 @@ extension ChecklistStore on TaskStore {
     // This is the exact committed/transactional SQL input. A preparation
     // overlay is kept only in its separate resolver and cannot supply a missing
     // frontier here; post-INSERT replay sees its actual inserted rows.
-    final canonicalInput = _textInput();
+    final roots = <String>{for (final event in completions) event.entity};
+    final canonicalInput = _textInput(entities: roots);
     final resolution =
         suppliedResolution ??
-        _textResolution(pending: pending == null ? [] : [pending]);
+        _textResolution(
+          pending: pending == null ? [] : [pending],
+          entities: roots,
+        );
     for (final completion in completions) {
       final descriptor = completion.data['checklist'] as Map;
       final declared = (descriptor['items'] as List)
@@ -421,18 +430,18 @@ extension ChecklistStore on TaskStore {
           );
         }
         final nativeParent =
-            verification.observedPrefix.any(
+            verification.recordsForResolution.any(
               (event) =>
                   event.entity == completion.entity &&
                   isNativeTextCreation(event.type),
             ) ||
             textContributions(
-              verification.observedPrefix,
+              verification.recordsForResolution,
               completion.entity,
             ).isNotEmpty ||
             _legacyTextRoots(
                   completion.entity,
-                  verification.observedPrefix,
+                  verification.recordsForResolution,
                 )?.isNotEmpty ==
                 true;
         if (nativeParent != hasNativeTaskSuccessor(completion)) {
@@ -472,7 +481,9 @@ extension ChecklistStore on TaskStore {
         'This checklist exceeds the recurring-copy item limit.',
       );
     }
-    final resolution = _textResolution();
+    final resolution = _textResolution(
+      entities: [parent, ...items.map((item) => item['id'] as String)],
+    );
     return {
       'codec': 'yrs-v1',
       'adapter': 2,

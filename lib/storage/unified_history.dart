@@ -166,7 +166,7 @@ class UnifiedSnapshot {
 /// Sole write/recovery authority. Public calls use the existing profile queue.
 /// *InProfileQueue methods are for stores already executing on that same queue;
 /// they must never be invoked from a second independent store queue.
-class UnifiedHistory {
+final class UnifiedHistory {
   UnifiedHistory._(
     this.folder,
     this.profile,
@@ -292,6 +292,23 @@ class UnifiedHistory {
     final revision = _semanticValidator?.reusedProjectionRevision;
     _semanticValidator?.reusedProjectionRevision = null;
     return revision;
+  }
+
+  /// A synchronous detached dependency read from this exact owning snapshot.
+  /// Prepared scratch state cannot be borrowed by an older committed snapshot.
+  int get taskSelectedReadCount =>
+      _semanticValidator?.selectedTextReadCount ?? 0;
+
+  bool ownsTaskValidator(TaskSemanticValidator validator) =>
+      identical(_semanticValidator, validator);
+
+  TaskTextReadSelection? selectTaskText(
+    UnifiedSnapshot snapshot,
+    Iterable<String> roots,
+  ) {
+    final key = _verifiedTaskRevisions[snapshot];
+    if (key == null) return null;
+    return _semanticValidator?.selectText(key, roots);
   }
 
   bool copyValidatedTaskProjection(
@@ -1591,6 +1608,7 @@ class UnifiedHistory {
     if (ready == null) {
       semanticValidationRuns++;
       final validator = _semanticValidator ??= TaskSemanticValidator(
+        owningHistory: this,
         space: m.space,
         writer: writer,
         textEngine: textEngine,

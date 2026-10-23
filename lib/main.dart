@@ -252,6 +252,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   LocalSettings? settings;
   LocalProfileDatabase? profileDatabase;
   Future<void>? starting;
+  Future<void>? _shutdownFuture;
+  Future<AppExitResponse>? _exitRequest;
+  bool _exitQuiescing = false, _shutdownFailureReported = false;
   Completer<void>? activeActionDone;
   bool settingsLoaded = false;
   final firstName = TextEditingController();
@@ -410,7 +413,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   void _invalidateView() {
-    if (!mounted || !foreground) return;
+    if (!mounted || _exitQuiescing || !foreground) return;
     if (foodVisible && taskView != null) {
       _taskProjectionDirty = true;
       viewClock.stop();
@@ -659,6 +662,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       errorFromRefresh = true;
     }
     debugPrint('TANDEMLOG_ROWS ${jsonEncode(store!.lastReadTimings)}');
+    debugPrint(
+      'TANDEMLOG_STARTUP_CACHE ${jsonEncode({'warmTaskProjectionReuses': store!.warmProjectionReuses, 'decodedCacheReuses': store!.unified?.decodedCacheReuses ?? 0, 'strictDecodedRecords': store!.unified?.decodedRecords ?? 0})}',
+    );
     if (!rows.any((r) => r['kind'] == 'user' && r['id'] == user)) {
       user = null;
       if (foodVisible) {
@@ -690,6 +696,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   void _requestSection(bool food, {bool waitForFolderChoice = true}) {
+    if (_exitQuiescing) return;
     requestedSection = (
       food: food,
       revision: ++sectionRevision,
@@ -699,7 +706,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   void _wakeSectionRequests() {
-    if (!mounted || requestedSection == null) return;
+    if (!mounted || _exitQuiescing || requestedSection == null) return;
     // Save callbacks return before their child clears its saving/route state.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) unawaited(_drainSectionRequests());
@@ -709,6 +716,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   bool get _sectionReady =>
       mounted &&
+      !_exitQuiescing &&
       !busy &&
       !openingChecklistEditor &&
       !closingEditor &&
@@ -793,6 +801,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   ) async {
     final origin = foodStore;
     if (!mounted ||
+        _exitQuiescing ||
         busy ||
         sharedSafetyError != null ||
         origin == null ||
@@ -1210,10 +1219,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   });
 
   Future<void> _showSettings() async {
+    if (_exitQuiescing) return;
     final origin = store, owner = profileDatabase, preferences = settings;
     final location = origin?.folder.location ?? preferences?.folder;
     bool current() =>
         mounted &&
+        !_exitQuiescing &&
         identical(store, origin) &&
         identical(profileDatabase, owner) &&
         identical(settings, preferences) &&
@@ -1545,7 +1556,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _act(Future<void> Function() action) async {
-    if (!mounted || busy || sharedSafetyError != null) {
+    if (!mounted || _exitQuiescing || busy || sharedSafetyError != null) {
       return;
     }
     final completion = activeActionDone = Completer<void>();
@@ -1787,6 +1798,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   void _configureImporter() {
+    if (_exitQuiescing) {
+      importer?.stop();
+      return;
+    }
     _bindWorkspaceState();
     if (_taskProjectionDirty) _invalidateView();
     if (!identical(watchedStore, store)) {
@@ -1815,6 +1830,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _refresh() async {
     if (!mounted ||
+        _exitQuiescing ||
         !foreground ||
         store == null ||
         busy ||
@@ -2042,6 +2058,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_exitQuiescing) return;
     foreground =
         state == AppLifecycleState.resumed ||
         state == AppLifecycleState.inactive;
@@ -2060,11 +2077,121 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   @override
-  Future<AppExitResponse> didRequestAppExit() async {
-    if (busy || !await _closeEditor() || !await _closeFoodEditor()) {
-      return AppExitResponse.cancel;
+  Future<AppExitResponse> didRequestAppExit() => _exitRequest ??=
+      _requestAppExit().whenComplete(() => _exitRequest = null);
+
+  Future<AppExitResponse> _requestAppExit() async {
+    if (_shutdownFuture == null) {
+      if (!mounted || busy) return AppExitResponse.cancel;
+      try {
+        if (!await _closeEditor() ||
+            busy ||
+            !await _closeFoodEditor() ||
+            busy) {
+          return AppExitResponse.cancel;
+        }
+      } catch (failure, stack) {
+        // The framework catches observer exceptions and may still exit. A
+        // failed/canceled draft decision must instead explicitly keep the app.
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: failure,
+            stack: stack,
+            context: ErrorDescription(
+              'while deciding whether to close Tandemlog',
+            ),
+          ),
+        );
+        return AppExitResponse.cancel;
+      }
+      final shutdown = _shutdownOnce(foodPageKey.currentState?.editorDone);
+      Object? barrierFailure;
+      StackTrace? barrierStack;
+      try {
+        if (mounted) {
+          // Cover existing Settings/dialog routes too. No new input may start
+          // after accepted closure while private queues and native owners drain.
+          unawaited(
+            showDialog<void>(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => const PopScope(
+                canPop: false,
+                child: Dialog(
+                  key: ValueKey('app-closing'),
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20),
+                        Text('Closing…'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      } catch (failure, stack) {
+        barrierFailure = failure;
+        barrierStack = stack;
+      }
+      await _observeShutdown(shutdown);
+      if (barrierFailure != null) {
+        _reportShutdownFailure(barrierFailure, barrierStack!);
+      }
+    } else {
+      await _observeShutdown(_shutdownFuture!);
     }
+    // Cleanup errors have already been reported and every close attempted.
+    // Keep the app quiescent and explicitly exit; never expose half-closed
+    // resources behind an interactive canceled window or rely on a thrown
+    // observer exception to choose the native response.
     return AppExitResponse.exit;
+  }
+
+  Future<void> _observeShutdown(Future<void> shutdown) async {
+    try {
+      await shutdown;
+    } catch (failure, stack) {
+      _reportShutdownFailure(failure, stack);
+    }
+  }
+
+  void _reportShutdownFailure(Object failure, StackTrace stack) {
+    if (_shutdownFailureReported) return;
+    _shutdownFailureReported = true;
+    FlutterError.reportError(
+      FlutterErrorDetails(
+        exception: failure,
+        stack: stack,
+        context: ErrorDescription('while closing Tandemlog'),
+      ),
+    );
+  }
+
+  Future<void> _shutdownOnce(
+    Future<void>? foodEditorDone, {
+    bool repaint = true,
+  }) {
+    final running = _shutdownFuture;
+    if (running != null) return running;
+    final completion = Completer<void>();
+    _shutdownFuture = completion.future;
+    _exitQuiescing = true;
+    busy = true;
+    foreground = false;
+    requestedSection = null;
+    if (repaint && mounted) setState(() {});
+    unawaited(
+      _shutdown(
+        foodEditorDone,
+      ).then(completion.complete, onError: completion.completeError),
+    );
+    return completion.future;
   }
 
   Future<void> _chooseFolder() async {
@@ -2080,6 +2207,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final writer = preferences!.writer;
     bool current() =>
         mounted &&
+        !_exitQuiescing &&
         identical(store, origin) &&
         identical(foodStore, originalFood) &&
         identical(profileDatabase, owner) &&
@@ -2355,6 +2483,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _openSelectionSession() async {
+    if (_exitQuiescing) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final origin = store;
     if (origin == null || busy || sharedSafetyError != null) return;
@@ -2384,6 +2513,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             : 'This workspace has no verified shared text setup. Restore its initialized history before editing.';
       }
       if (!mounted ||
+          _exitQuiescing ||
           busy ||
           sharedSafetyError != null ||
           !identical(store, origin) ||
@@ -3686,7 +3816,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     Map<String, dynamic> task, {
     Offset? position,
   }) async {
-    if (!identical(store, origin) || busy || taskMenuOpen) return;
+    if (_exitQuiescing || !identical(store, origin) || busy || taskMenuOpen) {
+      return;
+    }
     final id = task['id'] as String;
     final anchor = taskMenuKeys[id]?.currentContext?.findRenderObject();
     final overlay = Navigator.of(context).overlay?.context.findRenderObject();
@@ -4167,7 +4299,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     String parent, {
     Map<String, dynamic>? item,
   }) async {
-    if (busy || openingChecklistEditor || checklistEditorKey != null) return;
+    if (_exitQuiescing ||
+        busy ||
+        openingChecklistEditor ||
+        checklistEditorKey != null) {
+      return;
+    }
     if (!identical(store, origin)) return;
     TaskTextCapture? captured;
     TaskTextSession? session;
@@ -4334,9 +4471,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    // Capture route/native completion before disposing controllers. Normal
+    // desktop exit already owns this same future even without an unmount.
+    final shutdown = _shutdownOnce(
+      foodPageKey.currentState?.editorDone,
+      repaint: false,
+    );
     _detachWorkspaceState();
     FocusManager.instance.removeListener(_focusChanged);
-    sectionNavigation?.dispose();
     requestedSection = null;
     _stopDragScroll();
     taskScroll.dispose();
@@ -4361,19 +4503,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     captureValidation.dispose();
     firstName.dispose();
     firstNameFocus.dispose();
-    unawaited(_shutdown(foodPageKey.currentState?.editorDone));
+    unawaited(_observeShutdown(shutdown));
     super.dispose();
   }
 
   Future<void> _shutdown(Future<void>? foodEditorDone) async {
-    // Never release the installation lease while a startup, preference write,
-    // command or ingestion can still complete against the old instance.
-    await starting;
-    await sectionWork;
-    await activeActionDone?.future;
-    await syncing;
-    await checklistEditorDone?.future;
-    await foodEditorDone;
     Object? firstFailure;
     StackTrace? firstStack;
     Future<void> cleanup(FutureOr<void> Function() close) async {
@@ -4385,6 +4519,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
     }
 
+    // Stop producers first. Existing queued work retains its captures/leases
+    // until the same established drain and resource-close order completes.
+    await cleanup(() => importer?.stop());
+    final navigation = sectionNavigation;
+    sectionNavigation = null;
+    await cleanup(() => navigation?.dispose());
+    await cleanup(_stopDragScroll);
+    taskDrag = null;
+    await cleanup(timeSource.stop);
+    await cleanup(viewClock.stop);
+    await cleanup(() => FocusManager.instance.primaryFocus?.unfocus());
+    await cleanup(() => starting);
+    await cleanup(() => sectionWork);
+    await cleanup(() => activeActionDone?.future);
+    await cleanup(() => syncing);
+    await cleanup(() => checklistEditorDone?.future);
+    await cleanup(() => foodEditorDone);
     await cleanup(() => foodStore?.close());
     await cleanup(() => store?.close());
     await cleanup(() => store?.unified?.close());
@@ -4397,6 +4548,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    if (_exitQuiescing) {
+      return const Scaffold(body: Center(child: Text('Closing…')));
+    }
     final users = rows.where((r) => r['kind'] == 'user').toList();
     // Setup keeps its private name/focus and established Continue retry. That
     // callback revalidates shared authority before any user creation; other

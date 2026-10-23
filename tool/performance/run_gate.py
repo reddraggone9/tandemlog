@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 try:
     import resource
 except ImportError:  # Policy tests also run on Windows.
@@ -26,6 +27,18 @@ def digest(path):
         for chunk in iter(lambda:stream.read(1024*1024),b''):
             value.update(chunk)
     return value.hexdigest()
+
+def runtime_environment():
+    # Fixed non-personal fields only; never serialize the ambient environment.
+    result={'architecture':platform.machine(),'kernel':platform.release(),
+            'python':platform.python_version(),'logicalCPUs':os.cpu_count(),
+            'runnerImage':{k:os.environ[k] for k in ('ImageOS','ImageVersion','RUNNER_OS','RUNNER_ARCH') if k in os.environ}}
+    try:
+        for line in pathlib.Path('/proc/cpuinfo').read_text().splitlines():
+            if line.startswith('model name') and ':' in line:
+                result['cpuModel']=line.split(':',1)[1].strip();break
+    except OSError:pass
+    return result
 
 def write_new(path, value):
     with pathlib.Path(path).open('x') as stream:
@@ -304,7 +317,7 @@ def main():
     bounds=actual_resource_bounds()
     if not args.measure_only:require_release_bounds(bounds)
     env=os.environ.copy();env.update(LD_PRELOAD=str(args.sqlite_library.resolve()),TANDEMLOG_TEXT_LIBRARY=str(args.native_library.resolve()),DART_SUPPRESS_ANALYTICS='true',CI='true')
-    report={'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'measureOnly':args.measure_only,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
+    report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'measureOnly':args.measure_only,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
     try:
         binary=root/'benchmark';command=[str(args.dart.resolve()),'compile','exe','--packages='+str(packages),str(tools/'benchmark.dart'),'-o',str(binary)]
         report['compile']=run_child(command,root/'compile.log',env,180);check_pins()

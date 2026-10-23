@@ -432,7 +432,23 @@ class TaskStore {
         if (settledDelta || knownReadyDelta) {
           for (final event in events) {
             if (event.type == 'task.completedWithChecklist') {
-              resolution ??= _textResolution();
+              resolution ??= _textResolution(
+                entities: {
+                  for (final changed in events) ...{
+                    changed.entity,
+                    if (changed.data['successor'] is Map)
+                      (changed.data['successor'] as Map)['id'] as String,
+                    if (changed.type == 'task.completedWithChecklist')
+                      for (final item
+                          in (changed.data['checklist'] as Map)['items']
+                              as List)
+                        (item as Map)['id'] as String,
+                    if (changed.type == 'task.moved' &&
+                        changed.data['before'] is String)
+                      changed.data['before'] as String,
+                  },
+                },
+              );
               _validateChecklistCompletions(event, false, resolution);
             }
             _validateUndoReferences(event);
@@ -516,7 +532,7 @@ class TaskStore {
       resolution ??=
           textEngine != null &&
               (!incremental || entities.any(_hasInheritedText))
-          ? _textResolution()
+          ? _textResolution(entities: entities)
           : null;
       for (final entity in entities) {
         final state = _projectEntity(
@@ -1246,9 +1262,16 @@ class TaskStore {
   int semanticProjectionReuses = 0;
   String? _unifiedTaskRevision;
   UnifiedSnapshot? _stagedSnapshot;
+  UnifiedSnapshot? _textStageSnapshot;
+  TaskSemanticValidator? _textReadOwner;
+  int selectedTextReads = 0, selectedTextRecords = 0, selectedTextLookups = 0;
+  int selectedTextInitialDecodes = 0;
+
   EventClock? _stagedMaximumClock;
   void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
     final before = _canonicalTextInput;
+    final beforeScope = _textStageSnapshot;
+    _textStageSnapshot = snapshot;
     try {
       final publish = _withCopySeedIndex(
         () => _stageUnifiedProjectionIndexed(snapshot),
@@ -1262,6 +1285,7 @@ class TaskStore {
       // The caller still owns the shared SQL transaction. Publish this pure
       // candidate only after that transaction has actually committed.
       _canonicalTextInput = before;
+      _textStageSnapshot = beforeScope;
     }
   }
 
@@ -1407,7 +1431,7 @@ class TaskStore {
       // and share it across fields/captures without extending its lifetime.
       RecurringTextResolver? resolution;
       Map<String, ResolvedTextField> resolve(String entity) =>
-          (resolution ??= _textResolution()).resolve(entity);
+          (resolution ??= _textResolution(entities: affected)).resolve(entity);
       _updateCapturedTextDocuments(added, affected, resolve: resolve);
       _updateNativeUndoOwners(added, affected, resolve: resolve);
     });
@@ -1594,6 +1618,7 @@ class TaskStore {
     // no resolver survives a later refresh or Save.
     final resolution = _hasInheritedText(entity)
         ? _textResolution(
+            entities: [entity],
             pending: history
                 .where((event) => event.canonicalRaw != null)
                 .toList(),
@@ -3339,9 +3364,28 @@ class TaskStore {
   Map<String, ResolvedTextField> _resolvedText(
     String entity, {
     List<LogEvent> pending = const [],
-  }) => _textResolution(pending: pending).resolve(entity);
+  }) => _textResolution(pending: pending, entities: [entity]).resolve(entity);
 
-  RecurringTextInput _textInput() {
+  RecurringTextInput _textInput({Iterable<String> entities = const []}) {
+    final roots = entities.toSet();
+    if (_canonicalTextInput == null && roots.isNotEmpty) {
+      final snapshot = _textStageSnapshot ?? _stagedSnapshot;
+      final selection =
+          _textReadOwner?._selectText(roots) ??
+          (snapshot == null ? null : unified?.selectTaskText(snapshot, roots));
+      if (selection != null) {
+        final input = RecurringTextInput.fromSelectedCanonical(
+          selection.records,
+          selection.heads,
+          selection.sequences,
+        );
+        selectedTextReads++;
+        selectedTextRecords += selection.records.length;
+        selectedTextLookups += selection.lookups;
+        selectedTextInitialDecodes += input.selectedDecodedRecordCount;
+        return input;
+      }
+    }
     final input =
         _canonicalTextInput ??
         RecurringTextInput.fromCanonical(
@@ -3354,8 +3398,13 @@ class TaskStore {
     return input;
   }
 
-  RecurringTextResolver _textResolution({List<LogEvent> pending = const []}) {
-    var input = _textInput();
+  RecurringTextResolver _textResolution({
+    List<LogEvent> pending = const [],
+    Iterable<String> entities = const [],
+  }) {
+    var input = _textInput(
+      entities: {...entities, ...pending.map((e) => e.entity)},
+    );
     final added = pending
         .where((event) => !input.containsCanonical(event))
         .toList();
@@ -4426,6 +4475,62 @@ String _taskCacheDigest(List<List<List<Object?>>> rows, List<String> ready) =>
 /// Disposable, process-local semantic admission oracle. Complete candidate
 /// batches are staged together; a failed or non-monotonic candidate rebuilds
 /// from canonical input rather than retaining partly validated SQL/native state.
+
+final class _TaskTextRelations {
+  final entity = <String, List<LogEvent>>{};
+  final successor = <String, List<LogEvent>>{};
+  final copies = <String, List<LogEvent>>{};
+  final children = <String, List<LogEvent>>{};
+  final inbound = <String, List<LogEvent>>{};
+  final retractions = <String, List<LogEvent>>{};
+  final baselines = <LogEvent>[];
+  void add(LogEvent e) {
+    (entity[e.entity] ??= []).add(e);
+    final next = (e.data['successor'] as Map?)?['id'];
+    if (next is String) (successor[next] ??= []).add(e);
+    if (e.type == 'checklist.itemCreated') {
+      (children[e.data['parent'] as String] ??= []).add(e);
+    }
+    if (e.type == 'task.completedWithChecklist') {
+      (children[next as String] ??= []).add(e);
+      for (final item in (e.data['checklist'] as Map)['items'] as List) {
+        (copies[(item as Map)['id'] as String] ??= []).add(e);
+      }
+    }
+    if (e.type == 'task.moved' && e.data['before'] is String) {
+      (inbound[e.data['before'] as String] ??= []).add(e);
+    }
+    if (e.type == 'task.operationUndone' ||
+        e.type == 'task.textEditUndone' ||
+        e.type == 'task.recurringCompletionUndone') {
+      final target =
+          e.data[e.type == 'task.recurringCompletionUndone'
+                  ? 'completion'
+                  : 'operation']
+              as String;
+      (retractions[target] ??= []).add(e);
+    }
+    if (e.type == 'text.baselineInitialized') baselines.add(e);
+  }
+}
+
+/// Detached, strictly canonical dependency payload. Only the owning semantic
+/// validator can construct it; callers cannot inject a provider into TaskStore.
+final class TaskTextReadSelection {
+  TaskTextReadSelection._(
+    Iterable<String> records,
+    Map<String, String> heads,
+    Map<String, int> sequences,
+    this.lookups,
+  ) : records = List.unmodifiable(records),
+      heads = Map.unmodifiable(heads),
+      sequences = Map.unmodifiable(sequences);
+  final List<String> records;
+  final Map<String, String> heads;
+  final Map<String, int> sequences;
+  final int lookups;
+}
+
 class TaskSemanticValidator {
   TaskSemanticValidator({
     required this.space,
@@ -4434,11 +4539,13 @@ class TaskSemanticValidator {
     this.profile,
     this.locationKey,
     this.manifestDigest,
+    this.owningHistory,
   });
   final String space, writer;
   final NativeTextEngine? textEngine;
   final LocalProfileDatabase? profile;
   final String? locationKey, manifestDigest;
+  final UnifiedHistory? owningHistory;
   String? reusedProjectionRevision;
   Set<String>? _ready;
   bool _attemptedWarm = false;
@@ -4455,8 +4562,183 @@ class TaskSemanticValidator {
   int warmCacheRestoreMicroseconds = 0;
 
   String? _validatedInputKey;
+  _TaskTextRelations _textRelations = _TaskTextRelations();
+  int _textRawCost = 0;
+  List<LogEvent>? _textCandidate;
+  bool _textSelectionSuppressed = false;
+  int get selectedTextReadCount => _store?.selectedTextReads ?? 0;
+  int get selectedTextRecordCount => _store?.selectedTextRecords ?? 0;
+  int get selectedTextLookupCount => _store?.selectedTextLookups ?? 0;
+
+  bool get _textOverBudget =>
+      _raws.length > 4096 || _textRawCost > 16 * 1024 * 1024;
+
+  TaskTextReadSelection? selectText(
+    String expectedKey,
+    Iterable<String> roots,
+  ) {
+    if (_validatedInputKey != expectedKey) return null;
+    return _selectText(roots);
+  }
+
+  TaskTextReadSelection? _selectText(Iterable<String> roots) {
+    final store = _store;
+    if (store == null ||
+        _textSelectionSuppressed ||
+        owningHistory?.ownsTaskValidator(this) != true ||
+        !_textOverBudget ||
+        _ready?.length != _raws.length) {
+      return null;
+    }
+    final candidate = _textCandidate;
+    final extra = _TaskTextRelations();
+    final sequences = Map<String, int>.of(_lastSequences);
+    final candidateById = <String, LogEvent>{};
+    if (candidate != null) {
+      // A scope starts before replay, but may be read only AFTER every strict
+      // candidate record was actually inserted into this owning SQL transaction.
+      for (final event in candidate) {
+        final row = store.db.select(
+          'SELECT raw FROM ${store.tables.events} WHERE id=?',
+          [event.id],
+        );
+        if (row.length != 1 || row.single['raw'] != event.canonicalRaw) {
+          return null;
+        }
+        extra.add(event);
+        candidateById[event.id] = event;
+        if (event.sequence > (sequences[event.writer] ?? 0)) {
+          sequences[event.writer] = event.sequence;
+        }
+      }
+    }
+    final selected = <String, LogEvent>{};
+    final pending = roots.toSet().toList(), seen = <String>{};
+    var lookups = 0;
+    Iterable<LogEvent> bucket(
+      Map<String, List<LogEvent>> a,
+      Map<String, List<LogEvent>> b,
+      String key,
+    ) {
+      lookups++;
+      return [...?a[key], ...?b[key]];
+    }
+
+    final heads = <String, String>{};
+    void add(LogEvent event) {
+      if (selected.containsKey(event.id)) return;
+      selected[event.id] = event;
+      // Descriptor heads are independent evidence, not fake selected history.
+      for (final name in ['inheritance', 'checklist']) {
+        final value = event.data[name];
+        if (value is! Map || value['frontiers'] is! Map) continue;
+        for (final entry in (value['frontiers'] as Map).entries) {
+          final seq = (entry.value as Map)['seq'] as int;
+          final id = '${entry.key}:$seq';
+          final head = candidateById[id] ?? _events[id];
+          if (head != null) heads[id] = head.canonicalRaw!;
+        }
+      }
+    }
+
+    for (final event in [..._textRelations.baselines, ...extra.baselines]) {
+      add(event);
+    }
+    while (pending.isNotEmpty) {
+      final entity = pending.removeLast();
+      if (!seen.add(entity)) continue;
+      for (final event in bucket(_textRelations.entity, extra.entity, entity)) {
+        add(event);
+      }
+      for (final event in bucket(
+        _textRelations.successor,
+        extra.successor,
+        entity,
+      )) {
+        add(event);
+        pending.add(event.entity);
+      }
+      for (final event in bucket(_textRelations.copies, extra.copies, entity)) {
+        add(event);
+        pending.add(event.entity);
+        for (final item in (event.data['checklist'] as Map)['items'] as List) {
+          if ((item as Map)['id'] == entity) {
+            pending.add(item['source'] as String);
+          }
+        }
+      }
+      for (final event in bucket(
+        _textRelations.children,
+        extra.children,
+        entity,
+      )) {
+        add(event);
+        if (event.type == 'checklist.itemCreated') {
+          pending.add(event.entity);
+        } else {
+          for (final item
+              in (event.data['checklist'] as Map)['items'] as List) {
+            pending.add((item as Map)['id'] as String);
+            pending.add(item['source'] as String);
+          }
+        }
+      }
+      for (final event in bucket(
+        _textRelations.inbound,
+        extra.inbound,
+        entity,
+      )) {
+        add(event);
+      }
+    }
+    // Cross-entity Undo must remain visible to the pure checklist oracle.
+    final retract = selected.keys.toList(), retracted = <String>{};
+    while (retract.isNotEmpty) {
+      final id = retract.removeLast();
+      if (!retracted.add(id)) continue;
+      for (final event in bucket(
+        _textRelations.retractions,
+        extra.retractions,
+        id,
+      )) {
+        add(event);
+        retract.add(event.id);
+      }
+    }
+    for (final entry in sequences.entries) {
+      final id = '${entry.key}:${entry.value}';
+      final head = candidateById[id] ?? _events[id];
+      if (head != null) heads[id] = head.canonicalRaw!;
+    }
+    return TaskTextReadSelection._(
+      selected.values.map((e) => e.canonicalRaw!),
+      heads,
+      sequences,
+      lookups,
+    );
+  }
+
+  void _rebuildTextRelations() {
+    _textRelations = _TaskTextRelations();
+    _textRawCost = 0;
+    for (final event in _events.values) {
+      _textRelations.add(event);
+      _textRawCost += event.canonicalRaw!.length * 4;
+    }
+  }
 
   Set<String> validate(List<LogEvent> events, {String? inputKey}) {
+    // Generic/interior/peer validation may replace the entire candidate. Its
+    // SQL transaction must never borrow the previous committed selected scope.
+    _textSelectionSuppressed = true;
+    try {
+      return _validateFull(events, inputKey: inputKey);
+    } finally {
+      _textSelectionSuppressed = false;
+    }
+  }
+
+  Set<String> _validateFull(List<LogEvent> events, {String? inputKey}) {
     final incoming = {for (final e in events) e.id: e.canonicalRaw!};
     if (_store != null &&
         _raws.entries.any((e) => incoming[e.key] != e.value)) {
@@ -4481,6 +4763,7 @@ class TaskSemanticValidator {
           tables,
           null,
         )..space = space;
+        _store!._textReadOwner = this;
       } catch (_) {
         db.close();
         rethrow;
@@ -4491,6 +4774,7 @@ class TaskSemanticValidator {
       if (!_attemptedWarm) {
         _attemptedWarm = true;
         _restoreCleanCache(events);
+        _rebuildTextRelations();
       }
       final delta = events.where((e) => !_raws.containsKey(e.id)).toList();
       if (delta.isEmpty && _ready != null) {
@@ -4549,6 +4833,7 @@ class TaskSemanticValidator {
         _events
           ..clear()
           ..addAll({for (final event in events) event.id: event});
+        _rebuildTextRelations();
         return ready;
       } catch (_) {
         if (!db.autocommit) db.execute('ROLLBACK');
@@ -4590,6 +4875,7 @@ class TaskSemanticValidator {
       final priorBlocked = store.textWriteBlocked;
       final db = store.db;
       db.execute('BEGIN IMMEDIATE');
+      _textCandidate = List.unmodifiable(delta);
       try {
         store._replaySemanticEvents(
           delta,
@@ -4625,6 +4911,8 @@ class TaskSemanticValidator {
         for (final event in delta) {
           _raws[event.id] = event.canonicalRaw!;
           _events[event.id] = event;
+          _textRelations.add(event);
+          _textRawCost += event.canonicalRaw!.length * 4;
           if (event.sequence > (_lastSequences[event.writer] ?? 0)) {
             _lastSequences[event.writer] = event.sequence;
           }
@@ -4634,6 +4922,8 @@ class TaskSemanticValidator {
         if (!db.autocommit) db.execute('ROLLBACK');
         close();
         rethrow;
+      } finally {
+        _textCandidate = null;
       }
     });
   }
@@ -4883,6 +5173,9 @@ class TaskSemanticValidator {
 
   void close() {
     _validatedInputKey = null;
+    _textCandidate = null;
+    _textRelations = _TaskTextRelations();
+    _textRawCost = 0;
     final store = _store;
     _store = null;
     _raws.clear();

@@ -3,6 +3,8 @@
 import 'dart:async';
 
 import 'synthetic_fixture.dart';
+import 'operation_diagnostics.dart';
+import 'package:tandemlog/storage/local_durability.dart';
 
 import 'dart:convert';
 import 'dart:io';
@@ -25,6 +27,10 @@ import 'package:tandemlog/storage/unified_history.dart';
 import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/storage/unified_manifest.dart' show bytesDigest;
 import 'package:tandemlog/text/native_text_engine.dart';
+
+final durabilityDiagnostics = BenchmarkDurabilityDiagnostics(
+  LocalDurability.shared,
+);
 
 const benchmarkWarmups = 2, benchmarkSamples = 5;
 int sampleStart = 0, sampleEnd = benchmarkWarmups + benchmarkSamples;
@@ -128,7 +134,7 @@ class Audit {
     }
     final profileUs = watch.elapsedMicroseconds;
     history = await UnifiedHistory.open(
-      LocalLogFolder(shared.path),
+      LocalLogFolder(shared.path, durability: durabilityDiagnostics),
       profile: profile,
       writer: writer,
       textEngine: engine,
@@ -182,9 +188,13 @@ class Audit {
     final seq = history.physicalSequence,
         reads = history.readFiles,
         validations = history.semanticValidationRuns;
+    final resourcesBefore = benchmarkResourceCounters();
+    final appendCallsBefore = durabilityDiagnostics.appendCalls;
+    final appendUsBefore = durabilityDiagnostics.appendMicroseconds;
     final watch = Stopwatch()..start();
     final value = await body();
     final us = watch.elapsedMicroseconds;
+    final resourcesAfter = benchmarkResourceCounters();
     final delta = history.physicalSequence - seq;
     require(
       !history.hasPending && !history.snapshot.pendingEffects,
@@ -203,6 +213,21 @@ class Audit {
         'action': action,
         'rep': rep,
         'microseconds': us,
+        'diagnostics': {
+          'appendCalls': durabilityDiagnostics.appendCalls - appendCallsBefore,
+          'appendMicroseconds':
+              durabilityDiagnostics.appendMicroseconds - appendUsBefore,
+          'resourceInterval': 'bracketed; probe overhead outside action timer',
+          'resourcesAvailable':
+              resourcesBefore.isNotEmpty &&
+              resourcesBefore.keys.every(resourcesAfter.containsKey),
+          'resourceDeltas': {
+            for (final entry in resourcesBefore.entries)
+              if (resourcesAfter.containsKey(entry.key))
+                entry.key: resourcesAfter[entry.key]! - entry.value,
+          },
+          'rssBytesAfter': ProcessInfo.currentRss,
+        },
         'ownPhysicalDelta': delta,
         'readFilesDelta': history.readFiles - reads,
         'semanticValidationsDelta':
@@ -1352,7 +1377,7 @@ Future<void> changedPeer(Audit a) async {
   FoodStore? peerFood;
   try {
     peer = await TaskStore.open(
-      LocalLogFolder(remote.path),
+      LocalLogFolder(remote.path, durability: durabilityDiagnostics),
       '${a.root.path}/peer-profile',
       textEngine: a.engine,
     );
