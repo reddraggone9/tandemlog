@@ -321,7 +321,7 @@ void main() {
   );
 
   test(
-    'metadata remains optional observations and never creates trusted stamps',
+    'metadata provides optional change hints and detects document replacement',
     () async {
       var identity = 'before-replacement';
       messenger.setMockMethodCallHandler(
@@ -356,14 +356,16 @@ void main() {
         expect(entry.size, isNull);
         expect(entry.modifiedMillis, isNull);
       }
-      expect(before.every((entry) => entry.stamp.isEmpty), isTrue);
+      expect(observation.stamp, 'before-replacement:1000:42');
+      expect(before.skip(1).every((entry) => entry.stamp.isEmpty), isTrue);
       identity = 'after-replacement';
       final after = await folder.list();
       expect(
         (after.first as AndroidLogFileInfo).documentId,
         'after-replacement',
       );
-      expect(after.first.stamp, '');
+      expect(after.first.stamp, 'after-replacement:1000:42');
+      expect(after.first.stamp, isNot(observation.stamp));
       expect(observation.documentId, 'before-replacement');
     },
   );

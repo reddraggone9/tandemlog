@@ -1,90 +1,220 @@
-# Task latency repair (development only)
+# Responsive canonical actions
 
-RC4 user testing found repeated pauses on startup, opening task editors, Save,
-Undo and completion. The common history refresh repeatedly decoded unchanged
-canonical records, while full semantic/projection replay repeatedly decoded the
-same events and scanned JSON relationship predicates without indexes.
+RC4 user testing exposed repeated pauses when opening editors, saving, undoing,
+completing tasks and starting the app. Ordinary actions were repeatedly decoding
+unchanged records, rebuilding unrelated projections and restoring unrelated
+native documents. Task and Food interaction coverage must be assessed together.
 
-The repair reuses bounded immutable decoded records only for exact source
-strings, uses a deterministic complete semantic-history validation key, and
-indexes entity/successor/checklist lookups in the disposable SQLite projection.
-Expression indexes are created after canonical rows replace old cache contents,
-so malformed old cache JSON cannot prevent its ordinary rebuild.
+## Reuse boundaries
 
-Every provider read, byte limit, protected prefix, manifest/policy, physical and
-semantic chain, future-required-event fence and admission check remains. SQL
-projection rebuild and same-session uncertain append/native actor safeguards
-remain. This adds no durable intent, restart retry, history-format change or
-migration.
+The incremental contract in [ADR0007](decisions/0007-canonical-history-integrity.md)
+allows an unchanged, previously admitted file to reuse its immutable bytes when
+the provider has demonstrated real seek support and its size, identity and
+change stamp still match. Growth is read from the last complete newline, so an
+old incomplete tail is checked again. Missing seek or metadata, replacement,
+shrinkage and changed same-size stamps take the bounded full-read path. A pending
+own append always receives a real suffix observation even when metadata is stale.
+Provider buffers are copied before asynchronous admission; accepted checkpoints
+advance only after the transaction commits.
 
-Synthetic regression coverage exercises 600 native tasks plus a second writer,
-warm capture, one-record title Save/Undo and completion/Undo, cold reopening,
-unchanged provider reads, invalid complete records, same-length prefix mutation,
-and malformed old cache recovery. Realistic private-copy benchmarks and their
-raw reports stay outside this repository. Debug storage timings demonstrate
-the avoided work; native release UI timing remains a separate gate before a
-future candidate. No personal fixture belongs in source or CI.
+Metadata hints are change detectors, not integrity proofs. As originally accepted
+in ADR0007, same-size damage hidden behind unchanged provider hints can remain
+undetected until Settings Verify Logs or a full reconstruction. Those audits
+bypass reuse and verify complete canonical bytes. Strict decoding, sealed
+migration references, physical predecessor hashes and exact protected byte
+boundaries still apply whenever bytes are read. Protected heads use an explicit
+chain commitment; old byte-digest checkpoints are fully verified before promotion.
 
-Stable publication and live cutover remain on hold pending successful user
-acceptance. This repair does not authorize a new release.
+The disposable semantic validator stages a complete delta in one transaction.
+It resets on changed/removed evidence or a failed candidate. Native packets,
+actor claims, baselines, reference rules and affected projections retain their
+checks. Settled point operations require ready explicit births or already-protected
+derived identities, with ready dependencies;
+new sequences cannot fill old observed cuts. A single recurring completion may
+also use an action-local proof of the exact previously selected untouched child
+seeds: every child has no own activity, each claim has the same parent/source,
+and existing copied items keep their original earliest seed. Retained successor
+markers, conflicting claims, missing dependencies and uncertain contexts use the
+full readiness path. The existing greatest-fixed-point readiness semantics are
+unchanged. Creation, moves and their Undo retain ordering work. Local deleted/suppressed
+item eligibility remains separate from canonical peer-ingestion semantics.
 
+The main projection may reuse the six canonical reference audits only when its
+owning common history certified the exact visible Task revision. A process-only
+certificate binds both prior published and current input; public snapshot
+construction, other histories and rejected physical candidates cannot confer it.
+Native validation, affected entity closure, order and private editor/Undo owners
+remain independent. Full replay stays available as the comparison oracle.
 
-## Incremental repair follow-up (development, acceptance pending)
+Checkpoint readiness reuses only the successful pure pending-bit result for
+exact immutable state bytes under every native limit, within one engine owner.
+This bounded memo contains no native handles or actor/admission authority.
+Changed bytes, budgets or owner lifetime require a new check.
 
-The initial decode/index repair still rebuilt unrelated Task state on every new
-action. The follow-up retains a disposable semantic validator between actions,
-stages each complete delta under one SQL transaction, and projects affected
-entities (including derived successors, checklist parents, move anchors and
-text-baseline transitions). An invalid or non-monotonic candidate resets this
-validator; canonical full replay remains the recovery/audit oracle.
+Recurring checklist membership/mode predicates are reusable only for the exact
+completion, actual observed prefix and current legacy baseline/blocked scope.
+The owning index verifies each declared cut and may reuse its exact successful
+proof after only outside-cut appends. Current global native lineage/collision
+resolution still runs; missing or changed interior evidence cannot reuse a cut.
 
-Unchanged refreshes still read and compare exact bounded provider bytes and
-protected heads. They reuse the admitted snapshot only after those checks;
-size/mtime/range hints do not prove prefix integrity. Task-only actions reuse
-unchanged Food admission by exact semantic input. Some global validators,
-readiness computation and changed-history admission still scale with history;
-the 100ms native Save target is not yet an accepted result.
+The process-local recurring text input is a final opaque, strictly decoded and
+deep-frozen value. Resolvers share its immutable entity/contribution indexes,
+not native handles or resolved-field authority. An append strictly decodes only
+new canonical records and advances those indexes only for fresh IDs, increasing
+writer sequences and globally later order. Interior/reordered/conflicting input
+uses generic reconstruction. Retained input is bounded to 4,096 events and a
+conservative 16 MiB raw cost. One detached previous input supports a newly
+observed complete cut; it has no backlink chain. Successful inheritance cuts
+retain at most 128 entries and 2 MiB of accounted keys/frontiers/prefix
+references. Failed or pending cuts are not cached, and an arriving interior
+record invalidates affected cut evidence.
 
-A clean-close witness can reuse an intact local projection on the next startup.
-It binds canonical visible Task input, manifest/generation/native support,
-typed cache tables and readiness. It is durably consumed before reuse; hidden
-physical effects still require validation. The witness is created only after
-queue drain and equality with the independent semantic cache. Missing, damaged,
-crashed or incompatible caches rebuild from canonical history. Cache-wide proof
-hashing runs at open/close, never on ordinary Save. Explicit rebuild always
-bypasses restored-cache eligibility. This stores no unfinished Save intent and
-cannot authorize a restart write.
+Checklist membership selects its parent births/copy seeds, every own record of
+those item IDs and retractions targeting selected operations, then runs the same
+domain projector. Colliding non-item births and cross-entity retractions are
+retained for equivalent corruption/order behavior. An observed prefix builds
+its own selection indexes; current global native collision and lineage checks
+still run. The generic projector eagerly materializes creation membership so
+testing each ordered action cannot repeatedly scan a lazy full-history filter.
 
-Private-copy measurements and screenshots remain outside the repository.
-Hosted CI on the earlier18dbff7 passed all platforms; that success does not
-attribute acceptance to this subsequent source. New regression, native timing,
-independent review and replacement-candidate gates remain required.
+Materialization sometimes passes the entity's already committed history as a
+preparation overlay. An exact ID plus canonical-byte match contributes nothing
+new and is removed before trying incremental append; this avoids rebuilding and
+decoding the whole recurring input on ordinary completion. Different bytes,
+unknown IDs and non-monotonic additions retain strict decoding/reconstruction.
+No pending overlay is published as committed input. SQL-stage candidates replace
+the retained input only in the existing post-COMMIT publication callback; failed
+later projections leave the prior input, rows, protected heads and editor/Undo
+owners intact.
 
-## Current measured boundary
+## Startup and disposable state
 
-Changed histories reuse parsed immutable records only after the freshly read
-committed prefix matches byte for byte and the manifest matches. An old
-unterminated tail is always reparsed. Projection revision and readiness
-certificates are disposable local values, never canonical format changes.
+An already validated private projection can initialize a cold destination only
+when its complete canonical raw set equals the visible candidate. Hidden or
+rejected candidates cannot initialize visible SQL state. Lookup indexes are
+created after validated rows replace old cache rows.
 
-A fully ready graph can validate a pure text delta without auditing unrelated
-non-text references. Eligibility is established before insertion, requires an
-existing ready birth and known Undo target, and retains native packet, baseline,
-new/reverse Undo and affected-field validation. Any uncertain native result runs
-the skipped global checks before fallback readiness or commit. Cold replay,
-mixed actions, unresolved histories and explicit cache rebuild keep full checks.
-The visible projection uses a readiness certificate from its exact prior
-published candidate; publication alone is not treated as readiness.
+A clean-close witness binds canonical Task input, manifest, format generation,
+native support, typed cache rows and readiness. It is created only after queue
+drain and equality with the independent validator, and consumed durably before
+reuse. Missing, damaged, incompatible or unclean caches rebuild. Metadata mixes
+projection state and preferences: only order_projection and
+text_baseline_verified belong in this proof or projection copy. Checklist
+expansion preferences stay intact. No unfinished Save intent or restart replay
+is added.
 
-Remaining work is explicitly measurable: reads still verify complete bounded
-canonical bytes; semantic-input ordering/digest keys and projection revisions
-still traverse prior Task events; visible-row snapshots traverse current rows.
-Repeat startup consumes and validates the cache witness and canonical source,
-so its cost still grows with cache/history size. Full replay is reserved for
-cold, invalidated or uncertain state, but this does not yet establish constant
-time ordinary operations or the requested native latency.
+A separate layout2 decode cache stores exact outer record strings and their
+already validated typed Task/Food fields, bounded to 4,096 records and a 16 MiB
+payload. Its one-shot clean-close receipt binds location, installation, manifest,
+protected heads, native support and cache layout. Restoration verifies the whole
+payload checksum and binding before exposing immutable records; final opaque
+receipts bind each typed module to its actual record/effect position, kind and
+raw string. Food retains its cheap operation-shape validation. Missing, damaged,
+stale or unsupported receipts fall back to strict canonical decoding. This is
+private disposable-cache corruption detection, not authentication against an
+adversary replacing both the cache and its proof. Closed validation or
+normalization changes require a cache-layout change.
 
-Release-mode standalone AOT measurements are storage-only, not UI timings.
-Current realistic-copy Save/Undo remain above 100ms; the repair is not accepted
-for replacement publication yet. Exact measurements and private source/input
-bindings remain outside the repository.
+The cache never authorizes unseen bytes: startup still reads actual canonical
+files and checks their physical chains, protected heads and sealed migration
+references. Exact raw-string matches may reuse decoded objects. Settings Verify
+Logs bypasses this decode shortcut. The Task projection witness separately reads
+and checks typed SQL rows and readiness; cache JSON parsing, checksums and table
+proofs still scale with the saved cache. No cached restart snapshot or durable
+unfinished-save intent is introduced.
+
+Canonical decoding yields between bounded complete-record slices before the
+admission transaction, while retaining the profile queue and frozen input bytes.
+SQL admission and staged native mutations remain synchronous.
+
+## Measurement and remaining scaling
+
+Release AOT storage/application/readmodel measurements are distinct from native
+input-to-paint UI measurements. The versioned synthetic performance gate covers
+the explicit Task/Food inventory and repeated histories; private fixtures and
+raw evidence remain outside the repository. Performance acceptance cannot
+substitute for state, Undo, replay, corruption and crash correctness checks.
+
+Ordinary owned actions reuse one certified admitted snapshot, validate their
+typed delta and observe the exact appended suffix before publishing both
+projections. Unchanged peer logs are not reread. Incompatible, pending or uncertain
+candidates retain the conservative path. Immutable collection copies, inherited
+text resolution, ordered prefix comparisons and current visible-row snapshots
+still traverse input; zero canonical file reads do not imply constant CPU cost.
+Warm startup reuses decoded actions after checking actual canonical bytes and
+validates the separate clean projection witness; it does not promise a zero-read
+restart or a constant-time cache proof. These costs are
+reported rather than described as constant time. Full UI responsiveness, cold versus warm startup, action-specific limits
+and scaling need separate measurements. No performance limit may be loosened
+without the owner's approval, and no correctness failure qualifies for a noise
+rerun.
+
+An ordinary peer refresh may reuse Food delta admission only after proving
+that every prior visible Food ID retains its exact canonical bytes in the same
+manifest/ownership mapping. The existing fully-ready index checks new records,
+clocks, bulk target sets and dependencies; removed/replaced old records,
+non-monotonic delivery and pending inputs retain full admission. A new Food
+record no longer forces reprojection of every historical Food edit. Exact
+Task-set certification is separate. The owned suffix confirmation also avoids a
+second copy of the already-owned concatenated immutable physical buffer.
+
+Remaining immutable physical/list/map/ready-set copies scale with retained
+history references. Current visible-row serialization scales with current
+entities. These are representation costs, not required durability guarantees.
+Above the bounded recurring-input retention budget, generic resolver
+reconstruction remains a known performance boundary; raising a cache cap alone
+does not solve history-scaled ordinary work. Current measurements do not prove
+constant-time behavior beyond the measured shapes.
+
+The repair changes no canonical format, atomic action boundary, durable signing
+safeguard or live workspace. Stable publication and live cutover remain separate
+acceptance decisions.
+
+## Recurring text and measured calibration
+
+The sanitized history-only calibration exposed a recurring-text decode cache
+cliff above 2,048 records: repeated scans evicted later-needed entries and
+produced about 21,000 decode/freeze misses per inherited title Save.
+RecurringTextMemo now snapshots its bounded exact-raw entries for one scan and
+refreshes hits through ordinary accounting. Its entry cap is 4,096 with the
+same 16 MiB retained raw-payload budget. A batch can temporarily retain another
+bounded old payload set and references; 16 MiB is not a peak-heap guarantee.
+Changed bytes still decode fully, and conflicting records still fail.
+
+Established derived identities can use point updates only when both the prior
+physical activity and actual selected seed are ready. First activity and
+anchor-only protection retain the full path. A fixed SQL replay shares one
+canonical resolver. Pending native validation does not give unpersisted sibling
+effects permission to serve as observed history.
+
+A committed publication shares one current resolver between editor captures
+and Undo owners. The native packet graph reuses an already frozen packet only
+for exact canonical bytes, with every metadata, data, claim and update check
+still performed before its duplicate shortcut. Ordinary local native commands
+delegate canonical validation to the complete candidate check, which runs
+before reservation callbacks or append. Creation and baseline checks remain
+local, and observed-frontier checks still require old persisted SQL membership.
+
+On the i5-12600KF Linux worker, with a two-CPU quota and 6 GiB memory bound,
+the retained earlier public calibration (trial47, source snapshot46) used two
+warmups and five samples per action. Both fixtures have 793 live Tasks, three Users, two checklist items
+and 329 Food containers, with identical current state. They contain 1,325
+and 2,645 physical records (1,688,850 and 3,180,181 canonical bytes).
+
+| Storage/application operation | Smaller median / maximum (ms) | Larger median / maximum (ms) |
+| --- | ---: | ---: |
+| Explicit Task title Save | 67.18 / 69.52 | 96.75 / 101.78 |
+| Inherited Task title Save | 94.65 / 103.14 | 154.51 / 167.62 |
+| Recurring completion with native checklist | 132.50 / 134.06 | 228.34 / 232.19 |
+| Derived successor title and Notes Save | 119.02 / 122.24 | 212.96 / 221.00 |
+| Derived successor completion | 184.55 / 186.80 | 351.47 / 361.13 |
+
+This is calibration, not accepted release evidence. The observed maximum of
+five samples is not a p95 or p99 estimate. Fresh-profile startup does not imply
+a flushed OS page cache. Actual native input-to-paint timings remain pending.
+The larger synthetic budgets are separate from the roughly 100 ms ordinary
+action target on representative realistic data; passing them cannot establish
+that target. These retained numbers predate the incremental admission and layout2 cache
+repairs; they are not current-source acceptance. Current candidate results need
+their own exact-source receipts, including residual recurring costs, startup
+proof work and the separate native UI boundary.

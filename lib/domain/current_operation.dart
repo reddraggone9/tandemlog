@@ -29,10 +29,11 @@ class CurrentOperation {
     required this.subject,
     required this.family,
     required this.revision,
-    required this.value,
+    required Map<String, dynamic> value,
     required this.predecessor,
     String? referenceHash,
-  }) : retainedReferenceHash = referenceHash;
+  }) : value = _freezeOperationValue(value) as Map<String, dynamic>,
+       retainedReferenceHash = referenceHash;
   final String module,
       space,
       author,
@@ -57,7 +58,7 @@ class CurrentOperation {
     'value': value,
     'predecessor': predecessor,
   };
-  String get contentHash => sha256
+  late final String contentHash = sha256
       .convert(utf8.encode('$_domain${canonicalDataJson(_body)}'))
       .toString();
   String get referenceHash => retainedReferenceHash ?? contentHash;
@@ -66,7 +67,8 @@ class CurrentOperation {
     'referenceHash': referenceHash,
     'contentHash': contentHash,
   };
-  String encode() => canonicalDataJson(toJson());
+  late final String _encoded = canonicalDataJson(toJson());
+  String encode() => _encoded;
 
   static void _keys(Map value, Set<String> keys) {
     if (value.length != keys.length || !value.keys.every(keys.contains)) {
@@ -164,6 +166,19 @@ class CurrentOperation {
     return result;
   }
 }
+
+// Hash/encoding reuse requires ownership of every JSON collection. Preserve
+// unsupported leaves/keys for the unchanged canonical encoder to reject.
+Object? _freezeOperationValue(Object? value) => switch (value) {
+  Map<String, dynamic>() => Map<String, dynamic>.unmodifiable(
+    value.map((key, item) => MapEntry(key, _freezeOperationValue(item))),
+  ),
+  Map() => Map.unmodifiable(
+    value.map((key, item) => MapEntry(key, _freezeOperationValue(item))),
+  ),
+  List() => List<Object?>.unmodifiable(value.map(_freezeOperationValue)),
+  _ => value,
+};
 
 class TaskOperationPayload {
   const TaskOperationPayload(this.family, this.value);

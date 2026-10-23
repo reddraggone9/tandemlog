@@ -28,6 +28,31 @@ String seal(Map<String, dynamic> record) {
 
 void main() {
   test(
+    'canonical strings preserve all Unicode scalars and control escapes',
+    () {
+      final value = String.fromCharCodes([
+        for (var scalar = 0; scalar <= 0xffff; scalar++)
+          if (scalar < 0xd800 || scalar > 0xdfff) scalar,
+        0x10000,
+        0x1f642,
+        0x10ffff,
+      ]);
+      final encoded = canonicalDataJson(value);
+      expect(jsonDecode(encoded), value);
+      expect(encoded, jsonEncode(value));
+      for (final malformed in [
+        String.fromCharCode(0xd800),
+        String.fromCharCode(0xdfff),
+        'before${String.fromCharCode(0xd800)}after',
+        String.fromCharCodes([0xd800, 0xd800, 0xdc00]),
+        String.fromCharCodes([0xd800, 0xdc00, 0xdc00]),
+      ]) {
+        expect(() => canonicalDataJson(malformed), throwsFormatException);
+      }
+    },
+  );
+
+  test(
     'Python SHA256 current fixture is byte-exact including UTF-8 and predecessor chaining',
     () {
       expect(

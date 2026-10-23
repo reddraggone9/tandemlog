@@ -4,6 +4,16 @@ CI uses standard GitHub-hosted Ubuntu 24.04 and Windows 2022 runners, pinned off
 
 Every executable-change main push and every pull request runs formatting, analysis, the complete domain/storage integrity/convergence/recovery suite and native Linux integration and release startup smoke checks (fresh/warm SQLite), plus Linux release, native Windows release and Android debug builds. Windows also runs domain/storage tests. Fast Linux checks start immediately; platform builds run independently. No integrity tests are removed for previews.
 
+The separate [release performance gate](performance-gate.md) measures the
+versioned synthetic Task/Food action inventory in AOT mode, including matched
+history sizes. Its initial limits remain inactive until reviewed runner
+calibration; a measure-only development run does not satisfy a signed candidate.
+After activation, timing-only reruns require independently observed external
+load, preserve both attempts and are bounded to one complete three-shape,
+two-comparison rerun. Every implicated size needs independent noise evidence.
+Correctness failures cannot be retried as noise. Native input-to-visible-response
+acceptance remains separate from storage/application timings.
+
 To prepare an authorized candidate, dispatch **Build signed candidate** on main. It checks the public signing pin and monotonically increasing Android build number, runs the full Linux/Windows/debug-Android matrix, then produces a universal non-debuggable APK using the owner-provided signing identity. No publishing occurs. Its `android-release` artifact includes APK, checksum, public signature report and source/version/certificate metadata. Download and install this exact APK for native acceptance before publishing.
 
 Android builds install the [reviewed repository routing policy](decisions/0020-build-dependency-repository-routing.md) in a fresh job-temporary Gradle home before resolution. Owner signing byte-verifies that policy before materializing its keystore. Local owner builds must run `python3 tool/gradle_repository_policy.py install` with the same `GRADLE_USER_HOME` used for the build, on a trusted unshared host. A changed toolchain or repository graph requires policy review; do not bypass a routing failure.

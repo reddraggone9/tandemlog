@@ -42,6 +42,110 @@ void main() {
         seed: engine.seedText(text),
       );
 
+      test(
+        'checkpoint readiness reuse binds exact bytes and all native limits',
+        () {
+          final source = document(40, text: 'x');
+          final target = document(41, text: 'x');
+          final first = source.captureDraft(actorClientId: 42)
+            ..replaceText('xA');
+          final firstSave = first.prepareSave();
+          firstSave.commit(receiptUpdate: firstSave.update);
+          final second = source.captureDraft(actorClientId: 43)
+            ..replaceText('xAB');
+          final secondSave = second.prepareSave();
+          secondSave.commit(receiptUpdate: secondSave.update);
+          target.applyRemote(secondSave.update);
+          const limits = NativeTextLimits(visibleUtf16: 500);
+          final pending = target.checkpoint();
+          expect(engine.checkpointHasPending(pending, limits: limits), isTrue);
+          expect(engine.checkpointHasPending(pending, limits: limits), isTrue);
+          target.applyRemote(firstSave.update);
+          final complete = target.checkpoint();
+          expect(
+            engine.checkpointHasPending(complete, limits: limits),
+            isFalse,
+          );
+          expect(engine.checkpointHasPending(pending, limits: limits), isTrue);
+          expect(
+            () => engine.checkpointHasPending(
+              complete,
+              limits: const NativeTextLimits(visibleUtf16: 1),
+            ),
+            throwsA(isA<NativeTextException>()),
+          );
+          expect(
+            engine.checkpointHasPending(complete, limits: limits),
+            isFalse,
+          );
+          final corrupt = NativeTextCheckpoint(NativeTextState.parse('/w=='));
+          expect(
+            () => engine.checkpointHasPending(corrupt, limits: limits),
+            throwsA(isA<NativeTextException>()),
+          );
+          expect(
+            engine.checkpointHasPending(complete, limits: limits),
+            isFalse,
+          );
+          for (var i = 0; i < 2100; i++) {
+            final doc = document(100 + i, text: 'Synthetic checkpoint $i');
+            try {
+              expect(
+                engine.checkpointHasPending(doc.checkpoint(), limits: limits),
+                isFalse,
+              );
+              expect(
+                engine.cachedCheckpointPendingCount,
+                lessThanOrEqualTo(2048),
+              );
+              expect(
+                engine.cachedCheckpointPendingPayloadBytes,
+                lessThanOrEqualTo(4 * 1024 * 1024),
+              );
+            } finally {
+              doc.dispose();
+            }
+          }
+          expect(engine.checkpointHasPending(pending, limits: limits), isTrue);
+          for (var i = 0; i < 250; i++) {
+            final doc = document(
+              10000 + i,
+              text: '${'X' * 9000}$i',
+              limit: 10000,
+            );
+            try {
+              expect(
+                engine.checkpointHasPending(
+                  doc.checkpoint(),
+                  limits: const NativeTextLimits(visibleUtf16: 10000),
+                ),
+                isFalse,
+              );
+              expect(
+                engine.cachedCheckpointPendingPayloadBytes,
+                lessThanOrEqualTo(4 * 1024 * 1024),
+              );
+            } finally {
+              doc.dispose();
+            }
+          }
+          expect(
+            engine.cachedCheckpointPendingCount,
+            lessThan(2048),
+            reason:
+                'Large checkpoints must independently enforce the byte budget.',
+          );
+          expect(engine.checkpointHasPending(pending, limits: limits), isTrue);
+          engine.dispose();
+          expect(engine.cachedCheckpointPendingCount, 0);
+          expect(engine.cachedCheckpointPendingPayloadBytes, 0);
+          expect(
+            () => engine.checkpointHasPending(complete, limits: limits),
+            throwsStateError,
+          );
+        },
+      );
+
       test('inspection reuse is immutable budget-specific and bounded', () {
         final update = engine.seedText('X' * 20);
         final actors = engine.inspect(update);

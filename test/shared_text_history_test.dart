@@ -256,6 +256,82 @@ void main() {
     expect(graph.packetCount, 0);
   });
 
+  test('primed canonical packet reuse rejects hostile duplicate envelopes', () {
+    final graph = SharedTextHistoryGraph();
+    final root = graph.root(_context, packets.seed);
+    final original = packets.replace('AXB');
+    final retained = graph.append(root, original);
+    final event = original.event;
+    final mutable = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
+    LogEvent envelope({
+      String? entity,
+      EventClock? clock,
+      Map<String, dynamic>? data,
+    }) => LogEvent(
+      event.space,
+      event.writer,
+      event.sequence,
+      clock ?? event.clock,
+      entity ?? event.entity,
+      event.type,
+      data ?? event.data,
+      previousHash: event.previousHash,
+      hash: event.hash,
+      canonicalRaw: event.canonicalRaw,
+    );
+    for (final forged in [
+      envelope(entity: const Uuid().v4()),
+      envelope(clock: EventClock(event.clock.value + BigInt.one)),
+    ]) {
+      expect(
+        () => graph.append(
+          retained,
+          LineageTextOperation(
+            forged,
+            original.field,
+            original.claim,
+            original.update,
+          ),
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+    }
+    final caller = LineageTextOperation(
+      envelope(data: mutable),
+      original.field,
+      original.claim,
+      original.update,
+    );
+    expect(graph.append(retained, caller), same(retained));
+    (mutable['changes'] as Map)['title'] = {'context': 'Mutated'};
+    expect(() => graph.append(retained, caller), throwsA(isA<FormatFailure>()));
+    final claim = TextActorClaim(
+      context: 'c' * 64,
+      writer: original.claim.writer,
+      allocation: original.claim.allocation,
+      actor: original.claim.actor,
+    );
+    expect(
+      () => graph.append(
+        retained,
+        LineageTextOperation(event, original.field, claim, original.update),
+      ),
+      throwsA(isA<FormatFailure>()),
+    );
+    expect(graph.packetCount, 1);
+    expect(
+      graph.operations(retained).single.event.canonicalRaw,
+      event.canonicalRaw,
+    );
+    expect(
+      () =>
+          (graph.operations(retained).single.event.data['changes']
+                  as Map)['title'] =
+              {},
+      throwsUnsupportedError,
+    );
+  });
+
   test(
     'retained original packets are deeply immutable and privately owned',
     () {

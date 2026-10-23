@@ -27,6 +27,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial limits remain inactive until calibration review.
+
 - [Task latency repair](task-latency-repair.md): bounded exact-byte decode reuse and disposable projection indexes address RC4 startup/edit/Save/Undo/completion pauses; development validation and private-copy benchmarks are separate from future native candidate acceptance.
 
 - [Coordinated unified-only cutover](decisions/0031-coordinated-unified-cutover.md): approved successor to the transition mechanisms below. Current action records, required revisions on first persistence, settings-only local reset and external normalization have passed [qualified development validation](../evidence/coordinated-cutover-build99/README.md). Actual physical mapping and fresh frozen real-copy replay remain cutover prerequisites. No live conversion or release is implied; earlier build98 evidence retains its original attribution.

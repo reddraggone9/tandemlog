@@ -1,3 +1,4 @@
+import '../domain/event.dart' show EventClock;
 import 'food_record.dart';
 import 'inventory.dart';
 
@@ -35,50 +36,7 @@ FoodAdmission admitFoodRecords(
       ...r.operation.observedEdits,
       if (r.operation.retracts != null) r.operation.retracts!,
     };
-    if (r.operation.action == FoodAction.undo) {
-      final basis = byId[r.operation.retracts];
-      if (basis != null &&
-          (basis.operation.action == FoodAction.undo ||
-              (basis.writer != r.writer &&
-                  !(r.unified &&
-                      r.operation.undoOwner == r.writer &&
-                      legacyOwners[basis.writer] == r.writer)) ||
-              basis.sequence >= r.sequence ||
-              basis.clock >= r.clock ||
-              basis.operation.targets.length != r.operation.targets.length ||
-              !r.operation.targets.every(targetSets[basis.id]!.contains))) {
-        throw const FormatException(
-          'Food Undo reference has wrong kind, writer, targets or clock.',
-        );
-      }
-    }
-    for (final entry in r.createdWith.entries) {
-      final basis = byId[entry.value];
-      if (basis != null &&
-          (basis.operation.action != FoodAction.add ||
-              !targetSets[basis.id]!.contains(entry.key) ||
-              basis.clock >= r.clock ||
-              births[entry.key]?.id != basis.id)) {
-        throw const FormatException('Food target creation basis is invalid.');
-      }
-    }
-    for (final (refs, kind) in [
-      (r.operation.observedDeletes, FoodAction.remove),
-      (r.operation.observedEdits, FoodAction.edit),
-    ]) {
-      for (final ref in refs) {
-        final basis = byId[ref];
-        if (basis == null) continue;
-        if (basis.operation.action != kind ||
-            basis.clock >= r.clock ||
-            !r.operation.targets.every(targetSets[basis.id]!.contains) ||
-            (kind == FoodAction.edit && basis.operation.contents == null)) {
-          throw const FormatException(
-            'Food observed reference has wrong kind, target or clock.',
-          );
-        }
-      }
-    }
+    _validateReferences(r, byId, targetSets, births, legacyOwners);
     dependencies[r.id] = refs.toList();
   }
   final ordered = records.toList()
@@ -95,20 +53,231 @@ FoodAdmission admitFoodRecords(
       operations.add(r.operation);
     }
   }
-  return FoodAdmission(
+  return FoodAdmission._(
     projectFood(operations, legacyOwners: legacyOwners),
     births,
     ready,
+    ready.length == byId.length
+        ? _FoodAdmissionIndex(records, legacyOwners, maximumContainers)
+        : null,
+  );
+}
+
+void _validateReferences(
+  FoodRecord r,
+  Map<String, FoodRecord> byId,
+  Map<String, Set<String>> targetSets,
+  Map<String, FoodRecord> births,
+  Map<String, String> legacyOwners,
+) {
+  if (r.operation.action == FoodAction.undo) {
+    final basis = byId[r.operation.retracts];
+    if (basis != null &&
+        (basis.operation.action == FoodAction.undo ||
+            (basis.writer != r.writer &&
+                !(r.unified &&
+                    r.operation.undoOwner == r.writer &&
+                    legacyOwners[basis.writer] == r.writer)) ||
+            basis.sequence >= r.sequence ||
+            basis.clock >= r.clock ||
+            basis.operation.targets.length != r.operation.targets.length ||
+            !r.operation.targets.every(targetSets[basis.id]!.contains))) {
+      throw const FormatException(
+        'Food Undo reference has wrong kind, writer, targets or clock.',
+      );
+    }
+  }
+  for (final entry in r.createdWith.entries) {
+    final basis = byId[entry.value];
+    if (basis != null &&
+        (basis.operation.action != FoodAction.add ||
+            !targetSets[basis.id]!.contains(entry.key) ||
+            basis.clock >= r.clock ||
+            births[entry.key]?.id != basis.id)) {
+      throw const FormatException('Food target creation basis is invalid.');
+    }
+  }
+  for (final (refs, kind) in [
+    (r.operation.observedDeletes, FoodAction.remove),
+    (r.operation.observedEdits, FoodAction.edit),
+  ]) {
+    for (final ref in refs) {
+      final basis = byId[ref];
+      if (basis == null) continue;
+      if (basis.operation.action != kind ||
+          basis.clock >= r.clock ||
+          !r.operation.targets.every(targetSets[basis.id]!.contains) ||
+          (kind == FoodAction.edit && basis.operation.contents == null)) {
+        throw const FormatException(
+          'Food observed reference has wrong kind, target or clock.',
+        );
+      }
+    }
+  }
+}
+
+class _FoodAdmissionIndex {
+  _FoodAdmissionIndex(
+    List<FoodRecord> records,
+    Map<String, String> owners,
+    this.maximumContainers,
+  ) : legacyOwners = Map.unmodifiable(owners),
+      byId = Map.unmodifiable({for (final r in records) r.id: r}),
+      targets = Map.unmodifiable({
+        for (final r in records)
+          r.id: Set<String>.unmodifiable(r.operation.targets),
+      }),
+      byTarget = _indexTargets(records),
+      maximumClock = records.isEmpty
+          ? null
+          : records.map((r) => r.clock).reduce((a, b) => a > b ? a : b);
+  _FoodAdmissionIndex._updated(
+    Map<String, FoodRecord> records,
+    Map<String, Set<String>> targetSets,
+    Map<String, List<FoodRecord>> histories,
+    this.maximumClock,
+    _FoodAdmissionIndex context,
+  ) : legacyOwners = context.legacyOwners,
+      maximumContainers = context.maximumContainers,
+      byId = Map.unmodifiable(records),
+      targets = Map.unmodifiable(targetSets),
+      byTarget = Map.unmodifiable(histories);
+  final Map<String, String> legacyOwners;
+  final int maximumContainers;
+  final Map<String, FoodRecord> byId;
+  final Map<String, Set<String>> targets;
+  final Map<String, List<FoodRecord>> byTarget;
+  final EventClock? maximumClock;
+  static Map<String, List<FoodRecord>> _indexTargets(List<FoodRecord> records) {
+    final result = <String, List<FoodRecord>>{};
+    for (final r in records) {
+      for (final target in r.operation.targets) {
+        (result[target] ??= []).add(r);
+      }
+    }
+    return Map.unmodifiable(
+      result.map(
+        (key, value) => MapEntry(key, List<FoodRecord>.unmodifiable(value)),
+      ),
+    );
+  }
+}
+
+/// Reuse only a fully admitted immutable base. New records cannot retroactively
+/// resolve pending old dependencies. Keep original bulk target sets in every
+/// validation and affected-container projection.
+FoodAdmission? appendReadyFoodRecords(
+  FoodAdmission base,
+  List<FoodRecord> delta, {
+  int maximumContainers = 100000,
+  Map<String, String> legacyOwners = const {},
+}) {
+  final index = base._index;
+  if (index == null ||
+      base.readyIds.length != index.byId.length ||
+      maximumContainers != index.maximumContainers ||
+      legacyOwners.length != index.legacyOwners.length ||
+      legacyOwners.entries.any((e) => index.legacyOwners[e.key] != e.value)) {
+    return null;
+  }
+  if (delta.any((r) => index.byId.containsKey(r.id))) {
+    throw const FormatException('Food append reuses an operation identity.');
+  }
+  if (delta.isEmpty) return base;
+  if (index.maximumClock != null &&
+      delta.any((r) => r.clock <= index.maximumClock!)) {
+    return null;
+  }
+  final byId = Map<String, FoodRecord>.of(index.byId);
+  final targets = Map<String, Set<String>>.of(index.targets);
+  final births = Map<String, FoodRecord>.of(base.births);
+  final byTarget = Map<String, List<FoodRecord>>.of(index.byTarget);
+  final affected = <String>{};
+  for (final record in delta) {
+    record.operation.validate();
+    if (byId.containsKey(record.id)) {
+      throw const FormatException('Food append reuses an operation identity.');
+    }
+    byId[record.id] = record;
+    targets[record.id] = record.operation.targets.toSet();
+    affected.addAll(record.operation.targets);
+    if (record.operation.action == FoodAction.add) {
+      for (final target in record.operation.targets) {
+        if (births.containsKey(target)) {
+          throw const FormatException(
+            'A physical food container has different creation records.',
+          );
+        }
+        births[target] = record;
+      }
+      if (births.length > maximumContainers) {
+        throw const FormatException('Too many food containers.');
+      }
+    }
+  }
+  final ready = Set<String>.of(base.readyIds);
+  final ordered = delta.toList()
+    ..sort((a, b) {
+      final clock = a.clock.compareTo(b.clock);
+      return clock != 0 ? clock : a.id.compareTo(b.id);
+    });
+  for (final r in ordered) {
+    _validateReferences(r, byId, targets, births, legacyOwners);
+    final refs = {
+      ...r.createdWith.values,
+      ...r.operation.observedDeletes,
+      ...r.operation.observedEdits,
+      if (r.operation.retracts != null) r.operation.retracts!,
+    };
+    if (!refs.every(ready.contains)) return null;
+    ready.add(r.id);
+  }
+  for (final target in affected) {
+    byTarget[target] = List.unmodifiable([
+      ...?index.byTarget[target],
+      ...delta.where((r) => r.operation.targets.contains(target)),
+    ]);
+  }
+  final history = <String, FoodOperation>{};
+  for (final target in affected) {
+    for (final record in byTarget[target]!) {
+      history[record.id] = record.operation;
+    }
+  }
+  final changed = projectFood(history.values, legacyOwners: legacyOwners);
+  final containers = [
+    ...base.state.containers.where((c) => !affected.contains(c.id)),
+    ...changed.containers.where((c) => affected.contains(c.id)),
+  ]..sort((a, b) => a.id.compareTo(b.id));
+  return FoodAdmission._(
+    FoodState(containers),
+    births,
+    ready,
+    _FoodAdmissionIndex._updated(
+      byId,
+      targets,
+      byTarget,
+      ordered.last.clock,
+      index,
+    ),
   );
 }
 
 class FoodAdmission {
   FoodAdmission(
+    FoodState state,
+    Map<String, FoodRecord> births,
+    Set<String> readyIds,
+  ) : this._(state, births, readyIds, null);
+
+  FoodAdmission._(
     this.state,
     Map<String, FoodRecord> births,
     Set<String> readyIds,
+    this._index,
   ) : births = Map.unmodifiable(births),
       readyIds = Set.unmodifiable(readyIds);
+  final _FoodAdmissionIndex? _index;
   final FoodState state;
   final Map<String, FoodRecord> births;
   final Set<String> readyIds;

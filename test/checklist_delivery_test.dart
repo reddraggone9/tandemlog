@@ -464,6 +464,76 @@ void main() {
     'order',
     'visible text',
     'history proof',
+    'frontier hash',
+  ]) {
+    test(
+      'fresh recurring copies reject $corruption before reservation',
+      () async {
+        final first = await f.add('First', notes: 'Notes');
+        final second = await f.add('Second');
+        final valid = f.payload([first, second]);
+        final data = jsonDecode(jsonEncode(valid)) as Map<String, dynamic>;
+        final descriptor = data['checklist'] as Map;
+        final items = (descriptor['items'] as List).cast<Map>();
+        switch (corruption) {
+          case 'membership':
+            descriptor['items'] = [items.first];
+          case 'order':
+            descriptor['items'] = items.reversed.toList();
+          case 'visible text':
+            items.first['title'] = 'Forged words';
+          case 'history proof':
+            items.last['fields']['description']['historyHash'] = 'f' * 64;
+          case 'frontier hash':
+            final heads = descriptor['frontiers'] as Map;
+            (heads.values.last as Map)['hash'] = 'f' * 64;
+        }
+        final before = jsonEncode(f.cached());
+        final bytes = await f.canonical();
+        var prepared = false;
+        await expectLater(
+          f.store.command(
+            f.parent,
+            'task.completedWithChecklist',
+            data,
+            onPrepared: (_) => prepared = true,
+          ),
+          throwsA(isA<FormatFailure>()),
+        );
+        expect(prepared, isFalse);
+        expect(jsonEncode(f.cached()), before);
+        expect(await f.canonical(), bytes);
+        expect(f.store.unified!.hasPending, isFalse);
+        final runs = f.store.unified!.fullTaskReadinessRuns;
+        await f.store.command(f.parent, 'task.completedWithChecklist', valid);
+        // A failed semantic stage discards its scratch state. Retrying then
+        // requires full reconstruction; a rejected frontier never entered it.
+        expect(
+          f.store.unified!.fullTaskReadinessRuns,
+          corruption == 'frontier hash' ? runs : greaterThan(runs),
+        );
+        expect(f.store.unified!.snapshot.allVisibleTasksReady, isTrue);
+        expect(
+          {for (final row in f.store.rows) row['id']: row},
+          {
+            for (final row in TaskStore.validateSemanticHistory(
+              f.store.unified!.snapshot.tasks,
+              space: f.store.space,
+              writer: f.store.writer,
+              textEngine: f.engine,
+            ))
+              row['id']: row,
+          },
+        );
+      },
+    );
+  }
+
+  for (final corruption in [
+    'membership',
+    'order',
+    'visible text',
+    'history proof',
     'source parent',
   ]) {
     test(

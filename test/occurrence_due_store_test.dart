@@ -187,7 +187,11 @@ void main() {
       final a = await open('a');
       await a.command(user, 'user.created', {'name': 'Synthetic'});
       final b = await open('b');
+      final view = a.currentView;
+      final cacheTransactions = a.cacheTransactions;
       expect(await a.refresh(), isFalse);
+      expect(identical(a.currentView, view), isTrue);
+      expect(a.cacheTransactions, cacheTransactions);
       await b.command(id(9), 'user.created', {'name': 'Newly synced person'});
       final result = await a.migrateOccurrenceDates();
       expect(result.migrated, 0);

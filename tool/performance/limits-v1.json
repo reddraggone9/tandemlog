@@ -1,0 +1,3547 @@
+{
+  "schemaVersion": 1,
+  "version": "proposed-1",
+  "releaseReady": false,
+  "warmups": 2,
+  "samples": 5,
+  "historySizes": {
+    "dense-1": 1320,
+    "dense-2": 2640,
+    "dense-food": {
+      "baseRecords": 2640,
+      "growthKind": "food"
+    }
+  },
+  "actionsBySize": {
+    "dense-1": {
+      "task.title.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.title.save": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.title.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.notes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.notes.save": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.notes.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.titleAndNotes.save": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.titleAndNotes.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.editorOpenCancel": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.schedule": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.schedule.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.tags": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.tags.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.assignee": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.assignee.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.delete": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.restoreViaUndo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.reorder": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.reorder.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.complete.application": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.reopen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.bulkEdit.three": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.bulkEdit.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.bulkDelete.three": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.bulkDelete.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.bulkReorder.three": {
+        "medianMs": 150,
+        "maxMs": 225
+      },
+      "task.bulkReorder.undo": {
+        "medianMs": 150,
+        "maxMs": 225
+      },
+      "checklist.add": {
+        "medianMs": 150,
+        "maxMs": 225
+      },
+      "checklist.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.titleAndNotes.save": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.titleAndNotes.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.complete": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.uncompleteViaUndo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.reorder": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.reorder.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.delete": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.restoreViaUndo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.complete.checklistDecline": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.complete.checklistConfirm": {
+        "medianMs": 150,
+        "maxMs": 225
+      },
+      "task.reopen.withChecklist": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.add.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.add.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.add.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.add.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.details.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.details.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.details.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.details.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.contents.APIonly": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.contents.APIonly.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.delete.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.delete.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.restore.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.restore.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.delete.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.delete.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.restore.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.restore.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.rows.queryDecode": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.snapshot.serializeAll": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.openCompleted": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.upcoming": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.assignee": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.tags": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.inventory": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.inbox": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.retained": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.deleted": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.brand": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.location": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.retention": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "refresh.tasks.unchanged": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "refresh.food.unchanged": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "section.preference.food": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "section.preference.tasks": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "foreground.request.reconcileImmediate": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.capture.1": {
+        "medianMs": 350,
+        "maxMs": 525
+      },
+      "task.capture.3": {
+        "medianMs": 375,
+        "maxMs": 575
+      },
+      "task.matched.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.matched.tags": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.matched.assignee": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.brand": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.location": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.retention": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "sync.peerTask.whileFood.storageAdmission": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "sync.peerFood.whileTasks.storageAdmission": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "recurring.complete.nativeChecklist": {
+        "medianMs": 725,
+        "maxMs": 1100
+      },
+      "recurring.complete.undoUntouched": {
+        "medianMs": 625,
+        "maxMs": 950
+      },
+      "recurring.recomplete.nativeChecklist": {
+        "medianMs": 775,
+        "maxMs": 1175
+      },
+      "derivedSuccessor.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "derivedSuccessor.titleAndNotes.save": {
+        "medianMs": 700,
+        "maxMs": 1050
+      },
+      "derivedSuccessor.titleAndNotes.undo": {
+        "medianMs": 700,
+        "maxMs": 1050
+      },
+      "copiedChecklist.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "copiedChecklist.titleAndNotes.save": {
+        "medianMs": 725,
+        "maxMs": 1100
+      },
+      "copiedChecklist.titleAndNotes.undo": {
+        "medianMs": 725,
+        "maxMs": 1100
+      },
+      "derivedSuccessor.metadata.tags": {
+        "medianMs": 675,
+        "maxMs": 1025
+      },
+      "derivedSuccessor.metadata.undo": {
+        "medianMs": 675,
+        "maxMs": 1025
+      },
+      "copiedChecklist.metadata.complete": {
+        "medianMs": 675,
+        "maxMs": 1025
+      },
+      "copiedChecklist.metadata.undo": {
+        "medianMs": 700,
+        "maxMs": 1050
+      },
+      "derivedSuccessor.complete.nativeChecklist": {
+        "medianMs": 900,
+        "maxMs": 1350
+      },
+      "derivedSuccessor.complete.undo": {
+        "medianMs": 750,
+        "maxMs": 1125
+      },
+      "derivedSuccessor.recomplete.nativeChecklist": {
+        "medianMs": 950,
+        "maxMs": 1425
+      },
+      "recurring.complete.undoProtectedSuccessor": {
+        "medianMs": 775,
+        "maxMs": 1175
+      },
+      "recurring.recomplete.keepProtectedSuccessor": {
+        "medianMs": 775,
+        "maxMs": 1175
+      },
+      "startup.cold.total": {
+        "medianMs": 2500,
+        "maxMs": 3750
+      },
+      "startup.cold.history": {
+        "medianMs": 2500,
+        "maxMs": 3750
+      },
+      "startup.cold.taskAttach": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "startup.warm.total": {
+        "medianMs": 1100,
+        "maxMs": 1650
+      },
+      "startup.warm.history": {
+        "medianMs": 1100,
+        "maxMs": 1650
+      },
+      "startup.warm.proof": {
+        "medianMs": 150,
+        "maxMs": 225
+      },
+      "startup.warm.cacheRestore": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "startup.warm.taskAttach": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.uncomplete": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.recompleteViaUndo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.add.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.add.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.add.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.add.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.contents.APIonly": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.contents.APIonly.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.delete.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.delete.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.delete.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.delete.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.details.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.details.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.details.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.details.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.restore.1": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.restore.1.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.restore.3": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "historical.food.restore.3.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.title.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.title.save": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.title.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.notes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.notes.save": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.notes.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.titleAndNotes.save": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.titleAndNotes.undo": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.editorOpenCancel": {
+        "medianMs": 125,
+        "maxMs": 200
+      }
+    },
+    "dense-2": {
+      "task.title.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.title.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.title.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.notes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.notes.save": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.notes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.titleAndNotes.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.titleAndNotes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.editorOpenCancel": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.schedule": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.schedule.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.tags": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.tags.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.metadata.assignee": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.assignee.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.delete": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.restoreViaUndo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.reorder": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.reorder.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.complete.application": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.reopen": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "task.bulkEdit.three": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkEdit.undo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkDelete.three": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkDelete.undo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkReorder.three": {
+        "medianMs": 325,
+        "maxMs": 500
+      },
+      "task.bulkReorder.undo": {
+        "medianMs": 300,
+        "maxMs": 450
+      },
+      "checklist.add": {
+        "medianMs": 300,
+        "maxMs": 450
+      },
+      "checklist.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.titleAndNotes.save": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "checklist.titleAndNotes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.complete": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.uncompleteViaUndo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "checklist.reorder": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.reorder.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "checklist.delete": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.restoreViaUndo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.complete.checklistDecline": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.complete.checklistConfirm": {
+        "medianMs": 325,
+        "maxMs": 500
+      },
+      "task.reopen.withChecklist": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.add.1": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "food.add.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.add.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "food.add.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.details.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.details.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.details.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.details.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.contents.APIonly": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.contents.APIonly.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.delete.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.delete.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.delete.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "food.delete.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.rows.queryDecode": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.snapshot.serializeAll": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.openCompleted": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.upcoming": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.assignee": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.tags": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.inventory": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.inbox": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.retained": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.deleted": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.brand": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.location": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.retention": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "refresh.tasks.unchanged": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "refresh.food.unchanged": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "section.preference.food": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "section.preference.tasks": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "foreground.request.reconcileImmediate": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.capture.1": {
+        "medianMs": 750,
+        "maxMs": 1125
+      },
+      "task.capture.3": {
+        "medianMs": 775,
+        "maxMs": 1175
+      },
+      "task.matched.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.matched.tags": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.matched.assignee": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.brand": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.location": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.retention": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "sync.peerTask.whileFood.storageAdmission": {
+        "medianMs": 600,
+        "maxMs": 900
+      },
+      "sync.peerFood.whileTasks.storageAdmission": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "recurring.complete.nativeChecklist": {
+        "medianMs": 1575,
+        "maxMs": 2375
+      },
+      "recurring.complete.undoUntouched": {
+        "medianMs": 1375,
+        "maxMs": 2075
+      },
+      "recurring.recomplete.nativeChecklist": {
+        "medianMs": 1700,
+        "maxMs": 2550
+      },
+      "derivedSuccessor.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "derivedSuccessor.titleAndNotes.save": {
+        "medianMs": 1550,
+        "maxMs": 2325
+      },
+      "derivedSuccessor.titleAndNotes.undo": {
+        "medianMs": 1525,
+        "maxMs": 2300
+      },
+      "copiedChecklist.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "copiedChecklist.titleAndNotes.save": {
+        "medianMs": 1550,
+        "maxMs": 2325
+      },
+      "copiedChecklist.titleAndNotes.undo": {
+        "medianMs": 1575,
+        "maxMs": 2375
+      },
+      "derivedSuccessor.metadata.tags": {
+        "medianMs": 1450,
+        "maxMs": 2175
+      },
+      "derivedSuccessor.metadata.undo": {
+        "medianMs": 1475,
+        "maxMs": 2225
+      },
+      "copiedChecklist.metadata.complete": {
+        "medianMs": 1500,
+        "maxMs": 2250
+      },
+      "copiedChecklist.metadata.undo": {
+        "medianMs": 1500,
+        "maxMs": 2250
+      },
+      "derivedSuccessor.complete.nativeChecklist": {
+        "medianMs": 1950,
+        "maxMs": 2925
+      },
+      "derivedSuccessor.complete.undo": {
+        "medianMs": 1650,
+        "maxMs": 2475
+      },
+      "derivedSuccessor.recomplete.nativeChecklist": {
+        "medianMs": 2075,
+        "maxMs": 3125
+      },
+      "recurring.complete.undoProtectedSuccessor": {
+        "medianMs": 1675,
+        "maxMs": 2525
+      },
+      "recurring.recomplete.keepProtectedSuccessor": {
+        "medianMs": 1700,
+        "maxMs": 2550
+      },
+      "startup.cold.total": {
+        "medianMs": 5500,
+        "maxMs": 8250
+      },
+      "startup.cold.history": {
+        "medianMs": 5500,
+        "maxMs": 8250
+      },
+      "startup.cold.taskAttach": {
+        "medianMs": 550,
+        "maxMs": 825
+      },
+      "startup.warm.total": {
+        "medianMs": 2425,
+        "maxMs": 3650
+      },
+      "startup.warm.history": {
+        "medianMs": 2425,
+        "maxMs": 3650
+      },
+      "startup.warm.proof": {
+        "medianMs": 350,
+        "maxMs": 500
+      },
+      "startup.warm.cacheRestore": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "startup.warm.taskAttach": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "checklist.uncomplete": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.recompleteViaUndo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "historical.food.add.1": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "historical.food.add.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.add.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "historical.food.add.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.contents.APIonly": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.contents.APIonly.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.delete.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.delete.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.delete.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "historical.food.delete.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.details.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.details.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "historical.food.details.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.details.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "historical.food.restore.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.restore.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "historical.food.restore.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.restore.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.title.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.title.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "explicitTask.title.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.notes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.notes.save": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.notes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.titleAndNotes.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "explicitTask.titleAndNotes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.editorOpenCancel": {
+        "medianMs": 125,
+        "maxMs": 200
+      }
+    },
+    "dense-food": {
+      "task.title.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.title.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.title.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.notes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.notes.save": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.notes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.titleAndNotes.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.titleAndNotes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.editorOpenCancel": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.metadata.schedule": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.schedule.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.tags": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.tags.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.metadata.assignee": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.metadata.assignee.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.delete": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.restoreViaUndo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.reorder": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.reorder.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "task.complete.application": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.reopen": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "task.bulkEdit.three": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkEdit.undo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkDelete.three": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkDelete.undo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.bulkReorder.three": {
+        "medianMs": 325,
+        "maxMs": 500
+      },
+      "task.bulkReorder.undo": {
+        "medianMs": 300,
+        "maxMs": 450
+      },
+      "checklist.add": {
+        "medianMs": 300,
+        "maxMs": 450
+      },
+      "checklist.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "checklist.titleAndNotes.save": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "checklist.titleAndNotes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.complete": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.uncompleteViaUndo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "checklist.reorder": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.reorder.undo": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "checklist.delete": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.restoreViaUndo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "task.complete.checklistDecline": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.complete.checklistConfirm": {
+        "medianMs": 325,
+        "maxMs": 500
+      },
+      "task.reopen.withChecklist": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.add.1": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "food.add.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.add.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "food.add.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.details.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.details.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.details.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.details.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.contents.APIonly": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.contents.APIonly.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.delete.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.delete.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "food.delete.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "food.delete.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "food.restore.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "task.rows.queryDecode": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.snapshot.serializeAll": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.openCompleted": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.upcoming": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.assignee": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.tags": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.view.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.inventory": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.inbox": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.retained": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.view.deleted": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.brand": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.location": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.filter.retention": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "refresh.tasks.unchanged": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "refresh.food.unchanged": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "section.preference.food": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "section.preference.tasks": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "foreground.request.reconcileImmediate": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.capture.1": {
+        "medianMs": 750,
+        "maxMs": 1125
+      },
+      "task.capture.3": {
+        "medianMs": 775,
+        "maxMs": 1175
+      },
+      "task.matched.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.matched.tags": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "task.matched.assignee": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.search": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.brand": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.location": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "food.matched.retention": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "sync.peerTask.whileFood.storageAdmission": {
+        "medianMs": 600,
+        "maxMs": 900
+      },
+      "sync.peerFood.whileTasks.storageAdmission": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "recurring.complete.nativeChecklist": {
+        "medianMs": 1575,
+        "maxMs": 2375
+      },
+      "recurring.complete.undoUntouched": {
+        "medianMs": 1375,
+        "maxMs": 2075
+      },
+      "recurring.recomplete.nativeChecklist": {
+        "medianMs": 1700,
+        "maxMs": 2550
+      },
+      "derivedSuccessor.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "derivedSuccessor.titleAndNotes.save": {
+        "medianMs": 1550,
+        "maxMs": 2325
+      },
+      "derivedSuccessor.titleAndNotes.undo": {
+        "medianMs": 1525,
+        "maxMs": 2300
+      },
+      "copiedChecklist.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "copiedChecklist.titleAndNotes.save": {
+        "medianMs": 1550,
+        "maxMs": 2325
+      },
+      "copiedChecklist.titleAndNotes.undo": {
+        "medianMs": 1575,
+        "maxMs": 2375
+      },
+      "derivedSuccessor.metadata.tags": {
+        "medianMs": 1450,
+        "maxMs": 2175
+      },
+      "derivedSuccessor.metadata.undo": {
+        "medianMs": 1475,
+        "maxMs": 2225
+      },
+      "copiedChecklist.metadata.complete": {
+        "medianMs": 1500,
+        "maxMs": 2250
+      },
+      "copiedChecklist.metadata.undo": {
+        "medianMs": 1500,
+        "maxMs": 2250
+      },
+      "derivedSuccessor.complete.nativeChecklist": {
+        "medianMs": 1950,
+        "maxMs": 2925
+      },
+      "derivedSuccessor.complete.undo": {
+        "medianMs": 1650,
+        "maxMs": 2475
+      },
+      "derivedSuccessor.recomplete.nativeChecklist": {
+        "medianMs": 2075,
+        "maxMs": 3125
+      },
+      "recurring.complete.undoProtectedSuccessor": {
+        "medianMs": 1675,
+        "maxMs": 2525
+      },
+      "recurring.recomplete.keepProtectedSuccessor": {
+        "medianMs": 1700,
+        "maxMs": 2550
+      },
+      "startup.cold.total": {
+        "medianMs": 5500,
+        "maxMs": 8250
+      },
+      "startup.cold.history": {
+        "medianMs": 5500,
+        "maxMs": 8250
+      },
+      "startup.cold.taskAttach": {
+        "medianMs": 550,
+        "maxMs": 825
+      },
+      "startup.warm.total": {
+        "medianMs": 2425,
+        "maxMs": 3650
+      },
+      "startup.warm.history": {
+        "medianMs": 2425,
+        "maxMs": 3650
+      },
+      "startup.warm.proof": {
+        "medianMs": 350,
+        "maxMs": 500
+      },
+      "startup.warm.cacheRestore": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "startup.warm.taskAttach": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "checklist.uncomplete": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "checklist.recompleteViaUndo": {
+        "medianMs": 275,
+        "maxMs": 425
+      },
+      "historical.food.add.1": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "historical.food.add.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.add.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "historical.food.add.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.contents.APIonly": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.contents.APIonly.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.delete.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.delete.1.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.delete.3": {
+        "medianMs": 175,
+        "maxMs": 275
+      },
+      "historical.food.delete.3.undo": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.details.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.details.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "historical.food.details.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.details.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "historical.food.restore.1": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.restore.1.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "historical.food.restore.3": {
+        "medianMs": 200,
+        "maxMs": 300
+      },
+      "historical.food.restore.3.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.title.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.title.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "explicitTask.title.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.notes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.notes.save": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.notes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.titleAndNotes.editorOpen": {
+        "medianMs": 125,
+        "maxMs": 200
+      },
+      "explicitTask.titleAndNotes.save": {
+        "medianMs": 250,
+        "maxMs": 375
+      },
+      "explicitTask.titleAndNotes.undo": {
+        "medianMs": 225,
+        "maxMs": 350
+      },
+      "explicitTask.editorOpenCancel": {
+        "medianMs": 125,
+        "maxMs": 200
+      }
+    }
+  },
+  "status": "PROVISIONAL: synthetic suite not yet measured; these bounds MUST NOT gate or approve a release until reviewed and activated.",
+  "basis": "Conservative draft headroom from clean private26/29 numeric observations only. Different synthetic shape and second size remain unmeasured.",
+  "looseningRequires": "Lee explicit approval; no automatic baseline update or accept switch.",
+  "pairedScaling": {
+    "smallSize": "dense-1",
+    "largeSize": "dense-2",
+    "meaning": "Pure history growth with identical initial1320record prefixes,current IDs/rows/Food containers/content; actual native extras recorded.",
+    "rules": {
+      "task.title.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.title.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.title.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.notes.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.notes.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.notes.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.titleAndNotes.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.titleAndNotes.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.titleAndNotes.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.editorOpenCancel": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.metadata.schedule": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.metadata.schedule.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.metadata.tags": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.metadata.tags.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.metadata.assignee": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.metadata.assignee.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.delete": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.restoreViaUndo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.reorder": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.reorder.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.complete.application": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.reopen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.bulkEdit.three": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.bulkEdit.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.bulkDelete.three": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.bulkDelete.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.bulkReorder.three": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.bulkReorder.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.add": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.titleAndNotes.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.titleAndNotes.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.titleAndNotes.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.complete": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.uncompleteViaUndo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.reorder": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.reorder.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.delete": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.restoreViaUndo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.complete.checklistDecline": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.complete.checklistConfirm": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.reopen.withChecklist": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.add.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.add.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.add.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.add.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.details.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.details.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.details.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.details.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.contents.APIonly": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.contents.APIonly.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.delete.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.delete.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.restore.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.restore.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.delete.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.delete.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.restore.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.restore.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.rows.queryDecode": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.snapshot.serializeAll": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.view.openCompleted": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.view.upcoming": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.view.assignee": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.view.tags": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.view.search": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.view.inventory": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.view.inbox": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.view.retained": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.view.deleted": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.filter.search": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.filter.brand": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.filter.location": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.filter.retention": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "refresh.tasks.unchanged": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "refresh.food.unchanged": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "section.preference.food": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "section.preference.tasks": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "foreground.request.reconcileImmediate": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.capture.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.capture.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.matched.search": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.matched.tags": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "task.matched.assignee": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.matched.search": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.matched.brand": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.matched.location": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "food.matched.retention": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "sync.peerTask.whileFood.storageAdmission": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "sync.peerFood.whileTasks.storageAdmission": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "recurring.complete.nativeChecklist": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "recurring.complete.undoUntouched": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "recurring.recomplete.nativeChecklist": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.titleAndNotes.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.titleAndNotes.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.titleAndNotes.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "copiedChecklist.titleAndNotes.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "copiedChecklist.titleAndNotes.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "copiedChecklist.titleAndNotes.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.metadata.tags": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.metadata.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "copiedChecklist.metadata.complete": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "copiedChecklist.metadata.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.complete.nativeChecklist": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.complete.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "derivedSuccessor.recomplete.nativeChecklist": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "recurring.complete.undoProtectedSuccessor": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "recurring.recomplete.keepProtectedSuccessor": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "startup.cold.total": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "startup.cold.history": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "startup.cold.taskAttach": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "startup.warm.total": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "startup.warm.history": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "startup.warm.proof": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "startup.warm.cacheRestore": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "startup.warm.taskAttach": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "checklist.uncomplete": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "checklist.recompleteViaUndo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.add.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.add.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.add.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.add.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.contents.APIonly": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.contents.APIonly.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.delete.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.delete.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.delete.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.delete.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.details.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.details.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.details.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.details.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.restore.1": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.restore.1.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.restore.3": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "historical.food.restore.3.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.title.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.title.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.title.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.notes.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.notes.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.notes.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.titleAndNotes.editorOpen": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.titleAndNotes.save": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.titleAndNotes.undo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      },
+      "explicitTask.editorOpenCancel": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 25,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 50
+      }
+    }
+  },
+  "additionalPairedScaling": {
+    "food-own-history": {
+      "smallSize": "dense-1",
+      "largeSize": "dense-food",
+      "meaning": "Same current state; additive Food-only edit/restore history, provisional limits awaiting calibration.",
+      "rules": {
+        "task.title.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.title.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.title.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.notes.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.notes.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.notes.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.titleAndNotes.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.titleAndNotes.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.titleAndNotes.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.editorOpenCancel": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.metadata.schedule": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.metadata.schedule.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.metadata.tags": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.metadata.tags.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.metadata.assignee": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.metadata.assignee.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.delete": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.restoreViaUndo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.reorder": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.reorder.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.complete.application": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.reopen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.bulkEdit.three": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.bulkEdit.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.bulkDelete.three": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.bulkDelete.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.bulkReorder.three": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.bulkReorder.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.add": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.titleAndNotes.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.titleAndNotes.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.titleAndNotes.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.complete": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.uncompleteViaUndo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.reorder": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.reorder.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.delete": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.restoreViaUndo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.complete.checklistDecline": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.complete.checklistConfirm": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.reopen.withChecklist": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.add.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.add.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.add.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.add.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.details.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.details.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.details.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.details.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.contents.APIonly": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.contents.APIonly.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.delete.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.delete.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.restore.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.restore.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.delete.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.delete.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.restore.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.restore.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.rows.queryDecode": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.snapshot.serializeAll": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.view.openCompleted": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.view.upcoming": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.view.assignee": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.view.tags": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.view.search": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.view.inventory": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.view.inbox": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.view.retained": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.view.deleted": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.filter.search": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.filter.brand": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.filter.location": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.filter.retention": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "refresh.tasks.unchanged": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "refresh.food.unchanged": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "section.preference.food": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "section.preference.tasks": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "foreground.request.reconcileImmediate": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.capture.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.capture.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.matched.search": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.matched.tags": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "task.matched.assignee": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.matched.search": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.matched.brand": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.matched.location": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "food.matched.retention": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "sync.peerTask.whileFood.storageAdmission": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "sync.peerFood.whileTasks.storageAdmission": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "recurring.complete.nativeChecklist": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "recurring.complete.undoUntouched": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "recurring.recomplete.nativeChecklist": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.titleAndNotes.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.titleAndNotes.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.titleAndNotes.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "copiedChecklist.titleAndNotes.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "copiedChecklist.titleAndNotes.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "copiedChecklist.titleAndNotes.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.metadata.tags": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.metadata.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "copiedChecklist.metadata.complete": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "copiedChecklist.metadata.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.complete.nativeChecklist": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.complete.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "derivedSuccessor.recomplete.nativeChecklist": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "recurring.complete.undoProtectedSuccessor": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "recurring.recomplete.keepProtectedSuccessor": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "startup.cold.total": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "startup.cold.history": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "startup.cold.taskAttach": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "startup.warm.total": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "startup.warm.history": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "startup.warm.proof": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "startup.warm.cacheRestore": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "startup.warm.taskAttach": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "checklist.uncomplete": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "checklist.recompleteViaUndo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.add.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.add.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.add.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.add.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.contents.APIonly": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.contents.APIonly.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.delete.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.delete.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.delete.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.delete.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.details.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.details.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.details.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.details.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.restore.1": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.restore.1.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.restore.3": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "historical.food.restore.3.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.title.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.title.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.title.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.notes.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.notes.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.notes.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.titleAndNotes.editorOpen": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.titleAndNotes.save": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.titleAndNotes.undo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        },
+        "explicitTask.editorOpenCancel": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 25,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 50
+        }
+      },
+      "growthKind": "food"
+    }
+  }
+}

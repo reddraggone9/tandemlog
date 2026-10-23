@@ -1,5 +1,6 @@
 import 'dart:convert';
 import '../domain/current_operation.dart';
+import '../domain/validated_action_cache.dart';
 
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
@@ -39,7 +40,9 @@ class FoodRecord {
     this.attributedWriter,
     this.retainedReferenceHash,
     Map<String, String> createdWith = const {},
-  }) : createdWith = Map.unmodifiable(createdWith) {
+  }) : createdWith = Map.unmodifiable(createdWith),
+       _cachedIntegrityHash = null,
+       _cachedRaw = null {
     if (!isCanonicalId(space) ||
         !isCanonicalId(writer) ||
         sequence < 1 ||
@@ -86,10 +89,70 @@ class FoodRecord {
       throw const FormatException('Food record is too large.');
     }
   }
+  FoodRecord._cached({
+    required this.space,
+    required this.writer,
+    required this.sequence,
+    required this.clock,
+    required this.operation,
+    required this.previousHash,
+    required this.unified,
+    required this.attributedWriter,
+    required this.retainedReferenceHash,
+    required Map<String, String> createdWith,
+    required String referenceHash,
+    required String integrity,
+    required String raw,
+  }) : createdWith = Map.unmodifiable(createdWith),
+       _cachedIntegrityHash = integrity,
+       _cachedRaw = raw {
+    hash = referenceHash;
+  }
+
+  /// A per-effect receipt is minted only by the immutable whole-batch verifier;
+  /// arbitrary DTOs or caller-supplied successful callbacks are not accepted.
+  factory FoodRecord.fromDecodedCache(ValidatedActionEffect receipt) {
+    final fields = receipt.fields;
+    if (receipt.layout != 2 ||
+        !const {'food', 'history.food'}.contains(receipt.kind) ||
+        fields == null ||
+        fields.length != 12) {
+      throw const FormatException('Unsupported cached Food layout.');
+    }
+    final unified = fields[6] as bool;
+    final result = FoodRecord._cached(
+      space: fields[0] as String,
+      writer: fields[1] as String,
+      sequence: fields[2] as int,
+      clock: EventClock.fromJson(fields[3]),
+      operation: FoodOperation.fromJson(
+        fields[4] as Map<String, dynamic>,
+        unified: unified,
+      ),
+      previousHash: fields[5] as String,
+      unified: unified,
+      attributedWriter: fields[7] as String?,
+      retainedReferenceHash: fields[8] as String?,
+      createdWith: Map<String, String>.from(fields[9] as Map),
+      referenceHash: fields[10] as String,
+      integrity: fields[11] as String,
+      raw: receipt.raw,
+    );
+    if (result.operation.id != result.id ||
+        result.operation.order != result.clock.value.toInt() ||
+        !isEventHash(result.hash) ||
+        !isEventHash(result.integrityHash)) {
+      throw const FormatException('Invalid cached Food identity.');
+    }
+    return result;
+  }
+
+  final String? _cachedIntegrityHash, _cachedRaw;
   final bool unified;
   final String? attributedWriter, retainedReferenceHash;
   String get author => attributedWriter ?? writer;
-  String get integrityHash => currentOperation.contentHash;
+  String get integrityHash =>
+      _cachedIntegrityHash ?? currentOperation.contentHash;
   final String space, writer, previousHash;
   final int sequence;
   final EventClock clock;
@@ -98,7 +161,9 @@ class FoodRecord {
   late final String hash;
   String get id => '$writer:$sequence';
   int get version => currentOperationFormat;
-  CurrentOperation get currentOperation {
+  late final CurrentOperation currentOperation = _buildCurrentOperation();
+
+  CurrentOperation _buildCurrentOperation() {
     final values = operation.toJson()
       ..remove('id')
       ..remove('order')
@@ -119,8 +184,10 @@ class FoodRecord {
     );
   }
 
-  Map<String, dynamic> toJson() => currentOperation.toJson();
-  String encode() => currentOperation.encode();
+  Map<String, dynamic> toJson() => _cachedRaw == null
+      ? currentOperation.toJson()
+      : jsonDecode(_cachedRaw) as Map<String, dynamic>;
+  String encode() => _cachedRaw ?? currentOperation.encode();
 
   factory FoodRecord.decode(String raw) {
     try {

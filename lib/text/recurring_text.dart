@@ -176,7 +176,7 @@ class RecurringTextMemo {
   RecurringTextMemo({
     this.maxEntries = 128,
     this.maxPayloadBytes = 16 * 1024 * 1024,
-    this.maxRecords = 2048,
+    this.maxRecords = 4096,
     this.maxRecordPayloadBytes = 16 * 1024 * 1024,
     this.maxActorDerivations = 2048,
   }) {
@@ -263,7 +263,13 @@ class RecurringTextMemo {
     }
     final event = _freezeEvent(LogEvent.decode(raw));
     recordDecodes++;
+    _rememberRecord(raw, event);
+    return event;
+  }
+
+  void _rememberRecord(String raw, LogEvent event) {
     final bytes = raw.length * 4;
+    if (_records.remove(raw) != null) retainedRecordPayloadBytes -= bytes;
     if (bytes <= maxRecordPayloadBytes) {
       while (_records.isNotEmpty &&
           (_records.length >= maxRecords ||
@@ -275,7 +281,26 @@ class RecurringTextMemo {
       _records[raw] = event;
       retainedRecordPayloadBytes += bytes;
     }
-    return event;
+  }
+
+  // An eager scan retains the bounded starting entries until this one batch
+  // finishes. Early misses cannot evict later hits in the SAME immutable input.
+  // This avoids the all-miss LRU cliff when history slightly exceeds the cap.
+  // Only frozen exact-raw decodes are reused; new bytes always decode below.
+  List<LogEvent> _decodeCanonicalBatch(Iterable<String> raws) {
+    final previous = Map<String, LogEvent>.of(_records);
+    final decoded = <LogEvent>[];
+    for (final raw in raws) {
+      final remembered = previous[raw];
+      if (remembered != null) {
+        recordHits++;
+        _rememberRecord(raw, remembered);
+        decoded.add(remembered);
+      } else {
+        decoded.add(decodeCanonical(raw));
+      }
+    }
+    return decoded;
   }
 
   void clear() {
@@ -302,13 +327,114 @@ class RecurringTextMemo {
     if (failure != null) Error.throwWithStackTrace(failure, failureStack!);
   }
 
-  Map<String, ResolvedTextField>? _get(String key) {
-    final value = _entries.remove(key);
-    if (value == null) {
+  String _checklistCutKey(
+    NativeTextEngine engine,
+    String baselineScope,
+    LogEvent completion,
+  ) {
+    if (completion.hash == null || completion.integrityHash == null) {
+      throw StateError('Checklist memo evidence must be strictly canonical.');
+    }
+    return 'checklist-cut-v1:${jsonEncode([engine.ownerId, baselineScope, completion.hash, completion.integrityHash])}';
+  }
+
+  // The strict input owns the verification identity; callers cannot supply an
+  // arbitrary receipt to bypass the public list API's complete pair comparison.
+  bool hasVerifiedChecklistInputCut(
+    NativeTextEngine engine,
+    String baselineScope,
+    LogEvent completion,
+    RecurringTextInput input,
+    Map<String, dynamic> descriptor,
+  ) {
+    final verified = input.verifyInheritance(
+      descriptor,
+      completion: completion,
+    );
+    return !verified.isPending &&
+        _get(
+              _checklistCutKey(engine, baselineScope, completion),
+              verified.observedPrefix,
+              verification: verified,
+            ) !=
+            null;
+  }
+
+  void rememberVerifiedChecklistInputCut(
+    NativeTextEngine engine,
+    String baselineScope,
+    LogEvent completion,
+    RecurringTextInput input,
+    Map<String, dynamic> descriptor,
+  ) {
+    final verified = input.verifyInheritance(
+      descriptor,
+      completion: completion,
+    );
+    if (verified.isPending) throw StateError('Cannot remember a pending cut.');
+    _put(
+      _checklistCutKey(engine, baselineScope, completion),
+      const {},
+      verified.observedPrefix,
+      verification: verified,
+    );
+  }
+
+  /// Cache only caller-verified membership/order/native-parent predicates.
+  /// TaskStore owns its memo privately; this does not validate a completion.
+  bool hasVerifiedChecklistCut(
+    NativeTextEngine engine,
+    String baselineScope,
+    LogEvent completion,
+    List<LogEvent> verifiedPrefix,
+  ) =>
+      _get(
+        _checklistCutKey(engine, baselineScope, completion),
+        verifiedPrefix,
+      ) !=
+      null;
+
+  void rememberVerifiedChecklistCut(
+    NativeTextEngine engine,
+    String baselineScope,
+    LogEvent completion,
+    List<LogEvent> verifiedPrefix,
+  ) => _put(
+    _checklistCutKey(engine, baselineScope, completion),
+    const {},
+    verifiedPrefix,
+  );
+
+  Map<String, ResolvedTextField>? _get(
+    String key,
+    List<LogEvent> observedPrefix, {
+    TextInheritanceVerification? verification,
+  }) {
+    final value = _entries[key];
+    if (value == null || value.prefix.length != observedPrefix.length) {
       misses++;
       return null;
     }
+    // Strict canonical decoding binds every body field with integrityHash and
+    // its independent retained anchor with hash. Compare the ENTIRE freshly
+    // verified ordered prefix, including unrelated and sparse interior records.
+    final identicalVerifiedCut =
+        verification != null &&
+        identical(verification.observedPrefix, observedPrefix) &&
+        identical(value.verification?.target, verification);
+    for (var i = 0; !identicalVerifiedCut && i < observedPrefix.length; i++) {
+      final event = observedPrefix[i];
+      final reference = event.hash, content = event.integrityHash;
+      if (reference == null || content == null) {
+        throw StateError('Observed memo evidence must be strictly canonical.');
+      }
+      if (value.prefix[i].$1 != reference || value.prefix[i].$2 != content) {
+        misses++;
+        return null;
+      }
+    }
     hits++;
+    _entries.remove(key);
     _entries[key] = value;
     return value.fields;
   }
@@ -337,9 +463,27 @@ class RecurringTextMemo {
     }
   }
 
-  void _put(String key, Map<String, ResolvedTextField> fields) {
+  void _put(
+    String key,
+    Map<String, ResolvedTextField> fields,
+    List<LogEvent> observedPrefix, {
+    TextInheritanceVerification? verification,
+  }) {
+    if (verification != null &&
+        (!identical(verification.observedPrefix, observedPrefix) ||
+            verification.isPending)) {
+      throw StateError('Memo receipt must be the exact successful cut.');
+    }
+    // Reject malformed evidence before eviction or accounting mutation.
+    for (final event in observedPrefix) {
+      if (event.hash == null || event.integrityHash == null) {
+        throw StateError('Observed memo evidence must be strictly canonical.');
+      }
+    }
     final frozen = Map<String, ResolvedTextField>.unmodifiable(fields);
-    var bytes = key.length * 2;
+    // Charge both 64-character hash strings, tuple/list references and
+    // conservative metadata per record. No full input event/raw is retained.
+    var bytes = key.length * 2 + observedPrefix.length * 320 + 64;
     final packets = Set<LineageTextOperation>.identity();
     final events = Set<LogEvent>.identity();
     for (final field in frozen.values) {
@@ -382,6 +526,15 @@ class RecurringTextMemo {
         packets.fold(0, (n, packet) => n + _packetBytes(packet)) +
         events.fold(0, (n, event) => n + _eventBytes(event));
     if (alone > maxPayloadBytes) return;
+    final prefix = List<(String, String)>.unmodifiable([
+      for (final event in observedPrefix)
+        (
+          event.hash ??
+              (throw StateError('Observed reference hash is required.')),
+          event.integrityHash ??
+              (throw StateError('Observed content hash is required.')),
+        ),
+    ]);
     if (_entries.containsKey(key)) _forget(key);
     while (_entries.isNotEmpty &&
         (_entries.length >= maxEntries ||
@@ -396,16 +549,32 @@ class RecurringTextMemo {
     for (final event in events) {
       _eventUses[event] = (_eventUses[event] ?? 0) + 1;
     }
-    _entries[key] = _RememberedText(frozen, bytes, packets, events);
+    _entries[key] = _RememberedText(
+      frozen,
+      bytes,
+      packets,
+      events,
+      prefix,
+      verification == null ? null : WeakReference(verification),
+    );
   }
 }
 
 class _RememberedText {
-  _RememberedText(this.fields, this.bytes, this.packets, this.events);
+  _RememberedText(
+    this.fields,
+    this.bytes,
+    this.packets,
+    this.events,
+    this.prefix,
+    this.verification,
+  );
+  final WeakReference<TextInheritanceVerification>? verification;
   final Map<String, ResolvedTextField> fields;
   final int bytes;
   final Set<LineageTextOperation> packets;
   final Set<LogEvent> events;
+  final List<(String, String)> prefix;
 }
 
 Object? _freezeJson(Object? value) => switch (value) {
@@ -431,6 +600,268 @@ LogEvent _freezeEvent(LogEvent event) => LogEvent(
   integrityHash: event.integrityHash,
   operationRevision: event.operationRevision,
 );
+
+/// Resolver-local references into one strictly decoded immutable input. This
+/// avoids scanning every unrelated record for each entity. Observed-prefix
+/// subresolvers build their own lookup; no candidate or proof crosses a prefix.
+/// The extra references scale with input records and declared copied items.
+class _RecurringHistoryLookup {
+  _RecurringHistoryLookup(List<LogEvent> history) {
+    for (final event in history) {
+      (own[event.entity] ??= []).add(event);
+      if (event.type == 'checklist.itemCreated') {
+        (checklistParents[event.data['parent'] as String] ??= []).add(event);
+      } else if (event.type == 'task.completedWithChecklist') {
+        final parent = (event.data['successor'] as Map)['id'] as String;
+        (checklistParents[parent] ??= []).add(event);
+      }
+      if (event.type == 'task.operationUndone' ||
+          event.type == 'task.textEditUndone' ||
+          event.type == 'task.recurringCompletionUndone') {
+        final target =
+            event.data[event.type == 'task.recurringCompletionUndone'
+                    ? 'completion'
+                    : 'operation']
+                as String;
+        (retractions[target] ??= []).add(event);
+      }
+      final children = <String>{};
+      if (hasNativeTaskSuccessor(event)) {
+        children.add((event.data['successor'] as Map)['id'] as String);
+      }
+      // Scalar parents can still copy native checklist fields.
+      if (event.type == 'task.completedWithChecklist') {
+        for (final item in (event.data['checklist'] as Map)['items'] as List) {
+          children.add((item as Map)['id'] as String);
+        }
+      }
+      for (final child in children) {
+        (contributionCandidates[child] ??= []).add(event);
+      }
+      if (isScalarSuccessorInitialization(event)) {
+        final child = (event.data['successor'] as Map?)?['id'];
+        if (child is String) scalarSuccessors.add(child);
+      }
+    }
+  }
+
+  _RecurringHistoryLookup.appended(
+    _RecurringHistoryLookup prior,
+    List<LogEvent> added,
+  ) {
+    own.addAll(prior.own);
+    contributionCandidates.addAll(prior.contributionCandidates);
+    scalarSuccessors.addAll(prior.scalarSuccessors);
+    checklistParents.addAll(prior.checklistParents);
+    retractions.addAll(prior.retractions);
+    final delta = _RecurringHistoryLookup(added);
+    for (final entry in delta.own.entries) {
+      own[entry.key] = List.unmodifiable([...?own[entry.key], ...entry.value]);
+    }
+    for (final entry in delta.contributionCandidates.entries) {
+      contributionCandidates[entry.key] = List.unmodifiable([
+        ...?contributionCandidates[entry.key],
+        ...entry.value,
+      ]);
+    }
+    scalarSuccessors.addAll(delta.scalarSuccessors);
+    for (final entry in delta.checklistParents.entries) {
+      checklistParents[entry.key] = List.unmodifiable([
+        ...?checklistParents[entry.key],
+        ...entry.value,
+      ]);
+    }
+    for (final entry in delta.retractions.entries) {
+      retractions[entry.key] = List.unmodifiable([
+        ...?retractions[entry.key],
+        ...entry.value,
+      ]);
+    }
+  }
+
+  // Membership uses the same pure domain projector, with every relevant own
+  // record, copy seed and retraction (including malformed cross-entity Undo).
+  // Unrelated Tasks and their Notes cannot affect this parent's checklist.
+  List<LogEvent> checklistHistory(String parent) {
+    final selected = <String, LogEvent>{};
+    final ids = <String>{};
+    for (final event in checklistParents[parent] ?? const <LogEvent>[]) {
+      selected[event.id] = event;
+      if (event.type == 'checklist.itemCreated') {
+        ids.add(event.entity);
+      } else {
+        for (final item in (event.data['checklist'] as Map)['items'] as List) {
+          ids.add((item as Map)['id'] as String);
+        }
+      }
+    }
+    for (final id in ids) {
+      for (final event in own[id] ?? const <LogEvent>[]) {
+        selected[event.id] = event;
+      }
+    }
+    for (final id in selected.keys.toList()) {
+      for (final event in retractions[id] ?? const <LogEvent>[]) {
+        selected[event.id] = event;
+      }
+    }
+    return selected.values.toList();
+  }
+
+  final checklistParents = <String, List<LogEvent>>{};
+  final retractions = <String, List<LogEvent>>{};
+  final own = <String, List<LogEvent>>{};
+  final contributionCandidates = <String, List<LogEvent>>{};
+  final scalarSuccessors = <String>{};
+}
+
+/// Pure immutable canonical input, shared by resolvers without sharing native
+/// handles, actor admission or resolved fields. Store retention is bounded.
+final class RecurringTextInput {
+  RecurringTextInput._(
+    this.history,
+    this._records,
+    this._heads,
+    this._inheritanceIndex,
+    this.rawCost, [
+    this._lookupCache,
+    this._previous,
+  ]);
+  factory RecurringTextInput.fromCanonical(
+    Iterable<String> history, {
+    RecurringTextMemo? memo,
+  }) {
+    final records = <String, LogEvent>{};
+    final decoded =
+        memo?._decodeCanonicalBatch(history) ??
+        history.map((raw) => _freezeEvent(LogEvent.decode(raw)));
+    for (final event in decoded) {
+      final previous = records[event.id];
+      if (previous != null && previous.canonicalRaw != event.canonicalRaw) {
+        throw FormatFailure('Conflicting text lineage records.');
+      }
+      records[event.id] = event;
+    }
+    final ordered = records.values.toList()..sort(compareEvents);
+    return RecurringTextInput._fromEvents(List.unmodifiable(ordered));
+  }
+  factory RecurringTextInput._fromEvents(List<LogEvent> events) {
+    final records = <String, LogEvent>{}, heads = <String, int>{};
+    var cost = 0;
+    for (final event in events) {
+      records[event.id] = event;
+      final writer = '${event.space}:${event.writer}';
+      if (event.sequence > (heads[writer] ?? 0)) heads[writer] = event.sequence;
+      cost += event.canonicalRaw!.length * 4;
+    }
+    return RecurringTextInput._(
+      events,
+      Map.unmodifiable(records),
+      Map.unmodifiable(heads),
+      TextInheritanceIndex(events),
+      cost,
+    );
+  }
+  final List<LogEvent> history;
+  final Map<String, LogEvent> _records;
+  final Map<String, int> _heads;
+  final TextInheritanceIndex _inheritanceIndex;
+  final int rawCost;
+  final RecurringTextInput? _previous;
+  _RecurringHistoryLookup? _lookupCache;
+  _RecurringHistoryLookup get _lookup =>
+      _lookupCache ??= _RecurringHistoryLookup(history);
+  bool get cacheable => history.length <= 4096 && rawCost <= 16 * 1024 * 1024;
+
+  RecurringTextInput? appendedCanonical(
+    Iterable<String> raw, {
+    RecurringTextMemo? memo,
+  }) {
+    final added =
+        (memo?._decodeCanonicalBatch(raw) ??
+                raw.map((raw) => _freezeEvent(LogEvent.decode(raw))))
+            .toList()
+          ..sort(compareEvents);
+    if (added.isEmpty) return this;
+    final heads = Map<String, int>.of(_heads);
+    var cost = rawCost;
+    final newIds = <String>{};
+    for (final event in added) {
+      final writer = '${event.space}:${event.writer}';
+      if (_records.containsKey(event.id) ||
+          !newIds.add(event.id) ||
+          event.sequence <= (heads[writer] ?? 0) ||
+          history.isNotEmpty && compareEvents(history.last, event) >= 0) {
+        return null;
+      }
+      heads[writer] = event.sequence;
+      cost += event.canonicalRaw!.length * 4;
+    }
+    // Keep only one detached previous input for newly observed complete cuts.
+    // It has no backlink; old generations cannot form a retained chain.
+    final previous = RecurringTextInput._(
+      history,
+      _records,
+      _heads,
+      _inheritanceIndex,
+      rawCost,
+      _lookupCache,
+    );
+    return RecurringTextInput._(
+      List.unmodifiable([...history, ...added]),
+      Map.unmodifiable({..._records, for (final e in added) e.id: e}),
+      Map.unmodifiable(heads),
+      TextInheritanceIndex.appended(_inheritanceIndex, added),
+      cost,
+      _lookupCache == null
+          ? null
+          : _RecurringHistoryLookup.appended(_lookupCache!, added),
+      previous,
+    );
+  }
+
+  /// Exact old records in a preparation overlay do not change this input.
+  /// Compare actual canonical bytes as well as ID; conflicting duplicates still
+  /// take the strict generic reconstruction path and fail there.
+  bool containsCanonical(LogEvent event) =>
+      event.canonicalRaw != null &&
+      _records[event.id]?.canonicalRaw == event.canonicalRaw;
+
+  TextInheritanceVerification verifyInheritance(
+    Map<String, dynamic> descriptor, {
+    required LogEvent completion,
+  }) => _inheritanceIndex.verify(descriptor, completion: completion);
+
+  /// A declared cut is verified against this exact strictly decoded input
+  /// before selecting parent-local membership records. Pending cuts stay pending.
+  List<Map<String, dynamic>> observedChecklist(
+    String parent,
+    Map<String, dynamic> descriptor, {
+    required LogEvent completion,
+  }) {
+    final verified = verifyInheritance(descriptor, completion: completion);
+    if (verified.isPending) {
+      throw TextInheritancePending(
+        'Checklist is waiting for observed history.',
+      );
+    }
+    return _forPrefix(verified.observedPrefix).checklist(parent);
+  }
+
+  List<Map<String, dynamic>> checklist(String parent) =>
+      projectChecklist(_lookup.checklistHistory(parent), parent);
+
+  RecurringTextInput _forPrefix(List<LogEvent> prefix) {
+    bool same(List<LogEvent> available) =>
+        prefix.length == available.length &&
+        Iterable<int>.generate(
+          prefix.length,
+        ).every((i) => identical(prefix[i], available[i]));
+    if (same(history)) return this;
+    if (_previous != null && same(_previous.history)) return _previous;
+    return RecurringTextInput._fromEvents(prefix);
+  }
+}
 
 /// Resolves only immutable, admitted history. No receipt creation, writes,
 /// timestamp rewriting, Undo execution or SQLite state is involved.
@@ -471,20 +902,30 @@ class RecurringTextResolver {
         'Memoized legacy roots require an immutable baseline scope.',
       );
     }
-    final records = <String, LogEvent>{};
-    for (final raw in history) {
-      final event =
-          memo?.decodeCanonical(raw) ?? _freezeEvent(LogEvent.decode(raw));
-      final previous = records[event.id];
-      if (previous != null && previous.canonicalRaw != raw) {
-        throw FormatFailure('Conflicting text lineage records.');
-      }
-      records[event.id] = event;
+    return RecurringTextResolver.fromInput(
+      engine,
+      RecurringTextInput.fromCanonical(history, memo: memo),
+      legacyRoots: legacyRoots,
+      memo: memo,
+      legacyScope: legacyScope,
+    );
+  }
+
+  factory RecurringTextResolver.fromInput(
+    NativeTextEngine engine,
+    RecurringTextInput input, {
+    LegacyTextRoots? legacyRoots,
+    RecurringTextMemo? memo,
+    String? legacyScope,
+  }) {
+    if (memo != null && legacyRoots != null && legacyScope == null) {
+      throw ArgumentError(
+        'Memoized legacy roots require an immutable baseline scope.',
+      );
     }
-    final ordered = records.values.toList()..sort(compareEvents);
     return RecurringTextResolver._(
       engine,
-      List.unmodifiable(ordered),
+      input,
       legacyRoots,
       const {},
       {},
@@ -497,7 +938,7 @@ class RecurringTextResolver {
 
   RecurringTextResolver._(
     this.engine,
-    this.history,
+    this.input,
     this.legacyRoots,
     this.ancestors,
     this.observedFields,
@@ -507,7 +948,10 @@ class RecurringTextResolver {
     this._closeRuntime,
   );
   final NativeTextEngine engine;
-  final List<LogEvent> history;
+  final RecurringTextInput input;
+  List<LogEvent> get history => input.history;
+  _RecurringHistoryLookup get _lookup => input._lookup;
+  TextInheritanceIndex get _inheritanceIndex => input._inheritanceIndex;
   final LegacyTextRoots? legacyRoots;
   final Set<String> ancestors;
   // One immutable completion proof has one parent snapshot. Share it across
@@ -524,9 +968,9 @@ class RecurringTextResolver {
       // A pending/failed entity may be followed by another entity in the same
       // ingestion transaction. Rejoin the memo's live admission runtime before
       // publishing observed fields; detached fields cannot authorize new owners.
-      return RecurringTextResolver.fromCanonical(
+      return RecurringTextResolver.fromInput(
         engine,
-        history.map((event) => event.canonicalRaw!),
+        input,
         legacyRoots: legacyRoots,
         memo: memo,
         legacyScope: legacyScope,
@@ -560,11 +1004,14 @@ class RecurringTextResolver {
     if (ancestors.contains(entity)) {
       throw FormatFailure('Cyclic recurring text lineage.');
     }
-    final own = history.where((event) => event.entity == entity).toList();
+    final own = _lookup.own[entity] ?? const <LogEvent>[];
     final creations = own
         .where((event) => isNativeTextCreation(event.type))
         .toList();
-    final contributions = textContributions(history, entity).toList();
+    final contributions = textContributions(
+      _lookup.contributionCandidates[entity] ?? const <LogEvent>[],
+      entity,
+    ).toList();
     final roots = <String, TextFieldSeed>{};
     final inheritedReferences = <String, List<SharedTextReference>>{
       'title': [],
@@ -586,11 +1033,7 @@ class RecurringTextResolver {
           'Recurring text identity collides with a creation.',
         );
       }
-      if (history.any(
-        (event) =>
-            isScalarSuccessorInitialization(event) &&
-            (event.data['successor'] as Map?)?['id'] == entity,
-      )) {
+      if (_lookup.scalarSuccessors.contains(entity)) {
         throw FormatFailure(
           'Mixed successor text initialization; history retained.',
         );
@@ -607,10 +1050,9 @@ class RecurringTextResolver {
           throw FormatFailure('Invalid recurring text identity.');
         }
         final proof = contribution.proof;
-        final verified = verifyTextInheritance(
+        final verified = _inheritanceIndex.verify(
           proof,
           completion: completion,
-          available: history,
         );
         if (verified.isPending) {
           throw TextInheritancePending(
@@ -622,14 +1064,22 @@ class RecurringTextResolver {
           observed = observedFields.putIfAbsent(contribution.key, () {
             // The exact record set matters even when a declared head is
             // present: a sparse closed prefix must not reuse a fuller proof.
+            final content = completion.integrityHash;
+            if (content == null) {
+              throw StateError('Completion memo evidence must be canonical.');
+            }
             var key =
-                '${engine.ownerId}|${legacyScope ?? ''}|${completion.hash}|${sha256.convert(utf8.encode(verified.observedPrefix.map((event) => '${event.id}:${event.hash}\n').join()))}';
+                '${engine.ownerId}|${legacyScope ?? ''}|${completion.hash}|$content';
             if (contribution.checklist) key += '|${contribution.parent}';
-            final remembered = memo?._get(key);
+            final remembered = memo?._get(
+              key,
+              verified.observedPrefix,
+              verification: verified,
+            );
             if (remembered != null) return remembered;
             final result = RecurringTextResolver._(
               engine,
-              verified.observedPrefix,
+              input._forPrefix(verified.observedPrefix),
               legacyRoots,
               {...ancestors, entity},
               observedFields,
@@ -638,7 +1088,12 @@ class RecurringTextResolver {
               _runtime,
               false,
             ).resolve(contribution.parent);
-            memo?._put(key, result);
+            memo?._put(
+              key,
+              result,
+              verified.observedPrefix,
+              verification: verified,
+            );
             return result;
           });
         } on TextInheritancePending {

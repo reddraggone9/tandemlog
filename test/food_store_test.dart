@@ -293,6 +293,9 @@ void main() {
     profile.database.execute(
       "CREATE TRIGGER reject_food_head BEFORE INSERT ON protected_app_heads WHEN NEW.sequence>0 BEGIN SELECT RAISE(ABORT,'synthetic admission failure'); END",
     );
+    profile.database.execute(
+      "CREATE TRIGGER reject_food_head_update BEFORE UPDATE ON protected_app_heads WHEN NEW.sequence>0 BEGIN SELECT RAISE(ABORT,'synthetic admission failure'); END",
+    );
     await expectLater(
       food!.add(const FoodDetails(name: 'Rice'), 1),
       throwsA(isA<Exception>()),
@@ -300,6 +303,7 @@ void main() {
     expect(food!.state.active, isEmpty);
     expect(receipts(), hasLength(1));
     profile.database.execute('DROP TRIGGER reject_food_head');
+    profile.database.execute('DROP TRIGGER reject_food_head_update');
     await food!.refresh();
     expect(food!.state.active, hasLength(1));
     expect(food!.hasPreparedAppend, isFalse);

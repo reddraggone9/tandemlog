@@ -278,6 +278,465 @@ void main() {
       });
       tearDown(() => engine.dispose());
       test(
+        'entity lookup preserves concurrent lineage across unrelated and shuffled history',
+        () {
+          final created = h.create();
+          final ax = h.edit([created], _a, _parent, {'title': 'AXB'});
+          final by = h.edit([created], _b, _parent, {'title': 'ABY'});
+          final ca = h.complete([created, ax], _a, _parent, _child);
+          final cb = h.complete([created, by], _b, _parent, _child);
+          final core = [created, ax, by, ca, cb];
+          final unrelated = [
+            for (var i = 0; i < 64; i++)
+              h.append(
+                _a,
+                const Uuid().v5(_space, 'unrelated-$i'),
+                'task.createdWithText',
+                created.data,
+              ),
+          ];
+          final memo = RecurringTextMemo();
+          try {
+            final indexed = RecurringTextResolver(engine, [
+              ...unrelated.reversed,
+              ...core.reversed,
+            ], memo: memo);
+            for (final entity in [_parent, _child]) {
+              final expected = RecurringTextResolver(
+                engine,
+                core,
+              ).resolve(entity);
+              final actual = indexed.resolve(entity);
+              for (final field in ['title', 'description']) {
+                expect(actual[field]!.text, expected[field]!.text);
+                expect(
+                  actual[field]!.context.hash,
+                  expected[field]!.context.hash,
+                );
+                expect(
+                  actual[field]!.historyReference!.hash,
+                  expected[field]!.historyReference!.hash,
+                );
+                expect(
+                  actual[field]!.state.encoded,
+                  expected[field]!.state.encoded,
+                );
+              }
+            }
+          } finally {
+            memo.clear();
+          }
+        },
+      );
+      test(
+        'entity lookup retains foreign creation and undone scalar collisions',
+        () {
+          final created = h.create();
+          final completion = h.complete([created], _a, _parent, _child);
+          final foreignSpace = const Uuid().v5(_space, 'foreign-space');
+          final foreign = LogEvent.decode(
+            LogEvent(
+              foreignSpace,
+              _b,
+              1,
+              EventClock(BigInt.from(1000)),
+              _child,
+              'task.createdWithText',
+              created.data,
+            ).encode(previousHash: eventGenesisHash(foreignSpace, _b)),
+          );
+          expect(
+            () => RecurringTextResolver(engine, [
+              foreign,
+              completion,
+              created,
+            ]).resolve(_child),
+            throwsA(
+              isA<FormatFailure>().having(
+                (error) => error.message,
+                'reason',
+                contains('collides with a creation'),
+              ),
+            ),
+          );
+          final scalar = h.append(_b, _parent, 'task.completed', {
+            'completedAt': '2030-05-10',
+            'successor': completion.data['successor'],
+          });
+          final undo = h.append(_b, _parent, 'task.recurringCompletionUndone', {
+            'completion': scalar.id,
+          });
+          expect(
+            () => RecurringTextResolver(engine, [
+              undo,
+              completion,
+              scalar,
+              created,
+            ]).resolve(_child),
+            throwsA(
+              isA<FormatFailure>().having(
+                (error) => error.message,
+                'reason',
+                contains('Mixed successor text initialization'),
+              ),
+            ),
+          );
+        },
+      );
+      test(
+        'checklist cut memo binds engine, scope, completion content and complete ordered prefix within existing budget',
+        () {
+          final created = h.create();
+          final edit = h.edit([created], _a, _parent, {'title': 'AXB'});
+          final completion = h.complete([created, edit], _a, _parent, _child);
+          final prefix = [created, edit];
+          final memo = RecurringTextMemo(maxEntries: 1, maxPayloadBytes: 4096);
+          final otherEngine = NativeTextEngine(libraryPath: _library);
+          try {
+            memo.rememberVerifiedChecklistCut(
+              engine,
+              'baseline',
+              completion,
+              prefix,
+            );
+            expect(
+              memo.hasVerifiedChecklistCut(
+                engine,
+                'baseline',
+                completion,
+                prefix,
+              ),
+              isTrue,
+            );
+            expect(
+              memo.hasVerifiedChecklistCut(
+                otherEngine,
+                'baseline',
+                completion,
+                prefix,
+              ),
+              isFalse,
+            );
+            expect(
+              memo.hasVerifiedChecklistCut(
+                engine,
+                'other baseline',
+                completion,
+                prefix,
+              ),
+              isFalse,
+            );
+            expect(
+              memo.hasVerifiedChecklistCut(engine, 'baseline', completion, [
+                edit,
+              ]),
+              isFalse,
+            );
+            expect(
+              memo.hasVerifiedChecklistCut(engine, 'baseline', completion, [
+                edit,
+                created,
+              ]),
+              isFalse,
+            );
+            final retained = memo.retainedPayloadBytes;
+            final bare = LogEvent(
+              _space,
+              _a,
+              99,
+              EventClock(BigInt.from(99)),
+              _parent,
+              'task.edited',
+              {'schedule': <String, dynamic>{}},
+            );
+            expect(
+              () => memo.rememberVerifiedChecklistCut(
+                engine,
+                'baseline',
+                completion,
+                [created, bare],
+              ),
+              throwsStateError,
+            );
+            expect(memo.entryCount, 1);
+            expect(memo.retainedPayloadBytes, retained);
+            expect(
+              memo.hasVerifiedChecklistCut(
+                engine,
+                'baseline',
+                completion,
+                prefix,
+              ),
+              isTrue,
+            );
+            final changed = LogEvent.decode(
+              LogEvent(
+                created.space,
+                created.writer,
+                created.sequence,
+                created.clock,
+                created.entity,
+                created.type,
+                {
+                  ...created.data,
+                  'schedule': {'dueDate': '2030-05-12'},
+                },
+                hash: created.hash,
+              ).encode(previousHash: created.previousHash),
+            );
+            expect(changed.hash, created.hash);
+            expect(changed.integrityHash, isNot(created.integrityHash));
+            expect(
+              memo.hasVerifiedChecklistCut(engine, 'baseline', completion, [
+                changed,
+                edit,
+              ]),
+              isFalse,
+            );
+            final replacement = LogEvent.decode(
+              LogEvent(
+                completion.space,
+                completion.writer,
+                completion.sequence,
+                completion.clock,
+                completion.entity,
+                completion.type,
+                {...completion.data, 'completedAt': '2030-05-11'},
+                hash: completion.hash,
+              ).encode(previousHash: completion.previousHash),
+            );
+            expect(replacement.hash, completion.hash);
+            expect(replacement.integrityHash, isNot(completion.integrityHash));
+            expect(
+              memo.hasVerifiedChecklistCut(
+                engine,
+                'baseline',
+                replacement,
+                prefix,
+              ),
+              isFalse,
+            );
+            memo.rememberVerifiedChecklistCut(
+              engine,
+              'other baseline',
+              completion,
+              prefix,
+            );
+            expect(memo.entryCount, 1);
+            expect(memo.retainedPayloadBytes, lessThanOrEqualTo(4096));
+            expect(
+              memo.hasVerifiedChecklistCut(
+                engine,
+                'baseline',
+                completion,
+                prefix,
+              ),
+              isFalse,
+            );
+            final shared = RecurringTextMemo(
+              maxEntries: 1,
+              maxPayloadBytes: 1024 * 1024,
+            );
+            try {
+              RecurringTextResolver(engine, [
+                ...prefix,
+                completion,
+              ], memo: shared).resolve(_child);
+              expect(shared.entryCount, 1);
+              shared.rememberVerifiedChecklistCut(
+                engine,
+                'baseline',
+                completion,
+                prefix,
+              );
+              expect(
+                shared.hasVerifiedChecklistCut(
+                  engine,
+                  'baseline',
+                  completion,
+                  prefix,
+                ),
+                isTrue,
+              );
+              RecurringTextResolver(engine, [
+                ...prefix,
+                completion,
+              ], memo: shared).resolve(_child);
+              expect(
+                shared.hasVerifiedChecklistCut(
+                  engine,
+                  'baseline',
+                  completion,
+                  prefix,
+                ),
+                isFalse,
+              );
+              expect(shared.entryCount, 1);
+              expect(
+                shared.retainedPayloadBytes,
+                lessThanOrEqualTo(1024 * 1024),
+              );
+            } finally {
+              shared.clear();
+            }
+            final tiny = RecurringTextMemo(maxPayloadBytes: 1);
+            try {
+              tiny.rememberVerifiedChecklistCut(
+                engine,
+                'baseline',
+                completion,
+                prefix,
+              );
+              expect(tiny.entryCount, 0);
+              expect(tiny.retainedPayloadBytes, 0);
+            } finally {
+              tiny.clear();
+            }
+          } finally {
+            memo.clear();
+            otherEngine.dispose();
+          }
+        },
+      );
+      test(
+        'memo prefix identity includes content behind retained reference hashes',
+        () {
+          final created = h.create();
+          final completion = h.complete([created], _a, _parent, _child);
+          final memo = RecurringTextMemo();
+          try {
+            expect(
+              RecurringTextResolver(engine, [
+                created,
+                completion,
+              ], memo: memo).resolve(_child)['title']!.text,
+              'AB',
+            );
+            final oldText = created.data['text'] as Map;
+            final changed = LogEvent.decode(
+              LogEvent(
+                created.space,
+                created.writer,
+                created.sequence,
+                created.clock,
+                created.entity,
+                created.type,
+                {
+                  ...created.data,
+                  'title': 'Changed root',
+                  'text': {
+                    ...oldText,
+                    'seeds': {
+                      ...(oldText['seeds'] as Map),
+                      'title': sha256
+                          .convert(engine.seedText('Changed root').bytes)
+                          .toString(),
+                    },
+                  },
+                },
+                hash: created.hash,
+              ).encode(previousHash: created.previousHash),
+            );
+            expect(changed.hash, created.hash);
+            expect(changed.integrityHash, isNot(created.integrityHash));
+            final misses = memo.misses;
+            expect(
+              () => RecurringTextResolver(engine, [
+                changed,
+                completion,
+              ], memo: memo).resolve(_child),
+              throwsA(isA<FormatFailure>()),
+            );
+            expect(memo.misses, greaterThan(misses));
+            expect(memo.entryCount, 0);
+            expect(memo.retainedPayloadBytes, 0);
+            expect(
+              RecurringTextResolver(engine, [
+                created,
+                completion,
+              ], memo: memo).resolve(_child)['title']!.text,
+              'AB',
+            );
+          } finally {
+            memo.clear();
+          }
+        },
+      );
+      test(
+        'memo distinguishes completion content and a sparse prefix with a known head',
+        () {
+          final created = h.create();
+          final other = const Uuid().v5(_parent, 'other-parent');
+          final otherCreated = h.append(
+            _b,
+            other,
+            'task.createdWithText',
+            created.data,
+          );
+          final prefix = [created, otherCreated];
+          final first = h.complete(prefix, _a, _parent, _child);
+          final otherChild = const Uuid().v5(other, 'successor');
+          final second = h.complete(prefix, _b, other, otherChild);
+          final replacement = LogEvent.decode(
+            LogEvent(
+              first.space,
+              first.writer,
+              first.sequence,
+              first.clock,
+              second.entity,
+              second.type,
+              second.data,
+              hash: first.hash,
+            ).encode(previousHash: first.previousHash),
+          );
+          expect(replacement.hash, first.hash);
+          expect(replacement.integrityHash, isNot(first.integrityHash));
+          final memo = RecurringTextMemo();
+          try {
+            final original = RecurringTextResolver(engine, [
+              ...prefix,
+              first,
+            ], memo: memo).resolve(_child);
+            final alternate = RecurringTextResolver(engine, [
+              ...prefix,
+              replacement,
+            ], memo: memo).resolve(otherChild);
+            expect(alternate['title']!.text, 'AB');
+            expect(
+              alternate['title']!.context.hash,
+              isNot(original['title']!.context.hash),
+            );
+            memo.clear();
+            final edit = h.edit([created], _a, _parent, {'title': 'AXB'});
+            final head = h.append(_a, _parent, 'task.edited', {
+              'schedule': {'dueDate': '2030-05-10'},
+            });
+            final full = [created, edit, head];
+            final completion = h.complete(full, _a, _parent, _child);
+            expect(
+              RecurringTextResolver(engine, [
+                ...full,
+                completion,
+              ], memo: memo).resolve(_child)['title']!.text,
+              'AXB',
+            );
+            final misses = memo.misses;
+            expect(
+              () => RecurringTextResolver(engine, [
+                created,
+                head,
+                completion,
+              ], memo: memo).resolve(_child),
+              throwsA(isA<FormatFailure>()),
+            );
+            expect(memo.misses, greaterThan(misses));
+            expect(memo.entryCount, 0);
+          } finally {
+            memo.clear();
+          }
+        },
+      );
+      test(
         'new reference proofs preserve old exact-state proofs and reject substitution',
         () {
           final history = [h.create()];
@@ -500,6 +959,72 @@ void main() {
           expect(memo.actorDerivationCount, 0);
         },
       );
+      test(
+        'over-cap canonical scans reuse bounded entries without LRU thrash',
+        () {
+          final events = [
+            for (var i = 0; i < 5; i++)
+              h.append(_a, const Uuid().v4(), 'user.created', {
+                'name': 'Synthetic scan user $i',
+              }),
+          ];
+          final raws = events.map((e) => e.canonicalRaw!).toList();
+          final memo = RecurringTextMemo(maxRecords: 2);
+          RecurringTextResolver.fromCanonical(engine, raws, memo: memo);
+          expect(memo.recordDecodes, 5);
+          for (var pass = 0; pass < 3; pass++) {
+            final before = memo.recordDecodes;
+            final result = RecurringTextResolver.fromCanonical(
+              engine,
+              raws,
+              memo: memo,
+            );
+            expect(
+              memo.recordDecodes - before,
+              3,
+              reason: 'All two starting entries must survive this eager scan',
+            );
+            expect(result.history.map((e) => e.canonicalRaw), raws);
+            expect(memo.recordCount, 2);
+            expect(
+              memo.retainedRecordPayloadBytes,
+              raws.skip(3).fold<int>(0, (sum, raw) => sum + raw.length * 4),
+            );
+            expect(
+              () => result.history.last.data['name'] = 'Mutated',
+              throwsUnsupportedError,
+            );
+          }
+          final altered = [...raws]
+            ..[4] = raws.last.replaceFirst(
+              'Synthetic scan user 4',
+              'Synthetic scan user X',
+            );
+          expect(
+            () => RecurringTextResolver.fromCanonical(
+              engine,
+              altered,
+              memo: memo,
+            ),
+            throwsA(isA<FormatFailure>()),
+          );
+          final bytes = RecurringTextMemo(
+            maxRecords: 10,
+            maxRecordPayloadBytes: raws.last.length * 4,
+          );
+          for (var pass = 0; pass < 2; pass++) {
+            RecurringTextResolver.fromCanonical(engine, raws, memo: bytes);
+            expect(
+              bytes.retainedRecordPayloadBytes,
+              lessThanOrEqualTo(raws.last.length * 4),
+            );
+            expect(bytes.recordCount, lessThanOrEqualTo(1));
+          }
+          memo.clear();
+          bytes.clear();
+        },
+      );
+
       test(
         'shared originals remain bounded without evicting the latest edited proof',
         () {

@@ -264,6 +264,8 @@ class MainActivity : FlutterActivity() {
                         "readFrom" -> {
                             val offset = (call.argument<Number>("offset") ?: error("Missing offset")).toLong()
                             require(offset >= 0) { "Invalid offset" }
+                            val maximum = call.argument<Number>("maximumBytes")?.toInt() ?: (32 * 1024 * 1024)
+                            require(maximum in 0..(32 * 1024 * 1024)) { "Invalid read bound" }
                             // Resolve the selected pathname anew; a retained
                             // watcher cursor/old file handle is not its content.
                             val uri = child(tree, name!!) ?: throw MissingFolderFile(name)
@@ -282,7 +284,18 @@ class MainActivity : FlutterActivity() {
                                     } catch (e: IOException) {
                                         return@use null // Never read/skip the prefix silently.
                                     }
-                                    input.readBytes()
+                                    require(size - offset <= maximum) { "Input exceeds safe read limits" }
+                                    val output = java.io.ByteArrayOutputStream()
+                                    val buffer = ByteArray(64 * 1024)
+                                    while (true) {
+                                        val count = input.read(buffer)
+                                        if (count < 0) break
+                                        require(output.size().toLong() + count <= maximum.toLong()) {
+                                            "Input exceeds safe read limits"
+                                        }
+                                        output.write(buffer, 0, count)
+                                    }
+                                    output.toByteArray()
                                 }
                             }
                         }

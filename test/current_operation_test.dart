@@ -26,6 +26,56 @@ LogEvent event(String type, Map<String, dynamic> data, {String? anchor}) =>
 
 void main() {
   test(
+    'current operation owns nested JSON before hashing and cached wire cannot be mutated through aliases',
+    () {
+      final input = <String, dynamic>{
+        'values': {'title': 'Original'},
+        'tags': {
+          'add': ['one'],
+          'remove': <String>[],
+        },
+      };
+      CurrentOperation make(Map<String, dynamic> value) => CurrentOperation(
+        module: 'tasks',
+        space: space,
+        author: author,
+        writer: writer,
+        sequence: 1,
+        clock: '1',
+        subject: entity,
+        family: 'task.update',
+        revision: 1,
+        value: value,
+        predecessor: eventGenesisHash(space, writer),
+      );
+      final expectedInput =
+          jsonDecode(jsonEncode(input)) as Map<String, dynamic>;
+      final op = make(input);
+      (input['values'] as Map)['title'] = 'Changed before first hash';
+      ((input['tags'] as Map)['add'] as List).add('two');
+      final expected = make(expectedInput);
+      expect(op.encode(), expected.encode());
+      expect(op.contentHash, expected.contentHash);
+      expect(
+        () => (op.value['values'] as Map)['title'] = 'Mutated',
+        throwsUnsupportedError,
+      );
+      expect(
+        () => ((op.value['tags'] as Map)['add'] as List).clear(),
+        throwsUnsupportedError,
+      );
+      final json = op.toJson();
+      json['contentHash'] = 'forged';
+      (json['identity'] as Map)['writer'] = author;
+      expect(op.encode(), expected.encode());
+      expect(
+        CurrentOperation.decode(op.encode(), module: 'tasks').encode(),
+        expected.encode(),
+      );
+    },
+  );
+
+  test(
     'a known required revision survives decode and re-encode even without an alias',
     () {
       final base = CurrentOperation.decode(

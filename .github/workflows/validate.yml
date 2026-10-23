@@ -1,6 +1,11 @@
 name: Validate and build
 on:
   workflow_call:
+    inputs:
+      performance_calibration:
+        description: Development timing collection only; signed candidates use false
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -240,3 +245,50 @@ jobs:
           path: dist/*
           retention-days: 5
           if-no-files-found: error
+
+  performance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: linux
+      - run: flutter pub get --enforce-lockfile
+      - name: Build reviewed native text library
+        run: |
+          python3 tool/build_text_engine.py --platform linux --output-dir "$RUNNER_TEMP/performance-native"
+          python3 tool/native_build_gates.py verify_library "$RUNNER_TEMP/performance-native/libtandemlog_text.so"
+          echo "TANDEMLOG_TEXT_LIBRARY=$RUNNER_TEMP/performance-native/libtandemlog_text.so" >> "$GITHUB_ENV"
+      - name: Verify SQLite profile adapter and materialize locked native assets
+        run: flutter test --no-pub test/local_profile_database_test.dart
+      - name: Run required synthetic release AOT performance gate
+        timeout-minutes: 56
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/performance-diagnostics"
+          # Fixed versioned limits are reviewed with this workflow. Activation
+          # replaces the sentinel with their literal SHA; inactive limits fail.
+          limits_sha="INACTIVE_PENDING_REVIEWED_CALIBRATION"
+          mode=()
+          if [[ "${{ inputs.performance_calibration }}" == true ]]; then
+            mode=(--measure-only)
+          fi
+          bash tool/performance/run_ci.sh "$limits_sha" "${mode[@]}" \
+            > "$RUNNER_TEMP/performance-diagnostics/runner.stdout.log" \
+            2> "$RUNNER_TEMP/performance-diagnostics/runner.stderr.log"
+      - name: Retain every performance attempt and preflight diagnostic
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: release-performance
+          path: |
+            ${{ runner.temp }}/performance-diagnostics/*.log
+            ${{ runner.temp }}/performance-results/gate-result.json
+            ${{ runner.temp }}/performance-results/*-result.json
+            ${{ runner.temp }}/performance-results/*.log
+            ${{ runner.temp }}/performance-results/fixture-*/fixture.json
+          retention-days: 5
+          if-no-files-found: warn

@@ -70,7 +70,7 @@ class TextFieldContext {
   }
 
   final String space, entity, field, basis, basisKind, seedHash;
-  String get hash => sha256
+  late final String hash = sha256
       .convert(
         utf8.encode(
           canonicalTextJson({

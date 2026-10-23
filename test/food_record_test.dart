@@ -20,6 +20,46 @@ FoodOperation seed() => FoodOperation(
 void main() {
   // Frozen independently with Python json/SHA256/UUID-v5, not the Dart codec.
   test(
+    'Food immutable operation evidence cannot be changed through wire JSON aliases',
+    () {
+      final targets = <String>[container];
+      final record = FoodRecord(
+        space: space,
+        writer: writer,
+        sequence: 1,
+        clock: EventClock(BigInt.one),
+        previousHash: eventGenesisHash(space, writer),
+        operation: FoodOperation(
+          id: '$writer:1',
+          order: 1,
+          action: FoodAction.add,
+          targets: targets,
+          details: const FoodDetails(name: 'Rice'),
+          createdAt: '2026-10-22T00:00:00Z',
+        ),
+      );
+      targets.clear();
+      final raw = record.encode(), digest = record.integrityHash;
+      final json = record.toJson();
+      expect(
+        () => (((json['value'] as Map)['values'] as Map)['targets'] as List)
+            .clear(),
+        throwsUnsupportedError,
+      );
+      expect(
+        () =>
+            ((((json['value'] as Map)['values'] as Map)['details']
+                    as Map)['name'] =
+                'Changed'),
+        throwsUnsupportedError,
+      );
+      expect(record.encode(), raw);
+      expect(record.integrityHash, digest);
+      expect(FoodRecord.decode(raw).integrityHash, digest);
+    },
+  );
+
+  test(
     'literal legacy Food wire is preserved and refused by the current reader',
     () {
       const raw =

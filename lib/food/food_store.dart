@@ -88,27 +88,53 @@ class FoodStore {
     }
   }
 
+  Object? _stagedFoodAdmission;
+  UnifiedSnapshot? _stagedFoodSnapshot;
+
   void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
-    final records = snapshot.effects
-        .where((e) => e.food != null)
-        .map((e) => e.food!)
-        .toList();
+    if (identical(snapshot.foodAdmission, _stagedFoodAdmission) &&
+        !snapshot.pendingEffects &&
+        _pendingOperationIds.isEmpty &&
+        pendingReferences == 0) {
+      final pending = unified!.pendingRecords
+          .expand((r) => r.effects)
+          .map((e) => e.food)
+          .whereType<FoodRecord>()
+          .toList();
+      return () {
+        _stagedFoodSnapshot = snapshot;
+        if (pending.isNotEmpty) {
+          lastPreparedRecords = List.unmodifiable(pending);
+        }
+      };
+    }
+    final ownDelta = unified!.validatedFoodDelta(snapshot, _stagedFoodSnapshot);
+    final records = ownDelta != null
+        ? [..._records, ...ownDelta]
+        : snapshot.effects
+              .where((e) => e.food != null)
+              .map((e) => e.food!)
+              .toList();
     final admission = snapshot.foodAdmission;
     final candidateView = FoodViewSnapshot.next(admission.state, _currentView);
-    final pendingIds = snapshot.records
-        .expand((r) => r.effects)
-        .map((e) => e.food)
-        .whereType<FoodRecord>()
-        .where((r) => !admission.readyIds.contains(r.id))
-        .map((r) => r.id)
-        .toSet()
-        .toList();
+    final pendingIds = ownDelta != null && !snapshot.pendingEffects
+        ? <String>[]
+        : snapshot.records
+              .expand((r) => r.effects)
+              .map((e) => e.food)
+              .whereType<FoodRecord>()
+              .where((r) => !admission.readyIds.contains(r.id))
+              .map((r) => r.id)
+              .toSet()
+              .toList();
     final pending = unified!.pendingRecords
         .expand((r) => r.effects)
         .where((e) => e.food != null)
         .map((e) => e.food!)
         .toList();
     return () {
+      _stagedFoodSnapshot = snapshot;
+      _stagedFoodAdmission = admission;
       _currentView = candidateView;
       state = candidateView.state;
       _births = admission.births;

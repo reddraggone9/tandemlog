@@ -171,6 +171,10 @@ class NativeTextEngine {
   int _inspectionPayloadBytes = 0;
   int get cachedInspectionCount => _inspectionCache.length;
   int get cachedInspectionPayloadBytes => _inspectionPayloadBytes;
+  final _checkpointPending = <String, bool>{};
+  int _checkpointPendingPayloadBytes = 0;
+  int get cachedCheckpointPendingCount => _checkpointPending.length;
+  int get cachedCheckpointPendingPayloadBytes => _checkpointPendingPayloadBytes;
   bool _closed = false;
   void _ensureOpen() {
     if (_closed) throw StateError('Native text engine owner is disposed');
@@ -227,6 +231,46 @@ class NativeTextEngine {
     return _create('restore', actorClientId, limits, {
       'checkpoint': checkpoint.toJson(),
     });
+  }
+
+  /// Pure readiness of an exact immutable checkpoint under exact native limits.
+  /// No native handle, editor allocation, ownership or admission proof is reused.
+  bool checkpointHasPending(
+    NativeTextCheckpoint checkpoint, {
+    required NativeTextLimits limits,
+  }) {
+    _ensureOpen();
+    final key = '${jsonEncode(limits.toJson())}:${checkpoint.state.encoded}';
+    final remembered = _checkpointPending.remove(key);
+    if (remembered != null) {
+      _checkpointPending[key] = remembered;
+      return remembered;
+    }
+    final document = restoreDocument(
+      actorClientId: 2,
+      limits: limits,
+      checkpoint: checkpoint,
+    );
+    final bool pending;
+    try {
+      pending = document.read().pending;
+    } finally {
+      document.dispose();
+    }
+    final cost = key.length * 2;
+    const budget = 4 * 1024 * 1024;
+    if (cost <= budget) {
+      while (_checkpointPending.isNotEmpty &&
+          (_checkpointPending.length >= 2048 ||
+              _checkpointPendingPayloadBytes + cost > budget)) {
+        final oldest = _checkpointPending.keys.first;
+        _checkpointPending.remove(oldest);
+        _checkpointPendingPayloadBytes -= oldest.length * 2;
+      }
+      _checkpointPending[key] = pending;
+      _checkpointPendingPayloadBytes += cost;
+    }
+    return pending;
   }
 
   NativeTextDocument _create(
@@ -356,6 +400,8 @@ class NativeTextEngine {
     if (_closed) return;
     _inspectionCache.clear();
     _inspectionPayloadBytes = 0;
+    _checkpointPending.clear();
+    _checkpointPendingPayloadBytes = 0;
     Object? failure;
     for (final materializer in _materializers.toList()) {
       try {

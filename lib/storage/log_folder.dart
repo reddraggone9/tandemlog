@@ -16,11 +16,12 @@ bool isFoodConflictName(String name) =>
 
 class LogFileInfo {
   final String name, stamp;
+  final String? identity;
 
   /// Current observed length, when the provider exposes it. This is an append
   /// hint, not proof that previously admitted bytes remain unchanged.
   final int? size;
-  LogFileInfo(this.name, this.stamp, {this.size});
+  LogFileInfo(this.name, this.stamp, {this.size, this.identity});
 }
 
 /// Human-readable transport failure. Retain the original platform cause for
@@ -56,6 +57,12 @@ abstract class TailTruncateLogFolder {
 /// read; implementations must not read/skip the old prefix to produce a suffix.
 abstract class RangeLogFolder {
   Future<Uint8List?> readFrom(String name, int offset);
+}
+
+/// Actual seek with a bound enforced during reading, including concurrent growth.
+/// Null requests a bounded full read; implementations never scan/skip a prefix.
+abstract class BoundedRangeLogFolder {
+  Future<Uint8List?> readFromBounded(String name, int offset, int maximumBytes);
 }
 
 /// Enforce the caller's byte bound while reading, including unknown lengths.
@@ -102,6 +109,7 @@ class LocalLogFolder
     implements
         LogFolder,
         RangeLogFolder,
+        BoundedRangeLogFolder,
         BoundedLogFolder,
         AtomicReplaceLogFolder,
         RecoverableReplaceLogFolder,
@@ -353,20 +361,37 @@ class LocalLogFolder
   }
 
   @override
-  Future<Uint8List> readFrom(String name, int offset) async {
+  Future<Uint8List> readFrom(String name, int offset) async =>
+      (await readFromBounded(name, offset, maximumOwnedReplacementBytes))!;
+
+  @override
+  Future<Uint8List?> readFromBounded(
+    String name,
+    int offset,
+    int maximumBytes,
+  ) async {
+    if (offset < 0 || maximumBytes < 0) {
+      throw ArgumentError('Invalid read bound.');
+    }
     final handle = await file(name).open();
     try {
       final length = await handle.length();
-      if (offset < 0 || length < offset) {
+      if (length < offset) {
         throw FolderAccessFailure(
           'Previously imported log $name was truncated. Restore it before writing.',
         );
+      }
+      if (length - offset > maximumBytes) {
+        throw const FormatException('Input exceeds safe read limits.');
       }
       await handle.setPosition(offset);
       final builder = BytesBuilder(copy: false);
       while (true) {
         final chunk = await handle.read(64 * 1024);
         if (chunk.isEmpty) break;
+        if (builder.length + chunk.length > maximumBytes) {
+          throw const FormatException('Input exceeds safe read limits.');
+        }
         builder.add(chunk);
       }
       return builder.takeBytes();
