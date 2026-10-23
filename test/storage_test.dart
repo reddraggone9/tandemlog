@@ -136,6 +136,80 @@ void main() {
   }
 
   test(
+    'point editor guard equals visible rows across scratch and rollback',
+    () async {
+      final id = await task();
+      Map<String, dynamic>? expected(String entity) => a!.rows
+          .where((row) => row['id'] == entity && row['kind'] == 'task')
+          .firstOrNull;
+      expect(a!.visibleTaskRow(id), expected(id));
+      final user = a!.rows.singleWhere((row) => row['kind'] == 'user');
+      expect(a!.visibleTaskRow(user['id'] as String), isNull);
+      expect(a!.visibleTaskRow(const Uuid().v4()), isNull);
+      final original =
+          a!.db.select('SELECT raw FROM ${a!.tables.views} WHERE id=?', [
+                id,
+              ]).single['raw']
+              as String;
+      for (final change in [
+        {'title': 'Different candidate'},
+        {'deleted': true},
+        {'successorSuppressed': true},
+        {'kind': 'checklistItem'},
+        {'kind': 'user'},
+      ]) {
+        a!.db.execute('BEGIN');
+        try {
+          a!.db.execute('UPDATE ${a!.tables.views} SET raw=? WHERE id=?', [
+            jsonEncode({...jsonDecode(original) as Map, ...change}),
+            id,
+          ]);
+          expect(a!.visibleTaskRow(id), expected(id));
+        } finally {
+          a!.db.execute('ROLLBACK');
+        }
+        expect(a!.visibleTaskRow(id), expected(id));
+        expect(a!.visibleTaskRow(id)!['title'], 'Groceries');
+      }
+      a!.db.execute('BEGIN');
+      try {
+        a!.db.execute('DELETE FROM ${a!.tables.positions} WHERE id=?', [id]);
+        expect(a!.visibleTaskRow(id), isNull);
+        expect(expected(id), isNull);
+      } finally {
+        a!.db.execute('ROLLBACK');
+      }
+      expect(a!.visibleTaskRow(id), expected(id));
+    },
+  );
+
+  test(
+    'target-only deletion requires a guard and rejects stale targets',
+    () async {
+      final id = await task();
+      final name = '${a!.writer}.applog';
+      final before = await aFolder.read(name);
+      await expectLater(
+        a!.deleteTask(id, expectedTaskSnapshot: null),
+        throwsArgumentError,
+      );
+      await expectLater(
+        a!.deleteTask(id, expectedTaskSnapshot: null, canCommit: () => false),
+        throwsA(isA<StaleTaskSnapshot>()),
+      );
+      expect(await aFolder.read(name), before);
+      expect(a!.visibleTaskRow(id), isNotNull);
+      final originalTitle = a!.visibleTaskRow(id)!['title'];
+      await a!.deleteTask(
+        id,
+        expectedTaskSnapshot: null,
+        canCommit: () => a!.visibleTaskRow(id)?['title'] == originalTitle,
+      );
+      expect(a!.visibleTaskRow(id), isNull);
+    },
+  );
+
+  test(
     'owned tag lookup matches complete reverse and successor union including undone removes',
     () async {
       final id = await task();

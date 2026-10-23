@@ -959,6 +959,22 @@ class TaskStore {
         )
         .any((r) => ready.contains(r['id']));
     Map<String, dynamic>? known(String entity, String kind) {
+      final rows = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
+        entity,
+      ]);
+      if (rows.length != 1) return null;
+      final raw = rows.single['raw'] as String;
+      Map<String, dynamic>? state;
+      try {
+        final decoded = jsonDecode(raw);
+        if (decoded is Map<String, dynamic>) {
+          if (decoded['kind'] != kind) return null;
+          state = decoded;
+        }
+      } on FormatException {
+        // Retain the existing proof/fallback and invalid-cache error ordering.
+        // Only a successfully decoded wrong-kind view may short-circuit it.
+      }
       final births = kind == 'user'
           ? ['user.created']
           : kind == 'task'
@@ -969,12 +985,7 @@ class TaskStore {
           firstActivitySeeds[entity]?.kind != kind) {
         return null;
       }
-      final rows = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
-        entity,
-      ]);
-      if (rows.length != 1) return null;
-      final state =
-          jsonDecode(rows.single['raw'] as String) as Map<String, dynamic>;
+      state ??= jsonDecode(raw) as Map<String, dynamic>;
       return state['kind'] == kind ? state : null;
     }
 
@@ -2327,6 +2338,20 @@ class TaskStore {
     watch.reset();
     lastReadTimings['sort_ms'] = 0;
     return result;
+  }
+
+  /// The same visible Task row as [rows], without decoding unrelated rows.
+  /// Keep the join and visibility predicates identical: an unpositioned,
+  /// deleted, suppressed, or non-Task entity cannot satisfy an editor guard.
+  Map<String, dynamic>? visibleTaskRow(String id) {
+    final records = db.select(
+      "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE ${tables.views}.id=? AND json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0",
+      [id],
+    );
+    if (records.isEmpty) return null;
+    final row =
+        jsonDecode(records.single['raw'] as String) as Map<String, dynamic>;
+    return row['kind'] == 'task' ? row : null;
   }
 
   /// Persist disposable sequence positions only when order-affecting history changes.
@@ -3918,11 +3943,10 @@ class TaskStore {
         'completion': historical.id,
         'hash': historical.hash,
       };
-      return _command(
+      return _commandAfterRefresh(
         entity,
         'task.completedKeepingSuccessor',
         data,
-        expectedTaskSnapshot: taskSnapshot,
         onPrepared: onPrepared,
       );
     }
@@ -3988,13 +4012,7 @@ class TaskStore {
       );
       type = 'task.completedWithChecklist';
     }
-    return _command(
-      entity,
-      type,
-      data,
-      expectedTaskSnapshot: taskSnapshot,
-      onPrepared: onPrepared,
-    );
+    return _commandAfterRefresh(entity, type, data, onPrepared: onPrepared);
   });
 
   /// Immutable comparison token for current task content and global order.
@@ -4513,19 +4531,26 @@ class TaskStore {
 
   Future<LogEvent> deleteTask(
     String id, {
-    required String expectedTaskSnapshot,
+    required String? expectedTaskSnapshot,
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
-  }) => _serialize(
-    () => _command(
-      id,
-      'task.deleted',
-      {},
-      expectedTaskSnapshot: expectedTaskSnapshot,
-      canCommit: canCommit,
-      onPrepared: onPrepared,
-    ),
-  );
+  }) {
+    if (expectedTaskSnapshot == null && canCommit == null) {
+      return Future.error(
+        ArgumentError('Deletion requires a snapshot or a target guard.'),
+      );
+    }
+    return _serialize(
+      () => _command(
+        id,
+        'task.deleted',
+        {},
+        expectedTaskSnapshot: expectedTaskSnapshot,
+        canCommit: canCommit,
+        onPrepared: onPrepared,
+      ),
+    );
+  }
 
   /// Input order is ignored: preserve selected tasks' current global order.
   /// Caller guard checks the effective date/filter key immediately before commits.

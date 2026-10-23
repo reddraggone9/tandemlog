@@ -28,6 +28,102 @@ class _ListHookFolder extends LocalLogFolder {
 }
 
 void main() {
+  for (final injectPeer in [false, true]) {
+    test(
+      'completion uses one admitted snapshot; peer race=$injectPeer',
+      () async {
+        final root = await Directory.systemTemp.createTemp(
+          'completion-snapshot-',
+        );
+        final folder = _ListHookFolder(
+          (await Directory('${root.path}/shared').create()).path,
+        );
+        TaskStore? store;
+        try {
+          store = await TaskStore.open(folder, '${root.path}/profile');
+          final current = store;
+          final user = const Uuid().v4(), task = const Uuid().v4();
+          await current.command(user, 'user.created', {
+            'name': 'Synthetic user',
+          });
+          await current.command(task, 'task.created', {
+            'title': 'Original title',
+            'description': '',
+            'assignee': user,
+          });
+          final ownedName = '${current.writer}.applog';
+          final original = await folder.read(ownedName);
+          final sequence = current.unified!.physicalSequence;
+          final peer = const Uuid().v4();
+          final peerBytes = peerBytesFor(
+            current,
+            LogEvent(
+              current.space,
+              peer,
+              1,
+              EventClock(current.unified!.maximumClock!.value + BigInt.one),
+              task,
+              'task.edited',
+              {
+                'schedule': {'dueDate': '2030-05-10'},
+              },
+            ),
+          );
+          var lists = 0, callbacks = 0, listsAtReservation = 0;
+          folder.beforeList = () async {
+            if (++lists == 2 && injectPeer) {
+              folder.beforeList = null;
+              await folder.create('$peer.applog', peerBytes);
+            }
+          };
+          final operation = current.complete(
+            task,
+            completionDay: DateTime.utc(2030, 5, 10),
+            onPrepared: (_) {
+              callbacks++;
+              listsAtReservation = lists;
+            },
+          );
+          if (injectPeer) {
+            await expectLater(
+              operation,
+              throwsA(
+                isA<FormatFailure>().having(
+                  (error) => error.message,
+                  'reason',
+                  contains('changed while preparing'),
+                ),
+              ),
+            );
+            expect(callbacks, 0);
+            expect(current.unified!.hasPending, isFalse);
+            expect(current.unified!.physicalSequence, sequence);
+            expect(await folder.read(ownedName), original);
+            expect(current.visibleTaskRow(task)!['completed'], isFalse);
+            expect(
+              current.visibleTaskRow(task)!['schedule']['dueDate'],
+              '2030-05-10',
+            );
+          } else {
+            await operation;
+            expect(callbacks, 1);
+            expect(current.unified!.physicalSequence, sequence + 1);
+            expect(current.visibleTaskRow(task)!['completed'], isTrue);
+            expect(
+              listsAtReservation,
+              2,
+              reason:
+                  'One initial admission and reservation recheck before binding; commit confirmation is counted separately.',
+            );
+          }
+        } finally {
+          await store?.close();
+          await root.delete(recursive: true);
+        }
+      },
+    );
+  }
+
   test(
     'native Save reuses immediate refresh but refuses a peer change at preparation',
     () async {

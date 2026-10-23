@@ -87,6 +87,27 @@ the retained input only in the existing post-COMMIT publication callback; failed
 later projections leave the prior input, rows, protected heads and editor/Undo
 owners intact.
 
+Editor target checks use the same positioned/non-deleted/non-suppressed rows
+predicate with an entity ID, followed by the same decoded Task-kind check.
+They no longer decode unrelated current rows to inspect one Task. Ordinary
+single-task editor Save and deletion use these target guards instead of
+serializing unrelated Tasks into a global comparison token. This preserves the
+documented allowance for unrelated Task updates; the native context and
+ownership proofs and preparation's expected canonical revision remain checked.
+Global content/order snapshot guards remain in place for bulk actions and moves. A target-only deletion must explicitly pass a null global snapshot and a target guard; without either form of protection it is rejected before entering the queue. Completion
+also plans synchronously inside its owning queue after admission, then uses the
+same after-refresh command path. Reservation still rechecks the expected
+canonical revision before capture/append; a peer race cannot publish stale
+completion or successor data. It no longer performs a second preflight refresh
+or serialize all current Tasks merely to compare them with themselves. Settled admission rejects a
+successfully decoded wrong-kind view before inspecting that entity's birth and
+derived lineage; matching-kind targets retain every readiness/provenance check.
+Malformed-cache parsing keeps the existing proof/fallback error ordering.
+Food grouping retains each already-computed display grouping key for its sort
+comparator; expiry priority and the exclusion of estimated status from that key
+remain unchanged. These avoidable costs were identified in native callback
+profiles; storage timings alone do not establish input-to-paint acceptance.
+
 ## Startup and disposable state
 
 An already validated private projection can initialize a cold destination only

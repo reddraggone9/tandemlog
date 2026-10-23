@@ -2523,9 +2523,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (session != null) origin.releaseTextCapture(session.capture);
         return;
       }
-      final current = origin.rows
-          .where((row) => row['id'] == id && row['kind'] == 'task')
-          .firstOrNull;
+      final current = origin.visibleTaskRow(id);
       if (current == null) {
         session?.cancel();
         if (session != null) origin.releaseTextCapture(session.capture);
@@ -2856,9 +2854,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       key: task[key],
   });
   bool _nonTextUnchanged(TaskStore origin, Map<String, dynamic> frozen) {
-    final current = origin.rows
-        .where((row) => row['id'] == frozen['id'] && row['kind'] == 'task')
-        .firstOrNull;
+    final current = origin.visibleTaskRow(frozen['id'] as String);
     return sharedSafetyError == null &&
         identical(store, origin) &&
         current != null &&
@@ -2870,9 +2866,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       ? Map<String, dynamic>.from(task)
       : {...task, 'title': 'Text unavailable', 'description': ''};
   bool _targetUnchanged(TaskStore origin, Map<String, dynamic> frozen) {
-    final current = origin.rows
-        .where((row) => row['id'] == frozen['id'] && row['kind'] == 'task')
-        .firstOrNull;
+    final current = origin.visibleTaskRow(frozen['id'] as String);
     return sharedSafetyError == null &&
         identical(store, origin) &&
         current != null &&
@@ -3014,7 +3008,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   'deleting',
                   (prepared) => origin.deleteTask(
                     task['id'],
-                    expectedTaskSnapshot: origin.taskSnapshot,
+                    expectedTaskSnapshot: null,
                     canCommit: () => _targetUnchanged(origin, task),
                     onPrepared: prepared,
                   ),
@@ -3052,7 +3046,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       observedTagRefs: Map<String, String>.from(
                         task['tagRefs'] as Map? ?? {},
                       ),
-                      expectedSnapshot: origin.taskSnapshot,
                       canCommit: () => _nonTextUnchanged(origin, task),
                       onPrepared: prepared,
                     ),
@@ -3084,7 +3077,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       observedTagRefs: Map<String, String>.from(
                         task['tagRefs'] as Map? ?? {},
                       ),
-                      expectedTaskSnapshot: origin.taskSnapshot,
                       canCommit: () => _nonTextUnchanged(origin, task),
                       onPrepared: prepared,
                     ),
