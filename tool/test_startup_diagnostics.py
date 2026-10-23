@@ -190,12 +190,13 @@ class StartupDiagnostics(unittest.TestCase):
             profile.mkdir(); shared.mkdir(); epoch='22222222-2222-4222-8222-222222222222'
             (shared/'tandemlog-space.json').write_text(json.dumps({'epoch': epoch}))
             key=hashlib.sha256(f'{shared}#app5:{epoch}'.encode()).hexdigest()
+            decoded_key='app5.location.'+hashlib.sha256(str(shared).encode()).hexdigest()
             payload='synthetic opaque decoded payload'; proof=hashlib.sha256(payload.encode()).hexdigest()
             task=json.dumps({'generation':3,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
             with closing(sqlite3.connect(profile/'local.sqlite')) as db, db:
                 db.execute('CREATE TABLE profile_metadata(key TEXT PRIMARY KEY,value TEXT)')
-                for name,value in [(f'app5.task.cache.{key}',task),(f'app5.decoded.proof.{key}',proof),
-                                   (f'app5.decoded.payload.{key}',payload)]:
+                for name,value in [(f'app5.task.cache.{key}',task),(f'app5.decoded.proof.{decoded_key}',proof),
+                                   (f'app5.decoded.payload.{decoded_key}',payload)]:
                     db.execute('INSERT INTO profile_metadata VALUES (?,?)',(name,value))
             before=(profile/'local.sqlite').read_bytes()
             observed=inspect_stopped_witness(profile,shared)

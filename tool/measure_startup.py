@@ -178,8 +178,11 @@ def inspect_stopped_witness(profile, folder):
         return result
     epoch = json.loads((folder/'tandemlog-space.json').read_text())['epoch']
     key = hashlib.sha256(f'{folder}#app5:{epoch}'.encode()).hexdigest()
-    names = [f'app5.task.cache.{key}', f'app5.decoded.proof.{key}',
-             f'app5.decoded.payload.{key}']
+    # Task projections are scoped to format+epoch; decoded receipts are scoped
+    # to UnifiedHistory._locationKey, which is app5.location.SHA256(location).
+    decoded_key = 'app5.location.'+hashlib.sha256(str(folder).encode()).hexdigest()
+    names = [f'app5.task.cache.{key}', f'app5.decoded.proof.{decoded_key}',
+             f'app5.decoded.payload.{decoded_key}']
     with closing(sqlite3.connect(database.resolve().as_uri()+'?mode=ro', uri=True, timeout=0)) as db:
         db.execute('PRAGMA query_only=ON')
         rows = dict(db.execute('SELECT key,value FROM profile_metadata WHERE key IN (?,?,?)', names))

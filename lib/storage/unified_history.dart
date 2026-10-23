@@ -311,6 +311,15 @@ final class UnifiedHistory {
     return _semanticValidator?.selectText(key, roots);
   }
 
+  List<String>? selectTaskTagMutationRaws(
+    UnifiedSnapshot snapshot,
+    LogEvent pending,
+  ) {
+    final key = _verifiedTaskRevisions[snapshot];
+    if (key == null) return null;
+    return _semanticValidator?.selectTagMutationRaws(key, pending);
+  }
+
   bool copyValidatedTaskProjection(
     TaskStore store,
     UnifiedSnapshot candidate,

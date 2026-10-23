@@ -136,6 +136,53 @@ void main() {
   }
 
   test(
+    'owned tag lookup matches complete reverse and successor union including undone removes',
+    () async {
+      final id = await task();
+      await editTags(a!, id, ['retained', 'first']);
+      final addition = a!.unified!.snapshot.tasks.last;
+      await editTags(a!, id, ['retained']);
+      final removal = a!.unified!.snapshot.tasks.last;
+      await a!.command(id, 'task.operationUndone', {'operation': removal.id});
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every day'},
+      });
+      await a!.complete(id, completionDay: DateTime.utc(2026, 10, 2));
+      final child = const Uuid().v5(id, 'successor');
+      await editTags(a!, child, []);
+      final history = a!.unified!, snapshot = history.snapshot;
+      for (final pending in snapshot.tasks) {
+        final successor =
+            isTaskCompletion(pending.type) && pending.data['successor'] is Map
+            ? (pending.data['successor'] as Map)['id']
+            : null;
+        final expected = snapshot.tasks
+            .where((event) {
+              final changes = event.data['tagChanges'] as Map?;
+              final removals = (changes?['remove'] as List? ?? const [])
+                  .cast<String>();
+              return removals.any(
+                    (token) => token.startsWith('${pending.id}:'),
+                  ) ||
+                  successor != null && event.entity == successor;
+            })
+            .map((event) => event.canonicalRaw!)
+            .toSet();
+        final selected = history.selectTaskTagMutationRaws(snapshot, pending);
+        expect(selected, isNotNull);
+        expect(selected!.toSet(), expected);
+        expect(selected.length, expected.length);
+      }
+      expect(
+        history.selectTaskTagMutationRaws(snapshot, addition),
+        contains(removal.canonicalRaw),
+      );
+      await a!.command(child, 'task.edited', {'description': 'Later'});
+      expect(history.selectTaskTagMutationRaws(snapshot, removal), isNull);
+    },
+  );
+
+  test(
     'local task deletion targeting user rejects before canonical append',
     () async {
       final id = await task();

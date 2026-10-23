@@ -239,17 +239,89 @@ final class SelectedTextInheritanceCut extends TextResolutionCut {
 /// Pure selection under a complete owning canonical read scope. Storage checks
 /// that scope; this index has no database or transport access. Generic sparse
 /// and arbitrary list inputs continue to use TextInheritanceIndex unchanged.
+/// Pure strict record decoding, never a frontier, cut or admission receipt.
+/// Bounds account retained raw payload and entry count, not total heap use.
+final class CanonicalTextRecordMemo {
+  CanonicalTextRecordMemo({
+    this.maximumEntries = 128,
+    this.maximumRawPayloadBytes = 1024 * 1024,
+  }) {
+    if (maximumEntries < 1 || maximumRawPayloadBytes < 1) {
+      throw ArgumentError('Invalid selected record memo budget.');
+    }
+  }
+  final int maximumEntries, maximumRawPayloadBytes;
+  final _records = <String, LogEvent>{};
+  int retainedRawPayloadBytes = 0, decodes = 0, hits = 0;
+  int get entryCount => _records.length;
+  LogEvent decode(String raw) {
+    final remembered = _records.remove(raw);
+    if (remembered != null) {
+      hits++;
+      _records[raw] = remembered;
+      return remembered;
+    }
+    final event = _freezeSelectedEvent(LogEvent.decode(raw));
+    decodes++;
+    _remember(raw, event);
+    return event;
+  }
+
+  void _remember(String raw, LogEvent event) {
+    final bytes = raw.length * 4;
+    if (_records.remove(raw) != null) retainedRawPayloadBytes -= bytes;
+    if (bytes <= maximumRawPayloadBytes) {
+      while (_records.isNotEmpty &&
+          (_records.length >= maximumEntries ||
+              retainedRawPayloadBytes + bytes > maximumRawPayloadBytes)) {
+        final oldest = _records.keys.first;
+        _records.remove(oldest);
+        retainedRawPayloadBytes -= oldest.length * 4;
+      }
+      _records[raw] = event;
+      retainedRawPayloadBytes += bytes;
+    }
+  }
+
+  // A batch keeps its bounded starting entries until the scan completes.
+  // Early misses cannot evict later exact-raw hits in this same immutable input.
+  List<LogEvent> decodeBatch(Iterable<String> raws) {
+    final previous = Map<String, LogEvent>.of(_records);
+    final decoded = <LogEvent>[];
+    for (final raw in raws) {
+      final remembered = previous[raw];
+      if (remembered != null) {
+        hits++;
+        _remember(raw, remembered);
+        decoded.add(remembered);
+      } else {
+        decoded.add(decode(raw));
+      }
+    }
+    return decoded;
+  }
+
+  void clear() {
+    _records.clear();
+    retainedRawPayloadBytes = 0;
+  }
+}
+
 final class SelectedTextInheritanceIndex {
   factory SelectedTextInheritanceIndex.fromCanonical(
     Iterable<String> raw,
     Map<String, String> headRaws,
-    Map<String, int> availableSequences,
-  ) {
+    Map<String, int> availableSequences, {
+    CanonicalTextRecordMemo? decodeMemo,
+  }) {
     final records = <String, LogEvent>{};
     var decoded = 0;
     for (final value in raw) {
-      final event = _freezeSelectedEvent(LogEvent.decode(value));
-      decoded++;
+      final before = decodeMemo?.decodes ?? 0;
+      final event =
+          decodeMemo?.decode(value) ??
+          _freezeSelectedEvent(LogEvent.decode(value));
+      decoded += decodeMemo == null ? 1 : decodeMemo.decodes - before;
       final old = records[event.id];
       if (old != null && old.canonicalRaw != event.canonicalRaw) {
         throw FormatFailure('Conflicting text lineage records.');
@@ -262,6 +334,8 @@ final class SelectedTextInheritanceIndex {
       headRaws,
       availableSequences,
       _SelectedDecodeCounter(decoded),
+      null,
+      decodeMemo,
     );
   }
   SelectedTextInheritanceIndex._(
@@ -270,6 +344,7 @@ final class SelectedTextInheritanceIndex {
     Map<String, int> availableSequences, [
     _SelectedDecodeCounter? counter,
     Map<String, LogEvent>? decodedHeads,
+    this._decodeMemo,
   ]) : _decodeCounter = counter ?? _SelectedDecodeCounter(0),
        _heads = decodedHeads ?? <String, LogEvent>{},
        records = List.unmodifiable(selected),
@@ -284,6 +359,7 @@ final class SelectedTextInheritanceIndex {
   final Map<String, int> availableSequences;
   final Map<String, LogEvent> _heads;
   final _SelectedDecodeCounter _decodeCounter;
+  final CanonicalTextRecordMemo? _decodeMemo;
   final _cuts = <String, SelectedTextInheritanceCut>{};
   final _cutCosts = <String, int>{};
   int _retainedCutBytes = 0;
@@ -304,6 +380,7 @@ final class SelectedTextInheritanceIndex {
       },
       _decodeCounter,
       _heads,
+      _decodeMemo,
     );
   }
 
@@ -347,8 +424,14 @@ final class SelectedTextInheritanceIndex {
         continue;
       }
       final head = _heads.putIfAbsent(id, () {
-        _decodeCounter.count++;
-        return _freezeSelectedEvent(LogEvent.decode(raw));
+        final before = _decodeMemo?.decodes ?? 0;
+        final result =
+            _decodeMemo?.decode(raw) ??
+            _freezeSelectedEvent(LogEvent.decode(raw));
+        _decodeCounter.count += _decodeMemo == null
+            ? 1
+            : _decodeMemo.decodes - before;
+        return result;
       });
       if (_byId[id] != null && _byId[id]!.canonicalRaw != raw) {
         throw FormatFailure(

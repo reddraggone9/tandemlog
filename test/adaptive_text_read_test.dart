@@ -175,6 +175,10 @@ void main() {
         hasLength(events.length),
       );
       expect(validator.selectText('caller-key', [events.last.entity]), isNull);
+      expect(
+        validator.selectTagMutationRaws('caller-key', events.last),
+        isNull,
+      );
       expect(validator.selectedTextReadCount, 0);
     } finally {
       validator.close();
@@ -317,7 +321,7 @@ void main() {
     skip: Platform.environment['TANDEMLOG_TEXT_LIBRARY'] == null,
   );
 
-  for (final shape in [(4100, 2), (450, 9900)]) {
+  for (final shape in [(120, 2), (4100, 2), (450, 9900)]) {
     test(
       'owned physical workspace selection matches full oracle past caps $shape',
       () async {
@@ -412,7 +416,7 @@ void main() {
           final full = RecurringTextInput.fromCanonical(
             snapshot.tasks.map((e) => e.canonicalRaw!),
           );
-          expect(full.cacheable, isFalse);
+          expect(full.cacheable, shape == (120, 2));
           for (final id in [child, copy]) {
             final a = RecurringTextResolver.fromInput(
               engine,

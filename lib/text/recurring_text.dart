@@ -191,7 +191,10 @@ class RecurringTextMemo {
   final int maxEntries, maxPayloadBytes, maxRecords, maxRecordPayloadBytes;
   final int maxActorDerivations;
   final _entries = <String, _RememberedText>{};
-  final _records = <String, LogEvent>{};
+  late final recordDecodeMemo = CanonicalTextRecordMemo(
+    maximumEntries: maxRecords,
+    maximumRawPayloadBytes: maxRecordPayloadBytes,
+  );
   final _actors = <(String, String, String), int>{};
   final _sharedPackets = <String, LineageTextOperation>{};
   final _packetUses = Map<LineageTextOperation, int>.identity();
@@ -229,9 +232,12 @@ class RecurringTextMemo {
   int _eventBytes(LogEvent event) => event.canonicalRaw!.length * 4;
 
   int retainedPayloadBytes = 0, hits = 0, misses = 0;
-  int retainedRecordPayloadBytes = 0, recordHits = 0, recordDecodes = 0;
+  int get retainedRecordPayloadBytes =>
+      recordDecodeMemo.retainedRawPayloadBytes;
+  int get recordHits => recordDecodeMemo.hits;
+  int get recordDecodes => recordDecodeMemo.decodes;
   int get entryCount => _entries.length;
-  int get recordCount => _records.length;
+  int get recordCount => recordDecodeMemo.entryCount;
   int get actorDerivationCount => _actors.length;
 
   /// Reuse only the pure allocation hash. Registries still check contextual
@@ -254,66 +260,21 @@ class RecurringTextMemo {
 
   /// An exact canonical string is decoded and deeply frozen once. Changed raw
   /// bytes always undergo full validation; callers cannot mutate a cached event.
-  LogEvent decodeCanonical(String raw) {
-    final remembered = _records.remove(raw);
-    if (remembered != null) {
-      recordHits++;
-      _records[raw] = remembered;
-      return remembered;
-    }
-    final event = _freezeEvent(LogEvent.decode(raw));
-    recordDecodes++;
-    _rememberRecord(raw, event);
-    return event;
-  }
+  LogEvent decodeCanonical(String raw) => recordDecodeMemo.decode(raw);
 
-  void _rememberRecord(String raw, LogEvent event) {
-    final bytes = raw.length * 4;
-    if (_records.remove(raw) != null) retainedRecordPayloadBytes -= bytes;
-    if (bytes <= maxRecordPayloadBytes) {
-      while (_records.isNotEmpty &&
-          (_records.length >= maxRecords ||
-              retainedRecordPayloadBytes + bytes > maxRecordPayloadBytes)) {
-        final oldest = _records.keys.first;
-        _records.remove(oldest);
-        retainedRecordPayloadBytes -= oldest.length * 4;
-      }
-      _records[raw] = event;
-      retainedRecordPayloadBytes += bytes;
-    }
-  }
-
-  // An eager scan retains the bounded starting entries until this one batch
-  // finishes. Early misses cannot evict later hits in the SAME immutable input.
-  // This avoids the all-miss LRU cliff when history slightly exceeds the cap.
-  // Only frozen exact-raw decodes are reused; new bytes always decode below.
-  List<LogEvent> _decodeCanonicalBatch(Iterable<String> raws) {
-    final previous = Map<String, LogEvent>.of(_records);
-    final decoded = <LogEvent>[];
-    for (final raw in raws) {
-      final remembered = previous[raw];
-      if (remembered != null) {
-        recordHits++;
-        _rememberRecord(raw, remembered);
-        decoded.add(remembered);
-      } else {
-        decoded.add(decodeCanonical(raw));
-      }
-    }
-    return decoded;
-  }
+  List<LogEvent> _decodeCanonicalBatch(Iterable<String> raws) =>
+      recordDecodeMemo.decodeBatch(raws);
 
   void clear() {
     final histories = _histories.values.toList();
     _histories.clear();
     _entries.clear();
-    _records.clear();
+    recordDecodeMemo.clear();
     _actors.clear();
     _sharedPackets.clear();
     _packetUses.clear();
     _eventUses.clear();
     retainedPayloadBytes = 0;
-    retainedRecordPayloadBytes = 0;
     Object? failure;
     StackTrace? failureStack;
     for (final runtime in histories) {
@@ -786,12 +747,14 @@ final class RecurringTextInput {
   factory RecurringTextInput.fromSelectedCanonical(
     Iterable<String> records,
     Map<String, String> heads,
-    Map<String, int> availableSequences,
-  ) => RecurringTextInput._fromSelectedIndex(
+    Map<String, int> availableSequences, {
+    RecurringTextMemo? memo,
+  }) => RecurringTextInput._fromSelectedIndex(
     SelectedTextInheritanceIndex.fromCanonical(
       records,
       heads,
       availableSequences,
+      decodeMemo: memo?.recordDecodeMemo,
     ),
   );
 
@@ -846,6 +809,7 @@ final class RecurringTextInput {
         records.values.map((e) => e.canonicalRaw!),
         _selectedIndex.headRaws,
         _selectedIndex.availableSequences,
+        memo: memo,
       );
     }
     final added =

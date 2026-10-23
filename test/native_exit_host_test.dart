@@ -129,6 +129,28 @@ void main() {
           )['generation'],
           3,
         );
+        // Probe the actual production-created keys in the stopped database,
+        // rather than a Python fake fixture repeating the helper's key formula.
+        final probe = (await tester.runAsync(() async {
+          final result = await Process.run(
+            Platform.isWindows ? 'python' : 'python3',
+            [
+              '-c',
+              'import json,sys; from pathlib import Path; sys.path.insert(0,"tool"); '
+                  'from measure_startup import inspect_stopped_witness; '
+                  'print(json.dumps(inspect_stopped_witness(Path(sys.argv[1]),Path(sys.argv[2]))))',
+              data.profile,
+              data.folder.location,
+            ],
+            workingDirectory: Directory.current.path,
+          ).timeout(const Duration(seconds: 10));
+          expect(result.exitCode, 0, reason: result.stderr.toString());
+          return jsonDecode(result.stdout as String) as Map<String, dynamic>;
+        }))!;
+        expect(probe['taskProofShapeValid'], isTrue);
+        expect(probe['decodedProofPresent'], isTrue);
+        expect(probe['decodedPayloadHashMatches'], isTrue);
+        expect(probe['productionReuseVerified'], isFalse);
         expect(await exit(tester, state), AppExitResponse.exit);
         await unmount(tester);
         expect(

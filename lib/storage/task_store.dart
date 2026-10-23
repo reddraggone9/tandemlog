@@ -3037,15 +3037,26 @@ class TaskStore {
             pending.data['successor'] is Map
         ? (pending.data['successor'] as Map)['id']
         : null;
-    final mutations = db
-        .select(
-          pending == null
-              ? "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.tagChanges') IS NOT NULL"
-              : "SELECT raw FROM ${tables.events} e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.semantic,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
-          pending == null ? [] : ['${pending.id}:%', successor],
-        )
-        .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String))
-        .toList();
+    final snapshot = _textStageSnapshot ?? _stagedSnapshot;
+    final indexed = pending == null
+        ? null
+        : _textReadOwner?._selectTagMutationRaws(pending) ??
+              (snapshot == null
+                  ? null
+                  : unified?.selectTaskTagMutationRaws(snapshot, pending));
+    final mutations = indexed == null
+        ? db
+              .select(
+                pending == null
+                    ? "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.tagChanges') IS NOT NULL"
+                    : "SELECT raw FROM ${tables.events} e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.semantic,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
+                pending == null ? [] : ['${pending.id}:%', successor],
+              )
+              .map(
+                (r) => _recurringTextMemo.decodeCanonical(r['raw'] as String),
+              )
+              .toList()
+        : indexed.map(_recurringTextMemo.decodeCanonical).toList();
     if (pending != null) mutations.add(pending);
     for (final mutation in mutations) {
       final changes = mutation.data['tagChanges'];
@@ -3368,16 +3379,20 @@ class TaskStore {
 
   RecurringTextInput _textInput({Iterable<String> entities = const []}) {
     final roots = entities.toSet();
-    if (_canonicalTextInput == null && roots.isNotEmpty) {
+    if (roots.isNotEmpty) {
       final snapshot = _textStageSnapshot ?? _stagedSnapshot;
       final selection =
           _textReadOwner?._selectText(roots) ??
           (snapshot == null ? null : unified?.selectTaskText(snapshot, roots));
       if (selection != null) {
+        // This scope already supplies the whole relevant immutable closure.
+        // Retaining a second whole-history input would copy it on every append.
+        _canonicalTextInput = null;
         final input = RecurringTextInput.fromSelectedCanonical(
           selection.records,
           selection.heads,
           selection.sequences,
+          memo: _recurringTextMemo,
         );
         selectedTextReads++;
         selectedTextRecords += selection.records.length;
@@ -4483,9 +4498,20 @@ final class _TaskTextRelations {
   final children = <String, List<LogEvent>>{};
   final inbound = <String, List<LogEvent>>{};
   final retractions = <String, List<LogEvent>>{};
+  final tagRemovals = <String, List<LogEvent>>{};
   final baselines = <LogEvent>[];
   void add(LogEvent e) {
     (entity[e.entity] ??= []).add(e);
+    final changes = e.data['tagChanges'] as Map?;
+    for (final token
+        in (changes?['remove'] as List? ?? const []).cast<String>()) {
+      final pieces = token.split(':');
+      if (pieces.length != 3) {
+        throw FormatFailure('Invalid tag reference in ${e.id}.');
+      }
+      final target = '${pieces[0]}:${pieces[1]}';
+      (tagRemovals[target] ??= []).add(e);
+    }
     final next = (e.data['successor'] as Map?)?['id'];
     if (next is String) (successor[next] ??= []).add(e);
     if (e.type == 'checklist.itemCreated') {
@@ -4563,15 +4589,11 @@ class TaskSemanticValidator {
 
   String? _validatedInputKey;
   _TaskTextRelations _textRelations = _TaskTextRelations();
-  int _textRawCost = 0;
   List<LogEvent>? _textCandidate;
   bool _textSelectionSuppressed = false;
   int get selectedTextReadCount => _store?.selectedTextReads ?? 0;
   int get selectedTextRecordCount => _store?.selectedTextRecords ?? 0;
   int get selectedTextLookupCount => _store?.selectedTextLookups ?? 0;
-
-  bool get _textOverBudget =>
-      _raws.length > 4096 || _textRawCost > 16 * 1024 * 1024;
 
   TaskTextReadSelection? selectText(
     String expectedKey,
@@ -4581,15 +4603,59 @@ class TaskSemanticValidator {
     return _selectText(roots);
   }
 
-  TaskTextReadSelection? _selectText(Iterable<String> roots) {
+  // Shared actual-scope guard; candidates must already exist byte-exact in SQL.
+  bool _hasOwnedSelectionScope() {
     final store = _store;
     if (store == null ||
         _textSelectionSuppressed ||
         owningHistory?.ownsTaskValidator(this) != true ||
-        !_textOverBudget ||
-        _ready?.length != _raws.length) {
-      return null;
+        _ready == null ||
+        _ready!.length != _raws.length) {
+      return false;
     }
+    for (final event in _textCandidate ?? const <LogEvent>[]) {
+      final row = store.db.select(
+        'SELECT raw FROM ${store.tables.events} WHERE id=?',
+        [event.id],
+      );
+      if (row.length != 1 || row.single['raw'] != event.canonicalRaw) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  List<String>? selectTagMutationRaws(String expectedKey, LogEvent pending) {
+    if (_validatedInputKey != expectedKey) return null;
+    return _selectTagMutationRaws(pending);
+  }
+
+  List<String>? _selectTagMutationRaws(LogEvent pending) {
+    if (!_hasOwnedSelectionScope()) return null;
+    final extra = _TaskTextRelations();
+    for (final event in _textCandidate ?? const <LogEvent>[]) {
+      extra.add(event);
+    }
+    final successor =
+        isTaskCompletion(pending.type) && pending.data['successor'] is Map
+        ? (pending.data['successor'] as Map)['id']
+        : null;
+    final selected = <String, String>{};
+    for (final event in [
+      ...?_textRelations.tagRemovals[pending.id],
+      ...?extra.tagRemovals[pending.id],
+      if (successor is String) ...[
+        ...?_textRelations.entity[successor],
+        ...?extra.entity[successor],
+      ],
+    ]) {
+      selected[event.id] = event.canonicalRaw!;
+    }
+    return List.unmodifiable(selected.values);
+  }
+
+  TaskTextReadSelection? _selectText(Iterable<String> roots) {
+    if (!_hasOwnedSelectionScope()) return null;
     final candidate = _textCandidate;
     final extra = _TaskTextRelations();
     final sequences = Map<String, int>.of(_lastSequences);
@@ -4598,13 +4664,6 @@ class TaskSemanticValidator {
       // A scope starts before replay, but may be read only AFTER every strict
       // candidate record was actually inserted into this owning SQL transaction.
       for (final event in candidate) {
-        final row = store.db.select(
-          'SELECT raw FROM ${store.tables.events} WHERE id=?',
-          [event.id],
-        );
-        if (row.length != 1 || row.single['raw'] != event.canonicalRaw) {
-          return null;
-        }
         extra.add(event);
         candidateById[event.id] = event;
         if (event.sequence > (sequences[event.writer] ?? 0)) {
@@ -4719,11 +4778,11 @@ class TaskSemanticValidator {
   }
 
   void _rebuildTextRelations() {
+    // A ready owner can select exact closures; do not keep a second full input.
+    _store?._canonicalTextInput = null;
     _textRelations = _TaskTextRelations();
-    _textRawCost = 0;
     for (final event in _events.values) {
       _textRelations.add(event);
-      _textRawCost += event.canonicalRaw!.length * 4;
     }
   }
 
@@ -4912,7 +4971,6 @@ class TaskSemanticValidator {
           _raws[event.id] = event.canonicalRaw!;
           _events[event.id] = event;
           _textRelations.add(event);
-          _textRawCost += event.canonicalRaw!.length * 4;
           if (event.sequence > (_lastSequences[event.writer] ?? 0)) {
             _lastSequences[event.writer] = event.sequence;
           }
@@ -5175,7 +5233,6 @@ class TaskSemanticValidator {
     _validatedInputKey = null;
     _textCandidate = null;
     _textRelations = _TaskTextRelations();
-    _textRawCost = 0;
     final store = _store;
     _store = null;
     _raws.clear();

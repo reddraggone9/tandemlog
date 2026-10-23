@@ -175,9 +175,11 @@ second copy of the already-owned concatenated immutable physical buffer.
 Remaining immutable physical/list/map/ready-set copies scale with retained
 history references. Current visible-row serialization scales with current
 entities. These are representation costs, not required durability guarantees.
-Above the whole-input budget of 4,096 Task records or 16 MiB raw cost,
-an actual owning history may synchronously select a detached text closure from
-its strictly admitted records and relation indexes. Selection requires its
+For a rooted read under a ready, actual owning history, text resolution
+synchronously selects a detached closure from strictly admitted records and
+relation indexes. This applies below and above the whole-input budget of
+4,096 Task records or 16 MiB raw cost, so an ordinary append does not invalidate
+and reconstruct a whole-history text input. Selection requires its
 current committed key or the exact inserted candidate scope; general validator
 fallback cannot borrow old committed rows as candidate input. Declared cuts,
 competing seeds, copies, retractions, baseline and native collision checks remain
@@ -202,6 +204,21 @@ refreshes hits through ordinary accounting. Its entry cap is 4,096 with the
 same 16 MiB retained raw-payload budget. A batch can temporarily retain another
 bounded old payload set and references; 16 MiB is not a peak-heap guarantee.
 Changed bytes still decode fully, and conflicting records still fail.
+
+The selected path and generic path share that one strict, deeply frozen,
+exact-raw record pool. Each selected index, available-sequence map, head scope
+and observed cut is built anew; decoded-record reuse grants no contextual
+validation or admission authority. Lazy heads use the same bounded pool.
+Clearing it releases all cached records before native cleanup is attempted.
+
+Reverse tag-reference validation uses the owning validator's committed relation
+index only for its current verified snapshot or exact inserted candidate scope.
+It selects every removal targeting the pending event and every event on a
+completion's successor, including inactive removals. Candidate membership is
+still checked against actual SQL bytes. The existing token, entity, clock,
+index and derived-seed checks run unchanged. Foreign, unready and generic full
+validation retain the SQL oracle. This avoids scanning unrelated historical
+Notes for every local title Save without skipping tag integrity checks.
 
 Established derived identities can use point updates only when both the prior
 physical activity and actual selected seed are ready. First activity and
