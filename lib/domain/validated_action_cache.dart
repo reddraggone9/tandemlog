@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
@@ -117,11 +118,22 @@ final class ValidatedActionCache {
   }
 }
 
-Object? _freeze(Object? value) => switch (value) {
-  Map() => Map<String, dynamic>.unmodifiable({
-    for (final entry in value.entries)
-      entry.key as String: _freeze(entry.value),
-  }),
-  List() => List<Object?>.unmodifiable(value.map(_freeze)),
-  _ => value,
-};
+// Both callers hand over fresh, exclusively owned jsonDecode trees. Replace
+// children before wrapping, so no mutable backing alias can escape; avoid
+// allocating a second map/list and then copying it again for unmodifiable().
+Object? _freeze(Object? value) {
+  if (value is Map) {
+    final map = value.cast<String, dynamic>();
+    for (final key in map.keys) {
+      map[key] = _freeze(map[key]);
+    }
+    return UnmodifiableMapView<String, dynamic>(map);
+  }
+  if (value is List) {
+    for (var index = 0; index < value.length; index++) {
+      value[index] = _freeze(value[index]);
+    }
+    return UnmodifiableListView<Object?>(value.cast<Object?>());
+  }
+  return value;
+}

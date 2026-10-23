@@ -220,9 +220,24 @@ index and derived-seed checks run unchanged. Foreign, unready and generic full
 validation retain the SQL oracle. This avoids scanning unrelated historical
 Notes for every local title Save without skipping tag integrity checks.
 
-Established derived identities can use point updates only when both the prior
-physical activity and actual selected seed are ready. First activity and
-anchor-only protection retain the full path. A fixed SQL replay shares one
+Move-anchor existence and validation queries also use an expression index on
+event type and before target. Otherwise unrelated historical moves remain a
+type-filtered scan even when title edits use selected text. The ordinary private
+projection index initializer installs the index after a canonical rebuild and
+on a restored cache; rollback resets that initializer as before. Canonical data
+and reference checks are unchanged.
+
+Established derived identities can use point updates when both the prior
+physical activity and actual selected seed are ready. A single first pure text
+edit also reuses readiness when its prior selected seed is already the earliest
+ready seed and remains exactly that seed after projection. The same private
+proof admits a single Task schedule, assignee or tag edit, native Task text plus
+those metadata fields, or a copied item's completed-only toggle. These actions
+still pass the existing point dependency and shape checks. For a copied item,
+the proof includes its derived parent, since item activity protects the parent
+birth too. Changed selection, missing native context, unsupported mixed actions
+and ambiguous claims retain full validation. Anchor-only protection does not
+grant a broader shortcut. A fixed SQL replay shares one
 canonical resolver. Pending native validation does not give unpersisted sibling
 effects permission to serve as observed history.
 
@@ -257,3 +272,52 @@ that target. These retained numbers predate the incremental admission and layout
 repairs; they are not current-source acceptance. Current candidate results need
 their own exact-source receipts, including residual recurring costs, startup
 proof work and the separate native UI boundary.
+
+
+The owned ready checklist-seed lookup reuses the same validated owning scope
+as text resolution and reads its exact per-item copy relation. It returns every
+matching claim, sorted by canonical event order, including competing or retracted
+completions. This avoids rebuilding
+a scope-wide copied-descriptor index or scanning its payload budget for an
+unrelated ordinary edit. Generic, unready, stale and suppressed scopes retain the
+full SQL oracle; the descriptor cache budget remains unchanged.
+
+
+Clean-cache startup preserves the same generation2 byte digest, scope binding,
+kind/position checks and opaque receipts. Fresh decoded JSON trees are frozen in
+place before unmodifiable views escape, avoiding redundant collection copies.
+Pure whole-batch verification runs in a short-lived Dart isolate with only three
+immutable strings; profile transactions, canonical reads/admission and native
+text ownership stay on the owning queue. The one-shot proof is consumed durably
+before awaiting the worker. Unavailable or failed optional verification falls
+back to strict canonical reconstruction. This improves UI responsiveness rather
+than promising that verification or disk durability takes less than100ms.
+A full owned canonical candidate may reuse its already-computed Task root after
+an exact cached ID/raw bijection; a cached prefix retains its own root check
+before any arriving delta is admitted.
+
+An untouched derived identity can change its selected birth when activity first
+protects it. A single native pure text edit, Task point metadata edit, native
+Task text plus point metadata, or copied completed-only toggle avoids full
+readiness only when a private action-local proof records the earliest ready
+selected seed before the edit and verifies the exact same identity after
+projection, including a copied item's derived parent. Task metadata remains
+limited to schedule, assignee and tag changes, with ready user and observed-tag
+dependencies checked by the existing predicate. Both generic monotonic incremental validation and owning
+append validation retain native pending/context checks and the all-old-ready
+precondition. A failed postcondition restores the full path; later surviving
+seeds, unsupported action shapes and uncertain claims remain conservative. No public DTO or
+caller-supplied key grants this proof.
+
+The remaining full readiness path indexes the earliest copy birth by
+compareEvents once, including retracted and competing claims, instead of
+repeating transitive copy lookups. Successor selection, native checks and every
+readiness dependency remain unchanged.
+
+Copy-seed lookup uses the existing owning validator's exact per-item claim
+relation, not a transitive text-selection closure. The snapshot key, owning
+validator, readiness and byte-exact inserted-candidate checks are shared with
+selected text reads. Empty claims return an empty result; an untrusted scope
+falls back to the original SQL oracle. All competing/retracted claims and
+candidate claims are retained in compareEvents order. No new cache or size
+budget is introduced.

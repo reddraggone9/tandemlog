@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:sqlite3/sqlite3.dart' show SqliteException;
@@ -6,6 +7,7 @@ import 'package:sqlite3/sqlite3.dart' show SqliteException;
 import 'package:uuid/uuid.dart';
 
 import '../domain/event.dart';
+import '../domain/validated_action_cache.dart';
 import '../domain/time_zone_policy.dart';
 import '../food/inventory.dart';
 import '../food/food_record.dart';
@@ -28,6 +30,17 @@ typedef UnifiedEffectBuilder =
       EventClock clock,
       String commonPredecessor,
     );
+
+// A top-level boundary captures only three immutable strings. No history,
+// SQLite/profile object or native text owner can enter the worker isolate.
+Future<ValidatedActionCache> _verifyDecodedCacheOffThread(
+  String payload,
+  String digest,
+  String binding,
+) => Isolate.run(
+  () => ValidatedActionCache.verify(payload, digest, binding),
+  debugName: 'tandemlog-cache-verify',
+);
 
 // A same-session proof of the ORIGINAL reservation base, independent of any
 // protected head advanced by lost-acknowledgement reconciliation.
@@ -311,6 +324,15 @@ final class UnifiedHistory {
     return _semanticValidator?.selectText(key, roots);
   }
 
+  List<String>? selectTaskCopySeedRaws(
+    UnifiedSnapshot snapshot,
+    String entity,
+  ) {
+    final key = _verifiedTaskRevisions[snapshot];
+    if (key == null) return null;
+    return _semanticValidator?.selectCopySeedRaws(key, entity);
+  }
+
   List<String>? selectTaskTagMutationRaws(
     UnifiedSnapshot snapshot,
     LogEvent pending,
@@ -385,7 +407,7 @@ final class UnifiedHistory {
     ]);
   }
 
-  void _primeDecodedCache(UnifiedManifest current) {
+  Future<void> _primeDecodedCache(UnifiedManifest current) async {
     if (_attemptedDecodedRestore) return;
     _attemptedDecodedRestore = true;
     final db = profile.database;
@@ -415,11 +437,23 @@ final class UnifiedHistory {
                 _decodedPayloadKey,
               ]).single['value']
               as String;
-      final records = UnifiedDecodedCache.restore(
-        payload,
-        digest,
-        _decodedCacheBinding(current),
-      );
+      final ValidatedActionCache batch;
+      try {
+        batch = await _verifyDecodedCacheOffThread(
+          payload,
+          digest,
+          _decodedCacheBinding(current),
+        );
+      } on IsolateSpawnException {
+        return; // Optional cache unavailable: use exact canonical decoding.
+      } on RemoteError {
+        return; // No worker result can authorize a partial cache restore.
+      } on ArgumentError {
+        return; // Failed optional spawn/transfer cannot bypass strict decoding.
+      } on UnsupportedError {
+        return; // Platforms without this optional optimization stay strict.
+      }
+      final records = UnifiedDecodedCache.restoreVerifiedBatch(batch);
       for (final record in records) {
         final raw = record.encode();
         final cost = raw.length * 4;
@@ -847,7 +881,9 @@ final class UnifiedHistory {
     if (ownerSet.length > 256) {
       throw FormatFailure('Too many installation histories.');
     }
-    if (!forceFullAudit && _snapshot == null) _primeDecodedCache(current);
+    if (!forceFullAudit && _snapshot == null) {
+      await _primeDecodedCache(current);
+    }
     final previous = _snapshot;
     final sameAcceptedHeads =
         previous != null &&

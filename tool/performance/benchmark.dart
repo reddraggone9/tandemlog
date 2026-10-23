@@ -10,10 +10,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:uuid/uuid.dart';
+import 'package:tandemlog/application/food_undo_history.dart';
 import 'package:tandemlog/application/task_text_session.dart';
 import 'package:tandemlog/application/text_save_command.dart';
 import 'package:tandemlog/application/checklist_completion_command.dart';
+import 'package:tandemlog/domain/event.dart' show LogEvent;
 import 'package:tandemlog/domain/task_view.dart';
+import 'package:tandemlog/domain/event_chain.dart' show canonicalDataJson;
 import 'package:tandemlog/domain/timed_view.dart';
 import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/food_record.dart';
@@ -181,6 +184,8 @@ class Audit {
     bool readOnly = false,
   }) async {
     if (family == 'food-historical') action = 'historical.$action';
+    if (family.startsWith('converted-')) action = 'converted.$action';
+    if (family == 'food-cardinality500') action = 'cardinality500.$action';
     require(
       !history.hasPending && !history.snapshot.pendingEffects,
       'Clean admission required',
@@ -358,6 +363,8 @@ Future<void> textRound(
   bool notes = false,
   bool both = false,
   String? expectedProtectedOrder,
+  String? replacementTitle,
+  String? replacementNotes,
 }) async {
   final before = Map<String, dynamic>.from(a.row(id));
   TaskTextCapture? capture;
@@ -372,10 +379,16 @@ Future<void> textRound(
   }, readOnly: true);
   try {
     if (!notes || both) {
-      session!.replace('title', 'Benchmark synthetic title $rep');
+      session!.replace(
+        'title',
+        replacementTitle ?? 'Benchmark synthetic title $rep',
+      );
     }
     if (notes || both) {
-      session!.replace('description', 'Benchmark synthetic Notes $rep');
+      session!.replace(
+        'description',
+        replacementNotes ?? 'Benchmark synthetic Notes $rep',
+      );
     }
     final desiredTags = List<String>.from(before['tags'] as List? ?? []),
         refs = Map<String, String>.from(before['tagRefs'] as Map? ?? {});
@@ -397,13 +410,15 @@ Future<void> textRound(
     );
     if (!notes || both) {
       require(
-        a.row(id)['title'] == 'Benchmark synthetic title $rep',
+        a.row(id)['title'] ==
+            (replacementTitle ?? 'Benchmark synthetic title $rep'),
         'Saved title differs',
       );
     }
     if (notes || both) {
       require(
-        a.row(id)['description'] == 'Benchmark synthetic Notes $rep',
+        a.row(id)['description'] ==
+            (replacementNotes ?? 'Benchmark synthetic Notes $rep'),
         'Saved Notes differ',
       );
     }
@@ -489,8 +504,282 @@ Future<void> taskText(Audit a) async {
   }
 }
 
-Future<void> taskCommands(Audit a) async {
-  final ids = await a.syntheticTasks(4), id = ids.first;
+Map<String, Object?> convertedBeforeState(Audit a, Object value) {
+  final heads = <String, UnifiedRecord>{};
+  for (final record in a.history.snapshot.records) {
+    final old = heads[record.writer];
+    if (old == null || old.sequence < record.sequence) {
+      heads[record.writer] = record;
+    }
+  }
+  return {
+    'canonicalCurrentValueSHA256': bytesDigest(
+      utf8.encode(canonicalDataJson(value)),
+    ),
+    'physicalHeads': {
+      for (final entry in heads.entries)
+        entry.key: {'sequence': entry.value.sequence, 'hash': entry.value.hash},
+    },
+    'cache':
+        'fresh profile per family; native owner retained across repetitions',
+    'sequence': 'two warmups then five measured samples; no timing retry',
+  };
+}
+
+List<String> convertedTaskTargets(Audit a) {
+  final base = a.config['fixtureBaseIdentity'] as int;
+  final ids = [
+    for (final i in [3, 6, 9, 18]) benchmarkId('task:$base:$i'),
+  ];
+  for (final id in ids) {
+    final birth = a.history.snapshot.effects
+        .where(
+          (effect) =>
+              effect.kind == 'history.task' &&
+              effect.task?.entity == id &&
+              effect.task?.type == 'task.created',
+        )
+        .toList();
+    require(
+      birth.length == 1,
+      'Converted Task must retain its imported scalar birth',
+    );
+    require(
+      !a.history.snapshot.tasks.any(
+        (event) =>
+            event.entity == id && event.type == 'task.createdWithText' ||
+            (event.data['successor'] as Map?)?['id'] == id,
+      ),
+      'Converted Task must not be a newly created or derived native target',
+    );
+    final row = a.row(id);
+    require(
+      row['kind'] == 'task' &&
+          row['completed'] != true &&
+          row['assignee'] == a.user,
+      'Converted Task target/cohort differs',
+    );
+  }
+  print(
+    jsonEncode({
+      'measurement': 'converted-target-contract',
+      'family': a.family,
+      'module': 'tasks',
+      'ids': ids,
+      'birth': 'history.task/task.created',
+      'pairedNativeTarget': ids.first,
+      'before': convertedBeforeState(a, a.row(ids.first)),
+      'pairedTitle': 'Benchmark paired title',
+      'pairedNotes': 'Benchmark paired Notes',
+    }),
+  );
+  return ids;
+}
+
+void requireImportedFoodTargets(Audit a, List<String> ids) {
+  for (final id in ids) {
+    final births = a.history.snapshot.effects
+        .where(
+          (effect) =>
+              effect.kind == 'history.food' &&
+              effect.food?.operation.action == FoodAction.add &&
+              effect.food!.operation.targets.contains(id),
+        )
+        .toList();
+    require(
+      births.length == 1,
+      'Food target must retain one imported creation',
+    );
+    require(
+      a.history.manifest.referenceAuthors[births.single.food!.writer] ==
+          births.single.food!.author,
+      'Food imported ownership differs',
+    );
+    require(
+      a.food.state.active.any((item) => item.id == id),
+      'Imported Food target must start active',
+    );
+  }
+}
+
+Future<void> convertedTaskText(Audit a) async {
+  final id = convertedTaskTargets(a).first;
+  // Contiguous open/Save/Undo repetitions match the paired native input plan.
+  // Existing inherited/native metric families retain their original ordering.
+  for (final mode in ['title', 'notes', 'titleAndNotes']) {
+    for (var rep = sampleStart; rep < sampleEnd; rep++) {
+      await textRound(
+        a,
+        id,
+        'task.$mode',
+        rep,
+        notes: mode == 'notes',
+        both: mode == 'titleAndNotes',
+        replacementTitle: 'Benchmark paired title',
+        replacementNotes: 'Benchmark paired Notes',
+      );
+    }
+  }
+  for (var rep = sampleStart; rep < sampleEnd; rep++) {
+    await editorCancelRound(a, id, 'task.editorOpenCancel', rep);
+  }
+}
+
+// Separate application confirmation boundary; existing backend-only metrics stay intact.
+Future<void> convertedConfirmedFood(Audit a) async {
+  final base = a.config['fixtureBaseIdentity'] as int;
+  final ordinal = base == 60 ? 4 : 1000;
+  final id = benchmarkId('food:$base:$ordinal');
+  requireImportedFoodTargets(a, [id]);
+  final birth = a.history.snapshot.effects
+      .singleWhere(
+        (effect) =>
+            effect.kind == 'history.food' &&
+            effect.food?.operation.action == FoodAction.add &&
+            effect.food!.operation.targets.contains(id),
+      )
+      .food!;
+  final undoHistory = FoodUndoHistory()
+    ..setWorkspace(
+      jsonEncode([
+        a.history.folder.location,
+        a.history.manifest.space,
+        a.writer,
+      ]),
+    );
+  print(
+    jsonEncode({
+      'measurement': 'confirmed-food-contract',
+      'family': a.family,
+      'target': id,
+      'creationReference': birth.id,
+      'before': convertedBeforeState(
+        a,
+        a.food.state.active.singleWhere((item) => item.id == id).toJson(),
+      ),
+      'boundary':
+          'Backend plus main exact-receipt confirmation and real session Undo history; excludes widget/render',
+    }),
+  );
+  for (var rep = sampleStart; rep < sampleEnd; rep++) {
+    final before = logicalFood(a.food);
+    final item = a.food.state.active.singleWhere((value) => value.id == id);
+    final details = FoodDetails.fromJson({
+      ...item.details.toJson(),
+      'brand': 'Benchmark paired brand',
+    });
+    late List<FoodRecord> saved;
+    await a.measure('food.paired.details.confirmedSave', rep, () async {
+      await a.food.changeDetails([id], details, ['brand']);
+      saved = a.food.lastPreparedRecords;
+      require(
+        saved.every(a.food.isAdmitted),
+        'Food save needs exact confirmation',
+      );
+      undoHistory.record('Updated', saved, confirmed: a.food.isAdmitted);
+    }, expectedDelta: 1);
+    require(
+      saved.length == 1 &&
+          saved.single.createdWith[id] == birth.id &&
+          a.food.state.active
+                  .singleWhere((value) => value.id == id)
+                  .details
+                  .brand ==
+              'Benchmark paired brand',
+      'Confirmed imported Food edit/basis differs',
+    );
+    final entry =
+        undoHistory.latest ??
+        (throw StateError('Confirmed Food Undo entry missing'));
+    require(
+      undoHistory.length == 1 && identical(entry.records.single, saved.single),
+      'Confirmed Food Undo entry differs',
+    );
+    await a.measure('food.paired.details.confirmedUndo', rep, () async {
+      await a.food.undoOperations(entry.records);
+      final inverse = a.food.lastPreparedRecords;
+      require(
+        inverse.every(a.food.isAdmitted),
+        'Food Undo needs exact confirmation',
+      );
+      undoHistory.complete(entry);
+    }, expectedDelta: 1);
+    require(
+      undoHistory.latest == null && undoHistory.length == 0,
+      'Confirmed Food Undo entry retained',
+    );
+    require(logicalFood(a.food) == before, 'Confirmed Food Undo differs');
+  }
+}
+
+Future<void> convertedPairedFood(Audit a) async {
+  final base = a.config['fixtureBaseIdentity'] as int;
+  final ordinal = base == 60 ? 4 : 1000;
+  final id = benchmarkId('food:$base:$ordinal');
+  requireImportedFoodTargets(a, [id]);
+  final birth = a.history.snapshot.effects
+      .singleWhere(
+        (effect) =>
+            effect.kind == 'history.food' &&
+            effect.food?.operation.action == FoodAction.add &&
+            effect.food!.operation.targets.contains(id),
+      )
+      .food!;
+  print(
+    jsonEncode({
+      'measurement': 'converted-target-contract',
+      'family': a.family,
+      'module': 'food',
+      'ids': [id],
+      'creationReference': birth.id,
+      'author': birth.author,
+      'nativePairing': base == 60
+          ? 'functional-only; Food1000 absent'
+          : 'Food1000',
+      'before': convertedBeforeState(
+        a,
+        a.food.state.active.singleWhere((value) => value.id == id).toJson(),
+      ),
+      'pairedBrand': 'Benchmark paired brand',
+    }),
+  );
+  for (var rep = sampleStart; rep < sampleEnd; rep++) {
+    final before = logicalFood(a.food);
+    final item = a.food.state.active.singleWhere((value) => value.id == id);
+    final details = FoodDetails.fromJson({
+      ...item.details.toJson(),
+      'brand': 'Benchmark paired brand',
+    });
+    await a.measure(
+      'food.paired.details.save',
+      rep,
+      () => a.food.changeDetails([id], details, ['brand']),
+      expectedDelta: 1,
+    );
+    final records = List<FoodRecord>.from(a.food.lastPreparedRecords);
+    require(
+      records.length == 1 &&
+          records.single.createdWith[id] == birth.id &&
+          a.food.state.active
+                  .singleWhere((value) => value.id == id)
+                  .details
+                  .brand ==
+              'Benchmark paired brand',
+      'Paired imported Food edit/basis differs',
+    );
+    await a.measure(
+      'food.paired.details.undo',
+      rep,
+      () => a.food.undoOperations(records),
+      expectedDelta: 1,
+    );
+    require(logicalFood(a.food) == before, 'Paired Food Undo differs');
+  }
+}
+
+Future<void> taskCommands(Audit a, {bool converted = false}) async {
+  final ids = converted ? convertedTaskTargets(a) : await a.syntheticTasks(4),
+      id = ids.first;
   for (var rep = sampleStart; rep < sampleEnd; rep++) {
     for (final kind in ['schedule', 'tags', 'assignee']) {
       final before = Map<String, dynamic>.from(a.row(id));
@@ -597,6 +886,10 @@ Future<void> taskCommands(Audit a) async {
       expectedDelta: 1,
     );
     require(a.row(id)['completed'] == false, 'Reopen not visible');
+    require(
+      jsonEncode(a.tasks.rows) == before,
+      'Task reopen changed the pre-completion workspace state',
+    );
   }
   for (var rep = sampleStart; rep < sampleEnd; rep++) {
     final selected = ids.take(3).toList(), before = jsonEncode(a.tasks.rows);
@@ -692,8 +985,10 @@ Future<void> taskCommands(Audit a) async {
   }
 }
 
-Future<void> checklist(Audit a) async {
-  final parent = (await a.syntheticTasks(1)).single;
+Future<void> checklist(Audit a, {bool converted = false}) async {
+  final parent = converted
+      ? convertedTaskTargets(a).first
+      : (await a.syntheticTasks(1)).single;
   for (var rep = sampleStart; rep < sampleEnd; rep++) {
     final id = const Uuid().v4();
     await a.measure(
@@ -783,6 +1078,7 @@ Future<void> checklist(Audit a) async {
       jsonEncode(a.tasks.checklistItems(parent)) == orderBefore,
       'Checklist delete Undo differs',
     );
+    final completionBefore = jsonEncode(a.tasks.rows);
     final seq = a.history.physicalSequence;
     final declined = await a.measure(
       'task.complete.checklistDecline',
@@ -817,10 +1113,22 @@ Future<void> checklist(Audit a) async {
       () => a.tasks.reopen(parent, a.tasks.activeCompletionIds(parent)),
       expectedDelta: 1,
     );
+    require(
+      jsonEncode(a.tasks.rows) == completionBefore,
+      'Checklist parent reopen changed the pre-completion workspace state',
+    );
   }
 }
 
-Future<void> foodCommands(Audit a, {bool historical = false}) async {
+Future<void> foodCommands(
+  Audit a, {
+  bool historical = false,
+  List<String>? historicalTargets,
+}) async {
+  require(
+    historicalTargets == null || historical,
+    'Historical target override',
+  );
   for (var rep = sampleStart; rep < sampleEnd; rep++) {
     for (final count in [1, 3]) {
       final before = logicalFood(a.food),
@@ -857,7 +1165,9 @@ Future<void> foodCommands(Audit a, {bool historical = false}) async {
   }
   late List<String> synthetic;
   if (historical) {
-    synthetic = a.food.state.active.take(3).map((c) => c.id).toList();
+    synthetic =
+        historicalTargets ??
+        a.food.state.active.take(3).map((c) => c.id).toList();
   } else {
     await a.food.add(
       const FoodDetails(
@@ -873,6 +1183,7 @@ Future<void> foodCommands(Audit a, {bool historical = false}) async {
         .toList();
   }
   require(synthetic.length == 3, 'Food fixture missing');
+  if (historical) requireImportedFoodTargets(a, synthetic);
   FoodContainer item() =>
       a.food.state.containers.singleWhere((c) => c.id == synthetic.first);
   for (var rep = sampleStart; rep < sampleEnd; rep++) {
@@ -984,6 +1295,234 @@ Future<void> foodCommands(Audit a, {bool historical = false}) async {
   }
 }
 
+// A separate current-state stress family; original sealed shapes and labels stay intact.
+Future<void> foodCardinality500(Audit a) async {
+  final originalTaskRows = jsonEncode(a.tasks.rows);
+  final originalFoodCount = a.food.state.containers.length;
+  final originalIDs = a.food.state.active.map((item) => item.id).toSet();
+  // Preserve the original retained cohort; expected members come from the
+  // captured input details rather than calling the view under measurement.
+  final originalInventory = {
+    for (final item in a.food.state.active)
+      if (item.details.expiry != null && item.details.retention.isEmpty)
+        item.id,
+  };
+  final originalRetained = {
+    for (final item in a.food.state.active)
+      if (item.details.retention.isNotEmpty) item.id,
+  };
+  final originalInbox = {
+    for (final item in a.food.state.active)
+      if (item.details.expiry == null && item.details.retention.isEmpty)
+        item.id,
+  };
+  final targets = a.food.state.active.take(3).map((item) => item.id).toList();
+  requireImportedFoodTargets(a, targets);
+  require(
+    originalFoodCount < 490 &&
+        originalIDs.length == originalFoodCount &&
+        originalInventory.length +
+                originalRetained.length +
+                originalInbox.length ==
+            originalFoodCount &&
+        {
+          ...originalInventory,
+          ...originalRetained,
+          ...originalInbox,
+        }.containsAll(originalIDs),
+    'Expected original active Food fixture with classified exact members',
+  );
+  final stock = <String>{},
+      retained = <String>{},
+      inbox = <String>{},
+      deleted = <String>{},
+      otherInventory = <String>{};
+  final sequenceBefore = a.history.physicalSequence;
+  for (var i = originalFoodCount; i < 503; i++) {
+    final offset = i - originalFoodCount;
+    await a.food.add(
+      offset < 3
+          ? const FoodDetails(
+              name: 'Benchmark matched stock',
+              expiry: '2026-11-10',
+              brand: 'Benchmark matched brand',
+              location: 'Benchmark matched location',
+            )
+          : offset < 5
+          ? const FoodDetails(
+              name: 'Benchmark matched retained',
+              retention: 'Benchmark matched reason',
+            )
+          : offset < 7
+          ? const FoodDetails(name: 'Benchmark cardinality inbox')
+          : FoodDetails(
+              name: 'Benchmark cardinality food $i',
+              expiry: '2026-11-10',
+              brand: 'Benchmark cardinality brand',
+              location: 'Benchmark cardinality shelf',
+            ),
+      1,
+    );
+    final records = a.food.lastPreparedRecords;
+    require(
+      records.length == 1 && records.every(a.food.isAdmitted),
+      'Food setup admission',
+    );
+    final id = records.single.operation.targets.single;
+    (offset < 3
+            ? stock
+            : offset < 5
+            ? retained
+            : offset < 7
+            ? inbox
+            : offset < 10
+            ? deleted
+            : otherInventory)
+        .add(id);
+  }
+  final removals = await a.food.remove(deleted.toList());
+  require(removals.every(a.food.isAdmitted), 'Deleted-cohort setup admission');
+  require(
+    a.food.state.containers.length == 503 &&
+        a.food.state.active.length == 500 &&
+        a.food.state.deleted.length == 3 &&
+        a.history.physicalSequence - sequenceBefore == 504 - originalFoodCount,
+    'Food cardinality setup differs',
+  );
+  require(
+    jsonEncode(a.tasks.rows) == originalTaskRows,
+    'Food setup changed Tasks',
+  );
+  requireImportedFoodTargets(a, targets);
+  final expectedModes = {
+    FoodView.inventory: {...originalInventory, ...stock, ...otherInventory},
+    FoodView.inbox: {...originalInbox, ...inbox},
+    FoodView.retained: {...originalRetained, ...retained},
+    FoodView.deleted: deleted,
+  };
+  final expectedMatches = {
+    'search': {...stock, ...retained},
+    'brand': stock,
+    'location': stock,
+    'retention': retained,
+  };
+  require(
+    expectedModes[FoodView.inventory]!.length +
+                expectedModes[FoodView.inbox]!.length +
+                expectedModes[FoodView.retained]!.length ==
+            500 &&
+        expectedModes.values.expand((ids) => ids).toSet().length == 503 &&
+        stock.length == 3 &&
+        retained.length == 2 &&
+        inbox.length == 2 &&
+        deleted.length == 3,
+    'Food setup cohort cardinalities',
+  );
+  print(
+    jsonEncode({
+      'measurement': 'food-cardinality-setup',
+      'family': a.family,
+      'initialContainers': originalFoodCount,
+      'originalModeCounts': {
+        'inventory': originalInventory.length,
+        'retained': originalRetained.length,
+        'inbox': originalInbox.length,
+      },
+      'currentContainers': 503,
+      'activeContainers': 500,
+      'deletedContainers': 3,
+      'addedContainers': 503 - originalFoodCount,
+      'setupPhysicalDelta': a.history.physicalSequence - sequenceBefore,
+      'expectedModeCounts': {
+        for (final entry in expectedModes.entries)
+          entry.key.name: entry.value.length,
+      },
+      'expectedMatchCounts': {
+        for (final entry in expectedMatches.entries)
+          entry.key: entry.value.length,
+      },
+      'currentFoodSHA256': bytesDigest(utf8.encode(logicalFood(a.food))),
+      'taskRowsSHA256': bytesDigest(utf8.encode(originalTaskRows)),
+      'physicalRecordsAfterSetup': a.history.snapshot.records.length,
+      'scope':
+          'production setup outside timers; 500active+3deleted; IDs vary; state-stress case with added history, not isolated cardinality causation',
+    }),
+  );
+  await convertedPairedFood(a);
+  await foodCommands(a, historical: true, historicalTargets: targets);
+  for (var rep = sampleStart; rep < sampleEnd; rep++) {
+    await foodReadModels(a, rep, expectedByView: expectedModes);
+    await matchedFoodReadModels(a, rep, expectedIDs: expectedMatches);
+    await a.measure(
+      'refresh.food.unchanged',
+      rep,
+      () => a.food.refresh(),
+      readOnly: true,
+    );
+  }
+  require(
+    a.food.state.containers.length == 503 &&
+        a.food.state.active.length == 500 &&
+        a.food.state.deleted.length == 3,
+    'Food stress family did not restore cardinality',
+  );
+  require(
+    jsonEncode(a.tasks.rows) == originalTaskRows,
+    'Food stress family changed Tasks',
+  );
+}
+
+void requireFoodGroupIDs(
+  List<FoodGroup> groups,
+  Set<String> expected,
+  String label,
+) {
+  final actual = groups
+      .expand((group) => group.containers)
+      .map((item) => item.id)
+      .toList();
+  require(
+    actual.length == expected.length &&
+        actual.toSet().length == actual.length &&
+        actual.toSet().containsAll(expected),
+    'Food $label exact members differ',
+  );
+}
+
+Future<void> foodReadModels(
+  Audit a,
+  int rep, {
+  Map<FoodView, Set<String>>? expectedByView,
+}) async {
+  for (final mode in FoodView.values) {
+    final groups = await a.measure(
+      'food.view.${mode.name}',
+      rep,
+      () async => a.food.state.view(mode),
+      readOnly: true,
+    );
+    require(groups.every((g) => g.containers.isNotEmpty), 'Empty Food group');
+    if (expectedByView != null) {
+      requireFoodGroupIDs(groups, expectedByView[mode]!, mode.name);
+    }
+  }
+  for (final filter in ['search', 'brand', 'location', 'retention']) {
+    final groups = await a.measure(
+      'food.filter.$filter',
+      rep,
+      () async => a.food.state.view(
+        filter == 'retention' ? FoodView.retained : FoodView.inventory,
+        search: filter == 'search' ? 'synthetic-unmatched-query' : '',
+        brands: filter == 'brand' ? {'synthetic-unmatched-brand'} : {},
+        locations: filter == 'location' ? {'synthetic-unmatched-location'} : {},
+        reasons: filter == 'retention' ? {'synthetic-unmatched-reason'} : {},
+      ),
+      readOnly: true,
+    );
+    require(groups.isEmpty, 'Expected unmatched Food filter');
+  }
+}
+
 Future<void> readModels(Audit a) async {
   final viewTime = ViewTime(
     instant: DateTime.utc(2026, 10, 22, 12),
@@ -1035,32 +1574,7 @@ Future<void> readModels(Audit a) async {
         );
       }
     }
-    for (final mode in FoodView.values) {
-      final groups = await a.measure(
-        'food.view.${mode.name}',
-        rep,
-        () async => a.food.state.view(mode),
-        readOnly: true,
-      );
-      require(groups.every((g) => g.containers.isNotEmpty), 'Empty Food group');
-    }
-    for (final filter in ['search', 'brand', 'location', 'retention']) {
-      final groups = await a.measure(
-        'food.filter.$filter',
-        rep,
-        () async => a.food.state.view(
-          filter == 'retention' ? FoodView.retained : FoodView.inventory,
-          search: filter == 'search' ? 'synthetic-unmatched-query' : '',
-          brands: filter == 'brand' ? {'synthetic-unmatched-brand'} : {},
-          locations: filter == 'location'
-              ? {'synthetic-unmatched-location'}
-              : {},
-          reasons: filter == 'retention' ? {'synthetic-unmatched-reason'} : {},
-        ),
-        readOnly: true,
-      );
-      require(groups.isEmpty, 'Expected unmatched Food filter');
-    }
+    await foodReadModels(a, rep);
     await a.measure(
       'refresh.tasks.unchanged',
       rep,
@@ -1200,11 +1714,16 @@ Future<void> main(List<String> args) async {
     'sealedWorkspacePath': fixture['workspace'],
     'sealedFiles': fixture['files'],
     'fixtureWriter': fixture['writer'],
+    'fixtureBaseIdentity': count == 60 ? 60 : 1320,
   };
   final all = <String, Future<void> Function(Audit)>{
     'task-text': taskText,
     'explicit-task-text': explicitTaskText,
     'task-commands': taskCommands,
+    'converted-task-text': convertedTaskText,
+    'converted-task-commands': (a) => taskCommands(a, converted: true),
+    'converted-checklist': (a) => checklist(a, converted: true),
+    'converted-food-paired': convertedPairedFood,
     'checklist': checklist,
     'food': foodCommands,
     'food-historical': (a) => foodCommands(a, historical: true),
@@ -1215,9 +1734,19 @@ Future<void> main(List<String> args) async {
     'matched-readmodels': matchedReadModels,
     'peer': changedPeer,
     'derived-recurring': derivedRecurring,
+    'food-cardinality500': foodCardinality500,
+    'converted-food-confirmed': convertedConfirmedFood,
+    'first-derived-tags': (a) =>
+        firstDerivedPointAction(a, sampleStart, 'tags'),
+    'first-copied-checkbox': (a) =>
+        firstDerivedPointAction(a, sampleStart, 'copy'),
+    'first-derived-mixed': (a) =>
+        firstDerivedPointAction(a, sampleStart, 'mixed'),
   };
   for (final entry in all.entries) {
-    if (entry.key == 'derived-recurring') {
+    if (entry.key == 'derived-recurring' ||
+        entry.key.startsWith('first-derived-') ||
+        entry.key == 'first-copied-checkbox') {
       for (var rep = 0; rep < benchmarkWarmups + benchmarkSamples; rep++) {
         sampleStart = rep;
         sampleEnd = rep + 1;
@@ -1295,6 +1824,31 @@ Future<void> taskCapture(Audit a) async {
   }
 }
 
+Future<void> matchedFoodReadModels(
+  Audit a,
+  int rep, {
+  Map<String, Set<String>>? expectedIDs,
+}) async {
+  for (final kind in ['search', 'brand', 'location', 'retention']) {
+    final result = await a.measure(
+      'food.matched.$kind',
+      rep,
+      () async => a.food.state.view(
+        kind == 'retention' ? FoodView.retained : FoodView.inventory,
+        search: kind == 'search' ? 'Benchmark matched' : '',
+        brands: kind == 'brand' ? {'Benchmark matched brand'} : {},
+        locations: kind == 'location' ? {'Benchmark matched location'} : {},
+        reasons: kind == 'retention' ? {'Benchmark matched reason'} : {},
+      ),
+      readOnly: true,
+    );
+    require(result.isNotEmpty, 'Matched Food group missing');
+    if (expectedIDs != null) {
+      requireFoodGroupIDs(result, expectedIDs[kind]!, 'matched $kind');
+    }
+  }
+}
+
 Future<void> matchedReadModels(Audit a) async {
   final id = (await a.syntheticTasks(1)).single;
   await a.tasks.edit(
@@ -1347,21 +1901,7 @@ Future<void> matchedReadModels(Audit a) async {
         'Matched Task missing',
       );
     }
-    for (final kind in ['search', 'brand', 'location', 'retention']) {
-      final result = await a.measure(
-        'food.matched.$kind',
-        rep,
-        () async => a.food.state.view(
-          kind == 'retention' ? FoodView.retained : FoodView.inventory,
-          search: kind == 'search' ? 'Benchmark matched' : '',
-          brands: kind == 'brand' ? {'Benchmark matched brand'} : {},
-          locations: kind == 'location' ? {'Benchmark matched location'} : {},
-          reasons: kind == 'retention' ? {'Benchmark matched reason'} : {},
-        ),
-        readOnly: true,
-      );
-      require(result.isNotEmpty, 'Matched Food group missing');
-    }
+    await matchedFoodReadModels(a, rep);
   }
 }
 
@@ -1685,5 +2225,237 @@ Future<void> derivedRecurring(Audit a) async {
       jsonEncode(a.row(child)) == retainedChild,
       'Protected successor overwritten by recompletion',
     );
+  }
+}
+
+Future<void> firstDerivedPointAction(Audit a, int rep, String kind) async {
+  final copied = kind == 'copy', mixed = kind == 'mixed';
+  final parent = (await a.syntheticTasks(1)).single;
+  await a.tasks.edit(
+    parent,
+    {
+      'schedule': {'dueDate': '2026-10-22', 'recurrence': 'every day'},
+    },
+    tags: [],
+    observedTagRefs: {},
+  );
+  final item = await a.tasks.addChecklistItem(
+    parent,
+    'Baseline copied item',
+    notes: 'Synthetic Notes',
+  );
+  final completion = await a.tasks.complete(
+    parent,
+    completionDay: DateTime(2026, 10, 22),
+  );
+  final child = const Uuid().v5(parent, 'successor');
+  final sourceItem = item.entity;
+  final copy = const Uuid().v5(child, 'checklist:$sourceItem');
+  final target = copied ? copy : child;
+  final old = a.history.snapshot;
+  require(old.allVisibleTasksReady, 'Prior graph must be fully ready');
+  require(
+    !old.tasks.any((event) => event.entity == child || event.entity == copy),
+    'No prior child/item canonical activity',
+  );
+  final expectedOrder =
+      '${completion.clock.toString().padLeft(19, '0')}:${completion.writer}';
+  final orderBefore = a.row(child)['order'];
+  require(
+    orderBefore == expectedOrder,
+    'Actual selected pre-seed must be completion',
+  );
+  Map<String, dynamic> contexts() => {
+    for (final row in a.tasks.db.select(
+      'SELECT field,context FROM ${a.tasks.tables.textFields} WHERE entity=? ORDER BY field',
+      [target],
+    ))
+      row['field'] as String: row['context'],
+  };
+  final priorContexts = contexts();
+  require(priorContexts.length == 2, 'Actual native field contexts required');
+  final before = jsonEncode(a.tasks.rows);
+  final row = a.row(target);
+  final snapshot = a.tasks.taskSnapshot;
+  TaskTextCapture? capture;
+  TaskTextSession? session;
+  try {
+    if (mixed) {
+      final activeCapture = await a.tasks.captureTaskText(target);
+      capture = activeCapture;
+      session = TaskTextSession(
+        activeCapture,
+        registerDraftActor: (field, allocation, actor) => a.tasks
+            .registerTextDraftActor(activeCapture, field, allocation, actor),
+      );
+      session.replace('title', 'First mixed title');
+    }
+    final full = a.history.fullTaskReadinessRuns;
+    OperationReceipt? receipt;
+    final label = copied
+        ? 'firstCopied.metadata.complete'
+        : mixed
+        ? 'firstDerived.mixed.save'
+        : 'firstDerived.metadata.tags';
+    if (copied) {
+      await a.measure(
+        label,
+        rep,
+        () => a.tasks.setChecklistCompleted(
+          copy,
+          true,
+          onPrepared: (r) => receipt = r,
+        ),
+        expectedDelta: 1,
+      );
+      require(
+        a.row(copy)['completed'] == true,
+        'First checkbox must be visible',
+      );
+    } else if (mixed) {
+      final saved = await a.measure(
+        label,
+        rep,
+        () => TextSaveCommand(a.tasks, session!).save(
+          fields: {
+            'schedule': {
+              ...Map<String, dynamic>.from(row['schedule'] as Map),
+              'dueDate': '2026-10-24',
+            },
+          },
+          tags: [
+            ...List<String>.from(row['tags'] as List? ?? []),
+            'first-mixed-tag',
+          ],
+          observedTagRefs: Map<String, String>.from(
+            row['tagRefs'] as Map? ?? {},
+          ),
+          expectedSnapshot: snapshot,
+        ),
+        expectedDelta: 1,
+      );
+      receipt = saved.receipt;
+      require(
+        saved.status != TextSaveStatus.unchanged &&
+            a.row(target)['title'] == 'First mixed title',
+        'Actual mixed native Save required',
+      );
+      require(
+        (a.row(target)['schedule'] as Map)['dueDate'] == '2026-10-24' &&
+            (a.row(target)['tags'] as List).contains('first-mixed-tag'),
+        'Mixed metadata missing',
+      );
+    } else {
+      await a.measure(
+        label,
+        rep,
+        () => a.tasks.edit(
+          child,
+          {},
+          tags: [
+            ...List<String>.from(row['tags'] as List? ?? []),
+            'first-metadata',
+          ],
+          observedTagRefs: Map<String, String>.from(
+            row['tagRefs'] as Map? ?? {},
+          ),
+          expectedTaskSnapshot: snapshot,
+          onPrepared: (r) => receipt = r,
+        ),
+        expectedDelta: 1,
+      );
+      require(
+        (a.row(child)['tags'] as List).contains('first-metadata'),
+        'First tags must be visible',
+      );
+    }
+    require(
+      receipt != null && a.history.snapshot.allVisibleTasksReady,
+      'Actual new operation must be ready',
+    );
+    require(
+      a.history.fullTaskReadinessRuns == full,
+      'Proven first point action must avoid full readiness',
+    );
+    require(
+      a.row(child)['order'] == orderBefore,
+      'Actual selected post-seed/order must remain exact',
+    );
+    require(
+      jsonEncode(contexts()) == jsonEncode(priorContexts),
+      'Actual native context unexpectedly changed',
+    );
+    // Keep full replay away from the timed pair's live engine caches.
+    final savedSnapshot = a.history.snapshot;
+    final savedRows = jsonEncode(a.tasks.rows);
+    final savedReady = Set<String>.unmodifiable(savedSnapshot.readyTaskIds);
+    void oracle(
+      UnifiedSnapshot current,
+      String expectedRows,
+      Set<String> expectedReady,
+    ) {
+      require(
+        expectedRows ==
+            jsonEncode(
+              TaskStore.validateSemanticHistory(
+                current.tasks,
+                space: a.tasks.space,
+                writer: a.tasks.writer,
+                textEngine: a.engine,
+              ),
+            ),
+        'Fresh full rows oracle differs',
+      );
+      final validator = TaskSemanticValidator(
+        space: a.tasks.space,
+        writer: a.tasks.writer,
+        textEngine: a.engine,
+      );
+      try {
+        final ready = validator.validate(
+          List<LogEvent>.unmodifiable(current.tasks),
+        );
+        require(
+          ready.length == expectedReady.length &&
+              ready.every(expectedReady.contains),
+          'Fresh ready oracle differs',
+        );
+      } finally {
+        validator.close();
+      }
+    }
+
+    final afterFull = a.history.fullTaskReadinessRuns;
+    final undoLabel = mixed ? 'firstDerived.mixed.undo' : '$label.undo';
+    await a.undo(receipt!, undoLabel, rep);
+    require(
+      a.history.fullTaskReadinessRuns == afterFull,
+      'Established point Undo must avoid full readiness',
+    );
+    final undoSnapshot = a.history.snapshot;
+    final undoRows = jsonEncode(a.tasks.rows);
+    final undoReady = Set<String>.unmodifiable(undoSnapshot.readyTaskIds);
+    require(undoRows == before, 'First metadata Undo must restore exact rows');
+    // Both original full oracles remain, using their own immutable state.
+    oracle(savedSnapshot, savedRows, savedReady);
+    oracle(undoSnapshot, undoRows, undoReady);
+    print(
+      jsonEncode({
+        'measurement': 'first-metadata-proof',
+        'case': label,
+        'index': rep,
+        'noPriorOwnActivity': true,
+        'allOldAndNewReady': true,
+        'actualPreAndPostSeedOrderExact': true,
+        'actualNativeContextsExact': true,
+        'fullReadinessDelta': afterFull - full,
+        'undoFullReadinessDelta': a.history.fullTaskReadinessRuns - afterFull,
+        'freshFullOracleAccepted': true,
+        'scope': 'standalone first-point action, no UI or release acceptance',
+      }),
+    );
+  } finally {
+    session?.cancel();
+    if (capture != null) a.tasks.releaseTextCapture(capture);
   }
 }

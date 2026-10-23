@@ -53,6 +53,95 @@ List<Map<String, dynamic>> state(FoodAdmission value) =>
 
 void main() {
   test(
+    'ready point confirmation preserves reference hashes and pending fallback',
+    () {
+      const old = '00000000-0000-4000-8000-000000000011';
+      final imported = FoodRecord(
+        unified: true,
+        space: space,
+        writer: old,
+        sequence: 1,
+        clock: EventClock(BigInt.one),
+        previousHash: 'a' * 64,
+        retainedReferenceHash: 'b' * 64,
+        operation: FoodOperation(
+          id: '$old:1',
+          order: 1,
+          action: FoodAction.add,
+          targets: [a],
+          details: const FoodDetails(name: 'Imported'),
+          createdAt: '2026-10-22T00:00:00Z',
+        ),
+      );
+      final owners = {old: writer};
+      final admitted = admitFoodRecords([imported], legacyOwners: owners);
+      expect(imported.hash, isNot(imported.integrityHash));
+      expect(
+        admitted.confirmsReadyRecord(FoodRecord.decode(imported.encode())),
+        isTrue,
+      );
+      final wrongHash = FoodRecord(
+        unified: true,
+        space: space,
+        writer: old,
+        sequence: 1,
+        clock: imported.clock,
+        previousHash: imported.previousHash,
+        operation: imported.operation,
+      );
+      expect(wrongHash.hash, imported.integrityHash);
+      expect(admitted.confirmsReadyRecord(wrongHash), isFalse);
+      expect(
+        admitted.confirmsReadyRecord(record(8, FoodAction.remove, [a])),
+        isFalse,
+      );
+      expect(admitted.hasReadyRetraction(imported.id), isFalse);
+      final undo = FoodRecord(
+        unified: true,
+        space: space,
+        writer: writer,
+        sequence: 2,
+        clock: EventClock(BigInt.from(3)),
+        previousHash: 'a' * 64,
+        createdWith: {a: imported.id},
+        operation: FoodOperation(
+          id: '$writer:2',
+          order: 3,
+          action: FoodAction.undo,
+          targets: [a],
+          retracts: imported.id,
+          undoOwner: writer,
+        ),
+      );
+      final next = appendReadyFoodRecords(admitted, [
+        undo,
+      ], legacyOwners: owners)!;
+      expect(next.hasReadyRetraction(imported.id), isTrue);
+      expect(next.confirmsReadyRecord(undo), isTrue);
+      expect(admitted.hasReadyRetraction(imported.id), isFalse);
+      expect(
+        state(next),
+        state(admitFoodRecords([imported, undo], legacyOwners: owners)),
+      );
+
+      final seed = record(1, FoodAction.add, [
+        a,
+      ], details: const FoodDetails(name: 'Seed'));
+      final missingUndo = record(3, FoodAction.undo, [a], retracts: 2);
+      final pending = admitFoodRecords([seed, missingUndo]);
+      expect(pending.readyIds, {seed.id});
+      expect(pending.confirmsReadyRecord(seed), isNull);
+      expect(pending.confirmsReadyRecord(missingUndo), isNull);
+      expect(pending.hasReadyRetraction('$writer:2'), isNull);
+      final removal = record(2, FoodAction.remove, [a]);
+      final complete = admitFoodRecords([seed, removal, missingUndo]);
+      expect(complete.hasReadyRetraction(removal.id), isTrue);
+      expect(complete.confirmsReadyRecord(missingUndo), isTrue);
+      expect(complete.confirmsReadyRecord(seed), isTrue);
+    },
+  );
+
+  test(
     'legacy owner Undo preserves full bulk target proof and rejects remapping or Undo of Undo',
     () {
       const old = '00000000-0000-4000-8000-000000000011';

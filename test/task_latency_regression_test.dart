@@ -208,6 +208,15 @@ void main() {
         );
         expect(history.verifiesTaskRevision(snapshot, revision), isTrue);
         expect(history.verifiesTaskRevision(forged, revision), isFalse);
+        expect(
+          history.selectTaskCopySeedRaws(forged, titles.keys.first),
+          isNull,
+        );
+        expect(
+          history.selectTaskCopySeedRaws(snapshot, titles.keys.first),
+          isEmpty,
+        );
+
         final task = titles.keys.first;
         final canonicalBefore = await folder.read('${store.writer}.applog');
         final decodedBefore = history.decodedRecords;
@@ -744,10 +753,51 @@ void main() {
         expect(history.fullTaskReadinessRuns, established);
         oracle();
 
-        // A copied item's first canonical activity protects its own seed too.
+        // The child activity above already protected the earliest parent
+        // seed. First copy activity leaves both identities unchanged, so its
+        // completed-only update can use the private exact-seed proof.
+        expect(
+          history.snapshot.tasks.where((event) => event.entity == copied),
+          isEmpty,
+        );
+        final copyClaims = history.selectTaskCopySeedRaws(
+          history.snapshot,
+          copied,
+        )!;
+        expect(LogEvent.decode(copyClaims.first).id, first.id);
+        expect(history.snapshot.readyTaskIds, contains(first.id));
+        final childActivity = history.snapshot.tasks
+            .where((event) => event.entity == child)
+            .toList();
+        expect(childActivity, isNotEmpty);
+        expect(
+          childActivity.every(
+            (event) => history.snapshot.readyTaskIds.contains(event.id),
+          ),
+          isTrue,
+        );
+        Future<Map<String, String>> contextsFor(String entity) async {
+          final activeStore = store!;
+          final capture = await activeStore.captureTaskText(entity);
+          try {
+            return {
+              for (final field in capture.fields.entries)
+                field.key: field.value.context,
+            };
+          } finally {
+            activeStore.releaseTextCapture(capture);
+          }
+        }
+
+        final childContext = await contextsFor(child);
+        final copyContext = await contextsFor(copied);
+        expect(copyContext['title'], originalCopyContext);
         final beforeItem = history.fullTaskReadinessRuns;
         await store.setChecklistCompleted(copied, true);
-        expect(history.fullTaskReadinessRuns, greaterThan(beforeItem));
+        expect(history.fullTaskReadinessRuns, beforeItem);
+        expect(await contextsFor(child), childContext);
+        expect(await contextsFor(copied), copyContext);
+        expect(history.snapshot.allVisibleTasksReady, isTrue);
         oracle();
         final itemEstablished = history.fullTaskReadinessRuns;
         await store.setChecklistCompleted(copied, false);
@@ -1153,7 +1203,12 @@ void main() {
         try {
           // Simulate a disposable malformed row produced by an older build,
           // which did not have these expression indexes.
-          for (final suffix in ['entity', 'successor', 'type_parent']) {
+          for (final suffix in [
+            'entity',
+            'successor',
+            'type_parent',
+            'type_before',
+          ]) {
             db.execute('DROP INDEX IF EXISTS ${table}_$suffix');
           }
           db.execute('UPDATE $table SET semantic=? WHERE entity=?', [

@@ -86,6 +86,8 @@ void main() {
         await start(tester, data.profile, folder: rawFolder);
         final state = tester.state(find.byType(TasksPage)) as dynamic;
         resources = host.hostResources(tester);
+        final anchorIndex =
+            '${(state.store as TaskStore).tables.events}_type_before';
         final before = (await tester.runAsync(
           () => host.canonical(data.folder),
         ))!;
@@ -101,6 +103,16 @@ void main() {
         final witness = (await tester.runAsync(() async {
           final profile = await LocalProfileDatabase.open(data.profile);
           try {
+            // Simulate a closed cache created before the additive query index.
+            // The content witness remains valid; warm attach must install it.
+            profile.database.execute('DROP INDEX $anchorIndex');
+            expect(
+              profile.database.select(
+                "SELECT name FROM sqlite_master WHERE type='index' AND name=?",
+                [anchorIndex],
+              ),
+              isEmpty,
+            );
             return profile.database
                 .select('SELECT key,value FROM profile_metadata')
                 .map((row) => Map<String, dynamic>.from(row))
@@ -168,6 +180,13 @@ void main() {
         final reopened = tester.state(find.byType(TasksPage)) as dynamic;
         final tasks = reopened.store as TaskStore;
         expect(tasks.warmProjectionReuses, 1);
+        expect(
+          tasks.db.select(
+            "SELECT name FROM sqlite_master WHERE type='index' AND name=?",
+            [anchorIndex],
+          ),
+          hasLength(1),
+        );
         expect(tasks.unified!.decodedCacheReuses, greaterThan(0));
         expect(
           (await tester.runAsync(() => host.canonical(data.folder)))!,

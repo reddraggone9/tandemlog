@@ -132,6 +132,16 @@ class _NativeUndoField {
   final NativeTextDocument document;
 }
 
+// Private, action-local evidence; never persisted or accepted from a snapshot DTO.
+typedef _FirstDerivedTextSeed = ({
+  String kind,
+  String? parent,
+  String seed,
+  String sourceParent,
+  String? sourceItem,
+  bool explicit,
+});
+
 /// Results of append-only compatibility edits. Conflicts remain ordinary tasks.
 class OccurrenceDueMigrationResult {
   const OccurrenceDueMigrationResult(
@@ -349,6 +359,7 @@ class TaskStore {
       'CREATE INDEX IF NOT EXISTS ${tables.events}_entity ON ${tables.events}(entity)',
       "CREATE INDEX IF NOT EXISTS ${tables.events}_successor ON ${tables.events}(json_extract(semantic,'\$.data.successor.id'))",
       "CREATE INDEX IF NOT EXISTS ${tables.events}_type_parent ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.parent'))",
+      "CREATE INDEX IF NOT EXISTS ${tables.events}_type_before ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.before'))",
     ]) {
       db.execute(sql);
     }
@@ -734,7 +745,196 @@ class TaskStore {
     return Map.unmodifiable(prior);
   }
 
-  bool _settledActionTargets(List<LogEvent> delta, Set<String> ready) {
+  _FirstDerivedTextSeed? _firstDerivedTextSeed(
+    String entity,
+    String kind,
+    Set<String> ready, {
+    bool allowExplicit = false,
+  }) {
+    final rows = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
+      entity,
+    ]);
+    if (rows.length != 1) return null;
+    final state = jsonDecode(rows.single['raw'] as String) as Map;
+    final parent = state['parent'];
+    if (state['kind'] != kind ||
+        parent != null && parent is! String ||
+        state['deleted'] == true ||
+        state['successorSuppressed'] == true ||
+        state['textUnavailable'] != null ||
+        state['textInheritancePending'] == true) {
+      return null;
+    }
+    final births = db.select(
+      "SELECT raw FROM ${tables.events} WHERE entity=? AND json_extract(semantic,'\$.type') IN ('task.created','task.createdWithText','checklist.itemCreated')",
+      [entity],
+    );
+    final seeds = db.select(
+      "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+      [entity],
+    );
+    final copies = _itemCopySeeds(entity);
+    if (births.isNotEmpty) {
+      if (!allowExplicit ||
+          kind != 'task' ||
+          births.length != 1 ||
+          seeds.isNotEmpty ||
+          copies.isNotEmpty) {
+        return null;
+      }
+      final birth = _recurringTextMemo.decodeCanonical(
+        births.single['raw'] as String,
+      );
+      if (!ready.contains(birth.id)) return null;
+      return (
+        kind: kind,
+        parent: parent as String?,
+        seed: birth.id,
+        sourceParent: entity,
+        sourceItem: null,
+        explicit: true,
+      );
+    }
+    if (kind == 'task') {
+      if (seeds.isEmpty || copies.isNotEmpty) return null;
+      final first = _recurringTextMemo.decodeCanonical(
+        seeds.first['raw'] as String,
+      );
+      if (!const {
+            'task.completedWithText',
+            'task.completedWithChecklist',
+          }.contains(first.type) ||
+          first.data['inheritance'] is! Map ||
+          !ready.contains(first.id) ||
+          seeds.any(
+            (row) =>
+                _recurringTextMemo
+                    .decodeCanonical(row['raw'] as String)
+                    .entity !=
+                first.entity,
+          )) {
+        return null;
+      }
+      final own = db
+          .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
+          .map(
+            (row) => _recurringTextMemo.decodeCanonical(row['raw'] as String),
+          )
+          .toList();
+      final selected = _successorSelection(entity, seeds, own);
+      // A first durable activity protects the earliest seed. Do not treat
+      // an unprotected later survivor as the same birth.
+      if (selected.suppressed || selected.seed.id != first.id) return null;
+      return (
+        kind: kind,
+        parent: parent as String?,
+        seed: first.id,
+        sourceParent: first.entity,
+        sourceItem: null,
+        explicit: false,
+      );
+    }
+    if (kind != 'checklistItem' || seeds.isNotEmpty || copies.isEmpty) {
+      return null;
+    }
+    final first = copies.first;
+    final source = first.$2['source'];
+    final successor = (first.$1.data['successor'] as Map?)?['id'];
+    if (source is! String ||
+        parent != successor ||
+        first.$1.data['inheritance'] is! Map ||
+        !ready.contains(first.$1.id) ||
+        copies.any(
+          (copy) =>
+              copy.$1.entity != first.$1.entity ||
+              (copy.$1.data['successor'] as Map?)?['id'] != parent ||
+              copy.$2['source'] != source,
+        )) {
+      return null;
+    }
+    return (
+      kind: kind,
+      parent: parent as String?,
+      seed: first.$1.id,
+      sourceParent: first.$1.entity,
+      sourceItem: source,
+      explicit: false,
+    );
+  }
+
+  Map<String, _FirstDerivedTextSeed>? _firstDerivedActionSeeds(
+    List<LogEvent> delta,
+    Set<String> ready,
+  ) {
+    if (delta.length != 1) return null;
+    final event = delta.single;
+    final pureText =
+        event.type == 'task.textEdited' &&
+        event.data.length == 1 &&
+        event.data['changes'] is Map &&
+        (event.data['changes'] as Map).isNotEmpty;
+    final taskMetadata =
+        (event.type == 'task.edited' || event.type == 'task.textEdited') &&
+        event.data.isNotEmpty &&
+        event.data.keys.every(
+          (key) =>
+              key == 'schedule' ||
+              key == 'assignee' ||
+              key == 'tagChanges' ||
+              (event.type == 'task.textEdited' && key == 'changes'),
+        ) &&
+        (event.type != 'task.textEdited' ||
+            (event.data['changes'] is Map &&
+                (event.data['changes'] as Map).isNotEmpty));
+    final copiedCheckbox =
+        event.type == 'checklist.itemEdited' &&
+        event.data.length == 1 &&
+        event.data['completed'] is bool;
+    if ((!pureText && !taskMetadata && !copiedCheckbox) ||
+        db.select('SELECT 1 FROM ${tables.events} WHERE entity=? LIMIT 1', [
+          event.entity,
+        ]).isNotEmpty) {
+      return null;
+    }
+    final rows = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
+      event.entity,
+    ]);
+    if (rows.length != 1) return null;
+    final state = jsonDecode(rows.single['raw'] as String) as Map;
+    final kind = state['kind'];
+    if (kind != 'task' && kind != 'checklistItem') return null;
+    if (!pureText &&
+        !((kind == 'task' && taskMetadata) ||
+            (kind == 'checklistItem' && copiedCheckbox))) {
+      return null;
+    }
+    final target = _firstDerivedTextSeed(event.entity, kind as String, ready);
+    if (target == null || target.explicit) return null;
+    final proof = <String, _FirstDerivedTextSeed>{event.entity: target};
+    if (kind == 'checklistItem') {
+      final parent = target.parent;
+      if (parent == null || parent == event.entity) return null;
+      final parentSeed = _firstDerivedTextSeed(
+        parent,
+        'task',
+        ready,
+        allowExplicit: true,
+      );
+      if (parentSeed == null) return null;
+      proof[parent] = parentSeed;
+    }
+    // The private identity proof only supplies the otherwise missing birth.
+    // Reuse every existing shape and dependency guard before it can be used.
+    return _settledActionTargets(delta, ready, firstActivitySeeds: proof)
+        ? Map.unmodifiable(proof)
+        : null;
+  }
+
+  bool _settledActionTargets(
+    List<LogEvent> delta,
+    Set<String> ready, {
+    Map<String, _FirstDerivedTextSeed> firstActivitySeeds = const {},
+  }) {
     if (_recurringActionSeeds(delta, ready) != null) return true;
     if (delta.isEmpty) return false;
     final groups = <String, List<LogEvent>>{};
@@ -765,7 +965,8 @@ class TaskStore {
           ? ['task.created', 'task.createdWithText']
           : ['checklist.itemCreated'];
       if (!hasReadyBirth(entity, births) &&
-          !_hasReadyDerivedIdentity(entity, kind, ready)) {
+          !_hasReadyDerivedIdentity(entity, kind, ready) &&
+          firstActivitySeeds[entity]?.kind != kind) {
         return null;
       }
       final rows = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
@@ -931,6 +1132,7 @@ class TaskStore {
         r['id'] as String: jsonDecode(r['raw'] as String) as Map,
     };
     final births = <String, String>{};
+    final copiedBirths = <String, LogEvent>{};
     final derived = <String>{}, nativeSeeds = <String>{};
     final eventsByEntity = <String, List<LogEvent>>{};
 
@@ -955,6 +1157,10 @@ class TaskStore {
           final child = (item as Map)['id'] as String;
           births[child] = e.id;
           derived.add(child);
+          final previous = copiedBirths[child];
+          if (previous == null || compareEvents(e, previous) < 0) {
+            copiedBirths[child] = e;
+          }
         }
       }
     }
@@ -968,8 +1174,12 @@ class TaskStore {
         final own = eventsByEntity[child] ?? const <LogEvent>[];
         births[child] = _successorSelection(child, seeds, own).seed.id;
       } else {
-        final copies = _itemCopySeeds(child);
-        if (copies.isNotEmpty) births[child] = copies.first.$1.id;
+        // The full oracle already visited every strict canonical completion.
+        // Reuse its earliest claim instead of resolving each copied identity's
+        // transitive text closure again. Retractions/competing claims remain in
+        // this index, exactly as in _itemCopySeeds().first.
+        final copied = copiedBirths[child];
+        if (copied != null) births[child] = copied.id;
       }
     }
     final birthsByEvent = <String, List<String>>{};
@@ -1265,6 +1475,7 @@ class TaskStore {
   UnifiedSnapshot? _textStageSnapshot;
   TaskSemanticValidator? _textReadOwner;
   int selectedTextReads = 0, selectedTextRecords = 0, selectedTextLookups = 0;
+  int selectedCopySeedReads = 0, selectedCopySeedRecords = 0;
   int selectedTextInitialDecodes = 0;
 
   EventClock? _stagedMaximumClock;
@@ -1351,6 +1562,8 @@ class TaskStore {
         if (_unifiedTaskRevision == null &&
             unified!.takeReusedTaskProjectionRevision() == revision) {
           _validateTextBaseline();
+          // A usable older cache may predate an additive query index.
+          _ensureProjectionIndexes();
           warmProjectionReuses++;
         } else if (_unifiedTaskRevision == null) {
           // Index DDL can have rolled back with a prior failed rebuild stage.
@@ -1383,7 +1596,8 @@ class TaskStore {
               prior != null &&
               prior.allVisibleTasksReady &&
               added.every((e) => snapshot.readyTaskIds.contains(e.id)) &&
-              _settledActionTargets(added, prior.readyTaskIds);
+              (_settledActionTargets(added, prior.readyTaskIds) ||
+                  _firstDerivedActionSeeds(added, prior.readyTaskIds) != null);
           _replaySemanticEvents(
             added,
             incremental: true,
@@ -2723,7 +2937,8 @@ class TaskStore {
     final settledText =
         priorSnapshot != null &&
         priorSnapshot.allVisibleTasksReady &&
-        _settledActionTargets([e], priorSnapshot.readyTaskIds);
+        (_settledActionTargets([e], priorSnapshot.readyTaskIds) ||
+            _firstDerivedActionSeeds([e], priorSnapshot.readyTaskIds) != null);
     if (settledText) {
       _validateTagReferences(e);
       _validateMoves(e);
@@ -4603,6 +4818,33 @@ class TaskSemanticValidator {
     return _selectText(roots);
   }
 
+  List<String>? selectCopySeedRaws(String expectedKey, String entity) {
+    if (_validatedInputKey != expectedKey) return null;
+    return _selectCopySeedRaws(entity);
+  }
+
+  List<String>? _selectCopySeedRaws(String entity) {
+    if (!_hasOwnedSelectionScope()) return null;
+    // Copy claims are a point relation, not the entire transitive text closure.
+    // The same actual-scope guard verifies every inserted candidate byte first.
+    final claims = <String, LogEvent>{
+      for (final event in _textRelations.copies[entity] ?? const <LogEvent>[])
+        event.id: event,
+    };
+    for (final event in _textCandidate ?? const <LogEvent>[]) {
+      if (event.type == 'task.completedWithChecklist' &&
+          ((event.data['checklist'] as Map)['items'] as List).any(
+            (item) => (item as Map)['id'] == entity,
+          )) {
+        claims[event.id] = event;
+      }
+    }
+    final ordered = claims.values.toList()..sort(compareEvents);
+    return List<String>.unmodifiable(
+      ordered.map((event) => event.canonicalRaw!),
+    );
+  }
+
   // Shared actual-scope guard; candidates must already exist byte-exact in SQL.
   bool _hasOwnedSelectionScope() {
     final store = _store;
@@ -4832,7 +5074,7 @@ class TaskSemanticValidator {
     return store._withCopySeedIndex(() {
       if (!_attemptedWarm) {
         _attemptedWarm = true;
-        _restoreCleanCache(events);
+        _restoreCleanCache(events, inputKey: inputKey);
         _rebuildTextRelations();
       }
       final delta = events.where((e) => !_raws.containsKey(e.id)).toList();
@@ -4846,12 +5088,18 @@ class TaskSemanticValidator {
         final recurringSeeds = _ready == null
             ? null
             : store._recurringActionSeeds(delta, _ready!);
-        final settledCandidate =
+        final priorFullyReady =
             _ready != null &&
             _ready!.length == _raws.length &&
-            delta.every((e) => e.sequence > (_lastSequences[e.writer] ?? 0)) &&
+            delta.every((e) => e.sequence > (_lastSequences[e.writer] ?? 0));
+        final baseSettled =
+            priorFullyReady &&
             (recurringSeeds != null ||
                 store._settledActionTargets(delta, _ready!));
+        final firstActivitySeeds = priorFullyReady && !baseSettled
+            ? store._firstDerivedActionSeeds(delta, _ready!)
+            : null;
+        final settledCandidate = baseSettled || firstActivitySeeds != null;
         store._replaySemanticEvents(
           delta,
           incremental: incremental,
@@ -4861,6 +5109,7 @@ class TaskSemanticValidator {
           delta,
           eligible: settledCandidate,
           priorDerivedSeeds: recurringSeeds ?? const {},
+          firstActivitySeeds: firstActivitySeeds ?? const {},
         );
         // Native dependencies may still make a pure-text candidate pending.
         // Before accepting fallback readiness, restore every skipped global check.
@@ -4928,8 +5177,12 @@ class TaskSemanticValidator {
     }
     return store._withCopySeedIndex(() {
       final recurringSeeds = store._recurringActionSeeds(delta, _ready!);
-      final settled =
+      final baseSettled =
           recurringSeeds != null || store._settledActionTargets(delta, _ready!);
+      final firstActivitySeeds = baseSettled
+          ? null
+          : store._firstDerivedActionSeeds(delta, _ready!);
+      final settled = baseSettled || firstActivitySeeds != null;
       final priorBaseline = store._textBaseline?.id;
       final priorBlocked = store.textWriteBlocked;
       final db = store.db;
@@ -4948,6 +5201,7 @@ class TaskSemanticValidator {
             delta,
             eligible: true,
             priorDerivedSeeds: recurringSeeds ?? const {},
+            firstActivitySeeds: firstActivitySeeds ?? const {},
           );
         } else {
           fullReadinessRuns++;
@@ -4990,6 +5244,7 @@ class TaskSemanticValidator {
     List<LogEvent> delta, {
     required bool eligible,
     Map<String, String> priorDerivedSeeds = const {},
+    Map<String, _FirstDerivedTextSeed> firstActivitySeeds = const {},
   }) {
     // In a completely published graph, an ordinary text update/Undo cannot
     // introduce a new birth, baseline, order anchor or dependency for old ready
@@ -5009,7 +5264,11 @@ class TaskSemanticValidator {
         }
       }
     }
-    for (final entity in {...delta.map((e) => e.entity), ...derived.keys}) {
+    for (final entity in {
+      ...delta.map((e) => e.entity),
+      ...derived.keys,
+      ...firstActivitySeeds.keys,
+    }) {
       final rows = store.db.select(
         'SELECT raw FROM ${store.tables.views} WHERE id=?',
         [entity],
@@ -5023,6 +5282,17 @@ class TaskSemanticValidator {
         [entity],
       ).isNotEmpty;
       final birth = derived[entity];
+      final firstActivity = firstActivitySeeds[entity];
+      if (firstActivity != null &&
+          store._firstDerivedTextSeed(
+                entity,
+                firstActivity.kind,
+                _ready!,
+                allowExplicit: firstActivity.explicit,
+              ) !=
+              firstActivity) {
+        return null;
+      }
       if (birth != null) {
         final seeds = store.db.select(
           "SELECT raw FROM ${store.tables.events} WHERE json_extract(semantic,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
@@ -5044,6 +5314,7 @@ class TaskSemanticValidator {
       }
       if (birth == null &&
           !explicit &&
+          firstActivity == null &&
           !store._hasReadyDerivedIdentity(
             entity,
             state['kind'] as String,
@@ -5093,7 +5364,7 @@ class TaskSemanticValidator {
     return Set.unmodifiable({..._ready!, ...delta.map((e) => e.id)});
   }
 
-  void _restoreCleanCache(List<LogEvent> candidate) {
+  void _restoreCleanCache(List<LogEvent> candidate, {String? inputKey}) {
     if (profile == null || locationKey == null || manifestDigest == null) {
       return;
     }
@@ -5131,9 +5402,22 @@ class TaskSemanticValidator {
       }
       final ready = (proof['ready'] as List).cast<String>();
       final ids = cachedEvents.map((e) => e.id).toSet();
+      // The owning history already computed the full canonical root. Reuse it
+      // only for an exact ID/raw bijection with the whole candidate. A valid
+      // closed PREFIX still needs its own root before the new delta is admitted.
+      final fullOwnedCandidate =
+          owningHistory?.ownsTaskValidator(this) == true &&
+          inputKey != null &&
+          isEventHash(inputKey) &&
+          incoming.length == candidate.length &&
+          cachedEvents.length == candidate.length &&
+          ids.length == incoming.length;
+      final cachedRevision = fullOwnedCandidate
+          ? inputKey
+          : _taskProjectionRevision(cachedEvents);
       if (ready.toSet().length != ready.length ||
           !ready.every(ids.contains) ||
-          proof['revision'] != _taskProjectionRevision(cachedEvents) ||
+          proof['revision'] != cachedRevision ||
           proof['digest'] != _taskCacheDigest(rows, ready)) {
         return;
       }

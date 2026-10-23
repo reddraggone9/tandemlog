@@ -17,3 +17,33 @@ The one-time converter stays outside the repository. Its input is an accepted fr
 Retain continuing installation IDs and folder selections plus simple preferences. Other private state may reset, including drafts and unfinished saves; full profile export is not required. Sync-node count does not determine historical authors. Missing mappings stop conversion.
 
 Only a separate live-cutover approval can adopt converted history. Old applications must remain stopped afterward. Reverting after new-format writes requires reconciliation rather than copying old files over new work. No development test opens, resets or converts a production profile/workspace.
+
+
+Clean-cache startup preserves the same generation2 byte digest, scope binding,
+kind/position checks and opaque receipts. Fresh decoded JSON trees are frozen in
+place before unmodifiable views escape, avoiding redundant collection copies.
+Pure whole-batch verification runs in a short-lived Dart isolate with only three
+immutable strings; profile transactions, canonical reads/admission and native
+text ownership stay on the owning queue. The one-shot proof is consumed durably
+before awaiting the worker. Unavailable or failed optional verification falls
+back to strict canonical reconstruction. This improves UI responsiveness rather
+than promising that verification or disk durability takes less than100ms.
+A full owned canonical candidate may reuse its already-computed Task root after
+an exact cached ID/raw bijection; a cached prefix retains its own root check
+before any arriving delta is admitted.
+
+Supported first text, metadata and copied-checkbox actions can reuse exact
+pre/post earliest-target and parent-seed proofs, as described in the
+[latency repair](task-latency-repair.md). Changed or uncertain seeds retain full
+readiness. The remaining full-readiness pass indexes the earliest copy birth by
+compareEvents once, including retracted and competing claims, instead of
+repeating transitive copy-closure lookups. Successor selection, native checks
+and every readiness dependency remain enforced.
+
+Copy-seed lookup uses the existing owning validator's exact per-item claim
+relation, not a transitive text-selection closure. The snapshot key, owning
+validator, readiness and byte-exact inserted-candidate checks are shared with
+selected text reads. Empty claims return an empty result; an untrusted scope
+falls back to the original SQL oracle. All competing/retracted claims and
+candidate claims are retained in compareEvents order. No new cache or size
+budget is introduced.

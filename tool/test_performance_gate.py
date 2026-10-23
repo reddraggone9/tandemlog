@@ -192,10 +192,34 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
                       {'baseRecords':2640,'growthKind':'task'},
                       {'baseRecords':2640,'growthKind':'food','extra':True}):
             with self.assertRaises(RuntimeError):run_gate.fixture_argument(value)
-    def test_every146_metric_and_both_legacy_shapes_retained(self):
+    def test_original146_and_converted_metrics_and_both_legacy_shapes_retained(self):
         limits=json.loads((PATH.parent/'limits-v1.json').read_text())
         coverage=json.loads((PATH.parent/'coverage-v1.json').read_text())['storageApplicationActionIds']
-        self.assertEqual(len(coverage),146)
+        frozen=json.loads((PATH.parent/'original-action-ids-v1.json').read_text())['actions']
+        self.assertEqual(len(frozen),146)
+        self.assertTrue(set(frozen).issubset(coverage))
+        self.assertEqual(len(coverage),232)
+        for action in ('firstDerived.metadata.tags', 'firstDerived.metadata.tags.undo', 'firstCopied.metadata.complete', 'firstCopied.metadata.complete.undo', 'firstDerived.mixed.save', 'firstDerived.mixed.undo'):
+            self.assertIn(action,coverage)
+        for action in ("converted.food.paired.details.confirmedSave", "converted.food.paired.details.confirmedUndo"):
+            self.assertIn(action,coverage)
+        self.assertEqual(sum(action.startswith("cardinality500.") for action in coverage),33)
+        for action in ("cardinality500.food.paired.details.save",
+                       "cardinality500.food.add.1", "cardinality500.food.restore.3",
+                       "cardinality500.food.view.inventory", "cardinality500.food.matched.search",
+                       "cardinality500.refresh.food.unchanged"):
+            self.assertIn(action,coverage)
+        self.assertEqual(len(set(coverage)),len(coverage))
+        confirmed = {'converted.food.paired.details.confirmedSave',
+                     'converted.food.paired.details.confirmedUndo'}
+        self.assertEqual(sum(action.startswith('converted.') and action not in confirmed
+                             for action in coverage),45)
+        self.assertTrue(confirmed.issubset(coverage))
+        for action in ('converted.task.title.save','converted.task.title.undo',
+                       'converted.task.complete.application','converted.task.delete',
+                       'converted.task.bulkEdit.three','converted.checklist.add',
+                       'converted.food.paired.details.save','converted.food.paired.details.undo'):
+            self.assertIn(action,coverage)
         self.assertEqual(limits['historySizes']['dense-1'],1320)
         self.assertEqual(limits['historySizes']['dense-2'],2640)
         self.assertFalse(limits['releaseReady'])

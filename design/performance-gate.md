@@ -4,7 +4,7 @@ The standalone Dart executable measures production storage, application commands
 
 The three versioned shapes share the SAME first 1,320 historical physical records, three writers, entity IDs and current Task/Food values. The existing dense-1 baseline and dense-2 Task-growth shape retain their integer specifications and canonical generation. An additive dense-food shape uses {baseRecords: 2640, growthKind: food}, normalized to the closed CLI food:2640. Dense-2 adds 1,320 bounded Task Notes edits alternating with exact restores; dense-food instead adds 1,320 Food brand edits alternating with exact restores on existing containers, each carrying its actual observed creation reference. Neither Food contents nor deletion state changes. All three then receive production native-text initialization and the same native checklist/recurring operations. Enforce equal initial-prefix hashes, full current-state digest, Task rows and Food container counts before treating this as history-only scaling. Actual record, effect and row counts are recorded. Both pairs must prove their growth module: Task effects grow only in dense-2, Food effects grow only in dense-food, and the other module's effect count stays equal to the baseline. Missing, unknown or mismatched growth claims fail correctness. The additional pair closes Food-own-history coverage; it does not test a growing number of recurring descriptors. Scalar synthetic IDs and strings are deterministic; production native actor allocation may vary between fixture generations. Generate each fixture once, seal its actual bytes, and reuse exactly those bytes for a timing retry. Profiles and workload copies are always fresh; existing output is refused.
 
-Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Recurring samples use separate equivalent fixtures so descriptor accumulation is not confused with repeated-sample variance. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 146 expected actions. Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
+Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 232 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food and6 first-point cases). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
 
 `limits-v1.json` is currently a draft with `releaseReady: false`. It intentionally cannot approve a release. Calibrate the sanitized suite on the reviewed release worker before activating initial limits. Existing private timing evidence informed conservative draft headroom but does not validate this synthetic shape. Limits are regression bounds, not a declaration that every interaction meets the roughly 100 ms goal. Loosening an activated limit requires Lee's explicit approval; tooling has no automatic baseline-update switch.
 
@@ -42,3 +42,45 @@ with the actual file/byte/syscall counts of the read workload, and distinguish
 API wall time from storage service time. Preserve traces and explain residual
 gaps before presenting a reconciled cost breakdown. Storage accounting still
 does not measure input, widget construction, layout or paint.
+
+
+Converted-existing coverage has separate metric IDs and provenance assertions.
+The original inherited/new-native Task and historical Food targets retain their
+contracts. Added converted Task cases use imported scalar Tasks3/6/9/18 for text,
+metadata, completion, reopen, deletion, reorder, bulk and a checklist on an
+imported parent. The paired Food case uses imported Food1000, a brand-only edit,
+its exact creation reference and Undo; the small60 functional fixture explicitly
+uses Food4 and cannot establish that native pairing. Imported-birth and owner
+checks also guard the original historical Food selection. Native and storage
+comparisons must record matching source, entity, pre-action heads/current state,
+input sequence and native-owner lifetime. Fixture coverage remains distinct from
+actual widget/input/paint coverage; no existing metric or accepted limit is
+renamed, removed or relaxed by these additions.
+
+
+The fixture-selection audit distinguishes fixed-target warm edits from first
+durable activity on a newly derived entity. The inherited task.title family
+warms the same target. The recurring family instead creates a fresh parent,
+successor and copied items for every repetition: derivedSuccessor.titleAndNotes.save
+measures the successor's first durable activity in every reported sample.
+copiedChecklist.titleAndNotes.save measures the item's first durable activity
+after the preceding parent Save and Undo protect its containing seed. The
+oversized-descriptor correctness test separately covers a copied item's first
+Save without that preceding parent activity; it does not establish a separate
+timing distribution. None of these boundaries excuses slow first activity.
+
+Remembered-section metrics time LocalSettings persistence only. They do not
+include WorkspaceState publication or actual section navigation. Audit.open
+ends after FoodStore/settings loading and excludes main occurrence maintenance,
+workspace binding/publication and first useful paint. Checklist text cleanup
+runs in finally outside the timed labels, so it is not a separately timed cancel
+action. These gaps remain visible in coverage-v1.json until separately measured.
+
+
+The separate food-cardinality500 family starts from a fresh copy of each original sealed shape and adds synthetic containers through the production API outside timers, requiring 500 active containers plus 3 deleted containers (503 total). Setup uses mostly unique names and explicit stock, retained, inbox and deleted cohorts. The original 191 metrics remain; 33 cardinality500.* metrics add imported Food1000 brand Save/Undo, single/group Food commands, views, matching and unmatched filters, and unchanged Food refresh. Mode and positive-filter results must contain exactly the captured cohort IDs and counts, without duplicates; these assertions run outside timers. Undo must restore the full logical state; Task values, original prefixes and peer bytes remain checked. Setup adds both containers and canonical records and allocates new IDs, recorded separately: this is current-state stress, not isolated cardinality causation or byte-identical per-family histories. All added limits remain inactive pending calibration review.
+
+A separate converted-food-confirmed family measures imported Food1000 brand Save and Undo through the same exact-receipt confirmation and real session Undo history callbacks as the app. These additive confirmedSave/confirmedUndo labels include work beyond the preserved backend-only timings; they still exclude widget preparation, publication and paint. Food500 expected mode memberships preserve the original input's retained and inbox cohorts. The failed inventory-only setup trial remains external evidence.
+
+Six additive first-point metrics cover untouched successor tags, untouched copied checkbox, and mixed native title+Due+tag Save/Undo. Each case and repetition starts from its own fresh sealed-fixture copy before any successor/item own activity. Target/parent seed selection, actual native context, full ready/SQL replay oracles, exact row Undo and zero full-readiness on the supported ordinary path are checked outside timers. The mixed case owns its actual captured native session through Save and Undo. Retained153 measures the old positive full-fallback counter before repair. These additions do not claim every field combination or first delete/move timing, and cannot substitute for actual input-to-paint acceptance.
+
+First-point full replay oracles run after the timed Save/Undo pair against separately captured immutable Save and Undo snapshots, row encodings and ready sets. Retained153 first Save precedes that replay; its Undo followed same-owner full oracles and is not a direct baseline for an adjacent app Undo. Those original observations remain retained, with no latency effect inferred from this boundary finding.

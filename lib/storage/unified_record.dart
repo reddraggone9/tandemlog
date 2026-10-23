@@ -383,6 +383,13 @@ class UnifiedDecodedCache {
       expectedDigest,
       expectedBinding,
     );
+    return restoreVerifiedBatch(batch);
+  }
+
+  /// Reconstruct only from the existing opaque, deeply immutable verifier
+  /// receipt. Startup may perform pure verification in a short-lived isolate;
+  /// native owners, profile objects and contextual admission remain here.
+  static List<UnifiedRecord> restoreVerifiedBatch(ValidatedActionCache batch) {
     final records = <UnifiedRecord>[];
     for (final action in batch.records) {
       final value = action.value;

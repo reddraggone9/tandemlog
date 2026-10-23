@@ -139,6 +139,34 @@ extension ChecklistStore on TaskStore {
   }
 
   List<(LogEvent, Map<String, dynamic>)> _itemCopySeeds(String entity) {
+    final snapshot = _textStageSnapshot ?? _stagedSnapshot;
+    final selection =
+        _textReadOwner?._selectCopySeedRaws(entity) ??
+        (snapshot == null
+            ? null
+            : unified?.selectTaskCopySeedRaws(snapshot, entity));
+    if (selection != null) {
+      // All exact claims for this identity remain visible, including competing
+      // and retracted completions. An empty point result avoids unrelated text
+      // closures; an untrusted scope still uses the full SQL oracle below.
+      final completions =
+          selection
+              .map(_recurringTextMemo.decodeCanonical)
+              .where((event) => event.type == 'task.completedWithChecklist')
+              .toList()
+            ..sort(compareEvents);
+      final result = <(LogEvent, Map<String, dynamic>)>[];
+      for (final completion in completions) {
+        for (final item
+            in (completion.data['checklist'] as Map)['items'] as List) {
+          final value = item as Map<String, dynamic>;
+          if (value['id'] == entity) result.add((completion, value));
+        }
+      }
+      selectedCopySeedReads++;
+      selectedCopySeedRecords += completions.length;
+      return result;
+    }
     if (_copySeedScopeDepth > 0 && !_copySeedIndexUnavailable) {
       if (_copySeedIndex == null) {
         // Check a cheap bounded payload total before loading whole descriptors.

@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:typed_data';
 import 'dart:convert';
 import 'dart:io';
 
@@ -13,6 +15,19 @@ import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
+
+import 'current_history_fixture.dart';
+
+class _ReadGateFolder extends LocalLogFolder {
+  _ReadGateFolder(super.location);
+  Future<void> Function(String)? beforeRead;
+
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) async {
+    await beforeRead?.call(name);
+    return super.readBounded(name, maximumBytes);
+  }
+}
 
 void main() {
   for (final damage in [
@@ -178,6 +193,15 @@ void main() {
             .where((effect) => effect.kind.endsWith('food'))
             .toList();
         expect(saved, isNotEmpty);
+        expect(() => batch.records.clear(), throwsUnsupportedError);
+        final outer = batch.records.first.value;
+        expect(() => outer['clock'] = 'changed', throwsUnsupportedError);
+        final wire = outer['effects'] as List;
+        expect(() => wire.clear(), throwsUnsupportedError);
+        expect(
+          () => (wire.first as Map)['raw'] = 'changed',
+          throwsUnsupportedError,
+        );
         for (final receipt in saved) {
           final cached = FoodRecord.fromDecodedCache(receipt);
           final strict = FoodRecord.decode(receipt.raw);
@@ -197,6 +221,10 @@ void main() {
           );
           expect(
             () => (receipt.fields![4] as Map)['id'] = 'another id',
+            throwsUnsupportedError,
+          );
+          expect(
+            () => ((receipt.fields![4] as Map)['targets'] as List).clear(),
             throwsUnsupportedError,
           );
         }
@@ -345,4 +373,141 @@ void main() {
       await root.delete(recursive: true);
     }
   });
+  test('warm verifier consumes proof and keeps the profile queue leased', () async {
+    final root = await Directory.systemTemp.createTemp('decoded-queue-');
+    final folder = _ReadGateFolder(
+      (await Directory('${root.path}/shared').create()).path,
+    );
+    final profilePath = '${root.path}/profile';
+    final entered = Completer<void>(), release = Completer<void>();
+    TaskStore? store;
+    LocalProfileDatabase? profile;
+    Future<TaskStore>? opening;
+    try {
+      store = await TaskStore.open(folder, profilePath);
+      await store.command(const Uuid().v4(), 'user.created', {
+        'name': 'Synthetic',
+      });
+      final expected = jsonEncode(store.rows);
+      final canonical = await folder.read('${store.writer}.applog');
+      final writer = store.writer;
+      await store.close();
+      store = null;
+      final owned = profile = await LocalProfileDatabase.open(profilePath);
+      expect(
+        owned.database.select(
+          "SELECT key FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
+        ),
+        hasLength(1),
+      );
+      folder.beforeRead = (name) async {
+        if (!name.endsWith('.applog')) return;
+        folder.beforeRead = null;
+        expect(
+          owned.database.select(
+            "SELECT key FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
+          ),
+          isEmpty,
+          reason:
+              'The actual asynchronous verifier consumed its one-shot proof before canonical I/O.',
+        );
+        entered.complete();
+        await release.future;
+      };
+      opening = TaskStore.open(folder, profilePath, profileDatabase: owned);
+      await entered.future.timeout(const Duration(seconds: 5));
+      var queuedRan = false;
+      final queued = owned.serialize(() async {
+        queuedRan = true;
+      });
+      await Future<void>.delayed(Duration.zero);
+      expect(
+        queuedRan,
+        isFalse,
+        reason:
+            'No other profile work may interleave with awaited startup verification/readback.',
+      );
+      await expectLater(owned.close(), throwsStateError);
+      release.complete();
+      store = await opening;
+      opening = null;
+      await queued;
+      expect(queuedRan, isTrue);
+      expect(jsonEncode(store.rows), expected);
+      expect(
+        store.unified!.decodedCacheReuses,
+        greaterThan(0),
+        reason:
+            'A real isolate-transferred immutable receipt must be reusable.',
+      );
+      expect(store.unified!.decodedRecords, 0);
+      expect(await folder.read('$writer.applog'), canonical);
+    } finally {
+      if (!release.isCompleted) release.complete();
+      if (opening != null) store = await opening;
+      await store?.close();
+      await profile?.close();
+      await root.delete(recursive: true);
+    }
+  });
+
+  test(
+    'warm cached prefix admits a new complete peer suffix without reusing its root',
+    () async {
+      final root = await Directory.systemTemp.createTemp('decoded-prefix-');
+      final folder = LocalLogFolder(
+        (await Directory('${root.path}/shared').create()).path,
+      );
+      final profilePath = '${root.path}/profile';
+      TaskStore? store;
+      try {
+        store = await TaskStore.open(folder, profilePath);
+        await store.command(const Uuid().v4(), 'user.created', {
+          'name': 'Original',
+        });
+        final prefixCount = store.unified!.snapshot.records.length;
+        final peer = const Uuid().v4(), added = const Uuid().v4();
+        final bytes = peerBytesFor(
+          store,
+          LogEvent(
+            store.space,
+            peer,
+            1,
+            EventClock(store.unified!.maximumClock!.value + BigInt.one),
+            added,
+            'user.created',
+            {'name': 'Arrived after clean close'},
+          ),
+        );
+        final ownerName = '${store.writer}.applog';
+        final original = await folder.read(ownerName);
+        await store.close();
+        store = null;
+        await folder.create('$peer.applog', bytes);
+        store = await TaskStore.open(folder, profilePath);
+        expect(store.unified!.decodedCacheReuses, prefixCount);
+        expect(store.unified!.decodedRecords, 2);
+        expect(
+          store.unified!.warmTaskCacheProofMicroseconds,
+          greaterThan(0),
+          reason:
+              'The original Task prefix proof must be checked and restored, not silently replaced by a full rebuild.',
+        );
+        expect(store.unified!.warmTaskCacheRestoreMicroseconds, greaterThan(0));
+
+        expect(
+          store.rows.singleWhere((r) => r['id'] == added)['name'],
+          'Arrived after clean close',
+        );
+        final expected = jsonEncode(store.rows);
+        await store.verifyHistory();
+        expect(jsonEncode(store.rows), expected);
+        expect(await folder.read(ownerName), original);
+        expect(await folder.read('$peer.applog'), bytes);
+      } finally {
+        await store?.close();
+        await root.delete(recursive: true);
+      }
+    },
+  );
 }

@@ -128,6 +128,11 @@ class _FoodAdmissionIndex {
           r.id: Set<String>.unmodifiable(r.operation.targets),
       }),
       byTarget = _indexTargets(records),
+      retracted = Set.unmodifiable({
+        for (final record in records)
+          if (record.operation.action == FoodAction.undo)
+            record.operation.retracts!,
+      }),
       maximumClock = records.isEmpty
           ? null
           : records.map((r) => r.clock).reduce((a, b) => a > b ? a : b);
@@ -137,6 +142,7 @@ class _FoodAdmissionIndex {
     Map<String, List<FoodRecord>> histories,
     this.maximumClock,
     _FoodAdmissionIndex context,
+    this.retracted,
   ) : legacyOwners = context.legacyOwners,
       maximumContainers = context.maximumContainers,
       byId = Map.unmodifiable(records),
@@ -147,6 +153,7 @@ class _FoodAdmissionIndex {
   final Map<String, FoodRecord> byId;
   final Map<String, Set<String>> targets;
   final Map<String, List<FoodRecord>> byTarget;
+  final Set<String> retracted;
   final EventClock? maximumClock;
   static Map<String, List<FoodRecord>> _indexTargets(List<FoodRecord> records) {
     final result = <String, List<FoodRecord>>{};
@@ -245,6 +252,11 @@ FoodAdmission? appendReadyFoodRecords(
     }
   }
   final changed = projectFood(history.values, legacyOwners: legacyOwners);
+  final newRetractions = {
+    for (final record in ordered)
+      if (record.operation.action == FoodAction.undo)
+        record.operation.retracts!,
+  };
   final containers = [
     ...base.state.containers.where((c) => !affected.contains(c.id)),
     ...changed.containers.where((c) => affected.contains(c.id)),
@@ -259,6 +271,9 @@ FoodAdmission? appendReadyFoodRecords(
       byTarget,
       ordered.last.clock,
       index,
+      newRetractions.isEmpty
+          ? index.retracted
+          : Set.unmodifiable({...index.retracted, ...newRetractions}),
     ),
   );
 }
@@ -281,4 +296,18 @@ class FoodAdmission {
   final FoodState state;
   final Map<String, FoodRecord> births;
   final Set<String> readyIds;
+
+  /// Null means the full ready index is unavailable; callers retain their
+  /// existing ready-record fallback. Hash identity is the semantic reference
+  /// hash, including sealed imported records whose integrity hash differs.
+  bool? confirmsReadyRecord(FoodRecord record) {
+    final index = _index;
+    if (index == null) return null;
+    return readyIds.contains(record.id) &&
+        index.byId[record.id]?.hash == record.hash;
+  }
+
+  /// Only a fully ready canonical graph can certify an existing retraction.
+  bool? hasReadyRetraction(String operation) =>
+      _index?.retracted.contains(operation);
 }
