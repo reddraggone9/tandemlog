@@ -27,7 +27,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial limits remain inactive until calibration review.
+- [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 
 - [Task latency repair](task-latency-repair.md): bounded exact-byte decode reuse and disposable projection indexes address RC4 startup/edit/Save/Undo/completion pauses; development validation and private-copy benchmarks are separate from future native candidate acceptance.
 

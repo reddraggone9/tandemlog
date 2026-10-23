@@ -269,9 +269,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir "$RUNNER_TEMP/performance-diagnostics"
-          # Fixed versioned limits are reviewed with this workflow. Activation
-          # replaces the sentinel with their literal SHA; inactive limits fail.
-          limits_sha="INACTIVE_PENDING_REVIEWED_CALIBRATION"
+          # Initial calibrated AOT limits are source-bound here. This storage gate
+          # does not replace the separate actual native UI acceptance gate.
+          limits_sha="50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e"
           mode=()
           if [[ "${{ inputs.performance_calibration }}" == true ]]; then
             mode=(--measure-only)

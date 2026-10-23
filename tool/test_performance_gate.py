@@ -222,13 +222,15 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
             self.assertIn(action,coverage)
         self.assertEqual(limits['historySizes']['dense-1'],1320)
         self.assertEqual(limits['historySizes']['dense-2'],2640)
-        self.assertFalse(limits['releaseReady'])
+        self.assertTrue(limits['releaseReady'])
         for values in limits['actionsBySize'].values():
             self.assertEqual(set(values),set(coverage))
         specs=run_gate.scaling_specs(limits)
         self.assertEqual(set(specs),{'task-own-history','food-own-history'})
         for spec in specs.values():self.assertEqual(set(spec['rules']),set(coverage))
-        self.assertEqual(limits['actionsBySize']['dense-food'],limits['actionsBySize']['dense-2'])
+        ordinary=lambda values:{k:v for k,v in values.items() if not k.startswith('startup.')}
+        self.assertEqual(ordinary(limits['actionsBySize']['dense-food']),ordinary(limits['actionsBySize']['dense-2']))
+        self.assertEqual(set(limits['actionsBySize']['dense-food']),set(limits['actionsBySize']['dense-2']))
         self.assertEqual(specs['food-own-history']['rules'],specs['task-own-history']['rules'])
         del limits['additionalPairedScaling']
         with self.assertRaises(RuntimeError):run_gate.scaling_specs(limits)
@@ -371,5 +373,33 @@ sys.exit(98)
         self.assertEqual(result.returncode,2)
         self.assertFalse(self.args.exists())
 
+
+
+class CalibratedInitialLimitTests(unittest.TestCase):
+    def test_initial_policy_is_bound_to_workflow_and_keeps_ui_separate(self):
+        import hashlib
+        path=PATH.parent/'limits-v1.json'
+        limits=json.loads(path.read_text())
+        workflow=(PATH.parents[2]/'.github/workflows/validate.yml').read_text()
+        self.assertIn('limits_sha="'+hashlib.sha256(path.read_bytes()).hexdigest()+'"',workflow)
+        self.assertTrue(limits['releaseReady'])
+        self.assertFalse(limits['calibration']['actualUIAccepted'])
+        self.assertFalse(limits['calibration']['policyOnlyReevaluationIsFreshEnforcingRun'])
+    def test_ordinary_target_and_both_tight_pairs_keep_all_actions(self):
+        limits=json.loads((PATH.parent/'limits-v1.json').read_text())
+        for values in limits['actionsBySize'].values():
+            ordinary={k:v for k,v in values.items() if not k.startswith('startup.')}
+            self.assertEqual(len(ordinary),224)
+            self.assertEqual(len(values)-len(ordinary),8)
+            for bound in ordinary.values():
+                self.assertLessEqual(bound['medianMs'],bound['maxMs'])
+                self.assertLessEqual(bound['maxMs'],100)
+        for spec in run_gate.scaling_specs(limits).values():
+            for action,rule in spec['rules'].items():
+                startup=action.startswith('startup.')
+                self.assertEqual(rule['medianAdditiveMs'],100 if startup else 3)
+                self.assertEqual(rule['maximumAdditiveMs'],200 if startup else 5)
+                self.assertEqual(rule['maxMedianRatio'],2.25 if startup else 1.25)
+                self.assertEqual(rule['maxMaximumRatio'],2.5 if startup else 1.4)
 
 if __name__=='__main__':unittest.main()
