@@ -168,7 +168,7 @@ def finish_process(proc, marker, close_mode, xdotool):
     return result
 
 
-def inspect_stopped_witness(profile, folder):
+def inspect_stopped_witness(profile, folder, *, folder_location=None):
     """Presence/hash evidence only; production reuse validates actual bindings."""
     database = profile/'local.sqlite'
     result = {'taskProofPresent': False, 'decodedProofPresent': False,
@@ -177,10 +177,13 @@ def inspect_stopped_witness(profile, folder):
     if not database.exists():
         return result
     epoch = json.loads((folder/'tandemlog-space.json').read_text())['epoch']
-    key = hashlib.sha256(f'{folder}#app5:{epoch}'.encode()).hexdigest()
+    # Location is an opaque production identity. Path may normalize its slash or
+    # dot spelling for filesystem access; neither receipt hash may normalize it.
+    location = str(folder) if folder_location is None else folder_location
+    key = hashlib.sha256(f'{location}#app5:{epoch}'.encode()).hexdigest()
     # Task projections are scoped to format+epoch; decoded receipts are scoped
     # to UnifiedHistory._locationKey, which is app5.location.SHA256(location).
-    decoded_key = 'app5.location.'+hashlib.sha256(str(folder).encode()).hexdigest()
+    decoded_key = 'app5.location.'+hashlib.sha256(location.encode()).hexdigest()
     names = [f'app5.task.cache.{key}', f'app5.decoded.proof.{decoded_key}',
              f'app5.decoded.payload.{decoded_key}']
     with closing(sqlite3.connect(database.resolve().as_uri()+'?mode=ro', uri=True, timeout=0)) as db:

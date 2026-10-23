@@ -79,9 +79,11 @@ void main() {
     'normal exit without unmount seals cache, releases lease, and actual reopen reuses proof once',
     (tester) async {
       final data = (await tester.runAsync(host.fixture))!;
+      // Keep an equivalent spelling that Python Path normalizes on every OS.
+      final rawFolder = LocalLogFolder('${data.folder.location}/.');
       host.HostResources? resources;
       try {
-        await start(tester, data.profile);
+        await start(tester, data.profile, folder: rawFolder);
         final state = tester.state(find.byType(TasksPage)) as dynamic;
         resources = host.hostResources(tester);
         final before = (await tester.runAsync(
@@ -138,15 +140,19 @@ void main() {
               '-c',
               'import json,sys; from pathlib import Path; sys.path.insert(0,"tool"); '
                   'from measure_startup import inspect_stopped_witness; '
-                  'print(json.dumps(inspect_stopped_witness(Path(sys.argv[1]),Path(sys.argv[2]))))',
+                  'p=Path(sys.argv[1]); f=Path(sys.argv[2]); '
+                  'value=inspect_stopped_witness(p,f,folder_location=sys.argv[2]); '
+                  'value["normalizedTaskProofPresent"]=inspect_stopped_witness(p,f)["taskProofPresent"]; '
+                  'print(json.dumps(value))',
               data.profile,
-              data.folder.location,
+              rawFolder.location,
             ],
             workingDirectory: Directory.current.path,
           ).timeout(const Duration(seconds: 10));
           expect(result.exitCode, 0, reason: result.stderr.toString());
           return jsonDecode(result.stdout as String) as Map<String, dynamic>;
         }))!;
+        expect(probe['normalizedTaskProofPresent'], isFalse);
         expect(probe['taskProofShapeValid'], isTrue);
         expect(probe['decodedProofPresent'], isTrue);
         expect(probe['decodedPayloadHashMatches'], isTrue);
@@ -158,7 +164,7 @@ void main() {
           1,
           reason: 'dispose joins the same already completed shutdown.',
         );
-        await start(tester, data.profile);
+        await start(tester, data.profile, folder: rawFolder);
         final reopened = tester.state(find.byType(TasksPage)) as dynamic;
         final tasks = reopened.store as TaskStore;
         expect(tasks.warmProjectionReuses, 1);

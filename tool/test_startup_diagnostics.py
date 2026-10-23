@@ -1,5 +1,5 @@
 """Early process failures retain evidence; readiness still requires the model."""
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from contextlib import closing
 import json
 import hashlib
@@ -206,6 +206,38 @@ class StartupDiagnostics(unittest.TestCase):
             self.assertEqual((profile/'local.sqlite').read_bytes(),before)
 
 
+
+
+    def test_stopped_witness_hashes_explicit_location_verbatim(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory); profile=root/'profile'; shared=root/'shared'
+            profile.mkdir(); shared.mkdir(); epoch='22222222-2222-4222-8222-222222222222'
+            (shared/'tandemlog-space.json').write_text(json.dumps({'epoch':epoch}))
+            location=r'R:\synthetic\shared/data'
+            self.assertNotEqual(str(PureWindowsPath(location)),location)
+            key=hashlib.sha256(f'{location}#app5:{epoch}'.encode()).hexdigest()
+            decoded_key='app5.location.'+hashlib.sha256(location.encode()).hexdigest()
+            payload='opaque synthetic decoded payload'
+            task=json.dumps({'generation':3,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
+            with closing(sqlite3.connect(profile/'local.sqlite')) as db,db:
+                db.execute('CREATE TABLE profile_metadata(key TEXT PRIMARY KEY,value TEXT)')
+                db.executemany('INSERT INTO profile_metadata VALUES (?,?)',[
+                    (f'app5.task.cache.{key}',task),
+                    (f'app5.decoded.proof.{decoded_key}',hashlib.sha256(payload.encode()).hexdigest()),
+                    (f'app5.decoded.payload.{decoded_key}',payload)])
+            before=(profile/'local.sqlite').read_bytes()
+            normalized=inspect_stopped_witness(profile,shared)
+            self.assertFalse(normalized['taskProofPresent'])
+            self.assertFalse(normalized['decodedProofPresent'])
+            normalized_spelling=inspect_stopped_witness(
+                profile,shared,folder_location=str(PureWindowsPath(location)))
+            self.assertFalse(normalized_spelling['taskProofPresent'])
+            self.assertFalse(normalized_spelling['decodedProofPresent'])
+            observed=inspect_stopped_witness(profile,shared,folder_location=location)
+            self.assertTrue(observed['taskProofShapeValid'])
+            self.assertTrue(observed['decodedPayloadHashMatches'])
+            self.assertFalse(observed['productionReuseVerified'])
+            self.assertEqual((profile/'local.sqlite').read_bytes(),before)
 
 if __name__ == '__main__':
     unittest.main()
