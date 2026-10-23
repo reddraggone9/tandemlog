@@ -41,6 +41,78 @@ def seed_fixture(root, tasks, library):
     return folder, profile, receipt
 
 
+def send_wm_delete_window(window):
+    """Ask one validated X11 client to close using the standard ICCCM protocol."""
+    import ctypes as c
+    if not isinstance(window, int) or not 0 < window < 2**32:
+        raise RuntimeError('Invalid owned X11 window')
+    class Data(c.Union):
+        _fields_ = [('b', c.c_char*20), ('s', c.c_short*10), ('l', c.c_long*5)]
+    class ClientMessage(c.Structure):
+        _fields_ = [('type', c.c_int), ('serial', c.c_ulong),
+                    ('send_event', c.c_int), ('display', c.c_void_p),
+                    ('window', c.c_ulong), ('message_type', c.c_ulong),
+                    ('format', c.c_int), ('data', Data)]
+    class Event(c.Union):
+        _fields_ = [('xclient', ClientMessage), ('pad', c.c_long*24)]
+    try:
+        x = c.CDLL('libX11.so.6')
+    except OSError as error:
+        raise RuntimeError('Normal close requires the existing GTK X11 library libX11.so.6') from error
+    signatures = {
+        'XOpenDisplay': ([c.c_char_p], c.c_void_p),
+        'XInternAtom': ([c.c_void_p, c.c_char_p, c.c_int], c.c_ulong),
+        'XGetWMProtocols': ([c.c_void_p, c.c_ulong, c.POINTER(c.POINTER(c.c_ulong)), c.POINTER(c.c_int)], c.c_int),
+        'XFree': ([c.c_void_p], c.c_int),
+        'XSendEvent': ([c.c_void_p, c.c_ulong, c.c_int, c.c_long, c.POINTER(Event)], c.c_int),
+        'XSync': ([c.c_void_p, c.c_int], c.c_int),
+        'XCloseDisplay': ([c.c_void_p], c.c_int),
+        'XSetErrorHandler': ([c.c_void_p], c.c_void_p),
+    }
+    for name, (arguments, result) in signatures.items():
+        getattr(x, name).argtypes = arguments
+        getattr(x, name).restype = result
+    display = x.XOpenDisplay(None)  # The same explicit DISPLAY/XAUTHORITY as discovery.
+    if not display:
+        raise RuntimeError('Cannot open the measured X11 display for normal close')
+    errors = []
+    handler_type = c.CFUNCTYPE(c.c_int, c.c_void_p, c.c_void_p)
+    handler = handler_type(lambda _display, _event: (errors.append(True), 0)[1])
+    previous = x.XSetErrorHandler(c.cast(handler, c.c_void_p))
+    try:
+        protocols = x.XInternAtom(display, b'WM_PROTOCOLS', 1)
+        delete = x.XInternAtom(display, b'WM_DELETE_WINDOW', 1)
+        if not protocols or not delete:
+            raise RuntimeError('Owned client does not advertise normal window-close atoms')
+        supported = c.POINTER(c.c_ulong)()
+        count = c.c_int()
+        try:
+            found = x.XGetWMProtocols(display, window, c.byref(supported), c.byref(count))
+            if not found or not 0 < count.value <= 256 or delete not in supported[:count.value]:
+                raise RuntimeError('Owned client does not support WM_DELETE_WINDOW')
+        finally:
+            if supported:
+                x.XFree(supported)
+        event = Event()
+        event.xclient.type = 33  # ClientMessage
+        event.xclient.send_event = 1
+        event.xclient.display = display
+        event.xclient.window = window
+        event.xclient.message_type = protocols
+        event.xclient.format = 32
+        event.xclient.data.l[0] = delete
+        event.xclient.data.l[1] = 0  # CurrentTime; no focus or input action.
+        sent = x.XSendEvent(display, window, 0, 0, c.byref(event))
+        x.XSync(display, 0)
+        if not sent or errors:
+            raise RuntimeError('X11 server refused the owned normal-close request')
+    finally:
+        try:
+            x.XCloseDisplay(display)
+        finally:
+            x.XSetErrorHandler(previous)
+
+
 def request_owned_window_close(proc, xdotool):
     """Send WM_DELETE_WINDOW to one owned visible window; never focus/input."""
     if proc.poll() is not None:
@@ -50,8 +122,12 @@ def request_owned_window_close(proc, xdotool):
     if any(int(value) != os.getuid() for value in uid.split()[1:]):
         raise RuntimeError('Measured window process UID changed')
     def command(*args):
-        result = subprocess.run([str(xdotool), *args], stdin=subprocess.DEVNULL,
-                                capture_output=True, text=True, timeout=5)
+        try:
+            result = subprocess.run([str(xdotool), *args], stdin=subprocess.DEVNULL,
+                                    capture_output=True, text=True, timeout=5)
+        except FileNotFoundError as error:
+            raise RuntimeError('Normal close requires executable xdotool for owned-window discovery: '
+                               + str(xdotool)) from error
         if result.returncode:
             raise RuntimeError(f'Owned window close command failed: {args[0]}')
         return result.stdout.strip()
@@ -61,8 +137,8 @@ def request_owned_window_close(proc, xdotool):
     window = windows[0]
     if command('getwindowpid', window) != str(proc.pid) or proc.poll() is not None:
         raise RuntimeError('Measured window/PID binding changed')
-    # windowclose destroys the X window; windowquit asks the client to close.
-    command('windowquit', window)
+    # Old distro xdotool lacks windowquit; windowclose would destroy the window.
+    send_wm_delete_window(int(window))
     return {'method': 'owned-window-WM_DELETE_WINDOW', 'pid': proc.pid,
             'window': window, 'globalFocusOrInput': False}
 
@@ -253,7 +329,7 @@ def main():
     parser.add_argument('--close-mode', choices=['normal', 'terminate'], default='normal',
                         help='Normal owned-window close, or explicitly abrupt SIGTERM trials; SIGTERM never proves a clean witness')
     parser.add_argument('--xdotool', default=shutil.which('xdotool') or 'xdotool',
-                        help='Reviewed xdotool with windowquit support; no focus/input is sent')
+                        help='xdotool for owned-window discovery; normal close uses existing libX11, no focus/input is sent')
     args = parser.parse_args()
     if args.tasks < 0 or args.runs < 1:
         parser.error('tasks must be nonnegative and runs must be positive')

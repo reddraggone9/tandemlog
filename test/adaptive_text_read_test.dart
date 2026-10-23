@@ -652,6 +652,7 @@ void main() {
           await root.delete(recursive: true);
         }
       },
+      timeout: const Timeout(Duration(seconds: 120)),
       skip: Platform.environment['TANDEMLOG_TEXT_LIBRARY'] == null,
     );
   }

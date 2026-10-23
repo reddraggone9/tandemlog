@@ -11,7 +11,7 @@ import os
 import subprocess
 from unittest.mock import patch
 
-from measure_startup import launch, verify_loaded, inspect_stopped_witness, STARTUP_DEADLINE_SECONDS
+from measure_startup import launch, verify_loaded, inspect_stopped_witness, send_wm_delete_window, STARTUP_DEADLINE_SECONDS
 
 
 class StartupDiagnostics(unittest.TestCase):
@@ -73,7 +73,7 @@ class StartupDiagnostics(unittest.TestCase):
             self.assertFalse(result['cleanWitnessVerified'])
 
     @unittest.skipUnless(sys.platform.startswith('linux'), 'Owned PID/UID window protocol is Linux-only')
-    def test_normal_close_uses_exact_owned_pid_windowquit_without_focus_or_signal(self):
+    def test_normal_close_uses_exact_owned_pid_standard_protocol_without_focus_or_signal(self):
         # Fake manager commands exercise scope/cleanup, not actual GTK acceptance.
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); stop = root/'stop'
@@ -89,19 +89,19 @@ class StartupDiagnostics(unittest.TestCase):
                     pid = args[-1]; output = '4194305\n'
                 elif args[1] == 'getwindowpid':
                     output = pid+'\n'
-                elif args[1] == 'windowquit':
-                    stop.write_text('close acknowledged'); output = ''
                 else:
                     raise AssertionError('Unexpected manager/input command')
                 return subprocess.CompletedProcess(args, 0, output, '')
-            with patch('measure_startup.subprocess.run', side_effect=manager):
+            with patch('measure_startup.subprocess.run', side_effect=manager), patch(
+                    'measure_startup.send_wm_delete_window', side_effect=lambda window: stop.write_text('close acknowledged')) as close:
                 result = launch([sys.executable, '-c', program], root/'profile', root, 1,
                                 close_mode='normal', xdotool='/synthetic/xdotool')
             self.assertTrue(result['shutdown']['normalExitVerified'])
             self.assertEqual(result['process_exit'], 0)
             self.assertFalse(result['shutdown']['globalFocusOrInput'])
             self.assertNotIn('forcedTerminationUsed', result['shutdown'])
-            self.assertEqual([command[0] for command in commands], ['search','getwindowpid','windowquit'])
+            self.assertEqual([command[0] for command in commands], ['search','getwindowpid'])
+            close.assert_called_once_with(4194305)
 
     @unittest.skipUnless(sys.platform.startswith('linux'), 'Owned PID/UID window protocol is Linux-only')
     def test_foreign_window_binding_refuses_windowquit_and_retains_failed_forced_cleanup(self):
@@ -121,6 +121,68 @@ class StartupDiagnostics(unittest.TestCase):
             self.assertEqual(status['shutdown']['method'], 'SIGTERM')
             self.assertIn('binding changed', status['shutdown']['normalCloseError'])
             self.assertNotIn('windowquit', commands)
+
+    def test_linux_ci_declares_owned_window_discovery_dependency(self):
+        workflow = Path(__file__).resolve().parent.parent/'.github/workflows/validate.yml'
+        install = next(line for line in workflow.read_text().splitlines()
+                       if 'apt-get install -y' in line)
+        self.assertIn('xdotool', install.split('apt-get install -y', 1)[1].split())
+
+    @unittest.skipUnless(sys.platform.startswith('linux'), 'Owned PID/UID window protocol is Linux-only')
+    def test_missing_discovery_tool_retains_failure_and_forced_cleanup_not_clean_reuse(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); missing = root/'missing-xdotool'
+            with self.assertRaisesRegex(RuntimeError, 'Normal owned window close was not verified'):
+                launch([sys.executable, '-c',
+                        'import time; print("TANDEMLOG_READY_MS=1 FILES_READ=1", flush=True); time.sleep(30)'],
+                       root/'profile', root, 1, close_mode='normal', xdotool=missing)
+            status = json.loads((root/'run-1.json').read_text())
+            self.assertFalse(status['shutdown']['normalExitVerified'])
+            self.assertFalse(status['cleanWitnessVerified'])
+            self.assertEqual(status['shutdown']['method'], 'SIGTERM')
+            self.assertIn('Normal close requires executable xdotool for owned-window discovery',
+                          status['shutdown']['normalCloseError'])
+            self.assertEqual(status['process_exit'], -15)
+
+    def test_standard_x11_close_exact_event_support_and_error_paths(self):
+        # Fake Xlib checks exact wire intent, not actual GTK acceptance.
+        import ctypes as c
+        from unittest.mock import Mock
+        class Xlib:
+            def __init__(self, supported=True, reject=False):
+                self.atoms=(c.c_ulong*1)(202 if supported else 999)
+                self.XOpenDisplay=Mock(return_value=123)
+                self.XInternAtom=Mock(side_effect=lambda display,name,existing: 101 if name==b'WM_PROTOCOLS' else 202)
+                def protocols(display,window,array,count):
+                    c.cast(array,c.POINTER(c.POINTER(c.c_ulong)))[0]=c.cast(self.atoms,c.POINTER(c.c_ulong))
+                    c.cast(count,c.POINTER(c.c_int))[0]=1
+                    return 1
+                self.XGetWMProtocols=Mock(side_effect=protocols)
+                self.XFree=Mock(return_value=0)
+                self.XSendEvent=Mock(return_value=0 if reject else 1)
+                self.XSync=Mock(return_value=0)
+                self.XCloseDisplay=Mock(return_value=0)
+                self.XSetErrorHandler=Mock(return_value=None)
+        lib=Xlib()
+        with patch('ctypes.CDLL',return_value=lib):send_wm_delete_window(4194305)
+        display,window,propagate,mask,event = lib.XSendEvent.call_args.args
+        message=event._obj.xclient
+        self.assertEqual((display,window,propagate,mask),(123,4194305,0,0))
+        self.assertEqual((message.type,message.window,message.message_type,message.format),(33,4194305,101,32))
+        self.assertEqual(list(message.data.l),[202,0,0,0,0])
+        lib.XFree.assert_called_once();lib.XCloseDisplay.assert_called_once_with(123)
+        self.assertEqual(lib.XSetErrorHandler.call_count,2)
+        for supported,reject,error in [(False,False,'does not support WM_DELETE_WINDOW'),(True,True,'server refused')]:
+            lib=Xlib(supported,reject)
+            with patch('ctypes.CDLL',return_value=lib),self.assertRaisesRegex(RuntimeError,error):
+                send_wm_delete_window(4194305)
+            if not supported:lib.XSendEvent.assert_not_called()
+            lib.XCloseDisplay.assert_called_once_with(123)
+            self.assertEqual(lib.XSetErrorHandler.call_count,2)
+        lib=Xlib();lib.XOpenDisplay.return_value=None
+        with patch('ctypes.CDLL',return_value=lib),self.assertRaisesRegex(RuntimeError,'Cannot open'):
+            send_wm_delete_window(4194305)
+        lib.XSendEvent.assert_not_called()
 
     def test_stopped_proof_presence_and_hash_do_not_claim_production_reuse(self):
         with tempfile.TemporaryDirectory() as directory:
