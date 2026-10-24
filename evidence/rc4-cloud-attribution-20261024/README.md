@@ -81,7 +81,7 @@ title/Notes Undo and cold startup; dense-2 failed converted bulk-reorder Undo,
 checklist add, historical Food-details Undo and cold startup. Both paired checks
 still fail; exact per-case samples/bounds remain in the report. Peer Food changed
 no Task evidence and ran zero Task sorts in every sample, but its Food-history
-paired maximum still fails. This is not complete performance repair/acceptance.
+paired median still fails. This is not complete performance repair/acceptance.
 The cloud cgroup permits16GiB/4CPUs and is not the required
 6GiB/2CPU/no-swap release environment. Exact-commit enforcing CI is separate.
 
