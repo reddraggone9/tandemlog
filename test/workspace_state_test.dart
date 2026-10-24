@@ -152,6 +152,257 @@ void main() {
   );
 
   test(
+    'settled metadata and plain completion Undo preserve global positions',
+    () async {
+      final initialOrder = tasks.currentView.rows
+          .map((row) => row['id'])
+          .toList();
+      final rebuilds = tasks.globalOrderRebuilds;
+      final edited = await tasks.command(fixture.container, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-25'},
+      });
+      expect((await tasks.undoOperations([edited.id])).error, isNull);
+      final completed = await tasks.complete(
+        fixture.container,
+        completionDay: DateTime.utc(2026, 10, 25),
+      );
+      expect((await tasks.undoOperations([completed.id])).error, isNull);
+      expect(tasks.globalOrderRebuilds, rebuilds);
+      expect(tasks.currentView.rows.map((row) => row['id']), initialOrder);
+      expect(tasks.currentView.rows, tasks.rows);
+    },
+  );
+
+  test(
+    'delete restoration and manual moves retain ordered full fallback',
+    () async {
+      await tasks.command(builders.newTask, 'task.created', {
+        'title': 'Unrelated Task',
+        'description': '',
+        'assignee': fixture.peer,
+      });
+      final initial = tasks.currentView;
+      final rebuilds = tasks.globalOrderRebuilds;
+      final deleted = await tasks.command(
+        fixture.container,
+        'task.deleted',
+        {},
+      );
+      expect(
+        tasks.currentView.rows.any((row) => row['id'] == fixture.container),
+        isFalse,
+      );
+      final decoded = tasks.displaySnapshotRowsDecoded;
+      expect((await tasks.undoOperations([deleted.id])).error, isNull);
+      expect(tasks.globalOrderRebuilds, rebuilds);
+      expect(tasks.displaySnapshotRowsDecoded - decoded, greaterThan(1));
+      expect(
+        tasks.currentView.rows.map((row) => row['id']),
+        initial.rows.map((row) => row['id']),
+      );
+      expect(tasks.currentView.rows, tasks.rows);
+      final beforeMove = tasks.globalOrderRebuilds;
+      final move = await tasks.command(builders.newTask, 'task.moved', {
+        'before': fixture.container,
+      });
+      expect(tasks.globalOrderRebuilds, beforeMove + 1);
+      expect(tasks.currentView.rows, tasks.rows);
+      final ids = tasks.currentView.rows
+          .where((row) => row['kind'] == 'task')
+          .map((row) => row['id'])
+          .toList();
+      expect(
+        ids.indexOf(builders.newTask),
+        lessThan(ids.indexOf(fixture.container)),
+      );
+      expect((await tasks.undoOperations([move.id])).error, isNull);
+      expect(tasks.globalOrderRebuilds, beforeMove + 2);
+      expect(
+        tasks.currentView.rows.map((row) => row['id']),
+        initial.rows.map((row) => row['id']),
+      );
+      expect(tasks.currentView.rows, tasks.rows);
+    },
+  );
+
+  test(
+    'point Task edit reuses unrelated display rows and immutable users',
+    () async {
+      await tasks.command(builders.newTask, 'task.created', {
+        'title': 'Unrelated Task',
+        'description': '',
+        'assignee': fixture.peer,
+      });
+      final before = state.current.tasks;
+      final unchanged = before.rows.singleWhere(
+        (row) => row['id'] == builders.newTask,
+      );
+      final decoded = tasks.displaySnapshotRowsDecoded;
+      await tasks.command(fixture.container, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-25'},
+      });
+      final after = state.current.tasks;
+      expect(tasks.displaySnapshotRowsDecoded - decoded, 1);
+      expect(after.revision, before.revision + 1);
+      expect(identical(after.users, before.users), isTrue);
+      expect(
+        identical(
+          after.rows.singleWhere((row) => row['id'] == builders.newTask),
+          unchanged,
+        ),
+        isTrue,
+      );
+      final changed = after.rows.singleWhere(
+        (row) => row['id'] == fixture.container,
+      );
+      expect((changed['schedule'] as Map)['dueDate'], '2026-10-25');
+      expect(
+        (before.rows.singleWhere(
+              (row) => row['id'] == fixture.container,
+            )['schedule']
+            as Map)['dueDate'],
+        isNull,
+      );
+      expect(
+        () => (changed['schedule'] as Map)['dueDate'] = '2026-10-26',
+        throwsUnsupportedError,
+      );
+      final stable = tasks.displaySnapshotRowsDecoded;
+      await state.refresh();
+      await food.add(const FoodDetails(name: 'Unrelated delta'), 1);
+      await history.renameDevice('Metadata only');
+      expect(tasks.displaySnapshotRowsDecoded, stable);
+      expect(identical(state.current.tasks, after), isTrue);
+    },
+  );
+
+  test(
+    'failed projection stage cannot publish or mutate a point delta',
+    () async {
+      final before = state.current.tasks;
+      final owner = Object();
+      final originalRecordCount = history.snapshot.records.length;
+      var fail = false;
+      await profile.serialize(() async {
+        history.attachProjectionInProfileQueue(owner, (snapshot) {
+          if (fail && snapshot.records.length > originalRecordCount) {
+            throw StateError('Synthetic stage failure after Task projection');
+          }
+          return () {};
+        });
+      });
+      fail = true;
+      await expectLater(
+        tasks.command(fixture.container, 'task.edited', {
+          'schedule': {'dueDate': '2026-10-25'},
+        }),
+        throwsStateError,
+      );
+      expect(identical(state.current.tasks, before), isTrue);
+      expect(identical(tasks.currentView, before), isTrue);
+      expect(
+        (before.rows.singleWhere(
+              (row) => row['id'] == fixture.container,
+            )['schedule']
+            as Map)['dueDate'],
+        isNull,
+      );
+      fail = false;
+      await profile.serialize(
+        () async => history.detachProjectionInProfileQueue(owner),
+      );
+      await history.recoverPrepared();
+      expect(
+        (state.current.tasks.rows.singleWhere(
+              (row) => row['id'] == fixture.container,
+            )['schedule']
+            as Map)['dueDate'],
+        '2026-10-25',
+      );
+      final accepted = state.current.tasks;
+      await state.refresh();
+      expect(identical(state.current.tasks, accepted), isTrue);
+    },
+  );
+
+  test(
+    'display replacements preserve nested values, order, and fallback boundary',
+    () {
+      final before = TaskViewSnapshot.next([
+        {'id': 'u', 'kind': 'user', 'name': 'One'},
+        {
+          'id': 'a',
+          'kind': 'task',
+          'title': 'A',
+          'schedule': {'dueDate': null},
+        },
+        {
+          'id': 'b',
+          'kind': 'task',
+          'title': 'B',
+          'checklist': [
+            {'id': 'item', 'title': 'Old'},
+          ],
+        },
+      ], TaskViewSnapshot.empty());
+      final same = TaskViewSnapshot.replacing({
+        'a': {
+          'schedule': {'dueDate': null},
+          'title': 'A',
+          'kind': 'task',
+          'id': 'a',
+        },
+        'hidden': null,
+      }, before);
+      expect(identical(same, before), isTrue);
+      final mutable = {
+        'id': 'b',
+        'kind': 'task',
+        'title': 'B',
+        'checklist': [
+          {'id': 'item', 'title': 'New'},
+        ],
+      };
+      final after = TaskViewSnapshot.replacing({'b': mutable}, before)!;
+      ((mutable['checklist'] as List).single as Map)['title'] = 'Outside alias';
+      expect(
+        ((after.rows.last['checklist'] as List).single as Map)['title'],
+        'New',
+      );
+      expect(
+        ((before.rows.last['checklist'] as List).single as Map)['title'],
+        'Old',
+      );
+      expect(identical(after.rows[1], before.rows[1]), isTrue);
+      expect(identical(after.users, before.users), isTrue);
+      expect(
+        () => ((after.rows.last['checklist'] as List).single as Map)['title'] =
+            'Mutate',
+        throwsUnsupportedError,
+      );
+      final removed = TaskViewSnapshot.replacing({'a': null}, after)!;
+      expect(removed.rows.map((row) => row['id']), ['u', 'b']);
+      expect(
+        TaskViewSnapshot.replacing({'a': before.rows[1]}, removed),
+        isNull,
+      );
+      expect(
+        TaskViewSnapshot.replacing({
+          'new': {'id': 'new', 'kind': 'task'},
+        }, before),
+        isNull,
+      );
+      expect(
+        TaskViewSnapshot.replacing({
+          'a': {'id': 'b', 'kind': 'task'},
+        }, before),
+        isNull,
+      );
+      expect(before.rows.map((row) => row['id']), ['u', 'a', 'b']);
+    },
+  );
+
+  test(
     'device metadata preserves Tasks users and Food slice identities',
     () async {
       final before = state.current;
@@ -220,6 +471,8 @@ void main() {
 
   test('zero-candidate occurrence pass scans shared root once', () async {
     final before = folder.lists;
+    final planned = tasks.occurrenceDuePlansEvaluated;
+    final decoded = tasks.displaySnapshotRowsDecoded;
     final result = await state.refresh(
       migrateOccurrenceDates: true,
       canMigrate: () => true,
@@ -227,6 +480,12 @@ void main() {
     expect(folder.lists - before, 1);
     expect(result.migration!.migrated, 0);
     expect(result.migrationError, isNull);
+    expect(tasks.occurrenceDuePlansEvaluated, planned);
+    expect(tasks.displaySnapshotRowsDecoded, decoded);
+    await food.add(const FoodDetails(name: 'Food-only refresh'), 1);
+    await state.refresh(migrateOccurrenceDates: true, canMigrate: () => true);
+    expect(tasks.occurrenceDuePlansEvaluated, planned);
+    expect(tasks.displaySnapshotRowsDecoded, decoded);
   });
 
   test(

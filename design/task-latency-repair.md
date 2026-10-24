@@ -342,3 +342,55 @@ selected text reads. Empty claims return an empty result; an untrusted scope
 falls back to the original SQL oracle. All competing/retracted claims and
 candidate claims are retained in compareEvents order. No new cache or size
 budget is introduced.
+
+
+The shared editor surface retains the list's element ancestry when the editor
+opens, closes or changes between side panel and modal. The Task caller retains
+that surface when no editor is visible; Food retains its existing inner panel
+surface. Food's outer narrow-modal wrapper still changes ancestry so a focused
+editor can move out of the background before focus exclusion takes effect. This avoids recreating
+unkeyed entry controls and deactivating/reparenting the keyed viewport. Modal
+background focus and semantics remain excluded; panel width and keyboard inset
+ownership are unchanged. Lifecycle regression tests cover preserved control
+state and keyed descendants. The size of the native timing improvement remains
+subject to fresh native measurements; this correction alone is not performance
+acceptance.
+
+Ordinary title/completion Undo no longer serializes the entire Task snapshot
+solely for a possible bulk-order editor rebase. That snapshot is taken only
+when the existing move-editor rebase actually applies; its content comparison
+and stale-editor checks remain unchanged.
+
+
+## Point projection and page invalidation
+
+A successful Task replay reports the complete set of rows it actually projected,
+including affected checklist parents and derived identities. An immutable view
+can replace or remove those existing rows by ID while retaining untouched row
+objects. Newly visible identities and ordering changes use the ordered SQL
+fallback. The candidate view is staged before commit and published only after
+commit; a failed transaction cannot expose it. Regression tests compare these
+updates with an independent full rebuild, including deletion, restoration,
+checklist parents and recurrence.
+
+Settled scalar metadata, deletion, checklist changes and nonrecurring completion
+Undo avoid rebuilding the global order. Moves, recurrence and unsettled input
+retain the conservative ordering path. Occurrence-Due conversion selects its
+indexed candidates before decoding Task rows; no candidates means no unrelated
+Task-row decoding. These are projection optimizations, not relaxed canonical,
+text-lineage or readiness checks.
+
+Task and Food pages rebuild on focus notifications only when editable-text focus
+changes classification. Ordinary builds resynchronize that comparison, and
+keyboard Undo still checks live focus before acting. Food expiry notifications
+retain their separate invalidation path; editor and keyboard-inset behavior
+remain covered. The two-pixel toolbar progress strip has its own repaint
+boundary, preserving its animation and geometry while isolating animation paint
+from static page ancestors. Render-counter tests demonstrate that isolation;
+they do not establish native input-to-paint performance.
+
+The earlier release-mode Linux UI probe still exceeded the 100 ms target for
+Task and Food Save/Undo. Its artifact predates these focus and paint changes.
+Fresh native measurements, the full interaction inventory and exact-candidate
+release checks remain required; passing storage benchmarks alone cannot satisfy
+them. No timing limit has been relaxed.

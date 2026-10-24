@@ -36,3 +36,6 @@ test/fixtures/timezone-additional-2026e/** -text
 
 # Independent current-operation golden bytes must survive Windows checkouts.
 test/fixtures/current-operation-v1/** -text
+
+# The release workflow pins this policy by literal SHA256 on all platforms.
+tool/performance/limits-v1.json -text

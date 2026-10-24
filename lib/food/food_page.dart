@@ -199,15 +199,24 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       await _requestEditorClose?.call() ?? true;
   String? _actionError;
   late final FoodExpirationClock _expirationClock;
+  late bool _lastTextFocus;
   @override
   void initState() {
     super.initState();
+    _lastTextFocus = _textHasFocus;
     _expirationClock = FoodExpirationClock(now: widget.now)
-      ..addListener(_focusChanged);
+      ..addListener(_expirationChanged);
     FocusManager.instance.addListener(_focusChanged);
   }
 
   void _focusChanged() {
+    if (!mounted) return;
+    final textHasFocus = _textHasFocus;
+    if (textHasFocus == _lastTextFocus) return;
+    setState(() => _lastTextFocus = textHasFocus);
+  }
+
+  void _expirationChanged() {
     if (mounted) setState(() {});
   }
 
@@ -230,7 +239,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   @override
   void dispose() {
     FocusManager.instance.removeListener(_focusChanged);
-    _expirationClock.removeListener(_focusChanged);
+    _expirationClock.removeListener(_expirationChanged);
     _expirationClock.dispose();
     search.dispose();
     // An editor requested just before page disposal may never mount, so no
@@ -242,6 +251,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textHasFocus = _textHasFocus;
+    _lastTextFocus = textHasFocus;
     final addCommand = widget.onAdd, undoCommand = widget.onUndo;
     final pending = widget.hasPendingSave?.call() ?? widget.savePending;
     final querying = search.text.trim().isNotEmpty;
@@ -264,7 +275,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         // end field focus. Auxiliary routes still reserve their own insets.
         resizeToAvoidBottomInset:
             (ModalRoute.isCurrentOf(context) ?? true) &&
-            (_editorBuilder != null || _textHasFocus),
+            (_editorBuilder != null || textHasFocus),
         body: Actions(
           actions: {
             if (_editorBuilder != null)

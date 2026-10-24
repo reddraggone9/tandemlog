@@ -222,6 +222,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   final search = TextEditingController();
   final searchFocus = FocusNode();
   final bodyFocusScope = FocusScopeNode(debugLabel: 'Task and Food body');
+  late bool _lastTextFocus;
   bool captureMode = false;
   String get searchQuery => search.text.trim();
   bool get searching => searchQuery.isNotEmpty;
@@ -440,6 +441,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _lastTextFocus = _textHasFocus;
     setupValidation.addListener(_formValidationChanged);
     captureValidation.addListener(_formValidationChanged);
     firstName.addListener(() {
@@ -1603,7 +1605,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   void _focusChanged() {
-    if (mounted) setState(() {});
+    if (!mounted) return;
+    final textHasFocus = _textHasFocus;
+    if (textHasFocus == _lastTextFocus) return;
+    setState(() => _lastTextFocus = textHasFocus);
   }
 
   Future<T> _recordAction<T>(
@@ -1748,12 +1753,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         return;
       }
       final entry = requested!, label = entry.label;
-      final beforeUndo = origin.taskSnapshot;
-      final rebaseBulk =
-          preserveEditor &&
-          !bulkConflict &&
-          editingBulk != null &&
-          bulkSnapshot == beforeUndo;
+      final beforeUndo = preserveEditor && !bulkConflict && editingBulk != null
+          ? origin.taskSnapshot
+          : null;
+      final rebaseBulk = beforeUndo != null && bulkSnapshot == beforeUndo;
       final result = await origin.undoOperations(entry.operations.toList());
       undoHistory.acknowledge(entry, result.undone);
       if (!mounted || !identical(store, origin)) return;
@@ -2951,11 +2954,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     List<Map<String, dynamic>> users,
   ) => LayoutBuilder(
     builder: (context, constraints) {
+      final panel = constraints.maxWidth >= EditorSurface.breakpoint;
       if (editingTask == null && editingBulk == null) {
-        wideLayout = constraints.maxWidth >= 900;
-        return list;
+        wideLayout = panel;
+        return EditorSurface(list: list, panel: panel);
       }
-      final panel = constraints.maxWidth >= 900;
       final modal = _taskEditorModalAtWidth(constraints.maxWidth);
       if (wideLayout &&
           modal &&
@@ -2964,7 +2967,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         mobileEditorOpen = true;
       }
       wideLayout = panel;
-      if (!panel && !modal) return list;
+      if (!panel && !modal) return EditorSurface(list: list, panel: panel);
       final task = editingTask;
       final editor = task != null
           ? TaskEditor(
@@ -4540,6 +4543,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final textHasFocus = _textHasFocus;
+    _lastTextFocus = textHasFocus;
     if (_exitQuiescing) {
       return const Scaffold(body: Center(child: Text('Closing…')));
     }
@@ -4566,7 +4571,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       },
       child: CallbackShortcuts(
         bindings: {
-          if (!foodVisible && !_textHasFocus) ...{
+          if (!foodVisible && !textHasFocus) ...{
             const SingleActivator(LogicalKeyboardKey.keyZ, control: true):
                 _undoShortcut,
             const SingleActivator(LogicalKeyboardKey.keyZ, meta: true):
@@ -4585,7 +4590,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             // focus. Food dialogs own their insets without shrinking the page.
             resizeToAvoidBottomInset:
                 !foodVisible ||
-                ((ModalRoute.isCurrentOf(context) ?? true) && _textHasFocus),
+                ((ModalRoute.isCurrentOf(context) ?? true) && textHasFocus),
             body: SafeArea(
               child: Center(
                 child: ConstrainedBox(

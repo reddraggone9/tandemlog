@@ -89,9 +89,11 @@ Widget toolbarMenuAction<T>({
         ),
 );
 
-Widget toolbarProgress({required bool busy}) => SizedBox(
-  height: 2,
-  child: busy ? const LinearProgressIndicator(minHeight: 2) : null,
+Widget toolbarProgress({required bool busy}) => RepaintBoundary(
+  child: SizedBox(
+    height: 2,
+    child: busy ? const LinearProgressIndicator(minHeight: 2) : null,
+  ),
 );
 
 Widget toolbarFilterIcon({required bool active}) =>

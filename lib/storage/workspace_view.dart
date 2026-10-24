@@ -5,8 +5,13 @@ import '../food/inventory.dart';
 
 /// Display values, independent of store command reads and durable authority.
 class TaskViewSnapshot {
-  const TaskViewSnapshot._(this.revision, this.rows, this.users);
-  factory TaskViewSnapshot.empty() => const TaskViewSnapshot._(0, [], []);
+  const TaskViewSnapshot._(
+    this.revision,
+    this.rows,
+    this.users,
+    this._rowIndices,
+  );
+  factory TaskViewSnapshot.empty() => const TaskViewSnapshot._(0, [], [], {});
   static TaskViewSnapshot next(
     List<Map<String, dynamic>> rows,
     TaskViewSnapshot previous,
@@ -22,9 +27,61 @@ class TaskViewSnapshot {
       workspaceValuesEqual(users, previous.users)
           ? previous.users
           : List.unmodifiable(users),
+      Map.unmodifiable({
+        for (var i = 0; i < frozen.length; i++)
+          if (frozen[i]['id'] is String) frozen[i]['id'] as String: i,
+      }),
     );
   }
 
+  /// Patch a certified projection delta without decoding or freezing its
+  /// unchanged rows. An insertion needs the ordered full projection: the
+  /// caller must not infer a new row position from event arrival order.
+  static TaskViewSnapshot? replacing(
+    Map<String, Map<String, dynamic>?> changes,
+    TaskViewSnapshot previous,
+  ) {
+    for (final entry in changes.entries) {
+      if (entry.value != null &&
+          (entry.value!['id'] != entry.key ||
+              !previous._rowIndices.containsKey(entry.key))) {
+        return null;
+      }
+    }
+    List<Map<String, dynamic>>? next;
+    final removed = <String>{};
+    for (final entry in changes.entries) {
+      final index = previous._rowIndices[entry.key];
+      if (index == null) continue;
+      final value = entry.value;
+      if (value == null) {
+        removed.add(entry.key);
+      } else if (!workspaceValuesEqual(value, previous.rows[index])) {
+        next ??= previous.rows.toList();
+        next[index] = freezeWorkspaceValue(value) as Map<String, dynamic>;
+      }
+    }
+    if (next == null && removed.isEmpty) return previous;
+    final rows = List<Map<String, dynamic>>.unmodifiable(
+      (next ?? previous.rows).where((row) => !removed.contains(row['id'])),
+    );
+    final users = rows.where((row) => row['kind'] == 'user').toList();
+    return TaskViewSnapshot._(
+      previous.revision + 1,
+      rows,
+      workspaceValuesEqual(users, previous.users)
+          ? previous.users
+          : List.unmodifiable(users),
+      removed.isEmpty
+          ? previous._rowIndices
+          : Map.unmodifiable({
+              for (var i = 0; i < rows.length; i++)
+                if (rows[i]['id'] is String) rows[i]['id'] as String: i,
+            }),
+    );
+  }
+
+  final Map<String, int> _rowIndices;
   final int revision;
   final List<Map<String, dynamic>> rows;
   final List<Map<String, dynamic>> users;

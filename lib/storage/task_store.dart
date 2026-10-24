@@ -360,13 +360,14 @@ class TaskStore {
       "CREATE INDEX IF NOT EXISTS ${tables.events}_successor ON ${tables.events}(json_extract(semantic,'\$.data.successor.id'))",
       "CREATE INDEX IF NOT EXISTS ${tables.events}_type_parent ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.parent'))",
       "CREATE INDEX IF NOT EXISTS ${tables.events}_type_before ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.before'))",
+      "CREATE INDEX IF NOT EXISTS ${tables.views}_occurrence_due ON ${tables.views}(id) WHERE json_extract(raw,'\$.kind')='task' AND COALESCE(json_extract(raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(raw,'\$.successorSuppressed'),0)=0 AND json_extract(raw,'\$.schedule.dueDate') IS NULL AND json_extract(raw,'\$.schedule.scheduledDate') IS NOT NULL",
     ]) {
       db.execute(sql);
     }
     _projectionIndexesReady = true;
   }
 
-  void _replaySemanticEvents(
+  ({Set<String> projectedIds, bool orderRebuilt}) _replaySemanticEvents(
     List<LogEvent> events, {
     bool incremental = false,
     bool settledDelta = false,
@@ -560,7 +561,8 @@ class TaskStore {
           db.execute('DELETE FROM ${tables.views} WHERE id=?', [entity]);
         }
       }
-      if (!incremental ||
+      final orderRebuilt =
+          !incremental ||
           events.any(
             (event) =>
                 isTaskCompletion(event.type) && event.data['successor'] is Map,
@@ -574,7 +576,8 @@ class TaskStore {
                   events.any(
                     (e) =>
                         e.type == 'task.moved' ||
-                        e.type == 'task.operationUndone' ||
+                        (e.type == 'task.operationUndone' &&
+                            _undoMayChangeGlobalOrder(e)) ||
                         e.type == 'task.recurringCompletionUndone',
                   )) &&
               events.any(
@@ -590,9 +593,14 @@ class TaskStore {
                   'task.operationUndone',
                   'task.recurringCompletionUndone',
                 }.contains(e.type),
-              )) {
+              );
+      if (orderRebuilt) {
         _rebuildOrder();
       }
+      return (
+        projectedIds: Set.unmodifiable(entities),
+        orderRebuilt: orderRebuilt,
+      );
     } catch (_) {
       _canonicalTextInput = null;
       rethrow;
@@ -1565,6 +1573,8 @@ class TaskStore {
         unified!.validatedTaskRevision(snapshot) ??
         _taskProjectionRevision(events);
     final projectionChanged = revision != _unifiedTaskRevision;
+    Set<String>? projectedIds;
+    var orderRebuilt = true;
     final oldBaseline = _textBaseline, oldBlocked = textWriteBlocked;
     LogEvent? newBaseline = oldBaseline;
     String? newBlocked = oldBlocked;
@@ -1609,7 +1619,7 @@ class TaskStore {
               added.every((e) => snapshot.readyTaskIds.contains(e.id)) &&
               (_settledActionTargets(added, prior.readyTaskIds) ||
                   _firstDerivedActionSeeds(added, prior.readyTaskIds) != null);
-          _replaySemanticEvents(
+          final delta = _replaySemanticEvents(
             added,
             incremental: true,
             settledDelta: settled,
@@ -1623,6 +1633,8 @@ class TaskStore {
                       _unifiedTaskRevision!,
                     )),
           );
+          projectedIds = delta.projectedIds;
+          orderRebuilt = delta.orderRebuilt;
         }
         newBaseline = _textBaseline;
         newBlocked = textWriteBlocked;
@@ -1635,7 +1647,7 @@ class TaskStore {
         unified!.hasPendingAfter(snapshot) || snapshot.pendingEffects;
     final candidateView = revision == _unifiedTaskRevision
         ? _currentView
-        : TaskViewSnapshot.next(rows, _currentView);
+        : _nextProjectionView(projectedIds, orderRebuilt: orderRebuilt);
     final oldWarning = clockWarning;
     final maximum = snapshot.maximumClock;
     _updateClockWarning(maximum, _nowNs());
@@ -2323,6 +2335,37 @@ class TaskStore {
     }
   }
 
+  // Diagnostic count of display-row decoding, excluding command guards.
+  int displaySnapshotRowsDecoded = 0;
+
+  TaskViewSnapshot _nextProjectionView(
+    Set<String>? projectedIds, {
+    required bool orderRebuilt,
+  }) {
+    if (projectedIds != null && !orderRebuilt) {
+      final changes = <String, Map<String, dynamic>?>{};
+      for (final id in projectedIds) {
+        final records = db.select(
+          "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE ${tables.views}.id=? AND json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0",
+          [id],
+        );
+        if (records.isEmpty) {
+          changes[id] = null;
+        } else {
+          displaySnapshotRowsDecoded++;
+          changes[id] =
+              jsonDecode(records.single['raw'] as String)
+                  as Map<String, dynamic>;
+        }
+      }
+      final candidate = TaskViewSnapshot.replacing(changes, _currentView);
+      if (candidate != null) return candidate;
+    }
+    final all = rows;
+    displaySnapshotRowsDecoded += all.length;
+    return TaskViewSnapshot.next(all, _currentView);
+  }
+
   final Map<String, int> lastReadTimings = {};
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
@@ -2354,8 +2397,33 @@ class TaskStore {
     return row['kind'] == 'task' ? row : null;
   }
 
+  // These are diagnostic attempted-work counts, not committed cache state.
+  int globalOrderRebuilds = 0;
+
+  bool _undoMayChangeGlobalOrder(LogEvent undo) {
+    final target = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
+      undo.data['operation'],
+    ]);
+    if (target.length != 1) return true;
+    final event = _recurringTextMemo.decodeCanonical(
+      target.single['raw'] as String,
+    );
+    // The caller only uses this shortcut for a settled, validated delta.
+    // Checklist order is embedded in the reprojected parent, not global ranks.
+    return !const {
+          'task.edited',
+          'task.deleted',
+          'checklist.itemEdited',
+          'checklist.itemMoved',
+          'checklist.itemDeleted',
+          'task.completed',
+        }.contains(event.type) ||
+        (event.type == 'task.completed' && event.data['successor'] != null);
+  }
+
   /// Persist disposable sequence positions only when order-affecting history changes.
   void _rebuildOrder() {
+    globalOrderRebuilds++;
     final ids = db
         .select(
           "SELECT id FROM ${tables.views} ORDER BY json_extract(raw,'\$.order'),id",
@@ -4087,6 +4155,9 @@ class TaskStore {
     );
   });
 
+  // Attempted candidate work, including failed/cancelled passes.
+  int occurrenceDuePlansEvaluated = 0;
+
   Future<OccurrenceDueMigrationResult> _migrateOccurrenceDatesInProfileQueue({
     bool Function()? canCommit,
     bool? initialChanged,
@@ -4095,16 +4166,21 @@ class TaskStore {
     final conflicts = <String, String>{};
     var migrated = 0;
     Object? failure;
-    final ids = [
-      for (final task in rows)
-        if (planOccurrenceDueMigration(task) != null) task['id'] as String,
-    ];
+    // The disposable partial index tracks only actual migration candidates.
+    // Unchanged and unrelated Food refreshes decode no Task rows.
+    final ids = db
+        .select(
+          "SELECT v.id FROM ${tables.views} v JOIN ${tables.positions} p ON p.id=v.id WHERE json_extract(v.raw,'\$.kind')='task' AND COALESCE(json_extract(v.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(v.raw,'\$.successorSuppressed'),0)=0 AND json_extract(v.raw,'\$.schedule.dueDate') IS NULL AND json_extract(v.raw,'\$.schedule.scheduledDate') IS NOT NULL ORDER BY p.rank",
+        )
+        .map((row) => row['id'] as String)
+        .toList();
     for (final id in ids) {
       if (canCommit?.call() == false) break;
       // A preceding append may have admitted a newly synced task edit.
       changed = await _refresh() || changed;
-      final current = rows.where((row) => row['id'] == id).firstOrNull;
+      final current = visibleTaskRow(id);
       if (current == null) continue;
+      occurrenceDuePlansEvaluated++;
       final plan = planOccurrenceDueMigration(current);
       if (plan == null) continue;
       if (plan.conflict != null) {

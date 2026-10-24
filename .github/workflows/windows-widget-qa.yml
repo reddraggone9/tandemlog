@@ -1,0 +1,81 @@
+name: Build separate Windows widget viability QA
+on:
+  workflow_dispatch:
+  push:
+    branches: [fix/rc4-task-latency-20261022]
+    paths:
+      - '.github/workflows/windows-widget-qa.yml'
+      - 'tool/windows_widget_qa/**'
+      - 'integration_test/windows_release_widget_viability.dart'
+permissions:
+  contents: read
+concurrency:
+  group: windows-widget-viability-qa-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build-only:
+    runs-on: windows-2022
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Require reviewed development-branch QA build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (!$env:GITHUB_REF.StartsWith('refs/heads/') -or $env:GITHUB_REF -eq 'refs/heads/main') {
+            throw 'QA build requires a reviewed development branch; automatic pushes are limited to fix/rc4-task-latency-20261022.'
+          }
+      - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: windows
+      - name: Create isolated QA source and native-output trees
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $qaSource = Join-Path $env:RUNNER_TEMP ('tandemlog-widget-qa-source-' + $env:GITHUB_RUN_ID)
+          $qaOutput = Join-Path $env:RUNNER_TEMP ('tandemlog-widget-qa-output-' + $env:GITHUB_RUN_ID)
+          $qaCargo = Join-Path $env:RUNNER_TEMP ('tandemlog-widget-qa-cargo-' + $env:GITHUB_RUN_ID)
+          if ((Test-Path -LiteralPath $qaSource) -or (Test-Path -LiteralPath $qaOutput) -or (Test-Path -LiteralPath $qaCargo)) {
+            throw 'QA-only destinations must be absent.'
+          }
+          git worktree add --detach $qaSource $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Separate QA source checkout failed.' }
+          "WINDOWS_WIDGET_QA_SOURCE=$qaSource" >> $env:GITHUB_ENV
+          "WINDOWS_WIDGET_QA_OUTPUT=$qaOutput" >> $env:GITHUB_ENV
+          "TANDEMLOG_TEXT_TARGET_DIR=$qaCargo" >> $env:GITHUB_ENV
+      - name: Gate QA controller pure ownership layout and deadline controls
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-Location -LiteralPath $env:WINDOWS_WIDGET_QA_SOURCE
+          python -m unittest discover -s tool/windows_widget_qa -p 'test_*.py'
+          if ($LASTEXITCODE -ne 0) { throw 'QA controller pure controls failed.' }
+      - name: Build separate release-QA and smoke native ABI without app execution
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-Location -LiteralPath $env:WINDOWS_WIDGET_QA_SOURCE
+          $dirty = git status --porcelain --untracked-files=no
+          if ($LASTEXITCODE -ne 0 -or $dirty) { throw 'QA tracked tree must start clean.' }
+          flutter pub get --enforce-lockfile
+          if ($LASTEXITCODE -ne 0) { throw 'Locked QA dependency resolution failed.' }
+          flutter analyze integration_test/windows_release_widget_viability.dart
+          if ($LASTEXITCODE -ne 0) { throw 'Dedicated QA target analysis failed.' }
+          flutter build windows --release --target integration_test/windows_release_widget_viability.dart --dart-define=INTEGRATION_TEST_SHOULD_REPORT_RESULTS_TO_NATIVE=false
+          if ($LASTEXITCODE -ne 0) { throw 'Separate release-QA build failed.' }
+          python tool/native_build_gates.py verify_payload --platform windows --payload build/windows/x64/runner/Release
+          if ($LASTEXITCODE -ne 0) { throw 'QA native payload verification failed.' }
+          python tool/windows_widget_qa/package_qa.py --source $env:WINDOWS_WIDGET_QA_SOURCE --output $env:WINDOWS_WIDGET_QA_OUTPUT
+          if ($LASTEXITCODE -ne 0) { throw 'QA-only artifact binding failed.' }
+          if ((Test-Path -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'build/windows')) -or (Test-Path -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'dist'))) {
+            throw 'Unexpected ordinary checkout build/release output.'
+          }
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: TEST-ONLY-windows-widget-viability-qa
+          path: ${{ env.WINDOWS_WIDGET_QA_OUTPUT }}/*
+          retention-days: 5
+          if-no-files-found: error

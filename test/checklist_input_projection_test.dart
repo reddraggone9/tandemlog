@@ -80,7 +80,31 @@ void main() {
         oracle();
         final moved = await s.moveChecklistItem(second, first);
         oracle();
+        final beforeToggle = s.currentView;
+        final decoded = s.displaySnapshotRowsDecoded;
+        final unrelated = beforeToggle.rows.firstWhere(
+          (row) => row['kind'] == 'task' && row['id'] != parent,
+        );
         final toggled = await s.setChecklistCompleted(first, true);
+        expect(s.displaySnapshotRowsDecoded - decoded, 1);
+        expect(
+          identical(
+            s.currentView.rows.singleWhere(
+              (row) => row['id'] == unrelated['id'],
+            ),
+            unrelated,
+          ),
+          isTrue,
+        );
+        expect(identical(s.currentView.users, beforeToggle.users), isTrue);
+        expect(s.currentView.rows, s.rows);
+        expect(
+          identical(
+            s.currentView.rows.singleWhere((row) => row['id'] == parent),
+            beforeToggle.rows.singleWhere((row) => row['id'] == parent),
+          ),
+          isFalse,
+        );
         oracle();
         final removed = await s.deleteChecklistItem(second);
         oracle();
