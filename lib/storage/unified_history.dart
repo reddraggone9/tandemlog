@@ -1872,6 +1872,20 @@ final class UnifiedHistory {
     reserve: true,
   );
 
+  /// Refresh and clean the owned tail before synchronously building this action.
+  /// The caller owns the profile queue; no reusable freshness authority escapes.
+  Future<UnifiedReservation> prepareFromFreshInputsInProfileQueue(
+    List<UnifiedEffectBuilder> Function() build, {
+    void Function(List<UnifiedRecord>)? onReserved,
+    Map<String, dynamic>? provenance,
+  }) => _prepareInProfileQueue(
+    const [],
+    buildFreshInputs: build,
+    onReserved: onReserved,
+    provenance: provenance,
+    reserve: true,
+  );
+
   Future<UnifiedReservation> validateInProfileQueue(
     List<UnifiedEffectBuilder> builders,
   ) => _prepareInProfileQueue(builders, reserve: false);
@@ -1882,6 +1896,7 @@ final class UnifiedHistory {
     void Function(List<UnifiedRecord>)? onReserved,
     Map<String, dynamic>? provenance,
     required bool reserve,
+    List<UnifiedEffectBuilder> Function()? buildFreshInputs,
   }) async {
     await refreshInProfileQueue();
     if (reserve && !hasPending) await _discardOwnedTail();
@@ -1889,6 +1904,36 @@ final class UnifiedHistory {
       throw FormatFailure(
         'App history has an incomplete command; preserve drafts and recover.',
       );
+    }
+    if (buildFreshInputs != null) {
+      final observed = snapshot;
+      final observedManifest = manifest;
+      final observedDigest = manifest.digest;
+      final observedHeads = _acceptedHeads;
+      void requireUnchangedContext() {
+        profile.database; // Also refuses a closed or poisoned local profile.
+        if (_closed ||
+            _closing != null ||
+            safetyFailure != null ||
+            !identical(snapshot, observed) ||
+            snapshot.revision != observed.revision ||
+            !identical(manifest, observedManifest) ||
+            manifest.digest != observedDigest ||
+            _acceptedHeads != observedHeads ||
+            observedHeads != _protectedHeads(manifest) ||
+            LocalSettings.protectedValues(profile)['writer'] != writer ||
+            snapshot.pendingEffects ||
+            hasPending) {
+          throw FormatFailure(
+            'App history changed while preparing this command.',
+          );
+        }
+      }
+
+      requireUnchangedContext();
+      builders =
+          buildFreshInputs(); // Concrete List return: never await a caller.
+      requireUnchangedContext();
     }
     if (expectedRevision != null && expectedRevision != snapshot.revision) {
       throw FormatFailure('App history changed while preparing this command.');

@@ -320,17 +320,56 @@ class LocalLogFolder
   @override
   Future<List<LogFileInfo>> list() async {
     final result = <LogFileInfo>[];
-    await for (final entry in Directory(location).list()) {
-      if (entry is File) {
+    final pending =
+        <Future<({LogFileInfo? info, Object? error, StackTrace? stack})>>[];
+
+    Future<({LogFileInfo? info, Object? error, StackTrace? stack})> inspect(
+      File entry,
+    ) async {
+      try {
         final s = await entry.stat();
-        result.add(
-          LogFileInfo(
+        return (
+          info: LogFileInfo(
             entry.uri.pathSegments.last,
             '${s.size}:${s.modified.microsecondsSinceEpoch}:${s.changed.microsecondsSinceEpoch}',
             size: s.size,
           ),
+          error: null,
+          stack: null,
         );
+      } catch (error, stack) {
+        // Handle each future immediately, even while the directory stream
+        // supplies later entries. No failed stat is left unobserved.
+        return (info: null, error: error, stack: stack);
       }
+    }
+
+    Future<void> drain() async {
+      if (pending.isEmpty) return;
+      final batch = await Future.wait(pending);
+      pending.clear();
+      for (final observation in batch) {
+        final error = observation.error;
+        if (error != null) {
+          Error.throwWithStackTrace(error, observation.stack!);
+        }
+        result.add(observation.info!);
+      }
+    }
+
+    try {
+      await for (final entry in Directory(location).list()) {
+        if (entry is File) {
+          pending.add(inspect(entry));
+          if (pending.length == 16) await drain();
+        }
+      }
+      await drain();
+    } catch (error, stack) {
+      // A stream error must not leave reads running. An earlier listed file's
+      // failed stat keeps the precedence it had in the sequential reader.
+      await drain();
+      Error.throwWithStackTrace(error, stack);
     }
     return result;
   }

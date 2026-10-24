@@ -1678,36 +1678,50 @@ class TaskStore {
     List<(String, String, Map<String, dynamic>)> commands, {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
+    List<(String, String, Map<String, dynamic>)> Function()? buildFreshCommands,
   }) async {
-    _requireWriterAppendReady();
-    if (commands.isEmpty) return [];
-    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    if (buildFreshCommands == null) {
+      _requireWriterAppendReady();
+      if (commands.isEmpty) return [];
+      if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    }
     final creations = <String, LogEvent>{};
-    final expected = unified!.snapshot.revision;
-    final reservation = await unified!.prepareInProfileQueue(
-      [
-        for (final (entity, type, data) in commands)
-          (seq, clock, head) {
-            final event = _prepareCommand(
-              entity,
-              type,
-              data,
-              seq,
-              clock,
-              previousHash: head,
-              pendingCreation: creations[entity],
-            );
-            if (type == 'task.created' || type == 'task.createdWithText') {
-              creations[entity] = event;
-            }
-            return UnifiedEffect('task', event.canonicalRaw!);
-          },
-      ],
-      expectedRevision: expected,
-      onReserved: (_) {
-        if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
-      },
-    );
+    List<UnifiedEffectBuilder> build(
+      List<(String, String, Map<String, dynamic>)> commands,
+    ) => [
+      for (final (entity, type, data) in commands)
+        (seq, clock, head) {
+          final event = _prepareCommand(
+            entity,
+            type,
+            data,
+            seq,
+            clock,
+            previousHash: head,
+            pendingCreation: creations[entity],
+          );
+          if (type == 'task.created' || type == 'task.createdWithText') {
+            creations[entity] = event;
+          }
+          return UnifiedEffect('task', event.canonicalRaw!);
+        },
+    ];
+    void onReserved(List<UnifiedRecord> _) {
+      if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    }
+
+    final reservation = buildFreshCommands == null
+        ? await unified!.prepareInProfileQueue(
+            build(commands),
+            expectedRevision: unified!.snapshot.revision,
+            onReserved: onReserved,
+          )
+        : await unified!.prepareFromFreshInputsInProfileQueue(() {
+            final freshCommands = buildFreshCommands();
+            _requireWriterAppendReady();
+            if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+            return build(freshCommands);
+          }, onReserved: onReserved);
     final receipts = reservation.records
         .expand((r) => r.effects)
         .map((effect) {
@@ -1802,7 +1816,10 @@ class TaskStore {
       throw FormatFailure('Native text support is unavailable.');
     }
     final common = unified;
+    // The admitted snapshot already certifies whether any effects wait for
+    // publication. Avoid scanning complete history on ordinary editor opens.
     if (common != null &&
+        common.snapshot.pendingEffects &&
         common.snapshot.records.any((r) {
           if (r.sequence <= (common.snapshot.published[r.writer] ?? 0)) {
             return false;
@@ -2002,36 +2019,43 @@ class TaskStore {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
-    await _refresh();
-    final resolvedFields = _hasInheritedText(entity)
-        ? _resolvedText(entity)
-        : null;
     final bases = <String, Map<String, dynamic>>{};
-    for (final name in changes.keys) {
-      final row = _nativeTextFieldRow(entity, name, resolved: resolvedFields);
-      if (row == null) {
-        throw FormatFailure(
-          'Native text is waiting for its initialized field.',
-        );
-      }
-      final cached = Map<String, dynamic>.from(row);
-      cached['state'] = Uint8List.fromList(
-        cached['state'] as Uint8List,
-      ).asUnmodifiableView();
-      bases[name] = Map.unmodifiable(cached);
-    }
-    return _commandAfterRefresh(
-      entity,
-      'task.textEdited',
-      {...?nonText, 'changes': changes},
-      expectedTaskSnapshot: expectedSnapshot,
-      ignoreSnapshotText: true,
+    final receipts = await _appendUnifiedCommands(
+      const [],
+      buildFreshCommands: () {
+        final resolvedFields = _hasInheritedText(entity)
+            ? _resolvedText(entity)
+            : null;
+        for (final name in changes.keys) {
+          final row = _nativeTextFieldRow(
+            entity,
+            name,
+            resolved: resolvedFields,
+          );
+          if (row == null) {
+            throw FormatFailure(
+              'Native text is waiting for its initialized field.',
+            );
+          }
+          final cached = Map<String, dynamic>.from(row);
+          cached['state'] = Uint8List.fromList(
+            cached['state'] as Uint8List,
+          ).asUnmodifiableView();
+          bases[name] = Map.unmodifiable(cached);
+        }
+        _requireWriterAppendReady();
+        _requireTaskSnapshot(expectedSnapshot, ignoreSnapshotText: true);
+        return [
+          (entity, 'task.textEdited', {...?nonText, 'changes': changes}),
+        ];
+      },
       canCommit: canCommit,
       onPrepared: (receipt) {
         _preparedTextBases[receipt.id] = Map.unmodifiable(bases);
         onPrepared?.call(receipt);
       },
     );
+    return _recurringTextMemo.decodeCanonical(receipts.single.raw);
   });
 
   void registerTextOperation(
@@ -2571,6 +2595,22 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) async {
     _requireWriterAppendReady();
+    _requireTaskSnapshot(
+      expectedTaskSnapshot,
+      ignoreSnapshotText: ignoreSnapshotText,
+    );
+    final receipts = await _appendUnifiedCommands(
+      [(entity, type, data)],
+      canCommit: canCommit,
+      onPrepared: onPrepared,
+    );
+    return _recurringTextMemo.decodeCanonical(receipts.single.raw);
+  }
+
+  void _requireTaskSnapshot(
+    String? expectedTaskSnapshot, {
+    required bool ignoreSnapshotText,
+  }) {
     if (expectedTaskSnapshot != null) {
       final actual = taskSnapshot;
       if (expectedTaskSnapshot != actual &&
@@ -2580,12 +2620,6 @@ class TaskStore {
         throw StaleTaskSnapshot();
       }
     }
-    final receipts = await _appendUnifiedCommands(
-      [(entity, type, data)],
-      canCommit: canCommit,
-      onPrepared: onPrepared,
-    );
-    return _recurringTextMemo.decodeCanonical(receipts.single.raw);
   }
 
   void _requireWriterAppendReady() {

@@ -92,6 +92,16 @@ class _Peer {
   }
 }
 
+enum _LateNativeSaveCase {
+  editedNontext,
+  unchangedNontext,
+  revertedNontext,
+  editedDeleted,
+  unchangedDeleted,
+  editedCorrupt,
+  unchangedCorrupt,
+}
+
 enum _Consumer { taskPoll, foodRefresh, foodCommand }
 
 Future<void> _poll(
@@ -308,6 +318,201 @@ void main() {
                 'The actually painted Task title must reflect the peer edit, '
                 'even when Food already consumed its shared-history revision.',
           );
+          expect(tester.takeException(), isNull);
+        } finally {
+          if (find.byType(TasksPage).evaluate().isNotEmpty) {
+            await _stopHost(tester);
+          }
+          await tester.runAsync(() async {
+            await peer?.close();
+            await data.trial.close();
+            await data.trial.root.delete(recursive: true);
+          });
+        }
+      },
+    );
+  }
+
+  for (final lateCase in _LateNativeSaveCase.values) {
+    testWidgets(
+      'native Save freshly refuses unadmitted peer ${lateCase.name}',
+      (tester) async {
+        final data = (await tester.runAsync(unified.unifiedFixture))!;
+        _Peer? peer;
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(1100, 1000);
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        try {
+          final activePeer = peer = (await tester.runAsync(
+            () => _Peer.open(
+              data.trial.folder,
+              '${data.trial.root.path}/late-native-save-peer',
+            ),
+          ))!;
+          final folder = _PolledFolder(data.trial.folder);
+          await tester.pumpWidget(
+            TandemlogApp(
+              profilePath: data.profile,
+              folderFactory: (_) => folder,
+              textEngineFactory: host.createHostTextEngine,
+              timeSourceFactory: host.createHostTimeSource,
+            ),
+          );
+          final state = tester.state(find.byType(TasksPage)) as dynamic;
+          await host.ready(
+            tester,
+            () =>
+                state.store != null &&
+                state.foodStore != null &&
+                state.busy == false &&
+                state.syncing == null &&
+                find.text('Synthetic section task').evaluate().isNotEmpty,
+          );
+          final tasks = state.store as TaskStore;
+          final taskId =
+              tasks.rows.singleWhere((row) => row['kind'] == 'task')['id']
+                  as String;
+          await tester.tap(find.byKey(ValueKey('task-title-$taskId')));
+          final notes = find.byKey(const ValueKey('description'));
+          await host.ready(
+            tester,
+            () =>
+                notes.evaluate().isNotEmpty &&
+                state.editingText != null &&
+                state.syncing == null,
+          );
+          final controller = tester.widget<TextField>(notes).controller!;
+          final originalNotes = controller.text;
+          final unchanged = lateCase.name.startsWith('unchanged');
+          final reverted = lateCase == _LateNativeSaveCase.revertedNontext;
+          final deleted = lateCase.name.endsWith('Deleted');
+          final corrupt = lateCase.name.endsWith('Corrupt');
+          const localDraft = 'Local draft must survive a late refusal';
+          if (!unchanged) {
+            await tester.enterText(notes, localDraft);
+            if (reverted) await tester.enterText(notes, originalNotes);
+            await tester.pumpAndSettle();
+          }
+          final expectedDraft = unchanged || reverted
+              ? originalNotes
+              : localDraft;
+          final editor = tester.state<TaskEditorState>(find.byType(TaskEditor));
+          final textSession = state.editingText;
+          if (reverted) {
+            expect(
+              textSession.hasTextChanges,
+              isTrue,
+              reason:
+                  'Edit then revert must exercise actual no-op result, '
+                  'not a guessed pre-Save dirty flag.',
+            );
+          }
+          await host.ready(tester, () => state.syncing == null);
+          state.importer.stop();
+          final priorRevision = tasks.unified!.snapshot.revision;
+          if (corrupt) {
+            // Complete invalid record, including LF, on the synthetic peer
+            // stream. No application truncation/repair is permitted.
+            await tester.runAsync(
+              () => data.trial.folder.append(
+                '${activePeer.history.writer}.applog',
+                Uint8List.fromList([123, 125, 10]),
+              ),
+            );
+          } else if (deleted) {
+            await tester.runAsync(
+              () => activePeer.tasks.deleteTask(
+                taskId,
+                expectedTaskSnapshot: null,
+                canCommit: () => true,
+              ),
+            );
+          } else {
+            final peerRow = activePeer.tasks.rows.singleWhere(
+              (row) => row['id'] == taskId,
+            );
+            await tester.runAsync(
+              () => activePeer.tasks.edit(
+                taskId,
+                {
+                  'schedule': {'dueDate': '2026-10-22'},
+                },
+                tags: List<String>.from(peerRow['tags'] as List? ?? const []),
+                observedTagRefs: Map<String, String>.from(
+                  peerRow['tagRefs'] as Map? ?? const {},
+                ),
+              ),
+            );
+          }
+          expect(
+            tasks.unified!.snapshot.revision,
+            priorRevision,
+            reason:
+                'No Food refresh/poll/host admission may consume peer '
+                'mutation before actual Save.',
+          );
+          final staleRow = tasks.rows.singleWhere((row) => row['id'] == taskId);
+          expect(staleRow['deleted'], isNot(true));
+          expect(
+            staleRow['schedule'],
+            isNot(containsPair('dueDate', '2026-10-22')),
+          );
+          final beforeSave = (await tester.runAsync(
+            () => host.canonical(data.trial.folder),
+          ))!;
+          final listsBefore = folder.lists;
+          // Real editor commit and visible error; not a direct storage call.
+          final body =
+              tester.state(
+                    find.byWidgetPredicate(
+                      (widget) =>
+                          widget.runtimeType.toString() == '_EditorBody',
+                    ),
+                  )
+                  as dynamic;
+          await tester.tap(find.byKey(const ValueKey('task-save-action')));
+          await host.ready(
+            tester,
+            () =>
+                body.failure != null &&
+                !editor.closeBusy &&
+                folder.lists > listsBefore,
+          );
+          expect(find.byType(TaskEditor), findsOneWidget);
+          expect(controller.text, expectedDraft);
+          expect(identical(state.editingText, textSession), isTrue);
+          expect(textSession.hasPendingReceipt, isFalse);
+          if (!corrupt) {
+            expect(
+              find.textContaining('other details changed. Your draft is kept;'),
+              findsOneWidget,
+            );
+          } else {
+            expect(body.failure, isNotEmpty);
+            expect(tasks.unified!.safetyFailure, isNotNull);
+          }
+          expect(
+            await tester.runAsync(() => host.canonical(data.trial.folder)),
+            beforeSave,
+            reason:
+                'Late refusal must neither append local history nor '
+                'change/repair any peer canonical bytes.',
+          );
+          if (lateCase == _LateNativeSaveCase.editedNontext) {
+            // Rejection occurs after native prepare; an enabled editor must
+            // not reject its next keystroke because an unreserved packet froze.
+            const continuedDraft = 'Draft remains editable after refusal';
+            await tester.enterText(notes, continuedDraft);
+            await tester.pumpAndSettle();
+            expect(tester.takeException(), isNull);
+            expect(controller.text, continuedDraft);
+            expect(textSession.text('description'), continuedDraft);
+            expect(
+              await tester.runAsync(() => host.canonical(data.trial.folder)),
+              beforeSave,
+            );
+          }
           expect(tester.takeException(), isNull);
         } finally {
           if (find.byType(TasksPage).evaluate().isNotEmpty) {

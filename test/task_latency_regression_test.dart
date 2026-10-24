@@ -125,7 +125,7 @@ void main() {
   }
 
   test(
-    'native Save reuses immediate refresh but refuses a peer change at preparation',
+    'native Save builds from one fresh observation, guards stale nontext and retains Undo',
     () async {
       final root = await Directory.systemTemp.createTemp(
         'native-save-refresh-',
@@ -182,9 +182,10 @@ void main() {
               },
             ),
           );
+          final expectedSnapshot = current.taskSnapshot;
           var listsAfterArming = 0, callbacks = 0;
           folder.beforeList = () async {
-            if (++listsAfterArming == 2) {
+            if (++listsAfterArming == 1) {
               folder.beforeList = null;
               await folder.create('$peer.applog', peerBytes);
             }
@@ -193,17 +194,12 @@ void main() {
             current.editNativeTask(
               task,
               changes,
+              expectedSnapshot: expectedSnapshot,
               onPrepared: (_) => callbacks++,
             ),
-            throwsA(
-              isA<FormatFailure>().having(
-                (error) => error.message,
-                'reason',
-                contains('changed while preparing'),
-              ),
-            ),
+            throwsA(isA<StaleTaskSnapshot>()),
           );
-          expect(listsAfterArming, 2);
+          expect(listsAfterArming, 1);
           expect(callbacks, 0);
           expect(current.unified!.hasPending, isFalse);
           expect(current.unified!.physicalSequence, sequence);
@@ -215,10 +211,21 @@ void main() {
             '2030-05-10',
           );
           OperationReceipt? saved;
+          var retryLists = 0;
+          folder.beforeList = () async {
+            retryLists++;
+          };
           await current.editNativeTask(
             task,
             changes,
-            onPrepared: (receipt) => saved = receipt,
+            onPrepared: (receipt) {
+              expect(
+                retryLists,
+                1,
+                reason: 'Capture and reservation share one fresh observation.',
+              );
+              saved = receipt;
+            },
           );
           prepared.commit(receiptUpdate: prepared.update);
           current.registerTextOperation(saved!, capture);
@@ -242,6 +249,135 @@ void main() {
     },
     skip: Platform.environment['TANDEMLOG_TEXT_LIBRARY'] == null,
   );
+
+  for (final failure in [
+    'ownReplacement',
+    'completeInvalidPeer',
+    'onPreparedThrows',
+  ]) {
+    test(
+      'native fresh reservation retains exact receipt and Undo after $failure',
+      () async {
+        final root = await Directory.systemTemp.createTemp(
+          'native-fresh-recovery-',
+        );
+        final engine = NativeTextEngine(
+          libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
+        );
+        final folder = LocalLogFolder(
+          (await Directory('${root.path}/shared').create()).path,
+        );
+        TaskStore? store;
+        try {
+          store = await TaskStore.open(
+            folder,
+            '${root.path}/profile',
+            textEngine: engine,
+          );
+          final current = store;
+          final user = const Uuid().v4(),
+              task = const Uuid().v4(),
+              peer = const Uuid().v4();
+          await current.command(user, 'user.created', {'name': 'Synthetic'});
+          expect(
+            (await current.createTasks({
+              task: 'Original title',
+            }, user)).succeeded,
+            isTrue,
+          );
+          final capture = await current.captureTaskText(task);
+          final field = capture.fields['title']!;
+          final draft = field.document.captureDraft(actorClientId: field.actor)
+            ..replaceText('Saved title');
+          final prepared = draft.prepareSave();
+          try {
+            final changes = {
+              'title': {
+                'context': field.context,
+                'allocation': field.allocation,
+                'actor': field.actor,
+                'update': prepared.update.encoded,
+              },
+            };
+            final file = File('${folder.location}/${current.writer}.applog');
+            final before = await file.readAsBytes();
+            final sequence = current.unified!.physicalSequence;
+            final peerFile = File('${folder.location}/$peer.applog');
+            OperationReceipt? receipt;
+            var callbacks = 0;
+            await expectLater(
+              current.editNativeTask(
+                task,
+                changes,
+                onPrepared: (saved) {
+                  receipt = saved;
+                  callbacks++;
+                  if (failure == 'ownReplacement') {
+                    final replacement = File(
+                      '${folder.location}/replacement.tmp',
+                    );
+                    replacement.writeAsBytesSync(
+                      Uint8List.fromList(before)..[10] ^= 1,
+                      flush: true,
+                    );
+                    replacement.renameSync(file.path);
+                  } else if (failure == 'completeInvalidPeer') {
+                    peerFile.writeAsStringSync('{}\n', flush: true);
+                  } else {
+                    throw StateError('Synthetic onPrepared failure');
+                  }
+                },
+              ),
+              failure == 'onPreparedThrows'
+                  ? throwsStateError
+                  : throwsA(isA<FormatFailure>()),
+            );
+            expect(callbacks, 1);
+            expect(receipt, isNotNull);
+            expect(current.unified!.hasPending, isTrue);
+            final exact = current.unified!.pendingRecords.single;
+            expect(exact.effects.single.id, receipt!.id);
+            expect(exact.effects.single.raw, receipt!.raw);
+            expect(current.unified!.physicalSequence, sequence);
+            if (failure == 'ownReplacement') {
+              await file.writeAsBytes(before, flush: true);
+            } else if (failure == 'completeInvalidPeer') {
+              expect(await file.readAsBytes(), before);
+              await peerFile.delete();
+            } else {
+              expect(await file.readAsBytes(), before);
+            }
+            await current.unified!.recoverPrepared();
+            expect(await file.readAsBytes(), [
+              ...before,
+              ...utf8.encode('${exact.encode()}\n'),
+            ]);
+            expect(current.unified!.physicalSequence, sequence + 1);
+            expect(current.unified!.hasPending, isFalse);
+            prepared.commit(receiptUpdate: prepared.update);
+            current.registerTextOperation(receipt!, capture);
+            expect(
+              current.rows.singleWhere((row) => row['id'] == task)['title'],
+              'Saved title',
+            );
+            expect((await current.undoOperations([receipt!.id])).error, isNull);
+            expect(
+              current.rows.singleWhere((row) => row['id'] == task)['title'],
+              'Original title',
+            );
+          } finally {
+            draft.cancel();
+            current.releaseTextCapture(capture);
+          }
+        } finally {
+          await store?.close();
+          engine.dispose();
+          await root.delete(recursive: true);
+        }
+      },
+      skip: Platform.environment['TANDEMLOG_TEXT_LIBRARY'] == null,
+    );
+  }
 
   test(
     'dense native history reuses validation while Save, Undo and completion stay atomic',

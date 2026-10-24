@@ -74,6 +74,16 @@ class CountingFolder extends FaultFolder {
   }
 }
 
+class PreparationCountingFolder extends CountingFolder {
+  PreparationCountingFolder(super.location);
+  int lists = 0;
+  @override
+  Future<List<LogFileInfo>> list() {
+    lists++;
+    return super.list();
+  }
+}
+
 class AfterAppendFolder extends CountingFolder {
   AfterAppendFolder(super.location);
   Future<void> Function()? afterAppend;
@@ -234,6 +244,360 @@ void main() {
     profile = null;
     await root.delete(recursive: true);
   });
+
+  test(
+    'fresh input callback uses one observation and preserves reservation order',
+    () async {
+      await history!.close();
+      history = null;
+      final counted = PreparationCountingFolder(folder.location);
+      folder = counted;
+      await openAfterClosingProfile();
+      final h = history!, sequence = h.physicalSequence;
+      final before = await folder.read(unifiedLogName(owner));
+      counted.lists = 0;
+      final order = <String>[];
+      final reservation = await profile!.serialize(
+        () => h.prepareFromFreshInputsInProfileQueue(
+          () {
+            order.add('build');
+            expect(counted.lists, 1);
+            expect(h.hasPending, isFalse);
+            return [taskBuilder(newTask)];
+          },
+          onReserved: (records) {
+            order.add('reserved');
+            expect(h.hasPending, isTrue);
+            expect(records.single.sequence, sequence + 1);
+            expect(counted.lists, 1);
+          },
+        ),
+      );
+      expect(order, ['build', 'reserved']);
+      expect(await folder.read(unifiedLogName(owner)), before);
+      await profile!.serialize(h.commitInProfileQueue);
+      expect(
+        counted.lists,
+        greaterThan(1),
+        reason:
+            'Final commit still observes canonical bytes and confirms its suffix.',
+      );
+      expect(await folder.read(unifiedLogName(owner)), [
+        ...before,
+        ...reservation.bytes,
+      ]);
+      expect(h.snapshot.tasks.any((e) => e.entity == newTask), isTrue);
+      expect(h.physicalSequence, sequence + 1);
+    },
+  );
+
+  test(
+    'reusing a callback refreshes every call and refuses newly corrupt input',
+    () async {
+      final h = history!;
+      var calls = 0;
+      List<UnifiedEffectBuilder> build() {
+        calls++;
+        return [taskBuilder(const Uuid().v4())];
+      }
+
+      await profile!.serialize(
+        () => h.prepareFromFreshInputsInProfileQueue(build),
+      );
+      await profile!.serialize(h.commitInProfileQueue);
+      expect(calls, 1);
+      final before = await folder.read(unifiedLogName(owner));
+      await folder.append(
+        unifiedLogName(owner),
+        Uint8List.fromList(utf8.encode('{}\n')),
+      );
+      await expectLater(
+        profile!.serialize(() => h.prepareFromFreshInputsInProfileQueue(build)),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(calls, 1);
+      expect(h.hasPending, isFalse);
+      expect(await folder.read(unifiedLogName(owner)), [
+        ...before,
+        ...utf8.encode('{}\n'),
+      ]);
+    },
+  );
+
+  test(
+    'default preparation still refreshes and refuses newly corrupt input',
+    () async {
+      final h = history!;
+      await folder.append(
+        unifiedLogName(owner),
+        Uint8List.fromList(utf8.encode('{}\n')),
+      );
+      var reserved = false;
+      await expectLater(
+        profile!.serialize(
+          () => h.prepareInProfileQueue([
+            taskBuilder(newTask),
+          ], onReserved: (_) => reserved = true),
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(reserved, isFalse);
+      expect(h.hasPending, isFalse);
+    },
+  );
+
+  test(
+    'throwing fresh callback allocates nothing and keeps next sequence',
+    () async {
+      final h = history!, sequence = h.physicalSequence;
+      final before = await folder.read(unifiedLogName(owner));
+      final failure = StateError('Synthetic fresh input failure');
+      await expectLater(
+        profile!.serialize(
+          () => h.prepareFromFreshInputsInProfileQueue(() => throw failure),
+        ),
+        throwsA(same(failure)),
+      );
+      expect(h.hasPending, isFalse);
+      expect(await folder.read(unifiedLogName(owner)), before);
+      final reserved = await profile!.serialize(
+        () => h.prepareFromFreshInputsInProfileQueue(
+          () => [taskBuilder(newTask)],
+        ),
+      );
+      expect(reserved.records.single.sequence, sequence + 1);
+      await profile!.serialize(h.commitInProfileQueue);
+    },
+  );
+
+  test(
+    'fresh callback cannot begin closing its history and reserve an action',
+    () async {
+      final h = history!, before = await folder.read(unifiedLogName(owner));
+      Future<void>? closing;
+      await expectLater(
+        profile!.serialize(
+          () => h.prepareFromFreshInputsInProfileQueue(() {
+            closing = h
+                .close(); // Queued cleanup has not run while this callback executes.
+            return [taskBuilder(newTask)];
+          }),
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+      await closing;
+      expect(h.hasPending, isFalse);
+      expect(await folder.read(unifiedLogName(owner)), before);
+      history = null;
+    },
+  );
+
+  for (final mutation in ['heads', 'writer', 'safety', 'manifest']) {
+    test(
+      'fresh callback rejects synchronous $mutation mutation before reservation',
+      () async {
+        final h = history!, before = await folder.read(unifiedLogName(owner));
+        final db = profile!.database;
+        final heads = db.select(
+          'SELECT digest FROM protected_app_heads WHERE writer=?',
+          [owner],
+        ).single['digest'];
+        final settings = db
+            .select('SELECT writer,raw FROM protected_settings')
+            .single;
+        final originalManifest = h.manifest;
+        var reserved = false;
+        await expectLater(
+          profile!.serialize(
+            () => h.prepareFromFreshInputsInProfileQueue(() {
+              if (mutation == 'heads') {
+                db.execute(
+                  'UPDATE protected_app_heads SET digest=? WHERE writer=?',
+                  ['changed', owner],
+                );
+              } else if (mutation == 'writer') {
+                final writer = const Uuid().v4();
+                final raw =
+                    jsonDecode(utf8.decode(settings['raw'] as List<int>))
+                        as Map<String, dynamic>;
+                raw['writer'] = writer;
+                db.execute('UPDATE protected_settings SET writer=?,raw=?', [
+                  writer,
+                  utf8.encode(jsonEncode(raw)),
+                ]);
+              } else if (mutation == 'manifest') {
+                h.manifest = UnifiedManifest.decode(h.manifest.encode());
+              } else {
+                h.safetyFailure = StateError('Synthetic safety report');
+              }
+              return [taskBuilder(newTask)];
+            }, onReserved: (_) => reserved = true),
+          ),
+          throwsA(isA<FormatFailure>()),
+        );
+        expect(reserved, isFalse);
+        expect(h.hasPending, isFalse);
+        expect(await folder.read(unifiedLogName(owner)), before);
+        db.execute('UPDATE protected_app_heads SET digest=? WHERE writer=?', [
+          heads,
+          owner,
+        ]);
+        db.execute('UPDATE protected_settings SET writer=?,raw=?', [
+          settings['writer'],
+          settings['raw'],
+        ]);
+        h.manifest = originalManifest;
+        h.safetyFailure = null;
+      },
+    );
+  }
+
+  test(
+    'owned incomplete tail is cleaned and reconfirmed before fresh callback',
+    () async {
+      final h = history!, before = await folder.read(unifiedLogName(owner));
+      await folder.append(
+        unifiedLogName(owner),
+        Uint8List.fromList(utf8.encode('{"partial":')),
+      );
+      var called = false;
+      final reserved = await profile!.serialize(
+        () => h.prepareFromFreshInputsInProfileQueue(() {
+          called = true;
+          expect(h.snapshot.physical[owner], before);
+          expect(folder.file(unifiedLogName(owner)).readAsBytesSync(), before);
+          return [taskBuilder(newTask)];
+        }),
+      );
+      expect(called, isTrue);
+      await profile!.serialize(h.commitInProfileQueue);
+      expect(await folder.read(unifiedLogName(owner)), [
+        ...before,
+        ...reserved.bytes,
+      ]);
+    },
+  );
+
+  test(
+    'unsupported owned tail cleanup never enters the fresh callback',
+    () async {
+      await history!.close();
+      history = null;
+      await profile!.close();
+      profile = await LocalProfileDatabase.open('${root.path}/profile');
+      history = await UnifiedHistory.open(
+        AppendOnlyFolder(folder),
+        profile: profile!,
+        writer: owner,
+        now: () => DateTime.utc(2026, 10, 17),
+      );
+      final before = await folder.read(unifiedLogName(owner));
+      final tail = utf8.encode('{"unfinished":');
+      await folder.append(unifiedLogName(owner), Uint8List.fromList(tail));
+      var called = false;
+      await expectLater(
+        profile!.serialize(
+          () => history!.prepareFromFreshInputsInProfileQueue(() {
+            called = true;
+            return [taskBuilder(newTask)];
+          }),
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(called, isFalse);
+      expect(history!.hasPending, isFalse);
+      expect(await folder.read(unifiedLogName(owner)), [...before, ...tail]);
+    },
+  );
+
+  test(
+    'pending reservation refuses fresh builder without changing exact bytes',
+    () async {
+      final h = history!;
+      final first = await profile!.serialize(
+        () => h.prepareInProfileQueue([taskBuilder(newTask)]),
+      );
+      var called = false;
+      await expectLater(
+        profile!.serialize(
+          () => h.prepareFromFreshInputsInProfileQueue(() {
+            called = true;
+            return [foodBuilder()];
+          }),
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(called, isFalse);
+      expect(h.pendingRecords.single.encode(), first.records.single.encode());
+      await profile!.serialize(h.commitInProfileQueue);
+      expect(h.hasPending, isFalse);
+    },
+  );
+
+  test(
+    'fresh onReserved failure rolls back reservation and preserves next allocation',
+    () async {
+      final h = history!, sequence = h.physicalSequence;
+      final before = await folder.read(unifiedLogName(owner));
+      final failure = StateError('Synthetic reservation callback failure');
+      await expectLater(
+        profile!.serialize(
+          () => h.prepareFromFreshInputsInProfileQueue(
+            () => [taskBuilder(newTask)],
+            onReserved: (_) => throw failure,
+          ),
+        ),
+        throwsA(same(failure)),
+      );
+      expect(h.hasPending, isFalse);
+      expect(await folder.read(unifiedLogName(owner)), before);
+      final next = await profile!.serialize(
+        () => h.prepareFromFreshInputsInProfileQueue(
+          () => [taskBuilder(newTask)],
+        ),
+      );
+      expect(next.records.single.sequence, sequence + 1);
+      await profile!.serialize(h.commitInProfileQueue);
+    },
+  );
+
+  for (final corruption in ['ownReplacement', 'completeInvalidPeer']) {
+    test(
+      'fresh reservation retains final commit safety after $corruption',
+      () async {
+        final h = history!, before = await folder.read(unifiedLogName(owner));
+        final reservation = await profile!.serialize(
+          () => h.prepareFromFreshInputsInProfileQueue(
+            () => [taskBuilder(newTask)],
+          ),
+        );
+        final raw = reservation.records.single.encode();
+        if (corruption == 'ownReplacement') {
+          final replacement = File('${folder.location}/replacement.tmp');
+          await replacement.writeAsBytes(
+            Uint8List.fromList(before)..[10] ^= 1,
+            flush: true,
+          );
+          await replacement.rename(folder.file(unifiedLogName(owner)).path);
+        } else {
+          final peer = const Uuid().v4();
+          await folder.create(
+            unifiedLogName(peer),
+            Uint8List.fromList(utf8.encode('{}\n')),
+          );
+        }
+        await expectLater(
+          profile!.serialize(h.commitInProfileQueue),
+          throwsA(isA<FormatFailure>()),
+        );
+        expect(h.hasPending, isTrue);
+        expect(h.pendingRecords.single.encode(), raw);
+        if (corruption == 'completeInvalidPeer') {
+          expect(await folder.read(unifiedLogName(owner)), before);
+        }
+      },
+    );
+  }
 
   test('peer Food deltas reuse exact admitted base; missing references wait '
       'and resolve with the same full replay', () async {
