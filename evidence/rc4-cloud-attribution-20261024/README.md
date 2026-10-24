@@ -153,10 +153,42 @@ Tooling166 and Windows harness controls20 passed. Analysis and formatting clean.
 Default Linux release build, native payload/ABI, fresh/warm startup and normal
 owned-window exit passed. No foreground Windows run or hardware timing occurred.
 
-Exact-commit CI is dispatched after this development commit; its GitHub run
-must name this exact source and use calibration=false. The native/UI all-action
-acceptance and remaining timing failures must remain explicit. This checkpoint
-does not authorize a release or live adoption.
+[Exact-commit enforcing CI40124976992](https://github.com/reddraggone9/tandemlog/actions/runs/40124976992)
+finished for `cb1ea0e1317cd4550ced8349894076652d4e0cfd`, calibration=false:
+Windows and Android passed. Linux passed1500 units,166 tools,4 Rust cases,
+analysis/formatting, release build and native payload, then normal startup close
+crashed with SIGSEGV after readiness. Later packaging/native workflow checks
+were skipped. [Receipt](ci-receipt.json), [failed close](ci-linux-startup-failed.json)
+and [enforcing performance results](ci-enforcing-performance.json) preserve the
+failures. The performance job ran under6GiB/2CPU/no-swap/pids128, completed
+correctness on all three shapes, and failed absolute/paired timing. No retry
+qualified and none ran. Its terminal timing failure precedes the final
+allPinsMatch/measurementCompleted flags; do not turn their absence into a pass.
+
+For example, one Food-details Undo165.926ms includes156.746ms inside the combined
+durable append/barrier await, with16.295ms process/cgroup CPU and no quota
+throttling in that bracket. This does not isolate syscall service time or prove
+an external cause; it does rule out safely removing that durability guarantee to
+fit a limit. Another Save206.569ms includes183.773ms append/barrier await.
+
+The [separate Windows QA build40124968554](https://github.com/reddraggone9/tandemlog/actions/runs/40124968554)
+passed on the same source, artifact12573485040 (expires2026-10-29). No foreground
+run occurred. A local GDB controller initially failed before sending WM_DELETE;
+its corrected diagnostic and the reusable tool both observed normal exit and
+verified cleanup. Those clean local runs do not erase the CI SIGSEGV.
+
+The standalone `rc4-linux-close-diagnostic.yml` captures GDB stacks on the same
+Ubuntu24.04 image using at most three fresh public synthetic processes and stops
+at the first crash/error. It changes no required gate and performs no AOT retry;
+its results never establish timing/release acceptance. Every process result,
+native stack and exact test-only bundle is retained. Related upstream Linux
+shutdown defects exist ([FlTaskRunner193742](https://github.com/flutter/flutter/issues/193742),
+[FlView192873](https://github.com/flutter/flutter/issues/192873)); equivalence is
+unproven without this crash's stack. No SDK/dependency/workaround change has been
+made on that inference.
+
+Native/UI all-action acceptance and remaining timing failures remain open.
+This checkpoint does not authorize a release or live adoption.
 
 Open performance work is owned by the RC4 repair, with exit conditions of
 unchanged-budget exact-source AOT enforcement plus faithful native full-action

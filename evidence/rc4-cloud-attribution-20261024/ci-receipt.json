@@ -1,0 +1,35 @@
+{
+  "source": "cb1ea0e1317cd4550ced8349894076652d4e0cfd",
+  "run": 40124976992,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40124976992",
+  "conclusion": "failure",
+  "jobs": {
+    "windows": "success",
+    "android": "success",
+    "linux": "failure: native startup normal close SIGSEGV; later packaging/native workflow stages skipped",
+    "performance": "failure: absolute and paired timing; no eligible retry"
+  },
+  "linuxUnitCount": 1500,
+  "linuxToolCount": 166,
+  "linuxRustTests": 4,
+  "calibrate_performance": false,
+  "releaseOrVisibleAcceptance": false,
+  "windowsQA": {
+    "run": 40124968554,
+    "conclusion": "success",
+    "artifact": 12573485040,
+    "sha256": "14f2b82ae39ec0b24311787a719d98acede622dbee044e7e12874d235a4c10a4"
+  },
+  "startupArtifact": {
+    "id": 12572706801,
+    "sha256": "1015ec5882ee49ed40e0d539fd314dd1fcd282e86c9c02e36449bb3aba615be5"
+  },
+  "localDebug": {
+    "failedControllerBeforeWMDelete": "/workspace/scratch/rc4-native-close-debug-1",
+    "correctedControllerNormalClose": "/workspace/scratch/rc4-native-close-debug-2",
+    "toolNormalClose": "/workspace/scratch/rc4-final-close-controller-validation",
+    "crashReproduced": false
+  },
+  "limitsUnchanged": true,
+  "performanceGateUnchangedRetry": false
+}

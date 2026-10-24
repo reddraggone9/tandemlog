@@ -19,6 +19,13 @@ CI remains separately associated with the pushed source; earlier failed samples
 remain retained in the checkpoint.
 No release, production conversion, signing or dependency change is included.
 
+Exact-source CI40124976992 on cb1ea0e passed Windows/Android, Linux1500 units,
+166 tools and the release build/payload, then failed normal Linux startup close
+with SIGSEGV. The enforcing AOT job failed absolute and paired timing with no
+eligible retry. Packaging/later native Linux checks were therefore not completed.
+A separate bounded Linux GDB diagnostic captures native-close evidence without
+altering the required gates or retrying the unchanged performance experiment.
+
 ## Latest development result - 2026-10-21
 
 [Current acceptance](../evidence/coordinated-cutover-build99/README.md) records source0acfb3b and CI39633973437: all three jobs green,203 native Linux cases passed,1314 current unit/host cases,89 tooling checks and8 external-copy controls. Exact original-payload GTK Save/peer-while-Food/restart and200-percent Light/Dark checks passed. Android06 independently accepted the affected source243d253 debug-APK modal/restart flows; earlier source-specific peer/tail coverage retains its attribution. All temporary labs stopped with settings restoration and independent process checks. Local desktop and Android demonstrations retain their exact source labels.

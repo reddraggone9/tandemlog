@@ -1,0 +1,49 @@
+name: RC4 diagnostic-only Linux normal close
+on:
+  workflow_dispatch:
+  push:
+    branches: [fix/rc4-task-latency-20261022]
+    paths:
+      - '.github/workflows/rc4-linux-close-diagnostic.yml'
+      - 'tool/diagnose_linux_close.py'
+      - 'tool/test_diagnose_linux_close.py'
+permissions:
+  contents: read
+concurrency:
+  group: rc4-linux-close-diagnostic-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  diagnostic-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Require isolated RC4 development source
+        run: test "$GITHUB_REF" = refs/heads/fix/rc4-task-latency-20261022
+      - name: Prepare native debugger and owned virtual display
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb xdotool dbus-x11 gdb
+      - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: linux
+      - run: flutter pub get --enforce-lockfile
+      - name: Check diagnostic ownership and crash classification controls
+        run: python3 -m unittest discover -s tool -p test_diagnose_linux_close.py
+      - name: Build ordinary release application without source modifications
+        run: |
+          flutter build linux --release --no-pub
+          python3 tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle
+      - name: Capture bounded normal-close diagnostic stacks
+        timeout-minutes: 12
+        run: xvfb-run -a dbus-run-session -- python3 tool/diagnose_linux_close.py --output "$RUNNER_TEMP/rc4-close-debug" --attempts 3
+      - name: Preserve every diagnostic and exact test-only bundle
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: RC4-diagnostic-only-linux-close
+          path: |
+            ${{ runner.temp }}/rc4-close-debug/**/*.json
+            ${{ runner.temp }}/rc4-close-debug/**/*.log
+            build/linux/x64/release/bundle/**
+          retention-days: 5
+          if-no-files-found: error
