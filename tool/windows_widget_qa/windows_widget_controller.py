@@ -17,7 +17,7 @@ import tempfile
 import threading
 import time
 
-TARGET_SHA = "fb5d1ece2f7db649b2acd6c682c3e49de820ad9ebccdfa513d6ff08666743aad"
+TARGET_SHA = "63b506d1077114c518762512b7348680ace8fe5c0fad33bd172647bb15072cdd"
 TTL_SECONDS = 150
 CLEANUP_SECONDS = 20
 # Microsoft WinBase.h: attribute number13 | INPUT0x20000; Windows10+ only.
@@ -123,7 +123,7 @@ def load_public_fixture(root):
         need(Path(name).name==name and name not in (".",".."), "Fixture member path refused.")
         regular(path);need(path.stat().st_size<4*1024*1024 and sha(path)==data["files"][name], "Public canonical bytes differ.")
     return root.resolve(strict=True)
-def child_environment(bundle,native,output,tmp,run_root,run_name,fixture,inherited):
+def child_environment(bundle,native,output,tmp,run_root,run_name,fixture,inherited,*,cost_trace=False):
     env={key:inherited[key] for key in ("SystemRoot","WINDIR") if key in inherited}
     need("SystemRoot" in env, "SystemRoot missing.")
     env.update({"PATH":str(bundle)+";"+env["SystemRoot"]+r"\System32",
@@ -132,6 +132,8 @@ def child_environment(bundle,native,output,tmp,run_root,run_name,fixture,inherit
       "TANDEMLOG_PROFILE":str(run_root/"profile"),
       "TANDEMLOG_TEXT_LIBRARY":str(native),"TANDEMLOG_WINDOWS_WIDGET_RUN":run_name,
       "TANDEMLOG_WINDOWS_WIDGET_FIXTURE":str(fixture)})
+    if cost_trace:
+        env['TANDEMLOG_WINDOWS_WIDGET_COSTS']='1'
     return env
 def main():
     need(os.name == "nt", "Windows-only controller.")
@@ -142,6 +144,7 @@ def main():
     parser.add_argument("--artifact", type=Path, required=True)
     parser.add_argument("--manifest-sha256", required=True)
     parser.add_argument("--fixture", type=Path, required=True)
+    parser.add_argument("--cost-trace", action="store_true", help="Optional overlapping provider diagnostics; not ordinary release acceptance.")
     args = parser.parse_args()
     need(len(args.manifest_sha256) == 64, "Exact manifest SHA256 required.")
     metadata, bundle = load_artifact(args.artifact, args.manifest_sha256)
@@ -291,6 +294,7 @@ def main():
     started = time.monotonic()
     exit_code = None
     result = {"passed": False, "sourceOnlyPreparationPreviously": True,
+              "costTraceRequested": bool(args.cost_trace),
               "artifactManifestSHA256": args.manifest_sha256,
               "targetSHA256": TARGET_SHA, "output": str(output)}
     emit("preparing", desktop=desktop_name, station=station,
@@ -317,7 +321,7 @@ def main():
             TerminateJob(job, 124)
         timer = threading.Timer(max(0, started + TTL_SECONDS - time.monotonic()), expire)
         timer.daemon = True; timer.start()
-        env=child_environment(bundle,native,output,tmp,run_root,run_name,fixture,os.environ)
+        env=child_environment(bundle,native,output,tmp,run_root,run_name,fixture,os.environ,cost_trace=args.cost_trace)
         block = C.create_unicode_buffer("\0".join(k + "=" + v for k,v in
           sorted(env.items(), key=lambda item:item[0].upper())) + "\0\0")
         startup = STARTUPINFOEX()

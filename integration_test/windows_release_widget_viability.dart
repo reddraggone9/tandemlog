@@ -22,6 +22,7 @@ import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/unified_history.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
+import '../tool/windows_widget_qa/probe_cost_trace.dart';
 
 // Explicit framework text-channel stub. The default integration binding keeps
 // the engine channel real, so tester.enterText has client -1; RELEASE correctly
@@ -148,6 +149,10 @@ void main() {
   root.createSync();
   final log = File('${root.path}/probe.jsonl');
   final watch = Stopwatch()..start();
+  final costTrace =
+      Platform.environment['TANDEMLOG_WINDOWS_WIDGET_COSTS'] == '1'
+      ? ProbeCostTrace(() => watch.elapsedMicroseconds)
+      : null;
   void emit(String phase, Map<String, Object?> data) {
     log.writeAsStringSync(
       '${jsonEncode({'phase': phase, 'elapsedUs': watch.elapsedMicroseconds, 'release': kReleaseMode, 'pid': pid, ...data})}\n',
@@ -158,6 +163,7 @@ void main() {
 
   emit('bootstrap', {
     'syntheticOnly': true,
+    'providerCostTracingEnabled': costTrace != null,
     'nativeSHA256': sha(File(library).readAsBytesSync()),
     'osInputMeasured': false,
     'presentationMeasured': false,
@@ -236,13 +242,15 @@ void main() {
         !foregroundRequired || ownsForeground(),
         'Probe lost foreground after $name.',
       );
+      final finished = watch.elapsedMicroseconds;
+      costTrace?.action(name, start, finished);
       emit('action', {
         'foregroundRequired': foregroundRequired,
         'name': name,
         'startUs': start,
         'inputReturnedUs': returned - start,
         'stateObservedUs': observed - start,
-        'postFrameObservedUs': watch.elapsedMicroseconds - start,
+        'postFrameObservedUs': finished - start,
         'nestedCumulativeNotExclusive': true,
         'pollRequestedUs': 1000,
         'pumpObserverOverheadIncluded': true,
@@ -382,6 +390,9 @@ void main() {
         TandemlogApp(
           profilePath: profile,
           textEngineFactory: () => appEngine = OwnedEngine(library),
+          folderFactory: (path) => costTrace == null
+              ? LocalLogFolder(path)
+              : ProbeLocalLogFolder(path, costTrace),
         ),
       );
       await wait(() {
@@ -569,6 +580,13 @@ void main() {
             ),
         'Audit changed canonical.',
       );
+      if (costTrace != null) {
+        emit('provider-cost-trace', costTrace.report());
+        require(
+          costTrace.droppedSpans == 0,
+          'Provider diagnostic overflow; action results remain preserved.',
+        );
+      }
       emit('normal-resources-closed', {
         'nativeDisposed': appEngine!.closed,
         'profileDatabaseClosed': dbClosed,

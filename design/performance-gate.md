@@ -155,3 +155,19 @@ The separate windows-widget-qa.yml build pins the existing release-widget target
 The input title is Benchmark paired title, matching the paired Linux stimulus. Text still enters through the explicitly mocked framework channel; this is not native keyboard/IME evidence. Optional foreground probing waits for a run-bound controller arm, checks the actual foreground process before and after each action, and requires1280x860 logical pixels. Input-return, state-ready and post-frame fields are nested cumulative measurements; the delivered engine-frame slices are separate. App-mount readiness excludes process bootstrap, fixture setup and the controller wait. A single diagnostic sample does not establish median/tail or all-action acceptance, hardware renderer attribution or compositor presentation. These qualifications and the existing enforced budgets remain unchanged.
 
 The fixture controller reads only the public contract and four canonical files. Local profiles are not migration inputs. The generated Flutter plugin files are pinned as literal bytes across Windows worktrees; unexpected tracked changes still reject packaging, with bounded filenames/diff and raw working/Git byte hashes for diagnosis. This does not authorize a generated-source exception or release-gate waiver.
+
+
+Optional Windows provider-cost diagnostics
+The existing release-widget probe accepts explicit --cost-trace through its
+controller. The default remains uninstrumented. A LocalLogFolder subclass
+preserves range/bounded/replacement/tail capabilities and delegates production
+durability; its common-clock raw spans include provider list/read/range offsets,
+returned bytes and append/create/atomic-write-plus-barrier intervals. Action
+windows are correlated by timestamps, not invented causal async parents.
+Inclusive/overlapping intervals must not be summed; provider await is not kernel
+I/O service time. SQL/native-validation/write-versus-flush/render costs remain
+explicitly unmeasured. Bounded trace overflow preserves the operation result/error
+and invalidates the diagnostic after actions, rather than turning a successful
+append into a failed Save. Packaging pins this additional Dart source. These
+diagnostic samples cannot replace ordinary release or native visible-response
+acceptance, and no time/growth budgets change.

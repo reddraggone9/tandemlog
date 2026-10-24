@@ -19,11 +19,16 @@ class FaultFolder
   final LogFolder inner;
   int? prefix;
   bool throwAfter = false;
+  int listCalls = 0;
   String? readFailure;
   @override
   String get location => inner.location;
   @override
-  Future<List<LogFileInfo>> list() => inner.list();
+  Future<List<LogFileInfo>> list() {
+    listCalls++;
+    return inner.list();
+  }
+
   @override
   Future<Uint8List> readBounded(String name, int maximumBytes) {
     if (name == readFailure) {
@@ -99,6 +104,19 @@ void main() {
     await tasks.refresh();
     food = await FoodStore.openUnified(tasks.unified!);
   }
+
+  test(
+    'Food prepares from one fresh observation and retains confirmation',
+    () async {
+      await open();
+      final before = folder.listCalls;
+      await food!.add(const FoodDetails(name: 'Single preparation'), 1);
+      // One prepare, one final concurrent-write check, one own-append confirmation.
+      expect(folder.listCalls - before, 3);
+      expect(food!.state.containers.single.details.name, 'Single preparation');
+      expect(tasks.unified!.pendingRecords, isEmpty);
+    },
+  );
 
   List<Map<String, Object?>> receipts() => [
     for (final r in tasks.unified!.pendingRecords)

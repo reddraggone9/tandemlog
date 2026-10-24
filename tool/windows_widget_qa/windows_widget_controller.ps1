@@ -4,7 +4,8 @@
 param(
   [Parameter(Mandatory=$true)][string]$Artifact,
   [Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ManifestSha256,
-  [Parameter(Mandatory=$true)][string]$Fixture
+  [Parameter(Mandatory=$true)][string]$Fixture,
+  [switch]$CostTrace
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows -or $PSVersionTable.PSVersion.Major -lt 7) {
@@ -25,6 +26,7 @@ foreach ($argument in @($controller, '--artifact', $Artifact,
                        '--manifest-sha256', $ManifestSha256, '--fixture', $Fixture)) {
   $info.ArgumentList.Add($argument)
 }
+if ($CostTrace) { $info.ArgumentList.Add('--cost-trace') }
 $process = [System.Diagnostics.Process]::new()
 $process.StartInfo = $info
 $outerTimedOut = $false

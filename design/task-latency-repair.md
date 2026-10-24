@@ -394,3 +394,14 @@ Task and Food Save/Undo. Its artifact predates these focus and paint changes.
 Fresh native measurements, the full interaction inventory and exact-candidate
 release checks remain required; passing storage benchmarks alone cannot satisfy
 them. No timing limit has been relaxed.
+
+
+Food preparation consolidation (bounded follow-up)
+The nonempty Food command now uses the existing fresh-input preparation callback,
+building previous-edit references after its one fresh observation. Empty commands
+still refresh; final concurrent-write validation, provenance, exact prepared
+records and confirmation remain. Task/native Save preflight is unchanged,
+including rejected-Save/continued-keystroke and peer-change guards. This removes
+one redundant preparation scan; it does not claim all history-scaled work is gone.
+Owner-log byte concatenation remains a separate representation issue requiring
+its own correctness/growth gates, not an integrity-guarantee exception.

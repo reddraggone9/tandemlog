@@ -11,6 +11,10 @@ class ChildEnvironmentTests(unittest.TestCase):
         self.assertEqual(env["TANDEMLOG_WINDOWS_WIDGET_FIXTURE"],str(Path("public")))
         self.assertEqual(env["TANDEMLOG_TEXT_LIBRARY"],str(Path("bundle/native.dll")))
         self.assertNotIn("FLUTTER_ENGINE_SWITCHES",env)
+    def test_cost_trace_requires_explicit_controller_flag(self):
+        args=(Path("bundle"),Path("dll"),Path("out"),Path("tmp"),Path("tmp/run"),"run",Path("fixture"),{"SystemRoot":"C:\\Windows","TANDEMLOG_WINDOWS_WIDGET_COSTS":"1"})
+        self.assertNotIn("TANDEMLOG_WINDOWS_WIDGET_COSTS",build(*args))
+        self.assertEqual(build(*args,cost_trace=True)["TANDEMLOG_WINDOWS_WIDGET_COSTS"],"1")
     def test_missing_system_root_refused_before_spawn(self):
         with self.assertRaisesRegex(RuntimeError,"SystemRoot missing"):
             build(Path("bundle"),Path("dll"),Path("out"),Path("tmp"),Path("tmp/run"),"run",Path("fixture"),{})

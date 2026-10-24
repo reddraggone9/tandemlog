@@ -216,10 +216,14 @@ class FoodStore {
     List<_FoodChange> changes,
     Map<String, dynamic>? provenance,
   ) async {
-    await _refresh();
-    if (changes.isEmpty) return [];
-    final reservation = await unified!.prepareInProfileQueue(
-      _unifiedBuilders(changes),
+    if (changes.isEmpty) {
+      await _refresh();
+      return [];
+    }
+    // Build against the preparation owner's one fresh observation, preserving
+    // peer-derived previous-edit references and the final commit recheck.
+    final reservation = await unified!.prepareFromFreshInputsInProfileQueue(
+      () => _unifiedBuilders(changes),
       provenance: provenance,
     );
     final batch = List<FoodRecord>.unmodifiable(
