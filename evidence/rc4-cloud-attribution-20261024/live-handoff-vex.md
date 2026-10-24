@@ -1,6 +1,6 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-24 22:23 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-24 22:28 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
@@ -30,17 +30,17 @@ Earlier repairs keep the same live ordered/visible SQL query for Task tokens and
 
 ## Active run and completed validation
 
-**Only active command/task:** [CI40134281681](https://github.com/reddraggone9/tandemlog/actions/runs/40134281681), exact source **`6a0acdd`**, calibration=false. Linux job **`120992374942`** is running:
+**Latest completed run (no active local or CI command remains):** [CI40134281681](https://github.com/reddraggone9/tandemlog/actions/runs/40134281681), exact source **`6a0acdd`**, calibration=false. Linux job **`120992374942`** ran:
 
 ```sh
 xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux --reporter expanded --timeout 120s
 ```
 
-Native step started **21:41:00 UTC**, with a **50-minute bound** (approximately22:31 deadline). A previous passing203-case run took45m30s, so elapsed time alone is not a stall diagnosis. Available GitHub logs are final-only; live per-test progress is unavailable through the exposed API. Windows and Android passed. Linux already passed units/native/tools/build, actual startup/normal close, packaging and install/replace/uninstall. Its final native result remains **pending**.
+Native step started **21:41:00 UTC**, with a **50-minute bound** (approximately22:31 deadline). A previous passing203-case run took45m30s, so elapsed time alone is not a stall diagnosis. Available GitHub logs are final-only; live per-test progress is unavailable through the exposed API. Windows and Android passed. Linux already passed units/native/tools/build, actual startup/normal close, packaging and install/replace/uninstall. Its final native result is **202 passed/1 failed in40m24s**: `session Undo survives notices, protects drafts and preserves newer synced edits` could not find the Discard widget when tapping at `integration_test/task_flow_test.dart:4177`. Cause is not diagnosed; do not label it a harmless test flake. See `followup-native-session-undo-failure.json` and the full retained log `/workspace/scratch/rc4-proof-native-ci-40134281681/job.log`. This observed failure is not SIGSEGV.
 
 The AOT job **`120992374813`** completed: all three shapes pass correctness/232 metrics, but **202 absolute checks and123 paired checks fail**, with **zero eligible retries**. The AMD EPYC9V74 host differs from earlier hosts; do not claim controlled whole-run improvement/regression. Preserve the failed results; no unchanged gate retry is authorized by the noise policy.
 
-For **current8005430**: full local **1504 units pass in6m31s**,21 focused regressions,171 tools, clean analysis,394 files formatted with0 changes. Both existing checklist families on all three sealed shapes pass frozen-source correctness, full replay and canonical-prefix checks. A10,000-case scratch ordering differential and a committed1000-case old-oracle regression pass. **Fresh exact-commit CI for8005430 has not been dispatched**, to avoid cancelling the older native run. No active local shell/build/test session, pending push, new automation or persistent service remains. Old completed session IDs are not running work.
+For **current8005430**: full local **1504 units pass in6m31s**,21 focused regressions,171 tools, clean analysis,394 files formatted with0 changes. Both existing checklist families on all three sealed shapes pass frozen-source correctness, full replay and canonical-prefix checks. A10,000-case scratch ordering differential and a committed1000-case old-oracle regression pass. **Fresh exact-commit CI for8005430 has not been dispatched**, while the older native result and handoff coordination were pending. No active local shell/build/test session, pending push, new automation or persistent service remains. Old completed session IDs are not running work.
 
 ## Performance and Linux close issues
 
@@ -72,12 +72,12 @@ Cloud commands source `/workspace/toolchains/env.sh` (Flutter3.47.5/Dart3.13.4, 
 
 Cloud/Xvfb software framework-post-frame timings are **not hardware presentation latency**. Existing Linux nine-path diagnostics pass replay/restoration but include intervals above100ms. Windows's earlier32ms open/61ms Save/58ms Undo sample is framework-only and not all-action acceptance. Full native Windows action coverage, real timing/growth and remaining Linux UI acceptance remain open. Farnsworth access was restored by Lee; cloud did not use it. Leela foreground permission remains held. Coordinate exact native/device tasks through the parent; infer no new persistent access or foreground permission.
 
-Before any RC/release: current exact-source required CI including uninstrumented AOT limits, full action/growth/native validation, recorded exact-artifact acceptance, and applicable release/UX/dependency/signing gates. Physical writer mapping, private frozen real-copy replay and live adoption remain separate coordinated prerequisites. No release or live conversion is implied.
+Before any RC/release: triage/fix the native Session Undo/Discard failure without weakening its guarantees, current exact-source required CI including uninstrumented AOT limits, full action/growth/native validation, recorded exact-artifact acceptance, and applicable release/UX/dependency/signing gates. Physical writer mapping, private frozen real-copy replay and live adoption remain separate coordinated prerequisites. No release or live conversion is implied.
 
-Proposed cutover: finish/retain the current bounded6a native result, update this snapshot and push documentation; parent and Vex verify the published checkpoint and agree an explicit UTC cutover. Cloud then stops Tandemlog product writes/pushes and workflow dispatch/monitoring ownership transfers to Vex, with read-only assistance as coordinated. Until that announcement cloud remains sole product writer; Vex may inspect, but must not edit concurrently. After cutover preserve Farnsworth's local work, select the published development branch, verify tooling and dispatch/adopt **one** fresh exact-source CI (calibration=false), avoiding duplicate runs:
+Proposed cutover: the bounded6a native run is finished and its failure is retained. Push this updated snapshot; parent and Vex verify the published checkpoint and agree an explicit UTC cutover. Cloud then stops Tandemlog product writes/pushes and workflow dispatch/monitoring ownership transfers to Vex, with read-only assistance as coordinated. Until that announcement cloud remains sole product writer; Vex may inspect, but must not edit concurrently. After cutover preserve Farnsworth's local work, select the published development branch, verify tooling and dispatch/adopt **one** fresh exact-source CI (calibration=false), avoiding duplicate runs:
 
 ```sh
 gh workflow run ci.yml --ref fix/rc4-task-latency-20261022 -f calibrate_performance=false --repo reddraggone9/tandemlog
 ```
 
-No action was authorization-denied and no push outcome is uncertain. Pending blockers are technical timing/native evidence and the explicitly held foreground validation. No limit-loosening decision has been requested or granted.
+One direct CLI job-log blob download returned HTTP403 and was not retried; the successful earlier GitHub-app response was already available and has been retained. No authorization blocker remains for this handoff, and no push outcome is uncertain. Pending blockers are technical timing/native evidence and the explicitly held foreground validation. No limit-loosening decision has been requested or granted.
