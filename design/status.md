@@ -25,6 +25,11 @@ with SIGSEGV. The enforcing AOT job failed absolute and paired timing with no
 eligible retry. Packaging/later native Linux checks were therefore not completed.
 A separate bounded Linux GDB diagnostic captures native-close evidence without
 altering the required gates or retrying the unchanged performance experiment.
+That diagnostic40126806083 completed three clean GDB closes and preserved the
+exact bundle; it did not reproduce or clear the original SIGSEGV. No crash
+workaround or SDK change was made without an identifying stack. Current local
+tooling passes168 cases. Timing acceptance and the native close failure remain
+open, with [resumable evidence](../evidence/rc4-cloud-attribution-20261024/README.md).
 
 ## Latest development result - 2026-10-21
 

@@ -187,6 +187,35 @@ shutdown defects exist ([FlTaskRunner193742](https://github.com/flutter/flutter/
 unproven without this crash's stack. No SDK/dependency/workaround change has been
 made on that inference.
 
+[Targeted diagnostic40126806083](https://github.com/reddraggone9/tandemlog/actions/runs/40126806083)
+completed on5080c7e: all three normal WM_DELETE closes exited0 under GDB, no
+forced cleanup, both debugger/inferior stopped, bundle unchanged. The
+[complete report](ci-linux-close-diagnostic.json) binds artifact12572758425,
+SHA256 bdd68e156dc4c887ff8bffe81ca14cedc68e1597f7aeab6e2d8653cb6b3c7a36,
+retained until2026-10-29. The native library SHA256 matches the failed smoke's
+fixture receipt. The original SIGSEGV remains un-attributed and unwaived; these
+three non-reproductions are not proof of a fix. No production workaround was
+introduced without a stack identifying the faulty lifetime.
+
+The diagnostic addition leaves product/native source, dependencies, performance
+source/limits, and required CI workflows byte-identical to cb1ea0e. Its two new
+controls bring the local tooling suite to168 passing with the configured
+toolchain. Windows CI's full suite completed1498 passed with2 platform skips;
+the job, native contracts, product build and installer checks succeeded.
+
+Resumable cloud checkpoint: `/workspace/scratch/rc4-cloud-checkpoint.json`;
+toolchain: `/workspace/toolchains/env.sh`. Original failed CI startup/performance
+ZIPs and logs remain in `/workspace/scratch/rc4-ci-linux-startup-40124976992`
+and `/workspace/scratch/rc4-ci-performance-40124976992`; the targeted debugger
+archive (including the exact test-only bundle) remains in
+`/workspace/scratch/rc4-linux-close-ci-40126806083/artifact.zip`.
+
+No authorization denial or pending push remains. Technical acceptance is
+blocked by the required timing failures (no eligible unchanged retry), absence
+of a captured stack for the observed native close crash, and still-held native
+full-action/hardware validation. Further timing attribution or a captured native
+failure must justify the next repair; no limit loosening is proposed.
+
 Native/UI all-action acceptance and remaining timing failures remain open.
 This checkpoint does not authorize a release or live adoption.
 
