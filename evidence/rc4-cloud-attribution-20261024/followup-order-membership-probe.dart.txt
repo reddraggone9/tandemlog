@@ -1,0 +1,82 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:tandemlog/domain/projection.dart';
+import 'package:tandemlog/domain/event.dart';
+List<String> membershipOrder(
+  Iterable<String> availableInCreationOrder,
+  Iterable<OrderAction> actions,
+) {
+  final available = availableInCreationOrder.toSet();
+  final ordered = <String>[];
+  final placed = <String>{};
+  final pending = <(String, String?)>[];
+  final seeded = <String>{};
+  bool move(String entity, String? before) {
+    if (!placed.contains(entity) ||
+        (before != null && !placed.contains(before))) {
+      return false;
+    }
+    ordered.remove(entity);
+    ordered.insert(
+      before == null ? ordered.length : ordered.indexOf(before),
+      entity,
+    );
+    return true;
+  }
+
+  void settlePending() =>
+      pending.removeWhere((action) => move(action.$1, action.$2));
+  for (final action in actions) {
+    if (isTaskCompletion(action.type)) {
+      final next = action.successor;
+      if (next == null || !seeded.add(next) || !available.contains(next)) {
+        continue;
+      }
+      if (placed.add(next)) ordered.add(next);
+      if (!move(next, action.entity)) pending.add((next, action.entity));
+      settlePending();
+    } else if (action.type == 'task.moved') {
+      if (!move(action.entity, action.before)) {
+        pending.add((action.entity, action.before));
+      }
+    } else if ((action.type == 'task.created' ||
+            action.type == 'task.createdWithText' ||
+            action.type == 'user.created') &&
+        available.contains(action.entity) &&
+        !placed.contains(action.entity)) {
+      ordered.add(action.entity);
+      placed.add(action.entity);
+      settlePending();
+    }
+  }
+  for (final id in available) {
+    if (placed.add(id)) ordered.add(id);
+  }
+  settlePending();
+  return ordered;
+}
+
+
+void main() {
+ final random=Random(9932);
+ for(final count in [800,1600,3200]) {
+  final ids=[for(var i=0;i<count;i++) '00000000-0000-4000-8000-${i.toString().padLeft(12,'0')}'];
+  final actions=<OrderAction>[
+    for(final id in ids) OrderAction(id,'task.created'),
+    for(var i=0;i<80;i++) OrderAction(ids[random.nextInt(count)],'task.moved',before:i%7==0?null:ids[random.nextInt(count)]),
+  ];
+  // Keep the existing self-move rejection behavior outside the valid workload.
+  actions.removeWhere((a)=>a.entity==a.before);
+  final expected=projectOrder(ids,actions), actual=membershipOrder(ids,actions);
+  if(jsonEncode(actual)!=jsonEncode(expected)) throw StateError('Order differs');
+  final old=<int>[], next=<int>[];
+  for(var rep=0;rep<22;rep++) {
+   for(final which in (rep.isEven?[0,1]:[1,0])) {
+    final watch=Stopwatch()..start();final result=which==0?projectOrder(ids,actions):membershipOrder(ids,actions);final us=watch.elapsedMicroseconds;
+    if(jsonEncode(result)!=jsonEncode(expected)) throw StateError('Order differs');
+    if(rep>=2)(which==0?old:next).add(us);
+   }
+  }
+  print(jsonEncode({'count':count,'beforeUs':old,'afterUs':next,'sameOrder':true,'scope':'pure global ordering algorithm; no application latency acceptance'}));
+ }
+}

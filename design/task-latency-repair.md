@@ -495,3 +495,14 @@ cold startup did not improve. These are narrow observations, not full enforcemen
 or hardware/UI acceptance. The next genuine-source CI also enables bounded
 post-fault stack capture in the actual Linux startup step on this repair branch;
 it preserves original exit status and excludes raw memory cores from artifacts.
+
+The next [ordering analysis](../evidence/rc4-cloud-attribution-20261024/followup-order-analysis.md)
+retains6a0acdd's unsuccessful enforcing run and its successful actual-CI normal
+close separately. Pure global-order reconstruction now keeps a temporary placed-ID
+Set, avoiding repeated List membership scans while preserving every deferred
+move, first successor seed and fallback order. Its lifetime is one call, with
+O(N) extra references and no retained authority. Frozen-oracle/mixed-history
+regressions and both existing checklist families on all three shapes preserve
+correctness/replay; full exact-source enforcement remains required. Local syscall
+tracing did not reproduce the hosted hundreds-of-milliseconds tails, so their
+I/O/scheduling attribution remains open. No guarantee or budget is loosened.

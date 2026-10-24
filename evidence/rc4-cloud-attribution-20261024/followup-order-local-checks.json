@@ -1,0 +1,35 @@
+{
+  "scope": "pure ordering membership repair local validation",
+  "unitTests": 1504,
+  "unitSeconds": 391,
+  "focusedTests": 21,
+  "tools": 171,
+  "formatFiles": 394,
+  "formatChanges": 0,
+  "analysis": "pass",
+  "earlierStyleInfos": "Three new-test brace infos fixed; final analysis clean.",
+  "performanceAccepted": false,
+  "nativeCrashCleared": false,
+  "logs": {
+    "rc4-order-membership-full-unit.log": {
+      "path": "/workspace/toolchains/logs/rc4-order-membership-full-unit.log",
+      "sha256": "d1702a934e04ac4671551e2fdbfbfab0732c6722d446d9ed77ac6b5a5dd2f5af"
+    },
+    "rc4-order-membership-focused.log": {
+      "path": "/workspace/toolchains/logs/rc4-order-membership-focused.log",
+      "sha256": "0b73fe58cb3f0ce8ed2a383abb9d71a8a353d44841e2bf6a1e7c9768ac8d2315"
+    },
+    "rc4-order-membership-final-analysis.log": {
+      "path": "/workspace/toolchains/logs/rc4-order-membership-final-analysis.log",
+      "sha256": "d4bd2e1c79b9e71f9f59055794deeb122b23c7a78b3b7dd5eeceddda924f5545"
+    },
+    "rc4-order-membership-final-format.log": {
+      "path": "/workspace/toolchains/logs/rc4-order-membership-final-format.log",
+      "sha256": "0a0b1d582c858f457d4b3084688241ddababda4acc6c4392a4c82a41ba2169e1"
+    },
+    "rc4-order-membership-tools.log": {
+      "path": "/workspace/toolchains/logs/rc4-order-membership-tools.log",
+      "sha256": "618d508336578986581380efd4d781c32ecfbc9120f59fa88eb87493eb8b8d94"
+    }
+  }
+}

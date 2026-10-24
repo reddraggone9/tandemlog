@@ -59,6 +59,20 @@ The actual Linux CI startup step now prepares bounded post-fault stack capture
 on the repair branch, retaining its original launch, failure status and raw-core
 exclusion. All budgets and native/hardware acceptance qualifications remain.
 
+Exact6a0acdd CI40134281681 passed Windows/Android and Linux startup, normal
+close and package/lifecycle checks; its Linux native suite remains active.
+Enforcing correctness passes232 metrics on all shapes, but timing fails202
+absolute and123 paired checks with zero eligible retries. The AMD host differs
+from the previous run. Large append/non-CPU tails remain unexplained; the local
+syscall control did not reproduce them. No earlier failure is waived.
+
+The next [ordering repair](../evidence/rc4-cloud-attribution-20261024/followup-order-analysis.md)
+replaces repeated growing-List membership scans with a temporary placed-ID Set,
+retaining every move/seed/fallback result and storage guard. Full1504 units,
+171 tools, analysis and formatting pass. Both existing checklist families on all
+three sealed shapes pass source-frozen correctness/replay. Fresh exact-source
+CI remains required; budgets and held native/hardware acceptance are unchanged.
+
 ## Latest development result - 2026-10-21
 
 [Current acceptance](../evidence/coordinated-cutover-build99/README.md) records source0acfb3b and CI39633973437: all three jobs green,203 native Linux cases passed,1314 current unit/host cases,89 tooling checks and8 external-copy controls. Exact original-payload GTK Save/peer-while-Food/restart and200-percent Light/Dark checks passed. Android06 independently accepted the affected source243d253 debug-APK modal/restart flows; earlier source-specific peer/tail coverage retains its attribution. All temporary labs stopped with settings restoration and independent process checks. Local desktop and Android demonstrations retain their exact source labels.

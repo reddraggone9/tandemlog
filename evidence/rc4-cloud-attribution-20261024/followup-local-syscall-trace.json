@@ -1,0 +1,72 @@
+{
+  "scope": "local current6a0acdd synthetic first checklist action on each shape under strace; not gate/native UI acceptance",
+  "accepted": false,
+  "productSourceAtCompile": "6a0acddba036727b0b1c2519260dbb86295342f1",
+  "automatedSourceToBinaryAttestation": false,
+  "tracedCalls": [
+    "fsync",
+    "fdatasync"
+  ],
+  "noSQLOrWriteBuffersTraced": true,
+  "syscallWallTimeIncludesTracingAndScheduling": true,
+  "notPureKernelIOServiceTime": true,
+  "hostedHundredMillisecondTailsReproduced": false,
+  "callCount": 123,
+  "slowest": [
+    {
+      "seconds": 0.004954,
+      "line": "28344 1792878510.374460 fsync(8</workspace/scratch/rc4-kernel-io-attribution/dense-2/converted-checklist/profile/local.sqlite-wal>) = 0 <0.004954>"
+    },
+    {
+      "seconds": 0.004326,
+      "line": "28344 1792878508.191192 fsync(7</workspace/scratch/rc4-kernel-io-attribution/dense-2/converted-checklist/profile/local.sqlite>) = 0 <0.004326>"
+    },
+    {
+      "seconds": 0.004242,
+      "line": "28344 1792878514.653625 fsync(8</workspace/scratch/rc4-kernel-io-attribution/dense-food/converted-checklist/profile/local.sqlite-wal>) = 0 <0.004242>"
+    },
+    {
+      "seconds": 0.004097,
+      "line": "28344 1792878514.801672 fsync(7</workspace/scratch/rc4-kernel-io-attribution/dense-food/converted-checklist/profile/local.sqlite>) = 0 <0.004097>"
+    },
+    {
+      "seconds": 0.003874,
+      "line": "28344 1792878508.982027 fsync(7</workspace/scratch/rc4-kernel-io-attribution/dense-2/converted-checklist/profile/local.sqlite>) = 0 <0.003874>"
+    },
+    {
+      "seconds": 0.003756,
+      "line": "28344 1792878508.301761 fsync(8</workspace/scratch/rc4-kernel-io-attribution/dense-2/converted-checklist/profile/local.sqlite-wal>) = 0 <0.003756>"
+    },
+    {
+      "seconds": 0.003553,
+      "line": "28344 1792878510.480057 fsync(7</workspace/scratch/rc4-kernel-io-attribution/dense-2/converted-checklist/profile/local.sqlite>) = 0 <0.003553>"
+    },
+    {
+      "seconds": 0.003395,
+      "line": "28344 1792878516.803553 fsync(8</workspace/scratch/rc4-kernel-io-attribution/dense-food/converted-checklist/profile/local.sqlite-wal>) = 0 <0.003395>"
+    },
+    {
+      "seconds": 0.003165,
+      "line": "28344 1792878516.930494 fsync(7</workspace/scratch/rc4-kernel-io-attribution/dense-food/converted-checklist/profile/local.sqlite>) = 0 <0.003165>"
+    },
+    {
+      "seconds": 0.003068,
+      "line": "28344 1792878503.944595 fsync(7</workspace/scratch/rc4-kernel-io-attribution/dense-1/converted-checklist/profile/local.sqlite>) = 0 <0.003068>"
+    },
+    {
+      "seconds": 0.002174,
+      "line": "28344 1792878508.107238 fsync(8</workspace/scratch/rc4-kernel-io-attribution/dense-2/converted-checklist/profile/local.sqlite-wal>) = 0 <0.002174>"
+    },
+    {
+      "seconds": 0.002129,
+      "line": "28344 1792878503.395094 fsync(8</workspace/scratch/rc4-kernel-io-attribution/dense-1/converted-checklist/profile/local.sqlite-wal>) = 0 <0.002129>"
+    }
+  ],
+  "largestApplogSeconds": 0.001794,
+  "retainedTrace": "/workspace/scratch/rc4-kernel-io-syscalls.txt",
+  "traceSHA256": "adfd906bba85aa21c64f9027d90cfdee7df714e64168ba436896d928c965ee95",
+  "entrySHA256": "ca75b28430a0a78619a0b70439af47ae2293603703ad193601931836352ddd48",
+  "binarySHA256": "74cee97811471050194adf38496d7bdc02c6501958d16400f7c1720bed59300f",
+  "logSHA256": "6ed999ad82d71939d041fe9fe5f8f776b276c9614321af54f2df760eb9d81f87",
+  "allThreeCorrectnessReplayPass": true
+}

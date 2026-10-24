@@ -260,3 +260,15 @@ with direct JsonUtf8Encoder conversion. Both retain identical SHA256 digests;
 the full row inventory, ready IDs and consumed-witness comparison remain.
 The candidate changes only encoding allocation. Full startup/action enforcement
 and native acceptance remain separate; the component probe does not clear them.
+
+## Ordering follow-up
+
+The [next cost analysis](followup-order-analysis.md) preserves6a0acdd's full
+failed enforcement (202 absolute/123 paired checks, zero retries), actual-CI
+normal-close receipts, a qualified local syscall control and the next pure
+ordering repair. A temporary membership Set removes repeated growing-List scans
+without changing move/seed/fallback results or any storage/native guard.
+The frozen old-order oracle, mixed-history differential controls and existing
+checklist scenarios retain independent correctness/replay checks. All six
+source-frozen checklist families pass; full units and exact CI remain separate.
+No hosted tail failure or earlier SIGSEGV is waived by those narrow results.
