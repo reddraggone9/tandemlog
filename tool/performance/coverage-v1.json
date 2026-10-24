@@ -473,5 +473,33 @@
     "invariants": "Exact actual selected order/native context, ready graph, zero full-readiness on accepted ordinary action+Undo, full semantic/readiness oracle after each, exact row Undo, prefixes/peers and fresh replay.",
     "baseline": "Retained external153 old149 baseline deliberately asserts positive actual full-readiness before optimization; new metrics do not silently substitute protected post-text edits.",
     "gaps": "Separate timing distributions for first schedule/assignee/delete/move, arbitrary mixed fields, and large selected groups are not claimed."
+  },
+  "linuxFrameworkDiagnostic": {
+    "target": "integration_test/linux_release_action_costs.dart",
+    "controller": "tool/performance/run_linux_action_probe.py",
+    "shapes": [
+      "1320",
+      "2640",
+      "food:2640"
+    ],
+    "actions": [
+      "task-open",
+      "title-save",
+      "title-undo",
+      "task-complete",
+      "completion-undo",
+      "food-section",
+      "food-open",
+      "food-save",
+      "food-undo"
+    ],
+    "inputBoundary": "framework channel and hit-tested pointers; post-frame acknowledgment, not OS input or presented pixels",
+    "ordinaryObjectiveUs": 100000,
+    "timingAcceptance": false,
+    "remainingGaps": [
+      "One fresh process per shape is diagnostic only; no median/tail acceptance",
+      "Cloud Xvfb software rendering is not hardware presentation latency",
+      "Other UI actions still require faithful native timing coverage"
+    ]
   }
 }

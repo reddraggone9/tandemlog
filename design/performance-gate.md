@@ -165,9 +165,25 @@ durability; its common-clock raw spans include provider list/read/range offsets,
 returned bytes and append/create/atomic-write-plus-barrier intervals. Action
 windows are correlated by timestamps, not invented causal async parents.
 Inclusive/overlapping intervals must not be summed; provider await is not kernel
-I/O service time. SQL/native-validation/write-versus-flush/render costs remain
-explicitly unmeasured. Bounded trace overflow preserves the operation result/error
+I/O service time. Optional profile observation now adds synchronous SQLite API,
+transaction/body/BEGIN/COMMIT/ROLLBACK, queue-wait, semantic validation and refresh
+intervals; the native owner adds JSON/FFI/native API intervals. The pinned SQLite
+payload omits tracing, so no engine statement counter or engine-only duration is
+claimed. Diagnostic database views preserve the original connection, statements,
+hooks, parameters, results and errors and do not send SQL text to the observer.
+Direct raw/cursor SQL, write-versus-flush, allocation and render/scheduler details
+remain explicitly unmeasured. Bounded trace overflow preserves the operation result/error
 and invalidates the diagnostic after actions, rather than turning a successful
 append into a failed Save. Packaging pins this additional Dart source. These
 diagnostic samples cannot replace ordinary release or native visible-response
 acceptance, and no time/growth budgets change.
+
+The standalone runner exposes --diagnose-costs only together with --measure-only.
+It instruments every ordinary action through the same production paths, retains
+per-sample raw JSON traces under the disposable workload's cost-traces directory,
+and requires complete, exactly reconciled interval partitions. Raw trace files
+are written after the action timer stops. These instrumented timings can never
+satisfy release acceptance. Default/enforcing runs remain uninstrumented; action
+IDs, sample counts, first-use fixtures, history-growth comparisons and versioned
+budgets are unchanged. See task-latency-repair.md for the SQL-hook limitation,
+remaining attribution gaps and exact-row Task snapshot representation memo.

@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'synthetic_fixture.dart';
 import 'operation_diagnostics.dart';
+import 'cost_trace.dart';
 import 'package:tandemlog/storage/local_durability.dart';
 
 import 'dart:convert';
@@ -59,6 +60,7 @@ class Audit {
   late LocalSettings settings;
   final original = <String, List<int>>{};
   bool opened = false;
+  ProbeCostTrace? costTrace;
   String? profileOverride;
   Map<String, dynamic> row(String id) =>
       tasks.currentTextRow(id) ??
@@ -72,6 +74,14 @@ class Audit {
     root = Directory('${output.path}/$family');
     require(!await root.exists(), 'Refuse existing family');
     await root.create(recursive: true);
+    if (config['diagnosticCosts'] == true) {
+      final clock = Stopwatch()..start();
+      costTrace = ProbeCostTrace(
+        () => clock.elapsedMicroseconds,
+        profileHookAttachment: 'after SQLite profile open, before history open',
+      );
+      await Directory('${root.path}/cost-traces').create();
+    }
     shared = await Directory('${root.path}/workspace').create();
     writer = config['fixtureWriter'] as String;
     final source = Directory(config['sealedWorkspacePath'] as String);
@@ -101,6 +111,9 @@ class Audit {
     engine = NativeTextEngine(
       libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
     );
+    if (costTrace case final trace?) {
+      engine.diagnosticObserver = ProbeProfileDiagnostics(trace);
+    }
     await open(fresh: true, report: family == 'startup');
     user = tasks.rows.firstWhere((r) => r['kind'] == 'user')['id'] as String;
     settings.user = user;
@@ -116,6 +129,9 @@ class Audit {
     profile = await LocalProfileDatabase.open(
       profileOverride ?? '${root.path}/profile',
     );
+    if (costTrace case final trace?) {
+      profile.diagnosticObserver = ProbeProfileDiagnostics(trace);
+    }
     if (fresh) {
       profile.transaction(
         () => profile.database.execute(
@@ -137,7 +153,13 @@ class Audit {
     }
     final profileUs = watch.elapsedMicroseconds;
     history = await UnifiedHistory.open(
-      LocalLogFolder(shared.path, durability: durabilityDiagnostics),
+      costTrace == null
+          ? LocalLogFolder(shared.path, durability: durabilityDiagnostics)
+          : ProbeLocalLogFolder(
+              shared.path,
+              costTrace!,
+              durability: durabilityDiagnostics,
+            ),
       profile: profile,
       writer: writer,
       textEngine: engine,
@@ -196,10 +218,48 @@ class Audit {
     final resourcesBefore = benchmarkResourceCounters();
     final appendCallsBefore = durabilityDiagnostics.appendCalls;
     final appendUsBefore = durabilityDiagnostics.appendMicroseconds;
+    final snapshotDecodesBefore = tasks.taskSnapshotRowsDecoded;
+    final semanticSortsBefore = history.semanticTaskSortRuns;
+    final trace = costTrace;
+    trace?.reset();
+    final traceStart = trace?.now();
     final watch = Stopwatch()..start();
     final value = await body();
-    final us = watch.elapsedMicroseconds;
+    final traceEnd = trace?.now();
+    final us = trace == null
+        ? watch.elapsedMicroseconds
+        : traceEnd! - traceStart!;
     final resourcesAfter = benchmarkResourceCounters();
+    Map<String, Object?>? costs;
+    if (trace != null) {
+      trace.action(action, traceStart!, traceEnd!);
+      costs = trace.partition(traceStart, traceEnd);
+      final filename =
+          '${action.replaceAll(RegExp(r"[^a-zA-Z0-9_.-]"), "_")}-$rep.json';
+      final file = File('${root.path}/cost-traces/$filename');
+      await file.writeAsString(
+        jsonEncode({
+          'action': action,
+          'family': family,
+          'sample': rep,
+          'profileDiagnosticCallbackFailures':
+              profile.diagnosticCallbackFailures,
+          'partition': costs,
+          ...trace.report(),
+        }),
+      );
+      costs['traceFile'] = file.path;
+      require(
+        profile.diagnosticCallbackFailures == 0 &&
+            engine.diagnosticCallbackFailures == 0 &&
+            trace.droppedSpans == 0,
+        'Incomplete diagnostic attribution; results and trace retained',
+      );
+      require(
+        costs['reconciled'] == true,
+        'Diagnostic wall interval did not reconcile',
+      );
+    }
     final delta = history.physicalSequence - seq;
     require(
       !history.hasPending && !history.snapshot.pendingEffects,
@@ -218,7 +278,13 @@ class Audit {
         'action': action,
         'rep': rep,
         'microseconds': us,
+        'costs': ?costs,
         'diagnostics': {
+          'semanticTaskSortsDelta':
+              history.semanticTaskSortRuns - semanticSortsBefore,
+          'taskSnapshotRowsDecodedDelta':
+              tasks.taskSnapshotRowsDecoded - snapshotDecodesBefore,
+          'taskSnapshotRetainedBytesAfter': tasks.cachedTaskSnapshotBytes,
           'appendCalls': durabilityDiagnostics.appendCalls - appendCallsBefore,
           'appendMicroseconds':
               durabilityDiagnostics.appendMicroseconds - appendUsBefore,
@@ -1696,7 +1762,7 @@ Future<void> main(List<String> args) async {
     );
     return;
   }
-  require(args[0] == 'run', 'Unknown benchmark mode');
+  require({'run', 'diagnose'}.contains(args[0]), 'Unknown benchmark mode');
   final fixture = Map<String, dynamic>.from(
     jsonDecode(await File(args[3]).readAsString()) as Map,
   );
@@ -1715,6 +1781,7 @@ Future<void> main(List<String> args) async {
     'sealedFiles': fixture['files'],
     'fixtureWriter': fixture['writer'],
     'fixtureBaseIdentity': count == 60 ? 60 : 1320,
+    'diagnosticCosts': args[0] == 'diagnose',
   };
   final all = <String, Future<void> Function(Audit)>{
     'task-text': taskText,
@@ -1771,6 +1838,7 @@ Future<void> main(List<String> args) async {
       'actualPhysicalRecords': fixture['actualPhysicalRecords'],
       'warmups': benchmarkWarmups,
       'samples': benchmarkSamples,
+      'costDiagnosticsEnabled': args[0] == 'diagnose',
       'scope':
           'AOT storage/application/readmodel; actual UI input/paint measured separately',
     }),

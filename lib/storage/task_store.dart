@@ -2391,11 +2391,11 @@ class TaskStore {
   }
 
   final Map<String, int> lastReadTimings = {};
+  String get _visibleRowsSql =>
+      "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0 ORDER BY ${tables.positions}.rank";
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
-    final records = db.select(
-      "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0 ORDER BY ${tables.positions}.rank",
-    );
+    final records = db.select(_visibleRowsSql);
     lastReadTimings['query_ms'] = watch.elapsedMilliseconds;
     watch.reset();
     final result = records
@@ -4120,8 +4120,56 @@ class TaskStore {
   /// Immutable comparison token for current task content and global order.
   /// User-only changes do not invalidate a task move. No display policy lives
   /// here: callers separately validate filters/time-dependent move eligibility.
-  String get taskSnapshot =>
-      jsonEncode(rows.where((row) => row['kind'] == 'task').toList());
+  String get taskSnapshot {
+    // Always query the live connection, including staged SQL before COMMIT.
+    // Only the JSON representation is reused, after exact raw-row/order equality.
+    // This carries no freshness, admission, native ownership or commit authority.
+    final raw = [
+      for (final row in db.select(_visibleRowsSql)) row['raw'] as String,
+    ];
+    final previous = _taskSnapshotRaw;
+    if (previous != null && previous.length == raw.length) {
+      var equal = true;
+      for (var i = 0; i < raw.length; i++) {
+        if (raw[i] != previous[i]) {
+          equal = false;
+          break;
+        }
+      }
+      if (equal) return _taskSnapshotValue!;
+    }
+    taskSnapshotRowsDecoded += raw.length;
+    final value = jsonEncode(
+      raw
+          .map((value) => jsonDecode(value) as Map<String, dynamic>)
+          .where((row) => row['kind'] == 'task')
+          .toList(),
+    );
+    final bytes = raw.fold<int>(
+      raw.length * 64 + value.length * 2,
+      (total, value) => total + value.length * 2,
+    );
+    if (raw.length <= 4096 && bytes <= 4 * 1024 * 1024) {
+      _taskSnapshotRaw = List.unmodifiable(raw);
+      _taskSnapshotValue = value;
+      _taskSnapshotBytes = bytes;
+    } else {
+      _clearTaskSnapshotMemo();
+    }
+    return value;
+  }
+
+  List<String>? _taskSnapshotRaw;
+  String? _taskSnapshotValue;
+  int _taskSnapshotBytes = 0;
+  int get cachedTaskSnapshotBytes => _taskSnapshotBytes;
+  // Attempted representation work, separate from display-row decoding.
+  int taskSnapshotRowsDecoded = 0;
+  void _clearTaskSnapshotMemo() {
+    _taskSnapshotRaw = null;
+    _taskSnapshotValue = null;
+    _taskSnapshotBytes = 0;
+  }
 
   String _nonTextSnapshot(String snapshot) {
     final rows = (jsonDecode(snapshot) as List)
@@ -4706,6 +4754,7 @@ class TaskStore {
           field.document.dispose();
         }
         _canonicalTextInput = null;
+        _clearTaskSnapshotMemo();
         disposed = true;
       }
 

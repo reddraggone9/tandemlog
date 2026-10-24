@@ -2,10 +2,12 @@ import 'dart:io';
 import 'dart:convert';
 
 import '../domain/event.dart' show isCanonicalId;
+import '../diagnostics/operation_observer.dart';
 
 import 'package:sqlite3/sqlite3.dart';
 
 import 'local_durability.dart';
+import 'diagnostic_database.dart';
 import 'profile_lock.dart' show ProfileInUse;
 
 class LocalDatabaseFailure implements Exception {
@@ -14,6 +16,11 @@ class LocalDatabaseFailure implements Exception {
   @override
   String toString() => message;
 }
+
+/// Optional synchronous observation only. Implementations must not perform SQL
+/// or alter profile state. Failures are counted and never change operation
+/// results, error identity, transaction ordering or queue admission.
+typedef ProfileDiagnosticObserver = OperationDiagnosticObserver;
 
 /// App-owned local connection and database-file lease. At coordinated cutover,
 /// old local state is reset transactionally while retaining device preferences.
@@ -43,6 +50,76 @@ class LocalProfileDatabase {
   Future<void> _queue = Future<void>.value();
   final _workspaces = <String>{};
   Future<void>? _closing;
+  ProfileDiagnosticObserver? diagnosticObserver;
+  DiagnosticDatabase? _diagnosticDatabase;
+  int diagnosticCallbackFailures = 0;
+
+  Object? _diagnosticStart(ProfileDiagnosticObserver? observer, String name) {
+    if (observer == null) return null;
+    try {
+      return observer.start(name);
+    } catch (_) {
+      diagnosticCallbackFailures++;
+      return null;
+    }
+  }
+
+  void _diagnosticFinish(
+    ProfileDiagnosticObserver? observer,
+    Object? token,
+    bool succeeded,
+  ) {
+    if (observer == null || token == null) return;
+    try {
+      observer.finish(token, succeeded);
+    } catch (_) {
+      diagnosticCallbackFailures++;
+    }
+  }
+
+  T _diagnose<T>(String name, T Function() work) {
+    final observer = diagnosticObserver;
+    if (observer == null) return work();
+    final token = _diagnosticStart(observer, name);
+    var succeeded = false;
+    try {
+      final value = work();
+      succeeded = true;
+      return value;
+    } finally {
+      _diagnosticFinish(observer, token, succeeded);
+    }
+  }
+
+  /// Optional phase observation; application payloads are never passed through.
+  T observeSynchronous<T>(String name, T Function() work) =>
+      _diagnose(name, work);
+
+  Future<T> observeAsynchronous<T>(String name, Future<T> Function() work) {
+    final observer = diagnosticObserver;
+    if (observer == null) return work();
+    final token = _diagnosticStart(observer, name);
+    Future<T> measured() async {
+      var succeeded = false;
+      try {
+        final result = await work();
+        succeeded = true;
+        return result;
+      } finally {
+        _diagnosticFinish(observer, token, succeeded);
+      }
+    }
+
+    return measured();
+  }
+
+  void _executeControl(Database db, String sql, String name) {
+    if (diagnosticObserver == null) {
+      db.execute(sql);
+    } else {
+      _diagnose<void>(name, () => db.execute(sql));
+    }
+  }
 
   /// Workspace operations may perform provider I/O, but only this queue admits
   /// them to the shared connection. Internal calls must not enqueue themselves.
@@ -50,7 +127,10 @@ class LocalProfileDatabase {
     if (_closed || _closing != null) {
       return Future.error(StateError('Local profile is closing.'));
     }
+    final observer = diagnosticObserver;
+    final waiting = _diagnosticStart(observer, 'profile.queueWait');
     final result = _queue.then((_) {
+      _diagnosticFinish(observer, waiting, true);
       database; // Fail closed after an earlier shared rollback failure.
       return work();
     });
@@ -90,7 +170,9 @@ class LocalProfileDatabase {
         'Local profile database is closed or requires recovery.',
       );
     }
-    return _database;
+    return diagnosticObserver == null
+        ? _database
+        : _diagnosticDatabase ??= DiagnosticDatabase(_database, _diagnose);
   }
 
   static Future<LocalProfileDatabase> open(
@@ -305,14 +387,23 @@ class LocalProfileDatabase {
     if (work is Future Function() && work is! Never Function()) {
       throw ArgumentError('Local database transactions must be synchronous.');
     }
+    if (diagnosticObserver == null) return _transaction(work);
+    return _diagnose('sqlite.transaction', () => _transaction(work));
+  }
+
+  T _transaction<T>(T Function() work) {
     final db = database;
-    db.execute('BEGIN IMMEDIATE');
+    // BEGIN remains outside the rollback catch: a failed BEGIN must not roll
+    // back another owner's transaction.
+    _executeControl(db, 'BEGIN IMMEDIATE', 'sqlite.begin');
     try {
-      final result = work();
+      final result = diagnosticObserver == null
+          ? work()
+          : _diagnose('sqlite.body', work);
       if (result is Future) {
         throw ArgumentError('Local database transactions must be synchronous.');
       }
-      db.execute('COMMIT');
+      _executeControl(db, 'COMMIT', 'sqlite.commit');
       return result;
     } catch (error, stack) {
       // SQLITE_FULL and some I/O failures can already roll back a transaction.
@@ -330,7 +421,9 @@ class LocalProfileDatabase {
       // native handle was closed. Empty SQL checks wrapper liveness before
       // reading transaction state, without executing a database command.
       _database.execute('');
-      if (!_database.autocommit) _database.execute('ROLLBACK');
+      if (!_database.autocommit) {
+        _executeControl(_database, 'ROLLBACK', 'sqlite.rollback');
+      }
     } catch (failure) {
       _poisoned = true;
       throw LocalDatabaseFailure(

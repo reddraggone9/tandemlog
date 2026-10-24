@@ -405,3 +405,64 @@ including rejected-Save/continued-keystroke and peer-change guards. This removes
 one redundant preparation scan; it does not claim all history-scaled work is gone.
 Owner-log byte concatenation remains a separate representation issue requiring
 its own correctness/growth gates, not an integrity-guarantee exception.
+
+## Opt-in cost accounting and snapshot representation reuse
+
+The cloud handoff's proposed native SQLite statement hook could not run against
+the pinned SQLite3.7.0 payload: its build uses SQLITE_OMIT_TRACE and does not
+export sqlite3_trace_v2. That unsupported hook is not installed and the approved
+SQLite bytes and compile options are unchanged. Diagnostic profiles instead
+delegate the existing Database/PreparedStatement APIs through an optional view.
+It records API wall intervals (including binding and result conversion), not
+engine statement counts, trigger counts or engine-only service time. SQL text,
+parameters, row contents and native request payloads are never passed to the
+observer. Native API intervals include JSON framing, FFI and native work.
+
+The same bounded trace now covers all224 ordinary synthetic action IDs,
+including Food, completion, converted targets, first activity and their Undo.
+There are still232 registered metrics including the eight existing startup
+measurements. Startup retains its existing aggregate phase timers; the new
+per-action partitions do not claim a complete startup cost breakdown. Diagnostic
+callbacks cannot replace an operation result/error or change transaction/queue
+admission. Raw spans retain overlaps. A fixed interval precedence partitions
+each measured action into API/queue/validation/refresh coverage and an explicit
+unclassified remainder whose sum equals that action's measured interval.
+Connection overlap is not causal async attribution, and provider await is not
+kernel service time. Direct cursor/raw SQL, separate write/flush, allocation and
+render/scheduler details remain gaps. A lost span invalidates the diagnostic.
+
+The initial cloud instrumented run completed all three sealed history shapes,
+all registered metrics and full replay/first-activity correctness checks. Every
+ordinary sample partition reconciled; no retry occurred. It retained absolute
+timing failures (especially cold startup), and the Food-history pair failed
+sync.peerFood.whileTasks.storageAdmission and explicitTask.titleAndNotes.undo.
+Those failures remain evidence, not relaxed budgets or release acceptance.
+
+Review identified repeated JSON decoding/serialization of unchanged live SQL
+rows while constructing global Task comparison tokens. The token now still
+executes the identical live ordered/visible-row SQL query on every call,
+including inside a transaction. Only its immutable serialization is reused
+after exact raw-string and order equality. Changed data, ordering, visibility,
+staged projections and rollback must all match the original uncached oracle.
+This memo grants no admission, freshness, native ownership or commit authority.
+It retains at most4096 raw rows and a conservative4MiB of row/token strings and
+overhead, bypasses retention for larger representations, and clears on close.
+Existing snapshot/peer/draft/Undo guards and all release budgets are unchanged.
+
+The follow-up retains the same exact unchanged-Task-set proof before semantic
+admission. It collects Task events without an unused per-entity regrouping and
+sorts only when that proof fails. Peer Food/header-only input therefore avoids
+sorting unchanged Task history. Changed Task evidence retains canonical sorting,
+revision hashing and the existing validator. Regression coverage checks pending
+Food references, resolution, and a subsequent peer Task change.
+
+[Cloud attribution evidence](../evidence/rc4-cloud-attribution-20261024/README.md)
+preserves the unsuccessful timings and their source bindings. The Linux release
+framework probe exercises Task open/Save/Undo/completion and Food section/open/
+Save/Undo on all three synthetic history shapes. State restoration, fresh full
+replay, canonical-prefix preservation and normal window/process exit pass;
+several framework post-frame intervals still exceed100ms. Provider-await and
+refresh residuals dominate these instrumented cloud intervals, while API work
+alone does not explain them. Scheduler/event-loop, allocation and rendering
+attribution remains unresolved. These are diagnostic measurements, not native
+Windows input-to-presentation acceptance or permission to relax guarantees.

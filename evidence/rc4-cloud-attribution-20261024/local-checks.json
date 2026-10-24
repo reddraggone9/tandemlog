@@ -1,0 +1,82 @@
+{
+  "rc4-all-unit-tests.log": {
+    "sha256": "e9977e2fb65a65cef875daa2e5a7d8965d30abc6242ce049a94af292f29d7887",
+    "bytes": 305689,
+    "tail": [
+      "{\"adaptiveHistoricalRecords\":4100,\"notesChars\":2,\"selectedRecords\":7,\"relationLookups\":27,\"strictSelectedAndHeadDecodes\":9}",
+      "06:27 +1499: /workspace/tandemlog/test/adaptive_text_read_test.dart: owned physical workspace selection matches full oracle past caps (450, 9900)",
+      "{\"adaptiveHistoricalRecords\":450,\"notesChars\":9900,\"selectedRecords\":6,\"relationLookups\":26,\"strictSelectedAndHeadDecodes\":8}",
+      "06:34 +1500: All tests passed!"
+    ]
+  },
+  "rc4-final-focused-tests.log": {
+    "sha256": "44122c75cacd1caac0615a96a0db8f05a047cdacafdac2e2716f742aece8d8c8",
+    "bytes": 17381,
+    "tail": [
+      "00:19 +117: /workspace/tandemlog/test/task_latency_regression_test.dart: warm prefix proof distinguishes partial tails from new complete records",
+      "00:19 +118: /workspace/tandemlog/test/task_latency_regression_test.dart: old malformed semantic cache rebuilds before expression indexes open",
+      "00:19 +119: /workspace/tandemlog/test/task_latency_regression_test.dart: failed projection rebuild does not retain an uncommitted index-ready flag",
+      "00:19 +120: All tests passed!"
+    ]
+  },
+  "rc4-final-tool-tests.log": {
+    "sha256": "b95fda5e716dc40f896437f2f1e2c3bb54249564b22c99368b002a6c3b149372",
+    "bytes": 690,
+    "tail": [
+      "Ran 166 tests in 3.359s",
+      "",
+      "OK",
+      "{\"executable_sha256\": \"0370190d81a1bc1e156676eb83f3adb83bb65e765fd5b7b74719004b77345310\", \"github_run_id\": \"123\", \"native_library_sha256\": \"7bc2fcce9d2525bcb6a722a6cc144de4fd8946c0047d7de73788e37d1f2d42d8\", \"portable_archive\": \"tandemlog-windows-x64-unsigned-portable.zip\", \"portable_sha256\": \"e8a3138b829b428f8ccd47d27e9f3d96994bdd9617582dfe0e75693beef98f91\", \"source_revision\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+    ]
+  },
+  "rc4-final-windows-harness-tests.log": {
+    "sha256": "4fff41be4a6dbfa29d7405da1be947a8a2427aee780073ed09f32acfc2288375",
+    "bytes": 119,
+    "tail": [
+      "----------------------------------------------------------------------",
+      "Ran 20 tests in 0.013s",
+      "",
+      "OK"
+    ]
+  },
+  "rc4-final-analysis.log": {
+    "sha256": "d4bd2e1c79b9e71f9f59055794deeb122b23c7a78b3b7dd5eeceddda924f5545",
+    "bytes": 848,
+    "tail": [
+      "14 packages have newer versions incompatible with dependency constraints.",
+      "Try `flutter pub outdated` for more information.",
+      "Analyzing tandemlog...                                          ",
+      "No issues found! (ran in 1.4s)"
+    ]
+  },
+  "rc4-final-format.log": {
+    "sha256": "507c739277edd7fc313fb6147d50686d43f04bf7f54837f6a87be5beb01aaa5f",
+    "bytes": 49,
+    "tail": [
+      "Formatted 384 files (0 changed) in 2.26 seconds."
+    ]
+  },
+  "rc4-linux-release-build.log": {
+    "sha256": "a0c4f0b66876016483f75fb50a7281205eff9f202f9c3b29da042e99e00cf330",
+    "bytes": 3329,
+    "tail": [
+      "warning: hiding a lifetime that's elided elsewhere is confusing",
+      "warning: hiding a lifetime that's elided elsewhere is confusing",
+      "warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)",
+      "\u2713 Built build/linux/x64/release/bundle/tandemlog"
+    ]
+  },
+  "rc4-linux-action-final-build.log": {
+    "sha256": "a0c4f0b66876016483f75fb50a7281205eff9f202f9c3b29da042e99e00cf330",
+    "bytes": 3329,
+    "originalPath": "/workspace/toolchains/logs/rc4-linux-action-final-build.log",
+    "committedLogView": "linux-diagnostic-build.log",
+    "trailingWhitespaceTrimmedInView": true,
+    "tail": [
+      "warning: hiding a lifetime that's elided elsewhere is confusing",
+      "warning: hiding a lifetime that's elided elsewhere is confusing",
+      "warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)",
+      "\u2713 Built build/linux/x64/release/bundle/tandemlog"
+    ]
+  }
+}

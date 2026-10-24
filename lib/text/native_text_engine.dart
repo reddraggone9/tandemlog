@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:uuid/uuid.dart';
+import '../diagnostics/operation_observer.dart';
 
 const _operationBytes = 1024 * 1024;
 const _stateBytes = 8 * 1024 * 1024;
@@ -164,6 +165,8 @@ class NativeTextEngine {
   NativeTextEngine({String? libraryPath})
     : _bindings = _NativeBindings.load(libraryPath ?? _defaultLibrary());
   final _NativeBindings _bindings;
+  OperationDiagnosticObserver? diagnosticObserver;
+  int diagnosticCallbackFailures = 0;
   final String ownerId = const Uuid().v4();
   final Set<NativeTextDocument> _documents = {};
   final Set<NativeTextMaterializer> _materializers = {};
@@ -182,7 +185,28 @@ class NativeTextEngine {
 
   Map<String, dynamic> _call(String operation, Map<String, Object?> data) {
     _ensureOpen();
-    return _bindings.call(operation, data);
+    final observer = diagnosticObserver;
+    if (observer == null) return _bindings.call(operation, data);
+    Object? token;
+    try {
+      token = observer.start('native.api.$operation');
+    } catch (_) {
+      diagnosticCallbackFailures++;
+    }
+    var succeeded = false;
+    try {
+      final value = _bindings.call(operation, data);
+      succeeded = true;
+      return value;
+    } finally {
+      if (token != null) {
+        try {
+          observer.finish(token, succeeded);
+        } catch (_) {
+          diagnosticCallbackFailures++;
+        }
+      }
+    }
   }
 
   NativeTextUpdate seedText(String text) {

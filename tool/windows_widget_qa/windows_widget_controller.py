@@ -17,7 +17,7 @@ import tempfile
 import threading
 import time
 
-TARGET_SHA = "63b506d1077114c518762512b7348680ace8fe5c0fad33bd172647bb15072cdd"
+TARGET_SHA = "1a4af30cb2ea9a9d95f49e5de4d3a3ecc434381480574923158efe58e33bba6f"
 TTL_SECONDS = 150
 CLEANUP_SECONDS = 20
 # Microsoft WinBase.h: attribute number13 | INPUT0x20000; Windows10+ only.

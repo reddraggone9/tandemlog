@@ -1,0 +1,165 @@
+# RC4 cloud development attribution, 2026-10-24
+
+Development diagnosis and correctness evidence only. Performance acceptance is
+**not complete**. No release, live conversion, personal fixture, signing change,
+dependency update or limit adjustment occurred. Windows foreground/hardware
+validation remains separately pending; no Farnsworth access was used.
+
+## Source and method
+
+Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on
+`fix/rc4-task-latency-20261022`. The source-only handoff from local transfer
+`efe24c400d6240784cd95425fa25a50a7a34caac` was applied and all five supplied Git
+blob hashes matched ([receipt](handoff-receipt.json)). It was then reviewed,
+corrected, formatted and tested. That local transfer commit was never fetched
+or represented as published.
+
+The pinned SQLite3.7.0 native payload omits `sqlite3_trace_v2` (`SQLITE_OMIT_TRACE`).
+The unsupported proposed native callback was removed, preserving SQLite bytes
+and build options. Optional delegation records Database/PreparedStatement API
+wall intervals; these include binding and result conversion and are **not**
+engine statement/trigger counts. Native intervals include JSON/FFI/native work.
+Observers receive operation names, no SQL/parameters/request contents. Observer
+faults cannot replace operation results/errors. Tests cover transaction control,
+failed BEGIN/COMMIT/automatic rollback, queue ordering/drain, delegate APIs,
+observer disabling, and native success/failure. No native callback is retained.
+
+All224 ordinary AOT action IDs receive bounded cost partitions in diagnostic
+mode, including Food, completion, converted targets and first activity/Undo.
+The eight startup metrics retain aggregate phase timers. Raw per-sample spans
+are written after the measured action and remain in the disposable run output.
+Fixed overlap precedence makes exclusive coverage sum exactly to elapsed time;
+inclusive operation sums must not be added. This is interval coverage, not causal
+async attribution. Overflow/callback faults invalidate diagnosis. Enforcing runs
+cannot enable diagnostics; `--diagnose-costs` requires `--measure-only`.
+
+The unchanged activated limits SHA256 is
+`50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e`.
+No case IDs, history shapes, sample counts, first-use checks or retry rules were
+removed or relaxed.
+
+## Repairs supported by the review
+
+1. Task comparison tokens query the same live ordered/visible SQL rows every
+   call. Exact raw-string/order equality reuses only JSON serialization, bounded
+   to4096 rows and a conservative4MiB string/token estimate, cleared on close.
+   Changed bytes, visibility/order, staged SQL and rollback retain the uncached
+   oracle. Freshness/admission/commit/native ownership checks remain separate.
+2. Semantic admission collects Task events without an unused entity regrouping.
+   Only the existing exact unchanged canonical-set proof permits skipping sort;
+   changed Task evidence retains canonical sort/hash/validation. The regression
+   covers peer Food changes, pending references/resolution and a peer Task change.
+
+Repeated provider observations have **not** been removed just because their
+await intervals are large: preparation needs a fresh observation, final write
+validation must reject peer changes, and confirmation/tail recovery preserve
+durability and acknowledgement semantics. Rejected Save must preserve subsequent
+typing. These guards are not interchangeable with representation reuse.
+
+## AOT observations and retained failures
+
+[Instrumented before-memo report](aot-instrumented-before-memo.json) and
+[uninstrumented after-memo report](aot-uninstrumented-after-memo.json) retain all
+per-action summaries, absolute/paired failures, source pins, execution/noise and
+the full original report hashes/locations. Original reports/logs remain under
+`/workspace/scratch/rc4-cost-dense-20261024` and
+`/workspace/scratch/rc4-aot-after-snapshot-20261024`. Each completed all three
+sealed shapes,232 metrics, first-use/full replay correctness, no source rewrites,
+all pins matched and **zero retries**. Each has timing failures and
+`releaseGateAccepted=false`. Instrumented versus uninstrumented timings are not
+a controlled speedup comparison. The after-memo run's two paired failures both
+implicate peer-Food admission, motivating the exact-proof sort repair.
+[All-action diagnostic summary](aot-all-action-cost-partitions.json) retains
+every ordinary ID's median/maximum and median-sample exclusive partition for
+each shape:1120 measured ordinary partitions per shape, all complete.
+
+The [final uninstrumented recheck](aot-uninstrumented-final.json) completed from
+frozen product/tool source under `/workspace/scratch/rc4-aot-final-20261024`:
+all three shapes passed correctness/232-metric coverage and full replay, all
+pins matched, zero retries. Dense-food passed its absolute limits. Dense-1 failed
+title/Notes Undo and cold startup; dense-2 failed converted bulk-reorder Undo,
+checklist add, historical Food-details Undo and cold startup. Both paired checks
+still fail; exact per-case samples/bounds remain in the report. Peer Food changed
+no Task evidence and ran zero Task sorts in every sample, but its Food-history
+paired maximum still fails. This is not complete performance repair/acceptance.
+The cloud cgroup permits16GiB/4CPUs and is not the required
+6GiB/2CPU/no-swap release environment. Exact-commit enforcing CI is separate.
+
+## Linux release framework diagnosis
+
+A separate copied tree built the release-only
+`integration_test/linux_release_action_costs.dart` target; the controller refuses
+the ordinary application without its compiled sentinel. [Build log](linux-diagnostic-build.log),
+[input source pins](linux-input-source-pins.json) and bundle hashes in each result
+bind the inspected inputs/outputs. Source and bundle stayed unchanged during
+each probe. Automated source-to-binary attestation is explicitly false.
+The committed build-log view trims trailing whitespace; local-checks.json records
+the original unmodified log's hash/location, and that original remains retained.
+All333 pinned diagnostic inputs match the development checkout except JSON
+Unicode escape formatting in coverage-v1.json; its parsed content is identical.
+
+One fresh process per shape, GTK1280×720 in cloud Xvfb1600×1200, software GL,
+Light theme, public synthetic data only. Hit-tested framework pointers and the
+framework text channel exercise nine actual application paths; polling does not
+force frames. Timers stop at a framework post-frame callback, **not presented
+pixels or OS input**. Screenshots are outside action timers. Separate engine
+frame build/raster durations share neither a presentation acknowledgment nor a
+causal timing sum with action intervals.
+
+| Action (framework post-frame ms) | Base1320 | Task2640 | Food2640 |
+|---|---:|---:|---:|
+| Task open |125.084|89.856|112.773|
+| Title Save |492.429|392.697|378.972|
+| Title Undo |486.387|539.686|409.140|
+| Complete |473.917|471.184|635.106|
+| Completion Undo |440.178|516.037|542.635|
+| Food section |102.268|116.279|99.236|
+| Food open |35.751|35.734|36.998|
+| Food Save |219.342|268.260|239.677|
+| Food Undo |180.373|305.534|85.760|
+
+All three pass semantic Task/Food restoration, six actual action appends,
+canonical-prefix preservation, fresh full replay with unchanged canonical bytes,
+native resource disposal, controller-owned WM_DELETE and normal process exit0.
+Every action partition is complete and reconciled. Results:
+[base](linux-dense1-result.json), [Task growth](linux-dense2-result.json),
+[Food growth](linux-food-result.json); full verification/frame events:
+[base](linux-dense1-events.jsonl), [Task growth](linux-dense2-events.jsonl),
+[Food growth](linux-food-events.jsonl).
+
+For base title Save492.429ms, exclusive interval coverage is SQL5.344ms,
+native8.104ms, durability3.948ms, provider-await287.951ms,
+refresh residual104.243ms and unclassified80.849ms (plus queue/body/control).
+Provider await includes event-loop/scheduler waiting; it is not measured kernel
+I/O service time. Refresh residual includes decoding/hash/Dart work and scheduling.
+SQL/native API duration alone does not explain the pause. Render/scheduler,
+allocation, direct raw SQL and separate write/flush attribution remain gaps.
+Food section's large unclassified interval is also unresolved. These samples do
+not establish median/tail or all-action UI acceptance. No limits were loosened.
+
+The [Task](tasks-linux.png) and [Food](food-linux.png) screenshots were visually
+inspected: realistic synthetic rows, readable controls and correct section/user
+state, with no observed layout defect. They are Linux screenshots, not Windows
+or Android evidence. [Earlier harness failures](prior-harness-failures.json)
+retain missed-hit and ambiguous-selector failures; those harness corrections are
+not retries under the release timing-noise policy.
+
+## Local checks and remaining gates
+
+[Log hashes/tails](local-checks.json): full unit suite1500 passed before the final
+sort-only optimization; final focused120 passed afterwards (history, projection
+atomicity, workspace/Food, snapshots, diagnostics and rejected-Save/text guards).
+Tooling166 and Windows harness controls20 passed. Analysis and formatting clean.
+Default Linux release build, native payload/ABI, fresh/warm startup and normal
+owned-window exit passed. No foreground Windows run or hardware timing occurred.
+
+Exact-commit CI is dispatched after this development commit; its GitHub run
+must name this exact source and use calibration=false. The native/UI all-action
+acceptance and remaining timing failures must remain explicit. This checkpoint
+does not authorize a release or live adoption.
+
+Open performance work is owned by the RC4 repair, with exit conditions of
+unchanged-budget exact-source AOT enforcement plus faithful native full-action
+timing acceptance. Revisit before candidate/release decisions: provider/event-loop
+and refresh attribution, unavoidable versus repeated observations, cold startup,
+the retained paired/absolute misses, and remaining input-to-presentation gaps.

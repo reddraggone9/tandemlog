@@ -246,6 +246,23 @@ def measurements(log):
                 rows.append({'action':prefix+'.'+suffix,'index':item['index'],'warmup':item['warmup'],'microseconds':item[key]})
     return rows,complete
 
+def validate_cost_measurements(log):
+    observed=0
+    for line in pathlib.Path(log).read_text().splitlines():
+        try:item=json.loads(line)
+        except ValueError:continue
+        if not isinstance(item,dict) or item.get('measurement')!='broad-action':continue
+        cost=item.get('costs',{});coverage=cost.get('exclusiveCoverageUs',{})
+        if (cost.get('complete') is not True or cost.get('reconciled') is not True
+                or not coverage or any(type(v) is not int or v<0 for v in coverage.values())
+                or sum(coverage.values())!=item['microseconds']
+                or cost.get('totalUs')!=item['microseconds']
+                or cost.get('coverageSumUs')!=item['microseconds']):
+            raise RuntimeError('Missing, incomplete or unreconciled diagnostic action costs')
+        observed+=1
+    if not observed:raise RuntimeError('Diagnostic run produced no action cost intervals')
+    return observed
+
 def fixture_argument(spec):
     """Closed versioned shapes; old integer CLI values keep their meaning."""
     if type(spec) is int and spec in (60, 1320, 2640):
@@ -294,9 +311,13 @@ def main():
     for option in ['repo','dart','native-library','sqlite-library','output']:parser.add_argument('--'+option,required=True,type=pathlib.Path)
     parser.add_argument('--expected-limits-sha256',help='Required release workflow binding to committed versioned limits; no alternate limits path is accepted.')
     parser.add_argument('--measure-only',action='store_true',help='Collect calibration data; never reports release-gate acceptance.')
+    parser.add_argument('--diagnose-costs',action='store_true',help='Opt-in API/queue/transaction/provider interval accounting; requires --measure-only and never establishes release performance.')
     if not sys.platform.startswith('linux'):
         parser.error('The standalone AOT performance runner requires Linux; policy tests are portable.')
-    args=parser.parse_args();root=args.output.resolve();root.mkdir(mode=0o700,parents=False,exist_ok=False)
+    args=parser.parse_args()
+    if args.diagnose_costs and not args.measure_only:
+        parser.error('--diagnose-costs requires --measure-only; instrumented timings cannot satisfy release acceptance')
+    root=args.output.resolve();root.mkdir(mode=0o700,parents=False,exist_ok=False)
     tools=pathlib.Path(__file__).resolve().parent;limits_path=tools/'limits-v1.json';limits=json.loads(limits_path.read_text());limits['sha256']=digest(limits_path)
     if not args.measure_only and (limits.get('releaseReady') is not True or args.expected_limits_sha256!=limits['sha256']):raise SystemExit('Versioned limits are inactive or not workflow-bound; release gate fails closed.')
     comparisons=scaling_specs(limits)
@@ -318,7 +339,7 @@ def main():
     bounds=actual_resource_bounds()
     if not args.measure_only:require_release_bounds(bounds)
     env=os.environ.copy();env.update(LD_PRELOAD=str(args.sqlite_library.resolve()),TANDEMLOG_TEXT_LIBRARY=str(args.native_library.resolve()),DART_SUPPRESS_ANALYTICS='true',CI='true')
-    report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'measureOnly':args.measure_only,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
+    report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'measureOnly':args.measure_only,'costDiagnosticsEnabled':args.diagnose_costs,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
     try:
         binary=root/'benchmark';command=[str(args.dart.resolve()),'compile','exe','--packages='+str(packages),str(tools/'benchmark.dart'),'-o',str(binary)]
         report['compile']=run_child(command,root/'compile.log',env,180);check_pins()
@@ -351,8 +372,10 @@ def main():
             for size,fixture in fixtures.items():
                 output=root/(size+'-attempt-'+str(attempt));log=root/(size+'-attempt-'+str(attempt)+'.log')
                 require_binding(original,binding())
-                execution=run_child([str(binary),'run',str(output),str(args.native_library.resolve()),str(fixture['manifest'])],log,env,600)
+                execution=run_child([str(binary),'diagnose' if args.diagnose_costs else 'run',str(output),str(args.native_library.resolve()),str(fixture['manifest'])],log,env,600)
                 require_binding(original,binding())
+                if args.diagnose_costs and execution['exitCode']==0:
+                    validate_cost_measurements(log)
                 rows,complete=measurements(log);result={'size':size,'correctnessPassed':execution['exitCode']==0 and complete and execution['childAbsent'],'limitsSHA256':limits['sha256'],'observations':rows}
                 decision=evaluate(result,limits);item={'size':size,'attempt':attempt,'execution':execution,'binding':original,'result':result,'status':decision.status,'failures':decision.failures,'summaries':decision.summaries};report['attempts'].append(item);write_new(root/(size+'-attempt-'+str(attempt)+'-result.json'),item)
                 decisions[size]=decision;executions[size]=execution;summaries[size]=decision.summaries

@@ -1,4 +1,23 @@
-# Coordinated cutover development validation complete
+# Development status
+
+## RC4 latency repair checkpoint - 2026-10-24
+
+The [cloud attribution checkpoint](../evidence/rc4-cloud-attribution-20261024/README.md)
+records the verified source-only handoff, optional API/queue/provider/native
+diagnostics, bounded exact-row snapshot representation reuse, and skipped Task
+sorting after unchanged canonical-set proof. Full local units passed1500 cases;
+the final targeted set passed120, tooling166 and Windows harness controls20.
+Linux release diagnostics pass restoration, fresh replay, canonical byte checks
+and normal process exit on all three realistic synthetic shapes. Timings still
+fail limits; no release or native visible-response acceptance is claimed.
+Windows hardware/full-action validation remains pending separately. Budgets,
+rejected-Save/continued-typing, peer-change and tail-cleanup guarantees remain.
+
+The final uninstrumented timing recheck passed correctness on all three shapes,
+retained absolute/paired timing failures and used zero retries. Exact development
+CI remains separately associated with the pushed source; earlier failed samples
+remain retained in the checkpoint.
+No release, production conversion, signing or dependency change is included.
 
 ## Latest development result - 2026-10-21
 

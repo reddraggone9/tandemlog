@@ -5,6 +5,60 @@ import 'package:tandemlog/storage/log_folder.dart';
 import '../tool/windows_widget_qa/probe_cost_trace.dart';
 
 void main() {
+  test(
+    'exclusive coverage reconciles nested/overlapping/clipped intervals',
+    () {
+      final trace = ProbeCostTrace(() => 0);
+      for (final (operation, start, end) in [
+        ('provider.read', -5, 10),
+        ('sqlite.api.select', 2, 6),
+        ('profile.queueWait', 4, 14),
+        ('sqlite.body', 1, 12),
+        ('durability.append+barrier', 14, 18),
+        ('provider.list', 90, 100),
+      ]) {
+        trace.record({
+          'operation': operation,
+          'startUs': start,
+          'endUs': end,
+          'succeeded': true,
+        });
+      }
+      final result = trace.partition(0, 20);
+      expect(result['exclusiveCoverageUs'], {
+        'sqliteApi': 4,
+        'nativeApi': 0,
+        'durabilityApi': 4,
+        'providerApi': 6,
+        'queueWait': 4,
+        'semanticValidationOther': 0,
+        'transactionBodyOther': 0,
+        'transactionOther': 0,
+        'historyRefreshOther': 0,
+        'unclassified': 2,
+      });
+      expect(result['coverageSumUs'], result['totalUs']);
+      expect(result['reconciled'], isTrue);
+      expect(result['causalParentAttributionClaimed'], isFalse);
+      expect(
+        (result['operations'] as Map).containsKey('provider.list'),
+        isFalse,
+      );
+      trace.reset();
+      expect(
+        trace.partition(0, 20)['exclusiveCoverageUs'],
+        containsPair('unclassified', 20),
+      );
+    },
+  );
+
+  test('reconciliation never hides lost diagnostic spans', () {
+    final trace = ProbeCostTrace(() => 0)..droppedSpans = 1;
+    expect(trace.partition(0, 7)['reconciled'], isTrue);
+    expect(trace.partition(0, 7)['complete'], isFalse);
+    expect(() => trace.partition(7, 0), throwsArgumentError);
+  });
+
   test('span cap preserves successful result and original failure', () async {
     final trace = ProbeCostTrace(() => 0);
     for (var i = 0; i < ProbeCostTrace.maximumSpans; i++) {

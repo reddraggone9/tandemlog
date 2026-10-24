@@ -618,6 +618,7 @@ void main() {
     await h.refresh();
     final beforeFull = h.fullFoodAdmissionRuns;
     final beforeDelta = h.incrementalFoodAdmissionRuns;
+    final beforeTaskSorts = h.semanticTaskSortRuns;
     final added = actionRecord(peer, 2, time + 2, joined.hash, [
       (seq, clock, head) => UnifiedEffect(
         'food',
@@ -645,6 +646,7 @@ void main() {
     await h.refresh();
     expect(h.incrementalFoodAdmissionRuns, greaterThan(beforeDelta));
     expect(h.fullFoodAdmissionRuns, beforeFull);
+    expect(h.semanticTaskSortRuns, beforeTaskSorts);
     void oracle() {
       final full = admitFoodRecords(
         h.snapshot.effects.map((e) => e.food).whereType<FoodRecord>().toList(),
@@ -738,6 +740,25 @@ void main() {
           .every((c) => !c.deleted),
       isTrue,
     );
+    expect(h.semanticTaskSortRuns, beforeTaskSorts);
+    final newUser = const Uuid().v4();
+    final taskChange = actionRecord(peer, 4, time + 21, waiting.hash, [
+      (seq, clock, head) => UnifiedEffect(
+        'task',
+        LogEvent(space, peer, seq, clock, newUser, 'user.created', {
+          'name': 'Synthetic changed Task input',
+        }).encode(previousHash: head),
+      ),
+    ]);
+    await folder.append(
+      unifiedLogName(peer),
+      Uint8List.fromList(utf8.encode('${taskChange.encode()}\n')),
+    );
+    await h.refresh();
+    expect(h.semanticTaskSortRuns, greaterThan(beforeTaskSorts));
+    expect(h.snapshot.readyTaskIds, contains('$peer:4'));
+    expect(h.snapshot.tasks.any((event) => event.entity == newUser), isTrue);
+    oracle();
   });
 
   test(

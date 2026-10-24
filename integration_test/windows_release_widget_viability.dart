@@ -63,7 +63,10 @@ bool ownsForeground() {
 }
 
 class OwnedEngine extends NativeTextEngine {
-  OwnedEngine(String library) : super(libraryPath: library);
+  OwnedEngine(String library, {ProbeCostTrace? trace})
+    : super(libraryPath: library) {
+    if (trace != null) diagnosticObserver = ProbeProfileDiagnostics(trace);
+  }
   bool closed = false;
   @override
   void dispose() {
@@ -151,7 +154,10 @@ void main() {
   final watch = Stopwatch()..start();
   final costTrace =
       Platform.environment['TANDEMLOG_WINDOWS_WIDGET_COSTS'] == '1'
-      ? ProbeCostTrace(() => watch.elapsedMicroseconds)
+      ? ProbeCostTrace(
+          () => watch.elapsedMicroseconds,
+          profileHookAttachment: 'after app startup',
+        )
       : null;
   void emit(String phase, Map<String, Object?> data) {
     log.writeAsStringSync(
@@ -389,7 +395,8 @@ void main() {
       await tester.pumpWidget(
         TandemlogApp(
           profilePath: profile,
-          textEngineFactory: () => appEngine = OwnedEngine(library),
+          textEngineFactory: () =>
+              appEngine = OwnedEngine(library, trace: costTrace),
           folderFactory: (path) => costTrace == null
               ? LocalLogFolder(path)
               : ProbeLocalLogFolder(path, costTrace),
@@ -403,6 +410,11 @@ void main() {
             find.text(initialTitle).evaluate().length == 1;
       }, 'real startup');
       connection = host.profileDatabase.database;
+      if (costTrace != null) {
+        host.profileDatabase.diagnosticObserver = ProbeProfileDiagnostics(
+          costTrace,
+        );
+      }
       final original = semantic(
         Map<String, dynamic>.from(
           host.store.rows.singleWhere((dynamic row) => row['id'] == task),
@@ -581,7 +593,27 @@ void main() {
         'Audit changed canonical.',
       );
       if (costTrace != null) {
+        emit('action-cost-partitions', {
+          'actions': [
+            for (final action in costTrace.actions)
+              {
+                'name': action['name'],
+                ...costTrace.partition(
+                  action['startUs'] as int,
+                  action['endUs'] as int,
+                ),
+              },
+          ],
+        });
         emit('provider-cost-trace', costTrace.report());
+        require(
+          host.profileDatabase.diagnosticCallbackFailures == 0,
+          'Profile diagnostic callback failed; results remain preserved.',
+        );
+        require(
+          appEngine!.diagnosticCallbackFailures == 0,
+          'Native diagnostic callback failed; results remain preserved.',
+        );
         require(
           costTrace.droppedSpans == 0,
           'Provider diagnostic overflow; action results remain preserved.',

@@ -1,0 +1,11 @@
+{
+  "base": "2507e7161be822b0f8a4d7d57a46bbfcc19e5d83",
+  "expectedTransferCommit": "efe24c400d6240784cd95425fa25a50a7a34caac",
+  "receivedBlobs": {
+    "integration_test/windows_release_widget_viability.dart": "731bdca4acd72dff429d86bd49685ad4df5b0223",
+    "lib/storage/local_profile_database.dart": "a52e129e7ab7cfabc0dee49ba460b1884a8ffe83",
+    "tool/windows_widget_qa/package_qa.py": "bbe619058d3a6a62c19307b14b857dc2e128cccf",
+    "tool/windows_widget_qa/probe_cost_trace.dart": "263a8c1df58497b777c45fdee81b7004136023ce",
+    "tool/windows_widget_qa/probe_sql_trace.dart": "5d8ea9d9a2137830f522a055d16616cae24c3dff"
+  }
+}

@@ -8,7 +8,7 @@ import shutil
 import subprocess
 
 TARGET = "integration_test/windows_release_widget_viability.dart"
-TARGET_SHA = "63b506d1077114c518762512b7348680ace8fe5c0fad33bd172647bb15072cdd"
+TARGET_SHA = "1a4af30cb2ea9a9d95f49e5de4d3a3ecc434381480574923158efe58e33bba6f"
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def regular(p):
     if not p.is_file() or p.is_symlink() or (
@@ -73,7 +73,8 @@ def main():
                 ".github/actions/setup-flutter/action.yml",
                 ".github/actions/setup-text-engine/action.yml",TARGET,
                 "integration_test/native_text_fixtures.dart",
-                "tool/windows_widget_qa/probe_cost_trace.dart"):
+                "tool/windows_widget_qa/probe_cost_trace.dart",
+                "tool/performance/cost_trace.dart"):
         p=source/rel;regular(p);pins[rel]=sha(p)
     for rel in ("tool/build_text_engine.py","tool/bootstrap_text_engine.py",
                 "tool/native_build_gates.py","windows/flutter/generated_plugins.cmake",

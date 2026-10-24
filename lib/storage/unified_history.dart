@@ -791,6 +791,14 @@ final class UnifiedHistory {
   Future<UnifiedSnapshot> _refresh({
     bool observe = true,
     bool forceFullAudit = false,
+  }) => profile.observeAsynchronous(
+    'history.refresh',
+    () => _refreshObserved(observe: observe, forceFullAudit: forceFullAudit),
+  );
+
+  Future<UnifiedSnapshot> _refreshObserved({
+    required bool observe,
+    required bool forceFullAudit,
   }) async {
     final rawManifest = utf8.decode(
       await _read('tandemlog-space.json', 1024 * 1024),
@@ -1598,21 +1606,37 @@ final class UnifiedHistory {
   }
 
   int fullEffectValidationRuns = 0;
+  int semanticTaskSortRuns = 0;
 
   FoodAdmission _validateEffects(
     Iterable<UnifiedEffect> effects,
     UnifiedManifest m, {
     void Function(Set<String>)? onTaskReady,
     void Function(String)? onTaskValidated,
+  }) => profile.observeSynchronous(
+    'history.semanticValidation',
+    () => _validateObservedEffects(
+      effects,
+      m,
+      onTaskReady: onTaskReady,
+      onTaskValidated: onTaskValidated,
+    ),
+  );
+
+  FoodAdmission _validateObservedEffects(
+    Iterable<UnifiedEffect> effects,
+    UnifiedManifest m, {
+    void Function(Set<String>)? onTaskReady,
+    void Function(String)? onTaskValidated,
   }) {
     fullEffectValidationRuns++;
-    final tasks = <String, List<LogEvent>>{}, food = <String, FoodRecord>{};
+    final tasks = <LogEvent>[], food = <String, FoodRecord>{};
     final foodRaw = <String, String>{};
     final foodEffects = <String, UnifiedEffect>{};
     for (final effect in effects.where((e) => e.isData)) {
       final e = effect.task;
       if (e != null) {
-        tasks.putIfAbsent(e.entity, () => []).add(e);
+        tasks.add(e);
       } else {
         final r = effect.food!, previous = food[r.id];
         if (previous != null && foodRaw[r.id] != effect.raw) {
@@ -1623,8 +1647,7 @@ final class UnifiedHistory {
         foodEffects[r.id] = effect;
       }
     }
-    final semanticTasks = tasks.values.expand((v) => v).toList()
-      ..sort(compareEvents);
+    final semanticTasks = tasks;
     // A physical peer/header/Food change must not rename unchanged Task
     // evidence after an owned append used an incremental process key. Reuse
     // only this authority's already-ready exact canonical set in this manifest.
@@ -1646,6 +1669,13 @@ final class UnifiedHistory {
               event.canonicalRaw != null &&
               priorTasks.remove(event.id) == event.canonicalRaw,
         );
+    // Exact unchanged-set proof is order-independent. Do not regroup and sort
+    // all Task history for an unrelated peer Food/header change. Changed Task
+    // evidence retains the same canonical sort before hashing or validation.
+    if (!sameTasks) {
+      semanticTaskSortRuns++;
+      semanticTasks.sort(compareEvents);
+    }
     final key = sameTasks
         ? priorKey
         : TaskStore.canonicalTaskRevision(semanticTasks);

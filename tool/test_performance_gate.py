@@ -15,6 +15,33 @@ sys.path.insert(0,str(PATH.parent))
 import run_gate
 
 class PerformanceGateTests(unittest.TestCase):
+    def test_diagnostic_timings_cannot_be_requested_as_release_acceptance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output=pathlib.Path(directory)/'output'
+            command=[sys.executable,str(PATH.parent/'run_gate.py')]
+            for option in ['repo','dart','native-library','sqlite-library']:
+                command.extend(['--'+option,str(pathlib.Path(directory)/option)])
+            command.extend(['--output',str(output),'--diagnose-costs'])
+            result=subprocess.run(command,text=True,capture_output=True,timeout=10)
+            self.assertNotEqual(result.returncode,0)
+            expected='requires --measure-only' if sys.platform.startswith('linux') else 'requires Linux'
+            self.assertIn(expected,result.stderr)
+            self.assertFalse(output.exists())
+    def test_diagnostic_intervals_require_complete_exact_coverage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log=pathlib.Path(directory)/'observations.log'
+            valid={'measurement':'broad-action','microseconds':9,'costs':{
+                'complete':True,'reconciled':True,'totalUs':9,'coverageSumUs':9,
+                'exclusiveCoverageUs':{'sqliteApi':3,'unclassified':6}}}
+            log.write_text(json.dumps(valid)+'\n')
+            self.assertEqual(run_gate.validate_cost_measurements(log),1)
+            for key,value in [('complete',False),('totalUs',8),('coverageSumUs',8),
+                              ('exclusiveCoverageUs',{'unclassified':8}),
+                              ('exclusiveCoverageUs',{'sqliteApi':-1,'unclassified':10})]:
+                invalid=copy.deepcopy(valid);invalid['costs'][key]=value
+                log.write_text(json.dumps(invalid)+'\n')
+                with self.assertRaisesRegex(RuntimeError,'diagnostic action costs'):
+                    run_gate.validate_cost_measurements(log)
     def setUp(self):
         self.limits={'sha256':'sealed','warmups':2,'samples':5,'actionsBySize':{'dense-1':{'save':{'medianMs':100,'maxMs':150}}}}
         self.result={'correctnessPassed':True,'limitsSHA256':'sealed','size':'dense-1','observations':[{'action':'save','index':i,'warmup':i<2,'microseconds':100000} for i in range(7)]}
