@@ -46,7 +46,7 @@ def main():
         raise RuntimeError("QA checkout differs from dispatched revision.")
     dirty=subprocess.check_output(["git","-C",str(source),"status","--porcelain",
                                   "--untracked-files=no"],text=True).strip()
-    if dirty: raise RuntimeError("Tracked source changed during QA build.")
+    if dirty: raise RuntimeError("Tracked source changed during QA build (first8192 chars): " + repr(dirty[:8192]))
     sdk=Path(os.environ["RUNNER_TEMP"])/"flutter"
     sdk_revision=subprocess.check_output(["git","-C",str(sdk),"rev-parse","HEAD"],
                                          text=True).strip()
