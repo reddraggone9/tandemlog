@@ -43,3 +43,11 @@ tool/performance/limits-v1.json -text
 # Reviewed Windows QA target and helper byte pins must survive autocrlf checkout.
 integration_test/windows_release_widget_viability.dart -text
 tool/windows_widget_qa/** -text
+
+# Generated Flutter plugin inputs must retain literal bytes across QA worktrees.
+linux/flutter/generated_plugin_registrant.cc -text
+linux/flutter/generated_plugin_registrant.h -text
+linux/flutter/generated_plugins.cmake -text
+windows/flutter/generated_plugin_registrant.cc -text
+windows/flutter/generated_plugin_registrant.h -text
+windows/flutter/generated_plugins.cmake -text

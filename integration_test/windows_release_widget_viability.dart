@@ -1,9 +1,11 @@
-// SOURCE-ONLY UNCOMPILED VIABILITY DRAFT; no user profile/live workspace.
+// Separate release framework probe on the sealed public realistic workload.
 // Fork destination: integration_test/windows_release_widget_viability.dart.
 // Framework input/state/frame timings, NOT OS input/presentation/installer gate.
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ffi' as ffi;
+import 'package:ffi/ffi.dart' show calloc;
 import 'dart:ui' show AppExitResponse, FrameTiming, FramePhase;
 
 import 'package:crypto/crypto.dart';
@@ -20,9 +22,6 @@ import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/unified_history.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
-import 'package:uuid/uuid.dart';
-
-import 'native_text_fixtures.dart' show NativeTaskFixtures;
 
 // Explicit framework text-channel stub. The default integration binding keeps
 // the engine channel real, so tester.enterText has client -1; RELEASE correctly
@@ -33,10 +32,33 @@ class FrameworkInputBinding extends IntegrationTestWidgetsFlutterBinding {
   bool get registerTestTextInput => true;
 }
 
-const initialTitle = 'Public Windows viability task';
-const editedTitle = 'Public Windows viability task edited';
+const initialTitle = 'Benchmark historical task 3';
+const editedTitle = 'Benchmark paired title';
 void require(bool value, String reason) {
   if (!value) throw StateError(reason); // Explicit checks survive release.
+}
+
+const publicFixtureHash =
+    '74f0c24ce01a26792ff4d8a1730c36b1aacdf6a918b90df8310a79386753aeb1';
+bool ownsForeground() {
+  final user32 = ffi.DynamicLibrary.open('user32.dll');
+  final foreground = user32
+      .lookupFunction<
+        ffi.Pointer<ffi.Void> Function(),
+        ffi.Pointer<ffi.Void> Function()
+      >('GetForegroundWindow');
+  final owner = user32
+      .lookupFunction<
+        ffi.Uint32 Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Uint32>),
+        int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Uint32>)
+      >('GetWindowThreadProcessId');
+  final result = calloc<ffi.Uint32>();
+  try {
+    owner(foreground(), result);
+    return result.value == pid;
+  } finally {
+    calloc.free(result);
+  }
 }
 
 class OwnedEngine extends NativeTextEngine {
@@ -175,9 +197,6 @@ void main() {
     SchedulerBinding.instance.addTimingsCallback(onFrames);
     final shared = await Directory('${root.path}/shared').create();
     final profile = '${root.path}/profile';
-    final user = const Uuid().v4(), task = const Uuid().v4();
-    final seedEngine = OwnedEngine(library);
-    TaskStore? seed;
     LocalProfileDatabase? profileDb;
     OwnedEngine? appEngine;
     dynamic host, connection;
@@ -198,6 +217,12 @@ void main() {
             finder.hitTestable().evaluate().length == 1,
         'Ambiguous/not hit-testable: $name',
       );
+      final foregroundRequired =
+          Platform.environment['TANDEMLOG_WINDOWS_WIDGET_FOREGROUND'] == '1';
+      require(
+        !foregroundRequired || ownsForeground(),
+        'Probe lost foreground before $name.',
+      );
       final start = watch.elapsedMicroseconds, frameStart = frames.length;
       await tester.tap(finder);
       final returned = watch.elapsedMicroseconds;
@@ -207,7 +232,12 @@ void main() {
       WidgetsBinding.instance.addPostFrameCallback((_) => done.complete());
       await tester.pump();
       await done.future.timeout(const Duration(seconds: 10));
+      require(
+        !foregroundRequired || ownsForeground(),
+        'Probe lost foreground after $name.',
+      );
       emit('action', {
+        'foregroundRequired': foregroundRequired,
         'name': name,
         'startUs': start,
         'inputReturnedUs': returned - start,
@@ -222,46 +252,132 @@ void main() {
     }
 
     try {
-      seed = await TaskStore.open(
-        LocalLogFolder(shared.path),
-        '${root.path}/seed-profile',
-        textEngine: seedEngine,
+      final fixturePath =
+          Platform.environment['TANDEMLOG_WINDOWS_WIDGET_FIXTURE'] ?? '';
+      require(fixturePath.isNotEmpty, 'Explicit public fixture required.');
+      final fixture = Directory(fixturePath);
+      final contractBytes = await File(
+        '${fixture.path}/ui-fixture-original.json',
+      ).readAsBytes();
+      require(
+        sha(contractBytes) == publicFixtureHash,
+        'Public fixture contract differs.',
       );
-      await seed.command(user, 'user.created', {
-        'name': 'Public viability user',
-      });
-      await seed.createNativeFixtureTask(task, {
-        'title': initialTitle,
-        'description': 'Preserved native notes',
-        'assignee': user,
-      });
-      await seed.close();
-      seed = null;
-      seedEngine.dispose();
-      profileDb = await LocalProfileDatabase.open(profile);
-      await LocalSettings.initialize(profileDb);
-      final settings = LocalSettings(profile, profileDatabase: profileDb);
-      await settings.load();
-      settings.folder = shared.path;
-      settings.user = user;
-      await settings.save();
-      final writer = settings.writer;
-      final enrollEngine = OwnedEngine(library);
-      UnifiedHistory? enrollment;
-      try {
-        enrollment = await UnifiedHistory.open(
-          LocalLogFolder(shared.path),
-          profile: profileDb,
-          writer: writer,
-          textEngine: enrollEngine,
+      final contract =
+          jsonDecode(utf8.decode(contractBytes)) as Map<String, dynamic>;
+      require(
+        contract['syntheticOnly'] == true &&
+            contract['baselinePhysicalRecords'] == 1325,
+        'Public realistic workload required.',
+      );
+      final expected = contract['files'] as Map<String, dynamic>;
+      final input = await canonical(Directory('${fixture.path}/workspace'));
+      require(
+        input.length == 4 && input.keys.toSet().containsAll(expected.keys),
+        'Public canonical inventory differs.',
+      );
+      for (final entry in input.entries) {
+        require(
+          sha(entry.value) == expected[entry.key],
+          'Public canonical bytes differ.',
         );
-      } finally {
-        await enrollment?.close();
-        enrollEngine.dispose();
+        await File(
+          '${shared.path}/${entry.key}',
+        ).writeAsBytes(entry.value, flush: true);
       }
-      await profileDb.close();
+      final user = contract['user'] as String,
+          task = contract['taskId'] as String;
+      final fixtureWriter =
+          (contract['writers'] as Map<String, dynamic>)['a'] as String;
+      final setupProfile = await LocalProfileDatabase.open(profile);
+      profileDb = setupProfile;
+      await LocalSettings.initialize(setupProfile);
+      // Synthetic identity only: preserve the fixture's already enrolled writer.
+      // No TaskStore/enrollment is opened before measuring the app's cold cache.
+      await setupProfile.serialize(() async {
+        setupProfile.transaction(
+          () => setupProfile.database.execute(
+            'UPDATE protected_settings SET writer=?,raw=? WHERE singleton=1',
+            [
+              fixtureWriter,
+              utf8.encode(
+                jsonEncode({
+                  'writer': fixtureWriter,
+                  'folder': shared.path,
+                  'user': user,
+                  'appearance': 'light',
+                  'lastSection': 'tasks',
+                }),
+              ),
+            ],
+          ),
+        );
+      });
+      final settings = LocalSettings(profile, profileDatabase: setupProfile);
+      await settings.load();
+      final writer = settings.writer;
+      require(writer == fixtureWriter, 'Synthetic writer binding differs.');
+      await setupProfile.close();
       profileDb = null;
       final before = await canonical(shared);
+      final foregroundRequired =
+          Platform.environment['TANDEMLOG_WINDOWS_WIDGET_FOREGROUND'] == '1';
+      final armPath =
+          Platform.environment['TANDEMLOG_WINDOWS_WIDGET_ARM'] ?? '';
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: Text('Preparing public synthetic probe'),
+        ),
+      );
+      if (foregroundRequired) {
+        require(armPath.isNotEmpty, 'Foreground controller arm path required.');
+        final armFile = File(armPath);
+        require(
+          await armFile.parent.resolveSymbolicLinks() ==
+              await root.resolveSymbolicLinks(),
+          'Foreground arm must be inside this owned run.',
+        );
+        emit('awaiting-foreground-arm', {'run': runName});
+        await wait(
+          () => File(armPath).existsSync(),
+          'foreground controller arm',
+        );
+        require(
+          FileSystemEntity.typeSync(armPath, followLinks: false) ==
+                  FileSystemEntityType.file &&
+              await armFile.length() <= 4096,
+          'Invalid foreground arm file.',
+        );
+        final arm =
+            jsonDecode(await armFile.readAsString()) as Map<String, dynamic>;
+        require(
+          arm['run'] == runName &&
+              arm['foreground'] == true &&
+              ownsForeground(),
+          'Foreground ownership not established.',
+        );
+      }
+      Future<void> stageArm(String suffix, String stage) async {
+        final marker = File('$armPath.$suffix');
+        await wait(() => marker.existsSync(), 'owned $stage arm');
+        require(
+          await marker.parent.resolveSymbolicLinks() ==
+                  await root.resolveSymbolicLinks() &&
+              FileSystemEntity.typeSync(marker.path, followLinks: false) ==
+                  FileSystemEntityType.file &&
+              await marker.length() <= 4096,
+          'Invalid owned stage arm.',
+        );
+        final data =
+            jsonDecode(await marker.readAsString()) as Map<String, dynamic>;
+        require(
+          data['run'] == runName && data['stage'] == stage && ownsForeground(),
+          'Stage arm binding/foreground differs.',
+        );
+      }
+
+      final mountStartedUs = watch.elapsedMicroseconds;
       await tester.pumpWidget(
         TandemlogApp(
           profilePath: profile,
@@ -282,12 +398,40 @@ void main() {
         ),
       );
       final history = host.store.unified as UnifiedHistory;
+      require(
+        history.snapshot.records.length == 1325,
+        'Startup changed the sealed history or used the wrong workload.',
+      );
+      final logicalWidth =
+          tester.view.physicalSize.width / tester.view.devicePixelRatio;
+      final logicalHeight =
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+      require(
+        !foregroundRequired ||
+            ((logicalWidth - 1280).abs() <= 1 &&
+                (logicalHeight - 860).abs() <= 1),
+        'Foreground comparison viewport must be 1280x860 logical pixels.',
+      );
       final base = history.physicalSequence;
       emit('startup-ready', {
-        'fixtureTasks': 1,
+        'fixtureProjectionRows': host.store.rows.length,
+        'fixtureCanonicalRecords': history.snapshot.records.length,
+        'fixtureContractSHA256': publicFixtureHash,
+        'selectedTask': task,
+        'appMountToStateReadyUs': watch.elapsedMicroseconds - mountStartedUs,
+        'processStartupExcluded': true,
+        'logicalWidth': logicalWidth,
+        'logicalHeight': logicalHeight,
+        'devicePixelRatio': tester.view.devicePixelRatio,
+        'foregroundRequired': foregroundRequired,
         'baselinePhysicalSequence': base,
         'appProjectionCachePrimedByHarness': false,
       });
+      if (foregroundRequired) {
+        emit('awaiting-action-arm', {'run': runName});
+        await stageArm('ready', 'action');
+        require(ownsForeground(), 'Lost foreground before measured actions.');
+      }
       await tap(
         'task-open',
         find.text(initialTitle),
@@ -368,6 +512,11 @@ void main() {
             jsonEncode(original),
         'Task semantics did not restore.',
       );
+      if (foregroundRequired) {
+        emit('awaiting-inspection-arm', {'run': runName});
+        await stageArm('inspected', 'inspection');
+        require(ownsForeground(), 'Lost foreground before normal shutdown.');
+      }
       require(
         await host.didRequestAppExit() == AppExitResponse.exit,
         'Normal product exit canceled.',
@@ -438,8 +587,6 @@ void main() {
       SchedulerBinding.instance.removeTimingsCallback(onFrames);
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
-      await seed?.close();
-      if (!seedEngine.closed) seedEngine.dispose();
       await profileDb?.close();
       emit('target-teardown', {
         'normalShutdownAccepted': normal,

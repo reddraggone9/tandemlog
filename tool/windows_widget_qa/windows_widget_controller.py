@@ -17,7 +17,7 @@ import tempfile
 import threading
 import time
 
-TARGET_SHA = "e89624e837b7e94942191c0fee2d4fab5e3ba491d24af122b3f957847c6e7d5c"
+TARGET_SHA = "fb5d1ece2f7db649b2acd6c682c3e49de820ad9ebccdfa513d6ff08666743aad"
 TTL_SECONDS = 150
 CLEANUP_SECONDS = 20
 # Microsoft WinBase.h: attribute number13 | INPUT0x20000; Windows10+ only.
@@ -32,15 +32,15 @@ def sha(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 def regular(p):
     st = p.lstat()
-    need(not (getattr(st, "st_file_attributes", 0) & 0x400),
+    need(not p.is_symlink() and not (getattr(st, "st_file_attributes", 0) & 0x400),
          "Reparse point refused: " + str(p))
     need(p.is_file(), "Regular file required: " + str(p))
 def clean_tree(root):
     for p in (root, *root.parents):
-        need(not (getattr(p.lstat(), "st_file_attributes", 0) & 0x400),
+        need(not p.is_symlink() and not (getattr(p.lstat(), "st_file_attributes", 0) & 0x400),
              "Reparse ancestor refused.")
     for p in root.rglob("*"):
-        need(not (getattr(p.lstat(), "st_file_attributes", 0) & 0x400),
+        need(not p.is_symlink() and not (getattr(p.lstat(), "st_file_attributes", 0) & 0x400),
              "Reparse entry refused.")
 def acquire_owned_job(create_job, close_handle, set_error, get_error):
     # Unnamed Jobs are fresh. Defend even a surprising ERROR_ALREADY_EXISTS:
@@ -107,6 +107,32 @@ def load_artifact(root, manifest_sha):
          "Unexpected executable/native names.")
     return data, bundle
 
+PUBLIC_FIXTURE_SHA = "74f0c24ce01a26792ff4d8a1730c36b1aacdf6a918b90df8310a79386753aeb1"
+def load_public_fixture(root):
+    root=root.absolute()
+    for parent in (root,*root.parents):
+        need(not parent.is_symlink() and not (getattr(parent.lstat(),"st_file_attributes",0)&0x400), "Fixture reparse ancestor refused.")
+    contract=root/"ui-fixture-original.json";regular(contract)
+    need(contract.stat().st_size<65536 and sha(contract)==PUBLIC_FIXTURE_SHA, "Public fixture contract differs.")
+    data=json.loads(contract.read_text())
+    need(data["syntheticOnly"] is True and data["baselinePhysicalRecords"]==1325 and len(data["files"])==4, "Public realistic fixture required.")
+    workspace=root/"workspace";clean_tree(workspace)
+    paths={p.name:p for p in workspace.iterdir()}
+    need(set(paths)==set(data["files"]), "Public fixture inventory differs.")
+    for name,path in paths.items():
+        need(Path(name).name==name and name not in (".",".."), "Fixture member path refused.")
+        regular(path);need(path.stat().st_size<4*1024*1024 and sha(path)==data["files"][name], "Public canonical bytes differ.")
+    return root.resolve(strict=True)
+def child_environment(bundle,native,output,tmp,run_root,run_name,fixture,inherited):
+    env={key:inherited[key] for key in ("SystemRoot","WINDIR") if key in inherited}
+    need("SystemRoot" in env, "SystemRoot missing.")
+    env.update({"PATH":str(bundle)+";"+env["SystemRoot"]+r"\System32",
+      "TEMP":str(tmp),"TMP":str(tmp),"USERPROFILE":str(output/"home"),
+      "LOCALAPPDATA":str(output/"local"),"APPDATA":str(output/"roaming"),
+      "TANDEMLOG_PROFILE":str(run_root/"profile"),
+      "TANDEMLOG_TEXT_LIBRARY":str(native),"TANDEMLOG_WINDOWS_WIDGET_RUN":run_name,
+      "TANDEMLOG_WINDOWS_WIDGET_FIXTURE":str(fixture)})
+    return env
 def main():
     need(os.name == "nt", "Windows-only controller.")
     need(C.sizeof(C.c_void_p) == 8, "Require native 64-bit Python.")
@@ -115,9 +141,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--artifact", type=Path, required=True)
     parser.add_argument("--manifest-sha256", required=True)
+    parser.add_argument("--fixture", type=Path, required=True)
     args = parser.parse_args()
     need(len(args.manifest_sha256) == 64, "Exact manifest SHA256 required.")
     metadata, bundle = load_artifact(args.artifact, args.manifest_sha256)
+    fixture = load_public_fixture(args.fixture)
     exe = (bundle / metadata["executable"]).resolve(strict=True)
     native = (bundle / metadata["nativeLibrary"]).resolve(strict=True)
     nonce = secrets.token_hex(16)
@@ -289,13 +317,7 @@ def main():
             TerminateJob(job, 124)
         timer = threading.Timer(max(0, started + TTL_SECONDS - time.monotonic()), expire)
         timer.daemon = True; timer.start()
-        env = {key: os.environ[key] for key in ("SystemRoot", "WINDIR") if key in os.environ}
-        need("SystemRoot" in env, "SystemRoot missing.")
-        env.update({"PATH": str(bundle) + ";" + env["SystemRoot"] + r"\System32",
-          "TEMP": str(tmp), "TMP": str(tmp), "USERPROFILE": str(output / "home"),
-          "LOCALAPPDATA": str(output / "local"), "APPDATA": str(output / "roaming"),
-          "TANDEMLOG_TEXT_LIBRARY": str(native),
-          "TANDEMLOG_WINDOWS_WIDGET_RUN": run_name})
+        env=child_environment(bundle,native,output,tmp,run_root,run_name,fixture,os.environ)
         block = C.create_unicode_buffer("\0".join(k + "=" + v for k,v in
           sorted(env.items(), key=lambda item:item[0].upper())) + "\0\0")
         startup = STARTUPINFOEX()

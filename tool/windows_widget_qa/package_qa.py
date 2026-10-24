@@ -8,7 +8,7 @@ import shutil
 import subprocess
 
 TARGET = "integration_test/windows_release_widget_viability.dart"
-TARGET_SHA = "e89624e837b7e94942191c0fee2d4fab5e3ba491d24af122b3f957847c6e7d5c"
+TARGET_SHA = "fb5d1ece2f7db649b2acd6c682c3e49de820ad9ebccdfa513d6ff08666743aad"
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def regular(p):
     if not p.is_file() or p.is_symlink() or (
@@ -51,7 +51,12 @@ def main():
                    for name in ("generated_plugin_registrant.cc","generated_plugin_registrant.h","generated_plugins.cmake")]
         delta=subprocess.check_output(["git","-C",str(source),"diff","--no-color",
                                        "--no-ext-diff","--no-textconv","--",*generated],text=True)
+        byteproof={name:{"workingSHA256":sha(source/name),
+                         "gitSHA256":hashlib.sha256(subprocess.check_output(
+                             ["git","-C",str(source),"show","HEAD:"+name])).hexdigest()}
+                   for name in generated}
         raise RuntimeError("Tracked source changed during QA build (first8192 chars): " + repr(dirty[:8192])
+                           + "; generated raw byte proofs: " + repr(byteproof)
                            + "; generated diff (first16384 chars): " + repr(delta[:16384]))
     sdk=Path(os.environ["RUNNER_TEMP"])/"flutter"
     sdk_revision=subprocess.check_output(["git","-C",str(sdk),"rev-parse","HEAD"],

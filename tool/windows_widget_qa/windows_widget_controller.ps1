@@ -3,7 +3,8 @@
 [CmdletBinding()]
 param(
   [Parameter(Mandatory=$true)][string]$Artifact,
-  [Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ManifestSha256
+  [Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ManifestSha256,
+  [Parameter(Mandatory=$true)][string]$Fixture
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows -or $PSVersionTable.PSVersion.Major -lt 7) {
@@ -21,7 +22,7 @@ $info.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
 $info.RedirectStandardOutput = $true
 $info.RedirectStandardError = $true
 foreach ($argument in @($controller, '--artifact', $Artifact,
-                       '--manifest-sha256', $ManifestSha256)) {
+                       '--manifest-sha256', $ManifestSha256, '--fixture', $Fixture)) {
   $info.ArgumentList.Add($argument)
 }
 $process = [System.Diagnostics.Process]::new()
