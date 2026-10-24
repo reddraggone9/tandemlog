@@ -2441,8 +2441,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<bool> _closeEditor() async {
     if (!await _closeChecklistEditor()) return false;
     if (editingTask == null && editingBulk == null) return true;
-    if (closingEditor) return false;
-    closingEditor = true;
+    if (!mounted || closingEditor) return false;
+    setState(() => closingEditor = true);
     try {
       final okay =
           await ((editingTask != null
@@ -2465,7 +2465,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
       return okay;
     } finally {
-      closingEditor = false;
+      // Focus/viewport changes can rebuild Undo as disabled while the guard
+      // is open. Cancel must invalidate that view as well as release the flag.
+      if (mounted) {
+        setState(() => closingEditor = false);
+      } else {
+        closingEditor = false;
+      }
       _wakeSectionRequests();
     }
   }

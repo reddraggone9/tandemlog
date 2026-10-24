@@ -73,6 +73,18 @@ retaining every move/seed/fallback result and storage guard. Full1504 units,
 three sealed shapes pass source-frozen correctness/replay. Fresh exact-source
 CI remains required; budgets and held native/hardware acceptance are unchanged.
 
+The native Session Undo failure now has a deterministic reproduction: a rebuilt
+Undo toolbar remains disabled after Cancel releases the editor-close flag.
+Rebuilding on guard acquisition/release restores the intended readiness. Cancel
+still preserves notes, Undo identity and canonical bytes; subsequent Discard
+writes exactly one Undo. Full1505 units,12 focused route/exit checks and the
+original native case pass locally. [Evidence](../evidence/rc4-cloud-attribution-20261024/undo-cancel-rendered-readiness.json).
+Exact CI40139838647 remains on the preceding732ddac source: enforcing correctness
+passes but10 absolute maxima and9 paired checks fail; no retry or acceptance.
+Cloud remains sole writer until coordinated cutover, with hard stop2026-10-26
+13:00 UTC. [Configuration locations](../evidence/rc4-cloud-attribution-20261024/configuration-locations-vex.md)
+contain no secret values. No release or live change is authorized.
+
 ## Latest development result - 2026-10-21
 
 [Current acceptance](../evidence/coordinated-cutover-build99/README.md) records source0acfb3b and CI39633973437: all three jobs green,203 native Linux cases passed,1314 current unit/host cases,89 tooling checks and8 external-copy controls. Exact original-payload GTK Save/peer-while-Food/restart and200-percent Light/Dark checks passed. Android06 independently accepted the affected source243d253 debug-APK modal/restart flows; earlier source-specific peer/tail coverage retains its attribution. All temporary labs stopped with settings restoration and independent process checks. Local desktop and Android demonstrations retain their exact source labels.

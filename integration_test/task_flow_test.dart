@@ -4172,6 +4172,12 @@ void main() {
             .text,
         'Unsaved notes',
       );
+      expect(
+        toolbarButton(tester, undo).onPressed,
+        isNotNull,
+        reason: 'Cancelling the dirty close must re-enable session Undo.',
+      );
+      await captureNativeFixtureUi(tester, 'session-undo-cancel-retains-draft');
       await tester.tap(undo);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Discard'));

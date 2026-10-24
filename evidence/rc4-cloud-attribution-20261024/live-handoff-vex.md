@@ -4,6 +4,36 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Continuation update —2026-10-24 23:04 UTC
+
+The earlier checkpoint hold is superseded. Cloud remains sole writer; stop-write
+cutoff is2026-10-26 08:00 America/Chicago /13:00 UTC, or earlier actual quota
+exhaustion/access loss. No cutover occurred. Current quota is unknown.
+
+Exactly one fresh CI40139838647 was dispatched on732ddac (executable inputs8005430),
+calibration=false. AOT correctness/232 metrics pass all shapes and every absolute
+median fits, but10 absolute maxima and9 paired checks fail, with0 eligible retries.
+This run uses a different CPU; do not claim a controlled reduction from prior202
+failures. Windows/Linux jobs remain active; Android passed at the last check.
+
+The native Session Undo/Discard issue was reproduced unchanged in52s. A new
+host regression proves a rendered-state defect: closingEditor becomes false on
+Cancel without invalidating Undo's disabled view. This commit rebuilds when
+acquiring/releasing the guard and handles unmounted disposal. The deterministic
+regression and12 focused tests pass; the full original native case passes72s,
+including dirty Cancel, Discard/Undo, peer newer-text preservation and restart.
+Full1505 units pass in6m28s,171 tools pass, analysis clean, formatting395/0 changes.
+Snapshots were inspected; demo videos/device validation remain pending.
+
+Evidence: `undo-cancel-rendered-readiness.json`, native screenshots alongside it,
+and `followup-order-enforcing-result.json`. Nonsecret configuration supplement:
+`configuration-locations-vex.md`. The running732ddac CI does not include this
+new UI fix. Fresh current-source validation remains required; no unchanged AOT
+retry or budget/guarantee loosening is authorized. No new workflow was dispatched
+for this UI fix, and no signing/publication work was started.
+
+The22:28 snapshot below is historical and remains useful for paths and constraints.
+
 ## Checkout and conventions
 
 - Repository/origin, fetch and push: `https://github.com/reddraggone9/tandemlog.git`.
