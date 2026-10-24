@@ -506,3 +506,12 @@ regressions and both existing checklist families on all three shapes preserve
 correctness/replay; full exact-source enforcement remains required. Local syscall
 tracing did not reproduce the hosted hundreds-of-milliseconds tails, so their
 I/O/scheduling attribution remains open. No guarantee or budget is loosened.
+
+
+The [Food identity follow-up](../evidence/rc4-cloud-attribution-20261024/followup-food-id-analysis.md)
+applies the same derived-string retention to immutable FoodRecord IDs. Envelope
+validation, exact-byte readiness, cache-authority checks, native ownership,
+transaction ordering and append/barrier paths do not change. The full1505-unit
+suite passes. Full local AOT preserves every shape/action/replay/source seal and
+retains its startup/tail/paired failures; a finite peer-admission improvement is
+not full hosted or native acceptance. All budgets remain unchanged.

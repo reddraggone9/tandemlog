@@ -1,0 +1,225 @@
+{
+  "scope": "Own synthetic process user CPU sampling at199Hz; full cold-startup scenario includes initialization, seven opens, close/cache sealing and replay. Inclusive samples overlap, async ancestry may be unresolved. Not exclusive startup wall attribution or acceptance.",
+  "rawStackMemoryRecorded": false,
+  "lostSamples": 0,
+  "profileUserCpuSampleWeightNs": 13854269625,
+  "sampleBlocks": 2757,
+  "groupsPercent": {
+    "UnifiedHistory._refresh inclusive": 50.308,
+    "other/unresolved async ancestry": 30.758,
+    "TaskStore.close/cache sealing": 18.68,
+    "fixture initialization": 0.181,
+    "audit replay": 0.073
+  },
+  "topInclusivePercent": [
+    {
+      "symbol": "[unknown]",
+      "percent": 95.394
+    },
+    {
+      "symbol": "stub InvokeDartCode",
+      "percent": 77.476
+    },
+    {
+      "symbol": "_RawReceivePort._handleMessage",
+      "percent": 77.439
+    },
+    {
+      "symbol": "_RootZone.runUnary",
+      "percent": 76.206
+    },
+    {
+      "symbol": "_FutureListener.handleValue",
+      "percent": 76.025
+    },
+    {
+      "symbol": "_Future._propagateToListeners",
+      "percent": 76.025
+    },
+    {
+      "symbol": "_Future._propagateToListeners.handleValueCallback",
+      "percent": 76.025
+    },
+    {
+      "symbol": "_SuspendState._createAsyncStarCallback.<anonymous closure>",
+      "percent": 55.894
+    },
+    {
+      "symbol": "_Closure.call",
+      "percent": 53.536
+    },
+    {
+      "symbol": "_Timer._handleMessage",
+      "percent": 52.339
+    },
+    {
+      "symbol": "_Timer._runTimers",
+      "percent": 52.339
+    },
+    {
+      "symbol": "new Future.delayed.<anonymous closure>",
+      "percent": 50.562
+    },
+    {
+      "symbol": "_Future._complete",
+      "percent": 50.562
+    },
+    {
+      "symbol": "Timer._createTimer.<anonymous closure>",
+      "percent": 50.562
+    },
+    {
+      "symbol": "UnifiedHistory._refreshObserved",
+      "percent": 50.308
+    },
+    {
+      "symbol": "_microtaskLoop",
+      "percent": 25.644
+    },
+    {
+      "symbol": "_startMicrotaskLoop",
+      "percent": 25.644
+    },
+    {
+      "symbol": "UnifiedHistory._decodeRecord",
+      "percent": 24.628
+    },
+    {
+      "symbol": "new UnifiedRecord.decode",
+      "percent": 24.411
+    },
+    {
+      "symbol": "_runPendingImmediateCallback",
+      "percent": 23.867
+    },
+    {
+      "symbol": "UnifiedHistory._validateEffects.<anonymous closure>",
+      "percent": 22.96
+    },
+    {
+      "symbol": "UnifiedHistory._validateObservedEffects",
+      "percent": 22.96
+    },
+    {
+      "symbol": "LocalProfileDatabase.observeSynchronous",
+      "percent": 22.96
+    },
+    {
+      "symbol": "UnifiedHistory._validateEffects",
+      "percent": 22.96
+    },
+    {
+      "symbol": "LocalProfileDatabase._diagnose",
+      "percent": 22.96
+    },
+    {
+      "symbol": "ListIterator.moveNext",
+      "percent": 22.597
+    },
+    {
+      "symbol": "MappedListIterable.elementAt",
+      "percent": 22.524
+    },
+    {
+      "symbol": "TaskStore._withCopySeedIndex",
+      "percent": 22.198
+    },
+    {
+      "symbol": "TaskSemanticValidator._validateFull",
+      "percent": 20.783
+    },
+    {
+      "symbol": "TaskSemanticValidator.validate",
+      "percent": 20.783
+    }
+  ],
+  "topLeafPercent": [
+    {
+      "symbol": "[unknown]",
+      "percent": 29.416
+    },
+    {
+      "symbol": "_Sha32BitSink.updateHash",
+      "percent": 17.265
+    },
+    {
+      "symbol": "_Utf8Encoder._fillBuffer",
+      "percent": 6.13
+    },
+    {
+      "symbol": "_string",
+      "percent": 3.373
+    },
+    {
+      "symbol": "_JsonStringifier.writeStringContent",
+      "percent": 1.922
+    },
+    {
+      "symbol": "StringBuffer._addPart",
+      "percent": 1.523
+    },
+    {
+      "symbol": "HashSink._addData",
+      "percent": 1.342
+    },
+    {
+      "symbol": "_JsonUtf8Stringifier.writeByte",
+      "percent": 1.124
+    },
+    {
+      "symbol": "String.hashCode",
+      "percent": 1.088
+    },
+    {
+      "symbol": "_JsonUtf8Stringifier.writeStringSlice",
+      "percent": 1.052
+    },
+    {
+      "symbol": "stub AllocateObjectParameterized",
+      "percent": 0.834
+    },
+    {
+      "symbol": "sameData.<anonymous closure>",
+      "percent": 0.689
+    },
+    {
+      "symbol": "sqlite3VdbeExec",
+      "percent": 0.653
+    },
+    {
+      "symbol": "String._substringUncheckedNative",
+      "percent": 0.617
+    },
+    {
+      "symbol": "String.==",
+      "percent": 0.617
+    },
+    {
+      "symbol": "_Uint8ArrayView.[]",
+      "percent": 0.617
+    },
+    {
+      "symbol": "assert type is String",
+      "percent": 0.58
+    },
+    {
+      "symbol": "sqlite3RunParser",
+      "percent": 0.58
+    },
+    {
+      "symbol": "UnifiedHistory._refreshObserved",
+      "percent": 0.544
+    },
+    {
+      "symbol": "List._grow",
+      "percent": 0.508
+    }
+  ],
+  "acceptance": false,
+  "profileRoot": "/workspace/scratch/rc4-cold-cpu-profile",
+  "perfPackage": {
+    "officialDebianVersion": "6.12.105-1",
+    "packageSHA256": "9cb16521432f732da7adb1d9d704e9ad00b472c05bf831ef2afd72f4a9dbba23",
+    "systemInstallation": false
+  }
+}

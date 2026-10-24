@@ -4,35 +4,59 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
-## Continuation update —2026-10-24 23:04 UTC
+## Continuation update —2026-10-24 23:33 UTC
 
-The earlier checkpoint hold is superseded. Cloud remains sole writer; stop-write
-cutoff is2026-10-26 08:00 America/Chicago /13:00 UTC, or earlier actual quota
-exhaustion/access loss. No cutover occurred. Current quota is unknown.
+Cloud remains sole writer. Stop-write cutoff is2026-10-26 08:00 America/Chicago
+/13:00 UTC, or earlier actual quota exhaustion/access loss. No cutover occurred.
+Current account quota is unknown; no supported status endpoint is exposed.
 
-Exactly one fresh CI40139838647 was dispatched on732ddac (executable inputs8005430),
-calibration=false. AOT correctness/232 metrics pass all shapes and every absolute
-median fits, but10 absolute maxima and9 paired checks fail, with0 eligible retries.
-This run uses a different CPU; do not claim a controlled reduction from prior202
-failures. Windows/Linux jobs remain active; Android passed at the last check.
+Published UI fix is `fb13f68ee4c22cc92515c4ebe7e2379cb71238b4`: the unchanged
+Session Undo/Discard failure reproduced52s before it, and the original complete
+native case passes72s after it. Cancel now rebuilds Undo after releasing the
+draft-close guard, preserving dirty notes, canonical bytes and the same Undo
+entry. Full1505 units,171 tools,12 focused tests, analysis/format pass on that
+published source. Linux screenshots were inspected; demo videos/device and
+hardware timing acceptance remain pending.
 
-The native Session Undo/Discard issue was reproduced unchanged in52s. A new
-host regression proves a rendered-state defect: closingEditor becomes false on
-Cancel without invalidating Undo's disabled view. This commit rebuilds when
-acquiring/releasing the guard and handles unmounted disposal. The deterministic
-regression and12 focused tests pass; the full original native case passes72s,
-including dirty Cancel, Discard/Undo, peer newer-text preservation and restart.
-Full1505 units pass in6m28s,171 tools pass, analysis clean, formatting395/0 changes.
-Snapshots were inspected; demo videos/device validation remain pending.
+Baseline CI40139838647 is still running exact732ddac (executable inputs8005430),
+calibration=false. Windows and Android passed; Linux units/build/startup/normal
+close/package/install passed and its bounded native suite started22:57:54 UTC.
+AOT correctness/232 metrics pass all shapes, but10 absolute maxima and9 paired
+checks fail,0 eligible retries. Both close processes exit0 (189.994/77.204ms),
+no core; this does not clear the intermittent SIGSEGV. Keep this baseline's
+terminal evidence. The same-branch concurrency group cancels older active runs:
+**do not dispatch current-source CI until this baseline finishes**.
 
-Evidence: `undo-cancel-rendered-readiness.json`, native screenshots alongside it,
-and `followup-order-enforcing-result.json`. Nonsecret configuration supplement:
-`configuration-locations-vex.md`. The running732ddac CI does not include this
-new UI fix. Fresh current-source validation remains required; no unchanged AOT
-retry or budget/guarantee loosening is authorized. No new workflow was dispatched
-for this UI fix, and no signing/publication work was started.
+This successor candidate adds only a per-record immutable Food-ID
+string cache, matching LogEvent.id. No constructor/proof/transaction/durability
+check changes. Focused97 regressions pass. Full source-sealed uninstrumented
+local AOT completes all3 shapes/232 metrics/replay/prefix checks with0 retries;
+11 absolute and4 paired failures remain. Peer-Food/restore-one local paired
+checks fit, but the broader before/after Food command sample was mixed.
+The full1505-unit suite passes in6m25s; analysis is clean and formatting
+checks395 files with0 changes.
 
-The22:28 snapshot below is historical and remains useful for paths and constraints.
+No active local build/test/profile session remains. Unit log:
+`/workspace/toolchains/logs/rc4-food-id-full-unit.log`. Completed sessions44676
+(units),33994 (analysis/format),36890 (AOT) and33989 (CPU profile) are terminal. CPU sampling has0 lost samples and
+symbolizes Dart; refresh/strict decode and close-time cache sealing are distinct
+sampled costs, not exclusive startup wall attribution. Raw profile remains
+`/workspace/scratch/rc4-cold-cpu-profile`; no raw stack memory was recorded.
+
+Candidate evidence: `followup-food-id-probe.json`, `followup-food-id-full-aot.json`,
+`followup-food-id-analysis.md`, `followup-cold-cpu-sample.json`. Baseline close
+artifact12579060643 SHA256
+`d28cc364e97d5272edd4c98121a9f7858b71e9192ebac1a62e515680d622632d`
+is verified at `/workspace/scratch/rc4-baseline-close-ci-40139838647`.
+Nonsecret configuration supplement is `configuration-locations-vex.md`.
+
+Next: commit/push this tested successor, retain baseline terminal logs, then
+dispatch exactly one fresh current-source CI
+with calibration=false. If a tested Food cache successor is ready, that single
+run covers it plus the UI fix; do not dispatch an obsolete intermediate source.
+All existing budgets/native/first-use/history-growth/release qualifications stay
+in force. No signing/publication/live work or foreground Windows activity occurs.
+The22:28 snapshot below is historical.
 
 ## Checkout and conventions
 

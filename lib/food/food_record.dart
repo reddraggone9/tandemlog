@@ -159,7 +159,8 @@ class FoodRecord {
   final FoodOperation operation;
   final Map<String, String> createdWith;
   late final String hash;
-  String get id => '$writer:$sequence';
+  late final String _id = '$writer:$sequence';
+  String get id => _id;
   int get version => currentOperationFormat;
   late final CurrentOperation currentOperation = _buildCurrentOperation();
 

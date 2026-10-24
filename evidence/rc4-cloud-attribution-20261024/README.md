@@ -272,3 +272,17 @@ The frozen old-order oracle, mixed-history differential controls and existing
 checklist scenarios retain independent correctness/replay checks. All six
 source-frozen checklist families pass; full units and exact CI remain separate.
 No hosted tail failure or earlier SIGSEGV is waived by those narrow results.
+
+
+## Food identity follow-up
+
+[Analysis](followup-food-id-analysis.md), [sealed targeted comparisons](followup-food-id-probe.json),
+[all-action local AOT including failures](followup-food-id-full-aot.json),
+[1505-unit/analysis/format receipts](followup-food-id-local-checks.json), and
+[bounded cold-scenario CPU sampling](followup-cold-cpu-sample.json) preserve
+current evidence. Only the immutable Food ID string is retained per record; all
+constructor/admission/freshness/transaction/durability checks remain. Local AOT
+correctness passes every shape/232 metrics, but11 absolute and4 paired failures
+remain under unchanged budgets. This is not hosted/native acceptance. The
+[handoff](live-handoff-vex.md) records the pending exact-source CI and baseline
+concurrency hold.
