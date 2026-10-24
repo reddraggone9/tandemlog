@@ -1,0 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+import 'file:///workspace/tandemlog/tool/performance/benchmark.dart' as benchmark;
+Future<void> main(List<String> args) async {
+  if(args.length!=1 || !{'before-key','after-key'}.contains(args.single)) throw StateError('Closed diagnostic labels only');
+  final output=Directory('/workspace/scratch/rc4-peer-identity-${args.single}');
+  if(await output.exists()) throw StateError('Refuse existing evidence');
+  await output.create();
+  for(final shape in ['dense-1','dense-2','dense-food']) {
+    final fixture=Map<String,dynamic>.from(jsonDecode(await File('/workspace/scratch/rc4-aot-final-20261024/fixture-$shape/fixture.json').readAsString()) as Map);
+    if(fixture['syntheticOnly']!=true) throw StateError('Synthetic fixture required');
+    await benchmark.scenario({'authorizedRuntimeReady':true,'runRoot':'${output.path}/$shape','sealedWorkspacePath':fixture['workspace'],'sealedFiles':fixture['files'],'fixtureWriter':fixture['writer'],'fixtureBaseIdentity':1320,'diagnosticCosts':false},'peer',benchmark.changedPeer);
+  }
+  print(jsonEncode({'scope':'targeted existing production peer scenario with full scenario correctness/replay; not full gate/UI acceptance','stage':args.single,'accepted':false}));
+}

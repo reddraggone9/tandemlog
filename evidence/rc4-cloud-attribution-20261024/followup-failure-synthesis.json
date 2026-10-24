@@ -1,0 +1,1446 @@
+{
+  "cloud-final": {
+    "sourceReport": "aot-uninstrumented-final.json",
+    "sourceReportSHA256": "4d2596933e15935ca8cadcd3cc0594113c7a9ea9837900b4be4d92da8088bf45",
+    "absolute": [
+      {
+        "size": "dense-1",
+        "action": "explicitTask.titleAndNotes.undo",
+        "medianMs": 20.85,
+        "maxMs": 53.792,
+        "limits": {
+          "medianMs": 35,
+          "maxMs": 40
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          16.438,
+          17.844,
+          21.374,
+          53.792,
+          20.85
+        ],
+        "slowestOrdinarySample": {
+          "index": 5,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "explicit-task-text",
+          "action": "explicitTask.titleAndNotes.undo",
+          "rep": 5,
+          "microseconds": 53792,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1745164,
+            "appendCalls": 1,
+            "appendMicroseconds": 684,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 50305,
+              "cgroup.user_usec": 36792,
+              "cgroup.system_usec": 13513,
+              "cgroup.nice_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 7497,
+              "processIo.wchar": 92695,
+              "processIo.syscr": 17,
+              "processIo.syscw": 45,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 106496,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 186187776
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-1",
+        "action": "startup.cold.total",
+        "medianMs": 991.158,
+        "maxMs": 996.371,
+        "limits": {
+          "medianMs": 925,
+          "maxMs": 935
+        },
+        "medianFailed": true,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          991.158,
+          992.37,
+          988.849,
+          996.371,
+          877.897
+        ],
+        "slowestOrdinarySample": null
+      },
+      {
+        "size": "dense-1",
+        "action": "startup.cold.history",
+        "medianMs": 947.23,
+        "maxMs": 956.299,
+        "limits": {
+          "medianMs": 880,
+          "maxMs": 890
+        },
+        "medianFailed": true,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          943.193,
+          950.749,
+          947.23,
+          956.299,
+          834.597
+        ],
+        "slowestOrdinarySample": null
+      },
+      {
+        "size": "dense-2",
+        "action": "converted.task.bulkReorder.undo",
+        "medianMs": 42.593,
+        "maxMs": 60.916,
+        "limits": {
+          "medianMs": 50,
+          "maxMs": 55
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          40.985,
+          60.916,
+          43.638,
+          42.593,
+          41.853
+        ],
+        "slowestOrdinarySample": {
+          "index": 3,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "converted-task-commands",
+          "action": "converted.task.bulkReorder.undo",
+          "rep": 3,
+          "microseconds": 60916,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 794,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 58642,
+              "cgroup.user_usec": 54865,
+              "cgroup.system_usec": 3777,
+              "cgroup.nice_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 1973340,
+              "processIo.wchar": 204984,
+              "processIo.syscr": 495,
+              "processIo.syscw": 99,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 212992,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 160350208
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "converted.checklist.add",
+        "medianMs": 50.647,
+        "maxMs": 66.683,
+        "limits": {
+          "medianMs": 55,
+          "maxMs": 60
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          40.592,
+          43.278,
+          66.683,
+          50.647,
+          55.9
+        ],
+        "slowestOrdinarySample": {
+          "index": 4,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "converted-checklist",
+          "action": "converted.checklist.add",
+          "rep": 4,
+          "microseconds": 66683,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1751034,
+            "appendCalls": 1,
+            "appendMicroseconds": 602,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 51631,
+              "cgroup.user_usec": 34429,
+              "cgroup.system_usec": 17203,
+              "cgroup.nice_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 1780832,
+              "processIo.wchar": 253138,
+              "processIo.syscr": 450,
+              "processIo.syscw": 123,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 258048,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 161181696
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "historical.food.details.1.undo",
+        "medianMs": 9.355,
+        "maxMs": 22.108,
+        "limits": {
+          "medianMs": 15,
+          "maxMs": 20
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          7.877,
+          9.861,
+          9.355,
+          8.025,
+          22.108
+        ],
+        "slowestOrdinarySample": {
+          "index": 6,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "food-historical",
+          "action": "historical.food.details.1.undo",
+          "rep": 6,
+          "microseconds": 22108,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 759,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 31944,
+              "cgroup.user_usec": 28176,
+              "cgroup.system_usec": 3769,
+              "cgroup.nice_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5854,
+              "processIo.wchar": 5816,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 161652736
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "startup.cold.total",
+        "medianMs": 1343.373,
+        "maxMs": 1358.31,
+        "limits": {
+          "medianMs": 1335,
+          "maxMs": 1370
+        },
+        "medianFailed": true,
+        "maximumFailed": false,
+        "allSamplesMs": [
+          1351.694,
+          1317.18,
+          1343.373,
+          1358.31,
+          1338.299
+        ],
+        "slowestOrdinarySample": null
+      },
+      {
+        "size": "dense-2",
+        "action": "startup.cold.history",
+        "medianMs": 1286.754,
+        "maxMs": 1302.342,
+        "limits": {
+          "medianMs": 1240,
+          "maxMs": 1260
+        },
+        "medianFailed": true,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          1294.914,
+          1259.933,
+          1286.754,
+          1302.342,
+          1280.41
+        ],
+        "slowestOrdinarySample": null
+      }
+    ],
+    "paired": [
+      {
+        "comparison": "task-own-history",
+        "action": "food.restore.1",
+        "smallMedianMs": 6.741,
+        "largeMedianMs": 7.583,
+        "medianBoundMs": 11.42625,
+        "smallMaximumMs": 7.56,
+        "largeMaximumMs": 16.022,
+        "maximumBoundMs": 15.584,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "historical.food.details.1.undo",
+        "smallMedianMs": 7.021,
+        "largeMedianMs": 9.355,
+        "medianBoundMs": 11.77625,
+        "smallMaximumMs": 7.235,
+        "largeMaximumMs": 22.108,
+        "maximumBoundMs": 15.129,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "cardinality500.food.delete.1.undo",
+        "smallMedianMs": 8.697,
+        "largeMedianMs": 13.976,
+        "medianBoundMs": 13.87125,
+        "smallMaximumMs": 9.31,
+        "largeMaximumMs": 14.622,
+        "maximumBoundMs": 18.034,
+        "medianFailed": true,
+        "maximumFailed": false
+      },
+      {
+        "comparison": "food-own-history",
+        "action": "task.titleAndNotes.undo",
+        "smallMedianMs": 27.091,
+        "largeMedianMs": 36.936,
+        "medianBoundMs": 36.86375,
+        "smallMaximumMs": 47.318,
+        "largeMaximumMs": 43.582,
+        "maximumBoundMs": 71.2452,
+        "medianFailed": true,
+        "maximumFailed": false
+      },
+      {
+        "comparison": "food-own-history",
+        "action": "food.restore.1",
+        "smallMedianMs": 6.741,
+        "largeMedianMs": 8.311,
+        "medianBoundMs": 11.42625,
+        "smallMaximumMs": 7.56,
+        "largeMaximumMs": 16.033,
+        "maximumBoundMs": 15.584,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "food-own-history",
+        "action": "sync.peerFood.whileTasks.storageAdmission",
+        "smallMedianMs": 7.029,
+        "largeMedianMs": 14.158,
+        "medianBoundMs": 11.786249999999999,
+        "smallMaximumMs": 11.974,
+        "largeMaximumMs": 16.744,
+        "maximumBoundMs": 21.7636,
+        "medianFailed": true,
+        "maximumFailed": false
+      }
+    ],
+    "rerunsUsed": 0
+  },
+  "hosted-enforcing": {
+    "sourceReport": "ci-enforcing-performance.json",
+    "sourceReportSHA256": "b62f390b91d29b9e024b90a9236bec0261a57c488faa095f03947e647481d92b",
+    "absolute": [
+      {
+        "size": "dense-1",
+        "action": "task.titleAndNotes.undo",
+        "medianMs": 27.496,
+        "maxMs": 60.556,
+        "limits": {
+          "medianMs": 45,
+          "maxMs": 55
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          17.297,
+          27.496,
+          60.556,
+          23.872,
+          31.444
+        ],
+        "slowestOrdinarySample": {
+          "index": 4,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "task-text",
+          "action": "task.titleAndNotes.undo",
+          "rep": 4,
+          "microseconds": 60556,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 38618,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 22653,
+              "cgroup.user_usec": 20796,
+              "cgroup.system_usec": 1856,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 23116,
+              "processIo.wchar": 84427,
+              "processIo.syscr": 27,
+              "processIo.syscw": 41,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 94208,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 80297984
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-1",
+        "action": "converted.task.complete.checklistConfirm",
+        "medianMs": 81.047,
+        "maxMs": 216.522,
+        "limits": {
+          "medianMs": 70,
+          "maxMs": 85
+        },
+        "medianFailed": true,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          81.047,
+          28.763,
+          170.859,
+          38.399,
+          216.522
+        ],
+        "slowestOrdinarySample": {
+          "index": 6,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "converted-checklist",
+          "action": "converted.task.complete.checklistConfirm",
+          "rep": 6,
+          "microseconds": 216522,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1757838,
+            "appendCalls": 1,
+            "appendMicroseconds": 509,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 38362,
+              "cgroup.user_usec": 28365,
+              "cgroup.system_usec": 9996,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 3,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 372860,
+              "processIo.wchar": 967649,
+              "processIo.syscr": 108,
+              "processIo.syscw": 384,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 1101824,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 113639424
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-1",
+        "action": "task.complete.checklistConfirm",
+        "medianMs": 35.749,
+        "maxMs": 163.248,
+        "limits": {
+          "medianMs": 70,
+          "maxMs": 80
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          20.983,
+          24.452,
+          62.921,
+          35.749,
+          163.248
+        ],
+        "slowestOrdinarySample": {
+          "index": 6,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "checklist",
+          "action": "task.complete.checklistConfirm",
+          "rep": 6,
+          "microseconds": 163248,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1759956,
+            "appendCalls": 1,
+            "appendMicroseconds": 376,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 34232,
+              "cgroup.user_usec": 30356,
+              "cgroup.system_usec": 3875,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 2,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8333,
+              "processIo.wchar": 578329,
+              "processIo.syscr": 19,
+              "processIo.syscw": 281,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 708608,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 119230464
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "converted.task.reorder",
+        "medianMs": 29.433,
+        "maxMs": 62.728,
+        "limits": {
+          "medianMs": 55,
+          "maxMs": 60
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          27.306,
+          29.433,
+          27.399,
+          62.728,
+          36.214
+        ],
+        "slowestOrdinarySample": {
+          "index": 5,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "converted-task-commands",
+          "action": "converted.task.reorder",
+          "rep": 5,
+          "microseconds": 62728,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 6444,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 89283,
+              "cgroup.user_usec": 85084,
+              "cgroup.system_usec": 4200,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 1746541,
+              "processIo.wchar": 195151,
+              "processIo.syscr": 440,
+              "processIo.syscw": 95,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 200704,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 162213888
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "checklist.titleAndNotes.editorOpen",
+        "medianMs": 2.341,
+        "maxMs": 110.619,
+        "limits": {
+          "medianMs": 10,
+          "maxMs": 15
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          2.039,
+          110.619,
+          10.608,
+          2.248,
+          2.341
+        ],
+        "slowestOrdinarySample": {
+          "index": 3,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "checklist",
+          "action": "checklist.titleAndNotes.editorOpen",
+          "rep": 3,
+          "microseconds": 110619,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1750884,
+            "appendCalls": 0,
+            "appendMicroseconds": 0,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 2846,
+              "cgroup.user_usec": 1708,
+              "cgroup.system_usec": 1139,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 30326,
+              "processIo.wchar": 37080,
+              "processIo.syscr": 15,
+              "processIo.syscw": 18,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 40960,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 179576832
+          },
+          "ownPhysicalDelta": 0,
+          "readFilesDelta": 0,
+          "semanticValidationsDelta": 0,
+          "taskRows": 797,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "checklist.titleAndNotes.save",
+        "medianMs": 24.638,
+        "maxMs": 206.569,
+        "limits": {
+          "medianMs": 50,
+          "maxMs": 60
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          16.817,
+          206.569,
+          21.982,
+          25.848,
+          24.638
+        ],
+        "slowestOrdinarySample": {
+          "index": 3,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "checklist",
+          "action": "checklist.titleAndNotes.save",
+          "rep": 3,
+          "microseconds": 206569,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1753152,
+            "appendCalls": 1,
+            "appendMicroseconds": 183773,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 35723,
+              "cgroup.user_usec": 33937,
+              "cgroup.system_usec": 1786,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 2,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 99131,
+              "processIo.wchar": 133820,
+              "processIo.syscr": 36,
+              "processIo.syscw": 65,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 143360,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 177926144
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "task.complete.checklistConfirm",
+        "medianMs": 35.67,
+        "maxMs": 80.019,
+        "limits": {
+          "medianMs": 70,
+          "maxMs": 80
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          24.045,
+          24.975,
+          39.322,
+          35.67,
+          80.019
+        ],
+        "slowestOrdinarySample": {
+          "index": 6,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "checklist",
+          "action": "task.complete.checklistConfirm",
+          "rep": 6,
+          "microseconds": 80019,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1759956,
+            "appendCalls": 1,
+            "appendMicroseconds": 1495,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 78452,
+              "cgroup.user_usec": 59879,
+              "cgroup.system_usec": 18573,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8339,
+              "processIo.wchar": 582449,
+              "processIo.syscr": 19,
+              "processIo.syscw": 283,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 716800,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 176099328
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "recurring.complete.undoUntouched",
+        "medianMs": 44.004,
+        "maxMs": 76.832,
+        "limits": {
+          "medianMs": 65,
+          "maxMs": 70
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          42.256,
+          44.004,
+          45.052,
+          42.677,
+          76.832
+        ],
+        "slowestOrdinarySample": {
+          "index": 6,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "derived-recurring",
+          "action": "recurring.complete.undoUntouched",
+          "rep": 6,
+          "microseconds": 76832,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 493,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 42283,
+              "cgroup.user_usec": 37346,
+              "cgroup.system_usec": 4938,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 2116778,
+              "processIo.wchar": 236385,
+              "processIo.syscr": 531,
+              "processIo.syscw": 115,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 270336,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 196947968
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "recurring.complete.undoProtectedSuccessor",
+        "medianMs": 50.087,
+        "maxMs": 85.988,
+        "limits": {
+          "medianMs": 70,
+          "maxMs": 75
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          85.988,
+          61.628,
+          49.994,
+          49.244,
+          50.087
+        ],
+        "slowestOrdinarySample": {
+          "index": 2,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "derived-recurring",
+          "action": "recurring.complete.undoProtectedSuccessor",
+          "rep": 2,
+          "microseconds": 85988,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1752266,
+            "appendCalls": 1,
+            "appendMicroseconds": 502,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 53716,
+              "cgroup.user_usec": 47459,
+              "cgroup.system_usec": 6258,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 2182312,
+              "processIo.wchar": 269345,
+              "processIo.syscr": 547,
+              "processIo.syscw": 131,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 299008,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 201433088
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 799,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-2",
+        "action": "cardinality500.food.details.3.undo",
+        "medianMs": 8.745,
+        "maxMs": 165.926,
+        "limits": {
+          "medianMs": 15,
+          "maxMs": 20
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          9.046,
+          8.608,
+          8.745,
+          165.926,
+          8.391
+        ],
+        "slowestOrdinarySample": {
+          "index": 5,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "food-cardinality500",
+          "action": "cardinality500.food.details.3.undo",
+          "rep": 5,
+          "microseconds": 165926,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 156746,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 16295,
+              "cgroup.user_usec": 14540,
+              "cgroup.system_usec": 1754,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 2,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 6185,
+              "processIo.wchar": 6070,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 203427840
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 503,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      },
+      {
+        "size": "dense-food",
+        "action": "converted.checklist.add",
+        "medianMs": 41.185,
+        "maxMs": 65.06,
+        "limits": {
+          "medianMs": 55,
+          "maxMs": 60
+        },
+        "medianFailed": false,
+        "maximumFailed": true,
+        "allSamplesMs": [
+          31.599,
+          32.435,
+          41.185,
+          42.222,
+          65.06
+        ],
+        "slowestOrdinarySample": {
+          "index": 6,
+          "warmup": false,
+          "measurement": "broad-action",
+          "family": "converted-checklist",
+          "action": "converted.checklist.add",
+          "rep": 6,
+          "microseconds": 65060,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1755570,
+            "appendCalls": 1,
+            "appendMicroseconds": 593,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 60600,
+              "cgroup.user_usec": 48047,
+              "cgroup.system_usec": 12554,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 961707,
+              "processIo.wchar": 236658,
+              "processIo.syscr": 250,
+              "processIo.syscw": 115,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 245760,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 165126144
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329,
+          "scope": "standalone AOT storage/application; no UI"
+        }
+      }
+    ],
+    "paired": [
+      {
+        "comparison": "task-own-history",
+        "action": "task.title.undo",
+        "smallMedianMs": 19.164,
+        "largeMedianMs": 20.247,
+        "medianBoundMs": 26.955000000000002,
+        "smallMaximumMs": 22.243,
+        "largeMaximumMs": 43.429,
+        "maximumBoundMs": 36.14019999999999,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "checklist.titleAndNotes.editorOpen",
+        "smallMedianMs": 2.329,
+        "largeMedianMs": 2.341,
+        "medianBoundMs": 5.911250000000001,
+        "smallMaximumMs": 2.379,
+        "largeMaximumMs": 110.619,
+        "maximumBoundMs": 8.3306,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "checklist.titleAndNotes.save",
+        "smallMedianMs": 23.965,
+        "largeMedianMs": 24.638,
+        "medianBoundMs": 32.95625,
+        "smallMaximumMs": 29.627,
+        "largeMaximumMs": 206.569,
+        "maximumBoundMs": 46.477799999999995,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "recurring.complete.nativeChecklist",
+        "smallMedianMs": 35.545,
+        "largeMedianMs": 36.658,
+        "medianBoundMs": 47.431250000000006,
+        "smallMaximumMs": 42.535,
+        "largeMaximumMs": 74.521,
+        "maximumBoundMs": 64.54899999999999,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "recurring.complete.undoUntouched",
+        "smallMedianMs": 42.457,
+        "largeMedianMs": 44.004,
+        "medianBoundMs": 56.07125,
+        "smallMaximumMs": 46.174,
+        "largeMaximumMs": 76.832,
+        "maximumBoundMs": 69.64359999999999,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "recurring.recomplete.nativeChecklist",
+        "smallMedianMs": 47.576,
+        "largeMedianMs": 40.328,
+        "medianBoundMs": 62.47,
+        "smallMaximumMs": 49.088,
+        "largeMaximumMs": 74.728,
+        "maximumBoundMs": 73.72319999999999,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "derivedSuccessor.complete.nativeChecklist",
+        "smallMedianMs": 39.227,
+        "largeMedianMs": 38.355,
+        "medianBoundMs": 52.03375,
+        "smallMaximumMs": 46.684,
+        "largeMaximumMs": 75.767,
+        "maximumBoundMs": 70.35759999999999,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "recurring.complete.undoProtectedSuccessor",
+        "smallMedianMs": 49.214,
+        "largeMedianMs": 50.087,
+        "medianBoundMs": 64.5175,
+        "smallMaximumMs": 49.916,
+        "largeMaximumMs": 85.988,
+        "maximumBoundMs": 74.88239999999999,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "recurring.recomplete.keepProtectedSuccessor",
+        "smallMedianMs": 34.12,
+        "largeMedianMs": 38.168,
+        "medianBoundMs": 45.65,
+        "smallMaximumMs": 36.003,
+        "largeMaximumMs": 57.881,
+        "maximumBoundMs": 55.404199999999996,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "explicitTask.notes.save",
+        "smallMedianMs": 13.134,
+        "largeMedianMs": 13.369,
+        "medianBoundMs": 19.4175,
+        "smallMaximumMs": 18.273,
+        "largeMaximumMs": 32.864,
+        "maximumBoundMs": 30.582199999999997,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "converted.task.reorder",
+        "smallMedianMs": 26.564,
+        "largeMedianMs": 29.433,
+        "medianBoundMs": 36.205,
+        "smallMaximumMs": 29.207,
+        "largeMaximumMs": 62.728,
+        "maximumBoundMs": 45.8898,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "converted.task.restoreViaUndo",
+        "smallMedianMs": 16.498,
+        "largeMedianMs": 17.038,
+        "medianBoundMs": 23.622500000000002,
+        "smallMaximumMs": 18.164,
+        "largeMaximumMs": 34.185,
+        "maximumBoundMs": 30.4296,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "cardinality500.food.details.3.undo",
+        "smallMedianMs": 7.496,
+        "largeMedianMs": 8.745,
+        "medianBoundMs": 12.370000000000001,
+        "smallMaximumMs": 8.18,
+        "largeMaximumMs": 165.926,
+        "maximumBoundMs": 16.451999999999998,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "cardinality500.food.restore.1.undo",
+        "smallMedianMs": 7.163,
+        "largeMedianMs": 7.619,
+        "medianBoundMs": 11.95375,
+        "smallMaximumMs": 8.598,
+        "largeMaximumMs": 18.665,
+        "maximumBoundMs": 17.0372,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "task-own-history",
+        "action": "cardinality500.food.paired.details.save",
+        "smallMedianMs": 6.875,
+        "largeMedianMs": 6.611,
+        "medianBoundMs": 11.59375,
+        "smallMaximumMs": 7.507,
+        "largeMaximumMs": 17.041,
+        "maximumBoundMs": 15.509799999999998,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "food-own-history",
+        "action": "task.metadata.tags",
+        "smallMedianMs": 10.485,
+        "largeMedianMs": 10.178,
+        "medianBoundMs": 16.10625,
+        "smallMaximumMs": 11.094,
+        "largeMaximumMs": 20.692,
+        "maximumBoundMs": 20.531599999999997,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "food-own-history",
+        "action": "task.metadata.tags.undo",
+        "smallMedianMs": 8.402,
+        "largeMedianMs": 9.606,
+        "medianBoundMs": 13.5025,
+        "smallMaximumMs": 9.282,
+        "largeMaximumMs": 20.394,
+        "maximumBoundMs": 17.994799999999998,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "food-own-history",
+        "action": "converted.task.bulkDelete.three",
+        "smallMedianMs": 24.681,
+        "largeMedianMs": 22.765,
+        "medianBoundMs": 33.85125,
+        "smallMaximumMs": 26.124,
+        "largeMaximumMs": 43.12,
+        "maximumBoundMs": 41.5736,
+        "medianFailed": false,
+        "maximumFailed": true
+      },
+      {
+        "comparison": "food-own-history",
+        "action": "converted.task.reopen.withChecklist",
+        "smallMedianMs": 20.911,
+        "largeMedianMs": 22.849,
+        "medianBoundMs": 29.13875,
+        "smallMaximumMs": 25.072,
+        "largeMaximumMs": 46.694,
+        "maximumBoundMs": 40.1008,
+        "medianFailed": false,
+        "maximumFailed": true
+      }
+    ],
+    "rerunsUsed": 0
+  },
+  "observedPeerFoodChange": {
+    "dense-1": {
+      "beforeSortSkip": {
+        "allSamplesMs": [
+          8.112,
+          8.098,
+          8.535,
+          7.998,
+          8.359
+        ],
+        "medianMs": 8.112,
+        "maxMs": 8.535,
+        "warmupSamplesMs": [
+          9.075,
+          10.273
+        ]
+      },
+      "afterSortSkip": {
+        "allSamplesMs": [
+          6.847,
+          6.729,
+          7.029,
+          9.89,
+          11.974
+        ],
+        "medianMs": 7.029,
+        "maxMs": 11.974,
+        "warmupSamplesMs": [
+          7.134,
+          6.976
+        ]
+      },
+      "observedMedianChangePercent": -13.350591715976334,
+      "causalSpeedupProven": false
+    },
+    "dense-2": {
+      "beforeSortSkip": {
+        "allSamplesMs": [
+          14.218,
+          11.557,
+          12.408,
+          11.877,
+          19.577
+        ],
+        "medianMs": 12.408,
+        "maxMs": 19.577,
+        "warmupSamplesMs": [
+          11.522,
+          11.153
+        ]
+      },
+      "afterSortSkip": {
+        "allSamplesMs": [
+          10.295,
+          13.651,
+          10.748,
+          10.935,
+          12.075
+        ],
+        "medianMs": 10.935,
+        "maxMs": 13.651,
+        "warmupSamplesMs": [
+          10.489,
+          10.265
+        ]
+      },
+      "observedMedianChangePercent": -11.871373307543509,
+      "causalSpeedupProven": false
+    },
+    "dense-food": {
+      "beforeSortSkip": {
+        "allSamplesMs": [
+          12.298,
+          11.996,
+          16.051,
+          15.432,
+          32.819
+        ],
+        "medianMs": 15.432,
+        "maxMs": 32.819,
+        "warmupSamplesMs": [
+          14.34,
+          14.362
+        ]
+      },
+      "afterSortSkip": {
+        "allSamplesMs": [
+          13.343,
+          14.158,
+          13.303,
+          16.744,
+          15.449
+        ],
+        "medianMs": 14.158,
+        "maxMs": 16.744,
+        "warmupSamplesMs": [
+          15.871,
+          15.495
+        ]
+      },
+      "observedMedianChangePercent": -8.255572835666158,
+      "causalSpeedupProven": false
+    }
+  },
+  "qualification": "Finite uninstrumented runs with separately generated sealed public fixtures; no controlled causal speedup claim. Current action attribution is limited to retained counters/append intervals, not earlier instrumented API intervals."
+}

@@ -177,7 +177,7 @@ run occurred. A local GDB controller initially failed before sending WM_DELETE;
 its corrected diagnostic and the reusable tool both observed normal exit and
 verified cleanup. Those clean local runs do not erase the CI SIGSEGV.
 
-The standalone `rc4-linux-close-diagnostic.yml` captures GDB stacks on the same
+The initial standalone `rc4-linux-close-diagnostic.yml` captured GDB stacks on the same
 Ubuntu24.04 image using at most three fresh public synthetic processes and stops
 at the first crash/error. It changes no required gate and performs no AOT retry;
 its results never establish timing/release acceptance. Every process result,
@@ -224,3 +224,12 @@ unchanged-budget exact-source AOT enforcement plus faithful native full-action
 timing acceptance. Revisit before candidate/release decisions: provider/event-loop
 and refresh attribution, unavoidable versus repeated observations, cold startup,
 the retained paired/absolute misses, and remaining input-to-presentation gaps.
+
+The [follow-up identity/cost analysis](followup-identity-analysis.md) records the
+next minimal representation repair, complete absolute/paired miss tables and
+before/after narrow peer observations. The current close diagnostic instead
+checks out original cb1ea0e and runs its unchanged startup harness without a
+pre-attached debugger, matching the original package/native-library environment.
+It captures a bounded core only after a fault and extracts stacks postmortem;
+only harness-certified PIDs are admitted, and raw cores remain outside artifacts.
+The original failure remains unwaived until identifying evidence supports a fix.

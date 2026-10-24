@@ -466,3 +466,14 @@ refresh residuals dominate these instrumented cloud intervals, while API work
 alone does not explain them. Scheduler/event-loop, allocation and rendering
 attribution remains unresolved. These are diagnostic measurements, not native
 Windows input-to-presentation acceptance or permission to relax guarantees.
+
+The next [identity-representation follow-up](../evidence/rc4-cloud-attribution-20261024/followup-identity-analysis.md)
+retains only the derived Task event-ID and unified effect-key strings on their
+existing immutable decoded objects. Reconstructing history maps no longer
+reformats those unchanged identities repeatedly. Every byte/reference/readiness
+and publication check still runs. No global authority, durable field or cache
+schema changes. The full local1500-unit suite passes. A narrow existing peer
+scenario on the same three sealed fixtures passes before/after correctness and
+replay, with lower observed peer-Food medians; full enforcing/native acceptance
+remains separate. Exact prior absolute/paired failures and partial cost
+attribution are retained rather than replaced by those narrow observations.

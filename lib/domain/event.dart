@@ -89,7 +89,10 @@ class LogEvent {
     this.integrityHash,
     this.operationRevision,
   });
-  String get id => '$writer:$sequence';
+  // Identity uses immutable envelope fields, independently of payload/replay.
+  // Reuse its representation during repeated history/set reconstruction.
+  late final String _id = '$writer:$sequence';
+  String get id => _id;
   String get author => attributedWriter ?? writer;
   CurrentOperation currentOperation({String? previousHash}) {
     final predecessor =

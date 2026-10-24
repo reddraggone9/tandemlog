@@ -1,0 +1,33 @@
+{
+  "rc4-identity-all-unit-tests.log": {
+    "sha256": "c700c7f78d1dd35178655e43a8699ddea219b24862368f00e054dd15efacbf92",
+    "tail": [
+      "{\"adaptiveHistoricalRecords\":4100,\"notesChars\":2,\"selectedRecords\":7,\"relationLookups\":27,\"strictSelectedAndHeadDecodes\":9}",
+      "06:21 +1499: /workspace/tandemlog/test/adaptive_text_read_test.dart: owned physical workspace selection matches full oracle past caps (450, 9900)",
+      "{\"adaptiveHistoricalRecords\":450,\"notesChars\":9900,\"selectedRecords\":6,\"relationLookups\":26,\"strictSelectedAndHeadDecodes\":8}",
+      "06:27 +1500: All tests passed!"
+    ]
+  },
+  "rc4-identity-analysis.log": {
+    "sha256": "3ba7e2b782d4c60bfe44862c9415e829bddd6389b4a5d3c00e7a50e1d9e6113e",
+    "tail": [
+      "Analyzing tandemlog...                                          ",
+      "No issues found! (ran in 1.9s)"
+    ]
+  },
+  "rc4-identity-format.log": {
+    "sha256": "9b0ff73f85482bf8a74b5b5a84cb68ff26987eb5fbe356d2df93f0f29c1d72fe",
+    "tail": [
+      "Formatted 393 files (0 changed) in 2.19 seconds."
+    ]
+  },
+  "rc4-identity-final-tools.log": {
+    "sha256": "06fd17d0cd23d51d67da4ec7b78140a8509f9d5859e871d5051bedcd62e21e53",
+    "tail": [
+      "Ran 170 tests in 3.239s",
+      "",
+      "OK",
+      "{\"executable_sha256\": \"0370190d81a1bc1e156676eb83f3adb83bb65e765fd5b7b74719004b77345310\", \"github_run_id\": \"123\", \"native_library_sha256\": \"7bc2fcce9d2525bcb6a722a6cc144de4fd8946c0047d7de73788e37d1f2d42d8\", \"portable_archive\": \"tandemlog-windows-x64-unsigned-portable.zip\", \"portable_sha256\": \"1cb29fff003b76a7552b4e1e01da9a2c5fbbf47e4903b8f09b36c1c3075f9efa\", \"source_revision\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+    ]
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "scope": "narrow existing production peer scenario, same sealed fixture bytes; finite measurements, no release/UI acceptance",
+  "baseSource": "22d0fa74d2e8f50f293123a04db1ca79f4dc58bc",
+  "results": {
+    "before": {
+      "logSHA256": "ea937021a6885751d73e7fee5fbf6a93bfbc5db2d3db883ce88c5b0b35e3a8ed",
+      "binarySHA256": "ed6c2a8288f8380c77aa9a3467fdbaaa99e6fb8e5048ecdb504acdea3beea0a4",
+      "samples": {
+        "dense-1": {
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "samplesUs": [
+              7272,
+              7273,
+              10438,
+              7193,
+              9316
+            ],
+            "medianUs": 7273,
+            "maxUs": 10438,
+            "rssBytesAfter": [
+              104710144,
+              103665664,
+              101232640,
+              105013248,
+              101261312
+            ]
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "samplesUs": [
+              32771,
+              32732,
+              32559,
+              34002,
+              38472
+            ],
+            "medianUs": 32771,
+            "maxUs": 38472,
+            "rssBytesAfter": [
+              99418112,
+              99467264,
+              103698432,
+              104935424,
+              105353216
+            ]
+          }
+        },
+        "dense-2": {
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "samplesUs": [
+              13187,
+              11548,
+              10511,
+              12822,
+              10892
+            ],
+            "medianUs": 11548,
+            "maxUs": 13187,
+            "rssBytesAfter": [
+              147550208,
+              154656768,
+              152068096,
+              152788992,
+              148008960
+            ]
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "samplesUs": [
+              42045,
+              46856,
+              45922,
+              46960,
+              52833
+            ],
+            "medianUs": 46856,
+            "maxUs": 52833,
+            "rssBytesAfter": [
+              150888448,
+              154656768,
+              152055808,
+              152502272,
+              152973312
+            ]
+          }
+        },
+        "dense-food": {
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "samplesUs": [
+              12059,
+              12445,
+              14551,
+              14058,
+              11807
+            ],
+            "medianUs": 12445,
+            "maxUs": 14551,
+            "rssBytesAfter": [
+              173428736,
+              175071232,
+              179335168,
+              177463296,
+              181624832
+            ]
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "samplesUs": [
+              37847,
+              40502,
+              40518,
+              39961,
+              41332
+            ],
+            "medianUs": 40502,
+            "maxUs": 41332,
+            "rssBytesAfter": [
+              171855872,
+              175071232,
+              178810880,
+              179429376,
+              181133312
+            ]
+          }
+        }
+      },
+      "correctnessAndReplayCompleted": true
+    },
+    "after": {
+      "logSHA256": "58ae340d70a0b98c93f30d0a7cf915e8c0216497858e70fe7a51d973ab937f22",
+      "binarySHA256": "335d2b455a193a71621d253a0e39d4d51349556d75554dc0f93d0aa388f4d5e4",
+      "samples": {
+        "dense-1": {
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "samplesUs": [
+              7877,
+              6039,
+              6159,
+              10212,
+              5838
+            ],
+            "medianUs": 6159,
+            "maxUs": 10212,
+            "rssBytesAfter": [
+              101130240,
+              101027840,
+              106999808,
+              108048384,
+              105607168
+            ]
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "samplesUs": [
+              31546,
+              34078,
+              41879,
+              35454,
+              32110
+            ],
+            "medianUs": 34078,
+            "maxUs": 41879,
+            "rssBytesAfter": [
+              103153664,
+              100765696,
+              106995712,
+              108040192,
+              101859328
+            ]
+          }
+        },
+        "dense-2": {
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "samplesUs": [
+              10412,
+              9922,
+              15682,
+              11310,
+              10025
+            ],
+            "medianUs": 10412,
+            "maxUs": 15682,
+            "rssBytesAfter": [
+              212393984,
+              216182784,
+              182214656,
+              162004992,
+              165986304
+            ]
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "samplesUs": [
+              37694,
+              37474,
+              41323,
+              40233,
+              41760
+            ],
+            "medianUs": 40233,
+            "maxUs": 41760,
+            "rssBytesAfter": [
+              209367040,
+              214441984,
+              220004352,
+              164507648,
+              165830656
+            ]
+          }
+        },
+        "dense-food": {
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "samplesUs": [
+              9625,
+              10642,
+              9941,
+              9472,
+              9654
+            ],
+            "medianUs": 9654,
+            "maxUs": 10642,
+            "rssBytesAfter": [
+              170536960,
+              173051904,
+              174465024,
+              169431040,
+              175923200
+            ]
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "samplesUs": [
+              35190,
+              34945,
+              34791,
+              38067,
+              42511
+            ],
+            "medianUs": 35190,
+            "maxUs": 42511,
+            "rssBytesAfter": [
+              166313984,
+              169910272,
+              169906176,
+              169431040,
+              170479616
+            ]
+          }
+        }
+      },
+      "correctnessAndReplayCompleted": true
+    }
+  },
+  "probeSHA256": "175770a18a022cb04edba65891242761a0779d83d36faa478c762ba6a6d633e2",
+  "changedSource": {
+    "lib/domain/event.dart": {
+      "beforeSHA256": "8dfb99c2bfb0278e6ba44b74280bbaf085f6339e04a2f1b81dc3480c6182b9d5",
+      "afterSHA256": "6ed174f872d730a6426f769e31003d5bb0d8fa4b7c2c84605937b7355c24e912"
+    },
+    "lib/storage/unified_record.dart": {
+      "beforeSHA256": "5a1e323c2188fef23e97ab70e65584aaf6c65652dbcd04be068e65a7d85c62e7",
+      "afterSHA256": "df3f0da8795560a7ca91b537ccdbfbdd94f480601a1c3e736300f32369c8c3ce"
+    }
+  }
+}

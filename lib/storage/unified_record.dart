@@ -92,7 +92,10 @@ class UnifiedEffect {
   String get integrityHash => task?.integrityHash ?? food!.integrityHash;
   String get semanticHash => task?.hash ?? food!.hash;
   String get previousHash => task?.previousHash ?? food!.previousHash;
-  String get key => '${task == null ? 'food:' : 'task:'}$space:$id';
+  // This immutable envelope identity carries no readiness or admission proof.
+  // Keep its String/hash representation instead of rebuilding it per refresh.
+  late final String _key = '${task == null ? 'food:' : 'task:'}$space:$id';
+  String get key => _key;
   Map<String, dynamic> toJson() => {'kind': kind, 'raw': raw};
 }
 

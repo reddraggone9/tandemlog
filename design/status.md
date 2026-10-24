@@ -31,6 +31,16 @@ workaround or SDK change was made without an identifying stack. Current local
 tooling passes168 cases. Timing acceptance and the native close failure remain
 open, with [resumable evidence](../evidence/rc4-cloud-attribution-20261024/README.md).
 
+The next bounded repair caches two immutable identity-string representations.
+Local1500 units,170 tools, analysis and formatting pass; the existing narrow peer
+scenario preserves correctness/replay on all three sealed shapes and observes
+peer-Food medians6.159/10.412/9.654ms. These are not full-gate or visible-response
+acceptance. [Exact cost/failure synthesis](../evidence/rc4-cloud-attribution-20261024/followup-identity-analysis.md)
+separates retained absolute/paired misses, observed change and remaining gaps.
+An original-source close diagnostic now uses cb1ea0e, matching native/package
+setup and the unchanged startup harness, with post-fault core/stack capture.
+It performs no timing retry; raw cores are excluded from uploaded artifacts.
+
 ## Latest development result - 2026-10-21
 
 [Current acceptance](../evidence/coordinated-cutover-build99/README.md) records source0acfb3b and CI39633973437: all three jobs green,203 native Linux cases passed,1314 current unit/host cases,89 tooling checks and8 external-copy controls. Exact original-payload GTK Save/peer-while-Food/restart and200-percent Light/Dark checks passed. Android06 independently accepted the affected source243d253 debug-APK modal/restart flows; earlier source-specific peer/tail coverage retains its attribution. All temporary labs stopped with settings restoration and independent process checks. Local desktop and Android demonstrations retain their exact source labels.
