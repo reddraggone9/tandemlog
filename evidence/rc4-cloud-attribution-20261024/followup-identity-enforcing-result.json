@@ -1,0 +1,1943 @@
+{
+  "scope": "AOT storage/application/readmodel; actual UI gate separate",
+  "accepted": false,
+  "source": "c213ea98fce5cf8d43eddd2ab4144a001907ed47",
+  "runURL": "https://github.com/reddraggone9/tandemlog/actions/runs/40129495617",
+  "artifact": {
+    "id": 12574469668,
+    "sha256": "9184a8f9e071c45da36849a4685f7ad72d1d9f366b482344f7b2424a4c250c80"
+  },
+  "retainedReport": "/workspace/scratch/rc4-identity-performance-ci-40129495617/performance-results/gate-result.json",
+  "reportSHA256": "b23d6b169a900f4fc1102947f5c3739769e653bf6598143bd5f875acab008239",
+  "limitsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "environment": {
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "python": "3.12.3",
+    "logicalCPUs": 4,
+    "runnerImage": {},
+    "cpuModel": "INTEL(R) XEON(R) PLATINUM 8573C"
+  },
+  "resourceBounds": {
+    "memory.max": "6442450944",
+    "memory.swap.max": "0",
+    "cpu.max": "200000 100000",
+    "pids.max": "128"
+  },
+  "rerunsUsed": 0,
+  "qualifications": [
+    "All three shape correctness and 232 metrics pass; timing fails.",
+    "Different CPU from earlier hosted run prevents a controlled speedup comparison.",
+    "Append is combined provider/durability/scheduling elapsed, not native fsync-only service time.",
+    "CPU brackets include probe overhead and own threads; do not subtract or sum with append as exclusive attribution.",
+    "Startup remains aggregate phase attribution.",
+    "No hardware presentation, native UI acceptance, release or live changes."
+  ],
+  "shapes": {
+    "dense-1": {
+      "correctnessPassed": true,
+      "metrics": 232,
+      "execution": {
+        "exitCode": 0,
+        "seconds": 240.964453186,
+        "childPID": 3391,
+        "childAbsent": true,
+        "logSHA256": "603b4d573dd56898a958ceb5b0e6e11970c644167f42e48c92dcc843056d0d42",
+        "noise": {
+          "kind": "observed-external-cpu-load",
+          "sampleWindowCovered": true,
+          "windowSeconds": 240.964453186,
+          "cpuSomeStallMicrosecondsDelta": 7209665,
+          "otherCpuMicrosecondsDelta": 1492915,
+          "ownWorkExcluded": true,
+          "basis": "Other sibling systemd services; own service excluded",
+          "qualification": "Aggregate external pressure during entire attempt; suspected timing noise, not proof that every slow sample was affected."
+        }
+      },
+      "absoluteFailures": [
+        {
+          "action": "task.notes.undo",
+          "medianMs": 40.158,
+          "maximumMs": 46.876,
+          "bounds": {
+            "medianMs": 40,
+            "maxMs": 55
+          },
+          "failingStatistics": [
+            "medianMs"
+          ],
+          "samplesMs": [
+            40.158,
+            46.876,
+            44.643,
+            29.888,
+            31.548
+          ],
+          "slowestRawObservation": {
+            "index": 3,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "task-text",
+            "action": "task.notes.undo",
+            "rep": 3,
+            "microseconds": 46876,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1743010,
+              "appendCalls": 1,
+              "appendMicroseconds": 19726,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 38254,
+                "cgroup.user_usec": 36262,
+                "cgroup.system_usec": 1991,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 19728,
+                "processIo.wchar": 71796,
+                "processIo.syscr": 25,
+                "processIo.syscw": 35,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 81920,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 80879616
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "task.editorOpenCancel",
+          "medianMs": 7.516,
+          "maximumMs": 25.574,
+          "bounds": {
+            "medianMs": 10,
+            "maxMs": 15
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            7.435,
+            7.516,
+            7.486,
+            25.574,
+            8.009
+          ],
+          "slowestRawObservation": {
+            "index": 5,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "task-text",
+            "action": "task.editorOpenCancel",
+            "rep": 5,
+            "microseconds": 25574,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1743010,
+              "appendCalls": 0,
+              "appendMicroseconds": 0,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 7643,
+                "cgroup.user_usec": 6681,
+                "cgroup.system_usec": 962,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 7875,
+                "processIo.wchar": 20600,
+                "processIo.syscr": 12,
+                "processIo.syscw": 10,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 24576,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 84238336
+            },
+            "ownPhysicalDelta": 0,
+            "readFilesDelta": 0,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "explicitTask.titleAndNotes.save",
+          "medianMs": 20.253,
+          "maximumMs": 227.769,
+          "bounds": {
+            "medianMs": 40,
+            "maxMs": 45
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            19.127,
+            227.769,
+            19.657,
+            20.253,
+            22.117
+          ],
+          "slowestRawObservation": {
+            "index": 3,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "explicit-task-text",
+            "action": "explicitTask.titleAndNotes.save",
+            "rep": 3,
+            "microseconds": 227769,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1745164,
+              "appendCalls": 1,
+              "appendMicroseconds": 74888,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 21687,
+                "cgroup.user_usec": 18624,
+                "cgroup.system_usec": 3062,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 2,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 4934,
+                "processIo.wchar": 84400,
+                "processIo.syscr": 13,
+                "processIo.syscw": 41,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 94208,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 92053504
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 797,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "explicitTask.titleAndNotes.undo",
+          "medianMs": 25.679,
+          "maximumMs": 43.165,
+          "bounds": {
+            "medianMs": 35,
+            "maxMs": 40
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            19.995,
+            43.165,
+            39.125,
+            25.679,
+            24.667
+          ],
+          "slowestRawObservation": {
+            "index": 3,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "explicit-task-text",
+            "action": "explicitTask.titleAndNotes.undo",
+            "rep": 3,
+            "microseconds": 43165,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1745164,
+              "appendCalls": 1,
+              "appendMicroseconds": 13049,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 22393,
+                "cgroup.user_usec": 17269,
+                "cgroup.system_usec": 5124,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 7564,
+                "processIo.wchar": 67972,
+                "processIo.syscr": 17,
+                "processIo.syscw": 33,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 73728,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 92676096
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 797,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "explicitTask.editorOpenCancel",
+          "medianMs": 4.52,
+          "maximumMs": 22.462,
+          "bounds": {
+            "medianMs": 10,
+            "maxMs": 15
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            22.462,
+            4.391,
+            4.304,
+            4.52,
+            4.921
+          ],
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "explicit-task-text",
+            "action": "explicitTask.editorOpenCancel",
+            "rep": 2,
+            "microseconds": 22462,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1745164,
+              "appendCalls": 0,
+              "appendMicroseconds": 0,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 4213,
+                "cgroup.user_usec": 4085,
+                "cgroup.system_usec": 128,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 1645,
+                "processIo.wchar": 32960,
+                "processIo.syscr": 8,
+                "processIo.syscw": 16,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 36864,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 93671424
+            },
+            "ownPhysicalDelta": 0,
+            "readFilesDelta": 0,
+            "semanticValidationsDelta": 0,
+            "taskRows": 797,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "task.restoreViaUndo",
+          "medianMs": 21.94,
+          "maximumMs": 42.072,
+          "bounds": {
+            "medianMs": 35,
+            "maxMs": 40
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            21.954,
+            19.394,
+            19.843,
+            21.94,
+            42.072
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "task-commands",
+            "action": "task.restoreViaUndo",
+            "rep": 6,
+            "microseconds": 42072,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1751546,
+              "appendCalls": 1,
+              "appendMicroseconds": 685,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 21693,
+                "cgroup.user_usec": 18853,
+                "cgroup.system_usec": 2839,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 5768,
+                "processIo.wchar": 75704,
+                "processIo.syscr": 15,
+                "processIo.syscw": 37,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 81920,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 111128576
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 800,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "task.bulkReorder.undo",
+          "medianMs": 45.397,
+          "maximumMs": 56.173,
+          "bounds": {
+            "medianMs": 50,
+            "maxMs": 55
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            56.173,
+            40.981,
+            48.315,
+            43.549,
+            45.397
+          ],
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "task-commands",
+            "action": "task.bulkReorder.undo",
+            "rep": 2,
+            "microseconds": 56173,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1751546,
+              "appendCalls": 1,
+              "appendMicroseconds": 615,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 39863,
+                "cgroup.user_usec": 32853,
+                "cgroup.system_usec": 7010,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 1805472,
+                "processIo.wchar": 270904,
+                "processIo.syscr": 454,
+                "processIo.syscw": 131,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 278528,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 109916160
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 800,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "converted.task.editorOpenCancel",
+          "medianMs": 6.824,
+          "maximumMs": 25.279,
+          "bounds": {
+            "medianMs": 10,
+            "maxMs": 15
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            25.279,
+            5.678,
+            5.489,
+            18.05,
+            6.824
+          ],
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "converted-task-text",
+            "action": "converted.task.editorOpenCancel",
+            "rep": 2,
+            "microseconds": 25279,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1743010,
+              "appendCalls": 0,
+              "appendMicroseconds": 0,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 5582,
+                "cgroup.user_usec": 5540,
+                "cgroup.system_usec": 42,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 1646,
+                "processIo.wchar": 32960,
+                "processIo.syscr": 8,
+                "processIo.syscw": 16,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 36864,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 116383744
+            },
+            "ownPhysicalDelta": 0,
+            "readFilesDelta": 0,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "converted.task.reorder.undo",
+          "medianMs": 33.231,
+          "maximumMs": 55.781,
+          "bounds": {
+            "medianMs": 40,
+            "maxMs": 40
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            55.781,
+            34.553,
+            33.231,
+            31.235,
+            31.885
+          ],
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "converted-task-commands",
+            "action": "converted.task.reorder.undo",
+            "rep": 2,
+            "microseconds": 55781,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1743010,
+              "appendCalls": 1,
+              "appendMicroseconds": 598,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 47995,
+                "cgroup.user_usec": 47995,
+                "cgroup.system_usec": 0,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 5770,
+                "processIo.wchar": 158104,
+                "processIo.syscr": 15,
+                "processIo.syscw": 77,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 167936,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 122388480
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "converted.checklist.add",
+          "medianMs": 51.537,
+          "maximumMs": 61.879,
+          "bounds": {
+            "medianMs": 55,
+            "maxMs": 60
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            48.266,
+            51.537,
+            50.968,
+            59.306,
+            61.879
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "converted-checklist",
+            "action": "converted.checklist.add",
+            "rep": 6,
+            "microseconds": 61879,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1755570,
+              "appendCalls": 1,
+              "appendMicroseconds": 789,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 59589,
+                "cgroup.user_usec": 51259,
+                "cgroup.system_usec": 8329,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 961701,
+                "processIo.wchar": 240778,
+                "processIo.syscr": 250,
+                "processIo.syscw": 117,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 253952,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 118886400
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "checklist.add",
+          "medianMs": 56.527,
+          "maximumMs": 59.862,
+          "bounds": {
+            "medianMs": 50,
+            "maxMs": 65
+          },
+          "failingStatistics": [
+            "medianMs"
+          ],
+          "samplesMs": [
+            48.159,
+            56.527,
+            58.313,
+            52.238,
+            59.862
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "checklist",
+            "action": "checklist.add",
+            "rep": 6,
+            "microseconds": 59862,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1757688,
+              "appendCalls": 1,
+              "appendMicroseconds": 898,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 68464,
+                "cgroup.user_usec": 62438,
+                "cgroup.system_usec": 6027,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 1195173,
+                "processIo.wchar": 240778,
+                "processIo.syscr": 307,
+                "processIo.syscw": 117,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 245760,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 124391424
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 797,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "startup.warm.total",
+          "medianMs": 285.053,
+          "maximumMs": 291.325,
+          "bounds": {
+            "medianMs": 280,
+            "maxMs": 285
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            291.325,
+            281.671,
+            285.053,
+            286.811,
+            277.92
+          ]
+        },
+        {
+          "action": "startup.warm.history",
+          "medianMs": 275.739,
+          "maximumMs": 281.82,
+          "bounds": {
+            "medianMs": 270,
+            "maxMs": 275
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            281.82,
+            271.004,
+            275.739,
+            277.314,
+            266.647
+          ]
+        },
+        {
+          "action": "startup.warm.proof",
+          "medianMs": 76.371,
+          "maximumMs": 84.737,
+          "bounds": {
+            "medianMs": 75,
+            "maxMs": 85
+          },
+          "failingStatistics": [
+            "medianMs"
+          ],
+          "samplesMs": [
+            81.513,
+            75.31,
+            76.371,
+            84.737,
+            74.447
+          ]
+        },
+        {
+          "action": "startup.cold.total",
+          "medianMs": 1157.9,
+          "maximumMs": 1162.213,
+          "bounds": {
+            "medianMs": 925,
+            "maxMs": 935
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            1136.165,
+            1157.9,
+            1110.447,
+            1157.984,
+            1162.213
+          ]
+        },
+        {
+          "action": "startup.cold.history",
+          "medianMs": 1104.259,
+          "maximumMs": 1110.948,
+          "bounds": {
+            "medianMs": 880,
+            "maxMs": 890
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            1081.159,
+            1104.259,
+            1054.525,
+            1105.658,
+            1110.948
+          ]
+        },
+        {
+          "action": "startup.cold.taskAttach",
+          "medianMs": 48.095,
+          "maximumMs": 50.318,
+          "bounds": {
+            "medianMs": 40,
+            "maxMs": 45
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            49.677,
+            48.095,
+            50.318,
+            46.915,
+            45.099
+          ]
+        },
+        {
+          "action": "task.capture.1",
+          "medianMs": 39.651,
+          "maximumMs": 56.274,
+          "bounds": {
+            "medianMs": 45,
+            "maxMs": 50
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            37.933,
+            56.274,
+            42.378,
+            39.389,
+            39.651
+          ],
+          "slowestRawObservation": {
+            "index": 3,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "capture",
+            "action": "task.capture.1",
+            "rep": 3,
+            "microseconds": 56274,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 642,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 42450,
+                "cgroup.user_usec": 34329,
+                "cgroup.system_usec": 8121,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2738824,
+                "processIo.wchar": 2903612,
+                "processIo.syscr": 682,
+                "processIo.syscw": 754,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 2916352,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 133816320
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 809,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "cardinality500.food.contents.APIonly",
+          "medianMs": 9.532,
+          "maximumMs": 23.444,
+          "bounds": {
+            "medianMs": 20,
+            "maxMs": 20
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            9.029,
+            14.393,
+            9.196,
+            9.532,
+            23.444
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food-cardinality500",
+            "action": "cardinality500.food.contents.APIonly",
+            "rep": 6,
+            "microseconds": 23444,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 785,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 12030,
+                "cgroup.user_usec": 6983,
+                "cgroup.system_usec": 5048,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2654849,
+                "processIo.wchar": 2656025,
+                "processIo.syscr": 660,
+                "processIo.syscw": 650,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 2662400,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 144568320
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 503,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        }
+      ],
+      "peerFood": {
+        "allSamplesMs": [
+          6.622,
+          6.291,
+          8.633,
+          6.752,
+          6.509
+        ],
+        "medianMs": 6.622,
+        "maxMs": 8.633,
+        "warmupSamplesMs": [
+          6.508,
+          6.216
+        ]
+      },
+      "peerTask": {
+        "allSamplesMs": [
+          35.526,
+          34.906,
+          37.097,
+          52.472,
+          45.158
+        ],
+        "medianMs": 37.097,
+        "maxMs": 52.472,
+        "warmupSamplesMs": [
+          54.191,
+          37.651
+        ]
+      }
+    },
+    "dense-2": {
+      "correctnessPassed": true,
+      "metrics": 232,
+      "execution": {
+        "exitCode": 0,
+        "seconds": 316.79479129699996,
+        "childPID": 3631,
+        "childAbsent": true,
+        "logSHA256": "0fb56a22feda7300acb63abbeaf6640d54832eaf4e19ac53af5cf673990cc7af",
+        "noise": {
+          "kind": "observed-external-cpu-load",
+          "sampleWindowCovered": true,
+          "windowSeconds": 316.79479129699996,
+          "cpuSomeStallMicrosecondsDelta": 3113234,
+          "otherCpuMicrosecondsDelta": 1808588,
+          "ownWorkExcluded": true,
+          "basis": "Other sibling systemd services; own service excluded",
+          "qualification": "Aggregate external pressure during entire attempt; suspected timing noise, not proof that every slow sample was affected."
+        }
+      },
+      "absoluteFailures": [
+        {
+          "action": "task.reorder.undo",
+          "medianMs": 38.835,
+          "maximumMs": 39.692,
+          "bounds": {
+            "medianMs": 35,
+            "maxMs": 40
+          },
+          "failingStatistics": [
+            "medianMs"
+          ],
+          "samplesMs": [
+            38.835,
+            36.173,
+            39.431,
+            34.02,
+            39.692
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "task-commands",
+            "action": "task.reorder.undo",
+            "rep": 6,
+            "microseconds": 39692,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1751546,
+              "appendCalls": 1,
+              "appendMicroseconds": 887,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 55084,
+                "cgroup.user_usec": 49680,
+                "cgroup.system_usec": 5405,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2102924,
+                "processIo.wchar": 174616,
+                "processIo.syscr": 527,
+                "processIo.syscw": 86,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 184320,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 141127680
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 800,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "converted.checklist.add",
+          "medianMs": 55.833,
+          "maximumMs": 60.216,
+          "bounds": {
+            "medianMs": 55,
+            "maxMs": 60
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            46.653,
+            53.275,
+            60.216,
+            55.833,
+            59.989
+          ],
+          "slowestRawObservation": {
+            "index": 4,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "converted-checklist",
+            "action": "converted.checklist.add",
+            "rep": 4,
+            "microseconds": 60216,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1751034,
+              "appendCalls": 1,
+              "appendMicroseconds": 634,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 75265,
+                "cgroup.user_usec": 69190,
+                "cgroup.system_usec": 6076,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 1760426,
+                "processIo.wchar": 236658,
+                "processIo.syscr": 445,
+                "processIo.syscw": 115,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 241664,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 167010304
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "checklist.add",
+          "medianMs": 59.493,
+          "maximumMs": 64.606,
+          "bounds": {
+            "medianMs": 50,
+            "maxMs": 65
+          },
+          "failingStatistics": [
+            "medianMs"
+          ],
+          "samplesMs": [
+            46.301,
+            48.375,
+            59.493,
+            60.668,
+            64.606
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "checklist",
+            "action": "checklist.add",
+            "rep": 6,
+            "microseconds": 64606,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1757688,
+              "appendCalls": 1,
+              "appendMicroseconds": 937,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 80212,
+                "cgroup.user_usec": 73127,
+                "cgroup.system_usec": 7084,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 1989803,
+                "processIo.wchar": 232538,
+                "processIo.syscr": 501,
+                "processIo.syscw": 113,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 241664,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 163999744
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 797,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "startup.warm.total",
+          "medianMs": 491.63,
+          "maximumMs": 507.121,
+          "bounds": {
+            "medianMs": 465,
+            "maxMs": 470
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            495.974,
+            490.326,
+            491.63,
+            507.121,
+            488.585
+          ]
+        },
+        {
+          "action": "startup.warm.history",
+          "medianMs": 481.068,
+          "maximumMs": 496.521,
+          "bounds": {
+            "medianMs": 450,
+            "maxMs": 460
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            485.718,
+            480.227,
+            481.068,
+            496.521,
+            477.674
+          ]
+        },
+        {
+          "action": "startup.warm.proof",
+          "medianMs": 124.426,
+          "maximumMs": 130.128,
+          "bounds": {
+            "medianMs": 120,
+            "maxMs": 130
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            129.842,
+            124.426,
+            124.129,
+            130.128,
+            118.857
+          ]
+        },
+        {
+          "action": "startup.cold.total",
+          "medianMs": 1657.351,
+          "maximumMs": 1678.51,
+          "bounds": {
+            "medianMs": 1335,
+            "maxMs": 1370
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            1610.669,
+            1657.351,
+            1664.478,
+            1634.106,
+            1678.51
+          ]
+        },
+        {
+          "action": "startup.cold.history",
+          "medianMs": 1545.795,
+          "maximumMs": 1573.42,
+          "bounds": {
+            "medianMs": 1240,
+            "maxMs": 1260
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            1515.871,
+            1545.795,
+            1561.288,
+            1524.077,
+            1573.42
+          ]
+        }
+      ],
+      "peerFood": {
+        "allSamplesMs": [
+          7.982,
+          8.666,
+          8.46,
+          9.211,
+          8.916
+        ],
+        "medianMs": 8.666,
+        "maxMs": 9.211,
+        "warmupSamplesMs": [
+          8.299,
+          8.059
+        ]
+      },
+      "peerTask": {
+        "allSamplesMs": [
+          44.858,
+          51.551,
+          56.372,
+          46.28,
+          45.887
+        ],
+        "medianMs": 46.28,
+        "maxMs": 56.372,
+        "warmupSamplesMs": [
+          70.756,
+          45.229
+        ]
+      }
+    },
+    "dense-food": {
+      "correctnessPassed": true,
+      "metrics": 232,
+      "execution": {
+        "exitCode": 0,
+        "seconds": 312.695568355,
+        "childPID": 3851,
+        "childAbsent": true,
+        "logSHA256": "96bd2827cfd1eea1a61d9362af6ef877be4400fa1c4f60322dfeb34c09f37234",
+        "noise": {
+          "kind": "observed-external-cpu-load",
+          "sampleWindowCovered": true,
+          "windowSeconds": 312.695568355,
+          "cpuSomeStallMicrosecondsDelta": 3234778,
+          "otherCpuMicrosecondsDelta": 1926673,
+          "ownWorkExcluded": true,
+          "basis": "Other sibling systemd services; own service excluded",
+          "qualification": "Aggregate external pressure during entire attempt; suspected timing noise, not proof that every slow sample was affected."
+        }
+      },
+      "absoluteFailures": [
+        {
+          "action": "converted.checklist.add",
+          "medianMs": 54.042,
+          "maximumMs": 64.78,
+          "bounds": {
+            "medianMs": 55,
+            "maxMs": 60
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            47.468,
+            54.042,
+            51.778,
+            54.299,
+            64.78
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "converted-checklist",
+            "action": "converted.checklist.add",
+            "rep": 6,
+            "microseconds": 64780,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1755570,
+              "appendCalls": 1,
+              "appendMicroseconds": 815,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 61760,
+                "cgroup.user_usec": 54279,
+                "cgroup.system_usec": 7482,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 961707,
+                "processIo.wchar": 240778,
+                "processIo.syscr": 250,
+                "processIo.syscw": 117,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 253952,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 152367104
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "checklist.add",
+          "medianMs": 51.373,
+          "maximumMs": 56.069,
+          "bounds": {
+            "medianMs": 50,
+            "maxMs": 65
+          },
+          "failingStatistics": [
+            "medianMs"
+          ],
+          "samplesMs": [
+            48.807,
+            50.04,
+            51.373,
+            56.069,
+            55.972
+          ],
+          "slowestRawObservation": {
+            "index": 5,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "checklist",
+            "action": "checklist.add",
+            "rep": 5,
+            "microseconds": 56069,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1755420,
+              "appendCalls": 1,
+              "appendMicroseconds": 857,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 54906,
+                "cgroup.user_usec": 50679,
+                "cgroup.system_usec": 4226,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 1195179,
+                "processIo.wchar": 236658,
+                "processIo.syscr": 307,
+                "processIo.syscw": 115,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 245760,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 158994432
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 797,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "startup.warm.total",
+          "medianMs": 574.208,
+          "maximumMs": 584.166,
+          "bounds": {
+            "medianMs": 530,
+            "maxMs": 555
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            580.196,
+            568.416,
+            574.208,
+            584.166,
+            569.339
+          ]
+        },
+        {
+          "action": "startup.warm.history",
+          "medianMs": 563.969,
+          "maximumMs": 571.766,
+          "bounds": {
+            "medianMs": 520,
+            "maxMs": 540
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            567.809,
+            558.451,
+            563.969,
+            571.766,
+            559.156
+          ]
+        },
+        {
+          "action": "startup.warm.proof",
+          "medianMs": 84.227,
+          "maximumMs": 88.486,
+          "bounds": {
+            "medianMs": 80,
+            "maxMs": 85
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            84.227,
+            85.982,
+            83.567,
+            88.486,
+            83.985
+          ]
+        },
+        {
+          "action": "startup.cold.total",
+          "medianMs": 1699.387,
+          "maximumMs": 1724.154,
+          "bounds": {
+            "medianMs": 1400,
+            "maxMs": 1635
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            1699.387,
+            1696.264,
+            1696.717,
+            1724.154,
+            1709.83
+          ]
+        },
+        {
+          "action": "startup.cold.history",
+          "medianMs": 1644.951,
+          "maximumMs": 1670.617,
+          "bounds": {
+            "medianMs": 1345,
+            "maxMs": 1580
+          },
+          "failingStatistics": [
+            "medianMs",
+            "maxMs"
+          ],
+          "samplesMs": [
+            1644.951,
+            1642.049,
+            1643.052,
+            1670.617,
+            1652.069
+          ]
+        },
+        {
+          "action": "startup.cold.taskAttach",
+          "medianMs": 47.199,
+          "maximumMs": 50.239,
+          "bounds": {
+            "medianMs": 45,
+            "maxMs": 60
+          },
+          "failingStatistics": [
+            "medianMs"
+          ],
+          "samplesMs": [
+            45.237,
+            47.497,
+            47.199,
+            44.747,
+            50.239
+          ]
+        },
+        {
+          "action": "task.capture.1",
+          "medianMs": 43.928,
+          "maximumMs": 60.769,
+          "bounds": {
+            "medianMs": 45,
+            "maxMs": 50
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            41.677,
+            60.769,
+            44.462,
+            42.113,
+            43.928
+          ],
+          "slowestRawObservation": {
+            "index": 3,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "capture",
+            "action": "task.capture.1",
+            "rep": 3,
+            "microseconds": 60769,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 705,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 44320,
+                "cgroup.user_usec": 42685,
+                "cgroup.system_usec": 1634,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2751117,
+                "processIo.wchar": 2903588,
+                "processIo.syscr": 685,
+                "processIo.syscw": 753,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 2916352,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 191307776
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 809,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "sync.peerTask.whileFood.storageAdmission",
+          "medianMs": 41.051,
+          "maximumMs": 68.012,
+          "bounds": {
+            "medianMs": 55,
+            "maxMs": 65
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            40.948,
+            40.177,
+            42.859,
+            41.051,
+            68.012
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "peer",
+            "action": "sync.peerTask.whileFood.storageAdmission",
+            "rep": 6,
+            "microseconds": 68012,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 1,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 0,
+              "appendMicroseconds": 0,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 79210,
+                "cgroup.user_usec": 73238,
+                "cgroup.system_usec": 5971,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2703602,
+                "processIo.wchar": 2884736,
+                "processIo.syscr": 669,
+                "processIo.syscw": 752,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 2891776,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 243949568
+            },
+            "ownPhysicalDelta": 0,
+            "readFilesDelta": 1,
+            "semanticValidationsDelta": 1,
+            "taskRows": 803,
+            "foodContainers": 335,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "cardinality500.food.contents.APIonly",
+          "medianMs": 10.463,
+          "maximumMs": 25.533,
+          "bounds": {
+            "medianMs": 20,
+            "maxMs": 20
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            10.463,
+            10.263,
+            10.234,
+            11.752,
+            25.533
+          ],
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food-cardinality500",
+            "action": "cardinality500.food.contents.APIonly",
+            "rep": 6,
+            "microseconds": 25533,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 545,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 12292,
+                "cgroup.user_usec": 10429,
+                "cgroup.system_usec": 1864,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2654853,
+                "processIo.wchar": 2656027,
+                "processIo.syscr": 660,
+                "processIo.syscw": 650,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 2662400,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 209793024
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 503,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "firstDerived.mixed.undo",
+          "medianMs": 17.869,
+          "maximumMs": 38.759,
+          "bounds": {
+            "medianMs": 30,
+            "maxMs": 35
+          },
+          "failingStatistics": [
+            "maxMs"
+          ],
+          "samplesMs": [
+            38.759,
+            17.424,
+            17.869,
+            19.717,
+            17.21
+          ],
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "first-derived-mixed",
+            "action": "firstDerived.mixed.undo",
+            "rep": 2,
+            "microseconds": 38759,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1749686,
+              "appendCalls": 1,
+              "appendMicroseconds": 8949,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 17731,
+                "cgroup.user_usec": 15547,
+                "cgroup.system_usec": 2185,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 7346,
+                "processIo.wchar": 88342,
+                "processIo.syscr": 17,
+                "processIo.syscw": 43,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 94208,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 238817280
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 798,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        }
+      ],
+      "peerFood": {
+        "allSamplesMs": [
+          10.198,
+          10.334,
+          11.339,
+          10.527,
+          12.68
+        ],
+        "medianMs": 10.527,
+        "maxMs": 12.68,
+        "warmupSamplesMs": [
+          10.234,
+          10.217
+        ]
+      },
+      "peerTask": {
+        "allSamplesMs": [
+          40.948,
+          40.177,
+          42.859,
+          41.051,
+          68.012
+        ],
+        "medianMs": 41.051,
+        "maxMs": 68.012,
+        "warmupSamplesMs": [
+          59.358,
+          42.414
+        ]
+      }
+    }
+  },
+  "paired": [
+    {
+      "comparison": "task-own-history",
+      "status": "passed",
+      "failures": {}
+    },
+    {
+      "comparison": "food-own-history",
+      "status": "timing-failed",
+      "failures": {
+        "firstDerived.mixed.undo": {
+          "smallMedianMs": 16.608,
+          "largeMedianMs": 17.869,
+          "medianBoundMs": 23.76,
+          "smallMaximumMs": 20.312,
+          "largeMaximumMs": 38.759,
+          "maximumBoundMs": 33.4368
+        }
+      }
+    }
+  ]
+}

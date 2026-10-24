@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb xdotool dbus-x11 flatpak librsvg2-common
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb xdotool dbus-x11 flatpak librsvg2-common ${{ github.ref == 'refs/heads/fix/rc4-task-latency-20261022' && 'gdb' || '' }}
       - name: Prepare reviewed AppStream packaging tools
         run: python3 packaging/linux/prepare_appstream_tools.py --destination "$RUNNER_TEMP/reviewed-appstream" --github-path "$GITHUB_PATH"
       - uses: ./.github/actions/setup-flutter
@@ -44,9 +44,43 @@ jobs:
       - run: python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle
       - name: Smoke-test native release startup with fresh and warm cache
         id: linux-startup
+        timeout-minutes: 8
         run: |
           mkdir -p linux-startup-diagnostics
+          if [[ "$GITHUB_REF" == refs/heads/fix/rc4-task-latency-20261022 ]]; then
+            mkdir "$RUNNER_TEMP/rc4-startup-cores"
+            original_pattern="$(cat /proc/sys/kernel/core_pattern)"
+            trap 'printf "%s\n" "$original_pattern" | sudo tee /proc/sys/kernel/core_pattern > /dev/null' EXIT
+            trap 'exit 130' INT
+            trap 'exit 143' TERM
+            printf '%s\n' "$RUNNER_TEMP/rc4-startup-cores/core.%p" | sudo tee /proc/sys/kernel/core_pattern > /dev/null
+            ulimit -c 524288
+          fi
+          set +e
           xvfb-run -a dbus-run-session -- python3 tool/measure_startup.py --tasks 10 --runs 2 --workspace "$RUNNER_TEMP/tandemlog-performance" --diagnostics linux-startup-diagnostics > linux-startup.json 2> linux-startup-diagnostics/harness.stderr.log
+          original_status=$?
+          set -e
+          if [[ "$GITHUB_REF" == refs/heads/fix/rc4-task-latency-20261022 ]]; then
+            set +e
+            python3 tool/collect_linux_core_stacks.py --source "$GITHUB_WORKSPACE" --cores "$RUNNER_TEMP/rc4-startup-cores" --output linux-startup-diagnostics/postmortem
+            collector_status=$?
+            set -e
+            if [[ "$original_status" == 0 ]]; then exit "$collector_status"; fi
+          fi
+          exit "$original_status"
+      - name: Preserve RC4 postmortem and exact test-only bundle
+        if: always() && github.ref == 'refs/heads/fix/rc4-task-latency-20261022' && steps.linux-startup.outcome != 'skipped'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: RC4-required-ci-linux-close
+          path: |
+            linux-startup.json
+            linux-startup-diagnostics/**/*.json
+            linux-startup-diagnostics/**/*.txt
+            linux-startup-diagnostics/**/*.log
+            build/linux/x64/release/bundle/**
+          retention-days: 5
+          if-no-files-found: warn
       - name: Preserve failed startup diagnostics
         if: failure() && steps.linux-startup.outcome == 'failure'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9

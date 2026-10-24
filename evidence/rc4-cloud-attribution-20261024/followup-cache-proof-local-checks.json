@@ -1,0 +1,35 @@
+{
+  "scope": "local same-byte proof encoding follow-up",
+  "unitTests": 1502,
+  "unitSeconds": 388,
+  "focusedTests": 29,
+  "tools": 171,
+  "formatFiles": 394,
+  "formatChanges": 0,
+  "analysis": "pass",
+  "workflowSyntax": "YAML parse and bash -n pass",
+  "performanceAccepted": false,
+  "nativeCrashCleared": false,
+  "logs": {
+    "rc4-direct-utf8-full-unit.log": {
+      "path": "/workspace/toolchains/logs/rc4-direct-utf8-full-unit.log",
+      "sha256": "09cd3bc3787c06703cfd0477a81938b3b3142c82bf32d759a8675d058d5be90c"
+    },
+    "rc4-direct-utf8-tools.log": {
+      "path": "/workspace/toolchains/logs/rc4-direct-utf8-tools.log",
+      "sha256": "be7f0783f864f61ac47bc20a563c3af40b35ebc132f75fef8b3675a075983177"
+    },
+    "rc4-direct-utf8-final-analysis.log": {
+      "path": "/workspace/toolchains/logs/rc4-direct-utf8-final-analysis.log",
+      "sha256": "3f9cba40c0e0f3b7ef871dc88071f27d697024b699f287517a2018d87ae90183"
+    },
+    "rc4-direct-utf8-format.log": {
+      "path": "/workspace/toolchains/logs/rc4-direct-utf8-format.log",
+      "sha256": "2d44ebef6b16f3b2c8c3d1026c1176beb7e3800ed06eff76b208c1ef77d9f38f"
+    },
+    "rc4-direct-utf8-focused.log": {
+      "path": "/workspace/toolchains/logs/rc4-direct-utf8-focused.log",
+      "sha256": "2573a1aac5e4bb2af717d20b051f48f2ff8a17d9c6c2f64dae909efadbbc6947"
+    }
+  }
+}

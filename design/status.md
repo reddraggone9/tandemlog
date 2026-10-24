@@ -41,6 +41,24 @@ An original-source close diagnostic now uses cb1ea0e, matching native/package
 setup and the unchanged startup harness, with post-fault core/stack capture.
 It performs no timing retry; raw cores are excluded from uploaded artifacts.
 
+The identity-repair exact CI40129495617 passed Windows/Android and all Linux
+unit/build checks, but Linux normal close again crashed. Its enforcing AOT run
+passed correctness/232 metrics across all three shapes, with39 absolute failures
+and one paired Food-history maximum failure; Task-history pairing passed.
+Zero timing retries were used. The corrected full-prefix original-source control
+40132695520 closed normally and produced no core, leaving the observed crash
+unresolved. No native lifetime workaround is inferred from clean controls.
+
+The next proof-encoding repair retains the same row/ready-ID digest bytes while
+avoiding a full intermediate JSON string. Component and same-fixture startup
+probes preserve correctness/replay and observe lower warm proof/total medians;
+cold startup did not improve. Focused29 tests,171 tooling checks, analysis and
+formatting pass. Full current units pass1502 cases in6m28s; exact-commit CI is
+required next.
+The actual Linux CI startup step now prepares bounded post-fault stack capture
+on the repair branch, retaining its original launch, failure status and raw-core
+exclusion. All budgets and native/hardware acceptance qualifications remain.
+
 ## Latest development result - 2026-10-21
 
 [Current acceptance](../evidence/coordinated-cutover-build99/README.md) records source0acfb3b and CI39633973437: all three jobs green,203 native Linux cases passed,1314 current unit/host cases,89 tooling checks and8 external-copy controls. Exact original-payload GTK Save/peer-while-Food/restart and200-percent Light/Dark checks passed. Android06 independently accepted the affected source243d253 debug-APK modal/restart flows; earlier source-specific peer/tail coverage retains its attribution. All temporary labs stopped with settings restoration and independent process checks. Local desktop and Android demonstrations retain their exact source labels.

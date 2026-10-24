@@ -1,0 +1,29 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
+void main() {
+  for (final shape in ['dense-1', 'dense-2', 'dense-food']) {
+    final value=jsonDecode(File('/workspace/scratch/rc4-cache-digest-inputs/$shape.json').readAsStringSync());
+    // Restore actual SQLite BLOB types before measuring both encoders.
+    for (final table in value['rows'] as List) {
+      for (final row in table as List) {
+        for(var i=0;i<(row as List).length;i++) {
+          if(row[i] is List) row[i]=Uint8List.fromList((row[i] as List).cast<int>());
+        }
+      }
+    }
+    String before()=>sha256.convert(utf8.encode(jsonEncode(value))).toString();
+    String after()=>sha256.convert(JsonUtf8Encoder().convert(value)).toString();
+    final expected=before(); if(after()!=expected) throw StateError('Digest differs');
+    final old=<int>[], next=<int>[];
+    for(var i=0;i<12;i++) {
+      for(final which in (i.isEven?[0,1]:[1,0])) {
+        final watch=Stopwatch()..start();final hash=which==0?before():after();final us=watch.elapsedMicroseconds;
+        if(hash!=expected) throw StateError('Digest differs');
+        if(i>=2) (which==0?old:next).add(us);
+      }
+    }
+    print(jsonEncode({'shape':shape,'digest':expected,'beforeUs':old,'afterUs':next,'scope':'pure digest over retained SQLite rows; not startup/action acceptance'}));
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "diagnosticOnly": true,
+  "acceptance": false,
+  "applicationRerunByCollector": false,
+  "rawCoresUploaded": false,
+  "collectorSHA256": "1e2cf7cab18be19696b0f9772b6d3cc78fecf96087b8b0f7171b5f36e3ff7fdb",
+  "sourceRevision": "cb1ea0e1317cd4550ced8349894076652d4e0cfd",
+  "binarySHA256": "a1ddd8b7877b4467767e15f441158138a75a75b2e2e372ac617232d2a7020343",
+  "cores": [],
+  "certifiedApplicationPIDs": [
+    9828,
+    9904
+  ],
+  "coreCount": 0,
+  "runURL": "https://github.com/reddraggone9/tandemlog/actions/runs/40132695520",
+  "workflowSource": "c602178bc428625b92c11301ce83f5d0d57ab68e",
+  "artifactId": 12575737178,
+  "artifactSHA256": "47a47ef4205814c428badd4da713bfc9256f7b9080690bbc7d6d8167967e7b25",
+  "originalFailureCleared": false,
+  "runs": [
+    {
+      "run": 1,
+      "passed": true,
+      "cleanWitnessVerified": false,
+      "closeMode": "normal",
+      "external_ms": 6960,
+      "marker": "TANDEMLOG_READY_MS=2113 FILES_READ=2",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=76",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+        "TANDEMLOG_READY_MS=2113 FILES_READ=2"
+      ],
+      "external_main_ms": 4843,
+      "external_first_frame_ms": 4923,
+      "shutdown": {
+        "requestedMode": "normal",
+        "normalExitVerified": true,
+        "method": "owned-window-WM_DELETE_WINDOW",
+        "pid": 9828,
+        "window": "2097155",
+        "globalFocusOrInput": false,
+        "processExit": 0,
+        "elapsedMs": 283.56
+      },
+      "process_exit": 0,
+      "witnessBeforeLaunch": {
+        "taskProofPresent": false,
+        "decodedProofPresent": false,
+        "taskProofShapeValid": false,
+        "decodedPayloadHashMatches": false,
+        "productionReuseVerified": false
+      },
+      "previousNormalExitVerified": false,
+      "canonical_payload_reads": 2,
+      "canonical_files": 1,
+      "startupCacheCounters": {
+        "warmTaskProjectionReuses": 0,
+        "decodedCacheReuses": 0,
+        "strictDecodedRecords": 3
+      },
+      "cleanTaskWitnessVerified": false,
+      "cleanDecodedWitnessVerified": false,
+      "witnessAfterClose": {
+        "taskProofPresent": true,
+        "decodedProofPresent": true,
+        "taskProofShapeValid": true,
+        "decodedPayloadHashMatches": true,
+        "productionReuseVerified": false,
+        "taskProofSHA256": "c928ef670c6a7155e38a0ab9daaaa2d3113d844b19e6ddd332c563d864fc8ffd",
+        "decodedPayloadSHA256": "67e2fe895766cfb307bc7628cd35c9a44cfce3f3edfbf8c365a336a8788834d8"
+      },
+      "cache": "first-launch-no-cold-boot-claim"
+    },
+    {
+      "run": 2,
+      "passed": true,
+      "cleanWitnessVerified": true,
+      "closeMode": "normal",
+      "external_ms": 441,
+      "marker": "TANDEMLOG_READY_MS=241 FILES_READ=2",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=65",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":1,\"decodedCacheReuses\":3,\"strictDecodedRecords\":0}",
+        "TANDEMLOG_READY_MS=241 FILES_READ=2"
+      ],
+      "external_main_ms": 196,
+      "external_first_frame_ms": 265,
+      "shutdown": {
+        "requestedMode": "normal",
+        "normalExitVerified": true,
+        "method": "owned-window-WM_DELETE_WINDOW",
+        "pid": 9904,
+        "window": "2097155",
+        "globalFocusOrInput": false,
+        "processExit": 0,
+        "elapsedMs": 124.811
+      },
+      "process_exit": 0,
+      "witnessBeforeLaunch": {
+        "taskProofPresent": true,
+        "decodedProofPresent": true,
+        "taskProofShapeValid": true,
+        "decodedPayloadHashMatches": true,
+        "productionReuseVerified": false,
+        "taskProofSHA256": "c928ef670c6a7155e38a0ab9daaaa2d3113d844b19e6ddd332c563d864fc8ffd",
+        "decodedPayloadSHA256": "67e2fe895766cfb307bc7628cd35c9a44cfce3f3edfbf8c365a336a8788834d8"
+      },
+      "previousNormalExitVerified": true,
+      "canonical_payload_reads": 2,
+      "canonical_files": 1,
+      "startupCacheCounters": {
+        "warmTaskProjectionReuses": 1,
+        "decodedCacheReuses": 3,
+        "strictDecodedRecords": 0
+      },
+      "cleanTaskWitnessVerified": true,
+      "cleanDecodedWitnessVerified": true,
+      "witnessAfterClose": {
+        "taskProofPresent": true,
+        "decodedProofPresent": true,
+        "taskProofShapeValid": true,
+        "decodedPayloadHashMatches": true,
+        "productionReuseVerified": false,
+        "taskProofSHA256": "c928ef670c6a7155e38a0ab9daaaa2d3113d844b19e6ddd332c563d864fc8ffd",
+        "decodedPayloadSHA256": "67e2fe895766cfb307bc7628cd35c9a44cfce3f3edfbf8c365a336a8788834d8"
+      },
+      "cache": "verified-clean-repeat"
+    }
+  ]
+}

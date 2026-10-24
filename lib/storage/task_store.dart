@@ -4884,7 +4884,9 @@ void _insertTaskCacheRows(
 }
 
 String _taskCacheDigest(List<List<List<Object?>>> rows, List<String> ready) =>
-    bytesDigest(utf8.encode(jsonEncode({'rows': rows, 'ready': ready})));
+    // Identical JSON UTF-8 bytes without a full intermediate UTF-16 string.
+    // The entire ordered row inventory and ready list still enter the proof.
+    bytesDigest(JsonUtf8Encoder().convert({'rows': rows, 'ready': ready}));
 
 /// Disposable, process-local semantic admission oracle. Complete candidate
 /// batches are staged together; a failed or non-monotonic candidate rebuilds

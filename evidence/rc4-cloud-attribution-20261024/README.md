@@ -233,3 +233,30 @@ pre-attached debugger, matching the original package/native-library environment.
 It captures a bounded core only after a fault and extracts stacks postmortem;
 only harness-certified PIDs are admitted, and raw cores remain outside artifacts.
 The original failure remains unwaived until identifying evidence supports a fix.
+
+## Exact identity-repair enforcement
+
+[CI40129495617](https://github.com/reddraggone9/tandemlog/actions/runs/40129495617)
+tested `c213ea98fce5cf8d43eddd2ab4144a001907ed47`, calibration=false.
+Windows and Android passed. Linux passed1500 units, tooling/native checks and
+the ordinary release build, then failed normal WM_DELETE close with SIGSEGV.
+The original startup result and every earlier failure remain retained.
+
+The [full performance receipt](followup-identity-enforcing-result.json) binds
+the archive/report hashes, unchanged limits, all failed samples/bounds and
+available CPU/append observations. All three shapes passed correctness and
+232-metric coverage, with zero retries. Task-history pairing passed; Food-history
+pairing failed only firstDerived.mixed.undo maximum38.759ms versus33.4368ms.
+There are39 absolute action/phase failures, including warm/cold startup and
+checklist additions. This remains a failed gate. The hosted CPU changed from
+AMD EPYC9V45 to Intel Xeon Platinum8573C; cross-run timing changes do not establish
+a controlled improvement. Combined append awaits and CPU brackets overlap and
+must not be subtracted as exact exclusive costs.
+
+Inspection of the measured warm proof path found allocation of a whole JSON
+string immediately before UTF-8 conversion. A narrow AOT component probe over
+actual closed synthetic SQLite row inventories compares the original algorithm
+with direct JsonUtf8Encoder conversion. Both retain identical SHA256 digests;
+the full row inventory, ready IDs and consumed-witness comparison remain.
+The candidate changes only encoding allocation. Full startup/action enforcement
+and native acceptance remain separate; the component probe does not clear them.

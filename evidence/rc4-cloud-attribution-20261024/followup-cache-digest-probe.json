@@ -1,0 +1,108 @@
+{
+  "scope": "pure cache proof encoding+SHA256 over real stopped synthetic SQLite inventories; not startup/action enforcement",
+  "accepted": false,
+  "sourceSHA256": "6a09f85b6cc90f131699b8139f5618124dead3f2457788830c79f7f5015a5d1a",
+  "binarySHA256": "fedacf314233a8462ef01a202f4b0730852311fda48e241dcdd108b4cbe2ce41",
+  "logSHA256": "23941fab29b0a8ccfe05ed141dcc2148be50bdedbbb29558d75c7d039972bbb5",
+  "retainedInputPins": {
+    "dense-1.json": "f353e801fcae4d5cc6bb7a1300e9267891cd81a87c8a7712db96920e8424cd78",
+    "dense-food.json": "c9b6873b67bb884bc2bee979dca23b4763cedb7b266af444525cc4b324af9d74",
+    "dense-2.json": "8ee7f0feb4a4d18b767197a873270e878528bf1b2f026dc61068e438cf55abff"
+  },
+  "samples": [
+    {
+      "shape": "dense-1",
+      "digest": "f353e801fcae4d5cc6bb7a1300e9267891cd81a87c8a7712db96920e8424cd78",
+      "beforeUs": [
+        56946,
+        54845,
+        54535,
+        55368,
+        55144,
+        55315,
+        54634,
+        54840,
+        53919,
+        54257
+      ],
+      "afterUs": [
+        39142,
+        41052,
+        41584,
+        41457,
+        39071,
+        39949,
+        38649,
+        39645,
+        38663,
+        40090
+      ],
+      "scope": "pure digest over retained SQLite rows; not startup/action acceptance",
+      "beforeMedianUs": 54842.5,
+      "afterMedianUs": 39797.0
+    },
+    {
+      "shape": "dense-2",
+      "digest": "8ee7f0feb4a4d18b767197a873270e878528bf1b2f026dc61068e438cf55abff",
+      "beforeUs": [
+        85572,
+        85664,
+        84447,
+        85002,
+        83232,
+        84919,
+        84538,
+        85665,
+        84256,
+        84855
+      ],
+      "afterUs": [
+        59828,
+        61816,
+        59093,
+        61711,
+        60727,
+        61348,
+        60878,
+        60356,
+        61523,
+        61315
+      ],
+      "scope": "pure digest over retained SQLite rows; not startup/action acceptance",
+      "beforeMedianUs": 84887.0,
+      "afterMedianUs": 61096.5
+    },
+    {
+      "shape": "dense-food",
+      "digest": "c9b6873b67bb884bc2bee979dca23b4763cedb7b266af444525cc4b324af9d74",
+      "beforeUs": [
+        54639,
+        54269,
+        55099,
+        54135,
+        53483,
+        53627,
+        52898,
+        54734,
+        54724,
+        54193
+      ],
+      "afterUs": [
+        38457,
+        38906,
+        38062,
+        39019,
+        41229,
+        38721,
+        41898,
+        38684,
+        38359,
+        38068
+      ],
+      "scope": "pure digest over retained SQLite rows; not startup/action acceptance",
+      "beforeMedianUs": 54231.0,
+      "afterMedianUs": 38702.5
+    }
+  ],
+  "format": "old utf8.encode(jsonEncode(value)) compared with JsonUtf8Encoder().convert(value); SHA256 identical for every sample"
+}

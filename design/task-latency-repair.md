@@ -477,3 +477,21 @@ scenario on the same three sealed fixtures passes before/after correctness and
 replay, with lower observed peer-Food medians; full enforcing/native acceptance
 remains separate. Exact prior absolute/paired failures and partial cost
 attribution are retained rather than replaced by those narrow observations.
+
+Exact identity-repair CI40129495617 passes correctness/232 metrics but retains
+39 absolute timing failures and one Food-history paired maximum failure; Task
+history pairing passes. Windows/Android jobs pass; Linux normal close still has
+an unresolved intermittent SIGSEGV. The latest separate original-source
+full-prefix control closed normally, which does not clear the retained crashes.
+
+The next small repair removes a full intermediate JSON string when hashing
+the closed Task projection proof, using direct UTF-8 JSON encoding with identical
+digest bytes. The full ordered row inventory, native BLOBs, ready-ID list,
+consumed witness, canonical comparison and corruption fallback remain.
+An independent old-format oracle and damaged-projection regression cover actual
+native checkpoints. [Component and startup receipts](../evidence/rc4-cloud-attribution-20261024/followup-cache-proof-startup.json)
+show lower warm-proof/total medians on the same sealed synthetic shapes, while
+cold startup did not improve. These are narrow observations, not full enforcement
+or hardware/UI acceptance. The next genuine-source CI also enables bounded
+post-fault stack capture in the actual Linux startup step on this repair branch;
+it preserves original exit status and excludes raw memory cores from artifacts.
