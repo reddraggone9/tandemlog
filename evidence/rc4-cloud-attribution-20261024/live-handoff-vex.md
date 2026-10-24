@@ -4,59 +4,54 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
-## Continuation update —2026-10-24 23:33 UTC
+## Continuation update —2026-10-24 23:42 UTC
 
-Cloud remains sole writer. Stop-write cutoff is2026-10-26 08:00 America/Chicago
-/13:00 UTC, or earlier actual quota exhaustion/access loss. No cutover occurred.
-Current account quota is unknown; no supported status endpoint is exposed.
+Cloud remains sole writer; no cutover occurred. Stop-write cutoff remains
+2026-10-26 08:00 America/Chicago /13:00 UTC, or earlier actual exhaustion/access
+loss. Account quota remains unknown; no supported status endpoint is exposed.
 
-Published UI fix is `fb13f68ee4c22cc92515c4ebe7e2379cb71238b4`: the unchanged
-Session Undo/Discard failure reproduced52s before it, and the original complete
-native case passes72s after it. Cancel now rebuilds Undo after releasing the
-draft-close guard, preserving dirty notes, canonical bytes and the same Undo
-entry. Full1505 units,171 tools,12 focused tests, analysis/format pass on that
-published source. Linux screenshots were inspected; demo videos/device and
-hardware timing acceptance remain pending.
+Current tested product and verified remote source is
+`a71d0bac2981f93189c6dc9bdc7e3354027a7cb5`. It includes `fb13f68`'s reproduced
+Undo/Cancel rendered-readiness fix and only one subsequent product change:
+retain the derived immutable Food ID string, with all constructors, byte proofs,
+readiness/peer/native/transaction/durability guards unchanged. Full1505 units
+pass6m25s,97 focused regressions pass, analysis clean,395 files format0 changes.
+Local all3-shape/232-metric AOT correctness/replay/prefix/source seals pass,0
+retries;11 absolute and4 paired failures remain, not acceptance.
 
-Baseline CI40139838647 is still running exact732ddac (executable inputs8005430),
-calibration=false. Windows and Android passed; Linux units/build/startup/normal
-close/package/install passed and its bounded native suite started22:57:54 UTC.
-AOT correctness/232 metrics pass all shapes, but10 absolute maxima and9 paired
-checks fail,0 eligible retries. Both close processes exit0 (189.994/77.204ms),
-no core; this does not clear the intermittent SIGSEGV. Keep this baseline's
-terminal evidence. The same-branch concurrency group cancels older active runs:
-**do not dispatch current-source CI until this baseline finishes**.
+Baseline [40139838647](https://github.com/reddraggone9/tandemlog/actions/runs/40139838647)
+finished23:38:48UTC without cancellation: Windows/Android pass, performance and
+Linux fail. Native202 pass/1 failure in40m29s is the same missing-Discard Session
+Undo defect fixed byfb13; baseline does not include it. Baseline performance
+retains10 absolute maxima/9 paired failures. Both normal closes exit0,
+189.994/77.204ms, no core; the intermittent SIGSEGV remains unresolved. Completed
+native log is `/workspace/scratch/rc4-baseline-native-ci-40139838647/job.log`, SHA
+`228a196a7d5ace74e5893f495fa6baaf6a6f8f7cf11c0bf21aee086f4c1c9add`.
 
-This successor candidate adds only a per-record immutable Food-ID
-string cache, matching LogEvent.id. No constructor/proof/transaction/durability
-check changes. Focused97 regressions pass. Full source-sealed uninstrumented
-local AOT completes all3 shapes/232 metrics/replay/prefix checks with0 retries;
-11 absolute and4 paired failures remain. Peer-Food/restore-one local paired
-checks fit, but the broader before/after Food command sample was mixed.
-The full1505-unit suite passes in6m25s; analysis is clean and formatting
-checks395 files with0 changes.
+Exactly one fresh enforcing [CI40143666264](https://github.com/reddraggone9/tandemlog/actions/runs/40143666264)
+was dispatched23:40:05UTC for exacta71d0ba,calibration=false, only after the
+baseline became terminal. All four jobs are progressing through setup/build;
+no result yet. Do not duplicate dispatch or cancel it with a same-branch run.
+This documentation successor changes no executable inputs.
 
-No active local build/test/profile session remains. Unit log:
-`/workspace/toolchains/logs/rc4-food-id-full-unit.log`. Completed sessions44676
-(units),33994 (analysis/format),36890 (AOT) and33989 (CPU profile) are terminal. CPU sampling has0 lost samples and
-symbolizes Dart; refresh/strict decode and close-time cache sealing are distinct
-sampled costs, not exclusive startup wall attribution. Raw profile remains
-`/workspace/scratch/rc4-cold-cpu-profile`; no raw stack memory was recorded.
+No active local build/test/profile command remains. Completed local AOT lives
+`/workspace/scratch/rc4-food-id-full-aot`; failed and corrected bounded warm-Undo
+profiles remain `/workspace/scratch/rc4-warm-undo-cpu-profile{,-v2}`. Corrected
+profile passes7 complete replay/prefix runs with407 samples/0 lost. Full readiness
+is~19.9% inclusive samples and append semantic validation~28.0%; these overlap and
+are not exclusive wall costs. The next scratch hypothesis is exact-raw-row reuse
+of readiness-state decoding, retaining every live SQL/readiness/dependency check.
+No product change for that hypothesis has been made. The first profiler-control
+failure is retained; its five-byte NUL-terminated acknowledgement is now verified.
 
-Candidate evidence: `followup-food-id-probe.json`, `followup-food-id-full-aot.json`,
-`followup-food-id-analysis.md`, `followup-cold-cpu-sample.json`. Baseline close
-artifact12579060643 SHA256
-`d28cc364e97d5272edd4c98121a9f7858b71e9192ebac1a62e515680d622632d`
-is verified at `/workspace/scratch/rc4-baseline-close-ci-40139838647`.
-Nonsecret configuration supplement is `configuration-locations-vex.md`.
-
-Next: commit/push this tested successor, retain baseline terminal logs, then
-dispatch exactly one fresh current-source CI
-with calibration=false. If a tested Food cache successor is ready, that single
-run covers it plus the UI fix; do not dispatch an obsolete intermediate source.
-All existing budgets/native/first-use/history-growth/release qualifications stay
-in force. No signing/publication/live work or foreground Windows activity occurs.
-The22:28 snapshot below is historical.
+Evidence: `followup-order-baseline-terminal.json`, `followup-food-id-analysis.md`,
+`followup-food-id-probe.json`, `followup-food-id-full-aot.json`,
+`followup-food-id-local-checks.json`, `followup-protected-undo-cpu-sample.json`.
+Configuration locations: `configuration-locations-vex.md`. Native screenshots
+for the UI fix were inspected; desktop/Android demos, full native Windows action/
+growth validation and hardware presentation acceptance remain pending. No
+foreground Windows/Farnsworth access occurred. No releases/live changes or looser
+limits are authorized. The22:28 snapshot below is historical.
 
 ## Checkout and conventions
 

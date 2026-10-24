@@ -1,0 +1,54 @@
+{
+  "runId": 40139838647,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40139838647",
+  "source": "732ddac905bc67410731b7ef3f1c42eaf77701b8",
+  "productInputs": "8005430e10be7b2af614565754779639301101f0",
+  "completedUTC": "2026-10-24T23:38:48Z",
+  "conclusion": "failure",
+  "cancelled": false,
+  "jobs": {
+    "windows": "success",
+    "android": "success",
+    "linux": "failure",
+    "performance": "failure"
+  },
+  "native": {
+    "passed": 202,
+    "failed": 1,
+    "elapsed": "40m29s",
+    "failure": "same Session Undo missing Discard at4177",
+    "includesFb13Fix": false,
+    "logSHA256": "228a196a7d5ace74e5893f495fa6baaf6a6f8f7cf11c0bf21aee086f4c1c9add"
+  },
+  "performance": {
+    "all3ShapesCorrectness": true,
+    "metricsPerShape": 232,
+    "absoluteMaximumFailures": 10,
+    "pairedFailures": 9,
+    "retries": 0,
+    "accepted": false
+  },
+  "normalClose": {
+    "artifactId": 12579060643,
+    "sha256": "d28cc364e97d5272edd4c98121a9f7858b71e9192ebac1a62e515680d622632d",
+    "exitCodes": [
+      0,
+      0
+    ],
+    "closeMs": [
+      189.994,
+      77.204
+    ],
+    "coreCount": 0,
+    "clearsHistoricalCrash": false
+  },
+  "successorCI": {
+    "runId": 40143666264,
+    "headSHA": "a71d0bac2981f93189c6dc9bdc7e3354027a7cb5",
+    "createdUTC": "2026-10-24T23:40:05Z",
+    "calibration": false,
+    "dispatchCount": 1,
+    "baselineTerminalBeforeDispatch": true,
+    "result": "pending"
+  }
+}
