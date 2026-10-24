@@ -91,3 +91,19 @@ The original cb1ea0e failure used the unmodified measure_startup.py queue/pipe r
 The next standalone diagnostic checks out exact cb1ea0e, uses the original Ubuntu24.04 package set plus GDB, restores its native-unit environment, builds the ordinary release binary and runs the unchanged original fresh/warm harness once. A bounded kernel core is produced only after a fault; GDB reads it after the harness exits. The prior kernel setting is restored. This does not change pre-fault app launch, readiness observation or normal-close input, and it retries no AOT timing experiment. Packaging-tool prewarming and host scheduling are not claimed identical.
 
 Only cores whose PIDs the original owned-window receipts certify are read. Raw memory cores are excluded from artifacts because ambient CI credentials could be present; retained stack output omits frame arguments/locals. Core hashes, binary hash, signal/stack status and every original harness result are retained. No crash workaround or SDK change is inferred from clean runs.
+
+## Full-prefix native-close capture
+
+The original-source isolated pair completed cleanly (fresh1307ms, warm225ms),
+with no core; its binary SHA matches the earlier GDB control. That does not
+clear the failure. The new full identity-repair CI40129495617 again failed normal
+close with SIGSEGV after startup3351ms, close1882.567ms. Thus two full pipelines
+have failed while the isolated pair did not. This is a small observed pattern,
+not proof that prior test work causes the crash.
+
+The next original-source diagnostic includes the original Linux check prefix:
+AppStream preparation, formatting/analysis, all units, native/frozen contracts and
+tooling, followed by the same ordinary build and original fresh/warm harness.
+Post-fault core collection remains enabled, with no debugger before the fault.
+This is a distinct execution-condition control, not an AOT retry or additional
+unchanged clean-close sampling. Product/performance source remains c213ea9.

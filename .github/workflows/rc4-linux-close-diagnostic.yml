@@ -44,6 +44,16 @@ jobs:
           python3 tool/build_text_engine.py --platform linux --output-dir "$RUNNER_TEMP/native-unit"
           python3 tool/native_build_gates.py verify_library "$RUNNER_TEMP/native-unit/libtandemlog_text.so"
           echo "TANDEMLOG_TEXT_LIBRARY=$RUNNER_TEMP/native-unit/libtandemlog_text.so" >> "$GITHUB_ENV"
+      - name: Reproduce original Linux check prefix before startup
+        run: |
+          python3 packaging/linux/prepare_appstream_tools.py --destination "$RUNNER_TEMP/reviewed-appstream" --github-path "$GITHUB_PATH"
+          dart format --output=none --set-exit-if-changed lib test integration_test tool
+          flutter analyze
+          flutter test
+          cargo +1.99.0 test --locked --offline --manifest-path native/text_engine/Cargo.toml --target-dir "$TANDEMLOG_TEXT_TARGET_DIR"
+          export SPIKE_LIBRARY="$TANDEMLOG_TEXT_LIBRARY"
+          python3 -m unittest discover -s experiments/yrs-spike/tests -v
+          python3 -m unittest discover -s tool -p 'test_*.py'
       - name: Build ordinary release application without source modifications
         run: |
           flutter build linux --release --no-pub
