@@ -19,11 +19,73 @@ The runner accepts no caller package configuration, source override or alternate
 
 One eligible timing rerun repeats ALL THREE original sealed shapes and BOTH comparisons in fresh processes/workload profiles, using the original sealed fixtures and all original bindings. It never regenerates different native actor bytes, cherry-picks action samples or repeats only until a ratio passes.
 
-The shared validation workflow has a separate required Linux performance job; it is also required by signed-candidate checks. Its 65-minute whole-job bound includes native setup; the gate runs as the existing runner UID in a transient system-manager service with 55-minute runtime, 6 GiB physical-memory cap, no swap, 2 CPU quota and 128-task cap, plus bounded compile/generation/workload children. An outer timeout and exit/signal trap stop that exact service; actual cgroup bounds are recorded and required before release measurement. It retains preflight stderr/stdout, compile/generation logs, every timing attempt, paired comparisons, source/tool/fixture seals and per-size fixture contracts, including failures. Synthetic workspace payloads and local SQLite profiles are excluded from uploaded artifact paths. The committed limits remain inactive and the workflow SHA sentinel prevents acceptance until calibration review. The additive Food shape copies dense-2's provisional absolute and scaling rules only as an inactive draft; this does not approve those loose ratios or claim the roughly 100 ms goal. Fresh exact-source artifacts and hosted calibration are required after this tooling change. Food editor/controller construction/cancel/paint is explicitly a native-UI coverage gap; no storage-only number substitutes for it.
+The shared validation workflow has a separate required Linux performance job; it is also required by signed-candidate checks. Its 65-minute whole-job bound includes native setup; the gate runs as the existing runner UID in a transient system-manager service with 55-minute runtime, 6 GiB physical-memory cap, no swap, 2 CPU quota and 128-task cap, plus bounded compile/generation/workload children. An outer timeout and exit/signal trap stop that exact service; actual cgroup bounds are recorded and required before release measurement. It retains preflight stderr/stdout, compile/generation logs, every timing attempt, paired comparisons, source/tool/fixture seals and per-size fixture contracts, including failures. Synthetic workspace payloads and local SQLite profiles are excluded from uploaded artifact paths. The committed initial calibrated limits are active and the workflow pins their exact SHA. Fresh exact-source enforcement is required after tooling or application changes; measure-only observations do not satisfy it. Food editor/controller construction/cancel/paint is explicitly a native-UI coverage gap; no storage-only number substitutes for it.
 
 The initial calibration showed that the pre-existing task.title/notes/titleAndNotes and task.editorOpenCancel labels select the fixture's inherited recurring successor with a copied checklist, rather than an explicit Task birth. Those labels and observations are retained and their target is now asserted. Separate explicitTask.* cases add native-born ordinary Task title/Notes/both Save, Undo, editor preparation and complete native cancellation; they do not replace the inherited cases or excuse their scaling failures.
 
 Manual development CI can explicitly request performance calibration while initial limits or a runner-class review is pending. This collects the same source-bound observations with releaseGateAccepted=false; it cannot satisfy release acceptance. Signed-candidate validation explicitly fixes performance_calibration=false, and normal push/PR CI also defaults to the enforcing path. No calibration switch is exposed by candidate or promotion workflows.
+
+## Initial performance acceptance
+
+Choose each action's timing boundary and budget from its intended responsiveness
+before accepting the implementation. Do not measure a slow first implementation
+and add headroom to turn it into an approved baseline. Ordinary local actions
+retain the below-100 ms objective for input to visible acknowledgment; a passing
+storage-only measurement does not establish that outcome.
+
+Initial acceptance must use realistic public synthetic fixtures, representative
+existing/converted entities, first-use and steady-state samples, and relevant
+history-growth comparisons. Reconcile exclusive wall-time costs, state timing
+and instrumentation boundaries, and review repeated scans, decoding, validation,
+SQL work and refresh/render work for redundancy. Optimize demonstrated misses
+within existing integrity and durability guarantees. A genuinely necessary
+exception requires Lee's informed approval of the measured cost and guarantee
+tradeoff; calibration must not approve it automatically. Existing limits stay
+in force until Lee explicitly approves a change.
+
+Startup and bulk actions may need distinct, justified budgets and visible
+responsiveness checks. Define the operation size, useful-progress endpoint and
+UI blocking boundary explicitly; neither category is a blanket exemption.
+Regression prevention follows this initial acceptance, preserving the accepted
+requirements rather than legitimizing a slow starting point.
+
+## Maintaining action coverage
+
+Performance coverage is part of implementing a new or materially changed user
+action, including changes to its refresh, Undo, background maintenance or editor
+lifecycle. Update the same change with:
+
+- Registered metric IDs and the action inventory in coverage-v1.json, naming the
+  production entry point, target/fixture, timing boundary and remaining gaps.
+  Keep existing case IDs and their meaning stable; do not rename or drop a slow
+  case to make a gate pass.
+- Correctness assertions for the acknowledged result, relevant Undo and canonical
+  integrity. Benchmark work must use public synthetic data and exercise existing
+  imported/converted entities when those are supported.
+- Explicit versioned per-case budgets for every applicable fixture shape, plus
+  matched-history growth checks where history can affect the path. Investigate
+  redundant work before proposing a larger budget. Only Lee may approve loosening
+  an existing limit; neither calibration nor a new metric name bypasses that rule.
+- Faithful release-mode UI-path coverage for user-facing behavior: use the actual
+  callback, editor/capture lifetime, refresh/maintenance and visible acknowledgment
+  as appropriate. Keep storage/application and input-to-visible-response budgets
+  distinct. A storage-only case leaves a documented UI gap, not UI acceptance.
+
+Before merging and again before release, a reviewer must reconcile the actual
+Task/Food controls, shortcuts and background-triggered work with that inventory.
+Check new paths, renamed/removed actions, production API references, representative
+targets and declared gaps. CI cannot discover every possible unregistered action
+or prove that a descriptive UI reference still means the same behavior. Do not
+call an inventory complete merely because its registered cases pass. Native UI
+coverage that is not implemented or has not passed remains explicitly pending.
+
+The policy tests compare the registered IDs with every fixture's absolute
+budgets and both growth-rule sets. Runtime evaluation also rejects missing or
+unknown observed cases, invalid values and incomplete sample sequences. A stale
+registered ID therefore cannot be silently skipped by a workload. These checks
+complement the human inventory review; they do not replace it. Correctness and
+coverage failures are terminal, and only the documented single externally
+justified timing rerun is permitted.
 
 ## Cost accounting
 
@@ -77,7 +139,7 @@ runs in finally outside the timed labels, so it is not a separately timed cancel
 action. These gaps remain visible in coverage-v1.json until separately measured.
 
 
-The separate food-cardinality500 family starts from a fresh copy of each original sealed shape and adds synthetic containers through the production API outside timers, requiring 500 active containers plus 3 deleted containers (503 total). Setup uses mostly unique names and explicit stock, retained, inbox and deleted cohorts. The original 191 metrics remain; 33 cardinality500.* metrics add imported Food1000 brand Save/Undo, single/group Food commands, views, matching and unmatched filters, and unchanged Food refresh. Mode and positive-filter results must contain exactly the captured cohort IDs and counts, without duplicates; these assertions run outside timers. Undo must restore the full logical state; Task values, original prefixes and peer bytes remain checked. Setup adds both containers and canonical records and allocates new IDs, recorded separately: this is current-state stress, not isolated cardinality causation or byte-identical per-family histories. All added limits remain inactive pending calibration review.
+The separate food-cardinality500 family starts from a fresh copy of each original sealed shape and adds synthetic containers through the production API outside timers, requiring 500 active containers plus 3 deleted containers (503 total). Setup uses mostly unique names and explicit stock, retained, inbox and deleted cohorts. The original 191 metrics remain; 33 cardinality500.* metrics add imported Food1000 brand Save/Undo, single/group Food commands, views, matching and unmatched filters, and unchanged Food refresh. Mode and positive-filter results must contain exactly the captured cohort IDs and counts, without duplicates; these assertions run outside timers. Undo must restore the full logical state; Task values, original prefixes and peer bytes remain checked. Setup adds both containers and canonical records and allocates new IDs, recorded separately: this is current-state stress, not isolated cardinality causation or byte-identical per-family histories. These added cases are included in the active initial calibrated limits; their storage boundary remains distinct from actual UI acceptance.
 
 A separate converted-food-confirmed family measures imported Food1000 brand Save and Undo through the same exact-receipt confirmation and real session Undo history callbacks as the app. These additive confirmedSave/confirmedUndo labels include work beyond the preserved backend-only timings; they still exclude widget preparation, publication and paint. Food500 expected mode memberships preserve the original input's retained and inbox cohorts. The failed inventory-only setup trial remains external evidence.
 

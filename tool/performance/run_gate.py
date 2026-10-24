@@ -19,7 +19,7 @@ import sys
 import time
 import shutil
 import urllib.parse
-from gate_policy import evaluate, evaluate_scaling, may_rerun, Evaluation
+from gate_policy import evaluate, evaluate_scaling, may_rerun, Evaluation, validate_registered_coverage
 
 def digest(path):
     value=hashlib.sha256()
@@ -300,6 +300,7 @@ def main():
     tools=pathlib.Path(__file__).resolve().parent;limits_path=tools/'limits-v1.json';limits=json.loads(limits_path.read_text());limits['sha256']=digest(limits_path)
     if not args.measure_only and (limits.get('releaseReady') is not True or args.expected_limits_sha256!=limits['sha256']):raise SystemExit('Versioned limits are inactive or not workflow-bound; release gate fails closed.')
     comparisons=scaling_specs(limits)
+    validate_registered_coverage(json.loads((tools/'coverage-v1.json').read_text()),limits,comparisons)
     pins=source_pins(args.repo.resolve(),tools);packages,compiled_pins,compiled_seals,package_names=create_owned_source_fork(args.repo.resolve(),root)
     imports=validate_project_imports(tools/'benchmark.dart',root/'source',package_names)
     if not args.measure_only and tools!=(args.repo.resolve()/'tool/performance'):raise SystemExit('Release tooling must come from this exact repository checkout')

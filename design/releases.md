@@ -6,13 +6,30 @@ Every executable-change main push and every pull request runs formatting, analys
 
 The separate [release performance gate](performance-gate.md) measures the
 versioned synthetic Task/Food action inventory in AOT mode, including matched
-history sizes. Its initial limits remain inactive until reviewed runner
-calibration; a measure-only development run does not satisfy a signed candidate.
-After activation, timing-only reruns require independently observed external
+history sizes. Its initial calibrated limits are active and pinned by SHA;
+a measure-only development run does not satisfy a signed candidate.
+Timing-only reruns require independently observed external
 load, preserve both attempts and are bounded to one complete three-shape,
 two-comparison rerun. Every implicated size needs independent noise evidence.
 Correctness failures cannot be retried as noise. Native input-to-visible-response
 acceptance remains separate from storage/application timings.
+
+Before candidate acceptance, reconcile performance coverage with the actual
+changed UI/actions using the [maintenance contract](performance-gate.md#maintaining-action-coverage):
+
+- Initial performance acceptance meets intended budgets chosen before accepting
+  the implementation, with realistic first-use/warm samples, exclusive cost
+  accounting and redundant-work review. A slow first implementation is not its
+  own baseline; justified exceptions require Lee's informed approval.
+- New or materially changed actions have registered cases, correctness assertions,
+  explicit budgets and relevant history-growth coverage; removed or stale case
+  IDs and production references have been reviewed.
+- User-facing paths have faithful release-mode UI evidence, including refresh and
+  Undo where relevant. Record unimplemented or failed coverage explicitly;
+  storage-only passes do not close a visible-response gap.
+- The enforcing gate and policy tests pass for the candidate source. Preserve
+  failed attempts and any permitted noise rerun; any budget loosening has Lee's
+  explicit approval. Human review accounts for actions CI cannot discover.
 
 To prepare an authorized candidate, dispatch **Build signed candidate** on main. It checks the public signing pin and monotonically increasing Android build number, runs the full Linux/Windows/debug-Android matrix, then produces a universal non-debuggable APK using the owner-provided signing identity. No publishing occurs. Its `android-release` artifact includes APK, checksum, public signature report and source/version/certificate metadata. Download and install this exact APK for native acceptance before publishing.
 

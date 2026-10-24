@@ -11,6 +11,35 @@ class Evaluation:
     failures: tuple
     summaries: dict
 
+def validate_registered_coverage(coverage, limits, comparisons):
+    """Reject registry/budget drift before compiling or measuring a workload."""
+    ids = coverage.get("storageApplicationActionIds")
+    if (not isinstance(ids, list) or not ids or
+            any(not isinstance(action, str) or not action.strip() or
+                action != action.strip() for action in ids) or
+            len(ids) != len(set(ids))):
+        raise ValueError("Registered performance coverage IDs must be unique nonempty strings")
+    registered = set(ids)
+    sizes = limits.get("actionsBySize")
+    if not isinstance(sizes, dict) or not sizes:
+        raise ValueError("Registered performance coverage requires per-size budgets")
+    for size, actions in sizes.items():
+        if not isinstance(actions, dict) or set(actions) != registered:
+            raise ValueError("Registered performance coverage/budget IDs differ: " + str(size))
+        for action, budget in actions.items():
+            if not isinstance(budget, dict) or any(
+                    type(budget.get(key)) not in (int, float) or
+                    not math.isfinite(budget[key]) or budget[key] <= 0
+                    for key in ("medianMs", "maxMs")):
+                raise ValueError("Registered performance coverage has invalid budget: " + action)
+    if not isinstance(comparisons, dict) or not comparisons:
+        raise ValueError("Registered performance coverage requires growth comparisons")
+    for name, spec in comparisons.items():
+        actions = spec.get("rules") if isinstance(spec, dict) else None
+        if not isinstance(actions, dict) or set(actions) != registered:
+            raise ValueError("Registered performance coverage/growth IDs differ: " + str(name))
+    return tuple(ids)
+
 def evaluate(result, limits):
     if result.get("correctnessPassed") is not True:
         return Evaluation("correctness-failed", ("correctness",), {})

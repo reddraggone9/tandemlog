@@ -1,4 +1,5 @@
 import tempfile
+import copy
 import json
 import subprocess
 import os
@@ -72,6 +73,68 @@ class PerformanceGateTests(unittest.TestCase):
     def test_own_throttling_or_missing_noise_insufficient(self):
         for noise in [{},{'ownCpuThrottled':True},{**self.noise,'otherCpuMicrosecondsDelta':0},{**self.noise,'sampleWindowCovered':False}]:
             self.assertFalse(policy.may_rerun(self.timing_failure(),0,noise,self.binding,self.binding))
+
+class RegisteredCoveragePreflightTests(unittest.TestCase):
+    def setUp(self):
+        self.coverage=json.loads((PATH.parent/'coverage-v1.json').read_text())
+        self.limits=json.loads((PATH.parent/'limits-v1.json').read_text())
+    def check(self):
+        return policy.validate_registered_coverage(
+            self.coverage,self.limits,run_gate.scaling_specs(self.limits))
+    def test_committed_registry_matches_all_budgets_and_growth_rules(self):
+        self.assertEqual(set(self.check()),set(self.coverage['storageApplicationActionIds']))
+    def test_new_or_stale_registered_case_cannot_be_unbudgeted(self):
+        self.coverage['storageApplicationActionIds'].append('unbudgeted.future.action')
+        with self.assertRaisesRegex(ValueError,'coverage/budget'):self.check()
+    def test_removed_registry_id_cannot_leave_stale_budgets(self):
+        self.coverage['storageApplicationActionIds'].pop()
+        with self.assertRaisesRegex(ValueError,'coverage/budget'):self.check()
+    def test_duplicate_and_malformed_registry_ids_fail(self):
+        original=copy.deepcopy(self.coverage)
+        for value in [original['storageApplicationActionIds'][0],None,'',' trailing ']:
+            with self.subTest(value=value):
+                self.coverage=copy.deepcopy(original)
+                self.coverage['storageApplicationActionIds'].append(value)
+                with self.assertRaisesRegex(ValueError,'coverage IDs'):self.check()
+    def test_missing_or_invalid_budget_in_any_shape_fails(self):
+        for size in self.limits['actionsBySize']:
+            original=copy.deepcopy(self.limits)
+            action=self.coverage['storageApplicationActionIds'][0]
+            with self.subTest(size=size,kind='missing'):
+                del self.limits['actionsBySize'][size][action]
+                with self.assertRaisesRegex(ValueError,'coverage/budget'):self.check()
+            self.limits=copy.deepcopy(original)
+            for value in [0,True,float('inf')]:
+                with self.subTest(size=size,value=value):
+                    self.limits['actionsBySize'][size][action]['maxMs']=value
+                    with self.assertRaisesRegex(ValueError,'invalid budget'):self.check()
+                self.limits=copy.deepcopy(original)
+    def test_stale_id_in_either_growth_comparison_fails(self):
+        comparisons=run_gate.scaling_specs(self.limits)
+        for name in comparisons:
+            modified=copy.deepcopy(comparisons)
+            action=self.coverage['storageApplicationActionIds'][0]
+            del modified[name]['rules'][action]
+            with self.subTest(comparison=name):
+                with self.assertRaisesRegex(ValueError,'coverage/growth'):
+                    policy.validate_registered_coverage(self.coverage,self.limits,modified)
+    @unittest.skipUnless(sys.platform.startswith('linux'),'Linux runner preflight')
+    def test_stale_registry_fails_measure_only_before_source_fork_or_compiler(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=pathlib.Path(tmp);tools=root/'tools';tools.mkdir()
+            for name in ['run_gate.py','gate_policy.py','limits-v1.json']:
+                (tools/name).write_bytes((PATH.parent/name).read_bytes())
+            self.coverage['storageApplicationActionIds'].append('unbudgeted.future.action')
+            (tools/'coverage-v1.json').write_text(json.dumps(self.coverage))
+            output=root/'output'
+            result=subprocess.run([sys.executable,str(tools/'run_gate.py'),
+                '--repo',str(root/'unavailable-repo'),'--dart',str(root/'unavailable-dart'),
+                '--native-library',str(root/'native'),'--sqlite-library',str(root/'sqlite'),
+                '--output',str(output),'--measure-only'],capture_output=True,text=True,timeout=10)
+            self.assertNotEqual(result.returncode,0)
+            self.assertIn('Registered performance coverage/budget IDs differ',result.stderr)
+            self.assertFalse((output/'source').exists())
+            self.assertFalse((output/'compile.log').exists())
 
 class RunnerReceiptTests(unittest.TestCase):
     def test_measurements_keep_explicit_warmups_and_startup_components(self):
