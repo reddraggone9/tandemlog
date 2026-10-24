@@ -107,3 +107,18 @@ tooling, followed by the same ordinary build and original fresh/warm harness.
 Post-fault core collection remains enabled, with no debugger before the fault.
 This is a distinct execution-condition control, not an AOT retry or additional
 unchanged clean-close sampling. Product/performance source remains c213ea9.
+
+The full-prefix capture40130625113 reproduced the original-source SIGSEGV:
+readiness2765ms, normal-close process exit-11, elapsed881.432ms. It generated a
+harness-certified core, but the first collector rejected its logical size before
+GDB ran. [Failure receipt](followup-full-prefix-failed-collector.json).
+
+The collector's size accounting was wrong for sparse ELF cores: logical VM holes
+can exceed512MiB while actual allocated disk data remains bounded. The fix keeps
+the same512MiB allocation/core-generation cap and60-second debugger limit. It
+records logical and allocated sizes separately, and limits whole-file hashing
+to512MiB; larger sparse files get an explicitly labelled64KiB prefix digest.
+A sparse1GiB regression fixture verifies bounded allocation and hash reads.
+No performance limit changed. The next capture repeats the successful
+full-prefix reproduction with this corrected postmortem collector; it does not
+retry any AOT performance result.

@@ -1,0 +1,52 @@
+{
+  "workflowRun": 40130625113,
+  "workflowSource": "dc06d467848ecbded8a02d4d7ba15215532234c6",
+  "compiledSource": "cb1ea0e1317cd4550ced8349894076652d4e0cfd",
+  "artifactId": 12574429882,
+  "artifactSHA256": "d979e55663e70b91f220494fbcd144cd45abf8fb7b003b312ac178479d546665",
+  "startup": {
+    "run": 1,
+    "passed": false,
+    "cleanWitnessVerified": false,
+    "closeMode": "normal",
+    "external_ms": 11056,
+    "marker": "TANDEMLOG_READY_MS=2765 FILES_READ=2",
+    "phases": [
+      "TANDEMLOG_MAIN",
+      "TANDEMLOG_FIRST_FRAME_MS=71",
+      "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+      "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+      "TANDEMLOG_READY_MS=2765 FILES_READ=2"
+    ],
+    "external_main_ms": 8285,
+    "external_first_frame_ms": 8360,
+    "shutdown": {
+      "requestedMode": "normal",
+      "normalExitVerified": false,
+      "method": "owned-window-WM_DELETE_WINDOW",
+      "pid": 9907,
+      "window": "2097155",
+      "globalFocusOrInput": false,
+      "processExit": -11,
+      "elapsedMs": 881.432
+    },
+    "process_exit": -11,
+    "error": "Normal owned window close was not verified; forced cleanup is not a clean-close benchmark"
+  },
+  "collector": {
+    "diagnosticOnly": true,
+    "acceptance": false,
+    "applicationRerunByCollector": false,
+    "rawCoresUploaded": false,
+    "collectorSHA256": "9a72c326bcf6ef466e1a6c1f60ff26eb6dc186e53325b2d956d3e2f656917ed6",
+    "sourceRevision": "cb1ea0e1317cd4550ced8349894076652d4e0cfd",
+    "binarySHA256": "a1ddd8b7877b4467767e15f441158138a75a75b2e2e372ac617232d2a7020343",
+    "cores": [],
+    "certifiedApplicationPIDs": [
+      9907
+    ],
+    "error": "RuntimeError('Core exceeds the explicit 512MiB bound')"
+  },
+  "originalFailureCleared": false,
+  "stackCaptured": false
+}

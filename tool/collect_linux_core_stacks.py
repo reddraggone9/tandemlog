@@ -33,6 +33,30 @@ def sha(path):
     return result.hexdigest()
 
 
+MAXIMUM_ALLOCATED_CORE_BYTES = 512*1024*1024
+CORE_PREFIX_BYTES = 64*1024
+
+
+def core_metadata(path):
+    info = path.stat()
+    # ELF cores can have enormous logical holes between dumped VM mappings.
+    # Bound actual disk allocation and hashing, not sparse address-space size.
+    allocated = info.st_blocks*512
+    if allocated > MAXIMUM_ALLOCATED_CORE_BYTES:
+        raise RuntimeError('Allocated core exceeds the explicit 512MiB bound')
+    result = {'bytes': info.st_size, 'allocatedBytes': allocated,
+              'maximumAllocatedBytes': MAXIMUM_ALLOCATED_CORE_BYTES}
+    if info.st_size <= MAXIMUM_ALLOCATED_CORE_BYTES:
+        result.update(sha256=sha(path), hashScope='whole-core', hashReadBytes=info.st_size)
+    else:
+        with path.open('rb') as stream:
+            prefix = stream.read(CORE_PREFIX_BYTES)
+        result.update(sha256=None, prefixSHA256=hashlib.sha256(prefix).hexdigest(),
+                      hashScope='first-64KiB-only; whole sparse core not scanned',
+                      hashReadBytes=len(prefix))
+    return result
+
+
 def stack_metadata(text):
     signal = re.search(r'Program terminated with signal (SIG[A-Z0-9]+)', text)
     return {'nativeSignal': signal.group(1) if signal else None,
@@ -65,16 +89,18 @@ def main():
                 certified.add(pid)
         report['certifiedApplicationPIDs'] = sorted(certified)
         for core in owned_cores(args.cores, certified):
-            if core.stat().st_size > 512*1024*1024:
-                raise RuntimeError('Core exceeds the explicit 512MiB bound')
+            info = core.stat()
+            result = {'name': core.name, 'bytes': info.st_size,
+                      'allocatedBytes': info.st_blocks*512}
+            report['cores'].append(result)
+            result.update(core_metadata(core))
             log = args.output/(core.name+'.stack.txt')
             command = ['gdb', '--nx', '--batch', '-iex', 'set auto-load safe-path /nonexistent',
                        '-iex', 'set debuginfod enabled off', '-iex', 'set pagination off',
                        '-iex', 'set print frame-arguments none', '-ex', 'info program',
                        '-ex', 'thread apply all bt 32', '-ex', 'info sharedlibrary',
                        '--se='+str(binary), '--core='+str(core)]
-            result = {'name': core.name, 'bytes': core.stat().st_size,
-                      'sha256': sha(core), 'stackFile': log.name}
+            result['stackFile'] = log.name
             with log.open('w') as output:
                 try:
                     process = subprocess.run(command, cwd=repo, stdin=subprocess.DEVNULL,
@@ -83,7 +109,6 @@ def main():
                 except subprocess.TimeoutExpired:
                     result['error'] = 'Bounded postmortem debugger timeout'
             result.update(stack_metadata(log.read_text(errors='replace')))
-            report['cores'].append(result)
         report['coreCount'] = len(report['cores'])
     except Exception as error:
         report['error'] = repr(error)
