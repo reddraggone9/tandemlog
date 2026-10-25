@@ -1,0 +1,37 @@
+{
+  "runId": 40151805818,
+  "source": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "artifactId": 12583330501,
+  "archiveSHA256": "6b7156f60277283d347e46ac166245ccf07a14bcf88db6214a893490718445ad",
+  "apkName": "tandemlog-android-test-only.apk",
+  "apkSHA256": "125cd209534592dc042820ff2f66df451c2182f69d1e40b34649f180307d6031",
+  "apkBytes": 165628765,
+  "deviceExecuted": false,
+  "embeddedChecksumMatches": true,
+  "ciSignatureReceipt": "Android Debug; original receipt retained, no owner signing claim",
+  "localStaticChecks": "3 ABI libraries,unchanged notices,ELF machine/16KiB LOAD/RELRO pass",
+  "exportChecks": [
+    {
+      "abi": "arm64-v8a",
+      "exports": "pass",
+      "tool": "/usr/bin/nm"
+    },
+    {
+      "abi": "armeabi-v7a",
+      "exports": "pass",
+      "tool": "/usr/bin/nm"
+    },
+    {
+      "abi": "x86_64",
+      "exports": "pass",
+      "tool": "/usr/bin/nm"
+    }
+  ],
+  "localFullAndroidGate": "CLI stopped at missing ANDROID_HOME; zipalign/signature-tool rerun unavailable; original failure log retained",
+  "localToolLimitations": [
+    "Android SDK unavailable",
+    "LLVM nm unavailable; installed GNU nm used for read-only export checks"
+  ],
+  "fullAndroidGateCI": "pass exact job121044713164",
+  "localManifestOrSignatureToolReexecution": false
+}

@@ -1,6 +1,6 @@
 # Android native validation plan — exact e23f00f
 
-Snapshot:2026-10-25 01:49UTC. Prepared for the parent's existing local executor;
+Updated:2026-10-25 01:54UTC. Prepared for the parent's existing local executor;
 not executed by cloud. This is development runtime validation, not a release,
 live cutover, owner-signing request or hardware presentation acceptance.
 
@@ -10,11 +10,18 @@ live cutover, owner-signing request or hardware presentation acceptance.
   `fix/rc4-task-latency-20261022`. Later documentation-only successors may be
   present; verify the actual app inputs, not just the branch name.
 - Exact build: [CI40151805818](https://github.com/reddraggone9/tandemlog/actions/runs/40151805818),
-  Android job `121044713164`. At this snapshot its `android` artifact has not
-  appeared. Wait for that job's successful build/payload verification, resolve
-  its actual artifact ID/SHA256 and verify the downloaded archive and APK.
-  Preserve the original CI metadata and APK hash with the receipt. Do not
-  substitute prior5dc artifact12582355075 or rebuild and retain its attribution.
+  Android job `121044713164` passed. Artifact **12583330501** is independently
+  downloaded and verified; archive SHA256
+  `6b7156f60277283d347e46ac166245ccf07a14bcf88db6214a893490718445ad`.
+  APK `tandemlog-android-test-only.apk` SHA256
+  `125cd209534592dc042820ff2f66df451c2182f69d1e40b34649f180307d6031`,
+  165628765bytes. Embedded checksum,3 ABI libraries/notices and ELF alignment
+  checks pass locally; export-check details are in the receipt. Original CI
+  signature receipt identifies Android Debug. Full local CLI stopped at missing
+  ANDROID_HOME; local zipalign,signature and manifest-tool revalidation remain
+  for the device executor, while the exact CI full gate passed. Preserve these
+  original bytes. [Receipt](android-artifact-e23.json). Do not substitute prior5dc
+  APK or rebuild and retain its attribution.
 - Check the extracted APK's actual manifest, ABI and signature. Current source
   declares package `com.reddraggone9.tandemlog`, version
   `2026.10.7-rc.5+100`; this is an existing development version, not a new RC.
@@ -124,4 +131,5 @@ settings and stop only owned processes; preserve fixtures needed for review.
 Report functional/visual, timing, integrity and cleanup outcomes separately.
 Owner-signed exact candidate acceptance, real foreground Windows full-action
 timing, physical ARM/API36 coverage and any release remain separate prerequisites.
-No device execution, live data change or signing operation is authorized here.
+Cloud executes no device work. The parent/local executor retains its existing
+isolated-lab authorization; no real-device, live-data or signing action is added.
