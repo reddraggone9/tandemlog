@@ -112,5 +112,17 @@
   "cleanup": "all workloads and managers stopped, as reported",
   "applicationOrUiAcceptance": false,
   "releaseGateAccepted": false,
-  "nextState": "No further run/gate changes from this comparison; product pinned pending bounded optimization assessment; Android helper correction remains local and pending."
+  "nextState": "Additional bounded local attempt authorized as above;source e23 unchanged;no cloud performance run;proposed optimization not integrated;Android helper remains local-only",
+  "snapshotStatus": "Historical supplied final summary,before the later additional-attempt authorization",
+  "additionalAttemptLaterAuthorized": {
+    "authority": "subsequent parent delegation reporting Lee direction",
+    "scope": "ONE fresh bounded attempt for missing third complete timing measurement,after external controller fix/tests",
+    "executor": "local executor",
+    "completedRunsOrFailedSamplesRepeated": false,
+    "historicalAbortsRetained": true,
+    "measurementSourceUnchanged": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+    "reason": "global swap allocation growth alone was not pressure evidence;workloadswap0 and no disk-swapout increase",
+    "executionOutcome": "not supplied yet;cloud did not execute it",
+    "gateOrBudgetChanges": false
+  }
 }

@@ -4,6 +4,31 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Latest continuation direction —2026-10-25 04:34 UTC
+
+Later parent direction supersedes the earlier no-fourth-attempt instruction:
+ONE fresh bounded local-executor attempt is authorized after external controller
+fix/tests, to obtain the missing third complete e23 measurement. Global swap
+allocation alone was not pressure evidence withworkloadswap0/no disk-swapout
+increase. Do not rerun completed local runs or individually retry the failed
+sample; retain every historical abort. Exact e23 measurement source,pins,budgets
+and runtime caps remain unchanged. Outcome of this additional attempt has not
+yet been supplied to cloud; cloud does not execute it. No gate-policy,release,
+live-data,persistent-runner or major-feature change follows. The final supplied
+summary below is historical to this new authorization,not silently overwritten.
+
+Concrete optimization proposal is ready in `utf8-size-guard-proposal.md`:
+conservative UTF16 length bounds with original exact UTF8 fallback for five
+count-only size guards. Scratch functional oracle PASS326708comparisons,
+30000randomized strings,all Unicode scalars,malformed UTF16 and actual byte/
+one-third boundaries. All branches exercised;no timings recorded. Exact scratch
+prototype and source/SDK/result pins are published as evidence only. No app or
+repository test-suite integration has occurred. Next bounded step is caller-error/
+frozen-record parity and minimal shared-helper/five-predicate patch review.
+Do not skip canonical/Unicode/hash/native validation or alter any byte limit.
+This targets redundant count-only conversion,not the unexplained local paired
+outlier;no speedup or gate acceptance is claimed. Product remains exact e23 now.
+
 ## Supplied Farnsworth terminal update —2026-10-25 04:28 UTC
 
 Cloud remains sole product writer; product still exact e23f00f. **The parent

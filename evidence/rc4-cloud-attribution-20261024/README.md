@@ -321,3 +321,7 @@ Qualified final local-executor update: [Farnsworth comparison](farnsworth-e23-fi
 (records supplied by parent; cloud did not read raw local artifacts). Two completed runs,
 one retained local growth failure, third compilation guard abort; no fourth run.
 [Next bounded proposal](utf8-size-guard-proposal.md) is not implemented; product remains e23.
+
+Later direction authorizes one bounded local replacement attempt after controller fix/tests;
+see the latest handoff, with all earlier outcomes retained. [Scratch UTF8 oracle](utf8-size-guard-functional-oracle.json)
+passes326708 functional comparisons, not integrated and not a timing measurement.

@@ -1,8 +1,9 @@
 # Proposed next bounded repair — UTF8 size checks
 
-**Proposed only. No product/test implementation, performance run or gate change
-has been made.** Product stays at exact e23. The first next step is a scratch
-differential oracle and caller-compatibility review before a substantive patch.
+**Proposed application change only; no app/test-suite integration, performance
+run or gate change.** Product stays at exact e23. The scratch functional oracle
+is now complete; caller compatibility is the next bounded review before a
+substantive patch.
 
 The existing [cold CPU profile](followup-cold-start-cpu-profile.json) reports
 UTF8 encoding at about6% of sampled leaf CPU, alongside canonical encoding,
@@ -43,10 +44,13 @@ constructor execution or measured performance improvement.
 
 Before a product patch:
 
-1. Differentially compare against the original `utf8.encode(value).length`
-   predicate for ASCII,2/3-byte characters, supplementary scalars and malformed
-   UTF16, including empty strings and boundaries around256KiB/1MiB/16MiB and
-   the one-third fast-path boundary.
+1. **Completed in scratch:**326708 comparisons against the original
+   `utf8.encode(value).length` predicate,30000 randomized strings,all Unicode
+   scalars,malformed UTF16,empty strings and exact256KiB/1MiB/16MiB plus
+   one-third boundaries. All three branches were exercised.
+   [Exact prototype](utf8-size-guard-functional-oracle.dart) and
+   [functional result/source/SDK pins](utf8-size-guard-functional-oracle.json).
+   No timings were recorded and no caller integration is claimed.
 2. Audit all five callers for unchanged ordering and failure classes/messages;
    retain frozen current/legacy canonical bytes, hashes and oversize rejection.
    Reject the proposal if its proof or caller parity fails.
@@ -54,6 +58,8 @@ Before a product patch:
    implementation step. No cache, native ABI/SHA feature, persistence/format,
    durability, queue, peer/tail, admission or budget change is proposed.
 
-No additional Farnsworth or hosted performance attempt belongs to this completed
-comparison. Any later timing validation requires a separately scoped changed-source
-step; current failed evidence and hardware/UI qualifications remain intact.
+No performance run is proposed for this optimization step. The separately
+authorized single replacement comparison attempt remains local-executor owned
+and keeps e23 unchanged. Any later optimization timing validation belongs to a
+separately scoped changed-source step; failed evidence and hardware/UI
+qualifications remain intact.

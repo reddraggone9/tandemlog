@@ -18,7 +18,12 @@ No source/harness, performance threshold, CI or persistent-runner change follows
 | Farnsworth2 |0|1|Same reported validation; one maximum failure retained.|
 | Farnsworth3 |—|—|Aborted during compilation after2.038s; zero timed samples.|
 
-There was no fourth run. All workload/manager units are stopped, as reported.
+At the supplied summary snapshot there had been no fourth run, and all workload/manager
+units were stopped, as reported. A later parent direction separately authorizes
+**one fresh bounded replacement attempt**, after external controller correction
+and tests, to obtain the missing third completed measurement. The local executor
+owns it; e23 and all completed runs/outliers stay unchanged. This is authorization,
+not a new measured result; cloud has not executed the replacement.
 The comparison produced **two completed timing runs**, not three passes.
 
 The remaining local failure is `copiedChecklist.metadata.complete`, Task-history
@@ -54,8 +59,9 @@ application latency, a functional failure, proven disk swapping or a memory leak
 
 Existing hosted syscall evidence remains partial and instrumented. It does not
 tie the original slow samples or this local outlier to an exclusive fsync,
-metadata, scheduler or CPU cause. No further run or gate change is authorized
-from this comparison. Android's isolated helper correction is still pending;
+metadata, scheduler or CPU cause. No gate or budget change follows. The later single replacement-attempt
+authorization above supersedes the earlier no-fourth instruction; all historical
+aborts remain retained. Android's isolated helper correction is still pending;
 no native Android cases are promoted to a pass by these results.
 
 Next bounded work is only the [proposed UTF8 size-guard review](utf8-size-guard-proposal.md).
