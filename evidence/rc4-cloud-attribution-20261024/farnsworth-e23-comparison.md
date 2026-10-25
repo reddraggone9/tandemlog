@@ -17,6 +17,8 @@ correctness, source, environment or cleanup failure; timing failures remain data
 Expected total35–55minutes after setup. Bound each run to25minutes plus cleanup;
 all three at most80minutes. A timeout is a retained incomplete attempt, not an
 excuse to increase limits. No overlapping Android, builds or benchmark jobs.
+The outer local supervisor must stop every recorded owned unit on cancellation
+or its task deadline, even if the command client's process group was interrupted.
 
 The harness is Linux-only. Use Farnsworth's existing isolated Linux route; record
 whether native Linux, WSL or another VM, kernel/CPU, filesystem type and available
@@ -73,9 +75,12 @@ for comparison_index in 1 2 3; do
     comparison_unit="tandemlog-performance-$comparison_run_id-1.service"
     comparison_case="$comparison_root/run-$comparison_index"
     mkdir -m 700 "$comparison_case"
+    printf '%s\n' "$comparison_unit" > "$comparison_case/unit.txt"
     cleanup_comparison() {
-      comparison_status=$?
+      comparison_original_status=$?
+      comparison_status=$comparison_original_status
       trap - EXIT
+      printf '%s\n' "$comparison_original_status" > "$comparison_case/launcher-exit.txt"
       sudo -n systemctl stop "$comparison_unit" > "$comparison_case/stop.log" 2>&1 || true
       if ! sudo -n systemctl show "$comparison_unit" --property=LoadState --property=ActiveState --property=MainPID > "$comparison_case/cleanup.txt"; then
         comparison_status=1
@@ -85,6 +90,9 @@ for comparison_index in 1 2 3; do
       fi
       if ! grep -Eq '^ActiveState=(inactive|failed)$' "$comparison_case/cleanup.txt"; then
         comparison_status=1
+      fi
+      if test "$comparison_original_status" != 0; then
+        comparison_status=$comparison_original_status
       fi
       exit "$comparison_status"
     }
