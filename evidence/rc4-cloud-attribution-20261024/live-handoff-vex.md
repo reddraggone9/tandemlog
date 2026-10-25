@@ -1,8 +1,41 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 06:57 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 07:22 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Remaining-performance checkpoint — 2026-10-25 07:22 UTC
+
+Product remains **034a57d**; subsequent changes are evidence/validator preparation
+only. No new product edit, performance run or CI dispatch. Exact terminal
+CI40167598688 remains platform/native PASS, performance FAIL (5absolute maxima,
+3paired;all correctness,0retry). No owned app/test/watch/benchmark process active.
+
+[Sample-level triage](remaining-performance-triage-034a57d.md) and
+[machine-readable samples](remaining-performance-triage-034a57d.json) separate
+append waits, elapsed/CPU gaps and Food CPU growth. Startup passes this hosted
+run; the only paired-median miss is confirmed imported Food Save9.984/9.3125ms
+across Task-history growth. Repeatability across independent current-source
+reference runs is still unproved. Ready Food confirmation is already indexed;
+no correctness guard or confirmation boundary may be removed for timing.
+
+The older e23 open-only profile puts overlapping38%CPU under record decode,
+31%under semantic validation, with10%leafSHA and28%unresolved leaf. It predates
+UTF8guard repair and does not justify another product patch by itself. Proposed
+next step is current-source reference proof, followed by targeted CPU/allocation
+attribution if the median miss recurs; no unsupported startup optimization.
+
+[Fresh reference protocol](reference-034a57d.md) was published in **331e2f7**:
+exactly3predeclared serial observations, all3shapes232metrics,2warmups/5samples,
+unchanged budgets6GiB/2CPU/no-swap/128pids,25min/run80min/batch, measure-only,
+corrected external local controller and exact cleanup. Fresh118source and5390
+compiled-input bindings plus new independent policy validator replace e23-only
+bindings. Local executor owns launch/pressure control; cloud has not launched it.
+Configuration path-only review remains explicit, not silently waived. Preparation
+passes8validator regressions and a real detached034a preflight with exact hosted
+libraries. No local diagnostic result automatically clears hosted release gates
+or proves hardware presentation latency. Current-source native/device gaps remain
+separately coordinated by parent. Hard stop-write Oct26 13:00UTC remains unchanged.
 
 ## Terminal repair checkpoint — 2026-10-25 06:57 UTC
 
