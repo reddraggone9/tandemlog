@@ -1,0 +1,58 @@
+{
+  "scope": "Read-only cloud public fixture inspection;not Farnsworth raw evidence or timing measurement",
+  "stats": {
+    "dense-1": {
+      "outer16MiB": {
+        "strings": 1325,
+        "withinConservativeBound": 1325,
+        "maximumUtf16Units": 4185
+      },
+      "effect1MiB": {
+        "strings": 1326,
+        "withinConservativeBound": 1326,
+        "maximumUtf16Units": 3139
+      },
+      "food256KiB": {
+        "strings": 329,
+        "withinConservativeBound": 329,
+        "maximumUtf16Units": 964
+      }
+    },
+    "dense-2": {
+      "outer16MiB": {
+        "strings": 2645,
+        "withinConservativeBound": 2645,
+        "maximumUtf16Units": 4185
+      },
+      "effect1MiB": {
+        "strings": 2646,
+        "withinConservativeBound": 2646,
+        "maximumUtf16Units": 3139
+      },
+      "food256KiB": {
+        "strings": 329,
+        "withinConservativeBound": 329,
+        "maximumUtf16Units": 964
+      }
+    },
+    "dense-food": {
+      "outer16MiB": {
+        "strings": 2645,
+        "withinConservativeBound": 2645,
+        "maximumUtf16Units": 4185
+      },
+      "effect1MiB": {
+        "strings": 2646,
+        "withinConservativeBound": 2646,
+        "maximumUtf16Units": 3139
+      },
+      "food256KiB": {
+        "strings": 1649,
+        "withinConservativeBound": 1649,
+        "maximumUtf16Units": 1043
+      }
+    }
+  },
+  "status": "proposed,not implemented",
+  "productSourceUnchanged": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1"
+}

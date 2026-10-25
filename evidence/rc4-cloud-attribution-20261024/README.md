@@ -316,3 +316,8 @@ Instrumented syscall collection is isolated on diagnostics/rc4-io-20261025; no t
 Terminal e23 cloud checkpoint: [cold CPU attribution](followup-cold-start-cpu-profile.json),
 [retained second syscall failure](hosted-io-second-failure.json), and [approved Farnsworth protocol](farnsworth-e23-comparison.md).
 CI Linux/Windows/Android passed; enforcing performance failed. Product held at e23 for the controlled comparison.
+
+Qualified final local-executor update: [Farnsworth comparison](farnsworth-e23-final-summary-supplied.md)
+(records supplied by parent; cloud did not read raw local artifacts). Two completed runs,
+one retained local growth failure, third compilation guard abort; no fourth run.
+[Next bounded proposal](utf8-size-guard-proposal.md) is not implemented; product remains e23.

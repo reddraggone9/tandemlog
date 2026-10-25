@@ -4,6 +4,53 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Supplied Farnsworth terminal update —2026-10-25 04:28 UTC
+
+Cloud remains sole product writer; product still exact e23f00f. **The parent
+supplied the local executor's final summary from FINAL-COMPARISON-REVIEW.md;
+cloud has not read or independently audited its raw local artifacts.** See
+`farnsworth-e23-final-summary-supplied.md` and its attributed JSON receipt.
+
+Comparison is TERMINAL, not waiting for a third run: hosted28absolute/3growth
+failures; local1zero/zero; local2zero/one. Both completed local runs reportedly
+passed all3 shapes/232 metrics plus source/tool/fixture/resource/correctness
+checks.117source/tool hashes match;5389compiled pins examined with2environment
+package-config differences, contents not supplied to cloud. Local2 retains
+copiedChecklist.metadata.complete Task-growth maximum20.643ms over19.1176ms.
+Its bracketed CPU9.639ms/append0.858ms/zeroquota throttle are nonexclusive and
+establish no cause. Two local baseline median sets closely agree and are roughly
+half hosted values for the four supplied operations; this supports platform
+dependence, not proof of virtualization or visible UI performance.
+
+The installed-ZFS review reportedly found16.71GiB evictable ARC data excluded
+from MemAvailable. Lee corrected accounting; only the external controller
+adopted conservative raw>=2GiB and raw+min(evictableR/2,6GiB)>=8GiB, with ARCmin
+eligibility and stable snapshots. Runtime6GiB/no-swap/200%CPU/128-task limits and
+performance budgets remained unchanged. Third attempt passed that preflight
+then aborted2.038s into compilation on54.17MiB GLOBAL swap-allocation growth:
+zero timed samples,workloadswap/OOM0,no disk-swapout increase. This does not prove
+application swapping, thrashing or a leak. No fourth run; all workload/manager
+units stopped as reported. No further performance run or gate change follows.
+
+Android helper correction remains parent/local-executor owned, helper-only,
+not product. The earlier exact-debug APK prelaunch metadata refusal provided
+zero native cases; no new Android pass is inferred from backend comparison.
+Hosted enforcing failure,historical LinuxcloseSIGSEGV and hardware/UI acceptance
+qualifications remain unresolved. No release/live/signing/runner change.
+
+Next bounded proposal is `utf8-size-guard-proposal.md`: review a count-only UTF8
+size predicate using conservative code-unit bounds and original exact fallback
+at five existing guard sites. The pinned SDK documents the bound; profile UTF8
+leaf CPU~6% includes required hash work, so no speedup is claimed. Read-only
+inspection of existing CLOUD public fixtures shows broad bound eligibility;
+it is not Farnsworth raw access or another timing run. First proposed step is
+scratch differential/caller-parity review; **no product/test implementation yet**.
+Product remains pinned while assessing; no source rebaseline or budget change.
+
+All cloud CI/diagnostic runs remain terminal; no owned local measurement active.
+Quota remains unknown; stop-write cutoff2026-10-26 13:00UTC and explicit ownership
+handoff requirement remain. Earlier sections below are historical snapshots.
+
 ## Terminal cloud checkpoint —2026-10-25 02:41 UTC
 
 Cloud remains sole product writer; no cutover. Product is still exact
