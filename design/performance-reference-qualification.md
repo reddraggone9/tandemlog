@@ -33,7 +33,12 @@ change is implied. Cloud is the sole repository writer;local source is immutable
 x86_64,kernel7.2.11-arch1-1,16logical CPUs,Python3.14.8 and ext4 measurement path,
 plus exact SDK/native/SQLite/dependency/lock/limits pins. The registration came
 from the parent's read-only collection,not a cloud host probe. The reviewed
-controller SHA must be filled and status set to `registered` before qualification.
+controller revision2 is registered by SHA256
+`937e002fcee5a3f54786999f3956b3b0412afc27c22f4d5fb986c5367191ff0b`.
+Its adjacent pressure module remains SHA256
+`f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`.
+The source and original host fault evidence were reviewed privately;registration
+publishes only the required hash,not the private controller source or bundle.
 Unknown/pending registration or material drift fails. Do not merely rename a host.
 
 Keep the reviewed controller bytes stable across candidates:read the exact
@@ -49,8 +54,9 @@ The per-request manager adaptation must preserve:
 | --- | --- |
 | Ownership | existing verified lab UID/GID1002,unique transient manager/workload units |
 | Memory / swap / CPU / pids | 6GiB /0 /200% /128 |
-| Unit settings | existing RuntimeMax3300s,TimeoutStop20s,KillModecontrol-group,OOMPolicykill |
-| Outer qualification bound | **one invocation,25minutes**,plus20s termination cleanup;no external retry/extension |
+| Manager settings | RuntimeMax1500s,TimeoutStop1s,StartLimitBurst1,StartLimitIntervalinfinity,Restartno,KillModecontrol-group,OOMPolicykill |
+| Workload settings | RuntimeMax1500s,TimeoutStop19s,Restartno,KillModecontrol-group,OOMPolicykill;BindsTo+After exact nonce manager |
+| Outer qualification bound | **one invocation,25minutes from PID1 manager activation**,plus one shared20s termination cleanup (19s workload+1s manager);no external retry/extension |
 | Pressure | corrected ARC-aware stable preflight and genuine-pressure checks;global swap allocation alone is not swapping proof |
 | Concurrency | no emulator,app,other benchmark or build/test load;never kill unrelated work |
 | Cleanup | unconditional exact-unit stop/query,MainPID0,owned processes absent;preserve timeout/errors |
@@ -59,6 +65,27 @@ The invocation may contain the existing eligible full-suite noise retry within
 that25minute bound. If it cannot finish,the result fails and is retained. Future
 execution is coordinated through parent after tooling/registration review;these
 commands do not launch anything on their own. No foreground window is needed.
+
+Revision1 was not registered:its independent workload could survive abrupt
+manager death. Revision2 binds the workload lifetime to the exact manager and
+prevents restart,with a deadline anchored to PID1 activation and one shared
+19+1second stop window. Privately reviewed synthetic PID1 fault evidence covers
+SIGKILL with a stubborn workload,manager timeout and accepted-but-unobserved
+launch;all six owned units ended inactive/failed with MainPID0 and empty/absent
+cgroups. This establishes those lifecycle cases,not actual root-controller plus
+benchmark integration or performance acceptance. Missing invocation/result,
+counters,cleanup or deadline evidence still refuses qualification.
+
+The existing management route must start the nonce manager with
+`systemd-run --wait --pipe --collect --service-type=exec`,the manager settings
+above,and a clean environment running `/usr/bin/python3 -I -B` on the privately
+reviewed controller. Keep the existing supervised10second heartbeat stream open;
+EOF or35seconds without valid heartbeat cancels. Do not use a finite stdin pipe.
+After the manager exits,invoke its `finalize` mode separately through existing
+management access,with the same six path arguments and a finite timeout fitting
+the **original** activation+1520second deadline. Finalize can only read status and
+write evidence;it cannot launch units. Do not overwrite a failed finalization,
+reuse a claimed request or restart an uncertain invocation.
 
 ## Fresh request and immutable inputs
 

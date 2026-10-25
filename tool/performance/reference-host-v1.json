@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "pending-reviewed-controller-registration",
+  "status": "registered",
   "hostId": "farnsworth",
   "hardwareMultiplier": 1,
   "environment": {
@@ -25,7 +25,7 @@
       "findmnt -n -o FSTYPE -T measurement-path"
     ]
   },
-  "controllerSHA256": null,
+  "controllerSHA256": "937e002fcee5a3f54786999f3956b3b0412afc27c22f4d5fb986c5367191ff0b",
   "resourceBounds": {
     "memory.max": "6442450944",
     "memory.swap.max": "0",

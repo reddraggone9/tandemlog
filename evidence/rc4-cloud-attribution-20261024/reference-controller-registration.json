@@ -1,0 +1,60 @@
+{
+  "snapshotUTC": "2026-10-25T14:46:37.456973+00:00",
+  "stage": "reviewed controller registered;fresh enforcing request/run/receipt and exact-source CI pending",
+  "runtimeProductCommit": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "controllerSHA256": "937e002fcee5a3f54786999f3956b3b0412afc27c22f4d5fb986c5367191ff0b",
+  "pressureDependencySHA256": "f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10",
+  "privateReview": {
+    "sourceAndDependencyRead": true,
+    "allOuterInventoryHashesVerified": true,
+    "all13RawEvidenceHashesVerified": true,
+    "allThreeCaseSummariesAndDependencyReadbacksReviewed": true,
+    "sixTerminalUnitReadbacksMainPID0": true,
+    "privateSourceAndRawBundlePublished": false,
+    "priorUnregisteredRevisionAndFailuresRetained": true
+  },
+  "lifecycle": {
+    "managerExecutionSeconds": 1500,
+    "sharedCleanupSeconds": 20,
+    "workloadStopSeconds": 19,
+    "managerStopSeconds": 1,
+    "clock": "PID1 manager activation",
+    "managerStartLimitBurst": 1,
+    "managerStartLimitInterval": "infinity",
+    "restart": "no",
+    "workloadBindsToAndAfterExactManager": true,
+    "missingResultQualifies": false
+  },
+  "tests": {
+    "suppliedLocalUnitControlsPassed": 34,
+    "cloudPortableControlsPassed": 21,
+    "fullCloudToolTestsPassed": 196,
+    "cloudToolLogSHA256": "a53c88e78d89603d2fc986c3f8991d1ba751044b31ee7d233b50350430bc3d50",
+    "suppliedRealSystemdFaultCasesReviewed": [
+      {
+        "case": "manager-sigkill",
+        "seconds": 19.25270740900305
+      },
+      {
+        "case": "manager-timeout",
+        "seconds": 23.15573207900161
+      },
+      {
+        "case": "uncertain-accepted-launch",
+        "seconds": 0.08479304499633145
+      }
+    ],
+    "faultTestExecutionSeconds": 4,
+    "faultTestSharedCleanupSeconds": 20,
+    "faultTestObservationToleranceSeconds": 1,
+    "faultTestsAreSyntheticNotBenchmark": true,
+    "cloudLaunchedSystemdOrBenchmark": false,
+    "actualRootControllerPlusBenchmarkIntegration": "pending",
+    "fullCloudToolTestsSkipped": 2
+  },
+  "budgetsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "budgetOrCoverageChanged": false,
+  "newBenchmarkOrCIStarted": false,
+  "qualificationAccepted": false,
+  "next": "Freeze pushed policy source;private fresh request and parent-coordinated single enforcing invocation,review/seal/import receipt,then one exact-source hosted CI. No duplicate dispatch."
+}

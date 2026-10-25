@@ -1,8 +1,26 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 13:26 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 14:46 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Reviewed controller registered; fresh qualification pending — 2026-10-25 14:46 UTC
+
+Revision2 controller hash is registered after private source/dependency review,
+all13raw evidence hashes and3real synthetic systemd fault cases were checked.
+The old manager-death defect stays documented;the revised workload binds its
+lifetime to the exact manager,uses PID1 activation for the original25minute
+clock,and shares19+1seconds cleanup with no restart. Actual root controller plus
+benchmark integration remains unproven. [Registration receipt](reference-controller-registration.json)
+and [updated operating protocol](../../design/performance-reference-qualification.md).
+
+Cloud21portable controls pass;the196full tool tests succeed (2skipped);local34unit
+controls pass. Private source,raw bundle and host paths are not published here.
+Next is a fresh request/frozen source and exactly one parent-coordinated enforcing
+invocation through the existing bounded manager,then independently reviewed
+receipt and one exact-sourceCI. No benchmark/CI/foreground/release/live operation
+has started. Product/runtime remains034a57d,budgets unchanged,missing qualification
+still fails closed. Ownership and Oct26 13:00UTC stop-write cutoff unchanged.
 
 ## Lee-approved gate transition: tested preparation — 2026-10-25 13:26 UTC
 
