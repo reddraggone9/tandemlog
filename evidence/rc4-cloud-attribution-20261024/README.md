@@ -22,6 +22,8 @@ Current034a57d reference measurements are [reported complete by the local execut
 
 Current034a57d **wide Android** focused acceptance is now [reported passed](android-034a57d-final-supplied.json),including genuine dirty-editor toolbarUndoCancel/Discard,Task/Food emoji and14independent replays. Cancel needed manual text refocus. [Morning review / final gate and acceptance reservations](morning-review-034a57d.md) distinguishes existing dialog behavior from unproved regressions and retains hosted/hardware/release/live gaps. No product patch or gate change.
 
+Current-source Windows **build-only QA artifact12594136006** is [verified and ready for local preparation](windows-qa-034a57d.md),from one exact034a57d dispatch40179769562. No app/foreground run occurred. Source/member/DLL/manifest pins and explicit Windows CRLF conversions are recorded;external fixture and separately approved local foreground controls still require read-only rebinding/preflight. Framework Taskopen/Save/Undo is not full-action hardware presentation evidence.
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

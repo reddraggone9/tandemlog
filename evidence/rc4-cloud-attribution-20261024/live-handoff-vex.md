@@ -1,8 +1,34 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 09:07 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 09:22 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Exact current Windows QA artifact ready — 2026-10-25 09:22 UTC
+
+One authorized build-only dispatch **40179769562** on dedicated
+qa/windows-widget-034a57d-20261025 at **exact product034a57d** passed09:17:10UTC.
+No app/foreground run,broad CI,release,product/harness edit or new credential.
+[Local handover instructions](windows-qa-034a57d.md) and
+[verification receipt](windows-qa-034a57d-build.json) bind artifact**12594136006**,
+archiveab24194addf11faf9bc4e16a2ba59528bef73db22bd4a75722ab4dae7c5eb091,
+manifesta6335dd0cc575efbd2b4a8d8603266cd92113a709b5e76180d28014fd238164e.
+All17payload members/21checksums/3helpers verify;DLL91430a7a…passes static x64
+PE/export inspection and CI real ABI smoke.20pure controller tests pass.
+191source pins match034a:70literal Git,121exact Windows LF→CRLF conversion only;
+notice likewise CRLF-only. Actual Windows metadata/raw pins retained,not rewritten.
+Original strict raw-equality verification failures remain described in the proof.
+
+Target/controller still agree on public fixture contract74f0c24c…(1325records,
+4canonical files). Fixture is external/not bundled;cloud has not accessed its
+raw local copy. Local read-only member/contract verification remains required,
+as does rebinding the separately reviewed sharing-safe/asynchronous foreground
+harness to this source/manifest. Packaged controller defaults inactive Desktop;
+do not substitute it for the approved local foreground reader/ownership/watchdog/
+Jobcleanup. No foreground activity authorized by this receipt. Target remains
+one mocked-framework Taskopen/Save/Undo only,not Food/completion/repetitions or
+hardware/full-action presentation. Future user reservation remains separate.
+No owned command active after terminal build/watch;hard stop Oct26 13:00UTC.
 
 ## Focused current Android complete; morning review — 2026-10-25 09:07 UTC
 
