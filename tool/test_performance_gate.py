@@ -149,7 +149,7 @@ class RegisteredCoveragePreflightTests(unittest.TestCase):
     def test_stale_registry_fails_measure_only_before_source_fork_or_compiler(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=pathlib.Path(tmp);tools=root/'tools';tools.mkdir()
-            for name in ['run_gate.py','gate_policy.py','limits-v1.json']:
+            for name in ['run_gate.py','gate_policy.py','reference_receipt.py','limits-v1.json']:
                 (tools/name).write_bytes((PATH.parent/name).read_bytes())
             self.coverage['storageApplicationActionIds'].append('unbudgeted.future.action')
             (tools/'coverage-v1.json').write_text(json.dumps(self.coverage))
@@ -451,6 +451,13 @@ sys.exit(98)
         result=self.run_wrapper()
         self.assertEqual(result.returncode,0,result.stderr)
         self.assertNotIn('--measure-only',json.loads(self.args.read_text()))
+    def test_hosted_advisory_preserves_caps_and_is_explicit(self):
+        result=self.run_wrapper('--hosted-advisory')
+        self.assertEqual(result.returncode,0,result.stderr)
+        args=json.loads(self.args.read_text())
+        self.assertEqual(args[-1],'--hosted-advisory')
+        self.assertNotIn('--measure-only',args)
+        self.assertIn('--property=MemorySwapMax=0',args)
     def test_unverified_or_live_cleanup_fails(self):
         for mode in ['unavailable','empty','live']:
             result=self.run_wrapper(FAKE_MANAGER=mode)

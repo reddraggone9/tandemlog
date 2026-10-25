@@ -1,8 +1,41 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 12:27 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 13:26 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Lee-approved gate transition: tested preparation — 2026-10-25 13:26 UTC
+
+Lee approved **no hardware multipliers**,controlled Farnsworth unchanged absolute
+AND growth limits,mandatory hosted correctness/build/replay/integrity/source/
+fixture/completeness,and advisory hosted timing. [ADR0033](../../design/decisions/0033-controlled-reference-performance.md).
+The transition is prospective;all prior failures/measure-only evidence keep their
+original status. Product/runtime inputs remain034a57d;only policy/tooling/docs
+change. No new benchmark,CI,foreground,release or live operation has started.
+
+Implementation adds explicit hosted-advisory mode with fatal structural/binding/
+correctness paths,no noise retry,and a separate required reference verifier.
+The latter binds a fresh request and all relevant source bytes/modes,exact host/
+controller/tools/dependencies/fixtures/caps,independently evaluates all232cases/
+both pairs,and requires original logs/final export/cleanup proofs. Missing,
+stale,incorrect or incomplete receipts cannot pass;no continue-on-error.
+[Operating/controller protocol for local executor and Vex](../../design/performance-reference-qualification.md).
+
+**Tests passed:1515Flutter units,196tools,analysis,399files format0changes**.
+[Validation/preparation receipt](reference-policy-transition.json).
+The exact Farnsworth platform fields supplied12:47are registered in the pending
+profile (i5-12600KF,x86_64,7.2.11-arch1-1,16CPU,Python3.14.8,ext4). **Next blocker is
+reviewed controller adaptation/hash**,then profile activation and one fresh
+source-bound enforcing run through the existing25min manager route. Controller
+reads source/nonce from request;do not embed a final Git SHA in its own bytes.
+Old3measure-only passes do not qualify. After the fresh receipt is committed,
+run one exact relevant-source CI;none dispatched yet. No persistent runner,
+service/access/security change is authorized or required.
+
+[232-row action/history reconciliation and missing native specifications](acceptance-measurement-spec-034a57d.md)
+and [retained multiplier/variance analysis](hosted-normalization-analysis.md)
+are published. Foreground/hardware/candidate/release/live gates remain separate;
+no more Leela authorization. Cloud sole writer,hard stopOct26 13:00UTC unchanged.
 
 ## Supplied Windows bootstrap complete; no more foreground — 2026-10-25 12:27 UTC
 

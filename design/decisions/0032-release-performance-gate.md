@@ -2,6 +2,12 @@
 
 Status: accepted by Lee on 2026-10-22; implementation and initial limit activation are separately evidenced.
 
+[ADR0033](0033-controlled-reference-performance.md) prospectively changes host
+roles after Lee's2026-10-25 approval:controlled reference absolute/growth
+qualification,mandatory hosted correctness and advisory hosted timing. Existing
+limits,coverage,seals,retry constraints and separate native/release gates remain.
+
+
 ## Context
 
 RC4 exposed seconds of delay in ordinary local editing. Correctness tests did not detect this. Lee approved release benchmarks across Task and Food actions, with action-specific limits, owner approval before loosening them, investigation of redundant work first, and bounded retries for external load.

@@ -1,5 +1,18 @@
 # Development status
 
+## Reference-host performance transition — 2026-10-25
+
+Lee approved [ADR0033](decisions/0033-controlled-reference-performance.md):unchanged
+absolute/growth budgets qualify on controlled Farnsworth;hosted correctness,
+replay,integrity/source/fixture/completeness remain mandatory and timing advisory.
+No multipliers or budget changes. Tested tooling passes1515units/196tools,
+analysis/format;reviewed controller registration,fresh enforcing reference receipt
+and one exact-sourceCI remain pending. Missing/stale qualification fails closed.
+[Operating protocol](performance-reference-qualification.md) and
+[validation/checkpoint](../evidence/rc4-cloud-attribution-20261024/reference-policy-transition.json).
+Earlier failures/measure-only observations retain their status. Runtime product
+remains034a57d;no foreground,release,live or persistent-access change.
+
 ## RC4 latency repair checkpoint - 2026-10-24
 
 The [cloud attribution checkpoint](../evidence/rc4-cloud-attribution-20261024/README.md)

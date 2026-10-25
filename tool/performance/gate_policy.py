@@ -11,6 +11,12 @@ class Evaluation:
     failures: tuple
     summaries: dict
 
+def may_complete_with_advisory_timing(evaluations):
+    """Timing may be advisory; unknown/structural/correctness states never are."""
+    values = list(evaluations)
+    return bool(values) and all(value.status in ('passed', 'timing-failed')
+                                for value in values)
+
 def validate_registered_coverage(coverage, limits, comparisons):
     """Reject registry/budget drift before compiling or measuring a workload."""
     ids = coverage.get("storageApplicationActionIds")

@@ -1,5 +1,18 @@
 # Release performance gate
 
+## Prospective host-role transition — ADR0033
+
+Lee approved [controlled reference qualification](decisions/0033-controlled-reference-performance.md)
+on2026-10-25: unchanged absolute and both history-growth limits qualify on
+Farnsworth;hosted correctness/build/replay/integrity/source/fixture/completeness
+remain mandatory,with hosted timing advisory. No hardware multipliers. This
+supersedes earlier hosted placement only;all budgets/coverage/retry constraints
+below stay active. [Operating protocol](performance-reference-qualification.md).
+Missing or stale reference qualification fails the separate required verifier.
+Old failures and measure-only passes retain their original status;implementation
+is not qualified until reviewed registration,a fresh enforcing receipt and CI pass.
+
+
 The standalone Dart executable measures production storage, application commands and readmodel queries in AOT release mode. It uses only generated public synthetic workspaces. There is no argument for a user workspace, mapping, profile, title or fixture import. Native text and SQLite libraries, compiler, package configuration, source and fixture bytes are sealed in the result.
 
 The three versioned shapes share the SAME first 1,320 historical physical records, three writers, entity IDs and current Task/Food values. The existing dense-1 baseline and dense-2 Task-growth shape retain their integer specifications and canonical generation. An additive dense-food shape uses {baseRecords: 2640, growthKind: food}, normalized to the closed CLI food:2640. Dense-2 adds 1,320 bounded Task Notes edits alternating with exact restores; dense-food instead adds 1,320 Food brand edits alternating with exact restores on existing containers, each carrying its actual observed creation reference. Neither Food contents nor deletion state changes. All three then receive production native-text initialization and the same native checklist/recurring operations. Enforce equal initial-prefix hashes, full current-state digest, Task rows and Food container counts before treating this as history-only scaling. Actual record, effect and row counts are recorded. Both pairs must prove their growth module: Task effects grow only in dense-2, Food effects grow only in dense-food, and the other module's effect count stays equal to the baseline. Missing, unknown or mismatched growth claims fail correctness. The additional pair closes Food-own-history coverage; it does not test a growing number of recurring descriptors. Scalar synthetic IDs and strings are deterministic; production native actor allocation may vary between fixture generations. Generate each fixture once, seal its actual bytes, and reuse exactly those bytes for a timing retry. Profiles and workload copies are always fresh; existing output is refused.

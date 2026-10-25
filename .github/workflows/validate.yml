@@ -312,16 +312,16 @@ jobs:
           echo "TANDEMLOG_TEXT_LIBRARY=$RUNNER_TEMP/performance-native/libtandemlog_text.so" >> "$GITHUB_ENV"
       - name: Verify SQLite profile adapter and materialize locked native assets
         run: flutter test --no-pub test/local_profile_database_test.dart
-      - name: Run required synthetic release AOT performance gate
+      - name: Require hosted AOT correctness and retain advisory timings
         timeout-minutes: 56
         shell: bash
         run: |
           set -euo pipefail
           mkdir "$RUNNER_TEMP/performance-diagnostics"
-          # Initial calibrated AOT limits are source-bound here. This storage gate
-          # does not replace the separate actual native UI acceptance gate.
+          # Hosted correctness/bindings remain mandatory. The same absolute and
+          # growth limits qualify separately on the controlled reference host.
           limits_sha="50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e"
-          mode=()
+          mode=(--hosted-advisory)
           if [[ "${{ inputs.performance_calibration }}" == true ]]; then
             mode=(--measure-only)
           fi
@@ -341,3 +341,13 @@ jobs:
             ${{ runner.temp }}/performance-results/fixture-*/fixture.json
           retention-days: 5
           if-no-files-found: warn
+
+  reference-performance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Require fresh source-bound controlled-reference qualification
+        run: python3 tool/performance/reference_receipt.py verify --repo "$GITHUB_WORKSPACE"

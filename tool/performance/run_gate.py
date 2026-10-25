@@ -19,7 +19,8 @@ import sys
 import time
 import shutil
 import urllib.parse
-from gate_policy import evaluate, evaluate_scaling, may_rerun, Evaluation, validate_registered_coverage
+from gate_policy import evaluate, evaluate_scaling, may_rerun, Evaluation, validate_registered_coverage, may_complete_with_advisory_timing
+from reference_receipt import request_context, package_contract, read as read_reference_json, utc, check_reference_toolchain, profile as reference_profile
 
 def digest(path):
     value=hashlib.sha256()
@@ -310,13 +311,18 @@ def main():
     parser=argparse.ArgumentParser()
     for option in ['repo','dart','native-library','sqlite-library','output']:parser.add_argument('--'+option,required=True,type=pathlib.Path)
     parser.add_argument('--expected-limits-sha256',help='Required release workflow binding to committed versioned limits; no alternate limits path is accepted.')
-    parser.add_argument('--measure-only',action='store_true',help='Collect calibration data; never reports release-gate acceptance.')
+    mode=parser.add_mutually_exclusive_group()
+    mode.add_argument('--measure-only',action='store_true',help='Collect calibration data; never reports release-gate acceptance.')
+    mode.add_argument('--hosted-advisory',action='store_true',help='Require full hosted correctness, bindings, coverage and resource caps; timing misses remain advisory, never reference acceptance.')
+    parser.add_argument('--reference-request',type=pathlib.Path,help='Exact source-bound controlled-host qualification request; enforcing mode only.')
     parser.add_argument('--diagnose-costs',action='store_true',help='Opt-in API/queue/transaction/provider interval accounting; requires --measure-only and never establishes release performance.')
     if not sys.platform.startswith('linux'):
         parser.error('The standalone AOT performance runner requires Linux; policy tests are portable.')
     args=parser.parse_args()
     if args.diagnose_costs and not args.measure_only:
         parser.error('--diagnose-costs requires --measure-only; instrumented timings cannot satisfy release acceptance')
+    if args.reference_request and (args.measure_only or args.hosted_advisory):
+        parser.error('--reference-request requires uninstrumented enforcing mode')
     root=args.output.resolve();root.mkdir(mode=0o700,parents=False,exist_ok=False)
     tools=pathlib.Path(__file__).resolve().parent;limits_path=tools/'limits-v1.json';limits=json.loads(limits_path.read_text());limits['sha256']=digest(limits_path)
     if not args.measure_only and (limits.get('releaseReady') is not True or args.expected_limits_sha256!=limits['sha256']):raise SystemExit('Versioned limits are inactive or not workflow-bound; release gate fails closed.')
@@ -334,12 +340,25 @@ def main():
     gen=sdk/'bin/utils/gen_snapshot'
     if gen.is_file():compiled_pins[str(gen)]=digest(gen)
     toolpins={str(p.resolve()):digest(p) for p in [args.dart,packages,args.native_library,args.sqlite_library,limits_path]}
-    def check_pins():
-        if pins!=source_pins(args.repo.resolve(),tools) or any(digest(p)!=h for p,h in {**toolpins,**compiled_pins}.items()):raise RuntimeError('Source/tool/limits pins changed')
     bounds=actual_resource_bounds()
     if not args.measure_only:require_release_bounds(bounds)
+    reference = request_context(args.repo.resolve(),args.reference_request,root,bounds) if args.reference_request else None
+    package_contract_sha=package_contract(read_reference_json(args.repo.resolve()/'.dart_tool/package_config.json'))
+    if reference is not None:
+        check_reference_toolchain({'sourcePins':pins,'toolPins':toolpins,
+          'compiledSourceAndDependencyPins':compiled_pins,'packageContractSHA256':package_contract_sha},reference_profile(args.repo.resolve()))
+    request_digest = digest(args.reference_request) if args.reference_request else None
+    def check_pins():
+        if pins!=source_pins(args.repo.resolve(),tools) or any(digest(p)!=h for p,h in {**toolpins,**compiled_pins}.items()):raise RuntimeError('Source/tool/limits pins changed')
+        if not args.measure_only and actual_resource_bounds()!=bounds:
+            raise RuntimeError('Resource bounds changed')
+        if args.reference_request and (digest(args.reference_request)!=request_digest or request_context(args.repo.resolve(),args.reference_request,root,actual_resource_bounds())!=reference):
+            raise RuntimeError('Reference request/source/environment changed')
     env=os.environ.copy();env.update(LD_PRELOAD=str(args.sqlite_library.resolve()),TANDEMLOG_TEXT_LIBRARY=str(args.native_library.resolve()),DART_SUPPRESS_ANALYTICS='true',CI='true')
-    report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'measureOnly':args.measure_only,'costDiagnosticsEnabled':args.diagnose_costs,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
+    report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'correctnessAccepted':False,'timingRole':'hosted-advisory' if args.hosted_advisory else 'measure-only' if args.measure_only else 'enforcing','measureOnly':args.measure_only,'costDiagnosticsEnabled':args.diagnose_costs,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
+    report['startedAtUTC']=utc()
+    report['packageContractSHA256']=package_contract_sha
+    if reference is not None:report['referenceBinding']=reference
     try:
         binary=root/'benchmark';command=[str(args.dart.resolve()),'compile','exe','--packages='+str(packages),str(tools/'benchmark.dart'),'-o',str(binary)]
         report['compile']=run_child(command,root/'compile.log',env,180);check_pins()
@@ -387,16 +406,20 @@ def main():
                 report['pairedScalingAttempts'].append({'attempt':attempt,'comparison':name,'smallSize':spec['smallSize'],'largeSize':spec['largeSize'],'status':decision.status,'failures':decision.failures,'comparisons':decision.summaries})
                 if decision.status=='correctness-failed':raise RuntimeError('Paired fixture shape/coverage failed; retry prohibited')
             failures=[failure for d in decisions.values() for failure in d.failures]+[failure for _,d in paired for failure in d.failures]
+            if not may_complete_with_advisory_timing([*decisions.values(),*(decision for _,decision in paired)]):
+                raise RuntimeError('Correctness/structure cannot be advisory')
             if not failures:break
-            if args.measure_only:break
+            if args.measure_only or args.hosted_advisory:
+                break
             if may_rerun_all(decisions,paired,attempt,executions,original,binding()):
                 report['rerunsUsed']=1;continue
             raise RuntimeError('Absolute or paired timing limit exceeded; no eligible further rerun')
-        require_binding(original,binding());report['allPinsMatch']=True;report['measurementCompleted']=True;report['releaseGateAccepted']=not args.measure_only
+        require_binding(original,binding());report['allPinsMatch']=True;report['measurementCompleted']=True;report['correctnessAccepted']=True;report['timingLimitsPassed']=not failures;report['releaseGateAccepted']=not (args.measure_only or args.hosted_advisory)
         return 0
     except BaseException as error:
         report['error']=str(error);return 1
     finally:
+        report['finishedAtUTC']=utc()
         write_new(root/'gate-result.json',report)
 
 if __name__=='__main__':sys.exit(main())

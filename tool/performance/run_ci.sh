@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 mode=()
-if [[ "$#" == 2 && "$2" == --measure-only ]]; then
-  mode=(--measure-only)
+if [[ "$#" == 2 && ( "$2" == --measure-only || "$2" == --hosted-advisory ) ]]; then
+  mode=("$2")
 elif [[ "$#" != 1 ]]; then
-  echo "Usage: run_ci.sh EXPECTED_LIMITS_SHA [--measure-only]" >&2
+  echo "Usage: run_ci.sh EXPECTED_LIMITS_SHA [--measure-only|--hosted-advisory]" >&2
   exit 2
 fi
 repo=$(pwd -P)

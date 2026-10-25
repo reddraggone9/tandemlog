@@ -26,6 +26,8 @@ Current-source Windows **build-only QA artifact12594136006** is [verified and re
 
 Current034a57d Windows **foreground framework bootstrap** is now [reported passed](windows-034a57d-bootstrap-supplied.json),with exact Save/Undo/canonical/audit/normal-exit/owned-cleanup proof and RTX4090activity verified locally. Single post-frame observations30.564/63.344/56.488ms are not OS-input,presentation or full-action acceptance. The reservation is consumed;no more foreground authorized. [Remaining feasible preparation versus Lee decisions](remaining-acceptance-after-windows-bootstrap.md) retains hosted failures and all budget/release/live boundaries.
 
+Lee-approved **prospective reference-host policy** is now implemented as tested preparation:mandatory hosted correctness with advisory timing,and separate fail-closed Farnsworth absolute/growth qualification,no multipliers or budget changes. [ADR0033](../../design/decisions/0033-controlled-reference-performance.md),[local/Vex operating protocol](../../design/performance-reference-qualification.md),[1515unit/196tool validation receipt](reference-policy-transition.json). Host platform registration is supplied;reviewed controller hash/fresh enforcing receipt and one exact-sourceCI remain pending. Old failures and diagnostics are not promoted. [Full action reconciliation](acceptance-measurement-spec-034a57d.md) and [variance evidence](hosted-normalization-analysis.md).
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

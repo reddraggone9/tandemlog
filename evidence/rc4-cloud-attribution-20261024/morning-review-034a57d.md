@@ -5,6 +5,18 @@ Product remains **034a57dbc7092e242889d23d12e22091fed08b0c** on
 Cloud remains sole product writer until explicit handoff or the hard stop-write
 cutoff **2026-10-26 13:00UTC**. No release,live operation or policy change.
 
+## Subsequent policy approval — prospective implementation
+
+Lee approved the clarified reference-host arrangement: unchanged absolute AND
+history-growth budgets on controlled Farnsworth,hosted correctness mandatory,
+hosted timing advisory,no multipliers. [ADR0033](../../design/decisions/0033-controlled-reference-performance.md).
+Tested tooling preparation now passes1515units/196tools,analysis/format;reviewed
+controller registration,fresh enforcing receipt and exact-sourceCI remain pending.
+The earlier recommendation below is retained as chronology;the gate-placement
+decision is approved,not still awaiting Lee. No old failed result is rewritten,
+no earlier measure-only pass becomes qualification,and infrastructure/foreground/
+release/live permissions do not expand. [Operating protocol](../../design/performance-reference-qualification.md).
+
 ## Ready development checkpoint
 
 - Linux detached window/view/engine lifetime defect is fixed with same-thread,
