@@ -1,8 +1,38 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 09:22 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 12:27 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Supplied Windows bootstrap complete; no more foreground — 2026-10-25 12:27 UTC
+
+Parent/local executor supplies one **034a57d** QAartifact12594136006 run under
+Lee's fresh2minute reservation,CostTraceoff,no OS click injection/retry. Reported
+whole QA duration3.912s,normal close and cleanup12:19:17UTC;owned manager5532and
+child31860absent,normal Tandemlog28160unchanged. RTX4090activity verified and
+screenshots inspected locally. [Qualified supplied receipt](windows-034a57d-bootstrap-supplied.json).
+Local analysisSHA256 as supplied:
+12e16402e81cc148e16a50b2545befede47f0e95387cee5730fda93882dabc15.
+Cloud has not read raw local runtime/analysis/capture artifacts.
+
+Single **framework** state-ready/post-frame ms:Taskopen25.529/30.564,
+TitleSave58.925/63.344,closed-editorUndo46.066/56.488. Two atomic records,exact
+Undo reference,restored Task semantics,original prefixes/nonowner bytes,
+post-close audit,normal exit and empty owned Job passed as reported. These
+nested cumulative endpoints are not OS-input,presented-pixel,median/tail or
+full-action acceptance;RTX4090activity does not change that qualification.
+Completion/Food/repetitions/first-use/history-growth/native full-action timing
+remain uncovered by this Windows probe.
+
+[Minimum remaining acceptance work and decision boundaries](remaining-acceptance-after-windows-bootstrap.md):
+consolidate bindings/coverage and prepare missing endpoint/case specifications
+without another run. Hosted5absolute/3paired failures and unchanged budgets stay.
+A reference-host enforcing-gate substitution needs separate Lee decision;any
+further Leela foreground/OS-input run needs a **new explicit reservation**. The
+previous reservation is consumed,no more foreground authorization. Release/live
+work remains held. No new product/harness edit,CI,benchmark or device execution
+in cloud;product034a unchanged,cloud sole writer,no active command. Hard stop
+Oct26 13:00UTC remains.
 
 ## Exact current Windows QA artifact ready — 2026-10-25 09:22 UTC
 

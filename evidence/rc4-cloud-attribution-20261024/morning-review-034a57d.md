@@ -27,7 +27,16 @@ cutoff **2026-10-26 13:00UTC**. No release,live operation or policy change.
   Cleanup08:56:42UTC,before09:15:48deadline;both units inactive/MainPID0,emulator/
   ownedADBports absent. [Supplied Android receipt](android-034a57d-final-supplied.json).
 
-The Farnsworth/Android raw local artifacts were not accessed by cloud. These are
+- Parent subsequently supplies one current-source **Windows foreground framework
+  bootstrap** using the exact QAartifact12594136006,CostTraceoff. State-ready/
+  post-frame ms:Taskopen25.529/30.564,Save58.925/63.344,Undo46.066/56.488. Exact
+  two-record Save/Undo/prefix/nonowner/audit/normal-exit/empty-Job proof passed;
+  cleanup12:19:17UTC,existing normal app unchanged. RTX4090activity/screenshots
+  verified locally. [Qualified supplied receipt](windows-034a57d-bootstrap-supplied.json).
+  Single mocked-framework samples are not OS-input/presentation/full-action
+  acceptance. The2minute reservation was consumed;no more foreground authorized.
+
+The Farnsworth/Android/Windows raw local runtime artifacts were not accessed by cloud. These are
 qualified parent/local-executor reports,not claims of independent raw inspection.
 The Android artifact's archive/APK/checksum/static byte checks were independently
 performed in cloud: [exact artifact receipt](android-artifact-034a57d.json).
@@ -98,7 +107,7 @@ loosening is proposed.
 | Focused current-source Android | Wide emulator delta and genuine toolbarUndo guard reported passed;14replays. Previous wide-guard reachability gap is closed for this layout. |
 | Cancel input focus | Not automatically restored;manual refocus works. Recorded usability observation,no demonstrated new regression or patch. |
 | Hosted enforcing performance | **Failed**,unchanged limits. Gate-placement recommendation awaits separate decision;no retry/policy change performed. |
-| Native visible responsiveness | Full-action input-to-visible/presentation,first-use and history-growth acceptance remains open. Prior Windows32/61/58ms was framework-postframe-only,not all-action acceptance. Software-rendered/emulator/ADB/framework/hardware endpoints stay distinct. No new Leela foreground permission. |
+| Native visible responsiveness | Current Windows framework bootstrap is reported passed,but single Taskopen/Save/Undo samples do not establish OS-input/presentation,completion/Food,repetition,first-use/history-growth or all-action acceptance. No further foreground authorization. [Minimum remaining work](remaining-acceptance-after-windows-bootstrap.md). |
 | Broader device/candidate checks | Focused debug-emulator continuity does not establish physical-device,owner-signed exact candidate or all platform/layout/provider coverage. Retain existing source-specific evidence;run only applicable future candidate gaps under their authorizations. |
 | Failure/recovery guarantees | Empty-title rejection is form validation,not backend failed-Save durability proof. Rejected-Save continued typing,peer-change/selectiveUndo and owned-tail cleanup guarantees remain unchanged and retain their existing tests/evidence. |
 | Release/live adoption | Held. Future exact candidate/editorial/native gates,physical-writer mapping,fresh frozen real-copy conversion/replay and explicit adoption/publication boundaries remain prerequisites. No signing change or live work. |

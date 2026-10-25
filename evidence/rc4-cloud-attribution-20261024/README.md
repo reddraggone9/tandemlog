@@ -24,6 +24,8 @@ Current034a57d **wide Android** focused acceptance is now [reported passed](andr
 
 Current-source Windows **build-only QA artifact12594136006** is [verified and ready for local preparation](windows-qa-034a57d.md),from one exact034a57d dispatch40179769562. No app/foreground run occurred. Source/member/DLL/manifest pins and explicit Windows CRLF conversions are recorded;external fixture and separately approved local foreground controls still require read-only rebinding/preflight. Framework Taskopen/Save/Undo is not full-action hardware presentation evidence.
 
+Current034a57d Windows **foreground framework bootstrap** is now [reported passed](windows-034a57d-bootstrap-supplied.json),with exact Save/Undo/canonical/audit/normal-exit/owned-cleanup proof and RTX4090activity verified locally. Single post-frame observations30.564/63.344/56.488ms are not OS-input,presentation or full-action acceptance. The reservation is consumed;no more foreground authorized. [Remaining feasible preparation versus Lee decisions](remaining-acceptance-after-windows-bootstrap.md) retains hosted failures and all budget/release/live boundaries.
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

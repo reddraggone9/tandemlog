@@ -6,6 +6,21 @@ Product remains034a57d;no product/harness edit,release,persistent access,signing
 change,live fixture or broad CI rerun. Do not use an ordinary production EXE as
 this test entrypoint or substitute an older2507e71QA artifact.
 
+## Subsequent local bootstrap — supplied2026-10-25
+
+Parent reports one current-source run under Lee's fresh2minute reservation,
+CostTraceoff,normal close and cleanup12:19:17UTC. Framework state-ready/post-frame
+ms:Taskopen25.529/30.564,Save58.925/63.344,Undo46.066/56.488. Two matching atomic
+records,semantic restoration,prefix/nonowner preservation,post-close audit and
+empty owned Job passed;normal Tandemlog was unchanged. RTX4090activity and
+screenshots were verified locally. [Qualified supplied runtime receipt](windows-034a57d-bootstrap-supplied.json).
+Cloud has not accessed raw local runtime evidence. These are single framework
+samples,not OS-input,presentation,median/tail or all-action acceptance. The fresh
+reservation is consumed;**no further foreground authorization** remains.
+[Minimum remaining work and decision boundaries](remaining-acceptance-after-windows-bootstrap.md).
+The build-only/preflight instructions below retain their original scope and do
+not request another run.
+
 ## Exact build and download
 
 One dispatch of the existing read-only40minute build-only workflow:

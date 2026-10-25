@@ -1,0 +1,84 @@
+{
+  "snapshotUTC": "2026-10-25T12:23:46.981670+00:00",
+  "provenance": "Parent-supplied local-executor final evidence;cloud did not access Leela,raw runtime traces,screenshots or local analysis artifact.",
+  "sourceSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "qaArtifactId": 12594136006,
+  "qaBuildRunId": 40179769562,
+  "independentlyVerifiedBuildReceipt": "windows-qa-034a57d-build.json",
+  "localAnalysisSHA256AsSupplied": "12e16402e81cc148e16a50b2545befede47f0e95387cee5730fda93882dabc15",
+  "reservationAsReported": {
+    "user": "Lee",
+    "minutes": 2,
+    "freshReservation": true,
+    "consumed": true,
+    "furtherForegroundAuthorization": false
+  },
+  "executionAsReported": {
+    "runCount": 1,
+    "costTraceEnabled": false,
+    "elapsedSeconds": 3.912,
+    "elapsedQualification": "Reported whole QA run duration,not a measured shutdown or visible-response latency.",
+    "normalClose": true,
+    "osClicksInjected": false,
+    "retries": 0,
+    "RTX4090ActivityVerified": true,
+    "gpuQualification": "GPU activity/adapter evidence does not establish presented-pixel timestamps or per-action hardware latency.",
+    "screenshotsInspectedLocally": true
+  },
+  "frameworkSamplesAsReported": [
+    {
+      "action": "task-open",
+      "stateReadyMs": 25.529,
+      "postFrameMs": 30.564
+    },
+    {
+      "action": "title-save",
+      "stateReadyMs": 58.925,
+      "postFrameMs": 63.344
+    },
+    {
+      "action": "closed-editor-title-undo",
+      "stateReadyMs": 46.066,
+      "postFrameMs": 56.488
+    }
+  ],
+  "timingScope": {
+    "sampleCountPerAction": 1,
+    "frameworkTextChannelMocked": true,
+    "endpoints": "Nested cumulative state-ready/post-frame observations from framework action boundary;not exclusive components.",
+    "osInputMeasured": false,
+    "presentationMeasured": false,
+    "allActionsCovered": false,
+    "medianOrTailAcceptance": false,
+    "releaseGateAccepted": false
+  },
+  "integrityAndExitChecksReportedPassed": [
+    "exactly two atomic action records",
+    "Undo references exact Save operation",
+    "selected Task semantics restored",
+    "original canonical byte prefixes preserved",
+    "nonowner canonical files unchanged",
+    "post-close full audit",
+    "normal process exit",
+    "owned Job empty"
+  ],
+  "cleanupAsReported": {
+    "completedUTC": "2026-10-25T12:19:17Z",
+    "managerPID": 5532,
+    "ownedQAPID": 31860,
+    "managerAndChildAbsent": true,
+    "normalTandemlogPID": 28160,
+    "normalTandemlogUnchanged": true,
+    "noFurtherClickOrRetry": true
+  },
+  "remaining": [
+    "completion and Food Windows UI timing",
+    "repetitions/first-use/history-growth native distributions",
+    "other ordinary native interactions and startup visible endpoint",
+    "real OS input/IME and hardware presentation measurement",
+    "current hosted enforcing performance failures",
+    "exact owner-signed future candidate and broader device/installer acceptance",
+    "explicit release/live-cutover prerequisites"
+  ],
+  "qualification": "Qualified supplied current-source foreground framework bootstrap only. Cloud has independently verified the build artifact/source/payload bindings,not these runtime raw artifacts. No complete native performance,hardware presentation,release or gate-policy acceptance is claimed. No more foreground authorization."
+}
