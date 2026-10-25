@@ -1,8 +1,32 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 06:00 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 06:02 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Pushed disposal repair; exact CI active — 2026-10-25 06:02 UTC
+
+Product repair **034a57dbc7092e242889d23d12e22091fed08b0c** is pushed and
+remote-verified. All 447 local validation input pins match that exact commit.
+The additional proof/archive filenames are explicit text archives so ordinary
+Git log-ignore rules do not omit evidence; bytes remain unchanged. Current later
+updates are documentation only. No uncommitted product change or local app/
+benchmark process remains; a bounded read-only CI watch may be active.
+
+ONE fresh exact-source CI [40167598688](https://github.com/reddraggone9/tandemlog/actions/runs/40167598688)
+was accepted at 06:01:07 UTC, calibration false, all four jobs active in setup.
+Old same-branch runs were terminal; immediate list lag was checked without a
+second dispatch. [CI receipt](linux-disposal-required-ci.json). The source change
+is a tested native lifecycle repair, not an unchanged standalone performance
+retry. Dart/AOT algorithms and limits stay identical; full required CI still runs.
+
+Monitor the original uninstrumented startup/close check, additional deterministic
+disposal gate and broader native workflows through terminal results. Original
+SIGSEGV, incomplete prototypes, SDK diagnostics and all timing failures remain
+retained. No release, data conversion, SDK/security/signing/gate-policy change.
+Quota as freshly supplied by parent/local executor: 76% remaining, reset
+Oct31 17:21:56 UTC; not independently checked by cloud. Hard stop-write cutoff
+Oct26 13:00 UTC and explicit ownership handoff remain unchanged.
 
 ## Disposal candidate locally validated — 2026-10-25 06:00 UTC
 

@@ -1,0 +1,28 @@
+{
+  "snapshotUTC": "2026-10-25T06:02:43.675702+00:00",
+  "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "runId": 40167598688,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40167598688",
+  "createdUTC": "2026-10-25T06:01:07Z",
+  "state": "in_progress",
+  "calibratePerformanceRequested": false,
+  "dispatchCount": 1,
+  "dispatchExitCode": 0,
+  "previousSameBranchRunsTerminalBeforeDispatch": true,
+  "initialListingLagCheckedWithoutRedispatch": true,
+  "jobIds": {
+    "android": 121091718752,
+    "performance": 121091718835,
+    "windows": 121091718843,
+    "linux": 121091718895
+  },
+  "localValidationSourcePinsMatchExactCommit": true,
+  "sourcePinCount": 447,
+  "nativeChangeGenuineNewSource": true,
+  "dartAndAOTPerformanceAlgorithmChange": false,
+  "separatePerformanceRetry": false,
+  "priorFailingRun": 40164354926,
+  "priorCrashAndTimingsRetained": true,
+  "releaseGateAccepted": false,
+  "nativeHardwareAccepted": false
+}
