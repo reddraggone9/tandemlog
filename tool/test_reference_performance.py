@@ -66,7 +66,7 @@ class ReferenceReceiptTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.repo = Path(self.temp.name)
+        self.repo = Path(self.temp.name).resolve()
         self.tools = self.repo / 'tool/performance'
         self.tools.mkdir(parents=True)
         (self.repo / 'lib').mkdir()
@@ -367,6 +367,24 @@ class ReferenceReceiptTests(unittest.TestCase):
             receipt.main()
         self.assertTrue(receipt.verify_bundle(self.repo, output)['referencePerformanceQualified'])
         self.assertFalse((output / 'benchmark').exists())
+
+
+class ReferenceReceiptAliasTests(unittest.TestCase):
+    def test_fixture_canonicalizes_aliased_temporary_root(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        root = Path(temporary.name).resolve()
+        (root / 'alias-step').mkdir()
+        alias = str(root / 'alias-step' / '..')
+        fixture = ReferenceReceiptTests(methodName='test_fresh_complete_source_bound_receipt_passes')
+        self.addCleanup(fixture.doCleanups)
+        # Reproduce resolved source pins against a lexically different temp
+        # root without requiring Windows 8.3 aliases or symlink privileges.
+        with patch.object(temporary, 'name', alias), \
+                patch.object(tempfile, 'TemporaryDirectory', return_value=temporary):
+            fixture.setUp()
+        self.assertEqual(fixture.repo, root)
+        self.assertTrue(fixture.verify()['referencePerformanceQualified'])
 
 
 @unittest.skipUnless(sys.platform.startswith('linux'), 'Synthetic orchestration exercises the Linux-only AOT runner')

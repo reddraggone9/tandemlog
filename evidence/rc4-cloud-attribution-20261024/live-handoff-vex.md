@@ -1,8 +1,20 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 17:30 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 18:30 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Native Windows tooling follow-up and terminal CI — 2026-10-25 18:30 UTC
+
+The single successor [CI40217147781](https://github.com/reddraggone9/tandemlog/actions/runs/40217147781) at exact `d90e0b1`, with calibration disabled, is terminal. Linux passed 1,515 units, 107 native contracts, 197 tooling checks, normal startup/disposal/install lifecycle checks and 203 native workflows (40m32s). Android passed. Windows passed 1,513 units (two skips) and 107 native contracts, then its 197 tooling checks reported one failure, 17 errors and 27 skips before packaging. All 17 errors share a short-versus-resolved temporary-root alias; one older assertion expected the platform guard before invalid-mode validation.
+
+The test-only correction resolves the fixture root, adds a portable aliased-root regression and updates that assertion. Both deterministic pre-fix failures and the original hosted logs are preserved. The full 198-test Linux tooling suite passes (two skips). Reviewed private local-executor proof matches the exact two-file candidate hashes on actual Windows: 72 passed, 18 Linux-only skips across the two affected modules, 48 seconds, normal exit, no retries, GUI, app or emulator launch. CPython 3.12.10 differs from hosted 3.11.9, and the exact hosted temp-path environment remains unverified. A successor hosted validation requires coordination; no further CI was dispatched. [Follow-up receipt](ci-d90-portability-followup.json).
+
+Hosted AOT passed mandatory correctness and integrity on all three shapes, with 232 metrics each and zero reruns. It retained 86 failing action/shape timing entries and 45 growth entries as advisory evidence. [Absolute miss table](ci-d90-advisory-timing-misses.csv). Required reference qualification failed as expected. Performance acceptance and hardware presentation remain open; consumed requests and historical failures are unchanged.
+
+The separate Android early-read refusal preparation is **NO-GO pending a private helper correction**. Its restoration watcher expects the old 13-helper inventory, a 2,700-second worker and the previous AVD, while the new lab seals 19 helpers, 1,200 seconds and the refusal AVD. It would reject before arming stop. Correct and re-seal those exact bindings, then add matching-context and stale-context nonlaunch controls before review. The actual Android scratch no-overwrite probe, fresh resource/slot checks, single-attempt rule and partial/frozen-outcome rules remain mandatory. No emulator launched; private source and raw host details stay private.
+
+Runtime remains `034a57d`. This follow-up changes tests and evidence only; budgets, fixtures, controller registration and signing settings are unchanged. The closed recorder investigation, physical-device/owner-signed candidate and full-action Windows presentation gaps remain open. Cloud remains sole writer until explicit cutover, with the October 26 13:00 UTC cutoff unchanged. No release or live action is authorized.
 
 ## Hosted policy integration and Windows portability — 2026-10-25 17:30 UTC
 

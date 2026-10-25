@@ -30,6 +30,8 @@ Lee-approved **prospective reference-host policy** is now implemented as tested 
 
 Latest [hosted policy integration result and Windows portability repair](ci-7099-policy-integration.json) retains the failed required reference check,original Windows tooling failure and all advisory timing misses. Linux203native checks and Android pass;fresh native Windows tooling validation of the repair remains pending. [Full handoff](live-handoff-vex.md).
 
+The latest [native Windows tooling follow-up and terminal successor CI](ci-d90-portability-followup.json) retains both failed hosted Windows runs. The test-only correction passes 198 Linux tooling checks and reviewed local Windows module proof (72 passed, 18 platform skips); hosted Python/path equivalence remains qualified. CI40217147781 passed 203 Linux native tests and Android, while reference qualification remains failed. Android refusal preparation is held for a stale restoration-watcher binding correction.
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

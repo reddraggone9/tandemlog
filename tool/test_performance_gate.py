@@ -24,8 +24,7 @@ class PerformanceGateTests(unittest.TestCase):
             command.extend(['--output',str(output),'--diagnose-costs'])
             result=subprocess.run(command,text=True,capture_output=True,timeout=10)
             self.assertNotEqual(result.returncode,0)
-            expected='requires --measure-only' if sys.platform.startswith('linux') else 'requires Linux'
-            self.assertIn(expected,result.stderr)
+            self.assertIn('requires --measure-only',result.stderr)
             self.assertFalse(output.exists())
     def test_diagnostic_intervals_require_complete_exact_coverage(self):
         with tempfile.TemporaryDirectory() as directory:

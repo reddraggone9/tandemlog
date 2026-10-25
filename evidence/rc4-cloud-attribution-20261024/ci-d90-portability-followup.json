@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Windows test-only portability follow-up;not qualification or release acceptance",
+  "baseRevision": "d90e0b135e048f05a2ae3fed7312df603a5837d0",
+  "hostedRun": {
+    "id": 40217147781,
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40217147781",
+    "dispatchCount": 1,
+    "calibratePerformance": false,
+    "allJobsTerminal": true,
+    "overallAcceptance": false,
+    "jobs": [
+      {
+        "id": 121240655643,
+        "name": "checks / windows",
+        "status": "completed",
+        "conclusion": "failure",
+        "active": []
+      },
+      {
+        "id": 121240655753,
+        "name": "checks / reference-performance",
+        "status": "completed",
+        "conclusion": "failure",
+        "active": []
+      },
+      {
+        "id": 121240655761,
+        "name": "checks / android",
+        "status": "completed",
+        "conclusion": "success",
+        "active": []
+      },
+      {
+        "id": 121240655799,
+        "name": "checks / linux",
+        "status": "completed",
+        "conclusion": "success",
+        "active": []
+      },
+      {
+        "id": 121240655809,
+        "name": "checks / performance",
+        "status": "completed",
+        "conclusion": "success",
+        "active": []
+      }
+    ],
+    "linux": {
+      "unitPassed": 1515,
+      "nativeContractsPassed": 107,
+      "toolingTests": 197,
+      "nativePassed": 203,
+      "nativeDuration": "40m32s"
+    },
+    "windows": {
+      "unitPassed": 1513,
+      "unitSkipped": 2,
+      "nativeContractsPassed": 107,
+      "toolingTests": 197,
+      "failures": 1,
+      "errors": 17,
+      "skipped": 27,
+      "rootCauses": [
+        "Unresolved short temp-root alias versus resolved source-pin paths in fixture setup",
+        "One stale CLI guard-order assertion"
+      ],
+      "packagingReached": false
+    },
+    "advisoryPerformance": {
+      "correctnessAccepted": true,
+      "measurementCompleted": true,
+      "allPinsMatch": true,
+      "timingLimitsPassed": false,
+      "releaseGateAccepted": false,
+      "rerunsUsed": 0,
+      "metricsPerShape": 232,
+      "observationsPerShape": 1624,
+      "absoluteFailingActionShapeEntries": 86,
+      "absoluteMedianMisses": 3,
+      "absoluteMaximumMisses": 86,
+      "taskGrowthFailingActions": 14,
+      "foodGrowthFailingActions": 31,
+      "artifactID": 12607709944,
+      "artifactSHA256": "a9668a5d2459de177e05c7b430d6b88f2b244a543f7213b1361c22dc04a29d7c"
+    }
+  },
+  "candidate": {
+    "files": {
+      "tool/test_reference_performance.py": "9123264db62402b14d85018683f31c19d42accee58111433508e6027b1712cf4",
+      "tool/test_performance_gate.py": "9d2db5471218cfd98ca1f4f5cb53fcb641f860151baa024b507dbbe1ed9eb864"
+    },
+    "changes": [
+      "Canonicalize the fixture temporary root before path comparisons",
+      "Add portable aliased-root regression",
+      "Align the old diagnostic CLI assertion with current guard ordering"
+    ],
+    "preFixReproductions": "Both deterministic reproductions fail;retained privately",
+    "localLinuxTooling": {
+      "passed": 198,
+      "skipped": 2,
+      "seconds": 6.89
+    },
+    "reviewedLocalExecutorNativeWindows": {
+      "passed": 72,
+      "skippedLinuxOnly": 18,
+      "failures": 0,
+      "modules": 2,
+      "seconds": 48,
+      "python": "3.12.10",
+      "archiveSHA256": "73c5064fee1aeb283901f0732a655cb6bf2b3345456f704d45dd19db876a62f2",
+      "candidateArchiveSHA256": "69597bc72c4100818aa42c18338e9df2d22f6d271337ce04b0443490f62431b1",
+      "sourceFileHashesVerified": true,
+      "GUIAppOrEmulatorLaunched": false,
+      "retries": 0,
+      "qualification": "Hosted CPython3.11.9 and exact hosted short-path environment are not asserted identical;full successor hosted validation remains pending"
+    }
+  },
+  "runtimeSource": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "runtimeChanged": false,
+  "budgetsChanged": false,
+  "additionalCIDispatched": false,
+  "referenceQualification": "Still failed/missing;consumed request and historical failures unchanged",
+  "androidPreparationReview": {
+    "decision": "NO-GO current private revision",
+    "reason": "Restoration watcher expects old13helper set,2700seconds and priorAVD;actual lab seals19helpers/1200seconds/refusalAVD",
+    "required": "Correct exact watcher bindings,positive matching-context and negative stale-context controls,re-seal;fresh admission/scratch no-overwrite probe still mandatory",
+    "emulatorLaunched": false,
+    "privateSourcePublished": false
+  },
+  "logsSHA256": {
+    "linux": "0fae1476fa54bfdfc8885b41d9b11b55881d0286ae325ed72dbe237456d4902c",
+    "windows": "7bbb208171df9a7d0a08bfbb01b67ba993f13ed4d56eec9f584c388cae1b96ee",
+    "android": "c6b8a5975d81b9f3d22a239c77e0d53b256f3917e670b85c9c2ee9307848fee4",
+    "performance": "c796d7ab434ed4db0365e49c43352eafec79f096970963de26675454434c96d3",
+    "reference": "7f98bc52ba7ee04d0821c15a5ca3ca0c48566f2b5108f3ab10c6b8732ec5c45e"
+  }
+}
