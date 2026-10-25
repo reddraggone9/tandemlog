@@ -1,0 +1,31 @@
+{
+  "runId": 40164354926,
+  "headSHA": "6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6",
+  "artifactId": 12587946316,
+  "archiveSHA256": "07b4cb8f77883be921f8570e6da0e76e7541ce38667c92fb7600cca180238ce4",
+  "archiveDigestVerified": true,
+  "files": {
+    "tandemlog-android-test-only.apk": {
+      "bytes": 165629425,
+      "sha256": "15503b8d5ce3c434372f7ffa06dc5b1d5ff1d288bf5aee44f0311a37e5030eae"
+    },
+    "android-signature.txt": {
+      "bytes": 307,
+      "sha256": "080801533a25964de06c506594007d72597b4feaded383fbc0ce577ecadea04e"
+    },
+    "android-SHA256SUMS.txt": {
+      "bytes": 98,
+      "sha256": "f8fba6372c20e8d75d6eb09a1b56ca4f711ce0de9447c084c3423561352c9d07"
+    }
+  },
+  "installedOrLaunchedByCloud": false,
+  "apkSHA256SUMSMatches": true,
+  "nativeABIs": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64"
+  ],
+  "packageName": "test-only artifact; no installation",
+  "apkSignatureReverifiedLocally": false,
+  "qualification": "CI Android build/native payload verification passed; cloud independently verifies archive digest, APK hash and SHA256SUMS consistency only. No device acceptance."
+}

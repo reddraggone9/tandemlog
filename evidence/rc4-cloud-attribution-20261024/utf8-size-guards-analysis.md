@@ -105,3 +105,19 @@ paired miss, the historical intermittent Linux close SIGSEGV, pending Android
 helper validation and Windows hardware input-to-presentation acceptance remain
 qualified as documented in the handoff. This patch does not establish their
 cause or clear them. No release or live operation is authorized here.
+
+
+## Exact-source CI checkpoint
+
+[CI 40164354926](https://github.com/reddraggone9/tandemlog/actions/runs/40164354926)
+tests pushed product 6e400f7 with calibration disabled. Hosted Linux 1,515 unit
+tests, analysis/format/tooling/build/native-payload checks pass. Android job
+passes; the cloud independently verifies its archive/APK checksums but performs
+no installation. Windows unit step passes; later Windows/performance work is
+still active at this snapshot. Linux normal close failed with SIGSEGV. Its actual
+sanitized [stack](utf8-size-guards-linux-close-stack.txt) and
+[pinned receipt](utf8-size-guards-linux-close.json) locate LLVM/Gallium graphics
+compilation concurrent with process exit handlers; this is a disposal-order lead,
+not a proven upstream root cause. Warm startup/downstream native workflows were
+not executed. No source workaround or CI retry is applied. Fresh required gates
+therefore remain incomplete/failed despite byte-equivalence/local checks.

@@ -1,8 +1,40 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 05:08 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 05:22 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Captured Linux close fault — 2026-10-25 05:22 UTC
+
+Exact-source CI 40164354926 at product 6e400f7 is still active. Android job PASS;
+archive digest and APK checksum independently verified, no cloud installation.
+Windows unit step PASS and later checks active; enforcing performance active.
+Linux full 1,515 units, formatting/analysis/tooling/build/payload checks PASS,
+then normal owned-window WM_DELETE close SIGSEGV (-11), elapsed 2,781.761 ms.
+Warm startup, installed lifecycle and 203 native workflows were skipped after
+that failure. No acceptance or retry. Existing budget failures remain separate.
+
+The corrected bounded postmortem collector captured a sanitized stack from the
+actual failure, without relaunching the app or uploading raw cores. Artifact
+12588086221 SHA e3f7fd6a06bab9e4e67dd7da8cfa6c0d52eb2b857f9bcc083baa9df65a2d6203
+and diagnostic artifact 12587951465 SHA
+6912245ae2e2a346ad7981e83ed902a201784bf74de33ce27418277cfff9e10f are verified.
+[Crash receipt](utf8-size-guards-linux-close.json),
+[sanitized stack](utf8-size-guards-linux-close-stack.txt).
+
+Faulting worker: LLVM20 EVT/SelectionDAG/MCJIT through Gallium25.2.8 and Flutter.
+Main process thread: LLVM plus exit handlers. This is concrete evidence for
+reviewing graphics/engine disposal during process exit; root-cause ownership is
+not established. The pinned official Flutter source detaches application windows
+before quit and performs engine shutdown in object disposal. A lifecycle change
+would be separate from the UTF8 predicate patch and needs review before editing.
+No forced exit, sleeps, SDK/dependency/security change or new CI dispatch made.
+
+All 118 benchmark source pins also match committed 6e400f7, and all nine public
+canonical fixture files match retained cloud e23 generation byte-for-byte:
+[committed equivalence receipt](utf8-size-guards-committed-equivalence.json).
+Current work is read-only crash analysis and monitoring the existing CI. Product
+source remains frozen. Only the bounded read-only CI watch is owned locally.
 
 ## Pushed source and active exact CI — 2026-10-25 05:08 UTC
 
