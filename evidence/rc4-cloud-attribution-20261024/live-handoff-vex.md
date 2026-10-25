@@ -4,6 +4,38 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Continuation update —2026-10-25 01:45 UTC
+
+Product `e23f00f9640ee5724f4b646d37bc352ca58dc6f1` is committed/pushed and clean.
+Its ONE fresh enforcing [CI40151805818](https://github.com/reddraggone9/tandemlog/actions/runs/40151805818)
+started01:44:25UTC, calibration=false, after prior CI40148192820 terminated.
+Do not dispatch a same-branch duplicate. Prior5dc CI finished01:44:13UTC:
+Linux/Windows/Android PASS,203 native Linux tests PASS40m38s; overall FAIL only
+performance60absolute/45paired,0retries. Full native log
+`/workspace/scratch/rc4-owned-state-native-ci-40148192820/job.log`, SHA256
+`fb05d49423033cee240fd76c4b1c352578b769270006c33483a4d7abdc19b1dc`.
+This prior source does not accept the new quote repair or clear the old SIGSEGV.
+
+Separate diagnostics branch `diagnostics/rc4-io-20261025`, commit
+`16d8f4b50d6501219d1354412ea0ca3adf672cb0`, adds no product changes. Its ONE push-
+triggered [diagnostic40151843422](https://github.com/reddraggone9/tandemlog/actions/runs/40151843422)
+started01:45:02UTC. It runs the unchanged sealed all-action driver under opt-in
+cost diagnostics and fsync/fdatasync-only strace, never gate acceptance. All178
+tooling tests pass after locked package setup repaired the isolated worktree;
+initial missing-config failures are retained. Seven new parser/bounds/cleanup/
+acceptance-separation tests and a real2-fsync synthetic control pass. Local looser
+resource caps are refused before child creation. Service is6GiB/2CPU/no-swap/
+128pids,1200s process/1260s service bounds,64MiB/512tracefiles,verified cleanup.
+Trace includes setup/replay; no exact syscall-to-action or kernel-only duration
+claim. No SQL/buffers/rawstack capture. This is distinct evidence collection,
+not a noise retry or replacement for the failed required gate.
+
+Diagnostic worktree: `/workspace/scratch/rc4-io-diagnostic-worktree`, clean and
+pushed; full product checkout remains `/workspace/tandemlog`. No local benchmark,
+app, recorder or display is active. Both hosted runs are owned by cloud and must
+be monitored to terminal. Quota remains unknown. Monday13UTC cutoff, one writer,
+Windows foreground hold and all release/live/signing/limit safeguards remain.
+
 ## Continuation update —2026-10-25 01:37 UTC
 
 Tested pending successor: canonical quoting allocates a StringBuffer only when an

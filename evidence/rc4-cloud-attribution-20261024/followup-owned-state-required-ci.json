@@ -11992,5 +11992,19 @@
   "sourcePinCount": 117,
   "sourcePinsMatchAtInspection": true,
   "inspectedProductSource": "30f874789933f749f11dfe6319aaf74799365d7f",
-  "inspectionUTC": "2026-10-25T01:17:00Z"
+  "inspectionUTC": "2026-10-25T01:17:00Z",
+  "terminal": {
+    "completedUTC": "2026-10-25T01:44:13Z",
+    "conclusion": "failure",
+    "jobs": {
+      "linux": "success",
+      "windows": "success",
+      "android": "success",
+      "performance": "failure"
+    },
+    "linuxNativePassed": 203,
+    "linuxNativeFailed": 0,
+    "nativeElapsedSeconds": 2438,
+    "nativeLogSHA256": "fb05d49423033cee240fd76c4b1c352578b769270006c33483a4d7abdc19b1dc"
+  }
 }
