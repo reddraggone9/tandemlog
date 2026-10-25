@@ -1214,7 +1214,7 @@ class TaskStore {
         }
         if (textEngine!.checkpointHasPending(
           NativeTextCheckpoint(
-            NativeTextState.parse(base64Encode(r['state'] as Uint8List)),
+            NativeTextState.fromBytes(r['state'] as Uint8List),
           ),
           limits: NativeTextLimits(
             visibleUtf16: r['field'] == 'title' ? 500 : 10000,
@@ -1929,9 +1929,7 @@ class TaskStore {
           limits: NativeTextLimits(
             visibleUtf16: field == 'title' ? 500 : 10000,
           ),
-          checkpoint: NativeTextCheckpoint(
-            NativeTextState.parse(base64Encode(state)),
-          ),
+          checkpoint: NativeTextCheckpoint(NativeTextState.fromBytes(state)),
         );
         if (document.read().pending) {
           document.dispose();
@@ -2105,7 +2103,7 @@ class TaskStore {
           actorClientId: actor,
           limits: NativeTextLimits(visibleUtf16: name == 'title' ? 500 : 10000),
           checkpoint: NativeTextCheckpoint(
-            NativeTextState.parse(base64Encode(base['state'] as Uint8List)),
+            NativeTextState.fromBytes(base['state'] as Uint8List),
           ),
         );
         owner = _NativeUndoField(
@@ -5520,7 +5518,7 @@ class TaskSemanticValidator {
           if (field['adapter'] == 2) continue;
           if (store.textEngine!.checkpointHasPending(
             NativeTextCheckpoint(
-              NativeTextState.parse(base64Encode(field['state'] as Uint8List)),
+              NativeTextState.fromBytes(field['state'] as Uint8List),
             ),
             limits: NativeTextLimits(
               visibleUtf16: field['field'] == 'title' ? 500 : 10000,

@@ -515,3 +515,14 @@ transaction ordering and append/barrier paths do not change. The full1505-unit
 suite passes. Full local AOT preserves every shape/action/replay/source seal and
 retains its startup/tail/paired failures; a finite peer-admission improvement is
 not full hosted or native acceptance. All budgets remain unchanged.
+
+
+[SQL checkpoint construction](../evidence/rc4-cloud-attribution-20261024/followup-owned-state-analysis.md)
+now owns typed checkpoint bytes and generates canonical Base64 once, avoiding
+encoding/decoding/re-encoding self-generated strings at seven read sites. String
+inputs retain strict original parsing; representational errors, native budgets,
+pending checks, actor/owner/context checks and durable transaction rules remain.
+Full1508 units pass; source-sealed local AOT retains its timing failures. Fresh
+exact-source enforcement and native/hardware acceptance remain separate. The
+proposed availability memo/projection did not show a consistent advantage and
+was not retained.

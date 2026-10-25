@@ -92,6 +92,25 @@ class NativeTextState {
     encoded is String ? encoded : '',
     _decodeBytes(encoded, _stateBytes, 'Text state'),
   );
+
+  /// Own a SQL checkpoint's bytes without encoding and parsing our own Base64.
+  /// String inputs still use [parse] to verify their canonical representation.
+  factory NativeTextState.fromBytes(Uint8List bytes) {
+    if (bytes.isEmpty || bytes.length > _stateBytes) {
+      // Preserve parse(base64Encode(bytes)) failures, including the final
+      // partial Base64 block at the byte limit, before allocating a copy.
+      final encodedLength = ((bytes.length + 2) ~/ 3) * 4;
+      final maximumEncodedLength = ((_stateBytes + 2) ~/ 3) * 4;
+      throw FormatException(
+        bytes.isEmpty || encodedLength > maximumEncodedLength
+            ? 'Text state must be a bounded canonical Base64 string'
+            : 'Text state must preserve exact canonical Base64 bytes',
+      );
+    }
+    final owned = Uint8List.fromList(bytes).asUnmodifiableView();
+    return NativeTextState._(base64Encode(owned), owned);
+  }
+
   final String encoded;
   final Uint8List bytes;
 }

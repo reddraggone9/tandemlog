@@ -23,6 +23,55 @@ void main() {
     expect(NativeTextUpdate.parse('AAA=').encoded, 'AAA=');
   });
 
+  test('owned state bytes match the original canonical parser', () {
+    for (final length in [1, 2, 3, 4, 31, 256, 4096, 8 * 1024 * 1024]) {
+      final bytes = Uint8List(length);
+      for (var i = 0; i < length && i < 4096; i++) {
+        bytes[i] = (i * 17 + 3) & 255;
+      }
+      final original = NativeTextState.parse(base64Encode(bytes));
+      final owned = NativeTextState.fromBytes(bytes);
+      expect(owned.encoded, original.encoded);
+      expect(owned.bytes, original.bytes);
+    }
+  });
+
+  test('owned state rejects the same hard-boundary errors before copying', () {
+    Object failure(void Function() body) {
+      try {
+        body();
+      } catch (error) {
+        return error;
+      }
+      throw StateError('Expected state decoding failure.');
+    }
+
+    for (final length in [0, 8 * 1024 * 1024 + 1, 8 * 1024 * 1024 + 2]) {
+      final bytes = Uint8List(length);
+      final original = failure(
+        () => NativeTextState.parse(base64Encode(bytes)),
+      );
+      final owned = failure(() => NativeTextState.fromBytes(bytes));
+      expect(owned.runtimeType, original.runtimeType);
+      expect(owned.toString(), original.toString());
+    }
+  });
+
+  test('SQL state bytes own a copy independent of input and output views', () {
+    final backing = Uint8List.fromList([9, 1, 2, 3, 8]);
+    final input = Uint8List.sublistView(backing, 1, 4);
+    final owned = NativeTextState.fromBytes(input);
+    backing[1] = 200;
+    expect(owned.bytes, [1, 2, 3]);
+    expect(owned.encoded, 'AQID');
+    expect(() => owned.bytes[0] = 99, throwsUnsupportedError);
+    expect(
+      () => owned.bytes.buffer.asUint8List()[0] = 99,
+      throwsUnsupportedError,
+    );
+    expect(owned.bytes, [1, 2, 3]);
+  });
+
   final libraryPath =
       Platform.environment['TANDEMLOG_TEXT_LIBRARY'] ??
       Platform.environment['SPIKE_LIBRARY'];
@@ -57,11 +106,19 @@ void main() {
           secondSave.commit(receiptUpdate: secondSave.update);
           target.applyRemote(secondSave.update);
           const limits = NativeTextLimits(visibleUtf16: 500);
-          final pending = target.checkpoint();
+          final pendingWire = target.checkpoint();
+          final pending = NativeTextCheckpoint(
+            NativeTextState.fromBytes(pendingWire.state.bytes),
+          );
+          expect(pending.state.encoded, pendingWire.state.encoded);
           expect(engine.checkpointHasPending(pending, limits: limits), isTrue);
           expect(engine.checkpointHasPending(pending, limits: limits), isTrue);
           target.applyRemote(firstSave.update);
-          final complete = target.checkpoint();
+          final completeWire = target.checkpoint();
+          final complete = NativeTextCheckpoint(
+            NativeTextState.fromBytes(completeWire.state.bytes),
+          );
+          expect(complete.state.encoded, completeWire.state.encoded);
           expect(
             engine.checkpointHasPending(complete, limits: limits),
             isFalse,
@@ -78,7 +135,9 @@ void main() {
             engine.checkpointHasPending(complete, limits: limits),
             isFalse,
           );
-          final corrupt = NativeTextCheckpoint(NativeTextState.parse('/w=='));
+          final corrupt = NativeTextCheckpoint(
+            NativeTextState.fromBytes(Uint8List.fromList([255])),
+          );
           expect(
             () => engine.checkpointHasPending(corrupt, limits: limits),
             throwsA(isA<NativeTextException>()),

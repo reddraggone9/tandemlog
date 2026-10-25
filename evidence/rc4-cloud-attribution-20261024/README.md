@@ -286,3 +286,16 @@ correctness passes every shape/232 metrics, but11 absolute and4 paired failures
 remain under unchanged budgets. This is not hosted/native acceptance. The
 [handoff](live-handoff-vex.md) records the pending exact-source CI and baseline
 concurrency hold.
+
+
+## SQL checkpoint representation follow-up
+
+[Analysis](followup-owned-state-analysis.md), [codec samples](followup-owned-state-codec.json),
+[complete local AOT failures](followup-owned-state-full-aot.json) and
+[1508-unit/analysis/format receipts](followup-owned-state-local-checks.json)
+record removal of seven self-generated Base64 roundtrips, preserving exact
+bytes, bounds, immutable ownership and all native/admission/durability guards.
+[Exacta71 CI](followup-food-id-required-ci-terminal.json) confirms203 native
+Linux passes while retaining54 enforcing performance failures; it does not
+include this later constructor repair. Availability memo/projection experiments
+were [rejected with their evidence](followup-readiness-rejected-experiments.json).
