@@ -77,11 +77,14 @@ The complete product diff is confined to:
    Exact Linux closure/native gates already pass; Android does not need to repeat
    GTK disposal tests.
 
-For current-source Android development continuity, use **one fresh copy** of the
-sealed public synthetic baseline fixture (reference pins verify original canonical
-hashes), with a new disposable profile/SAF tree and the exact APK. No real/synced
-folder,live conversion or mutation of sealed originals. Existing e23 generation
-may be reused only after verifying those bytes; do not regenerate broad datasets.
+For current-source Android development continuity, use **one fresh public
+synthetic fixture** with a new disposable profile/SAF tree and the exact APK.
+The local executor proposes3Tasks/1Food container: sufficient for this focused
+delta. Pin its helper/replay wrapper to034a57d and seal the new fixture plus
+post-setup canonical ledger; it is not one of the large AOT reference manifests.
+An existing large reference fixture may instead be copied only after checking
+its published canonical hashes, but is not required. No real/synced folder,live
+conversion or mutation of sealed originals; do not regenerate broad datasets.
 Use the established bounded isolated emulator controller after comparison cleanup.
 Expected focused UI work10–20minutes plus independent replay/cleanup, within its
 existing finite deadline; do not extend it automatically for a blocked control.
@@ -150,3 +153,40 @@ Cloud remains sole product writer until explicit handoff; hard stop-write is
 2026-10-26 13:00UTC. The local executor performs only the coordinated immutable
 artifact validation. No further product repair is justified by these local
 reference passes alone.
+
+## Review of the proposed wide-emulator session
+
+Read-only source cross-check; **no lab launch or observed Android outcome**:
+
+- Proposed1280×960,density160 should exceed the actual900logical-pixel editor
+  breakpoint (`EditorSurface.breakpoint`;`main.dart:_taskEditorModalAtWidth`).
+  Verify effective density/insets and the actual side panel/toolbar instead of
+  assuming physical pixels prove layout. The content maximum1450 does not shrink
+  a1280-wide viewport below the breakpoint. The420-wide editor panel leaves the
+  host toolbar outside the narrow modal barrier.
+- Target the genuine host **toolbar Undo** (`undo-task-action`),not keyboard
+  Ctrl+Z/native text Undo or a transient snackbar. It is disabled while busy or
+  `closingEditor`; wait for settled state. `_undoLatest` calls `_closeEditor`,
+  which asks the unsaved-draft dialog. Cancel returns false and its finally path
+  clears closingEditor via setState; Discard closes the editor then applies the
+  requested exact session inverse. The proposed Cancel→continued typing→Discard
+  flow therefore exercises the relevant ownership/rebuild path.
+- Empty Title Save should reveal **Enter a task title.** after IME composition
+  has settled,retain editor/native draft,and append nothing. Correcting it in
+  the same editor then Save/Undo is useful validation continuity. This is a form
+  rejection,not evidence of backend/durability rejected-Save recovery. Successful
+  Save ordinarily closes the editor; “same editor” applies through the rejected
+  attempt and correction,not after successful Save.
+- Establish canonical checkpoints after legitimate fixture/admission/native
+  setup and record every setup action separately. Count the Discard-triggered
+  compensation by its exact referenced Save receipt,not an assumed total log
+  line count. After each pair compare full3Task rows and Food state,unaffected
+  targets,prefixes and the complete action ledger. One planned session with
+  titleSave/Undo,correctedSave/Undo,FoodEdit/Undo has3successful action/inverse
+  pairs; Cancel,Discarded draft,invalidSave and cold reopen add no independent
+  command. Any unexpected record is investigated,not normalized away.
+- Existing IME Unicode only if supported; no new IME service,megabyte input or
+  internal command injection. Retain actual draft/caret/focus and keyboard
+  reachability evidence. The proposed45minute session **includes3minutes cleanup**
+  under6GiB/no-swap/2CPU and the existing corrected supervision; no automatic
+  deadline extension/replacement. This remains emulator functional evidence.
