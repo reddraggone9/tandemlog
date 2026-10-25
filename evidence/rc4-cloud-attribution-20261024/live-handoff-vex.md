@@ -4,6 +4,18 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Warning-origin clarification — 2026-10-25 06:07 UTC
+
+Current product remains 034a57d; CI 40167598688 is active, unit suites and
+performance still running, no reported failed step. A single separate local
+warning-origin control preserved the original three warnings and traced them
+to generated plugin clear-method-handler helpers: URL launcher twice, file
+selector once. These construct basic channels while clearing handlers after
+the messenger's engine link is gone. Exact source/symbol/log pins are in
+[warning attribution](linux-disposal-warning-origin.json). No new product,
+dependency, SDK or warning-policy change. This explains those local messages;
+it is not a new LLVM-crash root-cause claim or hosted acceptance.
+
 ## Pushed disposal repair; exact CI active — 2026-10-25 06:02 UTC
 
 Product repair **034a57dbc7092e242889d23d12e22091fed08b0c** is pushed and

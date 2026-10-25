@@ -1,0 +1,44 @@
+{
+  "snapshotUTC": "2026-10-25T06:07:06.818594+00:00",
+  "productCommit": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "diagnosticOnly": true,
+  "applicationRuns": 1,
+  "originalWarningsPreserved": true,
+  "rawMemoryOrArgumentsCaptured": false,
+  "probeSourceSHA256": "73c7b5286c838caad6118aeb1848b9e3d0e3bf0dd7d1128cc51269fc09baff76",
+  "probeBinarySHA256": "23f5813ac8fc4eaa6208c8dbb22d1b076bfba6b663fbcc15ae019afe75780083",
+  "logSHA256": "8103da9aabccf665b38932176b0b82f887e0ba8027213074072bee8c7abe753e",
+  "localBundleLibraries": {
+    "liburl_launcher_linux_plugin.so": "1f4c6b0b3f2892b13acdc0d715f4959ad40cb875ee5d90ddf75885fa81243bbc",
+    "libfile_selector_linux_plugin.so": "27793a7333f9a1060bbcf4d7bd0f4fe95e00bf5628f628a61b0afd4e4d1fda65",
+    "libflutter_linux_gtk.so": "d57449a5c2ee39e77b9e3488f0703b165c67e0b3c554089f388db96484ae62f1"
+  },
+  "currentReviewedPackageSourcePins": {
+    "url_launcher_linux-3.2.3": {
+      "linux/messages.g.cc": "dcc34cd90d9c0fba2d066d343a3a4cd585bfda03c8132a101c5a22ce54201c4a",
+      "linux/url_launcher_plugin.cc": "b119a6e095fef26f2fc9edadadfea55f85d5f8310cb3d258c0d3b0fe6a7e2f5f"
+    },
+    "file_selector_linux-0.9.4+1": {
+      "linux/messages.g.cc": "c385d7edeb5f451a1ec38633f4116b676996287ba93a0d10fab537d367738a95",
+      "linux/file_selector_plugin.cc": "6c85e3968576e093e950fa6f0e11d788fe6972c9d93dbd93cd5514f807d31fd9"
+    }
+  },
+  "warningCallsites": [
+    {
+      "count": 2,
+      "symbol": "ful_url_launcher_api_clear_method_handlers",
+      "parent": "fl_url_launcher_plugin_dispose",
+      "operation": "construct basic channels for canLaunchUrl and launchUrl, then clear handlers"
+    },
+    {
+      "count": 1,
+      "symbol": "ffs_file_selector_api_clear_method_handlers",
+      "parent": "fl_file_selector_plugin_dispose",
+      "operation": "construct basic channel for showFileChooser, then clear handler"
+    }
+  ],
+  "attributionBasis": "Original nonfatal warning delegated unchanged, address-only backtrace, local plugin addr2line symbols, and exact current generated-source inspection. Method-channel annotation is unknown because these are basic-channel calls.",
+  "sourceChangesApplied": false,
+  "dependenciesChanged": false,
+  "qualification": "Explains these three local teardown warning emissions. Does not establish a new source of the earlier LLVM SIGSEGV or clear hosted/native performance gates."
+}

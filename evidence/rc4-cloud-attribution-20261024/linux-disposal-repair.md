@@ -85,3 +85,19 @@ normal-close/native gates pass. The previous SIGSEGV, all enforcing performance
 failures and their exact commits remain in the handoff. Local software-rendered
 proofs and the separately supplied older-e23 Android trial establish neither
 latest-source Windows/Android acceptance nor a release/cutover decision.
+
+
+## Follow-up warning attribution
+
+A separate single-launch [warning-origin control](linux-disposal-warning-origin.json)
+kept the original warnings visible and captured only native return addresses,
+not arguments or raw memory. Symbol mapping and the pinned generated sources
+identify two emissions in `ful_url_launcher_api_clear_method_handlers` during
+URL-launcher disposal and one in `ffs_file_selector_api_clear_method_handlers`
+during file-selector disposal. Those helpers construct basic channels and then
+clear their handlers after the messenger's engine link has gone. The earlier
+method-channel annotation reports unknown because these are basic-channel calls.
+[Original warning/backtrace log](linux-disposal-warning-origin.log.txt) is retained.
+No plugin, SDK, log policy or product source was changed for this diagnostic;
+this explains the local warning emission path without assigning the original
+LLVM SIGSEGV to those plugins or claiming warning-free native shutdown.
