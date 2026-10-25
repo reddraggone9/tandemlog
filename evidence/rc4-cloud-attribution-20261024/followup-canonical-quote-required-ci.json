@@ -14347,5 +14347,19 @@
         }
       }
     }
-  ]
+  ],
+  "terminal": {
+    "completedUTC": "2026-10-25T02:39:04Z",
+    "conclusion": "failure",
+    "jobs": {
+      "linux": "success",
+      "windows": "success",
+      "android": "success",
+      "performance": "failure"
+    },
+    "linuxNativePassed": 203,
+    "linuxNativeFailed": 0,
+    "linuxNativeSeconds": 2432,
+    "nativeLogSHA256": "55259ddbbc296ede93dc55d15ecd6b0a6e889196933d029d3d6630fb8c75e12f"
+  }
 }

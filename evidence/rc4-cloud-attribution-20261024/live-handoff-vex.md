@@ -4,6 +4,65 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Terminal cloud checkpoint —2026-10-25 02:41 UTC
+
+Cloud remains sole product writer; no cutover. Product is still exact
+`e23f00f9640ee5724f4b646d37bc352ca58dc6f1`; subsequent main-branch commits are
+protocol/evidence only. Product edits are held for Lee-approved controlled
+Farnsworth comparison. No local app,display,recorder,benchmark or profiler is active.
+
+Exact CI40151805818 TERMINAL at02:39:04UTC: Linux/Windows/Android PASS, including
+all203nativeLinux tests in40m32s. Native logSHA256 `55259ddbbc296ede93dc55d15ecd6b0a6e889196933d029d3d6630fb8c75e12f`.
+Overall FAIL: performance28absolute/18median and3pairedmaximum checks,0retries;
+all3shapes/232correctness pass. No hosted acceptance/release. See the pinned
+`followup-canonical-quote-required-ci.json`. No duplicate or newer CI dispatched.
+
+Corrected diagnostic40153325037 at08cf9af TERMINAL FAIL at02:30:58UTC: unchanged
+1200s process deadline;stop completed1210.120s,originalexit-9 retained. Both base
+andTask-growth completed correctness;Food-growth incomplete.17740barriers,
+0failed/0unparsed recorded;longest26.580ms canonical and6.559ms SQLite,including
+instrumentation/scheduling. No exact syscall-to-original-sample or exclusive
+kernel-service attribution. Unitabsence verified loadnot-found/inactive/PID0.
+Archive12584481252 SHA256
+`bf25007eb76bc60cd1760bcfaa3b37c69d335ef2cd4d9e4f231f50666ff1161f`;
+`hosted-io-second-failure.json`. Original first cap failure remains preserved.
+No cap extension or third dispatch; wait for the different Farnsworth control.
+
+Own-process cold CPU profile completed all21fresh-profile opens/all3replays:
+21404samples,no reported lost-event records,frame-pointer addresses only,no raw
+stack-memory capture. Inclusive decode~38%,semantic validation~31%,canonical
+value encoding~20%;leaf SHA~10%,UTF8~6%. These overlap and are not an exclusive
+wall partition. Nativebinary differs from hosted SHA; localcaps are looser.
+See `followup-cold-start-cpu-profile.json`. No subsequent product optimization
+has been applied; no native-SHA/API feature is started while quota is unknown.
+
+**Executable Farnsworth comparison is published**, immutable control receipt
+commit a4098b2: `farnsworth-e23-comparison.md`,
+`farnsworth-e23-comparison-pins.json`, `validate_farnsworth_comparison.py`.
+Three planned serial uninstrumented measure-only runs of exacte23/all232actions/
+all3histories,2warmups5samples;unchanged6GiB/2CPU/no-swap/128pids and budgets;
+25min/run plus cleanup,80min outer supervisor. Exact CI native/SQLite binaries
+are byte-identical to the enforcing job and reusable from artifact12583650483.
+Fixtures are deterministic: every canonical hash/non-path contract already
+matches hosted/cloud generation. Helper preflight and per-run closed-result
+validation stop on source/tool/data/resource/cleanup mismatch before next run.
+Validator logic checked against retained local report and6negative conditions;
+public strict caps reject the looser local report. Bash syntax passes.
+
+Pending action is execution through the parent's already isolated local executor
+AFTER its Android/test load is stopped and memory/cleanup verified. No concurrent
+measurement with the Android emulator. Record Linux/WSL/filesystem accurately;
+WSL is not bare-metal Windows. Allattempts remain diagnostic, no localpass
+substitutes for failed hosted gate. This is a sequencing prerequisite, not an
+authorization denial; Lee explicitly approved the comparison. Cloud does not
+access real devices or live data. Android exacte23 plan/APK receipt remain linked
+in `android-validation-plan-e23.md`;localfunctional execution is parent-owned.
+
+Remaining blockers: enforced performance,unwaived historical LinuxcloseSIGSEGV,
+separate hardware/native full-action acceptance and controlled local comparison
+pending its idle-lab slot. Quota remains unknown; no supported endpoint exposed.
+Stop-write cutoff2026-10-26 13:00UTC remains; ownership needs explicit handoff.
+
 ## Continuation update —2026-10-25 02:11 UTC
 
 Product remains e23f00f, with docs-only successors. Current exact-source
