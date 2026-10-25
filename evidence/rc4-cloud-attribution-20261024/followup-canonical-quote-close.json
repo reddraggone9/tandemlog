@@ -1,0 +1,47 @@
+{
+  "runId": 40151805818,
+  "source": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "artifactId": 12583650483,
+  "artifactSHA256": "58a30018449fe9e0f36793ad75d077b6bde9542bd7c7d8fdcaa50f4229be04b6",
+  "artifactVerified": true,
+  "shutdown": [
+    {
+      "requestedMode": "normal",
+      "normalExitVerified": true,
+      "method": "owned-window-WM_DELETE_WINDOW",
+      "pid": 9837,
+      "window": "2097155",
+      "globalFocusOrInput": false,
+      "processExit": 0,
+      "elapsedMs": 230.094
+    },
+    {
+      "requestedMode": "normal",
+      "normalExitVerified": true,
+      "method": "owned-window-WM_DELETE_WINDOW",
+      "pid": 9911,
+      "window": "2097155",
+      "globalFocusOrInput": false,
+      "processExit": 0,
+      "elapsedMs": 84.454
+    }
+  ],
+  "warmCleanWitnessVerified": true,
+  "postmortem": {
+    "diagnosticOnly": true,
+    "acceptance": false,
+    "applicationRerunByCollector": false,
+    "rawCoresUploaded": false,
+    "collectorSHA256": "1e2cf7cab18be19696b0f9772b6d3cc78fecf96087b8b0f7171b5f36e3ff7fdb",
+    "sourceRevision": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+    "binarySHA256": "a1ddd8b7877b4467767e15f441158138a75a75b2e2e372ac617232d2a7020343",
+    "cores": [],
+    "certifiedApplicationPIDs": [
+      9837,
+      9911
+    ],
+    "coreCount": 0
+  },
+  "historicalCrashCleared": false,
+  "hardwareTimingAccepted": false
+}

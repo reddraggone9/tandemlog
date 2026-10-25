@@ -4,6 +4,53 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Continuation update —2026-10-25 02:11 UTC
+
+Product remains e23f00f, with docs-only successors. Current exact-source
+CI40151805818: Windows/Android PASS; Linux units/build/payload/startup/install
+PASS and native suite active since01:58:06UTC (50min cap~02:48). Performance
+terminal FAIL: all3 shapes/232 correctness metrics pass;28 absolute failures,
+18median misses;3paired maximum failures;0eligible retries. CPU EPYC7763 differs
+from prior9V74; do not claim a controlled speed/regression comparison. Verified
+artifact12583168201 SHA256
+`b434e0bccc912d528b2945b75efedf272b692d135bd063e73d81ae87d6ad1bab`.
+Recorded117 source pins match current product inputs; the failed report never
+sets final measurementCompleted/allPinsMatch flags. See
+`followup-canonical-quote-required-ci.json`. Most median misses are startup;
+checklist Add/complete also miss. Next pure CPU attribution targets cold startup.
+
+Both exacte23 release closes exit0,230.094/84.454ms;warm witness reuse PASS,no core.
+Verified close artifact12583650483 SHA256
+`58a30018449fe9e0f36793ad75d077b6bde9542bd7c7d8fdcaa50f4229be04b6`.
+Original intermittent SIGSEGV remains UNWAIVED; clean runs do not diagnose it.
+
+Separate I/O diagnostic40151843422 FAILED after820.881s: per-thread strace output
+reached517files against512;1.69MiB total. Original exit-9/partial traces retained,
+unit cleanup verified load=not-found,state=inactive,pid=0. Base diagnostic
+correctness PASS;all-shape completion not achieved. First512-file partial read
+has9309barriers,0unparsed,longest5.986ms SQLite/3.260ms canonical; no exact action
+attribution or acceptance. Archive12582963439 SHA256
+`b12a31917c6aff16e5d5fd79e61c68a0282900c63feb3ce18006f895957d09b7`.
+This was an executed cap failure, not an authorization denial. Correction uses
+one interleaved file and supported seccomp syscall filtering, preserving ALL
+bounds.180tools plus actual one-file/two-child control pass. ONE corrected push-
+triggered diagnostic40153325037 is active on diagnostics/rc4-io-20261025 at
+08cf9af6cd60f5c2b5bbf93fc2c40425bb2276bf,started02:08:39UTC. No manual duplicate.
+Diagnostic source/results: branch evidence `hosted-io-diagnostic.md` and
+`hosted-io-first-failure.json`; product source is unchanged.
+
+The full isolated Android plan is now published as
+`android-validation-plan-e23.md`, with `android-artifact-e23.json`. Exact debug
+artifact12583330501/archive6b7156f6... and APK125cd209... are independently verified;
+3ABI libraries/notices/ELF alignment/exports pass. Full local Android CLI stopped
+at missing ANDROID_HOME; original CI full native gate passed. Device executor
+must verify actual manifest/signature/zipalign and use only the already isolated
+Farnsworth emulator route, with touch/IME foreground inside that lab. No Leela,
+real-device,live-data or cloud device access. No owner signing/release implied.
+
+Both hosted runs remain cloud-owned; no local app/display/recorder is active.
+Quota remains unknown and Monday13UTC cutoff/one-writer constraints remain.
+
 ## Continuation update —2026-10-25 01:45 UTC
 
 Product `e23f00f9640ee5724f4b646d37bc352ca58dc6f1` is committed/pushed and clean.

@@ -308,3 +308,7 @@ Canonical quote follow-up: [component research](followup-canonical-quote-researc
 [local checks](followup-canonical-quote-local-checks.json), [full AOT](followup-canonical-quote-full-aot.json)
 and [retained hosted cost synthesis](followup-owned-state-cost-analysis.md).
 All-action enforcement and native hardware acceptance remain pending.
+
+Current e23 follow-up: [required CI failures](followup-canonical-quote-required-ci.json),
+[exact-source normal closes](followup-canonical-quote-close.json), [Android plan](android-validation-plan-e23.md).
+Instrumented syscall collection is isolated on diagnostics/rc4-io-20261025; no timing acceptance.
