@@ -1,0 +1,57 @@
+{
+  "provenance": "Parent-supplied local-executor final evidence; no raw local artifact review by cloud",
+  "sourceSHA": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "suppliedChecksPassed": [
+    "repeated title Save/Undo",
+    "draft Cancel/Discard",
+    "completion/Undo",
+    "Food validation/Add/Edit/Remove/Undo",
+    "cold reopen"
+  ],
+  "independentReplaysPassed": 4,
+  "fullFinalTaskRowsEqualBaseline": true,
+  "canonicalBytesUnchangedFor": [
+    "Cancel",
+    "Discard",
+    "cold reopen"
+  ],
+  "remaining": [
+    "narrow modal did not expose dirty-editor Session Undo",
+    "physical timing",
+    "latest-source acceptance",
+    "broader native coverage"
+  ],
+  "cleanupAsReported": {
+    "UTC": "2026-10-25T05:26:18Z",
+    "settingsRestored": true,
+    "ownedProcessesAbsent": true,
+    "portsClosed": true,
+    "terminalReplayVerified": true
+  },
+  "farnsworthComparisonAsReported": {
+    "thirdCompletedUTC": "2026-10-25T04:41:36Z",
+    "completeRunsAbsolutePaired": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "historicalOutlierAndAbortsRetained": true
+  },
+  "quotaAsReported": {
+    "remainingPercent": 76,
+    "resetUTC": "2026-10-31T17:21:56Z",
+    "source": "Fresh supported local quota check relayed by parent",
+    "independentlyVerifiedByCloud": false
+  },
+  "cutoffUnchangedUTC": "2026-10-26T13:00:00Z",
+  "qualification": "Older e23 emulator functional evidence only, not latest6e400f7/native-close-candidate or physical input-to-presentation acceptance."
+}

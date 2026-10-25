@@ -1,0 +1,33 @@
+{
+  "focusedDisposalPassed": false,
+  "processClosesPassed": true,
+  "engineFinalizationMissing": true,
+  "markers": {
+    "run-1.stdout-stderr.log": [
+      "TANDEMLOG_LIFECYCLE_PROBE event=watch object=window thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=watch object=view thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=watch object=engine thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=detach object=window thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=destroyed object=window thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=destroyed object=view thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=finalized object=view thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=finalized object=window thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=window watched=1 destroyed=1 finalized=1 thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=view watched=1 destroyed=1 finalized=1 thread=65279",
+      "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=engine watched=1 destroyed=0 finalized=0 thread=65279"
+    ],
+    "run-2.stdout-stderr.log": [
+      "TANDEMLOG_LIFECYCLE_PROBE event=watch object=window thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=watch object=view thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=watch object=engine thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=detach object=window thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=destroyed object=window thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=destroyed object=view thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=finalized object=view thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=finalized object=window thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=window watched=1 destroyed=1 finalized=1 thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=view watched=1 destroyed=1 finalized=1 thread=65332",
+      "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=engine watched=1 destroyed=0 finalized=0 thread=65332"
+    ]
+  }
+}

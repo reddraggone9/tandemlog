@@ -1,8 +1,61 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 05:27 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 05:52 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Authorized disposal repair in progress — 2026-10-25 05:52 UTC
+
+Parent explicitly authorized continued native lifecycle investigation/repair;
+previous UTF8-only review hold is superseded. Cloud remains sole product writer.
+Current committed product is still 6e400f7; the native runner candidate is
+uncommitted while full validation runs. No new CI dispatched; baseline
+40164354926 is terminal and its Linux/performance failures remain unwaived.
+
+Focused proof on the exact retained failing hosted bundle found detached window,
+view and engine all alive at application-loop return, despite local normal exit.
+Window destruction alone finalized window/view but left the engine alive; that
+negative result is retained. Task tracing found an incomplete default-context
+GTask from implicit-view removal. Four already-ready context dispatches released
+it and finalized the engine. This is object ownership evidence, not another clean
+sample presented as SIGSEGV clearance.
+
+The candidate weakly tracks runner windows/engines, destroys surviving windows
+only during accepted application shutdown, and dispatches already-ready owning-
+thread completions until engines are gone, with a 256-dispatch operational cap
+and no sleeps/waiting for new work. Incomplete cleanup returns failure, not a
+successful normal-close witness. Canceled Dart exit never reaches shutdown.
+No forced exit, disabled rendering, SDK/security change or data/budget change.
+
+The deterministic QA gate passes fresh and verified warm-cache launches: window,
+view and engine all finalize on the GTK owning thread BEFORE loop return. Its
+validator rejects both retained broken cases and late/foreign/incomplete traces.
+Existing uninstrumented smoke remains; CI gains an additional disposal gate.
+[Focused proof](linux-disposal-focused-proof.json),
+[original negative](linux-disposal-original-proof.json),
+[window-only negative](linux-disposal-window-only-negative.json).
+Interim window-only binary was not separately archived before rebuilding; do not
+claim its binary attestation. SDK implicit-view rejection/messenger warnings are
+retained and under review, not muted or used as timing evidence.
+
+Full 1,515-unit/analysis/format/tool checks are active in session 27948, source
+frozen. Local native build and focused fresh/warm proofs pass. Finish checks,
+then uninstrumented close and final gate validation before product commit/push
+and ONE fresh exact-source CI. Current source is native-only relative to 6e400f7;
+Dart/performance algorithms and all limits are unchanged.
+
+Parent supplied final isolated e23 Android checks: repeated title Save/Undo,
+draft Cancel/Discard, completion/Undo, Food validation/Add/Edit/Remove/Undo and
+cold reopen PASS; four independent replays pass and final Task rows equal
+baseline. Cancel/Discard/cold-reopen canonical bytes unchanged. Dirty-editor
+Session Undo was unavailable in the narrow modal; physical timing/latest-source/
+broader native coverage remain open. Cleanup 05:26:18 UTC restored settings,
+removed owned processes, closed ports and verified terminal replay, as reported.
+Cloud has not reviewed raw local artifacts. [Attributed final receipt](android-e23-final-supplied.json).
+Comparison third run completed 04:41:36 UTC; complete series stays 0/0, 0/1, 0/0.
+Fresh LOCAL quota reportedly 76% remaining, reset Oct31 17:21:56 UTC; cloud does
+not independently verify it. Stop-write cutoff stays Oct26 13:00 UTC. No release,
+live operation, ownership transfer or hardware acceptance follows.
 
 ## Terminal exact-source CI and clean review point — 2026-10-25 05:27 UTC
 
