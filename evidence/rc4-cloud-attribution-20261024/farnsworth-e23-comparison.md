@@ -55,15 +55,17 @@ remain the harness's defined cold-profile cases, not a claimed cold OS disk.
 
 ## Execute using the existing reviewed launcher
 
-Local executor supplies `comparison_source` (new detached worktree) and
-`comparison_root` (new private output folder), after Android cleanup. Keep pins
-and this protocol outside the immutable measured tree. Run serially, supervised
+Local executor supplies `comparison_source` (new detached worktree),
+`comparison_root` (new private output folder), `comparison_pins` (published JSON)
+and `comparison_validator` ([read-only helper](validate_farnsworth_comparison.py)),
+after Android cleanup. Keep controls outside the immutable measured tree. Run serially, supervised
 by the existing local executor with an80minute outer task bound:
 
 ```bash
 set -euo pipefail
 test "$(git -C "$comparison_source" rev-parse HEAD)" = e23f00f9640ee5724f4b646d37bc352ca58dc6f1
 git -C "$comparison_source" diff --exit-code
+python3 "$comparison_validator" preflight "$comparison_source" "$comparison_pins"
 mkdir -m 700 "$comparison_root"
 for comparison_index in 1 2 3; do
   (
@@ -96,8 +98,10 @@ for comparison_index in 1 2 3; do
       50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e --measure-only \
       > "$comparison_case/launcher.log" 2>&1
   )
-  # Before continuing, the local executor validates the closed report below.
-  # If a postcondition fails, stop here and retain the original attempt.
+  python3 "$comparison_validator" report \
+    "$comparison_case/performance-results/gate-result.json" "$comparison_pins" \
+    > "$comparison_case/comparison-validation.json"
+  python3 "$comparison_validator" preflight "$comparison_source" "$comparison_pins"
 done
 ```
 
@@ -119,8 +123,8 @@ After **each** run, before proceeding, validate `performance-results/gate-result
   virtualization/filesystem/headroom and load observations. Preserve full logs,
   manifests, reports and cleanup proofs. Never overwrite an earlier run.
 
-If automation is needed for the per-run validator, the local executor may add it
-outside the immutable checkout using these fixed fields; do not patch the harness.
+The helper checks these conditions before the next run; it never edits the
+measured checkout or reports release acceptance. Retain its output and errors.
 
 ## What this can explain
 
