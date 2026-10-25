@@ -1,5 +1,5 @@
 {
-  "snapshotUTC": "2026-10-25T06:12:29.830623+00:00",
+  "snapshotUTC": "2026-10-25T06:16:04.247697+00:00",
   "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
   "runId": 40167598688,
   "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40167598688",
@@ -31,5 +31,22 @@
     "artifactDigestsVerified": true,
     "receipt": "linux-disposal-hosted-checks.json",
     "coreCount": 0
+  },
+  "performance": {
+    "status": "completed",
+    "conclusion": "failure",
+    "absoluteFailures": 5,
+    "absoluteMedianFailures": 0,
+    "absoluteMaximumFailures": 5,
+    "pairedFailures": 3,
+    "pairedMedianFailures": 1,
+    "pairedMaximumFailures": 3,
+    "rerunsUsed": 0,
+    "all3Shapes232CorrectnessPassed": true,
+    "artifactId": 12589850277,
+    "artifactSHA256": "f341b1d4db1be8a361e0d8b6f8eab810292a59011ff11c9ad9ccbad17005adbc",
+    "artifactDigestVerified": true,
+    "receipt": "linux-disposal-enforcing-performance.json",
+    "sameAOTBinarySourceToolsFixtureBindingAndCapsAsPrevious179_105Run": true
   }
 }

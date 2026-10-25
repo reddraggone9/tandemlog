@@ -4,6 +4,31 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Performance terminal; native suite active — 2026-10-25 06:16 UTC
+
+Exact CI 40167598688 has passed original hosted close and deterministic disposal
+gates, packaging/install lifecycle, and is running the full native Linux suite
+since 06:12:11 UTC (existing 50-minute step bound). Android PASS; Windows unit
+step remains active as last queried. No product edits or duplicate dispatch.
+
+Performance is TERMINAL FAIL: five absolute maximum-only misses, no absolute
+median misses; three paired failures (one median and three maximum, overlapping).
+All three shapes/232 correctness metrics pass; zero retries, limits unchanged.
+[Complete timing evidence](linux-disposal-enforcing-performance.json).
+Base misses: Task schedule max 143.987/40 ms, converted Task assignee max
+176.982/45 ms, its Undo 46.142/45 ms. Task-growth misses: converted paired Food
+details confirmed Save 29.243/20 ms, Undo 32.813/20 ms. Food-growth absolutes pass.
+Paired failures are those Food Save/Undo Task-growth cases and checklist-confirm
+completion Food-growth. The Save median 9.984 ms exceeds paired bound 9.3125 ms.
+
+The AOT executable is BYTE-IDENTICAL to prior CI 40164354926 (179 absolute/105
+paired failures), as are source/dependency pins, tools, full fixture/limits/binary
+binding and resource caps. CPU changed EPYC 9V74 to EPYC 9V45. Native runner
+changes are outside this standalone executable. This is direct evidence of
+execution-environment sensitivity, not a native-fix speedup, proof of a specific
+virtualization/CPU/storage cause, or authority to change gates. Every failure
+remains. No further performance run or limit/policy change is made.
+
 ## Hosted close and disposal gates verified — 2026-10-25 06:12 UTC
 
 Exact-source CI 40167598688 at product 034a57d has PASSED its original
