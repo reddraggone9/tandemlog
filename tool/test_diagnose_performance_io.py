@@ -14,6 +14,31 @@ SPEC.loader.exec_module(diag)
 
 
 class IoDiagnosticTests(unittest.TestCase):
+    def test_single_file_interleaved_resumption_preserves_original_start(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'fsync').write_text(
+                '120 1790000000.100000 fsync(8</tmp/dense-1-attempt-0/a.applog> <unfinished ...>\n'
+                '121 1790000000.100001 fdatasync(9</tmp/dense-1-attempt-0/b.applog>) = 0 <0.000400>\n'
+                '120 1790000000.244235 <... fsync resumed>) = 0 <0.144235>\n')
+            r = diag.summarize(root)
+            self.assertEqual(r['calls'], 2)
+            self.assertEqual(r['unparsedSyscallLines'], 0)
+            self.assertEqual(r['longest'][0]['startEpochSeconds'], '1790000000.100000')
+            self.assertEqual(r['longest'][0]['threadPID'], '120')
+            self.assertEqual(r['longest'][0]['elapsedUs'], 144235)
+
+    def test_orphan_resumption_and_pending_call_overflow_fail_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            p = root / 'fsync'
+            p.write_text('120 1790000000.1 <... fsync resumed>) = 0 <0.1>\n')
+            self.assertEqual(diag.summarize(root)['unparsedSyscallLines'], 1)
+            p.write_text(''.join(f'{pid} 1790000000.1 fsync(8 <unfinished ...>\n'
+                                for pid in range(129)))
+            with self.assertRaisesRegex(RuntimeError, 'pending-call bound'):
+                diag.summarize(root)
+
     def test_measurement_cannot_be_acceptance_or_omit_growth_correctness(self):
         valid = {'measureOnly': True, 'costDiagnosticsEnabled': True,
                  'allPinsMatch': True, 'measurementCompleted': True,

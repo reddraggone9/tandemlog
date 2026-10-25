@@ -26,3 +26,23 @@ fsync parser control and retained worktree-setup failure. The product branch and
 its pending exact-source CI remain separate. Push intentionally triggers ONE
 new diagnostic; do not also dispatch it or cancel an existing run. No release,
 live operation, limit loosening or hardware latency claim is authorized.
+
+## First bounded failure and collector correction
+
+Run40151843422 at16d8f4b failed after820.881s when per-thread strace output
+reached517files against512. Trace data was only1690835bytes; execution stopped,
+original childexit-9 was retained and the owned unit cleanup was verified. This
+is an executed diagnostic failure, not an authorization denial or app acceptance.
+Base-history correctness passed; all-shape completion did not. Original archive
+and logs remain pinned in [failure receipt](hosted-io-first-failure.json). A
+strictly partial first512-file analysis sees9309barriers,0unparsed,maximum5.986ms
+(SQLite) and3.260ms canonical; do not assign these to exact uninstrumented samples.
+
+Correction uses one interleaved strace file (-f) plus supported --seccomp-bpf
+filtering. The parser joins unfinished/resumed calls by PID and preserves original
+start time; orphan or over128pending calls fail closed. All bounds remain exactly
+unchanged, including512files/64MiB,20min process and resource caps.180tool tests
+pass, including interleaving/pending-bound cases; a real two-child BPF control
+produces1file/2barriers/0unparsed and stops all owned children. A new push runs
+ONE corrected diagnostic after the prior run's terminal failure. No product
+source or enforcing gate is modified.

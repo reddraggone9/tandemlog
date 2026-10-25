@@ -19,6 +19,8 @@ RUN_SECONDS = 1200
 CALL = re.compile(
     r'^(\d+\.\d+)\s+(fsync|fdatasync)\((\d+)(?:<([^>]*)>)?\)'
     r'\s+=\s+(-?\d+).*?<(\d+\.\d+)>$')
+PREFIX = re.compile(r'^(?:(\d+)\s+)?(\d+\.\d+)\s+(.*)$')
+RESUMED = re.compile(r'^<\.\.\. (fsync|fdatasync) resumed>(.*)$')
 
 
 def trace_inventory(root):
@@ -32,44 +34,77 @@ def trace_inventory(root):
     return sorted(files)
 
 
-def summarize(root):
+def trace_calls(files):
+    pending = {}
+    for path in files:
+        with path.open() as stream:
+            for line in stream:
+                prefix = PREFIX.match(line.strip())
+                if not prefix:
+                    if 'fsync(' in line or 'fdatasync(' in line or 'resumed>' in line:
+                        yield path.name, None, None
+                    continue
+                pid, stamp, body = prefix.groups()
+                key = pid or path.name
+                resumed = RESUMED.match(body)
+                if resumed:
+                    original = pending.pop(key, None)
+                    if original is None or original[0] != resumed[1]:
+                        yield path.name, pid, None
+                        continue
+                    complete = original[1] + resumed[2]
+                elif '<unfinished ...>' in body and body.startswith(('fsync(', 'fdatasync(')):
+                    if key in pending:
+                        yield path.name, pid, None
+                    pending[key] = (body.split('(', 1)[0],
+                                    stamp + ' ' + body.split('<unfinished ...>', 1)[0].rstrip())
+                    if len(pending) > 128:
+                        raise RuntimeError('Diagnostic pending-call bound exceeded')
+                    continue
+                else:
+                    complete = stamp + ' ' + body
+                match = CALL.match(complete)
+                if match or 'fsync(' in body or 'fdatasync(' in body or resumed:
+                    yield path.name, pid, match
+    for _ in pending:
+        yield '', None, None
+
+
+def summarize_files(files):
     count = failed = incomplete = 0
     total_us = 0
     longest = []
     longest_workload = []
     classes = {}
-    for path in trace_inventory(root):
-        with path.open() as stream:
-            for line in stream:
-                match = CALL.match(line.rstrip())
-                if not match:
-                    if 'fsync(' in line or 'fdatasync(' in line or 'resumed>' in line:
-                        incomplete += 1
-                    continue
-                start, operation, descriptor, target, result, seconds = match.groups()
-                duration = round(float(seconds) * 1_000_000)
-                target = target or ''
-                name = target.removesuffix(' (deleted)')
-                category = ('canonicalLog' if name.endswith(('.applog', '.operations'))
-                            else 'sqlite' if re.search(r'\.sqlite(?:-wal|-journal)?$', name)
-                            else 'otherFileOrDirectory')
-                stage = ('workloadOrReplay' if re.search(r'/dense-(?:1|2|food)-attempt-\d+/', name)
-                         else 'fixtureGeneration' if '/fixture-dense-' in name
-                         else 'compileControllerOrOther')
-                count += 1
-                failed += int(result) < 0
-                total_us += duration
-                classes[category] = classes.get(category, 0) + 1
-                longest.append({'traceFile': path.name, 'startEpochSeconds': start,
-                                'operation': operation, 'descriptor': int(descriptor),
-                                'path': target, 'class': category, 'stageHint': stage,
-                                'result': int(result), 'elapsedUs': duration})
-                if stage == 'workloadOrReplay':
-                    longest_workload.append(longest[-1])
-                    longest_workload.sort(key=lambda row: row['elapsedUs'], reverse=True)
-                    del longest_workload[20:]
-                longest.sort(key=lambda row: row['elapsedUs'], reverse=True)
-                del longest[20:]
+    for filename, pid, match in trace_calls(files):
+        if not match:
+            incomplete += 1
+            continue
+        start, operation, descriptor, target, result, seconds = match.groups()
+        duration = round(float(seconds) * 1_000_000)
+        target = target or ''
+        name = target.removesuffix(' (deleted)')
+        category = ('canonicalLog' if name.endswith(('.applog', '.operations'))
+                    else 'sqlite' if re.search(r'\.sqlite(?:-wal|-journal)?$', name)
+                    else 'otherFileOrDirectory')
+        stage = ('workloadOrReplay' if re.search(r'/dense-(?:1|2|food)-attempt-\d+/', name)
+                 else 'fixtureGeneration' if '/fixture-dense-' in name
+                 else 'compileControllerOrOther')
+        count += 1
+        failed += int(result) < 0
+        total_us += duration
+        classes[category] = classes.get(category, 0) + 1
+        longest.append({'traceFile': filename, 'threadPID': pid,
+                        'startEpochSeconds': start,
+                        'operation': operation, 'descriptor': int(descriptor),
+                        'path': target, 'class': category, 'stageHint': stage,
+                        'result': int(result), 'elapsedUs': duration})
+        if stage == 'workloadOrReplay':
+            longest_workload.append(longest[-1])
+            longest_workload.sort(key=lambda row: row['elapsedUs'], reverse=True)
+            del longest_workload[20:]
+        longest.sort(key=lambda row: row['elapsedUs'], reverse=True)
+        del longest[20:]
     return {'calls': count, 'failedCalls': failed,
             'unparsedSyscallLines': incomplete, 'classes': classes,
             'sumInclusiveElapsedUs': total_us, 'longest': longest,
@@ -79,6 +114,10 @@ def summarize(root):
             'qualification': 'Syscall wall includes scheduling and ptrace overhead; '
                              'calls may overlap. Not exclusive kernel service time. '
                              'No exact action-sample attribution is claimed.'}
+
+
+def summarize(root):
+    return summarize_files(trace_inventory(root))
 
 
 def capture(command, log, traces, *, seconds=RUN_SECONDS):
@@ -148,7 +187,7 @@ def main():
         report['environment'] = run_gate.runtime_environment()
         traces = root / 'syscalls'
         traces.mkdir(mode=0o700)
-        command = ['/usr/bin/strace', '-ff', '-ttt', '-T', '-yy',
+        command = ['/usr/bin/strace', '-f', '--seccomp-bpf', '-ttt', '-T', '-yy',
                    '-e', 'trace=fsync,fdatasync', '-o', str(traces / 'fsync'),
                    sys.executable, str(tools / 'run_gate.py'),
                    '--repo', str(repo), '--dart', str(args.dart.resolve()),
