@@ -51,5 +51,5 @@ unwaived despite two clean closes and no core.
 The availability memo and no-retention projection variants had mixed matched
 timings. Neither was retained in product source. Their full failed AOT and
 [comparison evidence](followup-readiness-rejected-experiments.json), plus the
-[unaccepted source patch](rejected-readiness-memo.patch), remain available; they
+[unaccepted source patch](rejected-readiness-memo.patch.gz), remain available; they
 are not accepted alternatives or instructions to reapply the cache.

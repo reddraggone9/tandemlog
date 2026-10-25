@@ -357,5 +357,7 @@
     }
   },
   "decision": "Mixed timings and a possible unrelated-path median regression do not justify retained state. Removed all availability memo/projection changes; preserve complete patch, full failed AOT/source and component tests. Next repair is deterministic checkpoint self-roundtrip removal.",
-  "sourcePatch": "rejected-readiness-memo.patch (evidence only; do not apply as accepted repair)"
+  "sourcePatch": "rejected-readiness-memo.patch.gz (lossless compressed evidence only; do not apply as accepted repair)",
+  "uncompressedPatchSHA256": "0619672a94a4ce86f5fdb40e95d8e5ef6f67da2126c65a27e7ab1acbc2f08a4a",
+  "compressedPatchSHA256": "b2e8f1ab13e72b7080909012b325b52be3290b4c6ac9b2e9779812c7f91c82c1"
 }
