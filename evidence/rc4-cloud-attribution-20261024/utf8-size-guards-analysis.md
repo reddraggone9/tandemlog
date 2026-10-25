@@ -121,3 +121,11 @@ compilation concurrent with process exit handlers; this is a disposal-order lead
 not a proven upstream root cause. Warm startup/downstream native workflows were
 not executed. No source workaround or CI retry is applied. Fresh required gates
 therefore remain incomplete/failed despite byte-equivalence/local checks.
+
+
+Terminal update: exact-source CI 40164354926 is overall FAIL. Windows/Android
+jobs PASS; Linux fails on the captured normal-close SIGSEGV and enforcing
+performance retains 179 absolute/105 paired failures, with zero retries. See
+[terminal analysis and scoped lifecycle review](utf8-size-guards-ci-analysis.md)
+for actual evidence, attribution limits and the next held review point. No new
+product change, workflow dispatch or acceptance is implied.

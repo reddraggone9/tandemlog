@@ -1,8 +1,48 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 05:22 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 05:27 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Terminal exact-source CI and clean review point — 2026-10-25 05:27 UTC
+
+Product commit remains **6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6**.
+Exact CI [40164354926](https://github.com/reddraggone9/tandemlog/actions/runs/40164354926)
+is terminal, updated 05:24:31 UTC: Windows and Android PASS; Linux and enforcing
+performance FAIL. One dispatch, calibration false, no cancellation or retry.
+No owned app/benchmark/watch process remains. Current later edits are evidence
+and documentation only; product/tests/performance tooling match that commit.
+Cloud remains sole product writer; no transfer occurred.
+
+[Terminal CI analysis and next review](utf8-size-guards-ci-analysis.md) includes
+exact failures, artifacts and the official pinned lifecycle source references.
+All hosted Linux 1,515 units/build checks pass, but normal close SIGSEGV blocks
+warm startup and downstream native cases. Actual post-fault stack locates LLVM/
+Gallium/Flutter code generation concurrent with process exit handlers. It does
+not establish root-cause ownership. The sanitized stack is retained, raw cores
+excluded. No clean-close sampling is treated as clearance.
+
+Enforcing performance: all three shapes/232 correctness metrics PASS; 179
+absolute failures (13 median, all 179 maximum) and 105 paired failures (12 median,
+103 maximum, overlapping), zero retries, unchanged limits and 6 GiB/two CPU/
+no-swap bounds. All 118 direct source pins match at independent inspection;
+final completion/pins flags are unset after timing failure. Runner EPYC 9V74
+versus earlier 7763; no controlled whole-action regression or improvement claim.
+Local component benefit and local AOT four startup-tail misses remain separate.
+
+The proposed next proof is actual window/view/engine disposal before main exit;
+if supported, consider weak runner-window ownership and destruction only AFTER
+Dart accepts exit/drains. Canceled exit must keep the window interactive. This
+native lifecycle change is beyond the latest UTF8-only scope and is held for
+review, not denied. No such edit, new run, dependency/SDK/security change,
+force-exit workaround, gate adjustment, release or live operation occurred.
+
+Parent-reported Farnsworth e23 series stays 0/0, 0/1, 0/0, with original outlier
+and controller aborts retained; cloud has not read its raw evidence. Android e23
+functional trial remains parent/local-executor owned and ongoing as last supplied.
+No current Windows hardware/foreground acceptance or Android trial pass inferred.
+Quota remains unknown; cutoff 2026-10-26 13:00 UTC and explicit handoff required.
+Earlier sections below are retained historical checkpoints.
 
 ## Captured Linux close fault — 2026-10-25 05:22 UTC
 
