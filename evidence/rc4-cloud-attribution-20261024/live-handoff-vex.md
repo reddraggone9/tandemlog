@@ -4,6 +4,30 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Hosted close and disposal gates verified — 2026-10-25 06:12 UTC
+
+Exact-source CI 40167598688 at product 034a57d has PASSED its original
+uninstrumented full-prefix fresh/warm normal-close smoke and its additional
+deterministic disposal gate. Original process exits 0/0; warm cache proof reuse
+verified. QA observes real window/view/engine finalization on the same owning
+GTK thread before application-loop return in both launches. All 18 bundle byte
+pins match across the two checks; all four QA source pins match current source.
+No core was generated. [Verified hosted receipts](linux-disposal-hosted-checks.json).
+
+Artifact 12589500796 SHA
+d014d6128a2c4c209108a2cfd8e7576f44a2e9e81734ea96f88938fc54926166;
+disposal artifact 12589635646 SHA
+c5723a75abdc7bb3b557bf5a21aeeaf2dfc36fc98ace67c27afd9182779df89b.
+Both archive digests independently verified. Native process teardown intervals
+1,027.874/727.453 ms are not visible UI/hardware responsiveness measurements.
+These results verify the lifetime repair on the hosted path that failed before;
+they do not establish universal elimination of every intermittent SIGSEGV.
+Historical fault and negative cases remain, with no budget change or retry.
+
+Android job PASS. Broader Linux packaging/native workflows, Windows and enforcing
+performance remain active/pending. No second dispatch or further product edits.
+Cloud remains sole writer; release/live operations and hardware acceptance held.
+
 ## Warning-origin clarification — 2026-10-25 06:07 UTC
 
 Current product remains 034a57d; CI 40167598688 is active, unit suites and

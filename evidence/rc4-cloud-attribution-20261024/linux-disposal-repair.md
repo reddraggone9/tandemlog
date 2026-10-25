@@ -101,3 +101,15 @@ method-channel annotation reports unknown because these are basic-channel calls.
 No plugin, SDK, log policy or product source was changed for this diagnostic;
 this explains the local warning emission path without assigning the original
 LLVM SIGSEGV to those plugins or claiming warning-free native shutdown.
+
+
+## Hosted exact-source checkpoint
+
+[Verified hosted artifacts](linux-disposal-hosted-checks.json) now record original
+uninstrumented fresh/warm normal exits 0/0, verified warm proof reuse and zero
+cores. The separate deterministic gate also passes both launches, finalizing all
+three objects on the owning thread before loop return. Both checks share all 18
+bundle pins; four QA source pins match. This verifies the lifetime correction on
+the original hosted execution path, while broader native workflows and required
+performance results remain pending. Historical SIGSEGV evidence is retained, not
+replaced by a universal crash-elimination claim or a hardware latency claim.
