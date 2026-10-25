@@ -549,3 +549,15 @@ were first run against e23, then retained with full Unicode/malformed/boundary
 oracle coverage. [Implementation and validation evidence](../evidence/rc4-cloud-attribution-20261024/utf8-size-guards-analysis.md)
 distinguishes same-binary component measurements from full-action, hosted and
 native presentation gates. No format, durability or budget change follows.
+
+
+## Accepted-exit native disposal
+
+The Linux runner now weakly tracks its windows/engines, destroys detached windows
+only after accepted Dart shutdown, and completes already-ready GTK disposal work
+before returning from the application loop. Unfinished engine cleanup is a failed
+exit. [Ownership proof and regressions](../evidence/rc4-cloud-attribution-20261024/linux-disposal-repair.md)
+retain the original fault and unsuccessful window-only prototype. Existing draft,
+queue, native-owner and durability decisions stay unchanged; no forced exit,
+rendering override or performance-limit relaxation is introduced. Original
+uninstrumented CI smoke remains, with an additional deterministic disposal gate.

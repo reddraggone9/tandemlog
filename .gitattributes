@@ -54,3 +54,6 @@ windows/flutter/generated_plugins.cmake -text
 
 # Actual-fault sanitized stack retains its artifact bytes for handoff review.
 evidence/rc4-cloud-attribution-20261024/utf8-size-guards-linux-close-stack.txt -text
+
+# Native disposal diagnostic archives retain literal source-evidence bytes.
+evidence/rc4-cloud-attribution-20261024/linux-disposal-*.log.txt -text

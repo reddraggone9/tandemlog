@@ -1,8 +1,30 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 05:52 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 06:00 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Disposal candidate locally validated — 2026-10-25 06:00 UTC
+
+The authorized native-only repair now passes all local checks. All 1,515 units,
+174 tooling tests, analysis, 399-file formatting check and release build PASS.
+Both the original uninstrumented fresh/warm harness and the final deterministic
+ownership gate PASS, including warm proof reuse. Window, view and engine finalize
+on the GTK owning thread before loop return. A separate renderer-child check
+also passes; no extra product change was needed. Source pins remained unchanged.
+
+[Repair/evidence](linux-disposal-repair.md) explains original negative, unsuccessful
+window-only cleanup, queued GTask completion, bounded ready-work barrier and
+explicit failure when engine cleanup is incomplete. Original crash and all
+performance failures remain retained. SDK teardown warnings are visible and
+unresolved, not suppressed. No performance/native-hardware clearance is claimed.
+
+No owned local check remains active. Next: commit/push this tested candidate,
+then ONE fresh exact-source CI with calibration false after checking concurrency.
+Do not start a separate unchanged performance retry or cancel another run.
+Previous CI 40164354926 is terminal; Dart/performance algorithms/limits are
+unchanged by this native repair. Parent-supplied e23 Android/quota results remain
+qualified below. Cloud remains sole writer; no release/live/ownership transfer.
 
 ## Authorized disposal repair in progress — 2026-10-25 05:52 UTC
 
