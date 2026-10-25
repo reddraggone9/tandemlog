@@ -5,6 +5,13 @@ Development diagnosis and correctness evidence only. Performance acceptance is
 dependency update or limit adjustment occurred. Windows foreground/hardware
 validation remains separately pending; no Farnsworth access was used.
 
+Latest count-only UTF-8 repair: [implementation and validation](utf8-size-guards-analysis.md),
+[frozen caller/source/check receipt](utf8-size-guards-validation.json),
+[actual-helper oracle](utf8-size-guards-integrated-oracle.json), and
+[same-binary component probe](utf8-size-guards-component.json).
+The [live handoff](live-handoff-vex.md) records current execution and remaining
+hosted/native gates; older evidence below retains its original source attribution.
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

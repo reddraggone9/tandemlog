@@ -1,0 +1,20 @@
+{
+  "functionalOraclePassed": true,
+  "comparisons": 326708,
+  "randomStrings": 30000,
+  "fullUnicodeScalarCorpus": true,
+  "malformedUtf16AndExactBudgetBoundaries": true,
+  "branches": {
+    "original exact fallback": 206071,
+    "proved within limit": 120637
+  },
+  "performanceMeasured": false,
+  "productIntegrated": true,
+  "reference": "Original Dart utf8.encode(value).length > maximumBytes",
+  "oracleSourceSHA256": "02fb18187cf8fa9a6356185e08ce56de8880a1e7a0484e2c91cf99ebc4b93412",
+  "helperSource": "lib/domain/utf8_byte_limit.dart",
+  "helperSHA256": "427e5ec6917c597c505a08788b8b1953a39ae40ef54862fe35d75c558ff1defa",
+  "dartSHA256": "327991241585ee23f10d8b239a3f8484cb55e5060c665700d19d7e01e62ec94a",
+  "exitCode": 0,
+  "qualification": "Upper-bound acceptance plus original exact fallback only; historical lower-bound prototype is separate. No performance measurement in this oracle."
+}

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../domain/current_operation.dart';
 import '../domain/validated_action_cache.dart';
+import '../domain/utf8_byte_limit.dart';
 
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
@@ -85,7 +86,7 @@ class FoodRecord {
         'Invalid Food operation reference or author.',
       );
     }
-    if (utf8.encode(encode()).length > maximumFoodRecordBytes) {
+    if (exceedsUtf8ByteLimit(encode(), maximumFoodRecordBytes)) {
       throw const FormatException('Food record is too large.');
     }
   }

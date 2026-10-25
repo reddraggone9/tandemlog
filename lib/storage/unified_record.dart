@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import '../domain/event.dart';
 import '../food/food_record.dart';
 import '../domain/validated_action_cache.dart';
+import '../domain/utf8_byte_limit.dart';
 
 const unifiedProtocol = 5;
 const maximumUnifiedFileBytes = 32 * 1024 * 1024;
@@ -193,7 +194,7 @@ class UnifiedRecord {
           utf8.encode('tandemlog:app-action:v5\n${canonicalDataJson(_body())}'),
         )
         .toString();
-    if (utf8.encode(encode()).length > maximumUnifiedRecordBytes) {
+    if (exceedsUtf8ByteLimit(encode(), maximumUnifiedRecordBytes)) {
       throw FormatFailure(
         'Action exceeds safe record size; nothing was written.',
       );
@@ -253,7 +254,7 @@ class UnifiedRecord {
   String encode() => _encoded ??= canonicalDataJson({..._body(), 'hash': hash});
   factory UnifiedRecord.decode(String raw) {
     try {
-      if (utf8.encode(raw).length > maximumUnifiedRecordBytes) {
+      if (exceedsUtf8ByteLimit(raw, maximumUnifiedRecordBytes)) {
         throw FormatFailure('Action exceeds safe read limits.');
       }
       final j = jsonDecode(raw);

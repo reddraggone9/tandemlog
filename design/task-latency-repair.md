@@ -537,3 +537,15 @@ remain unchanged. Independent JSON cases, original encoder differential research
 and frozen canonical/hash fixtures cover compatibility. Isolated same-binary
 AOT shows a component improvement, not full-action or native presentation
 acceptance; required all-action/first-use/history-growth limits still apply.
+
+
+## Count-only UTF-8 size checks
+
+Five existing size comparisons use a conservative UTF-16 upper bound to accept
+small strings without a temporary UTF-8 byte buffer. Larger strings retain the
+original exact conversion. Canonical scalar validation, serialized bytes, error
+ordering/messages and byte limits remain unchanged. Caller/frozen-record tests
+were first run against e23, then retained with full Unicode/malformed/boundary
+oracle coverage. [Implementation and validation evidence](../evidence/rc4-cloud-attribution-20261024/utf8-size-guards-analysis.md)
+distinguishes same-binary component measurements from full-action, hosted and
+native presentation gates. No format, durability or budget change follows.

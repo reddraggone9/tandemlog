@@ -1,0 +1,77 @@
+{
+  "source": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "errors": {
+    "current.asciiOversize": {
+      "type": "FormatException",
+      "message": "Oversized current operation."
+    },
+    "current.multibyteOversize": {
+      "type": "FormatException",
+      "message": "Oversized current operation."
+    },
+    "current.invalidScalar": {
+      "type": "FormatException",
+      "message": "Unpaired Unicode surrogate in event."
+    },
+    "current.formatBeforeHash": {
+      "type": "FormatException",
+      "message": "Unsupported operation format. Update the app; history was preserved."
+    },
+    "event.asciiOversize": {
+      "type": "FormatFailure",
+      "message": "Oversized event."
+    },
+    "event.multibyteOversize": {
+      "type": "FormatFailure",
+      "message": "Oversized event."
+    },
+    "event.invalidScalar": {
+      "type": "FormatFailure",
+      "message": "Unpaired Unicode surrogate in event."
+    },
+    "event.formatBeforeHash": {
+      "type": "FormatFailure",
+      "message": "Unsupported operation format. Update the app; history was preserved."
+    },
+    "food.invalidScalar": {
+      "type": "FormatException",
+      "message": "Unpaired Unicode surrogate in event."
+    },
+    "food.identityBeforeScalar": {
+      "type": "FormatException",
+      "message": "Invalid food record identity, clock or chain."
+    },
+    "food.textBeforeHash": {
+      "type": "FormatException",
+      "message": "Invalid food text."
+    },
+    "action.asciiOversize": {
+      "type": "FormatFailure",
+      "message": "Action exceeds safe read limits."
+    },
+    "action.multibyteOversize": {
+      "type": "FormatFailure",
+      "message": "Action exceeds safe read limits."
+    },
+    "action.formatBeforeHash": {
+      "type": "FormatFailure",
+      "message": "Unknown app history version. Update the app; history was preserved."
+    },
+    "action.invalidScalar": {
+      "type": "FormatFailure",
+      "message": "Invalid atomic action: FormatException: Unpaired Unicode surrogate in event."
+    }
+  },
+  "wire": {
+    "constructedFood": "{\"author\":\"22222222-2222-4222-8222-222222222222\",\"clock\":\"1\",\"contentHash\":\"d2a6c99822e17ea00c84b8bd938bdab6f9119a8d4e222cb5a74ebc2115c12e80\",\"format\":\"tandemlog.operation\",\"identity\":{\"sequence\":1,\"writer\":\"22222222-2222-4222-8222-222222222222\"},\"module\":\"food\",\"operation\":{\"family\":\"container.add\",\"revision\":1},\"predecessor\":\"45f93a5918726c4021803b86223e37965d486fd10c851c9499e615b55b5ef453\",\"referenceHash\":\"d2a6c99822e17ea00c84b8bd938bdab6f9119a8d4e222cb5a74ebc2115c12e80\",\"space\":\"11111111-1111-4111-8111-111111111111\",\"subject\":\"11111111-1111-4111-8111-111111111111\",\"value\":{\"creationBasis\":{},\"values\":{\"contents\":null,\"createdAt\":\"2026-10-10T00:00:00Z\",\"details\":{\"brand\":\"\",\"estimated\":false,\"expiry\":null,\"location\":\"\",\"name\":\"Café € 🙂\",\"retention\":\"\",\"size\":\"\"},\"fields\":[],\"observedDeletes\":[],\"observedEdits\":[],\"targets\":[\"44444444-4444-4444-8444-444444444444\"]}},\"version\":1}",
+    "constructedAction": "{\"clock\":\"1\",\"effects\":[{\"kind\":\"writer.named\",\"raw\":\"{\\\"name\\\":\\\"Café € 🙂\\\"}\"}],\"epoch\":\"33333333-3333-4333-8333-333333333333\",\"hash\":\"35285ae94dc98239eba4383bcd4bf0172e8e02ea5eabf16d00d1b6327f59df20\",\"observed\":{\"22222222-2222-4222-8222-222222222222\":{\"hash\":\"6b03d656bedfc22f77e0de6cad78e8fdde8ef4a920cc6d2c15bd92b6503ba758\",\"seq\":0}},\"previousHash\":\"6b03d656bedfc22f77e0de6cad78e8fdde8ef4a920cc6d2c15bd92b6503ba758\",\"provenance\":null,\"seq\":1,\"space\":\"11111111-1111-4111-8111-111111111111\",\"v\":5,\"writer\":\"22222222-2222-4222-8222-222222222222\"}",
+    "persons": [
+      "{\"author\":\"22222222-2222-4222-8222-222222222222\",\"clock\":\"1\",\"contentHash\":\"25a67b512527e909844484da57c0bdda5b3f4f03374aa88556b700b8a9a8ef5b\",\"format\":\"tandemlog.operation\",\"identity\":{\"sequence\":1,\"writer\":\"22222222-2222-4222-8222-222222222222\"},\"module\":\"tasks\",\"operation\":{\"family\":\"person.create\",\"revision\":1},\"predecessor\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"referenceHash\":\"25a67b512527e909844484da57c0bdda5b3f4f03374aa88556b700b8a9a8ef5b\",\"space\":\"11111111-1111-4111-8111-111111111111\",\"subject\":\"33333333-3333-4333-8333-333333333333\",\"value\":{\"name\":\"Example\"},\"version\":1}",
+      "{\"author\":\"22222222-2222-4222-8222-222222222222\",\"clock\":\"2\",\"contentHash\":\"bcb71086bd14d5d96d5682657b928d388326361b9bdf236eedb962d483664e08\",\"format\":\"tandemlog.operation\",\"identity\":{\"sequence\":2,\"writer\":\"22222222-2222-4222-8222-222222222222\"},\"module\":\"tasks\",\"operation\":{\"family\":\"person.create\",\"revision\":1},\"predecessor\":\"25a67b512527e909844484da57c0bdda5b3f4f03374aa88556b700b8a9a8ef5b\",\"referenceHash\":\"bcb71086bd14d5d96d5682657b928d388326361b9bdf236eedb962d483664e08\",\"space\":\"11111111-1111-4111-8111-111111111111\",\"subject\":\"44444444-4444-4444-8444-444444444444\",\"value\":{\"name\":\"Second €\"},\"version\":1}"
+    ],
+    "food": [
+      "{\"author\":\"00000000-0000-4000-8000-000000000010\",\"clock\":\"1\",\"contentHash\":\"00249487efdb903e7757553f7d3c1f858700f48e6df904b9659fc2d09585c250\",\"format\":\"tandemlog.operation\",\"identity\":{\"sequence\":1,\"writer\":\"00000000-0000-4000-8000-000000000010\"},\"module\":\"food\",\"operation\":{\"family\":\"container.add\",\"revision\":1},\"predecessor\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"referenceHash\":\"00249487efdb903e7757553f7d3c1f858700f48e6df904b9659fc2d09585c250\",\"space\":\"00000000-0000-4000-8000-000000000001\",\"subject\":\"00000000-0000-4000-8000-000000000001\",\"value\":{\"creationBasis\":{},\"values\":{\"contents\":{\"denominator\":1,\"numerator\":1,\"unit\":null},\"createdAt\":\"2026-10-10T00:00:00Z\",\"details\":{\"brand\":\"\",\"estimated\":false,\"expiry\":\"2026-10-15\",\"location\":\"\",\"name\":\"Rice\",\"retention\":\"\",\"size\":\"\"},\"fields\":[],\"observedDeletes\":[],\"observedEdits\":[],\"targets\":[\"00000000-0000-4000-8000-000000000002\"]}},\"version\":1}",
+      "{\"author\":\"00000000-0000-4000-8000-000000000010\",\"clock\":\"2\",\"contentHash\":\"fe4b83c285343a4e7b99bd32151b33fb5446169730e4036797bdfa8ea6ff6f6d\",\"format\":\"tandemlog.operation\",\"identity\":{\"sequence\":2,\"writer\":\"00000000-0000-4000-8000-000000000010\"},\"module\":\"food\",\"operation\":{\"family\":\"container.undo\",\"revision\":1},\"predecessor\":\"00249487efdb903e7757553f7d3c1f858700f48e6df904b9659fc2d09585c250\",\"referenceHash\":\"fe4b83c285343a4e7b99bd32151b33fb5446169730e4036797bdfa8ea6ff6f6d\",\"space\":\"00000000-0000-4000-8000-000000000001\",\"subject\":\"00000000-0000-4000-8000-000000000001\",\"value\":{\"creationBasis\":{\"00000000-0000-4000-8000-000000000002\":\"00000000-0000-4000-8000-000000000010:1\"},\"values\":{\"retracts\":\"00000000-0000-4000-8000-000000000010:1\",\"targets\":[\"00000000-0000-4000-8000-000000000002\"]}},\"version\":1}"
+    ]
+  }
+}

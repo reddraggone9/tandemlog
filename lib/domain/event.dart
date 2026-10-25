@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'current_operation.dart';
+import 'utf8_byte_limit.dart';
 import 'event_chain.dart';
 export 'event_chain.dart';
 import 'event_clock.dart';
@@ -141,7 +142,7 @@ class LogEvent {
 
   factory LogEvent.decode(String raw) {
     try {
-      if (raw.length > 1024 * 1024 || utf8.encode(raw).length > 1024 * 1024) {
+      if (raw.length > 1024 * 1024 || exceedsUtf8ByteLimit(raw, 1024 * 1024)) {
         throw FormatFailure('Oversized event.');
       }
       final operation = CurrentOperation.decode(raw, module: 'tasks');

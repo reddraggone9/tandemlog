@@ -1,5 +1,9 @@
 # Proposed next bounded repair — UTF8 size checks
 
+Historical proposal. The later authorized implementation and actual two-branch
+helper validation are recorded in [the implementation analysis](utf8-size-guards-analysis.md).
+The original prototype source/result below retain their original attribution.
+
 **Proposed application change only; no app/test-suite integration, performance
 run or gate change.** Product stays at exact e23. The scratch functional oracle
 is now complete; caller compatibility is the next bounded review before a
@@ -48,7 +52,7 @@ Before a product patch:
    `utf8.encode(value).length` predicate,30000 randomized strings,all Unicode
    scalars,malformed UTF16,empty strings and exact256KiB/1MiB/16MiB plus
    one-third boundaries. All three branches were exercised.
-   [Exact prototype](utf8-size-guard-functional-oracle.dart) and
+   [Exact prototype](utf8-size-guard-functional-oracle.dart.txt) and
    [functional result/source/SDK pins](utf8-size-guard-functional-oracle.json).
    No timings were recorded and no caller integration is claimed.
 2. Audit all five callers for unchanged ordering and failure classes/messages;
@@ -63,3 +67,5 @@ authorized single replacement comparison attempt remains local-executor owned
 and keeps e23 unchanged. Any later optimization timing validation belongs to a
 separately scoped changed-source step; failed evidence and hardware/UI
 qualifications remain intact.
+
+Historical prototype source is archived with a `.dart.txt` extension, byte-for-byte unchanged, so its evidence-only name and console output do not enter application analysis. The original source digest remains valid.

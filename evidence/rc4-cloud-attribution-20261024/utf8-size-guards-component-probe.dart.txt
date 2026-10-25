@@ -1,0 +1,110 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:tandemlog/domain/utf8_byte_limit.dart';
+
+@pragma('vm:never-inline')
+bool original(String value, int limit) => utf8.encode(value).length > limit;
+@pragma('vm:never-inline')
+bool candidate(String value, int limit) => exceedsUtf8ByteLimit(value, limit);
+
+(int, int) sample(
+  List<String> inputs,
+  int limit,
+  int repeats,
+  bool Function(String, int) predicate,
+) {
+  var checksum = 0;
+  final clock = Stopwatch()..start();
+  for (var r = 0; r < repeats; r++) {
+    for (final input in inputs) {
+      checksum += predicate(input, limit) ? 1 : 0;
+    }
+  }
+  clock.stop();
+  return (clock.elapsedMicroseconds, checksum);
+}
+
+void main(List<String> args) {
+  if (args.length != 1)
+    throw ArgumentError('One public fixture parent required');
+  final outer = <String>[], task = <String>[], food = <String>[];
+  for (final shape in ['dense-1', 'dense-2', 'dense-food']) {
+    final dir = Directory('${args.single}/fixture-$shape/workspace');
+    final files =
+        dir
+            .listSync()
+            .whereType<File>()
+            .where((p) => p.path.endsWith('.applog'))
+            .toList()
+          ..sort((a, b) => a.path.compareTo(b.path));
+    for (final file in files) {
+      for (final line in file.readAsLinesSync()) {
+        if (line.isEmpty) continue;
+        outer.add(line);
+        final j = jsonDecode(line) as Map<String, dynamic>;
+        for (final effect in j['effects'] as List) {
+          final raw = effect['raw'] as String;
+          ((effect['kind'] as String).endsWith('food') ? food : task).add(raw);
+        }
+      }
+    }
+  }
+  final results = <Object>[];
+  for (final (name, inputs, limit, repeats) in [
+    ('publicOuter', outer, 16 * 1024 * 1024, 32),
+    ('publicTaskEffect', task, 1024 * 1024, 32),
+    ('publicFoodEffect', food, 256 * 1024, 32),
+    (
+      'fallbackControl',
+      [
+        'a' * 400000,
+        '\u20ac' * 400000,
+        '\u{1f642}' * 300000,
+        String.fromCharCode(0xd800) * 400000,
+      ],
+      1024 * 1024,
+      4,
+    ),
+  ]) {
+    if (inputs.isEmpty) throw StateError('Empty component case $name');
+    final samples = <Object>[];
+    for (var round = 0; round < 7; round++) {
+      late (int, int) oldResult, newResult;
+      if (round.isEven) {
+        oldResult = sample(inputs, limit, repeats, original);
+        newResult = sample(inputs, limit, repeats, candidate);
+      } else {
+        newResult = sample(inputs, limit, repeats, candidate);
+        oldResult = sample(inputs, limit, repeats, original);
+      }
+      if (oldResult.$2 != newResult.$2) throw StateError('Predicate mismatch');
+      samples.add({
+        'round': round,
+        'warmup': round < 2,
+        'order': round.isEven ? 'original,candidate' : 'candidate,original',
+        'originalUs': oldResult.$1,
+        'candidateUs': newResult.$1,
+        'checksum': oldResult.$2,
+      });
+    }
+    results.add({
+      'case': name,
+      'strings': inputs.length,
+      'repeats': repeats,
+      'callsPerSample': inputs.length * repeats,
+      'limit': limit,
+      'allTakeFastPath': inputs.every((v) => v.length <= limit ~/ 3),
+      'samples': samples,
+    });
+  }
+  stdout.writeln(
+    jsonEncode({
+      'componentOnly': true,
+      'aot': true,
+      'sameBinaryAlternatingOrder': true,
+      'actionOrVisibleLatencyMeasured': false,
+      'cases': results,
+    }),
+  );
+}

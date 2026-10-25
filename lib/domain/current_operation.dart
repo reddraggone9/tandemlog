@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'event_chain.dart';
+import 'utf8_byte_limit.dart';
 
 const currentOperationFormat = 1;
 const _domain = 'tandemlog:operation:v1\n';
@@ -79,7 +80,7 @@ class CurrentOperation {
   }
 
   factory CurrentOperation.decode(String raw, {required String module}) {
-    if (utf8.encode(raw).length > 1024 * 1024) {
+    if (exceedsUtf8ByteLimit(raw, 1024 * 1024)) {
       throw const FormatException('Oversized current operation.');
     }
     final j = jsonDecode(raw);

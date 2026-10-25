@@ -1,8 +1,48 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-24 22:28 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 05:06 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Count-only UTF8 repair validated locally — 2026-10-25 05:06 UTC
+
+Parent authorized the narrow count-only size guard optimization. Cloud remains
+sole product writer. The development change after docs HEAD 47b3b0a contains one
+minimal helper and five predicate integrations; immutable Farnsworth e23 stays
+untouched. It uses only proved upper-bound acceptance and original exact
+conversion fallback, without the historical prototype's new early reject.
+No format, validation/error, durability, budget, UI or feature change.
+
+Caller errors and frozen records were tested on e23 BEFORE integration and
+remain identical. All 1,515 unit tests, 38 focused tests and 171 tooling tests
+PASS. Analysis PASS; 399 files formatted with zero changes. Actual-helper oracle
+PASS: 326,708 comparisons across full Unicode, malformed UTF16 and boundaries.
+Initial test-only baseline-read and historical evidence-file lint failures are
+retained. Original oracle source is archived byte-identically; no policy changed.
+
+The full uninstrumented source-sealed AOT session 68449 is TERMINAL, exit 0.
+All three shapes/232 metrics pass correctness, first-use/replay/prefix checks;
+both paired-growth comparisons pass. All 118 source pins match, zero retries.
+Four absolute startup maximum-only failures remain: base warm cache restore
+27.980/25 ms, cold total 940.157/935 ms, cold history 897.509/890 ms; Task-growth
+warm cache restore 42.192/40 ms. All medians pass; Food growth passes all limits.
+Every child is absent. Original run/report/logs are retained under
+`/workspace/scratch/rc4-utf8-guards-full-aot`. No owned process remains active.
+Local resource caps are looser than hosted, so this is diagnostic only.
+
+Same-binary alternating component batches show eligible count-only conversion
+work removed; larger-string fallback remains close. No full-action or visible
+latency speedup is claimed. See [implementation/evidence](utf8-size-guards-analysis.md).
+Next: commit/push this tested development change, then dispatch ONE fresh
+exact-source enforcing CI with `calibrate_performance=false`. Old e23 CI is
+terminal; no duplicate is active or requested. Do not substitute local results
+for hosted/native acceptance or relax a limit. Historical failures remain.
+
+The parent's authorized replacement Farnsworth attempt and Android helper work
+remain local-executor owned; their latest outcomes have not been supplied.
+No cloud Farnsworth/device access. Quota unknown; stop-write cutoff remains
+2026-10-26 13:00 UTC with explicit ownership handoff. Earlier sections below
+are historical and retain their original evidence/qualifications.
 
 ## Latest continuation direction —2026-10-25 04:34 UTC
 

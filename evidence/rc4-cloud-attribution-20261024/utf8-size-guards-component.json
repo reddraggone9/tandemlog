@@ -1,0 +1,295 @@
+{
+  "componentOnly": true,
+  "aot": true,
+  "sameBinaryAlternatingOrder": true,
+  "actionOrVisibleLatencyMeasured": false,
+  "cases": [
+    {
+      "case": "publicOuter",
+      "strings": 6615,
+      "repeats": 32,
+      "callsPerSample": 211680,
+      "limit": 16777216,
+      "allTakeFastPath": true,
+      "samples": [
+        {
+          "round": 0,
+          "warmup": true,
+          "order": "original,candidate",
+          "originalUs": 665143,
+          "candidateUs": 1769,
+          "checksum": 0
+        },
+        {
+          "round": 1,
+          "warmup": true,
+          "order": "candidate,original",
+          "originalUs": 650544,
+          "candidateUs": 1531,
+          "checksum": 0
+        },
+        {
+          "round": 2,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 659470,
+          "candidateUs": 1782,
+          "checksum": 0
+        },
+        {
+          "round": 3,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 646472,
+          "candidateUs": 1503,
+          "checksum": 0
+        },
+        {
+          "round": 4,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 645283,
+          "candidateUs": 1742,
+          "checksum": 0
+        },
+        {
+          "round": 5,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 647437,
+          "candidateUs": 1525,
+          "checksum": 0
+        },
+        {
+          "round": 6,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 649249,
+          "candidateUs": 1781,
+          "checksum": 0
+        }
+      ]
+    },
+    {
+      "case": "publicTaskEffect",
+      "strings": 4311,
+      "repeats": 32,
+      "callsPerSample": 137952,
+      "limit": 1048576,
+      "allTakeFastPath": true,
+      "samples": [
+        {
+          "round": 0,
+          "warmup": true,
+          "order": "original,candidate",
+          "originalUs": 229283,
+          "candidateUs": 990,
+          "checksum": 0
+        },
+        {
+          "round": 1,
+          "warmup": true,
+          "order": "candidate,original",
+          "originalUs": 234436,
+          "candidateUs": 978,
+          "checksum": 0
+        },
+        {
+          "round": 2,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 224453,
+          "candidateUs": 990,
+          "checksum": 0
+        },
+        {
+          "round": 3,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 224740,
+          "candidateUs": 964,
+          "checksum": 0
+        },
+        {
+          "round": 4,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 221466,
+          "candidateUs": 1000,
+          "checksum": 0
+        },
+        {
+          "round": 5,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 221873,
+          "candidateUs": 966,
+          "checksum": 0
+        },
+        {
+          "round": 6,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 220111,
+          "candidateUs": 986,
+          "checksum": 0
+        }
+      ]
+    },
+    {
+      "case": "publicFoodEffect",
+      "strings": 2307,
+      "repeats": 32,
+      "callsPerSample": 73824,
+      "limit": 262144,
+      "allTakeFastPath": true,
+      "samples": [
+        {
+          "round": 0,
+          "warmup": true,
+          "order": "original,candidate",
+          "originalUs": 166301,
+          "candidateUs": 507,
+          "checksum": 0
+        },
+        {
+          "round": 1,
+          "warmup": true,
+          "order": "candidate,original",
+          "originalUs": 165619,
+          "candidateUs": 515,
+          "checksum": 0
+        },
+        {
+          "round": 2,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 165091,
+          "candidateUs": 530,
+          "checksum": 0
+        },
+        {
+          "round": 3,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 167181,
+          "candidateUs": 502,
+          "checksum": 0
+        },
+        {
+          "round": 4,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 166468,
+          "candidateUs": 522,
+          "checksum": 0
+        },
+        {
+          "round": 5,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 167975,
+          "candidateUs": 557,
+          "checksum": 0
+        },
+        {
+          "round": 6,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 166655,
+          "candidateUs": 511,
+          "checksum": 0
+        }
+      ]
+    },
+    {
+      "case": "fallbackControl",
+      "strings": 4,
+      "repeats": 4,
+      "callsPerSample": 16,
+      "limit": 1048576,
+      "allTakeFastPath": false,
+      "samples": [
+        {
+          "round": 0,
+          "warmup": true,
+          "order": "original,candidate",
+          "originalUs": 41157,
+          "candidateUs": 39909,
+          "checksum": 12
+        },
+        {
+          "round": 1,
+          "warmup": true,
+          "order": "candidate,original",
+          "originalUs": 39813,
+          "candidateUs": 40649,
+          "checksum": 12
+        },
+        {
+          "round": 2,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 40109,
+          "candidateUs": 40082,
+          "checksum": 12
+        },
+        {
+          "round": 3,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 40935,
+          "candidateUs": 39813,
+          "checksum": 12
+        },
+        {
+          "round": 4,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 40873,
+          "candidateUs": 40277,
+          "checksum": 12
+        },
+        {
+          "round": 5,
+          "warmup": false,
+          "order": "candidate,original",
+          "originalUs": 40894,
+          "candidateUs": 40748,
+          "checksum": 12
+        },
+        {
+          "round": 6,
+          "warmup": false,
+          "order": "original,candidate",
+          "originalUs": 40026,
+          "candidateUs": 39801,
+          "checksum": 12
+        }
+      ]
+    }
+  ],
+  "sourceSHA256": "5fb139142e1ec4f76143c53fbf7d9e5d028a56eff4087d1f36f2674ed2c6fafd",
+  "helperSHA256": "427e5ec6917c597c505a08788b8b1953a39ae40ef54862fe35d75c558ff1defa",
+  "binarySHA256": "dd0095da046b9cd963d0622ab73185ecaa4bbe0904a395e3f691820f8af746da",
+  "dartSHA256": "327991241585ee23f10d8b239a3f8484cb55e5060c665700d19d7e01e62ec94a",
+  "fixtureCanonicalFileSHA256": {
+    "fixture-dense-1/workspace/19c88387-f660-56fb-89b5-305d65a7be79.applog": "4789c6ecf6aba6b90fd699e83437705ed0b78dd9601c644e851b8a44a531ef80",
+    "fixture-dense-1/workspace/e4aee5d1-c43f-5fdd-90f4-22c28e836e30.applog": "cea2cbc18f2aa099badeaaf629fef2a79fd19b69c32e0e848479127b0c63ced6",
+    "fixture-dense-1/workspace/ffbbdb20-8d1c-5aa3-a45c-1eca78faf2f8.applog": "0467029391a51db7f1a60e3a83715ba4664002aeca18cb8ac13d56e9448d8977",
+    "fixture-dense-2/workspace/19c88387-f660-56fb-89b5-305d65a7be79.applog": "4df98ef713991c554e1dbc15f5d827cd5f920cb8b7e73472bc3ed779689015d8",
+    "fixture-dense-2/workspace/e4aee5d1-c43f-5fdd-90f4-22c28e836e30.applog": "3ae6699b6015781d60f72be4b164a00375f93ea371400a49df49b4995730bdc2",
+    "fixture-dense-2/workspace/ffbbdb20-8d1c-5aa3-a45c-1eca78faf2f8.applog": "67032784a3f304e431b16d07e8afc55fe41c0e8ddd016c48d5d75829196e7077",
+    "fixture-dense-food/workspace/19c88387-f660-56fb-89b5-305d65a7be79.applog": "6612b009ad5018f07b87bf866f5c931de157fa37fbab22b123150fb2b27db007",
+    "fixture-dense-food/workspace/e4aee5d1-c43f-5fdd-90f4-22c28e836e30.applog": "0b0e53c8e19e5729710da9ae2bfa82447887bcd848593fa9cc34a3b5ee5af7b7",
+    "fixture-dense-food/workspace/ffbbdb20-8d1c-5aa3-a45c-1eca78faf2f8.applog": "2e1e876cea0c6c0170de23c7ec4bae07eb4862f4df3be5242c00b972b81187a1"
+  },
+  "qualification": "Cloud same-binary component only; 2 warmups and 5 measured rounds, alternating original/candidate order; all checksums equal. Inputs read and parsed outside timed loops. No allocation profiler or full-action/visible-latency improvement claimed. Unchanged original conversion is fallback control.",
+  "firstCompileAttempt": {
+    "exitCode": 64,
+    "reason": "--packages placed before compile instead of on compile exe; no binary or timing executed",
+    "logSHA256": "e02da8db2ec534b6fb15c109f0b535fddfbd41cb5deacd76320d517b16657ad9"
+  },
+  "successfulCompileLogSHA256": "cadb3de61bfc5727e5b90cd8e2bfdfecca9c158888ec0f63ac7a054248e9bcce",
+  "exitCode": 0
+}
