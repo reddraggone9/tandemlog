@@ -163,3 +163,12 @@ input-to-display latency. Current-source Linux native203-test and normal-close
 passes are separate evidence. Full-action hardware Windows responsiveness,
 current-source Android/native gaps and eventual candidate/release acceptance
 remain separately coordinated and unclaimed.
+
+## Completion report — supplied2026-10-25
+
+Parent/local executor reports all3planned observations complete with0absolute
+median/max and0paired median/max misses each,all pins/contracts/correctness/sample/
+package checks passed,no timingretry/replacement,and terminal cleanup07:59:11UTC.
+[Qualified supplied receipt](reference-034a57d-final-supplied.json). Cloud did not
+access raw local artifacts. Hosted5absolute/3paired failures remain retained;
+no gate replacement,policy change or hardware/native acceptance is implied.

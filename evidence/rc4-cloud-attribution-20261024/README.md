@@ -17,6 +17,8 @@ Latest Linux close repair: [ownership fix/proof](linux-disposal-repair.md) and
 passes Linux/Windows/Android jobs and all 203 native Linux workflows; overall CI
 still fails the unchanged performance gate. Historical evidence below is retained.
 
+Current034a57d reference measurements are [reported complete by the local executor](reference-034a57d-final-supplied.json):3fixed observations,each0absolute/paired misses,all input/correctness checks reported passed. Cloud has not reviewed raw local files; hosted enforcing failures remain. [Remaining acceptance and focused Android delta](acceptance-checklist-034a57d.md) links the independently verified [exact currentAPK receipt](android-artifact-034a57d.json). No gate-policy,product,release or live change.
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

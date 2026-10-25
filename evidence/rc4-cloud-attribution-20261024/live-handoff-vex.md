@@ -1,8 +1,40 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 07:22 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 08:15 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Current-source reference complete; Android delta prepared — 2026-10-25 08:15 UTC
+
+Parent-supplied local-executor evidence reports exactly3predeclared034a57d
+observations,each0absolute median/max and0paired median/max misses. All118source,
+5390compiled inventory,fixture correctness,sample/package checks pass;no timing
+retry/replacement. Manager finished07:59:11UTC,all4units absent/inactive/MainPID0,
+source clean. [Qualified supplied summary](reference-034a57d-final-supplied.json).
+Cloud has not reviewed raw local files. ReportSHA256 as supplied:
+73629403341640bcf0185e6e3db710e2e44b1d74079be56f98f6200d5a10a32b.
+Hosted40167598688 still fails5absolute/3paired;budgets/gate policy unchanged.
+No further benchmark,CI dispatch or product patch requested or started.
+
+[Remaining acceptance / minimum Android delta](acceptance-checklist-034a57d.md)
+and [exact Android artifact receipt](android-artifact-034a57d.json) are prepared
+for the parent's local executor. CI artifact12588729911/archivef6474faa… has
+APK11e685b28a0c76d7159d67430321e30ecb16d5d1e4c7360a3a1e9e719b26f600,
+165629425bytes. Cloud verifies archive/APK/embedded checksum and binary manifest,
+all3native text libraries/notices byte equality to e23. No local SDK signature/
+manifest-tool rerun or app/device execution. CI debugcertificate5deef41d… differs
+from e239b0e3e85…;use empty disposable lab profile,never replace/reset a retained
+or owner-signed installation. Actual package/version/debug/signature checks are
+required locally;versionCode100 is integer and debuggable=true is intentional.
+
+Android product delta from e23 is UTF8 size guards;Linux disposal is Linux-only.
+Focused currentAPK admission,Unicode Task/Food Save/Undo,Cancel/Discard,no-write
+cold reopen and independent replay are sufficient development continuity checks
+without rerunning broad unaffected matrices. Dirty-editor Session Undo remains
+separate:if genuine control is unreachable,retain the exact blocked step rather
+than substitute ordinary Discard. Hardware/full-action native responsiveness,
+owner-signed candidate/future release and live cutover remain unaccepted.
+Cloud remains sole writer;no owned command active;hard stop Oct26 13:00UTC.
 
 ## Remaining-performance checkpoint — 2026-10-25 07:22 UTC
 
