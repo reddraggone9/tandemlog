@@ -299,3 +299,7 @@ bytes, bounds, immutable ownership and all native/admission/durability guards.
 Linux passes while retaining54 enforcing performance failures; it does not
 include this later constructor repair. Availability memo/projection experiments
 were [rejected with their evidence](followup-readiness-rejected-experiments.json).
+
+2026-10-25 follow-up: [exact-source required CI](followup-owned-state-required-ci.json)
+and [native Linux desktop demonstration proof](followup-owned-state-native-demo.json).
+Performance remains failed; native CI pending at this snapshot.

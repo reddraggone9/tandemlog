@@ -4,6 +4,31 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
+## Continuation update —2026-10-25 01:25 UTC
+
+Source remains30f8747 / exact CI5dc4e3e; current docs successor ce70697.
+CI40148192820: Windows and Android PASS. Linux units/build/startup/package/install
+PASS; native suite active since01:03:10UTC,50-minute cap (~01:53UTC). Performance
+terminal FAIL: all3 shapes/232 metrics correctness PASS;60 absolute failures,
+2 median misses (Task-growth warm.cacheRestore30.378ms/cap30; Food-growth add.1
+43.973ms/cap15);45 paired failures,2 median misses;0 retries. CPU9V74 differs from
+prior7763, so no controlled whole-run speed comparison. Verified artifact12582121521
+SHA256 `a7cf7e85f10449fb2ff6db81c601a2db1ae2de985cb618865858ddd5d3cc9119`.
+See `followup-owned-state-required-ci.json`; complete raw report remains in
+`/workspace/scratch/rc4-owned-state-ci-40148192820`.
+
+Actual exact5dc native Linux GTK desktop pointer/keyboard demonstration completed:
+Save, dirty Undo/Cancel retains draft and enabled Undo with no canonical append,
+Undo/Discard restores3tasks;exact2addedactions,prefixes and independent replay
+PASS;normalexit0;all local processes stopped.40.45s video saved privately to
+Library. `followup-owned-state-native-demo.json` preserves public-safe proof.
+This is software-rendered Linux, not Windows/hardware timing; Android remains
+pending. Fresh/warm CI closes exit0,183.519/78.393ms; no core; historical crash
+remains unwaived. No production source edits since30f. Scratch-only canonical
+quoting research passed30,000 old-oracle checks and improved isolated AOT median
+~9% on synthetic envelopes/~21% short fields. No whole-action acceptance claimed.
+Quota still unknown; cutoff and ownership constraints unchanged.
+
 ## Continuation update —2026-10-25 00:51 UTC
 
 Cloud remains sole product writer; no cutover occurred. Stop-write cutoff is
