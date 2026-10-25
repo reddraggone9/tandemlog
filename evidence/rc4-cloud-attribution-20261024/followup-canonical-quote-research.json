@@ -1,0 +1,140 @@
+{
+  "oldOracleChecks": 30000,
+  "fullUnicodeScalarCorpus": true,
+  "sourcePinsMatch": true,
+  "scope": "isolated same-binary AOT quoting; not release or whole-action acceptance",
+  "rows": [
+    {
+      "workload": "short protocol fields",
+      "sample": 0,
+      "warmup": true,
+      "oldUs": 19258,
+      "newUs": 17495,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "short protocol fields",
+      "sample": 1,
+      "warmup": true,
+      "oldUs": 18918,
+      "newUs": 14958,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "short protocol fields",
+      "sample": 2,
+      "warmup": false,
+      "oldUs": 18250,
+      "newUs": 14515,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "short protocol fields",
+      "sample": 3,
+      "warmup": false,
+      "oldUs": 19320,
+      "newUs": 13873,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "short protocol fields",
+      "sample": 4,
+      "warmup": false,
+      "oldUs": 18928,
+      "newUs": 14463,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "short protocol fields",
+      "sample": 5,
+      "warmup": false,
+      "oldUs": 18388,
+      "newUs": 14116,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "short protocol fields",
+      "sample": 6,
+      "warmup": false,
+      "oldUs": 18147,
+      "newUs": 14756,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "actual synthetic envelopes",
+      "sample": 0,
+      "warmup": true,
+      "oldUs": 62061,
+      "newUs": 58068,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "actual synthetic envelopes",
+      "sample": 1,
+      "warmup": true,
+      "oldUs": 69530,
+      "newUs": 59419,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "actual synthetic envelopes",
+      "sample": 2,
+      "warmup": false,
+      "oldUs": 64289,
+      "newUs": 57398,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "actual synthetic envelopes",
+      "sample": 3,
+      "warmup": false,
+      "oldUs": 62375,
+      "newUs": 58614,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "actual synthetic envelopes",
+      "sample": 4,
+      "warmup": false,
+      "oldUs": 63395,
+      "newUs": 58382,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "actual synthetic envelopes",
+      "sample": 5,
+      "warmup": false,
+      "oldUs": 68584,
+      "newUs": 56767,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    },
+    {
+      "workload": "actual synthetic envelopes",
+      "sample": 6,
+      "warmup": false,
+      "oldUs": 64543,
+      "newUs": 59524,
+      "scope": "isolated canonical quoting AOT,not acceptance"
+    }
+  ],
+  "researchPins": {
+    "old.dart": "d81ccb91c552be5c29b009deeccb9328ce78b0a8bc8c80bac3d2ab33b4dafca6",
+    "new.dart": "a896897ad7efb11089e9ebe70572609692cb65248ee06d4fc0df590ad8d90df7",
+    "probe.dart": "165e673d3df69f3c9610e91d3452da4b6e0501e506fd236c33b21c88d0adcb3e"
+  },
+  "limitsUnchangedSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "workloadMedians": [
+    {
+      "workload": "actual synthetic envelopes",
+      "oldUs": 64289,
+      "newUs": 58382,
+      "relativeImprovementPercent": 9.188197047706451
+    },
+    {
+      "workload": "short protocol fields",
+      "oldUs": 18388,
+      "newUs": 14463,
+      "relativeImprovementPercent": 21.345442680008702
+    }
+  ]
+}

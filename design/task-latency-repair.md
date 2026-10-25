@@ -526,3 +526,14 @@ Full1508 units pass; source-sealed local AOT retains its timing failures. Fresh
 exact-source enforcement and native/hardware acceptance remain separate. The
 proposed availability memo/projection did not show a consistent advantage and
 was not retained.
+
+## Canonical quoting allocation
+
+Canonical string encoding validates every UTF-16 code unit before returning the
+unchanged literal form. Its StringBuffer is allocated only on the first actual
+escape; escaped runs retain the original copying/escaping rules. Unpaired
+surrogates, scalar object-key order, canonical JSON bytes and all hash domains
+remain unchanged. Independent JSON cases, original encoder differential research
+and frozen canonical/hash fixtures cover compatibility. Isolated same-binary
+AOT shows a component improvement, not full-action or native presentation
+acceptance; required all-action/first-use/history-growth limits still apply.

@@ -97,7 +97,7 @@ int _compareScalars(String a, String b) {
 /// available and lowercase u00xx otherwise. All other scalar values are literal.
 /// Unpaired UTF-16 surrogates are rejected instead of being replaced by UTF-8.
 String _string(String value) {
-  final result = StringBuffer('"');
+  StringBuffer? result;
   var start = 0;
   for (var i = 0; i < value.length; i++) {
     final unit = value.codeUnitAt(i);
@@ -127,11 +127,15 @@ String _string(String value) {
     if (escaped != null) {
       // Copy normal runs once, rather than dispatching every literal code unit
       // through StringBuffer. The validation/escaping contract is unchanged.
-      result.write(value.substring(start, i));
-      result.write(escaped);
+      final buffer = result ??= StringBuffer('"');
+      buffer.write(value.substring(start, i));
+      buffer.write(escaped);
       start = i + 1;
     }
   }
+  // Most protocol fields need no escaping. Still validate every code unit
+  // above, then avoid the buffer and substring allocations for that case.
+  if (result == null) return '"$value"';
   result.write(value.substring(start));
   result.write('"');
   return result.toString();

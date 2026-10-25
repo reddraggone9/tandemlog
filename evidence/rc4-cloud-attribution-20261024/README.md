@@ -303,3 +303,8 @@ were [rejected with their evidence](followup-readiness-rejected-experiments.json
 2026-10-25 follow-up: [exact-source required CI](followup-owned-state-required-ci.json)
 and [native Linux desktop demonstration proof](followup-owned-state-native-demo.json).
 Performance remains failed; native CI pending at this snapshot.
+
+Canonical quote follow-up: [component research](followup-canonical-quote-research.json),
+[local checks](followup-canonical-quote-local-checks.json), [full AOT](followup-canonical-quote-full-aot.json)
+and [retained hosted cost synthesis](followup-owned-state-cost-analysis.md).
+All-action enforcement and native hardware acceptance remain pending.

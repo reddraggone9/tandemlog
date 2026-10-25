@@ -1,0 +1,3983 @@
+{
+  "runId": 40148192820,
+  "scope": "Same uninstrumented enforcing samples; CPU counters bracket the timer and append is an inclusive API wall interval, not exclusive CPU or fsync-only service time. These values cannot be summed into a causal partition.",
+  "shapes": [
+    {
+      "shape": "dense-1",
+      "logSHA256": "5f60375bf08aca9bb2da818a7f9d1d4fc2781411e0405117ded4acd8ee7893b1",
+      "failedOperations": [
+        {
+          "action": "task.editorOpenCancel",
+          "medianMs": 5.804,
+          "maxMs": 18.268,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 5.804,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 6.323,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 18.268,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 6.584,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 6.05,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 7.011,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 5.792,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 6.214,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 5.659,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 6.433,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "converted.checklist.titleAndNotes.undo",
+          "medianMs": 28.191,
+          "maxMs": 97.827,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 23.866,
+              "appendMs": 0.4,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 34.37,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 28.191,
+              "appendMs": 0.363,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 39.421,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 29.659,
+              "appendMs": 0.424,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 37.957,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 27.606,
+              "appendMs": 0.291,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 27.48,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 97.827,
+              "appendMs": 63.574,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 44.19,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.checklist.reorder",
+          "medianMs": 32.77,
+          "maxMs": 73.992,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 20.034,
+              "appendMs": 0.387,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 19.638,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 45.589,
+              "appendMs": 0.329,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 25.005,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 29.862,
+              "appendMs": 0.315,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 40.294,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 73.992,
+              "appendMs": 46.392,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 27.225,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 32.77,
+              "appendMs": 0.303,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 32.424,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.complete.checklistConfirm",
+          "medianMs": 41.702,
+          "maxMs": 123.656,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 41.327,
+              "appendMs": 0.305,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 28.025,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 35.056,
+              "appendMs": 0.309,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 32.316,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 41.702,
+              "appendMs": 0.357,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 44.278,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 123.656,
+              "appendMs": 0.345,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 51.941,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 55.244,
+              "appendMs": 8.659,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 41.21,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "derivedSuccessor.complete.nativeChecklist",
+          "medianMs": 41.74,
+          "maxMs": 97.833,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 40.984,
+              "appendMs": 0.453,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 39.971,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 41.74,
+              "appendMs": 0.359,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 41.088,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 41.911,
+              "appendMs": 0.477,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 41.408,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 41.461,
+              "appendMs": 0.384,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 41.193,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 97.833,
+              "appendMs": 0.455,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 41.447,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "recurring.complete.undoProtectedSuccessor",
+          "medianMs": 47.711,
+          "maxMs": 86.002,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 47.767,
+              "appendMs": 0.381,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 46.241,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 47.711,
+              "appendMs": 0.364,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 47.79,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 46.716,
+              "appendMs": 0.396,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 46.391,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 46.137,
+              "appendMs": 0.332,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 45.393,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 86.002,
+              "appendMs": 39.216,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 46.984,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "recurring.recomplete.keepProtectedSuccessor",
+          "medianMs": 34.939,
+          "maxMs": 96.34,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 36.009,
+              "appendMs": 0.368,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 35.121,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 34.939,
+              "appendMs": 0.361,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 34.017,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 34.881,
+              "appendMs": 0.371,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 33.904,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 33.329,
+              "appendMs": 0.342,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 32.075,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 96.34,
+              "appendMs": 0.379,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 34.436,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "cardinality500.food.details.3",
+          "medianMs": 7.75,
+          "maxMs": 24.668,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 24.668,
+              "appendMs": 17.709,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.386,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.541,
+              "appendMs": 0.345,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.747,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 7.408,
+              "appendMs": 0.305,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.957,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 9.56,
+              "appendMs": 0.308,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.598,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.75,
+              "appendMs": 0.344,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.649,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "cardinality500.food.details.3.undo",
+          "medianMs": 10.056,
+          "maxMs": 20.888,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.916,
+              "appendMs": 0.424,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.329,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 10.152,
+              "appendMs": 0.36,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 17.239,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 10.056,
+              "appendMs": 2.161,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.097,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.191,
+              "appendMs": 0.4,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.339,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 20.888,
+              "appendMs": 6.288,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.649,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "firstDerived.metadata.tags.undo",
+          "medianMs": 10.823,
+          "maxMs": 79.074,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 10.823,
+              "appendMs": 0.366,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.84,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 10.592,
+              "appendMs": 0.373,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.331,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 14.485,
+              "appendMs": 0.317,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.752,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 10.648,
+              "appendMs": 0.316,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.93,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 79.074,
+              "appendMs": 7.63,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.713,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "firstCopied.metadata.complete",
+          "medianMs": 11.347,
+          "maxMs": 230.523,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 11.24,
+              "appendMs": 0.468,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.632,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 230.523,
+              "appendMs": 219.101,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.015,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 11.24,
+              "appendMs": 0.425,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.912,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 14.427,
+              "appendMs": 0.527,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.097,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 11.347,
+              "appendMs": 0.458,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.6,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "firstDerived.mixed.undo",
+          "medianMs": 13.122,
+          "maxMs": 74.243,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 74.243,
+              "appendMs": 0.336,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.065,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 14.675,
+              "appendMs": 0.309,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 23.707,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 13.122,
+              "appendMs": 0.378,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.243,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 13.003,
+              "appendMs": 0.387,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.168,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 12.64,
+              "appendMs": 0.357,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.349,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "shape": "dense-2",
+      "logSHA256": "77a783d76d0d9897a26d6095b2b6dca896a52983a1338a148fe7d08065911f9f",
+      "failedOperations": [
+        {
+          "action": "task.title.save",
+          "medianMs": 25.346,
+          "maxMs": 106.717,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 106.717,
+              "appendMs": 88.893,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 18.709,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 19.673,
+              "appendMs": 0.484,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 20.113,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 21.738,
+              "appendMs": 0.411,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 22.612,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 25.346,
+              "appendMs": 0.626,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 25.565,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 25.831,
+              "appendMs": 0.28,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 26.437,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "task.titleAndNotes.save",
+          "medianMs": 31.08,
+          "maxMs": 148.635,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 81.003,
+              "appendMs": 0.337,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 21.619,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 23.636,
+              "appendMs": 0.436,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 23.627,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 148.635,
+              "appendMs": 117.942,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 46.111,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 29.409,
+              "appendMs": 0.313,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 29.477,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 31.08,
+              "appendMs": 0.409,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 31.349,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.title.editorOpen",
+          "medianMs": 3.163,
+          "maxMs": 31.575,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 3.353,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 2.617,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 31.575,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.025,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 2.983,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.044,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 3.163,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 2.895,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 2.992,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.049,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "converted.task.notes.editorOpen",
+          "medianMs": 3.365,
+          "maxMs": 78.609,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 3.122,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.028,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 3.29,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.372,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 3.365,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.38,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 3.448,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.467,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 78.609,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.881,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "converted.task.notes.save",
+          "medianMs": 18.536,
+          "maxMs": 78.579,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 14.97,
+              "appendMs": 0.395,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.886,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 15.551,
+              "appendMs": 0.318,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.217,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 78.579,
+              "appendMs": 62.813,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.126,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 18.536,
+              "appendMs": 0.293,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 29.485,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 38.901,
+              "appendMs": 22.563,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.86,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "checklist.delete",
+          "medianMs": 21.894,
+          "maxMs": 59.991,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 17.079,
+              "appendMs": 0.444,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.74,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 20.716,
+              "appendMs": 0.374,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 20.83,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 21.894,
+              "appendMs": 0.441,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 21.564,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 29.415,
+              "appendMs": 0.348,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 30.388,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 59.991,
+              "appendMs": 30.238,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 43.587,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "food.delete.3.undo",
+          "medianMs": 8.509,
+          "maxMs": 79.328,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.655,
+              "appendMs": 0.319,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.411,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 9.562,
+              "appendMs": 0.356,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.601,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 7.881,
+              "appendMs": 0.323,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.411,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 79.328,
+              "appendMs": 0.342,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.403,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 8.509,
+              "appendMs": 0.351,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.753,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.add.1",
+          "medianMs": 6.607,
+          "maxMs": 23.549,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 6.607,
+              "appendMs": 0.493,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.447,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 6.642,
+              "appendMs": 0.314,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.446,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 23.549,
+              "appendMs": 0.309,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.941,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 6.355,
+              "appendMs": 0.339,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.227,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 6.464,
+              "appendMs": 0.396,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.45,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.add.3",
+          "medianMs": 6.91,
+          "maxMs": 26.093,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.018,
+              "appendMs": 0.412,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.1,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 6.386,
+              "appendMs": 0.327,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.801,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 6.91,
+              "appendMs": 0.35,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.943,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 6.656,
+              "appendMs": 0.349,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.746,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 26.093,
+              "appendMs": 0.535,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.684,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.details.1",
+          "medianMs": 6.877,
+          "maxMs": 30.74,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 6.53,
+              "appendMs": 0.384,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.841,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 30.74,
+              "appendMs": 10.735,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.639,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 6.877,
+              "appendMs": 0.421,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.499,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 6.814,
+              "appendMs": 0.416,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.205,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.25,
+              "appendMs": 0.375,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.835,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.details.3.undo",
+          "medianMs": 8.167,
+          "maxMs": 53.768,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 8.84,
+              "appendMs": 0.345,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.475,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.31,
+              "appendMs": 0.292,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.766,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 8.167,
+              "appendMs": 0.328,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.306,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 53.768,
+              "appendMs": 0.284,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 21.573,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 8.132,
+              "appendMs": 0.309,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.377,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.contents.APIonly.undo",
+          "medianMs": 8.096,
+          "maxMs": 79.038,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.029,
+              "appendMs": 0.313,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.756,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 79.038,
+              "appendMs": 0.336,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.871,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 9.492,
+              "appendMs": 2.542,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.88,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 7.273,
+              "appendMs": 0.288,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.863,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 8.096,
+              "appendMs": 0.353,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.676,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.restore.1",
+          "medianMs": 7.102,
+          "maxMs": 77.57,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 6.45,
+              "appendMs": 0.384,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.516,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 77.57,
+              "appendMs": 70.144,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.031,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 7.102,
+              "appendMs": 0.356,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.266,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.19,
+              "appendMs": 0.417,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.018,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 6.916,
+              "appendMs": 0.407,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.786,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.delete.3.undo",
+          "medianMs": 8.102,
+          "maxMs": 79.28,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.38,
+              "appendMs": 0.403,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.375,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 79.28,
+              "appendMs": 70.326,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.314,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 33.092,
+              "appendMs": 25.55,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.35,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 7.942,
+              "appendMs": 0.432,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.974,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 8.102,
+              "appendMs": 0.413,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.336,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "startup.warm.cacheRestore",
+          "medianMs": 30.378,
+          "maxMs": 30.814,
+          "samples": []
+        },
+        {
+          "action": "cardinality500.food.delete.3.undo",
+          "medianMs": 8.302,
+          "maxMs": 33.085,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 8.111,
+              "appendMs": 0.345,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.5,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 8.302,
+              "appendMs": 0.357,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.966,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 8.062,
+              "appendMs": 0.314,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.958,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.411,
+              "appendMs": 0.323,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.622,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 33.085,
+              "appendMs": 24.478,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.467,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "shape": "dense-food",
+      "logSHA256": "1ffc31b1d7291d2e34a44f5d9be71ae2c7c7dbf5ced799a8327c072b0c90e840",
+      "failedOperations": [
+        {
+          "action": "converted.task.title.save",
+          "medianMs": 16.025,
+          "maxMs": 164.112,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 164.112,
+              "appendMs": 52.929,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.201,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 13.722,
+              "appendMs": 0.289,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.703,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 86.696,
+              "appendMs": 72.407,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.555,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 14.088,
+              "appendMs": 0.384,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.774,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 16.025,
+              "appendMs": 0.638,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 23.102,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.notes.undo",
+          "medianMs": 15.023,
+          "maxMs": 86.179,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 14.926,
+              "appendMs": 0.338,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 20.285,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 14.741,
+              "appendMs": 0.511,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.858,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 15.023,
+              "appendMs": 0.293,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.32,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 86.179,
+              "appendMs": 0.289,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.512,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 16.175,
+              "appendMs": 0.352,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.465,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.titleAndNotes.editorOpen",
+          "medianMs": 4.078,
+          "maxMs": 29.876,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 3.722,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.711,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 4.343,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 4.442,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 29.876,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 4.188,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 4.078,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 4.152,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 3.964,
+              "appendMs": 0.0,
+              "appendCalls": 0,
+              "bracketedCgroupCpuMs": 3.951,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 0,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "converted.task.metadata.schedule.undo",
+          "medianMs": 13.332,
+          "maxMs": 195.745,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 72.44,
+              "appendMs": 0.501,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.179,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 12.16,
+              "appendMs": 0.313,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.523,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 13.332,
+              "appendMs": 0.451,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.596,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 195.745,
+              "appendMs": 0.304,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.878,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 12.245,
+              "appendMs": 0.383,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.327,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.metadata.tags.undo",
+          "medianMs": 11.961,
+          "maxMs": 133.223,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 11.372,
+              "appendMs": 0.391,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.185,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 11.256,
+              "appendMs": 0.393,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.943,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 11.961,
+              "appendMs": 0.376,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.541,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 101.671,
+              "appendMs": 0.29,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.766,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 133.223,
+              "appendMs": 0.409,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 25.549,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.metadata.assignee",
+          "medianMs": 15.412,
+          "maxMs": 166.71,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 12.537,
+              "appendMs": 0.354,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.562,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 113.644,
+              "appendMs": 100.498,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.516,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 166.71,
+              "appendMs": 153.353,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.457,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 15.213,
+              "appendMs": 0.308,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 19.869,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 15.412,
+              "appendMs": 0.339,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.678,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.restoreViaUndo",
+          "medianMs": 18.954,
+          "maxMs": 186.097,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 20.437,
+              "appendMs": 0.833,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 34.998,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 17.406,
+              "appendMs": 0.494,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 17.304,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 186.097,
+              "appendMs": 0.289,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 17.681,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 17.062,
+              "appendMs": 0.396,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 17.204,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 18.954,
+              "appendMs": 0.312,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 19.87,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.reorder",
+          "medianMs": 27.914,
+          "maxMs": 153.173,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 27.448,
+              "appendMs": 0.324,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 28.103,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 25.407,
+              "appendMs": 0.324,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 25.78,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 29.939,
+              "appendMs": 0.33,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 30.068,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 27.914,
+              "appendMs": 0.324,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 28.786,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 153.173,
+              "appendMs": 126.497,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 27.195,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.reorder.undo",
+          "medianMs": 33.623,
+          "maxMs": 148.355,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 89.539,
+              "appendMs": 65.287,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 25.475,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 33.623,
+              "appendMs": 0.327,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 21.391,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 21.703,
+              "appendMs": 0.404,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 22.408,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 148.355,
+              "appendMs": 123.356,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 26.19,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 24.219,
+              "appendMs": 0.605,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 38.383,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "converted.task.complete.application",
+          "medianMs": 16.831,
+          "maxMs": 175.069,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 14.8,
+              "appendMs": 0.299,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.535,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 16.329,
+              "appendMs": 0.39,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.407,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 175.069,
+              "appendMs": 0.314,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.57,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 16.831,
+              "appendMs": 0.402,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 24.202,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 17.575,
+              "appendMs": 0.286,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 17.64,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "food.add.1",
+          "medianMs": 43.973,
+          "maxMs": 154.097,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.276,
+              "appendMs": 0.345,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.978,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 154.097,
+              "appendMs": 144.235,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 19.002,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 79.688,
+              "appendMs": 0.389,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.323,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 7.632,
+              "appendMs": 0.477,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.514,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 43.973,
+              "appendMs": 37.064,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.603,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.add.1.undo",
+          "medianMs": 7.531,
+          "maxMs": 136.146,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.399,
+              "appendMs": 0.304,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.084,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.71,
+              "appendMs": 0.336,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.722,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 136.146,
+              "appendMs": 0.341,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.688,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 7.493,
+              "appendMs": 0.292,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.16,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.531,
+              "appendMs": 0.463,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.272,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.add.3",
+          "medianMs": 7.427,
+          "maxMs": 118.895,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.427,
+              "appendMs": 0.376,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.366,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.203,
+              "appendMs": 0.397,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.16,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 117.231,
+              "appendMs": 109.543,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.339,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 7.32,
+              "appendMs": 0.369,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.948,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 118.895,
+              "appendMs": 0.308,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 20.682,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.add.3.undo",
+          "medianMs": 7.746,
+          "maxMs": 106.805,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.746,
+              "appendMs": 0.283,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.946,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.432,
+              "appendMs": 0.257,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.306,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 8.655,
+              "appendMs": 0.315,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.96,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 7.406,
+              "appendMs": 0.302,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.213,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 106.805,
+              "appendMs": 0.435,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.391,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.contents.APIonly.undo",
+          "medianMs": 9.317,
+          "maxMs": 108.87,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 8.126,
+              "appendMs": 0.282,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.95,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 9.104,
+              "appendMs": 0.337,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.647,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 9.317,
+              "appendMs": 0.363,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.107,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 108.87,
+              "appendMs": 0.302,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.229,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 9.339,
+              "appendMs": 0.563,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.723,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.delete.1",
+          "medianMs": 7.911,
+          "maxMs": 25.898,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.534,
+              "appendMs": 0.704,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.382,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 25.898,
+              "appendMs": 0.345,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 19.612,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 7.628,
+              "appendMs": 0.368,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.166,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.651,
+              "appendMs": 0.455,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.999,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.911,
+              "appendMs": 0.395,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.341,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.delete.3",
+          "medianMs": 7.756,
+          "maxMs": 106.067,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 6.984,
+              "appendMs": 0.276,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.695,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.388,
+              "appendMs": 0.268,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.507,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 106.067,
+              "appendMs": 98.104,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.701,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 7.756,
+              "appendMs": 0.297,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.476,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.943,
+              "appendMs": 0.371,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.321,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.restore.3",
+          "medianMs": 10.344,
+          "maxMs": 122.882,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 8.867,
+              "appendMs": 0.405,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.745,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 8.947,
+              "appendMs": 0.336,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.96,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 11.308,
+              "appendMs": 0.397,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 18.691,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 122.882,
+              "appendMs": 0.352,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 24.606,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 10.344,
+              "appendMs": 0.372,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.914,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "food.restore.3.undo",
+          "medianMs": 10.355,
+          "maxMs": 148.768,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 9.998,
+              "appendMs": 0.873,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.958,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 9.602,
+              "appendMs": 0.364,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 10.2,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 10.355,
+              "appendMs": 0.452,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.318,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 10.609,
+              "appendMs": 0.458,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 11.167,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 148.768,
+              "appendMs": 0.444,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.933,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.add.1",
+          "medianMs": 7.367,
+          "maxMs": 29.197,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 29.197,
+              "appendMs": 20.062,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 14.733,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 23.152,
+              "appendMs": 2.01,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 18.478,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 7.367,
+              "appendMs": 0.463,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.477,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 6.997,
+              "appendMs": 0.368,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.693,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.361,
+              "appendMs": 0.338,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.977,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.add.3",
+          "medianMs": 7.414,
+          "maxMs": 23.164,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 23.164,
+              "appendMs": 1.572,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 21.121,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.142,
+              "appendMs": 0.412,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 6.901,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 7.414,
+              "appendMs": 0.481,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.153,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 9.479,
+              "appendMs": 0.359,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.997,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.229,
+              "appendMs": 0.282,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.319,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.add.3.undo",
+          "medianMs": 8.007,
+          "maxMs": 37.727,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 7.955,
+              "appendMs": 0.338,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.472,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 37.727,
+              "appendMs": 0.321,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 25.874,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 8.555,
+              "appendMs": 0.37,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.862,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.007,
+              "appendMs": 0.334,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.753,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.811,
+              "appendMs": 0.437,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.757,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.contents.APIonly",
+          "medianMs": 7.71,
+          "maxMs": 50.833,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 50.833,
+              "appendMs": 43.553,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.66,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.451,
+              "appendMs": 0.346,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.976,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 7.002,
+              "appendMs": 0.275,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.561,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.363,
+              "appendMs": 0.32,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 7.759,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 7.71,
+              "appendMs": 0.294,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.422,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "historical.food.delete.1.undo",
+          "medianMs": 8.797,
+          "maxMs": 35.532,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 9.107,
+              "appendMs": 0.317,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 13.144,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 35.532,
+              "appendMs": 0.401,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.225,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 8.119,
+              "appendMs": 0.359,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.517,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.797,
+              "appendMs": 0.369,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 9.718,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 8.524,
+              "appendMs": 0.409,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.774,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "recurring.complete.undoUntouched",
+          "medianMs": 39.619,
+          "maxMs": 143.896,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 39.197,
+              "appendMs": 0.287,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 38.521,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 39.619,
+              "appendMs": 0.332,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 39.984,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 143.896,
+              "appendMs": 81.5,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 39.606,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 39.422,
+              "appendMs": 0.324,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 38.862,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 44.211,
+              "appendMs": 0.343,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 56.283,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "recurring.recomplete.nativeChecklist",
+          "medianMs": 52.605,
+          "maxMs": 319.851,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 52.605,
+              "appendMs": 0.38,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 60.999,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 54.362,
+              "appendMs": 0.421,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 43.575,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 319.851,
+              "appendMs": 0.428,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 62.918,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 44.525,
+              "appendMs": 0.373,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 43.326,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 49.682,
+              "appendMs": 0.38,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 43.597,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "derivedSuccessor.titleAndNotes.save",
+          "medianMs": 32.871,
+          "maxMs": 118.126,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 30.174,
+              "appendMs": 0.418,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 31.43,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 32.871,
+              "appendMs": 0.516,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 49.411,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 59.425,
+              "appendMs": 1.508,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 32.278,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 118.126,
+              "appendMs": 83.922,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 52.394,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 30.517,
+              "appendMs": 0.392,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 31.423,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "copiedChecklist.titleAndNotes.undo",
+          "medianMs": 23.521,
+          "maxMs": 70.585,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 23.201,
+              "appendMs": 0.288,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 38.325,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 23.978,
+              "appendMs": 0.311,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 39.408,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 70.585,
+              "appendMs": 48.935,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 30.064,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 23.521,
+              "appendMs": 0.379,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 38.541,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 19.31,
+              "appendMs": 0.342,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 20.037,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "copiedChecklist.metadata.complete",
+          "medianMs": 15.205,
+          "maxMs": 85.705,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 15.39,
+              "appendMs": 0.612,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.629,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 15.205,
+              "appendMs": 0.334,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.537,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 15.029,
+              "appendMs": 0.31,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.049,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 85.705,
+              "appendMs": 70.097,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 16.495,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 14.955,
+              "appendMs": 0.3,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.106,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "derivedSuccessor.complete.nativeChecklist",
+          "medianMs": 41.243,
+          "maxMs": 140.495,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 41.225,
+              "appendMs": 0.352,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 40.318,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 41.289,
+              "appendMs": 0.734,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 40.761,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 41.14,
+              "appendMs": 0.385,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 40.327,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 140.495,
+              "appendMs": 2.664,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 42.165,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 41.243,
+              "appendMs": 0.364,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 41.082,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        },
+        {
+          "action": "cardinality500.food.contents.APIonly",
+          "medianMs": 8.184,
+          "maxMs": 21.11,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 9.15,
+              "appendMs": 0.287,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.536,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 3,
+              "wallMs": 7.696,
+              "appendMs": 0.304,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.155,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 4,
+              "wallMs": 8.153,
+              "appendMs": 0.329,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.999,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 5,
+              "wallMs": 8.184,
+              "appendMs": 0.333,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 8.46,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            },
+            {
+              "index": 6,
+              "wallMs": 21.11,
+              "appendMs": 0.333,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 12.69,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 0
+            }
+          ]
+        },
+        {
+          "action": "firstDerived.mixed.save",
+          "medianMs": 18.739,
+          "maxMs": 61.033,
+          "samples": [
+            {
+              "index": 2,
+              "wallMs": 19.27,
+              "appendMs": 0.418,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 31.87,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 3,
+              "wallMs": 15.382,
+              "appendMs": 0.53,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.022,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 4,
+              "wallMs": 61.033,
+              "appendMs": 42.223,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 31.61,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 5,
+              "wallMs": 15.084,
+              "appendMs": 0.354,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 15.149,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            },
+            {
+              "index": 6,
+              "wallMs": 18.739,
+              "appendMs": 0.378,
+              "appendCalls": 1,
+              "bracketedCgroupCpuMs": 30.856,
+              "bracketedThrottledUs": 0,
+              "snapshotRowsDecoded": 0,
+              "taskSorts": 0,
+              "reads": 2,
+              "semanticValidations": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

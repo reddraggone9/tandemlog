@@ -11989,6 +11989,8 @@
       }
     }
   },
-  "sourcePinsMatchCurrentCheckout": true,
-  "sourcePinCount": 117
+  "sourcePinCount": 117,
+  "sourcePinsMatchAtInspection": true,
+  "inspectedProductSource": "30f874789933f749f11dfe6319aaf74799365d7f",
+  "inspectionUTC": "2026-10-25T01:17:00Z"
 }

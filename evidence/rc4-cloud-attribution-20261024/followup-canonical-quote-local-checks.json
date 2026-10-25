@@ -1,0 +1,64 @@
+{
+  "snapshotUTC": "2026-10-25T01:36:51.393716+00:00",
+  "base": "fdb4e76fb7cd8679291839c5b930428df584e4cd",
+  "focusedTests": 13,
+  "fullUnitSession": 56533,
+  "sourceFrozenForValidation": true,
+  "scope": "lazy buffer only, same canonical bytes/validation",
+  "limitsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "fullAOT": "not started; wait for full units to avoid competing measurement",
+  "fullUnitTests": 1510,
+  "fullUnitSeconds": 396,
+  "analysis": "clean",
+  "format": "395 files,0 changes",
+  "toolingTests": 171,
+  "fullAOTSession": null,
+  "fullAOTRoot": "/workspace/scratch/rc4-lazy-quote-full-aot",
+  "fullAOTStartUTC": "2026-10-25T01:24:44Z",
+  "fullAOTOuterTimeoutSeconds": 1500,
+  "logs": {
+    "rc4-lazy-quote-focused.log": {
+      "sha256": "c4607e5cb242e06c9db3df9a9648560cae197460ba35802bdc2d7ad13ba0f7cb",
+      "lastLines": [
+        "00:00 +12: UTF-8 byte budget rejects oversized input before interpretation",
+        "00:00 +13: All tests passed!"
+      ]
+    },
+    "rc4-lazy-quote-full-unit.log": {
+      "sha256": "5be06293b3ee9079fff328e7bb61f005ae90f976b301f445cc9481aa8e828d83",
+      "lastLines": [
+        "{\"adaptiveHistoricalRecords\":450,\"notesChars\":9900,\"selectedRecords\":6,\"relationLookups\":26,\"strictSelectedAndHeadDecodes\":8}",
+        "06:36 +1510: All tests passed!"
+      ]
+    },
+    "rc4-lazy-quote-analysis.log": {
+      "sha256": "48b0cdc96bdc2d67205170884d27afb5656b191ade39dd41a409b788227dccd3",
+      "lastLines": [
+        "Analyzing tandemlog...                                          ",
+        "No issues found! (ran in 1.3s)"
+      ]
+    },
+    "rc4-lazy-quote-format.log": {
+      "sha256": "45306febef3bd79c245e20017a38968b0e4b9edc2d2d87f01e22443c5d6fdeda",
+      "lastLines": [
+        "Formatted 395 files (0 changed) in 2.27 seconds."
+      ]
+    },
+    "rc4-lazy-quote-tools.log": {
+      "sha256": "66e03ec3fa9412c1136f4e83814437de2b2f32632a6fd61a1f6e883002d9c303",
+      "lastLines": [
+        "OK",
+        "{\"executable_sha256\": \"0370190d81a1bc1e156676eb83f3adb83bb65e765fd5b7b74719004b77345310\", \"github_run_id\": \"123\", \"native_library_sha256\": \"7bc2fcce9d2525bcb6a722a6cc144de4fd8946c0047d7de73788e37d1f2d42d8\", \"portable_archive\": \"tandemlog-windows-x64-unsigned-portable.zip\", \"portable_sha256\": \"d13bef9c4bd78f23193677a56ec99a293b6fd4ca6214fb13dd228ae37c0e60a6\", \"source_revision\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+      ]
+    }
+  },
+  "fullAOTResult": {
+    "all3Correctness": true,
+    "metricsPerShape": 232,
+    "allPinsMatch": true,
+    "absoluteFailures": 7,
+    "pairedFailures": 8,
+    "retries": 0,
+    "accepted": false
+  }
+}

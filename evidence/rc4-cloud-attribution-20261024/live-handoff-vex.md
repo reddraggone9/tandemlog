@@ -4,7 +4,31 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
-## Continuation update —2026-10-25 01:25 UTC
+## Continuation update —2026-10-25 01:37 UTC
+
+Tested pending successor: canonical quoting allocates a StringBuffer only when an
+actual escape is needed, retaining full surrogate validation and byte/hash rules.
+Full1510 units PASS6m36s,171 tools PASS,analysis/format clean. Independent3,000
+JSON cases plus malformed Unicode/frozen hashes pass; scratch30,000 original
+encoder comparisons pass. Same-binary component AOT ~9%/21% faster, not a whole-
+action/UI claim. Source-sealed full local AOT passes all3 shapes/232 correctness,
+replay/prefix checks and every pin;7 absolute/8 paired failures remain,0 retries.
+Food-growth has no local timing failures in this run. Required enforcing and
+hardware acceptance remain pending. No current-source performance retry issued.
+
+See `followup-canonical-quote-research.json`, `followup-canonical-quote-local-checks.json`,
+`followup-canonical-quote-full-aot.json`, and matched prior hosted cost synthesis
+`followup-owned-state-cost-analysis.md` / `followup-owned-state-failure-costs.json`.
+Current source and failure evidence are being committed/pushed. CI40148192820 is
+still in its bounded native step (deadline~01:53UTC); do not cancel it. Dispatch
+ONE fresh exact-source CI after it terminates, calibration=false. A syscall-only
+hosted diagnostic is prepared as a scratch plan, not implemented/dispatched:
+`/workspace/scratch/rc4-hosted-io-diagnostic-plan.md`. Desktop media/replay complete;
+no further polishing is active. Original188.15s capture retained;40.45s deliverable
+removes observation pauses at unchanged action speed. All hardware qualifiers,
+remaining Android acceptance, quota unknown and Monday13UTC cutoff remain.
+
+## Continuation update —2026-10-25 01:17 UTC
 
 Source remains30f8747 / exact CI5dc4e3e; current docs successor ce70697.
 CI40148192820: Windows and Android PASS. Linux units/build/startup/package/install
