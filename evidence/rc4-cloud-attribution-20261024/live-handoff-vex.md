@@ -1,8 +1,35 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 08:15 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 09:07 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Focused current Android complete; morning review — 2026-10-25 09:07 UTC
+
+Parent supplies terminal034a57d wide Android emulator result:toolbarUndoCancel
+preserved dirty Notes/re-enabled Undo;manual refocus permitted typing;UndoDiscard
+added exactly1matching compensation. Empty-title rejection/correctionSaveUndo,
+Task/Food emojiSaveUndo,cold reopen and14independent replays reported PASS,with
+full baseline restoration,prefix preservation,exact compensation targets.
+Cleanup08:56:42UTC before09:15:48deadline;both units inactive/MainPID0,emulator/
+ownedADBports absent. [Qualified supplied receipt](android-034a57d-final-supplied.json).
+Cloud has not reviewed raw local device/replay artifacts. Exact APK remains the
+independently hashed034a artifact12588729911;no rebuild or cloud device action.
+
+Qualification:Cancel did **not** automatically restore text focus;manual refocus
+worked. Read-only Git/source/test review shows relevant UI unchanged e23→034a,
+no explicit prior-field focus request on this guard's Cancel,and existing native
+assertions for draft retention/re-enabled Undo. Help's explicit focus restoration
+is a separate contract. No new regression is demonstrated,no automatic focus or
+caret/composition proof is claimed,and no product patch is recommended now.
+
+[Morning review / final reservation checklist](morning-review-034a57d.md) records
+3supplied current-source reference0/0runs plus this focused native pass,while
+retaining hosted5absolute/3paired failures and physical/owner-signed/hardware/
+release/live qualifications. Recommend a separately reviewed reference-environment
+gate-placement decision,unchanged budgets;no policy substitution or unchanged
+hosted rerun. No new benchmark,CI,source edit or active cloud command. Hard
+stop-write Oct26 13:00UTC remains;cloud sole writer until explicit handoff.
 
 ## Current-source reference complete; Android delta prepared — 2026-10-25 08:15 UTC
 

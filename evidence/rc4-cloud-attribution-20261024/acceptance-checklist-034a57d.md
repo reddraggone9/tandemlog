@@ -3,6 +3,23 @@
 Checkpoint2026-10-25. Public engineering review only: no new product patch,
 benchmark, CI dispatch, device operation, release or live change.
 
+## Focused Android result now supplied
+
+Parent/local executor reports current034a57d wide Android acceptance complete:
+actual toolbarUndoCancel retains draft/re-enables Undo;manual refocus permits
+continued typing;UndoDiscard appends exactly1matching compensation. Empty-title
+rejection/correctionSaveUndo,Task/Food emojiSaveUndo and cold reopen pass,with
+14independent replays/full baseline restoration/unchanged prefixes/exact targets.
+Cleanup08:56:42UTC before09:15:48deadline,both units inactive/MainPID0,emulator/
+ownedADBports absent. [Qualified supplied receipt](android-034a57d-final-supplied.json).
+Cloud has not inspected raw local run/replay artifacts. Cancel **did not**
+automatically restore text focus. [Read-only focus review and final reservations](morning-review-034a57d.md).
+
+The earlier planned workflow below is retained for source/coverage attribution,
+not a request to repeat the completed focused session. Its wide-toolbar guard
+reachability gap is closed for the tested emulator layout. No new broad test,
+benchmark,CI,product patch or device action is requested.
+
 ## Current evidence
 
 - Exact CI40167598688 passes Linux/Windows/Android,1515units,174tools,203native
@@ -20,11 +37,10 @@ benchmark, CI dispatch, device operation, release or live change.
 - This closes the planned current-source **reference-measurement** gap. It does
   not waive the hosted failures, prove a virtualization cause, change gate-host
   policy or establish visible/hardware latency. No further benchmark is requested.
-- Supplied **e23** Android emulator evidence covers repeated Task Save/Undo,
-  Cancel/Discard,completion/Undo,Food validation/Add/Edit/Remove/Undo,cold reopen
-  and4independent replays. It remains older-source evidence. Its narrow modal
-  did not expose dirty-editor **Session Undo**; ordinary editor Discard coverage
-  is not a substitute for that control.
+- Earlier **e23** Android evidence retains its source attribution. The supplied
+  current034a wide-emulator result above now adds the focused delta and genuine
+  dirty-editor **Session Undo**. Narrow-modal geometry is not relabelled as a
+  wide-toolbar test;older completion/broader coverage is not claimed fresh.
 
 ## Exact-source Android artifact for the local executor
 
@@ -110,15 +126,19 @@ this equivalence-preserving delta. Those retained results keep their source and
 scope. This focused receipt establishes current debugAPK/emulator continuity;
 it is not broad native,owner-signed candidate,physicalARM/API36 or timing acceptance.
 
-## Existing native gap to attempt separately
+## Former native gap — planned flow, now reported passed in wide layout
 
-On the same empty lab only if the genuine app control is reachable, exercise
+The completed wide-emulator plan below was to exercise
 **dirty-editor Session Undo → Cancel → continued typing → Session Undo → Discard**
-against a prior saved action. Cancel must preserve exact draft/caret/native session
-and the Undo action with no canonical write; Discard must close the editor and
-apply exactly the saved action's matching inverse while preserving newer peer
-edits. The exact Linux suite already covers this regression; Android visibility/
-focus/reachability is still unobserved. Do not replace it with ordinary Cancel or
+against a prior saved action. The supplied outcome establishes retained draft,
+continued typing after manual refocus,re-enabled Undo and no Cancel write;
+automatic input focus/caret/composition restoration is not claimed. Discard
+closed the editor and applied exactly the saved action's matching inverse.
+Newer-peer preservation retains its separate existing tests;this small fixture
+does not add a peer-arrival proof. The exact Linux suite covers the broader
+regression; Android visibility/
+focus/reachability is now reported for the wide emulator,with manual refocus
+needed after Cancel. Do not replace it with ordinary Cancel or
 Discard,edit product source,inject an internal command or change the UI to expose
 it. If the narrow modal still lacks the control, retain screenshot/viewport and
 the precise blocked step. Report the gap honestly instead of running broad tests
@@ -140,9 +160,10 @@ local executor; cloud accesses no devices or foreground windows.
   guarantees stay fixed. Linux/software-rendered,Android emulator,ADB elapsed,
   framework post-frame and hardware presentation are distinct endpoints. No new
   foreground Leela/physical-device authorization is implied.
-- **Actual native coverage gaps**,including Android dirty-editor Session Undo
-  reachability and eventual source-pinned broader platform/candidate checks,
-  remain itemized rather than inferred from a build or the Linux suite.
+- **Broader native/device/candidate gaps** remain source-specific. The focused
+  wide Android Session Undo gap is now reported closed;automatic text-focus
+  restoration is not claimed. No broader native coverage is inferred from a
+  build,the Linux suite or this focused emulator session.
 - **Release/live cutover remain held.** A later exact owner-signed candidate must
   meet existing fresh candidate/platform/native/editorial gates and applicable
   acceptance. Actual physical-writer mapping,fresh frozen real-copy conversion/

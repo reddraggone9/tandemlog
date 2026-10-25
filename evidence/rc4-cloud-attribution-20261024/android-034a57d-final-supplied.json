@@ -1,0 +1,83 @@
+{
+  "snapshotUTC": "2026-10-25T09:05:04.182934+00:00",
+  "provenance": "Parent-supplied local-executor final evidence. Cloud did not access emulator or raw local run/replay artifacts.",
+  "sourceSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "expectedArtifactReceipt": "android-artifact-034a57d.json",
+  "expectedAPK_SHA256": "11e685b28a0c76d7159d67430321e30ecb16d5d1e4c7360a3a1e9e719b26f600",
+  "scope": "Focused wide-layout Android emulator functional acceptance of current development source, not owner-signed release or hardware timing",
+  "checksReportedPassed": [
+    "genuine toolbar Session Undo with dirty Notes opens unsaved guard",
+    "Undo Cancel retains draft and re-enables Undo",
+    "explicitly refocusing editor permits continued typing",
+    "Undo Discard appends exactly one matching compensation",
+    "empty-title form rejection then correction Save/Undo",
+    "Task emoji Save/Undo",
+    "Food emoji Save/Undo",
+    "cold reopen"
+  ],
+  "independentReplaysReportedPassed": 14,
+  "integrityChecksReportedPassed": [
+    "full baseline restoration",
+    "original canonical byte prefixes unchanged",
+    "exact compensation targets"
+  ],
+  "automaticTextFocusRestoredOnCancel": false,
+  "caretOrCompositionRestorationIndependentlyEstablished": false,
+  "cleanupAsReported": {
+    "completedUTC": "2026-10-25T08:56:42Z",
+    "deadlineUTC": "2026-10-25T09:15:48Z",
+    "ownedUnitsInactive": 2,
+    "allMainPIDs": 0,
+    "emulatorAbsent": true,
+    "ownedADBPortsAbsent": true
+  },
+  "sourceFocusReview": {
+    "method": "read-only exact Git blob comparison and inspection of app/tests/reviewed Flutter3.47.5 source",
+    "files": [
+      {
+        "path": "lib/main.dart",
+        "unchangedE23To034a57d": true,
+        "SHA256": "6588140945142bb1b42dfdaf20e3afbc540e14d6babcd7e40a09e5ef542a3383"
+      },
+      {
+        "path": "lib/presentation/task_editor.dart",
+        "unchangedE23To034a57d": true,
+        "SHA256": "29f41fe2a43bd60039865545a26ba0c15dd802de86b4f505ab1ea526c67c70a3"
+      },
+      {
+        "path": "lib/presentation/unsaved_draft_dialog.dart",
+        "unchangedE23To034a57d": true,
+        "SHA256": "c7a6daa9e9da19b9ffd82a674799187b0003203b0a1370300c73e12d0aba498e"
+      },
+      {
+        "path": "lib/presentation/editor_surface.dart",
+        "unchangedE23To034a57d": true,
+        "SHA256": "b85ace55addcd4a0937098c5e361c72ef956df08e7339bfbaba9efbedf8b46c8"
+      },
+      {
+        "path": "integration_test/task_flow_test.dart",
+        "unchangedE23To034a57d": true,
+        "SHA256": "d5827528410d4aa937fc8f63ffb9cd25ef232d655d6866b030f583d66096c49b"
+      },
+      {
+        "path": "test/task_editor_header_test.dart",
+        "unchangedE23To034a57d": true,
+        "SHA256": "cdcb79ffa6ba76f4791d30c371802ac5faf401e9df41e8816847c809a8b23bb9"
+      }
+    ],
+    "cancelBehavior": "Returns false from editor close guard, keeps editor/session mounted, then clears closingEditor and re-enables Undo. No explicit requestFocus of prior field.",
+    "existingNativeAssertion": "task_flow_test.dart dirty editor guard asserts exact draft text and toolbar Undo availability after Cancel; no automatic primary text-focus assertion.",
+    "separateHelpContract": "ADR0026 explicitly restores prior input focus after field Help; that is a separate path and does not add a Cancel requirement.",
+    "classification": "Existing unpromised dialog-focus behavior / usability observation; no e23 baseline proving a change and no demonstrated new regression. Final focus target and detailed platform cause are not established from the supplied observation.",
+    "productPatchRecommendedNow": false
+  },
+  "remaining": [
+    "hosted enforcing performance remains failed at unchanged budgets",
+    "full-action native input-to-presentation/hardware timing",
+    "physical-device and exact owner-signed future candidate acceptance",
+    "broader unaffected native matrix retains prior source attribution",
+    "backend rejected-Save recovery is not proved by an empty-title form rejection",
+    "live physical-writer mapping/frozen real-copy replay/adoption remain separately held"
+  ],
+  "qualification": "Supplied current-source emulator functional result closes the focused delta and previously unexposed wide Session Undo case. It does not prove automatic text focus/caret/composition restoration, all-action physical timing, a release gate pass, or live-cutover readiness."
+}

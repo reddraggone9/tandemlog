@@ -3,7 +3,8 @@
 Development diagnosis and correctness evidence only. Performance acceptance is
 **not complete**. No release, live conversion, personal fixture, signing change,
 dependency update or limit adjustment occurred. Windows foreground/hardware
-validation remains separately pending; no Farnsworth access was used.
+validation remains separately pending. Cloud did not access Farnsworth; separately
+supplied local-executor results below retain that provenance.
 
 Latest count-only UTF-8 repair: [implementation and validation](utf8-size-guards-analysis.md),
 [frozen caller/source/check receipt](utf8-size-guards-validation.json),
@@ -18,6 +19,8 @@ passes Linux/Windows/Android jobs and all 203 native Linux workflows; overall CI
 still fails the unchanged performance gate. Historical evidence below is retained.
 
 Current034a57d reference measurements are [reported complete by the local executor](reference-034a57d-final-supplied.json):3fixed observations,each0absolute/paired misses,all input/correctness checks reported passed. Cloud has not reviewed raw local files; hosted enforcing failures remain. [Remaining acceptance and focused Android delta](acceptance-checklist-034a57d.md) links the independently verified [exact currentAPK receipt](android-artifact-034a57d.json). No gate-policy,product,release or live change.
+
+Current034a57d **wide Android** focused acceptance is now [reported passed](android-034a57d-final-supplied.json),including genuine dirty-editor toolbarUndoCancel/Discard,Task/Food emoji and14independent replays. Cancel needed manual text refocus. [Morning review / final gate and acceptance reservations](morning-review-034a57d.md) distinguishes existing dialog behavior from unproved regressions and retains hosted/hardware/release/live gaps. No product patch or gate change.
 
 ## Source and method
 
