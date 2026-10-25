@@ -1,0 +1,45 @@
+{
+  "snapshotUTC": "2026-10-25T01:44:05.173510+00:00",
+  "productSource": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "diagnosticBranch": "diagnostics/rc4-io-20261025",
+  "productFilesChanged": false,
+  "releaseGateAccepted": false,
+  "purpose": "Hosted fsync/fdatasync-only metadata, not an unchanged enforcing retry",
+  "resourceBounds": {
+    "memory": "6GiB",
+    "cpu": "2CPU",
+    "swap": 0,
+    "pids": 128
+  },
+  "bounds": {
+    "processSeconds": 1200,
+    "serviceSeconds": 1260,
+    "jobMinutes": 30,
+    "traceBytes": 67108864,
+    "traceFiles": 512
+  },
+  "localChecks": {
+    "newTests": 7,
+    "allToolingTests": 178,
+    "bashSyntax": "pass",
+    "yamlStructure": "pass",
+    "actualSyntheticTraceControl": "2calls,0unparsed,childstopped",
+    "localResourcePreflight": "refusedbeforechildcreation;localcapsarelooser"
+  },
+  "retainedSetupFailure": {
+    "initialLoadedTooling": "2assertionsfailedbecauseisolatedworktreehadnopackage_config.json",
+    "repair": "flutterpubget--enforce-lockfile;178testsnowpass",
+    "unloadedInitialTools": "175tests,2skipsbeforeDartenvironmentloaded"
+  },
+  "logs": {
+    "rc4-io-diagnostic-loaded-tools.log": {
+      "sha256": "29ad075e510292533a80946ac884d19b486c5a1314a65266af14c0543724b068"
+    },
+    "rc4-io-diagnostic-loaded-tools-fixed.log": {
+      "sha256": "1538931fb79c6bea092d4c7134daa09968b0e5925a838c47c06e2ea97ac72e3c"
+    },
+    "rc4-io-diagnostic-final-tools.log": {
+      "sha256": "5b9caf106a0e7586a4872f0e593d5024bf8cf8212904cca4278e3fcbbf4b1f6b"
+    }
+  }
+}

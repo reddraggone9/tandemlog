@@ -1,0 +1,59 @@
+name: RC4 diagnostic-only fsync metadata
+on:
+  workflow_dispatch:
+  push:
+    branches: [diagnostics/rc4-io-20261025]
+    paths:
+      - '.github/workflows/rc4-io-diagnostic.yml'
+      - 'tool/diagnose_performance_io.py'
+      - 'tool/test_diagnose_performance_io.py'
+      - 'tool/performance/run_io_diagnostic.sh'
+permissions:
+  contents: read
+concurrency:
+  group: rc4-io-diagnostic-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  diagnostic-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Require isolated diagnostic branch and unchanged budgets
+        run: |
+          test "$GITHUB_REF" = refs/heads/diagnostics/rc4-io-20261025
+          echo '50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e  tool/performance/limits-v1.json' | sha256sum -c -
+      - name: Install distribution syscall metadata tracer
+        run: sudo apt-get update && sudo apt-get install -y strace
+      - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: linux
+      - run: flutter pub get --enforce-lockfile
+      - name: Check diagnostic bounds, cleanup and parser
+        run: python3 -m unittest discover -s tool -p 'test_*.py'
+      - name: Build and verify reviewed native payload
+        run: |
+          python3 tool/build_text_engine.py --platform linux --output-dir "$RUNNER_TEMP/io-native"
+          python3 tool/native_build_gates.py verify_library "$RUNNER_TEMP/io-native/libtandemlog_text.so"
+          echo "TANDEMLOG_TEXT_LIBRARY=$RUNNER_TEMP/io-native/libtandemlog_text.so" >> "$GITHUB_ENV"
+      - name: Materialize locked SQLite native assets
+        run: flutter test --no-pub test/local_profile_database_test.dart
+      - name: Run bounded instrumented all-shape diagnostic, never acceptance
+        timeout-minutes: 23
+        run: bash tool/performance/run_io_diagnostic.sh
+      - name: Preserve every diagnostic outcome and syscall metadata
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: RC4-diagnostic-only-fsync-metadata
+          path: |
+            ${{ runner.temp }}/io-diagnostic-results/io-result.json
+            ${{ runner.temp }}/io-diagnostic-results/controller.log
+            ${{ runner.temp }}/io-diagnostic-results/syscalls/*
+            ${{ runner.temp }}/io-diagnostic-results/measurement/gate-result.json
+            ${{ runner.temp }}/io-diagnostic-results/measurement/*-result.json
+            ${{ runner.temp }}/io-diagnostic-results/measurement/*.log
+            ${{ runner.temp }}/io-diagnostic-results/measurement/**/cost-traces/*.json
+          retention-days: 5
+          if-no-files-found: error
