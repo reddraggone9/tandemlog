@@ -20,7 +20,7 @@ The full case result is NOT yet known; no claim of full native acceptance.
 Active-job log fetch at 06:21:10 UTC returned 404 BlobNotFound. This is pending
 log materialization, not an authorization denial. Do not keep retrying the active
 log endpoint or substitute an alternate route; fetch once after terminal state.
-Metadata and the bounded read-only watch remain active. Prior same-source native
+Metadata and the bounded read-only watch remain active. The earlier 203-case native
 suite took 40m32s; current duration alone does not establish a stall. Do not
 restart, extend or duplicate this run.
 
