@@ -1,8 +1,34 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 05:06 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 05:08 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Pushed source and active exact CI — 2026-10-25 05:08 UTC
+
+Development product commit **6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6**
+is pushed and remote-verified. Working tree was clean after push; subsequent
+edits in this update are documentation/evidence only, with identical product,
+tests and performance tooling. No local app or benchmark remains active.
+
+ONE fresh exact-source CI [40164354926](https://github.com/reddraggone9/tandemlog/actions/runs/40164354926)
+was dispatched at 05:07:01 UTC with `calibrate_performance=false`. Exact head is
+6e400f7; all four jobs are active in setup. No duplicate or same-branch cancellation.
+The immediate list briefly lagged accepted dispatch; read-only verification found
+the run without another dispatch. [CI receipt](utf8-size-guards-required-ci.json).
+Monitor this run to terminal; keep original failures and all gate qualifications.
+This update is not a second dispatch request. Quota remains unknown.
+
+The parent reports the replacement Farnsworth e23 run completed and validated
+all three shapes/232 metrics/correctness/pins with zero absolute and zero paired
+failures. Three complete runs are now 0/0, 0/1, 0/0 versus hosted e23 28/3.
+The original paired outlier and infrastructure aborts remain. Comparison cleanup
+reportedly finished before Android launch. Cloud has not reviewed raw local
+artifacts or that external controller. See the attributed
+[updated comparison summary](farnsworth-e23-final-summary-supplied.md).
+Exact e23 Android functional checks are ongoing after successful app launch;
+no completed Android pass or UI/hardware performance acceptance is inferred.
+No performance budget, gate policy, persistent-runner, release or live change.
 
 ## Count-only UTF8 repair validated locally — 2026-10-25 05:06 UTC
 
@@ -33,13 +59,12 @@ Local resource caps are looser than hosted, so this is diagnostic only.
 Same-binary alternating component batches show eligible count-only conversion
 work removed; larger-string fallback remains close. No full-action or visible
 latency speedup is claimed. See [implementation/evidence](utf8-size-guards-analysis.md).
-Next: commit/push this tested development change, then dispatch ONE fresh
-exact-source enforcing CI with `calibrate_performance=false`. Old e23 CI is
-terminal; no duplicate is active or requested. Do not substitute local results
+The tested change is now pushed and ONE fresh exact-source CI is active as
+recorded above. Old e23 CI is terminal; no duplicate is requested. Do not substitute local results
 for hosted/native acceptance or relax a limit. Historical failures remain.
 
-The parent's authorized replacement Farnsworth attempt and Android helper work
-remain local-executor owned; their latest outcomes have not been supplied.
+The parent's replacement Farnsworth attempt has now completed as reported above;
+Android functional checks remain local-executor owned and ongoing.
 No cloud Farnsworth/device access. Quota unknown; stop-write cutoff remains
 2026-10-26 13:00 UTC with explicit ownership handoff. Earlier sections below
 are historical and retain their original evidence/qualifications.

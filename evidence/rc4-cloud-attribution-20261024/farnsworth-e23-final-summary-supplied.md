@@ -1,5 +1,22 @@
 # Farnsworth comparison — supplied final summary
 
+## Replacement completion update — 2026-10-25 05:08 UTC
+
+The parent now reports that the single authorized replacement completed and
+validated all three shapes, 232 metrics, correctness and pins, with zero absolute
+and zero paired failures. There are now **three complete Farnsworth runs:
+0/0, 0/1 and 0/0**, compared with hosted e23 28/3. The original outlier and every
+infrastructure abort remain retained. The corrected external pressure controller
+reportedly allowed completion; comparison cleanup finished before Android launch.
+Cloud has not read the raw local evidence or independently audited that controller.
+
+The exact e23 APK reportedly launched and Android functional checks are ongoing;
+no completed native acceptance is inferred. Product e23 remains immutable for
+these comparisons. The separate cloud UTF8 repair is at 6e400f7 with fresh CI
+40164354926 active. No budget/gate-policy change or automatic hosted/UI/release
+clearance follows. Structured update/provenance is appended to the JSON receipt.
+The earlier two-complete-run snapshot and its abort below are historical.
+
 This records the parent's final local-executor summary of
 `FINAL-COMPARISON-REVIEW.md` on Farnsworth. **Cloud has not read the raw local
 artifacts or independently audited those receipts.** Structured supplied values
@@ -64,5 +81,6 @@ authorization above supersedes the earlier no-fourth instruction; all historical
 aborts remain retained. Android's isolated helper correction is still pending;
 no native Android cases are promoted to a pass by these results.
 
-Next bounded work is only the [proposed UTF8 size-guard review](utf8-size-guard-proposal.md).
-Product source remains pinned while that proposal is assessed.
+The historical next-step proposal has since become the separately authorized
+[cloud UTF8 repair](utf8-size-guards-analysis.md); these Farnsworth measurements
+remain attributed to immutable e23.

@@ -124,5 +124,35 @@
     "reason": "global swap allocation growth alone was not pressure evidence;workloadswap0 and no disk-swapout increase",
     "executionOutcome": "not supplied yet;cloud did not execute it",
     "gateOrBudgetChanges": false
+  },
+  "replacementCompletionUpdate": {
+    "receivedByCloudUTC": "2026-10-25T05:08:25.224617+00:00",
+    "provenance": "Parent supplied local-executor completion/validation report in this delegated thread",
+    "rawArtifactsReadByCloud": false,
+    "sourceSHA": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+    "completed": true,
+    "all3Shapes232MetricsCorrectnessPins": "reported valid",
+    "absoluteFailures": 0,
+    "pairedFailures": 0,
+    "completeRunResultsInOrder": [
+      {
+        "absoluteFailures": 0,
+        "pairedFailures": 0
+      },
+      {
+        "absoluteFailures": 0,
+        "pairedFailures": 1
+      },
+      {
+        "absoluteFailures": 0,
+        "pairedFailures": 0
+      }
+    ],
+    "priorOutlierAndInfrastructureAbortsRetained": true,
+    "pressureController": "Corrected controller reportedly allowed completion; cloud has not audited the external controller",
+    "comparisonCleanup": "reported complete before Android launch",
+    "android": "Exact e23 APK launched; functional checks ongoing, not a completed acceptance result",
+    "budgetsOrGatePolicyChanged": false,
+    "qualification": "Supplied local-executor evidence; no direct raw review or automatic hosted/UI/release gate clearance"
   }
 }
