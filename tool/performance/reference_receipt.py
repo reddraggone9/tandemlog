@@ -238,12 +238,12 @@ def validate_report(repo, report, request, host):
     need(report['resourceBounds'] == host['resourceBounds'], 'Reference resource bounds differ')
     need(report.get('sourceRewrites') == [] and report.get('shimAllowlist') == [], 'Source rewrite/shim refused')
     pins = source_pins(repo, repo / 'tool/performance')
-    expected = {str(Path(p).relative_to(repo)): v for p, v in pins.items()}
+    expected = {Path(p).relative_to(repo).as_posix(): v for p, v in pins.items()}
     normalized, rename = check_reference_toolchain(report, host)
     actual = {rename(p).removeprefix('project/'): v for p, v in report['sourcePins'].items()}
     need(actual == expected, 'Reference source pin inventory differs')
     seals = report['compiledFileSeals']
-    originals = {str(p.relative_to(repo)): digest(p) for p in (repo / 'lib').rglob('*') if p.is_file()}
+    originals = {p.relative_to(repo).as_posix(): digest(p) for p in (repo / 'lib').rglob('*') if p.is_file()}
     originals.update({p: digest(repo / p) for p in ('pubspec.yaml', 'pubspec.lock')})
     need(set(seals) == set(originals), 'Compiled project file inventory differs')
     for name, value in seals.items():
@@ -257,7 +257,7 @@ def validate_report(repo, report, request, host):
     imports = validate_project_imports(repo / 'tool/performance/benchmark.dart', repo, host['packageNames'])
     need(all(rename(p).startswith(('staged/', 'project/')) for p in report['projectImportClosure']), 'Import escaped project')
     need(sorted(rename(p).split('/', 1)[1] for p in report['projectImportClosure']) ==
-         sorted(str(Path(p).relative_to(repo)) for p in imports), 'Compiled project import closure differs')
+         sorted(Path(p).relative_to(repo).as_posix() for p in imports), 'Compiled project import closure differs')
     limits = read(repo / 'tool/performance/limits-v1.json')
     limits['sha256'] = digest(repo / 'tool/performance/limits-v1.json')
     validate_registered_coverage(read(repo / 'tool/performance/coverage-v1.json'), limits, scaling_specs(limits))

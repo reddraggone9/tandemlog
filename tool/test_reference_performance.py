@@ -44,7 +44,22 @@ class AdvisoryPolicyTests(unittest.TestCase):
                           ['--measure-only', '--reference-request', str(root / 'request')]):
                 result = subprocess.run(base + flags, capture_output=True, text=True, timeout=10)
                 self.assertNotEqual(result.returncode, 0)
+                self.assertNotIn('runner requires Linux', result.stderr)
                 self.assertFalse((root / 'output').exists())
+
+    def test_non_linux_runner_still_refuses_before_creating_output(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            command = ['run_gate.py']
+            for option in ('repo', 'dart', 'native-library', 'sqlite-library', 'output'):
+                command.extend(['--' + option, str(root / option)])
+            with patch.object(sys, 'argv', command), patch.object(sys, 'platform', 'win32'), \
+                    contextlib.redirect_stderr(io.StringIO()) as errors:
+                with self.assertRaises(SystemExit) as raised:
+                    run_gate.main()
+            self.assertEqual(raised.exception.code, 2)
+            self.assertIn('runner requires Linux', errors.getvalue())
+            self.assertFalse((root / 'output').exists())
 
 
 class ReferenceReceiptTests(unittest.TestCase):
@@ -102,8 +117,10 @@ class ReferenceReceiptTests(unittest.TestCase):
                         'issuedAtUTC': '2026-10-25T00:00:00Z', 'sourceRevision': self.head(),
                         'relevantSource': self.identity, 'hostProfileSHA256': receipt.digest(self.repo / receipt.PROFILE),
                         'controllerSHA256': self.host['controllerSHA256'], 'controllerPath': str(self.controller)}
-        pins = {p.replace(str(self.repo), '/repo', 1): value for p, value in run_gate.source_pins(self.repo, self.tools).items()}
-        originals = {str(p.relative_to(self.repo)): receipt.digest(p) for p in (self.repo / 'lib').rglob('*') if p.is_file()}
+        # Reports originate on Linux even when the receipt validator runs on Windows.
+        pins = {'/repo/' + Path(p).relative_to(self.repo).as_posix(): value
+                for p, value in run_gate.source_pins(self.repo, self.tools).items()}
+        originals = {p.relative_to(self.repo).as_posix(): receipt.digest(p) for p in (self.repo / 'lib').rglob('*') if p.is_file()}
         originals.update({p: receipt.digest(self.repo / p) for p in ('pubspec.yaml', 'pubspec.lock')})
         compiled.update({'/stage/' + name: value for name, value in originals.items()})
         self.bundle = self.repo / receipt.QUALIFICATION
@@ -352,6 +369,7 @@ class ReferenceReceiptTests(unittest.TestCase):
         self.assertFalse((output / 'benchmark').exists())
 
 
+@unittest.skipUnless(sys.platform.startswith('linux'), 'Synthetic orchestration exercises the Linux-only AOT runner')
 class HostedRunnerTests(unittest.TestCase):
     def run_synthetic_runner(self, failure):
         fixture = ReferenceReceiptTests(methodName='test_fresh_complete_source_bound_receipt_passes')

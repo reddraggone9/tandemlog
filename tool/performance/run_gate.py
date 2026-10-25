@@ -316,13 +316,13 @@ def main():
     mode.add_argument('--hosted-advisory',action='store_true',help='Require full hosted correctness, bindings, coverage and resource caps; timing misses remain advisory, never reference acceptance.')
     parser.add_argument('--reference-request',type=pathlib.Path,help='Exact source-bound controlled-host qualification request; enforcing mode only.')
     parser.add_argument('--diagnose-costs',action='store_true',help='Opt-in API/queue/transaction/provider interval accounting; requires --measure-only and never establishes release performance.')
-    if not sys.platform.startswith('linux'):
-        parser.error('The standalone AOT performance runner requires Linux; policy tests are portable.')
     args=parser.parse_args()
     if args.diagnose_costs and not args.measure_only:
         parser.error('--diagnose-costs requires --measure-only; instrumented timings cannot satisfy release acceptance')
     if args.reference_request and (args.measure_only or args.hosted_advisory):
         parser.error('--reference-request requires uninstrumented enforcing mode')
+    if not sys.platform.startswith('linux'):
+        parser.error('The standalone AOT performance runner requires Linux; policy tests are portable.')
     root=args.output.resolve();root.mkdir(mode=0o700,parents=False,exist_ok=False)
     tools=pathlib.Path(__file__).resolve().parent;limits_path=tools/'limits-v1.json';limits=json.loads(limits_path.read_text());limits['sha256']=digest(limits_path)
     if not args.measure_only and (limits.get('releaseReady') is not True or args.expected_limits_sha256!=limits['sha256']):raise SystemExit('Versioned limits are inactive or not workflow-bound; release gate fails closed.')

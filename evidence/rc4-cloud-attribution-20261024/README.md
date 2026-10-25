@@ -28,6 +28,8 @@ Current034a57d Windows **foreground framework bootstrap** is now [reported passe
 
 Lee-approved **prospective reference-host policy** is now implemented as tested preparation:mandatory hosted correctness with advisory timing,and separate fail-closed Farnsworth absolute/growth qualification,no multipliers or budget changes. [ADR0033](../../design/decisions/0033-controlled-reference-performance.md),[local/Vex operating protocol](../../design/performance-reference-qualification.md),[1515unit/196tool validation receipt](reference-policy-transition.json). Host platform and privately reviewed revision2 controller are registered;[registration receipt](reference-controller-registration.json). Fresh enforcing receipt and one exact-sourceCI remain pending. Old failures and diagnostics are not promoted. [Full action reconciliation](acceptance-measurement-spec-034a57d.md) and [variance evidence](hosted-normalization-analysis.md).
 
+Latest [hosted policy integration result and Windows portability repair](ci-7099-policy-integration.json) retains the failed required reference check,original Windows tooling failure and all advisory timing misses. Linux203native checks and Android pass;fresh native Windows tooling validation of the repair remains pending. [Full handoff](live-handoff-vex.md).
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

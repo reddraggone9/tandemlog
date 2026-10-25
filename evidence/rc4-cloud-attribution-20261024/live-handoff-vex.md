@@ -1,8 +1,22 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 15:45 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 17:30 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Hosted policy integration and Windows portability — 2026-10-25 17:30 UTC
+
+One exact7099bbd run [CI40212054595](https://github.com/reddraggone9/tandemlog/actions/runs/40212054595),calibration=false,is terminal. Linux passed1515units,107native contracts,196tools and203native workflows (40m43s);Android passed. Windows passed1513units with2skips,then failed the new reference-policy tooling tests before packaging. Linux-origin synthetic receipt paths used Windows separators;the verifier also compared project-relative names using host separators. Synthetic Linux AOT orchestration tests incorrectly ran on Windows.
+
+The narrow repair keeps receipt project names POSIX on every verifier host,retains portable policy/receipt tests on Windows,and scopes Linux-only orchestration tests to Linux. Invalid CLI modes are checked before platform refusal;an explicit regression preserves valid non-Linux refusal before output creation. An isolated checkout passes22focused checks and the full197tool suite (2skips);all3changed Python files compile and whitespace checks pass. **Native Windows validation of this repair remains pending.** No runtime/native source,limits,coverage,controller,fixture or signing setting changes.
+
+Hosted AOT completed all3shapes/232metrics each with correctness accepted,pins matched and zero reruns. Timing is advisory:26failing action/shape entries (19median and20maximum misses),plus one Task-growth maximum miss;Food growth passes. [Integration receipt](ci-7099-policy-integration.json) and [exact absolute miss table](ci-7099-advisory-timing-misses.csv). No release/performance acceptance is claimed. The required reference job failed for missing eligible qualification;the earlier consumed failed request and raw results remain unchanged. No fresh request or enforcing retry was created.
+
+Recorder investigation is closed under current constraints:the original native Perfetto trace failed clock/track integrity;the alternative owned-process perf prerequisite was refused before application execution. There are no accepted operation CPU/allocation samples and no demonstrated bulk-delete cause or eligible noise retry. No security/capability changes or sampling fallback were attempted. Private source/raw evidence stays private.
+
+A separate Android backend-refusal plan was technically reviewed only. Its reversible synthetic directory obstruction is a candidate early-read refusal,not a guaranteed pre-reservation fault:provider metadata reuse can defer failure. Continued typing must be observed;blocked/frozen/Retry Save or uncertain stage remains a partial/failing result. Helper controls/bindings and execution coordination remain pending;no emulator launched. Existing older Android/Windows evidence keeps its qualifications.
+
+The CLI watcher stopped on credential expiry (HTTP401);the connected GitHub app completed read-only monitoring of the original run. No duplicate dispatch occurred. A successor exact-source CI requires coordination;do not relabel7099results as acceptance of the portability repair. Reference qualification,physical-device/owner-signed candidate and full-action Windows hardware-presentation gaps remain open. Cloud remains sole writer until coordinated cutover;Oct26 13:00UTC cutoff unchanged. No release or live changes.
 
 ## Terminal-evidence correction registered; no new execution — 2026-10-25 15:45 UTC
 
