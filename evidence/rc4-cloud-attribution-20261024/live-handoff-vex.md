@@ -1,8 +1,26 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 14:46 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 15:45 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Terminal-evidence correction registered; no new execution — 2026-10-25 15:45 UTC
+
+The privately reviewed controller correction is registered by hash343ad5c1…
+after45local host controls,six real synthetic manager/terminal cases and32cloud
+portable controls. All38private inventory hashes,exact candidate source and
+nine terminal-unit readbacks were checked. Only stop/query and terminal-evidence
+handling change;pressure,lifetime,19+1cleanup and deadline safeguards remain.
+[Sanitized registration receipt](reference-controller-terminal-registration.json).
+Private controller source and raw evidence are not published here.
+
+Registration does not install host files or qualify performance. No new request,
+benchmark,CI,release,foreground or live operation is authorized or started by this
+checkpoint. Consumed requests and historical failed evidence must remain unchanged.
+The required reference verifier still fails without fresh eligible qualification.
+Focused CPU/allocation diagnostic planning continues separately;no product change
+is justified from aggregate counters alone. Runtime034a57d,all budgets and cloud
+ownership/Oct26 13:00UTC cutoff remain unchanged.
 
 ## Reviewed controller registered; fresh qualification pending — 2026-10-25 14:46 UTC
 

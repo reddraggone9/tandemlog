@@ -1,0 +1,45 @@
+{
+  "snapshotUTC": "2026-10-25T15:41:18.780016+00:00",
+  "status": "reviewed controller hash registered;performance qualification missing",
+  "controllerSHA256": "343ad5c1ebdf3c51ddf4ad0ca1b468e4bd79c9da9d9e843aaca828eac41372fb",
+  "replacesControllerSHA256": "937e002fcee5a3f54786999f3956b3b0412afc27c22f4d5fb986c5367191ff0b",
+  "pressureDependencyUnchanged": true,
+  "sourceReview": {
+    "changedExistingFunctions": [
+      "stop_unit",
+      "run"
+    ],
+    "addedFunctions": [
+      "record_terminal_status",
+      "observed_usage"
+    ],
+    "allOtherFunctionAndClassASTsUnchanged": true,
+    "privateCandidateBytesIndependentlyMatched": true,
+    "privateEvidenceInventoryHashesVerified": 38,
+    "privateSourceOrRawEvidencePublished": false
+  },
+  "validation": {
+    "localOfflineAndHostControlsPassedAsVerifiedLog": 45,
+    "actualSyntheticManagerFaultCasesReviewed": 3,
+    "actualSyntheticTerminalFaultCasesReviewed": 3,
+    "allNineOwnedUnitTerminalReadbacksVerified": true,
+    "cloudPortableControlsPassed": 32,
+    "cloudToolingTestsRun": 196,
+    "cloudToolingTestsSkipped": 2,
+    "cloudToolingLogSHA256": "d720a412669403dc9848f69acde27fd4de3cde02a4ec58c4277f4fd90ea6aafe"
+  },
+  "qualificationGuards": {
+    "terminalStatusCapturedBeforeResourceReadback": true,
+    "collectedUnitDefaultsCannotProveOriginalSuccess": true,
+    "successfulExitWithoutFinalCountersRefused": true,
+    "statusQueryFailureNotCleanupSuccess": true,
+    "resourcePressureLifecycleAndDeadlineControlsUnchanged": true
+  },
+  "runtimeProductCommit": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "budgetOrCoverageChanged": false,
+  "hostInstallationPerformedByCloud": false,
+  "newRequestCreated": false,
+  "consumedRequestReused": false,
+  "newBenchmarkOrCIDispatched": false,
+  "qualifyingReferenceReceiptPresent": false
+}

@@ -33,8 +33,8 @@ change is implied. Cloud is the sole repository writer;local source is immutable
 x86_64,kernel7.2.11-arch1-1,16logical CPUs,Python3.14.8 and ext4 measurement path,
 plus exact SDK/native/SQLite/dependency/lock/limits pins. The registration came
 from the parent's read-only collection,not a cloud host probe. The reviewed
-controller revision2 is registered by SHA256
-`937e002fcee5a3f54786999f3956b3b0412afc27c22f4d5fb986c5367191ff0b`.
+controller with the reviewed terminal-evidence correction is registered by SHA256
+`343ad5c1ebdf3c51ddf4ad0ca1b468e4bd79c9da9d9e843aaca828eac41372fb`.
 Its adjacent pressure module remains SHA256
 `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`.
 The source and original host fault evidence were reviewed privately;registration
@@ -75,6 +75,15 @@ launch;all six owned units ended inactive/failed with MainPID0 and empty/absent
 cgroups. This establishes those lifecycle cases,not actual root-controller plus
 benchmark integration or performance acceptance. Missing invocation/result,
 counters,cleanup or deadline evidence still refuses qualification.
+
+The later terminal-evidence correction preserves terminal status before cgroup
+reads,refuses collected-unit defaults and missing final counters,and queries
+inactivity before trying to stop an unloaded unit. It preserves the same lifetime,
+pressure and deadline controls. Private review verified45host controls and six
+synthetic manager/terminal fault cases;no performance qualification follows from
+these controls. Registration replaces the expected controller hash only:it does
+not install host files,create another request,reuse a consumed request or authorize
+another invocation. Private source/raw evidence remain outside the public repo.
 
 The existing management route must start the nonce manager with
 `systemd-run --wait --pipe --collect --service-type=exec`,the manager settings
