@@ -4,54 +4,72 @@
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
 
-## Continuation update —2026-10-24 23:42 UTC
+## Continuation update —2026-10-25 00:51 UTC
 
-Cloud remains sole writer; no cutover occurred. Stop-write cutoff remains
+Cloud remains sole product writer; no cutover occurred. Stop-write cutoff is
 2026-10-26 08:00 America/Chicago /13:00 UTC, or earlier actual exhaustion/access
 loss. Account quota remains unknown; no supported status endpoint is exposed.
 
-Current tested product and verified remote source is
-`a71d0bac2981f93189c6dc9bdc7e3354027a7cb5`. It includes `fb13f68`'s reproduced
-Undo/Cancel rendered-readiness fix and only one subsequent product change:
-retain the derived immutable Food ID string, with all constructors, byte proofs,
-readiness/peer/native/transaction/durability guards unchanged. Full1505 units
-pass6m25s,97 focused regressions pass, analysis clean,395 files format0 changes.
-Local all3-shape/232-metric AOT correctness/replay/prefix/source seals pass,0
-retries;11 absolute and4 paired failures remain, not acceptance.
+Tested product source: `30f874789933f749f11dfe6319aaf74799365d7f`. Current exact-source
+[CI40148192820](https://github.com/reddraggone9/tandemlog/actions/runs/40148192820)
+was dispatched once at2026-10-25 00:49:28UTC, calibration=false, on
+`5dc4e3e398e63e7956312ddff258ac88b6465649`, an evidence-only successor with identical
+application/test/tool/workflow inputs. The rejected patch is losslessly gzipped
+because its blank unified-diff context markers tripped whitespace checks;
+original bytes/SHA are preserved. Do not dispatch a same-branch duplicate while
+this run is active. No other local build/test/profile command remains active.
 
-Baseline [40139838647](https://github.com/reddraggone9/tandemlog/actions/runs/40139838647)
-finished23:38:48UTC without cancellation: Windows/Android pass, performance and
-Linux fail. Native202 pass/1 failure in40m29s is the same missing-Discard Session
-Undo defect fixed byfb13; baseline does not include it. Baseline performance
-retains10 absolute maxima/9 paired failures. Both normal closes exit0,
-189.994/77.204ms, no core; the intermittent SIGSEGV remains unresolved. Completed
-native log is `/workspace/scratch/rc4-baseline-native-ci-40139838647/job.log`, SHA
-`228a196a7d5ace74e5893f495fa6baaf6a6f8f7cf11c0bf21aee086f4c1c9add`.
+The product repair adds NativeTextState.fromBytes: an owned immutable byte copy,
+the same hard representational bounds/errors, and canonical Base64 generation
+once. Seven SQL checkpoint sites no longer encode/decode/re-encode self-generated
+strings. String inputs still use original strict parsing. All native pending,
+limits, actor/context/ownership, byte/hash/receipt, queue, transaction, peer/tail
+and rejected-Save continued-typing checks remain. No native ABI, persistence,
+dependency, signing or performance-limit changes. Full1508 units pass6m38s;
+analysis clean;395 files format0 changes. Same-binary constructor AOT is~2.9x
+faster across256/1024/16384 bytes, not a whole-action/UI claim. Full local AOT
+correctness/replay/prefix/seals pass all3 shapes/232 metrics;10 absolute and9
+paired failures remain,0 retries. This is not enforcing or hardware acceptance.
 
-Exactly one fresh enforcing [CI40143666264](https://github.com/reddraggone9/tandemlog/actions/runs/40143666264)
-was dispatched23:40:05UTC for exacta71d0ba,calibration=false, only after the
-baseline became terminal. All four jobs are progressing through setup/build;
-no result yet. Do not duplicate dispatch or cancel it with a same-branch run.
-This documentation successor changes no executable inputs.
+Previous exacta71 [CI40143666264](https://github.com/reddraggone9/tandemlog/actions/runs/40143666264)
+finished2026-10-25 00:34:11UTC. Linux/Windows/Android PASS, including all203 native
+Linux cases in40m52s. The previously reproduced Session Undo/Discard failure now
+passes the complete native suite. Overall CI FAILS performance:54 absolute
+failures (42 median misses), both paired-growth comparisons PASS,0 eligible
+retries. CPU EPYC7763 differs from baseline9V45; no controlled code speed or
+regression comparison is claimed. Artifact12579904094 SHA256
+`96a8ff41dcc9c37246dd1433476aec64eb6ccc3eda04aa8a787dc48744cfffa0`
+is verified at `/workspace/scratch/rc4-food-id-ci-40143666264-refreshed`.
+Its first prepared download link expired00:04:50UTC and returned403/0bytes;
+one refresh after explicit expiry proof succeeded. No access blocker remains.
 
-No active local build/test/profile command remains. Completed local AOT lives
-`/workspace/scratch/rc4-food-id-full-aot`; failed and corrected bounded warm-Undo
-profiles remain `/workspace/scratch/rc4-warm-undo-cpu-profile{,-v2}`. Corrected
-profile passes7 complete replay/prefix runs with407 samples/0 lost. Full readiness
-is~19.9% inclusive samples and append semantic validation~28.0%; these overlap and
-are not exclusive wall costs. The next scratch hypothesis is exact-raw-row reuse
-of readiness-state decoding, retaining every live SQL/readiness/dependency check.
-No product change for that hypothesis has been made. The first profiler-control
-failure is retained; its five-byte NUL-terminated acknowledgement is now verified.
+Botha71 normal-close processes exit0,927.927/76.767ms, no core. The intermittent
+SIGSEGV remains UNWAIVED with no identifying stack. The CI post-fault collector
+stays in place; clean runs do not diagnose it. Linux native log:
+`/workspace/scratch/rc4-food-id-native-ci-40143666264/job.log`, SHA256
+`5a38b4b0453156e5a1431681b790d1a293cb0d5a66f82d3aad50785336899fae`.
+Close/bundle artifact12580365191 SHA256
+`4ea74ff5c61fe293250e95fbb6cbbe9938a26cb07699d6b0d03ff137870ffdd8`,
+verified at `/workspace/scratch/rc4-food-id-close-ci-40143666264`.
 
-Evidence: `followup-order-baseline-terminal.json`, `followup-food-id-analysis.md`,
-`followup-food-id-probe.json`, `followup-food-id-full-aot.json`,
-`followup-food-id-local-checks.json`, `followup-protected-undo-cpu-sample.json`.
-Configuration locations: `configuration-locations-vex.md`. Native screenshots
-for the UI fix were inspected; desktop/Android demos, full native Windows action/
-growth validation and hardware presentation acceptance remain pending. No
-foreground Windows/Farnsworth access occurred. No releases/live changes or looser
-limits are authorized. The22:28 snapshot below is historical.
+Availability memo/projection research was rejected after mixed matched timings.
+The full uncommitted memo patch,6 tests and failed AOT (13 absolute/20 paired)
+are preserved as evidence and are NOT product source. Do not reapply them as an
+accepted repair. See `followup-readiness-rejected-experiments.json` and
+`rejected-readiness-memo.patch.gz`. Current source retains neither variant.
+
+Start with `followup-owned-state-analysis.md`, `followup-owned-state-codec.json`,
+`followup-owned-state-full-aot.json`, `followup-owned-state-local-checks.json`,
+and `followup-food-id-required-ci-terminal.json`. Current resumable cloud state
+is `/workspace/scratch/rc4-cloud-checkpoint.json`. Configuration locations remain
+`configuration-locations-vex.md`. No secrets or personal fixtures are published.
+
+Remaining: finish the current enforcing run, investigate retained performance
+misses within unchanged limits, retain any genuine close-crash stack, and finish
+native UI/video/device acceptance. Cloud/Xvfb timing is not hardware Windows
+presentation. Windows foreground remains held; coordinate native/device work
+through the parent, with no new persistent access/services. No release/live
+cutover or budget loosening is authorized. The22:28 snapshot below is historical.
 
 ## Checkout and conventions
 
