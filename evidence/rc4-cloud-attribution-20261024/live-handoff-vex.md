@@ -1,8 +1,32 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 18:30 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 23:55 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Bulk selection repair and diagnostic preparation — 2026-10-25 23:55 UTC
+
+The completed fixed diagnostic retained504observations/252traces, with no
+replacements. Both snapshots were live memo hits; selection separately decoded
+796visible rows for three tasks. The [analysis and narrow repair](bulk-selection-projection-repair.md)
+retain overlapping-interval limits, original failed qualification and unchanged
+budgets. Fresh SQL logical-ID filtering removes this repeated decoder work only
+when the existing snapshot proves exact app-style row encoding. Noncanonical
+Task rows and guard-staged SQL changes use the original full Dart decoder;
+focused Dart JSON5/duplicate-label tests preserve refusal and error ordering.
+Selected maps always come from fresh SQL, never snapshot contents.
+
+The final source passed1,535Flutter tests,26focused controls,analysis/format,
+198tools,107native contracts,4Rust tests and Linux release/payload checks. Rebased
+**diagnostic-only** hooks count the new selection path directly; the focused
+control reports3queried/decoded selected rows, two live snapshot reads and exact
+receipt/Undo bytes, including observer-error transparency. A fresh sealed fixed
+four-process package is being prepared for review; no new measurement or CI has
+launched. No net latency speedup or acceptance is claimed. Old batch identities,
+consumed failed reference and prior control failures are immutable.
+
+Cloud remains sole writer; the October26 13:00UTC stop-write cutoff is unchanged.
+No release, live operation, new security access or native foreground activity.
 
 ## Native Windows tooling follow-up and terminal CI — 2026-10-25 18:30 UTC
 

@@ -5,6 +5,14 @@ completing tasks and starting the app. Ordinary actions were repeatedly decoding
 unchanged records, rebuilding unrelated projections and restoring unrelated
 native documents. Task and Food interaction coverage must be assessed together.
 
+The [bulk-selection diagnostic and repair](../evidence/rc4-cloud-attribution-20261024/bulk-selection-projection-repair.md)
+identify repeated full visible-row decoding for small bulk selections. Selection
+filters logical IDs in fresh SQL before decoding when the existing live snapshot
+proves app-style encoding and a caller guard made no SQL row writes; other cases
+keep the original full decoder. Snapshot, global order, visibility, semantic and
+append guards remain. A net latency improvement has not
+yet been measured; prior failed qualifications and budgets remain unchanged.
+
 ## Reuse boundaries
 
 The incremental contract in [ADR0007](decisions/0007-canonical-history-integrity.md)

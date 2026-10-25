@@ -2389,8 +2389,10 @@ class TaskStore {
   }
 
   final Map<String, int> lastReadTimings = {};
+  String get _visibleRowsQuery =>
+      "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0";
   String get _visibleRowsSql =>
-      "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0 ORDER BY ${tables.positions}.rank";
+      '$_visibleRowsQuery ORDER BY ${tables.positions}.rank';
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
     final records = db.select(_visibleRowsSql);
@@ -4137,12 +4139,32 @@ class TaskStore {
       if (equal) return _taskSnapshotValue!;
     }
     taskSnapshotRowsDecoded += raw.length;
-    final value = jsonEncode(
-      raw
-          .map((value) => jsonDecode(value) as Map<String, dynamic>)
-          .where((row) => row['kind'] == 'task')
-          .toList(),
-    );
+    final tasks = <Map<String, dynamic>>[];
+    final taskRaw = <String>[];
+    for (final source in raw) {
+      final row = jsonDecode(source) as Map<String, dynamic>;
+      if (row['kind'] == 'task') {
+        tasks.add(row);
+        taskRaw.add(source);
+      }
+    }
+    final value = jsonEncode(tasks);
+    // Filtering by SQLite's logical ID is equivalent only for the exact map
+    // encoding produced by our projection writers. Duplicate JSON labels or
+    // other noncanonical encodings keep the original full Dart decoder path.
+    // Compare against the representation already built above, without encoding
+    // the rows a second time or retaining any additional row payload.
+    var selectionSafe = true;
+    var offset = 1;
+    for (final entry in taskRaw.indexed) {
+      if (entry.$1 > 0) offset++;
+      if (!value.startsWith(entry.$2, offset)) {
+        selectionSafe = false;
+        break;
+      }
+      offset += entry.$2.length;
+    }
+    selectionSafe = selectionSafe && offset == value.length - 1;
     final bytes = raw.fold<int>(
       raw.length * 64 + value.length * 2,
       (total, value) => total + value.length * 2,
@@ -4151,6 +4173,7 @@ class TaskStore {
       _taskSnapshotRaw = List.unmodifiable(raw);
       _taskSnapshotValue = value;
       _taskSnapshotBytes = bytes;
+      _taskSnapshotSelectionSafe = selectionSafe;
     } else {
       _clearTaskSnapshotMemo();
     }
@@ -4160,6 +4183,7 @@ class TaskStore {
   List<String>? _taskSnapshotRaw;
   String? _taskSnapshotValue;
   int _taskSnapshotBytes = 0;
+  bool _taskSnapshotSelectionSafe = false;
   int get cachedTaskSnapshotBytes => _taskSnapshotBytes;
   // Attempted representation work, separate from display-row decoding.
   int taskSnapshotRowsDecoded = 0;
@@ -4167,6 +4191,7 @@ class TaskStore {
     _taskSnapshotRaw = null;
     _taskSnapshotValue = null;
     _taskSnapshotBytes = 0;
+    _taskSnapshotSelectionSafe = false;
   }
 
   String _nonTextSnapshot(String snapshot) {
@@ -4319,11 +4344,30 @@ class TaskStore {
     );
   });
 
-  List<Map<String, dynamic>> _selection(List<String> ids) {
+  List<Map<String, dynamic>> _selection(
+    List<String> ids, {
+    required bool useFilteredProjection,
+  }) {
     if (ids.isEmpty || ids.toSet().length != ids.length) {
       throw FormatFailure('Choose distinct tasks.');
     }
-    final tasks = rows
+    // Read the live projection after the snapshot/caller guard; the snapshot
+    // memo is never selection authority. Filter logical IDs before decoding so
+    // a small selection does not decode every visible Task/user row. Preserve
+    // the same visibility join, global rank order and Dart kind/ID checks.
+    // One JSON parameter also preserves large-selection validation without a
+    // placeholder per ID or SQLite's variable-count limit.
+    final candidates = useFilteredProjection
+        ? db
+              .select(
+                "$_visibleRowsQuery AND json_extract(${tables.views}.raw,'\$.id') IN (SELECT value FROM json_each(?)) ORDER BY ${tables.positions}.rank",
+                [jsonEncode(ids)],
+              )
+              .map(
+                (r) => jsonDecode(r['raw'] as String) as Map<String, dynamic>,
+              )
+        : rows;
+    final tasks = candidates
         .where((r) => r['kind'] == 'task' && ids.contains(r['id']))
         .toList();
     if (tasks.length != ids.length) {
@@ -4342,11 +4386,23 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
-    if (taskSnapshot != expectedTaskSnapshot ||
-        (canCommit != null && !canCommit())) {
-      throw StaleTaskSnapshot();
+    if (taskSnapshot != expectedTaskSnapshot) throw StaleTaskSnapshot();
+    var guardWroteSql = false;
+    if (canCommit != null) {
+      // Guards must not mutate the store. Preserve the legacy decoder/error
+      // behavior even for a caller that stages projection writes here.
+      final changes = db
+          .select('SELECT total_changes() AS count')
+          .single['count'];
+      if (!canCommit()) throw StaleTaskSnapshot();
+      guardWroteSql =
+          changes !=
+          db.select('SELECT total_changes() AS count').single['count'];
     }
-    final selected = _selection(ids);
+    final selected = _selection(
+      ids,
+      useFilteredProjection: _taskSnapshotSelectionSafe && !guardWroteSql,
+    );
     final commands = prepare(selected);
     final prepared = <OperationReceipt>[];
     Object? error;
