@@ -1,5 +1,5 @@
 {
-  "snapshotUTC": "2026-10-25T06:16:04.247697+00:00",
+  "snapshotUTC": "2026-10-25T06:37:24.289749+00:00",
   "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
   "runId": 40167598688,
   "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40167598688",
@@ -48,5 +48,36 @@
     "artifactDigestVerified": true,
     "receipt": "linux-disposal-enforcing-performance.json",
     "sameAOTBinarySourceToolsFixtureBindingAndCapsAsPrevious179_105Run": true
+  },
+  "jobs": {
+    "android": {
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "windows": {
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "performance": {
+      "status": "completed",
+      "conclusion": "failure",
+      "receipt": "linux-disposal-enforcing-performance.json",
+      "absoluteFailures": 5,
+      "pairedFailures": 3,
+      "rerunsUsed": 0
+    },
+    "linux": {
+      "status": "in_progress",
+      "activeStep": "Run bounded native Linux workflows",
+      "stepStartedUTC": "2026-10-25T06:12:11Z",
+      "unchangedStepDeadlineUTC": "2026-10-25T07:02:11Z",
+      "originalHostedNormalCloseAndDisposalGates": "success;verified receipts retained"
+    }
+  },
+  "liveNativeLogAvailability": {
+    "attemptUTC": "2026-10-25T06:21:10Z",
+    "outcome": "404 BlobNotFound while job active",
+    "classification": "pending log materialization, not authorization denial",
+    "nextAttempt": "only after terminal job state"
   }
 }

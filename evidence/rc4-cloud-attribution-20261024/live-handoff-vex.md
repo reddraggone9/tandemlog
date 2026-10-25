@@ -1,8 +1,36 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 06:02 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 06:37 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Current CI checkpoint — 2026-10-25 06:37 UTC
+
+Product **034a57d**, exact CI **40167598688**, one dispatch/calibration false.
+Windows and Android are TERMINAL PASS. Performance is TERMINAL FAIL (5 absolute
+maxima, 3 paired failures, all correctness passed, 0 retries). All prior timing
+failures remain and no budget/gate policy is changed.
+
+Linux is still in the full native workflow step started 06:12:11 UTC; unchanged
+50-minute deadline is 07:02:11 UTC. Its original hosted normal-close fresh/warm,
+deterministic same-thread disposal, packaging and installation lifecycle checks
+PASSED. Verified original/disposal artifacts match 18 bundle pins, with no core.
+The full case result is NOT yet known; no claim of full native acceptance.
+
+Active-job log fetch at 06:21:10 UTC returned 404 BlobNotFound. This is pending
+log materialization, not an authorization denial. Do not keep retrying the active
+log endpoint or substitute an alternate route; fetch once after terminal state.
+Metadata and the bounded read-only watch remain active. Prior same-source native
+suite took 40m32s; current duration alone does not establish a stall. Do not
+restart, extend or duplicate this run.
+
+Independent evidence review identified the three retained teardown warnings in
+existing URL-launcher/file-selector generated handler cleanup. It also confirmed
+fully ready Food receipts already use an index; preserve the incomplete-admission
+fallback. Retained paired Food medians show CPU/allocation attribution still
+needs evidence before another source optimization. No new measurement or product
+edit is in progress. The working tree/remote and all 447 validation source pins
+match. Cloud remains sole writer, no ownership transfer/release/live operation.
 
 ## Performance terminal; native suite active — 2026-10-25 06:16 UTC
 
