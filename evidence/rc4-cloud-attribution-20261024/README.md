@@ -12,6 +12,11 @@ Latest count-only UTF-8 repair: [implementation and validation](utf8-size-guards
 The [live handoff](live-handoff-vex.md) records current execution and remaining
 hosted/native gates; older evidence below retains its original source attribution.
 
+Latest Linux close repair: [ownership fix/proof](linux-disposal-repair.md) and
+[terminal exact-source CI](linux-disposal-terminal-ci.json). Product 034a57d
+passes Linux/Windows/Android jobs and all 203 native Linux workflows; overall CI
+still fails the unchanged performance gate. Historical evidence below is retained.
+
 ## Source and method
 
 Base: `2507e7161be822b0f8a4d7d57a46bbfcc19e5d83` on

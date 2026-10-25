@@ -1,10 +1,10 @@
 {
-  "snapshotUTC": "2026-10-25T06:37:24.289749+00:00",
+  "snapshotUTC": "2026-10-25T06:59:05.920475+00:00",
   "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
   "runId": 40167598688,
   "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40167598688",
   "createdUTC": "2026-10-25T06:01:07Z",
-  "state": "in_progress",
+  "state": "completed",
   "calibratePerformanceRequested": false,
   "dispatchCount": 1,
   "dispatchExitCode": 0,
@@ -50,34 +50,54 @@
     "sameAOTBinarySourceToolsFixtureBindingAndCapsAsPrevious179_105Run": true
   },
   "jobs": {
-    "android": {
+    "linux": {
+      "id": 121091718895,
+      "status": "completed",
+      "conclusion": "success",
+      "unitTestsPassed": 1515,
+      "toolTestsPassed": 174,
+      "nativeTestsPassed": 203,
+      "nativeTestElapsed": "39m28s",
+      "nativeStepStartedUTC": "2026-10-25T06:12:11Z",
+      "nativeFinalPassLine": "2026-10-25T06:51:53.9637488Z 39:28 +203: All tests passed!",
+      "sessionUndoRegressionLine": "2026-10-25T06:50:01.8242249Z 37:36 +198: session Undo survives notices, protects drafts and preserves newer synced edits",
+      "formatAnalysisBuildPayloadOriginalCloseDisposalPackagingAndInstall": "all passed",
+      "decodedJobLogSHA256": "60a6e17176fae62d563debe5cca435f800c9e0e1116563022a6b02b416622b21",
+      "decodedJobLogBytes": 980316
+    },
+    "windows": {
+      "id": 121091718843,
       "status": "completed",
       "conclusion": "success"
     },
-    "windows": {
+    "android": {
+      "id": 121091718752,
       "status": "completed",
       "conclusion": "success"
     },
     "performance": {
+      "id": 121091718835,
       "status": "completed",
       "conclusion": "failure",
-      "receipt": "linux-disposal-enforcing-performance.json",
+      "all3Shapes232CorrectnessPassed": true,
       "absoluteFailures": 5,
+      "absoluteMedianFailures": 0,
+      "absoluteMaximumFailures": 5,
       "pairedFailures": 3,
-      "rerunsUsed": 0
-    },
-    "linux": {
-      "status": "in_progress",
-      "activeStep": "Run bounded native Linux workflows",
-      "stepStartedUTC": "2026-10-25T06:12:11Z",
-      "unchangedStepDeadlineUTC": "2026-10-25T07:02:11Z",
-      "originalHostedNormalCloseAndDisposalGates": "success;verified receipts retained"
+      "pairedMedianFailures": 1,
+      "pairedMaximumFailures": 3,
+      "rerunsUsed": 0,
+      "limitsChanged": false,
+      "receipt": "linux-disposal-enforcing-performance.json"
     }
   },
   "liveNativeLogAvailability": {
-    "attemptUTC": "2026-10-25T06:21:10Z",
-    "outcome": "404 BlobNotFound while job active",
-    "classification": "pending log materialization, not authorization denial",
-    "nextAttempt": "only after terminal job state"
-  }
+    "priorOutcome": "404 BlobNotFound during active job",
+    "newEvidence": "job reached completed/success",
+    "completedLogFetch": "success;no alternate route or active-log retries"
+  },
+  "conclusion": "failure",
+  "completedUTCAsRunUpdated": "2026-10-25T06:51:58Z",
+  "terminalReceipt": "linux-disposal-terminal-ci.json",
+  "activeOwnedCommands": []
 }

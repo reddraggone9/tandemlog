@@ -113,3 +113,28 @@ bundle pins; four QA source pins match. This verifies the lifetime correction on
 the original hosted execution path, while broader native workflows and required
 performance results remain pending. Historical SIGSEGV evidence is retained, not
 replaced by a universal crash-elimination claim or a hardware latency claim.
+
+
+## Terminal exact-source validation
+
+[Terminal CI receipt](linux-disposal-terminal-ci.json): exact source 034a57d,
+run 40167598688, finished 06:51:58 UTC. Linux, Windows and Android jobs PASS.
+Linux passes all 1,515 unit tests, 174 tooling tests, original uninstrumented
+close, deterministic disposal, packaging/install lifecycle and **all 203 native
+workflows in 39m28s**. This includes the session Undo regression protecting drafts
+and newer synced edits. No job was canceled, extended or redispatched.
+
+Overall CI is FAIL solely on the unchanged performance gate: five absolute
+maximum and three paired failures, zero retries; all correctness checks pass.
+The same AOT executable/inputs/caps produced 179/105 failures on the prior CPU
+model, so this native-only repair is not credited with an AOT speedup. Hardware
+presentation, foreground Windows acceptance and latest-source physical Android
+validation remain distinct; the older supplied e23 emulator results retain their
+own source attribution. No release, live operation or limit loosening follows.
+
+The lifetime defect is corrected and now verified in the original hosted close
+path, by a deterministic same-thread disposal proof and the broader native suite.
+That is stronger than prior clean GDB samples; it does not erase the original
+fault or establish universal elimination of every intermittent graphics fault.
+The earlier active-log 404 was resolved by fetching after terminal state; the
+complete decoded log is retained with its digest. No owned app or watch remains.

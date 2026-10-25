@@ -1,8 +1,51 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 06:37 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-25 06:57 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Terminal repair checkpoint — 2026-10-25 06:57 UTC
+
+Product **034a57dbc7092e242889d23d12e22091fed08b0c** is pushed and tested.
+Later commits contain documentation/evidence only; all 447 local validation
+input pins still match that source. Cloud remains sole writer; no cutover.
+No owned app, benchmark, test command or read-only watch remains active.
+
+Exact-source [CI 40167598688](https://github.com/reddraggone9/tandemlog/actions/runs/40167598688)
+is TERMINAL, updated 06:51:58 UTC. Linux, Windows and Android jobs PASS. Linux
+passes 1,515 units, 174 tool tests, analysis/format/build/native payload, original
+uninstrumented fresh/warm normal close, deterministic disposal, packaging/install
+and **all 203 native workflows in 39m28s**. Session Undo protecting drafts/newer
+synced edits is among passing cases. No cancellation, deadline extension or retry.
+[Terminal receipt/artifact routes](linux-disposal-terminal-ci.json).
+Decoded Linux log SHA256
+60a6e17176fae62d563debe5cca435f800c9e0e1116563022a6b02b416622b21.
+Active-log 404 was pending publication and resolved after terminal state; no
+alternate access route or repeated active-log attempts were used.
+
+The underlying detached window/view/engine lifetime defect is fixed and verified
+locally and on the original hosted path. Same-thread destruction/finalization
+occurs before application-loop return, including a local renderer-child proof.
+Queued GTask completion is handled without sleeps, waiting for new work, forced
+exit, disabled rendering or SDK/security change. Incomplete cleanup cannot claim
+normal exit success. Original SIGSEGV, original negative and window-only negative
+proofs remain retained; no universal graphics-crash elimination claim.
+
+Overall CI remains FAIL solely on performance: 5 absolute maxima, 3 paired
+failures, all correctness passed, 0 retries. Exact AOT bytes/source/dependencies/
+tools/fixture binding/caps match the prior 179/105-failure run; CPU differs.
+No native-fix AOT speedup, isolated virtualization cause, threshold change or gate
+policy adjustment is claimed. Preserve every miss and source binding. Remaining
+paired Food attribution needs CPU/allocation/GC evidence; fully ready receipt
+confirmation is already indexed, and its incomplete-admission fallback must stay.
+
+Release/live changes remain held. Leela foreground/full-action presentation and
+latest-source physical Android acceptance are not established by this Linux job
+or the older e23 emulator trial. The supplied e23 Android/4-replay results and
+Farnsworth 0/0,0/1,0/0 series keep their prior attribution. Last supplied local
+quota: 76% remaining, reset Oct31 17:21:56 UTC, not independently rechecked by
+cloud. Hard stop-write cutoff stays Oct26 13:00 UTC; ownership requires explicit
+handoff. Current source is a clean resumable review checkpoint, not a release.
 
 ## Current CI checkpoint — 2026-10-25 06:37 UTC
 
