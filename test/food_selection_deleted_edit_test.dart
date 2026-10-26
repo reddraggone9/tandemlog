@@ -191,6 +191,18 @@ void main() {
       expect(find.text('2 selected'), findsNothing);
       update(() => pending = false);
       await tester.pumpAndSettle();
+      // A prepared Save can become pending after pointer-down without rebuilding
+      // the page. Recognition must re-read the current host receipt state.
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.text('Beans')),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      pending = true;
+      await tester.pump(const Duration(milliseconds: 600));
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(find.text('2 selected'), findsNothing);
+      pending = false;
       await tester.longPress(find.text('Beans'));
       await tester.pumpAndSettle();
       expect(find.text('2 selected'), findsOneWidget);

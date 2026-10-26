@@ -829,11 +829,15 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final workspace = widget.workspaceIdentity;
     final addCommand = widget.onAdd;
     final pending = widget.hasPendingSave?.call() ?? widget.savePending;
-    void toggleSelection() {
-      if (!_canUseGroupMenu(group, workspace)) return;
+    void toggleSelection({bool enter = false}) {
+      if (deleted ||
+          (widget.hasPendingSave?.call() ?? widget.savePending) ||
+          !_canUseGroupMenu(group, workspace))
+        return;
       setState(() {
+        if (enter) selecting = true;
         final ids = group.containers.map((e) => e.id);
-        if (ids.every(bulkSelected.contains)) {
+        if (!enter && ids.every(bulkSelected.contains)) {
           bulkSelected.removeAll(ids);
         } else {
           bulkSelected.addAll(ids);
@@ -911,13 +915,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           onTap: editable ? editGroup : null,
           onLongPress: !editable || deleted
               ? null
-              : () {
-                  if (!_canUseGroupMenu(group, workspace)) return;
-                  setState(() {
-                    selecting = true;
-                    bulkSelected.addAll(group.containers.map((e) => e.id));
-                  });
-                },
+              : () => toggleSelection(enter: true),
           excludeFromSemantics: true,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
