@@ -169,10 +169,8 @@ void main() {
               final search = find.byKey(const ValueKey('task-search'));
               await tester.enterText(search, 'Water plants');
               await tester.pumpAndSettle();
-              expect(
-                find.textContaining('Completed 2026-10-26'),
-                findsOneWidget,
-              );
+              expect(find.text('Monday · 2026-10-26'), findsOneWidget);
+              expect(find.textContaining('Completed 2026-'), findsNothing);
               await capture('search');
               // Shared picker is the exact production Tasks/Food component, not
               // a second product implementation or Flutter SDK fork.

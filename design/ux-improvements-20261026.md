@@ -181,8 +181,8 @@ product artifacts.
 
 ## Lee’s UX feedback and exact completion instants — final local review, 2026-10-26
 
-Completed rows now omit repeated completion dates; search keeps its viewer-local
-completion date. Month/year grids replace the existing calendar dialog body.
+Completed rows omit repeated completion dates in both the Completed view and
+Search (Lee 2026-10-26: search is grouped under the same date headings). Month/year grids replace the existing calendar dialog body.
 Back/Escape returns to the day calendar before dismissing it; Cancel preserves the
 draft. There is no stays-deleted note. Native screenshot iterations corrected the
 large-text selected-year offset, partial year rows and excess grid spacing.
