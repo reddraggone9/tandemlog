@@ -240,6 +240,59 @@ void main() {
     },
   );
   test(
+    'common live reservation cannot emit legacy date-only completion revisions',
+    () async {
+      tasks = await TaskStore.openUnified(h);
+      await h.appendAtomic([
+        user(),
+        (seq, clock, head) => UnifiedEffect(
+          'task',
+          LogEvent(h.manifest.space, writer, seq, clock, task, 'task.created', {
+            'title': 'Synthetic',
+            'description': '',
+            'assignee': person,
+          }).encode(previousHash: head),
+        ),
+      ]);
+      final before = await folder.read(unifiedLogName(writer));
+      final revision = h.snapshot.revision;
+      for (final requiredRevision in [1, 2]) {
+        UnifiedEffect build(int seq, EventClock clock, String head) =>
+            UnifiedEffect(
+              'task',
+              LogEvent(
+                h.manifest.space,
+                writer,
+                seq,
+                clock,
+                task,
+                'task.completed',
+                {'completedAt': '2026-10-26'},
+                operationRevision: requiredRevision,
+              ).encode(previousHash: head),
+            );
+        // Known historical meaning remains valid for read-only validation.
+        await h.validateInProfileQueue([build]);
+        await expectLater(
+          h.appendAtomic([build]),
+          throwsA(isA<FormatFailure>()),
+        );
+        expect(await folder.read(unifiedLogName(writer)), before);
+        expect(h.snapshot.revision, revision);
+        expect(h.hasPending, false);
+        expect(tasks!.visibleTaskRow(task)!['completed'], false);
+      }
+      final saved = await tasks!.complete(
+        task,
+        completionInstant: DateTime.utc(2026, 10, 26, 12),
+        localZoneId: 'UTC',
+      );
+      expect(saved.operationRevision, 3);
+      expect(saved.data, {'completedInstant': '2026-10-26T12:00:00.000000Z'});
+    },
+  );
+
+  test(
     'first persisted alias revises the operation without a manifest write',
     () async {
       final before = await folder.read('tandemlog-space.json');

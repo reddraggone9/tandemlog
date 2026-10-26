@@ -1991,6 +1991,13 @@ final class UnifiedHistory {
         throw FormatFailure('Historical effects require offline conversion.');
       }
       if (e.task != null) {
+        if (reserve &&
+            isTaskCompletion(e.task!.type) &&
+            e.task!.operationRevision != 3) {
+          throw FormatFailure(
+            'New completions require an exact completion instant.',
+          );
+        }
         assertWorkspaceTaskTimeZonePolicy(e.task!, timeZonePolicy);
       }
       effectBytes += utf8.encode(canonicalDataJson(e.toJson())).length;

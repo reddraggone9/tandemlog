@@ -35,7 +35,7 @@ Required revision is in each hashed operation. Frozen r1/r2 readers reject r3;
 unknown future completions stop common admission and writes in BOTH modules,
 retaining last-good state. Existing partial-tail waiting/retry rules remain.
 The current decoder retains r1/r2's historical date meaning; live command paths
-cannot emit them. Disposable Task projection generation5 and action-decode layout3
+cannot emit them, including the common live reservation API (read-only legacy validation remains supported). Disposable Task projection generation5 and action-decode layout3
 invalidate old derived witnesses without changing protected identity or authority.
 
 The external ADR0031 normalizer must enrich EVERY historical completion, including
