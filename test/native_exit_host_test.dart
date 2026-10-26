@@ -141,7 +141,7 @@ void main() {
                 )['value']
                 as String,
           )['generation'],
-          3,
+          4,
         );
         // Probe the actual production-created keys in the stopped database,
         // rather than a Python fake fixture repeating the helper's key formula.

@@ -6,9 +6,9 @@ import 'task_view_test.dart' show row, ids;
 import 'package:tandemlog/domain/event.dart';
 
 void main() {
-  ViewTime at(String instant) => ViewTime(
+  ViewTime at(String instant, [String zone = 'UTC']) => ViewTime(
     instant: DateTime.parse(instant),
-    localZoneId: 'UTC',
+    localZoneId: zone,
     localOffset: Duration.zero,
   );
   test(
@@ -126,4 +126,94 @@ void main() {
       }
     },
   );
+
+  test('rolling Today compares real instants across a DST fold', () {
+    final rows = [
+      row(
+        'inside',
+        schedule: TaskSchedule(
+          dueDate: '2026-11-01',
+          dueTime: '01:15',
+          timeZone: 'America/Chicago',
+        ),
+      ),
+      row(
+        'outside',
+        schedule: TaskSchedule(
+          dueDate: '2026-11-01',
+          dueTime: '01:45',
+          timeZone: 'America/Chicago',
+        ),
+      ),
+    ];
+    final before = projectTaskView(
+      rows,
+      at('2026-10-31T06:30:00Z', 'America/Chicago'),
+    );
+    expect(before.value.open.first.today, isTrue);
+    expect(before.value.open.last.today, isFalse);
+    expect(before.nextChange, DateTime.parse('2026-10-31T06:45:00Z'));
+    final boundary = projectTaskView(
+      rows,
+      at('2026-10-31T06:45:00Z', 'America/Chicago'),
+    );
+    expect(boundary.value.openGroups.single.today, isTrue);
+  });
+
+  test('Today uses the viewer date for a pinned due instant', () {
+    final view = projectTaskView([
+      row(
+        'local-tomorrow',
+        schedule: TaskSchedule(
+          dueDate: '2026-10-28',
+          dueTime: '00:30',
+          timeZone: 'Asia/Tokyo',
+        ),
+      ),
+    ], at('2026-10-26T15:30:00Z', 'America/Chicago'));
+    expect(view.value.open.single.today, isTrue);
+    expect(
+      view.value.open.single.effectiveDate,
+      DateTime.utc(2026, 10, 27, 10, 30),
+    );
+    expect(view.value.openGroups.single.date, '2026-10-26');
+  });
+
+  test(
+    'a later future task renews grouping at midnight without other activity',
+    () {
+      final rows = [
+        row(
+          'later',
+          schedule: TaskSchedule(dueDate: '2026-10-28', dueTime: '07:00'),
+        ),
+      ];
+      final before = projectTaskView(rows, at('2026-10-26T08:00:00Z'));
+      expect(before.value.open.single.today, isFalse);
+      expect(before.nextChange, DateTime.parse('2026-10-27T00:00:00Z'));
+      final midnight = projectTaskView(rows, at('2026-10-27T00:00:00Z'));
+      expect(midnight.nextChange, DateTime.parse('2026-10-27T07:00:00Z'));
+      expect(
+        projectTaskView(
+          rows,
+          at('2026-10-27T07:00:00Z'),
+        ).value.open.single.today,
+        isTrue,
+      );
+    },
+  );
+
+  test('Today uses bound-adjusted local effective time without moving Due', () {
+    final schedule = TaskSchedule(
+      dueDate: '2027-01-01',
+      dueTime: '07:00',
+      dueMaxDays: 1,
+    );
+    final view = projectTaskView([
+      row('bounded', schedule: schedule),
+    ], at('2026-10-26T08:00:00Z'));
+    expect(view.value.open.single.effectiveDate, DateTime.utc(2026, 10, 27, 7));
+    expect(view.value.open.single.today, isTrue);
+    expect(view.value.open.single.task['schedule'], schedule.toJson());
+  });
 }

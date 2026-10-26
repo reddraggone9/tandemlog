@@ -343,21 +343,41 @@ TimedView<TaskView> projectTaskView(
         final preciseTime = schedule.scheduledDate != null
             ? schedule.scheduledTime
             : schedule.dueTime;
-        final dueInstant = resolveCivilWallTime(
+        final originalInstant = resolveCivilWallTime(
           context.civil(date!, preciseTime),
           schedule.timeZone ?? time.localZoneId,
         ).instant;
+        final originalLocal = context.localCivil(originalInstant);
+        final originalDay = DateTime.utc(
+          originalLocal.year,
+          originalLocal.month,
+          originalLocal.day,
+        );
+        // Bounds change sorting days, not persisted deadlines. Use that adjusted
+        // wall time only when clamped; otherwise preserve the original DST fold.
+        final dueInstant = originalDay == day
+            ? originalInstant
+            : resolveCivilWallTime(effective, time.localZoneId).instant;
         final entersToday = dueInstant.subtract(const Duration(hours: 24));
         inToday = !entersToday.isAfter(time.instant);
         if (!inToday && (next == null || entersToday.isBefore(next))) {
           next = entersToday;
         }
       }
-      // Today labels and the rolling 24-hour inclusion renew at local midnight.
-      final midnight = context.nextLocalDay();
-      if ((day == context.today || day == tomorrow) &&
-          (next == null || midnight.isBefore(next))) {
-        next = midnight;
+      // Reconsider a distant timed date when it becomes tomorrow, even if no
+      // other task provides a clock boundary. Date-only values enter on their day.
+      if (!day.isBefore(context.today)) {
+        final refresh = !day.isAfter(tomorrow)
+            ? context.nextLocalDay()
+            : resolveCivilWallTime(
+                DateTime.utc(
+                  day.year,
+                  day.month,
+                  day.day - (timing.hasEffectiveTime ? 1 : 0),
+                ),
+                time.localZoneId,
+              ).instant;
+        if (next == null || refresh.isBefore(next)) next = refresh;
       }
     }
     if (next != null && (nextChange == null || next.isBefore(nextChange))) {

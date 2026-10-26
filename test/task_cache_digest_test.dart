@@ -11,8 +11,10 @@ import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
-  for (final damaged in [false, true]) {
-    test('Task proof keeps original digest bytes; cache damage=$damaged', () async {
+  for (final cacheState in ['current', 'damaged', 'pre-completion-order']) {
+    final damaged = cacheState == 'damaged';
+    final oldGeneration = cacheState == 'pre-completion-order';
+    test('Task proof keeps original digest bytes; cache=$cacheState', () async {
       final root = await Directory.systemTemp.createTemp('task-proof-bytes-');
       final folder = LocalLogFolder(
         (await Directory('${root.path}/shared').create()).path,
@@ -81,6 +83,16 @@ void main() {
                 )
                 .toString(),
           );
+          if (oldGeneration) {
+            proof['generation'] = 3;
+            profile.database.execute(
+              'UPDATE profile_metadata SET value=? WHERE key=?',
+              [jsonEncode(proof), proofRow['key']],
+            );
+            profile.database.execute(
+              "UPDATE ${tables.views} SET raw=json_remove(raw,'\$.completionOrder')",
+            );
+          }
           if (damaged) {
             profile.database.execute(
               "UPDATE ${tables.views} SET raw=json_set(raw,'\$.title','Forged cache') WHERE id=?",
@@ -91,7 +103,7 @@ void main() {
           await profile.close();
         }
         store = await TaskStore.open(folder, profilePath, textEngine: engine);
-        expect(store.warmProjectionReuses, damaged ? 0 : 1);
+        expect(store.warmProjectionReuses, (damaged || oldGeneration) ? 0 : 1);
         expect(jsonEncode(store.rows), expected);
         await store.verifyHistory();
         expect(jsonEncode(store.rows), expected);
