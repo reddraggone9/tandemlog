@@ -49,3 +49,13 @@ candidate claims are retained in compareEvents order. No new cache or size
 budget is introduced.
 
 See [ADR0035](decisions/0035-exact-completion-instants.md) for required revision3 completion instants, offline cutover approximation, viewer-local Completed/search chronology, and unchanged recurrence/Undo.
+
+### Offline replay observation
+
+`TaskStore.validateSemanticHistory` can optionally expose all materialized rows
+through `onAllRows` for external normalization/replay comparison. Ordinary visible
+rows deliberately exclude tombstones, suppressed successors and checklist items;
+those filters must not hide state from the offline equivalence oracle. The
+observer does not change runtime admission, projection, authority or persistence.
+Frozen historical readers remain byte-exact; any external observation-only
+adapter must prove its limited instrumentation delta separately.

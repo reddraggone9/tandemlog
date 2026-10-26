@@ -304,6 +304,7 @@ class TaskStore {
     required String writer,
     NativeTextEngine? textEngine,
     void Function(Set<String>)? onReady,
+    void Function(List<Map<String, dynamic>>)? onAllRows,
   }) {
     final events = input.toList(), db = sqlite3.openInMemory();
     const tables = TaskTables.legacy();
@@ -328,6 +329,16 @@ class TaskStore {
       db.execute('BEGIN IMMEDIATE');
       store._replaySemanticEvents(events);
       onReady?.call(store._semanticReadyIds(events));
+      // Offline equivalence must also inspect tombstones, suppressed successors
+      // and checklist items, which ordinary visible rows deliberately omit.
+      onAllRows?.call([
+        for (final row in db.select(
+          'SELECT raw FROM ${tables.views} ORDER BY id',
+        ))
+          Map<String, dynamic>.unmodifiable(
+            jsonDecode(row['raw'] as String) as Map<String, dynamic>,
+          ),
+      ]);
       return store.rows
           .map((row) => Map<String, dynamic>.unmodifiable(row))
           .toList();
