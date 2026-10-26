@@ -68,6 +68,20 @@ void main() {
               .hitTestable(),
           findsOneWidget,
         );
+        final yearViewport = tester.getRect(find.byType(CivilYearGrid));
+        for (final label
+            in find
+                .descendant(
+                  of: find.byType(CivilYearGrid),
+                  matching: find.byType(Text),
+                )
+                .evaluate()) {
+          final rect = tester.getRect(find.byWidget(label.widget));
+          if (rect.overlaps(yearViewport)) {
+            expect(rect.top, greaterThanOrEqualTo(yearViewport.top - .1));
+            expect(rect.bottom, lessThanOrEqualTo(yearViewport.bottom + .1));
+          }
+        }
         await tester.scrollUntilVisible(
           find.text('2029'),
           100,

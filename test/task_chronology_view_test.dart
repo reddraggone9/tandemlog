@@ -56,6 +56,68 @@ void main() {
     },
   );
 
+  test(
+    'canonical completion winner is not greatest wall instant; Undo restores its own instant',
+    () {
+      const space = '00000000-0000-4000-8000-000000000001';
+      const writer = '00000000-0000-4000-8000-000000000002';
+      const id = '00000000-0000-4000-8000-000000000003';
+      LogEvent e(int seq, String type, Map<String, dynamic> data) => LogEvent(
+        space,
+        writer,
+        seq,
+        EventClock(BigInt.from(seq)),
+        id,
+        type,
+        data,
+      );
+      final created = e(1, 'task.created', {
+        'title': 'Clock rollback',
+        'assignee': writer,
+      });
+      final first = e(2, 'task.completed', {
+        'completedInstant': '2026-10-26T12:00:00.123456Z',
+      });
+      final rollback = e(3, 'task.completed', {
+        'completedInstant': '2026-10-25T12:00:00.654321Z',
+      });
+      final selected = project([rollback, created, first])!;
+      expect(selected['completedInstant'], rollback.data['completedInstant']);
+      expect(
+        selected['completedMicros'],
+        DateTime.parse(
+          rollback.data['completedInstant'],
+        ).microsecondsSinceEpoch,
+      );
+      final reopen = e(4, 'task.completionUndone', {'completion': rollback.id});
+      expect(
+        project([created, first, rollback, reopen])!['completedInstant'],
+        first.data['completedInstant'],
+      );
+      final undoReopen = e(5, 'task.operationUndone', {'operation': reopen.id});
+      expect(
+        project([
+          created,
+          first,
+          rollback,
+          reopen,
+          undoReopen,
+        ])!['completedInstant'],
+        rollback.data['completedInstant'],
+      );
+      final all = project([
+        created,
+        first,
+        rollback,
+        reopen,
+        e(6, 'task.completionUndone', {'completion': first.id}),
+      ])!;
+      expect(all['completedInstant'], isNull);
+      expect(all['completedMicros'], isNull);
+      expect(all['completionOrder'], isNull);
+    },
+  );
+
   test('Today includes only tomorrow exact times inside rolling 24 hours', () {
     final rows = [
       row('today', schedule: TaskSchedule(dueDate: '2026-10-26')),

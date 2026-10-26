@@ -503,14 +503,19 @@ class _CivilYearGridState extends State<CivilYearGrid> {
           (constraints.maxWidth / math.max(104, scaler.scale(18) * 4))
               .floor()
               .clamp(1, 3);
-      final rowHeight = math.max(48.0, scaler.scale(20) + 24);
+      final minimumRowHeight = math.max(48.0, scaler.scale(20) + 24);
+      final visibleRows = math.max(
+        1,
+        (constraints.maxHeight / minimumRowHeight).floor(),
+      );
+      final rowHeight = constraints.maxHeight / visibleRows;
       final nextGeometry = (columns, rowHeight, constraints.maxHeight);
       final count = widget.lastDate.year - widget.firstDate.year + 1;
       final selectedRow =
           (widget.selectedDate.year - widget.firstDate.year) ~/ columns;
       final offset = math.max(
         0.0,
-        selectedRow * rowHeight - (constraints.maxHeight - rowHeight) / 2,
+        (selectedRow - visibleRows ~/ 2) * rowHeight,
       );
       controller ??= ScrollController(initialScrollOffset: offset);
       if (geometry != null && geometry != nextGeometry) {
