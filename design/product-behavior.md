@@ -344,3 +344,5 @@ Its Month / year action opens a compact month grid with an on-demand year picker
 a jump seeds that month with the currently selected day clamped to its valid length. Only
 calendar OK commits the draft date, so cancelling either chooser leaves it intact.
 The jump is shared by Food and Tasks, with the same owner-lifetime/picker guards.
+
+Completed rows do not repeat the completion date already shown in their heading. Search results retain their completion-date metadata.
