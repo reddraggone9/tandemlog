@@ -1211,7 +1211,7 @@ void main() {
   );
 
   testWidgets(
-    'workspace search preserves filters and completion sections while discarding Add drafts',
+    'workspace search preserves filters and completion sections while carrying Add drafts',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
@@ -1361,18 +1361,30 @@ void main() {
       expect(find.text('Planning available'), findsNothing);
       await filterChoice(tester, 'Open');
       await openCaptureForTest(tester);
+      Future<Map<String, String>> canonicalContents() async => {
+        await for (final entry in folder.list())
+          if (entry is File)
+            entry.path: base64Encode(await entry.readAsBytes()),
+      };
+      final beforeToggle = await canonicalContents();
       await tester.enterText(capture, 'Unsubmitted household draft');
+      final captureController = tester.widget<TextField>(capture).controller!;
+      final carried = captureController.value.copyWith(
+        selection: const TextSelection(baseOffset: 3, extentOffset: 15),
+      );
+      captureController.value = carried;
       await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
       await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
       await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
       await tester.pumpAndSettle();
+      expect(tester.widget<TextField>(searchField).controller!.value, carried);
+      expect(captureController.value, carried);
+      expect(await canonicalContents(), beforeToggle);
       await tester.enterText(searchField, 'planning');
       await tester.pumpAndSettle();
       expect(capture, findsNothing);
-      expect(
-        (tester.state(find.byType(TasksPage)) as dynamic).capture.text,
-        isEmpty,
-      );
+      expect(captureController.value, carried);
+      expect(await canonicalContents(), beforeToggle);
       await writer.createNativeFixtureTask(const Uuid().v4(), {
         'title': 'Planning incoming',
         'description': '',
