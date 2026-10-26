@@ -110,5 +110,9 @@ void main() {
         await tester.runAsync(() => data.root.delete(recursive: true));
       }
     },
+    variant: TargetPlatformVariant({
+      TargetPlatform.android,
+      TargetPlatform.linux,
+    }),
   );
 }

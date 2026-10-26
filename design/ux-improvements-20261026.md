@@ -34,7 +34,9 @@ ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
   mutation or local-profile schema reset.
 - Search queries are explicitly inactive in Add. The outgoing TextEditingValue
   replaces the destination only after existing dirty-editor/pending-save guards.
-  A toggle neither submits nor writes a task.
+  Native desktop focus does not select all over the carried selection; both
+  inputs retain the outgoing selection when focused after a toggle. A toggle
+  neither submits nor writes a task.
 - Food selection starts with exact observed physical IDs and existing group/
   workspace guard. Deleted editing uses ordinary details actions, retaining exact
   observed deletion references in the editor freshness guard. Restore stays separate.

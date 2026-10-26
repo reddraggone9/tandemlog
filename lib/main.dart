@@ -5163,6 +5163,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     key: const ValueKey('task-search'),
     controller: search,
     focusNode: searchFocus,
+    selectAllOnFocus: false,
     enabled: !busy,
     maxLines: 1,
     textInputAction: TextInputAction.search,
@@ -5501,6 +5502,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         TextField(
           controller: capture,
           focusNode: captureFocus,
+          selectAllOnFocus: false,
           readOnly: pendingCapture.isNotEmpty,
           keyboardType: TextInputType.multiline,
           textInputAction: TextInputAction.newline,
