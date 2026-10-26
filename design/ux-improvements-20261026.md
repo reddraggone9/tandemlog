@@ -1,6 +1,7 @@
 # UX improvements — 2026-10-26
 
-Status: local development implementation, not released or native-accepted.
+Status: local development implementation with bounded native development coverage
+below; not released or accepted as a full release candidate.
 
 ## Accepted scope
 
@@ -58,7 +59,8 @@ ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
 
 All fixtures are synthetic. No household workspace, migration or release was used.
 Pinned Flutter3.47.5/Dart3.13.4 and the package cache were recovered from the
-previous worker's task-local reflink copies; no shared source SDK was modified. Existing native text library from reference034a57d
+previous worker's task-local reflink copies; no shared source SDK was modified. Initial
+widget/host checks reused the native text library from reference034a57d
 has SHA256 `d33124d01cbcc7be76e6bbf421362c44d3d2b8e7f5ce1a1fc5b9ddcd9dd1ad83`.
 The `native/text_engine` source diff from034a57d to096f79b is empty. This library
 was used for real native-text-backed synthetic host/cache/Undo tests, not a claim
@@ -89,11 +91,11 @@ budget change was made for this batch.
 
 Widget raster captures cover dark320dp calendar/month grid at1x/2x, Food
 selection/deleted editor and synthetic app Today/completed-search views. These
-are widget-test evidence, not native desktop/Android demos. Exact-source OS
-runtime checks, touch/IME/keyboard acceptance, native desktop/Android videos and
-candidate performance qualification remain pending; no platform claim is inferred
-from widget width. Private capture/log locations are in the Vex implementation
-checkpoint rather than copied into public app artifacts.
+are widget-test evidence, not native desktop/Android demos. The separate native
+continuation below supplies its own OS runtime and demo evidence; no platform
+claim is inferred from widget width. Full physical-device/IME and candidate
+performance qualification remain separate. Private capture/log locations are in
+the Vex implementation report rather than copied into public app artifacts.
 
 ## Review and acceptance boundaries
 
@@ -110,18 +112,16 @@ an observed display limit, not a claim of native acceptance. Wide800×600 synthe
 Food and Tasks captures show unchanged row density, selection, deleted editor,
 Today and completed-date metadata. See ADR0034 for the bounded design rationale.
 
-Native Linux build was attempted but this execution host lacks CMake/Ninja/Xvfb.
-Android artifact acquisition failed TLS certificate validation before a native
-build could run; no exact-source Android runtime/demo was produced. Desktop and
-Android demonstrations remain blocked here. The
-pinned Rust1.99.0 gate cannot execute because rustup is absent (system Cargo1.99.1
-is not a substitute). These checks remain blocked, with retained attempt logs.
-Full unit/host, format, analyzer, Python tooling/native contracts are recorded in
-the private implementation report. Exact-source controlled performance qualification
-and native UI input-to-paint timings remain pending with existing budgets intact.
-No push, release, live profile or household history was used.
+The initial CMake/Ninja/Xvfb, official Rust1.99.0 and Android TLS-acquisition
+blockers were resolved during the authorized native continuation. Direct trusted
+TLS was used with proxy variables unset; no proxy CA or TLS-verification bypass
+was introduced. Linux and Android development builds and bounded runtime checks
+now pass as qualified below. The earlier failed attempts remain retained.
+Exact-source controlled performance qualification and native UI input-to-paint
+acceptance remain pending with existing budgets intact. No push, release, live
+profile, household history or release signing key was used.
 
-## Final development checks —2026-10-26
+## Pre-native development checks —2026-10-26
 
 - Full Flutter unit/host suite:1556passed,0failed.
 - Final independent-review regression subset:97passed,0failed.
@@ -135,7 +135,43 @@ No push, release, live profile or household history was used.
   setup failures and two stale exact range/witness expectations. These were fixed,
   not skipped; the final full rerun above passes all cases.
 
-These are development checks, not native OS/input/IME demonstrations or fresh
-controlled performance qualification. No acceptance limit, canonical fixture or
-release gate was changed. Exact commands and private log paths are in Vex's dated
-implementation report, outside the public product source.
+Those are the initial widget/host checks, not native OS/input/IME demonstrations
+or fresh controlled performance qualification. No acceptance limit, canonical
+fixture or release gate was changed.
+
+## Native development continuation —2026-10-26
+
+- Final-product Flutter unit/host suite:1558passed,0failed; official pinned Rust
+  tests:4passed,0failed; production and isolated-spike Python native contracts:
+  107passed,0failed each. Analyzer:0issues; formatter:406files,0changes.
+- Complete serialized Linux native workflow:203passed,0failed at `6e29023`.
+  The prior isolated run's197passes/6failures were resolved:four stale draft-clearing
+  fixture assumptions and two manifestations of genuinely truncated date guidance.
+  Exact draft selections, canonical no-write receipts and owned Undo remain checked.
+- Independent review found a pre-existing unused title prefix in the repeated-
+  capture fixture's no-accidental-submission guard. `72382fd` corrects it to the
+  actual typed prefix; follow-up native Linux and Android each pass4cases.
+- Final-product Linux AOT build, ABI/payload,2fresh/warm startup trials and2normal
+  GTK disposal trials pass. Production Android debug APK,3ABI native build,
+  payload/notices and debug signature pass. Narrow date guidance passes1actual
+  Android native workflow covering320dp,100/200% and both themes.
+- Isolated editor:10unit,1Linux native and1Android native case pass; Linux native
+  and both Android cross-builds plus the debug editor APK pass.
+- Actual X11-pointer GTK AOT demo and actual Android11/API30 x86_64 SAF/Latin-
+  keyboard demos were recorded and visually reviewed. Final Android dark390×850
+  media preserve canonical prefixes and both captures survive cold reopen without
+  writes. A supplemental no-write recording visibly encodes the OS pointer
+  crosshair,Show taps marker and coordinate overlay.
+
+Final product source is `ac460fa`; later native-fixture-only commits do not change
+product bytes. The broad native suite and separate strengthened-fixture reruns
+retain their distinct input revisions. The owned emulator and both scoped Gradle
+caches are stopped; Android settings were restored. Headless runs used private
+XDG runtime/DBus sessions and left the real desktop document portal active.
+
+These are bounded Linux GTK and Android11 x86_64 development checks, not Windows,
+physical ARM/API36/16KiB runtime, broad real-IME or full release acceptance.
+Performance qualification remains out of scope and existing failed reference
+results/budgets are unchanged. Exact commands, pass/fail counts, source receipts,
+logs and review media are in Vex's dated native-check report, outside public
+product artifacts.
