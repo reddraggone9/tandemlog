@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "da5bcfdd5dc0fb63b849e5722da5e3e4",
-  "issuedAtUTC": "2026-10-26T20:14:29.200990+00:00",
-  "sourceRevision": "efa1a7ab0859306a2850bf9fe91841b6971ade23",
+  "requestId": "0c18559fc53e4ff9d2d5ce38aa3a742f",
+  "issuedAtUTC": "2026-10-26T23:36:32.451859+00:00",
+  "sourceRevision": "63574e812a11326a2f8180a08b3316c1656c54c4",
   "relevantSource": {
-    "sha256": "a56d2cbae64e699ff5ac37b49bb4caba59a3a94e2c39b86db8ae3bb4259125cd",
+    "sha256": "d9c501456bf9ac31196e881594373df994ce2c51a5725cae58c4eb69e3c84f0f",
     "files": {
       ".gitattributes": {
-        "sha256": "a91e77dbd81f2db4f31fc9bf0443e6774ebd527d7f3bd3cd8956f5540ef88f8a",
+        "sha256": "b7b9b9684a9e7d84e98b7cf606ecb8dbe47b027eaa83f930c3066bb5e6cd76b1",
         "mode": "100644"
       },
       ".github/actions/setup-flutter/action.yml": {
@@ -2996,7 +2996,7 @@
         "mode": "100644"
       },
       "tool/performance/gate_policy.py": {
-        "sha256": "402fc062addce3e228a219f90f62168be64156c0ad7b8451c43428c98037a2c1",
+        "sha256": "8baed7c197513963c376615b8c8ed42c19d24888af708786a472d4fd7c7c1b04",
         "mode": "100644"
       },
       "tool/performance/limits-v1.json": {
@@ -3016,7 +3016,7 @@
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
-        "sha256": "586dbdb581a504cb0a495d3190a8dab8063cb2a10a5d7eb1d477942e0fed3c6d",
+        "sha256": "963da221842a66ded193041d85d86fcaa7b4f3af1b37b1cb006a3c05ebe3bf97",
         "mode": "100644"
       },
       "tool/performance/run_ci.sh": {
@@ -3124,7 +3124,7 @@
         "mode": "100644"
       },
       "tool/test_reference_performance.py": {
-        "sha256": "30921b5a809c2e8b9dd11b76787adaa9f0023d50e2c5e971c0e69216803ee9ea",
+        "sha256": "59b98c06ae2e5adc199a29cedac4fc3045f909577b35ca4057722c12c5455739",
         "mode": "100644"
       },
       "tool/test_release_gates.py": {
