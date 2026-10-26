@@ -72,6 +72,37 @@ void main() {
                   () =>
                       Future<void>.delayed(const Duration(milliseconds: 1000)),
                 );
+              } else if (Platform.isLinux &&
+                  Platform.environment['FOOD_PREVIEW_RECORD'] == '1') {
+                final found = await Process.run('xdotool', [
+                  'search',
+                  '--onlyvisible',
+                  '--name',
+                  r'^tandemlog$',
+                ]);
+                final window = found.stdout.toString().trim().split('\n').last;
+                final result = await Process.run('xdotool', [
+                  'getwindowgeometry',
+                  '--shell',
+                  window,
+                ]);
+                final geometry = {
+                  for (final match in RegExp(
+                    r'^(X|Y)=(-?[0-9]+)$',
+                    multiLine: true,
+                  ).allMatches(result.stdout.toString()))
+                    match.group(1)!: int.parse(match.group(2)!),
+                };
+                final point = tester.getCenter(target);
+                await Process.run('xdotool', [
+                  'mousemove',
+                  '${point.dx.round() + geometry['X']!}',
+                  '${point.dy.round() + geometry['Y']!}',
+                ]);
+                await tester.runAsync(
+                  () => Future<void>.delayed(const Duration(milliseconds: 200)),
+                );
+                await tester.tap(target);
               } else {
                 await pixels.tap(tester, target);
               }
@@ -95,7 +126,7 @@ void main() {
                 // Retain screenshots in app-private cache for owner-context adb run-as.
                 debugPrint('UX_SCREENSHOT=${output.path}/$name.png');
               } else {
-                await captureNativeFixtureUi(tester, name);
+                await pixels.capture(tester, name);
               }
             }
 
@@ -119,6 +150,7 @@ void main() {
                     .isNotEmpty,
               );
               if (width == 390 && theme == 'dark' && scale == 1) {
+                await pixels.capture(tester, 'demo-window-ready-$suffix');
                 await pixels.startRecording(tester);
               }
               await filterChoice(tester, 'Completed');

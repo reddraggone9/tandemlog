@@ -93,7 +93,7 @@ for name, source in source_bytes.items():
         # Logical predecessor/reference continuity remains ORIGINAL, separately
         # from regenerated normalized content and physical action hashes.
         semantic_head = event['hash']
-        action = dict(v=5,space=space,epoch=epoch,writer=writer,seq=event['seq'],clock=event['clock'],previousHash=physical_head,
+        action = dict(v=5,space=space,epoch=epoch,writer=writer,seq=event['seq'],clock=str(1793023445123456000 + event['seq']),previousHash=physical_head,
             observed={},effects=[dict(kind='history.task',raw=canonical(op))],provenance=None)
         physical_head=digest('tandemlog:app-action:v5\n'+canonical(action))
         output.append(canonical(dict(action,hash=physical_head))+'\n')

@@ -59,6 +59,7 @@ void registerCompletionFocusTests() {
           await tester.pumpWidget(
             TandemlogApp(
               profilePath: profile.path,
+              folderFactory: LocalLogFolder.new,
               timeSourceFactory: (onChanged) => ViewTimeSource(
                 onChanged: onChanged,
                 loadZone: () async => 'UTC',

@@ -59,10 +59,17 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
     3,
     (i) => benchmarkId('writer:$baseIdentity:$i'),
   );
-  // A continuing installation is separate from the normalized source writers.
-  // Otherwise Task-only growth changes its next logical sequence and therefore
-  // completionOrder, violating the equal-current-state growth contract.
-  final continuingWriter = benchmarkId('continuing-writer:$baseIdentity');
+  // Extra Task history retains large OWNED physical files but has its own
+  // normalized reference namespace. This preserves the continuing owner's next
+  // logical IDs/completionOrder, just as Food growth already does.
+  final growthWriters = List.generate(
+    3,
+    (i) => benchmarkId('task-growth-writer:$baseIdentity:$i'),
+  );
+  final growthTaskSeq = List.filled(3, 0);
+  final growthTaskHead = [
+    for (final w in growthWriters) eventGenesisHash(space, w),
+  ];
   final users = List.generate(3, (i) => benchmarkId('user:$baseIdentity:$i'));
   final foodWriters = List.generate(
     3,
@@ -181,17 +188,17 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
       final n = j % 3,
           w = writers[n],
           entity = taskIds[n][(j ~/ 6) % taskIds[n].length],
-          seq = ++taskSeq[n],
+          seq = ++growthTaskSeq[n],
           clock = EventClock(BigInt.from(1000000 + initialRecords + j));
       final notes = j % 6 < 3
           ? 'Benchmark historical growth ${j ~/ 6}'
           : baseNotes[entity]!;
       final event = LogEvent.decode(
-        LogEvent(space, w, seq, clock, entity, 'task.edited', {
+        LogEvent(space, growthWriters[n], seq, clock, entity, 'task.edited', {
           'description': notes,
-        }).encode(previousHash: taskHead[n]),
+        }, attributedWriter: w).encode(previousHash: growthTaskHead[n]),
       );
-      taskHead[n] = event.integrityHash!;
+      growthTaskHead[n] = event.integrityHash!;
       final record = UnifiedRecord(
         space: space,
         epoch: epoch,
@@ -249,8 +256,7 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
       buffers[n].writeln(outer.encode());
     }
   }
-  final growthTaskEffects =
-          taskSeq.reduce((a, b) => a + b) - initialTaskEffects,
+  final growthTaskEffects = growthTaskSeq.reduce((a, b) => a + b),
       growthFoodEffects = foodSeq.reduce((a, b) => a + b) - initialFoodEffects;
   fixtureCheck(
     growthTaskEffects + growthFoodEffects == baseRecords - initialRecords &&
@@ -282,6 +288,7 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
       for (var i = 0; i < 3; i++) ...{
         writers[i]: writers[i],
         foodWriters[i]: writers[i],
+        growthWriters[i]: writers[i],
       },
     },
   );
@@ -304,10 +311,10 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
       () => profile!.database.execute(
         'INSERT INTO protected_settings VALUES (1,?,?)',
         [
-          continuingWriter,
+          writers.first,
           utf8.encode(
             jsonEncode({
-              'writer': continuingWriter,
+              'writer': writers.first,
               'folder': shared.path,
               'user': users.first,
               'appearance': 'system',
@@ -320,7 +327,7 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
     history = await UnifiedHistory.open(
       LocalLogFolder(shared.path),
       profile: profile,
-      writer: continuingWriter,
+      writer: writers.first,
       textEngine: engine,
       now: () => DateTime.utc(2026, 10, 22),
     );
@@ -392,7 +399,7 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
           .where((e) => e.food != null)
           .length,
       'taskRows': store.rows.length,
-      'writer': continuingWriter,
+      'writer': writers.first,
       'user': users.first,
       'workspace': shared.absolute.path,
     };
