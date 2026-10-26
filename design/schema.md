@@ -18,7 +18,7 @@ Optional provenance is exactly kind,namespace,planHash,sourceSha256 for an add-o
 
 domain/current_operation.dart defines the closed current codec: format tandemlog.operation, version1, module, space, author, identity, clock, subject, operation family/revision, value, predecessor, referenceHash and contentHash. Content hashing covers the normalized body. Converted prefixes may retain verified historical reference anchors; live operations derive their anchor from their own exact content hash. The common action seals attribution and all normalized data.
 
-Envelope format version, operation revision and new event families are distinct. Newly supported timezones use required revision2 only when persisted; startup, draft choice, Cancel and no-op Save do not update compatibility metadata. A complete unknown family/revision fails both modules before continuing writes. There is no separate mutable reader floor or timezone toggle.
+Envelope format version, operation revision and new event families are distinct. Newly supported timezones use required revision2 for create/update; every new task.complete uses required revision3 with only a canonical UTC microsecond completedInstant (all four completion modes), cumulative with revision2 timezone meaning. Historical r1/r2 retain their date semantics and are not emitted by live commands; startup, draft choice, Cancel and no-op Save do not update compatibility metadata. A complete unknown family/revision fails both modules before continuing writes. There is no separate mutable reader floor or timezone toggle.
 
 Old wire decoders are absent from the app. Current semantic reducers retain task/native text/recurrence/Undo/Food meaning. A domain action is not a legacy wire decoder.
 

@@ -59,12 +59,21 @@ void main() {
         );
         await tester.tap(find.text('2028'));
         await tester.pumpAndSettle();
+        expect(
+          find
+              .descendant(
+                of: find.byType(CivilYearGrid),
+                matching: find.text('2028'),
+              )
+              .hitTestable(),
+          findsOneWidget,
+        );
         await tester.scrollUntilVisible(
           find.text('2029'),
           100,
           scrollable: find
               .descendant(
-                of: find.byType(YearPicker),
+                of: find.byType(CivilYearGrid),
                 matching: find.byType(Scrollable),
               )
               .first,

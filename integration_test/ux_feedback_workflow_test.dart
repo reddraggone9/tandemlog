@@ -15,7 +15,9 @@ import 'food_preview_workflow_test.dart' as pixels;
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  for (final width in [390.0, 1200.0]) {
+  binding.shouldPropagateDevicePointerEvents =
+      Platform.isAndroid && const bool.fromEnvironment('UX_NATIVE_TOUCH');
+  for (final width in (Platform.isAndroid ? [390.0] : [390.0, 1200.0])) {
     for (final theme in ['light', 'dark']) {
       for (final scale in [1.0, 2.0]) {
         testWidgets(
@@ -59,6 +61,22 @@ void main() {
             tester.view.devicePixelRatio = 1;
             tester.platformDispatcher.textScaleFactorTestValue = scale;
             final suffix = '${width.toInt()}-$theme-${scale.toInt()}00';
+            Future<void> touch(Finder target) async {
+              if (Platform.isAndroid &&
+                  const bool.fromEnvironment('UX_NATIVE_TOUCH')) {
+                final point = tester.getCenter(target);
+                debugPrint('UX_TOUCH=${point.dx.round()},${point.dy.round()}');
+                // The owner-context harness injects this exact OS tap while the
+                // app remains live. Show taps/pointer overlay are visible in video.
+                await tester.runAsync(
+                  () =>
+                      Future<void>.delayed(const Duration(milliseconds: 1000)),
+                );
+              } else {
+                await pixels.tap(tester, target);
+              }
+            }
+
             var converted = false;
             Future<void> capture(String screen) async {
               final name = '$screen-$suffix';
@@ -147,16 +165,16 @@ void main() {
                   ),
                 ),
               );
-              await pixels.tap(tester, find.byTooltip('Choose Expiration'));
+              await touch(find.byTooltip('Choose Expiration'));
               await tester.pumpAndSettle();
-              await pixels.tap(tester, find.text('Month / year'));
+              await touch(find.text('Month / year'));
               await tester.pumpAndSettle();
               expect(find.byType(Dialog), findsOneWidget);
               expect(find.byType(CalendarDatePicker), findsNothing);
               await capture('month-grid');
-              await pixels.tap(tester, find.text('2028'));
+              await touch(find.text('2028'));
               await tester.pumpAndSettle();
-              expect(find.byType(YearPicker), findsOneWidget);
+              expect(find.byType(CivilYearGrid), findsOneWidget);
               await capture('year-grid');
               await tester.sendKeyEvent(LogicalKeyboardKey.escape);
               await tester.pumpAndSettle();

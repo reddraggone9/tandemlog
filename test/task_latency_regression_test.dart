@@ -83,11 +83,12 @@ void main() {
             observeCompletionTime: () {
               samples++;
               expect(lists, 2);
-              if (injectPeer)
+              if (injectPeer) {
                 expect(
                   current.visibleTaskRow(task)!['schedule']['dueDate'],
                   '2030-05-10',
                 );
+              }
               return ViewTime(
                 instant: DateTime.utc(2030, 5, 10, 12, 34, 56, 123, 456),
                 localZoneId: 'UTC',

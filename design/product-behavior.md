@@ -132,7 +132,7 @@ The Open/Completed choice in Filter defaults to Open. Completed tasks use the sa
 
 Reopening reverses the completion events this device has observed, using existing targeted undo records. A concurrent unseen completion survives; after sync the task can remain Completed and can be unchecked again. Retrying after partial failure reverses only remaining observed completions.
 
-Inbox groups raw captures at the top, in shared manual order, until their first saved edit. New captures receive the first shared manual position, preserving multiline entry order; their initial rank survives leaving Inbox. A raw capture has no notes, tags or scheduling fields. Populated creations and generated recurring successors begin organized. Opening/canceling an editor, moving or completing a task does not count as an edit; Undo of its surviving edits restores Inbox. Completed browsing uses ordinary date/Someday groups, and reopening an unedited raw task restores its Inbox presentation. There is no separate never-edited flag. Inbox is a derived projection from existing events; cache replay updates earlier projections without rewriting canonical history. Manual reorder cannot cross Inbox and other groups.
+Inbox groups raw captures at the top, in shared manual order, until their first saved edit. New captures receive the first shared manual position, preserving multiline entry order; their initial rank survives leaving Inbox. A raw capture has no notes, tags or scheduling fields. Populated creations and generated recurring successors begin organized. Opening/canceling an editor, moving or completing a task does not count as an edit; Undo of its surviving edits restores Inbox. Completed browsing uses its viewer-local completion chronology, and reopening an unedited raw task restores its Inbox presentation. There is no separate never-edited flag. Inbox is a derived projection from existing events; cache replay updates earlier projections without rewriting canonical history. Manual reorder cannot cross Inbox and other groups.
 
 
 Description previews use one ellipsized line with embedded whitespace flattened for display; whitespace-only notes reserve no subtitle. Titles wrap fully in the list. New title input stays one logical line, initially one visual line and growing to two with internal scrolling beyond that; pasted line breaks become spaces after IME composition commits. Historical multiline titles remain readable and are preserved on unrelated edits. Notes grow with content beyond three lines up to a viewport/keyboard-aware cap, then scroll internally; editor actions remain reachable. Settings exposes Theme/current choice, with System/Light/Dark radio choices and cancel without saving.
@@ -163,13 +163,13 @@ in Due/occurrence metadata. Effective sorting values and manual-move buckets
 remain unchanged; the rolling-horizon boundary and local midnight refresh this
 derived grouping without writing task records.
 
-Completed tasks in both Completed and search's bottom section group by recorded
-completion date, newest first, with canonical selected active completion-operation
-order breaking same-date ties newest first. This is not a reconstructed actual
-completion timestamp: current history records a civil completion date. Missing
-legacy dates show “Completion date unknown” last. Completed rows show that date,
-not scheduled Due/occurrence dates, and cannot be manually reordered out of their
-chronology. Reopen/Undo recomputes from remaining active completion effects.
+Completed tasks in both Completed and search's bottom section sort globally by
+exact completion instant newest first. Headings and search metadata use the
+viewer's local date, not Due or the completing device's calendar. Equal instants
+use canonical selected completion-operation order, then immutable task ID.
+Completed rows omit repeated date metadata; search retains it. No time badge or
+approximation marker is added. Reopen/Undo selects one surviving contribution
+atomically; chronological rows cannot be manually reordered. See [ADR0035](decisions/0035-exact-completion-instants.md).
 
 Recompute while the app remains open at the next availability or date-bound boundary, immediately on resume and time/zone changes, and after task/filter updates. These are derived views: no event writes or storage replay for clock ticks. Drafts and active editors remain intact. See [time-driven view implementation plan](time-driven-task-view.md) for adapter and validation requirements.
 
@@ -340,9 +340,9 @@ rather than retargeting the draft. Add another copies corrected values but still
 clears/focuses expiry and creates new containers. Bulk selection remains active-only.
 
 The shared civil-date picker retains typed dates and Material day/input selection.
-Its Month / year action opens a compact month grid with an on-demand year picker;
+Its Month / year action swaps the calendar body for a month grid and on-demand year grid in the SAME dialog; Back/Escape returns to the day calendar before closing. The selected year is initially visible at100/200% text;
 a jump seeds that month with the currently selected day clamped to its valid length. Only
-calendar OK commits the draft date, so cancelling either chooser leaves it intact.
+calendar OK commits the draft date; Cancel dismisses the picker without changing the draft.
 The jump is shared by Food and Tasks, with the same owner-lifetime/picker guards.
 
 Completed rows do not repeat the completion date already shown in their heading. Search results retain their completion-date metadata.

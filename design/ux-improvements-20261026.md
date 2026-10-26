@@ -3,6 +3,8 @@
 Status: local development implementation with bounded native development coverage
 below; not released or accepted as a full release candidate.
 
+Completion chronology and picker details below record the initial bounded implementation. The subsequent exact-instant/viewer-local implementation and native screenshot-driven year-grid correction follow [ADR0035](decisions/0035-exact-completion-instants.md) and the current product behavior; old checks retain their source attribution.
+
 ## Accepted scope
 
 Lee requested six concrete refinements: next-24-hour timed tasks in Today;

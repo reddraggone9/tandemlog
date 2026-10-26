@@ -16,7 +16,8 @@ import 'package:tandemlog/storage/unified_manifest.dart';
 import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 
-const fixtureSchemaVersion = 1;
+// New prospective timestamp-aware fixture contract; old sealed v1 evidence stays immutable.
+const fixtureSchemaVersion = 2;
 const _namespace = 'a5c957b6-29ca-43e5-8bee-0c5c4852dced';
 String benchmarkId(String value) => const Uuid().v5(_namespace, value);
 void fixtureCheck(bool value, String message) {
@@ -261,8 +262,8 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
     bytesDigest(
       utf8.encode(
         growthKind == 'task'
-            ? 'public-benchmark-v1:$baseRecords'
-            : 'public-benchmark-v1:food:$baseRecords',
+            ? 'public-benchmark-v2:$baseRecords'
+            : 'public-benchmark-v2:food:$baseRecords',
       ),
     ),
     {

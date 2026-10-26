@@ -17,7 +17,7 @@ The confirmed next24h Today rule includes timed tomorrow values, not untimed one
   Long-press is selection-only; deleted editing never emits Restore/Delete.
   A Restore arriving while a draft is open invalidates its observed deletion context.
 - Use a small app-owned dialog composing public Material CalendarDatePicker,
-  YearPicker and InputDatePickerFormField. DatePickerDialog's pending selection is
+  InputDatePickerFormField and a small app-owned year grid. Native200% review found the SDK YearPicker initial offset assumed three columns while rendering two, opening decades before the selected year; owned public GridView/ScrollController geometry fixes that without private SDK traversal. DatePickerDialog's pending selection is
   private, so an outer month jump cannot reliably preserve the selected day.
   Reject SDK forks, private-state traversal, shadow selection and dependencies.
 - Completion-date presentation was the initial bounded implementation. Lee's
