@@ -832,8 +832,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     void toggleSelection({bool enter = false}) {
       if (deleted ||
           (widget.hasPendingSave?.call() ?? widget.savePending) ||
-          !_canUseGroupMenu(group, workspace))
+          !_canUseGroupMenu(group, workspace)) {
         return;
+      }
       setState(() {
         if (enter) selecting = true;
         final ids = group.containers.map((e) => e.id);

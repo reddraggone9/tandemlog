@@ -168,7 +168,7 @@ void main() {
               return FoodInventoryPage(
                 state: projectFood(events),
                 busy: busy,
-                savePending: pending,
+                hasPendingSave: () => pending,
                 onAdd: (_, _) => writes++,
                 onRemove: (_) => writes++,
                 onRestore: (_) => writes++,
