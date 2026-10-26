@@ -118,6 +118,24 @@ void registerDataIntegrityTests() {
           tester,
           () => find.text('Captured reference').evaluate().isNotEmpty,
         );
+        // Quick capture itself is not an Undo-history action. Make a real
+        // confirmed edit so this fixture actually tests preserving owned Undo.
+        final dynamic state = tester.state(find.byType(TasksPage));
+        await tester.tap(find.byKey(ValueKey('task-body-$task')));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.widgetWithText(TextField, 'Notes'),
+          'Confirmed integrity Undo anchor',
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('task-save-action')));
+        await flows.waitForUi(
+          tester,
+          () =>
+              !state.busy &&
+              state.editingTask == null &&
+              state.undoHistory.latest != null,
+        );
         const captureDraft = TextEditingValue(
           text: 'Unsubmitted capture draft',
           selection: TextSelection(baseOffset: 11, extentOffset: 3),
@@ -136,7 +154,6 @@ void registerDataIntegrityTests() {
         searchController.value = searchDraft;
         await tester.pumpAndSettle();
         await flows.selectTask(tester, task);
-        final dynamic state = tester.state(find.byType(TasksPage));
         expect(state.capture.value, captureDraft);
         final undoBefore = state.undoHistory.latest;
         expect(undoBefore, isNotNull);
