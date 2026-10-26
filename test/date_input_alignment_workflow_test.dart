@@ -80,7 +80,7 @@ Future<void> verifyDateInputAlignment(
   await capture?.call('focused-blank');
   await tester.tap(find.byTooltip('Choose Expiration'));
   await tester.pumpAndSettle();
-  expect(find.byType(DatePickerDialog), findsOneWidget);
+  expect(find.byType(CivilDatePickerDialog), findsOneWidget);
   await tester.tap(find.text('Cancel'));
   await tester.pumpAndSettle();
   expect(date.text, isEmpty);

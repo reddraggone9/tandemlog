@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
@@ -173,10 +174,10 @@ void registerDateTimeLayoutTests({
                 if (scale <= 1.3) {
                   await tester.tap(find.byTooltip('Choose Due date'));
                   await tester.pumpAndSettle();
-                  expect(find.byType(DatePickerDialog), findsOneWidget);
+                  expect(find.byType(CivilDatePickerDialog), findsOneWidget);
                   await tester.tap(
                     find.descendant(
-                      of: find.byType(DatePickerDialog),
+                      of: find.byType(CivilDatePickerDialog),
                       matching: find.text('Cancel'),
                     ),
                   );

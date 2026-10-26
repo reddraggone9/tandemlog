@@ -72,12 +72,12 @@ void main() {
     );
     await tester.tap(find.byTooltip('Choose Expiration'));
     await tester.pumpAndSettle();
-    final picker = tester.widget<DatePickerDialog>(
-      find.byType(DatePickerDialog),
+    final picker = tester.widget<CivilDatePickerDialog>(
+      find.byType(CivilDatePickerDialog),
     );
     expect(picker.initialDate, DateTime(2026, 10, 4));
     expect(picker.firstDate, DateTime(1900));
-    expect(picker.lastDate, DateTime(9999));
+    expect(picker.lastDate, DateTime(9999, 12, 31));
     await tester.tap(find.text('12'));
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
@@ -134,8 +134,8 @@ void main() {
       final before = DateTime.now();
       await tester.tap(find.byTooltip('Choose Expiration'));
       await tester.pumpAndSettle();
-      final picker = tester.widget<DatePickerDialog>(
-        find.byType(DatePickerDialog),
+      final picker = tester.widget<CivilDatePickerDialog>(
+        find.byType(CivilDatePickerDialog),
       );
       final after = DateTime.now();
       expect(

@@ -9,9 +9,14 @@ void main() {
     await loadSdkRoboto();
     await loadUxIcons();
   });
-  for (final scale in [1.0, 2.0]) {
+  for (final (scale, brightness) in [
+    (1.0, Brightness.dark),
+    (2.0, Brightness.dark),
+    (1.0, Brightness.light),
+    (2.0, Brightness.light),
+  ]) {
     testWidgets(
-      'fast month/year jump clamps leap day and cancellation is draft-only scale $scale',
+      'fast month/year jump clamps leap day and cancellation is draft-only scale $scale ${brightness.name}',
       (tester) async {
         tester.view.physicalSize = const Size(320, 640);
         tester.view.devicePixelRatio = 1;
@@ -23,7 +28,7 @@ void main() {
             key: const ValueKey('ux-root'),
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
-              theme: ThemeData(brightness: Brightness.dark),
+              theme: ThemeData(brightness: brightness),
               builder: (context, child) => MediaQuery(
                 data: MediaQuery.of(
                   context,
@@ -41,11 +46,14 @@ void main() {
         );
         await tester.tap(find.byTooltip('Choose Expiration'));
         await tester.pumpAndSettle();
-        await captureUx(tester, 'calendar-320-scale$scale');
+        await captureUx(tester, 'calendar-320-${brightness.name}-scale$scale');
         await tester.tap(find.text('Month / year').first);
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        await captureUx(tester, 'month-grid-320-scale$scale');
+        await captureUx(
+          tester,
+          'month-grid-320-${brightness.name}-scale$scale',
+        );
         await tester.tap(find.text('2028'));
         await tester.pumpAndSettle();
         await tester.scrollUntilVisible(
@@ -66,7 +74,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           tester
-              .widget<DatePickerDialog>(find.byType(DatePickerDialog))
+              .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
               .initialDate,
           DateTime(2029, 2, 28),
         );
@@ -115,6 +123,73 @@ void main() {
       await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
       expect(controller.text, '9999-12-31');
+      await tester.pumpWidget(const SizedBox());
+      controller.dispose();
+    },
+  );
+
+  testWidgets('month jump retains a newly selected pending day', (
+    tester,
+  ) async {
+    final controller = TextEditingController(text: '2028-02-29');
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CivilDateInput(controller: controller, label: 'Expiration'),
+        ),
+      ),
+    );
+    await tester.tap(find.byTooltip('Choose Expiration'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('15'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Month / year').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Jun'));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
+          .initialDate,
+      DateTime(2028, 6, 15),
+    );
+    expect(controller.text, '2028-02-29');
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    expect(controller.text, '2028-06-15');
+    await tester.pumpWidget(const SizedBox());
+    controller.dispose();
+  });
+
+  testWidgets(
+    'calendar input mode validates and commits only on confirmation',
+    (tester) async {
+      final controller = TextEditingController(text: '2028-02-29');
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CivilDateInput(controller: controller, label: 'Expiration'),
+          ),
+        ),
+      );
+      await tester.tap(find.byTooltip('Choose Expiration'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.edit_outlined));
+      await tester.pumpAndSettle();
+      final input = find.descendant(
+        of: find.byType(InputDatePickerFormField),
+        matching: find.byType(EditableText),
+      );
+      await tester.enterText(input, 'invalid');
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(find.byType(CivilDatePickerDialog), findsOneWidget);
+      expect(controller.text, '2028-02-29');
+      await tester.enterText(input, '06/15/2028');
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(controller.text, '2028-06-15');
+      expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
       controller.dispose();
     },

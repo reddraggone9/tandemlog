@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui' show PointerDeviceKind;
@@ -238,12 +239,12 @@ void registerFoodEditorPaneTests() {
       name.value = draft.copyWith(composing: TextRange.empty);
       await tester.tap(find.byTooltip('Choose Expiration'));
       await tester.pumpAndSettle();
-      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byType(CivilDatePickerDialog), findsOneWidget);
       final calendarDraft = name.value;
       expect(calendarDraft, draft.copyWith(composing: TextRange.empty));
       tester.view.physicalSize = const Size(650, 900);
       await tester.pumpAndSettle();
-      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byType(CivilDatePickerDialog), findsOneWidget);
       expect(controller(tester, 'Food name'), same(name));
       expect(name.value, calendarDraft);
       await tester.tap(find.text('OK'));
@@ -396,7 +397,7 @@ void registerFoodEditorPaneTests() {
       await tester.pumpAndSettle();
       expect(key.currentState!.closeBusy, isTrue);
       expect(await key.currentState!.requestCloseEditor(), isFalse);
-      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byType(CivilDatePickerDialog), findsOneWidget);
       await tester.tap(find.text('Cancel').last);
       await tester.pumpAndSettle();
       expect(key.currentState!.closeBusy, isFalse);
