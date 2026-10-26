@@ -198,7 +198,7 @@ void registerTaskInputModeTests() {
           }
           expect(
             titles.any(
-              (value) => value.toString().startsWith('Discarded unfinished'),
+              (value) => value.toString().startsWith('Carried unfinished'),
             ),
             isFalse,
           );
