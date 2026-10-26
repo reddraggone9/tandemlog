@@ -3710,9 +3710,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 .firstOrNull ??
             'Unknown user',
       if (task['completed'] == true && searching)
-        task['completedAt'] == null
+        entry.completionDate == null
             ? 'Completion date unknown'
-            : 'Completed ${task['completedAt']}',
+            : 'Completed ${formatCivilDate(entry.completionDate!)}',
       if ((task['completed'] != true
               ? scheduleMetadata(
                   schedule,
@@ -4147,15 +4147,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _complete(Map<String, dynamic> task) async {
     final origin = store!;
-    final time = timeSource.readTime();
     await _act(
       () => _recordAction(
         origin,
         'completing',
         (prepared) => ChecklistCompletionCommand(origin).complete(
           task['id'] as String,
-          completionInstant: time.instant,
-          localZoneId: time.localZoneId,
+          observeCompletionTime: timeSource.readTime,
+          localZoneId: null,
           confirmUnfinished: (items) async {
             if (!mounted || !identical(store, origin)) return false;
             final unfinished = items

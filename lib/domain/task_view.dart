@@ -1,6 +1,7 @@
 import 'package:timezone/timezone.dart' as tz;
 
 import 'schedule.dart';
+import 'completion_instant.dart';
 import 'timed_view.dart';
 import 'wall_time.dart';
 
@@ -18,6 +19,8 @@ class TaskViewEntry {
     this.hasEffectiveTime = false,
     this.today = false,
     this.groupDate,
+    this.completionDate,
+    this.completedInstant,
   });
   final Map<String, dynamic> task;
   final DateTime? effectiveDate;
@@ -28,6 +31,8 @@ class TaskViewEntry {
   final bool hasEffectiveTime;
   final bool today;
   final DateTime? groupDate;
+  final DateTime? completionDate;
+  final String? completedInstant;
 
   /// Manual movement cannot cross Inbox/date groups, exact times, or history.
   bool sharesOrderBucket(TaskViewEntry other) =>
@@ -72,7 +77,9 @@ String _groupDate(DateTime value) =>
 List<TaskViewGroup> _groups(List<TaskViewEntry> entries) {
   final groups = <TaskViewGroup>[];
   for (final entry in entries) {
-    final groupDay = entry.groupDate ?? entry.effectiveDate;
+    final groupDay = entry.task['completed'] == true
+        ? entry.completionDate
+        : entry.groupDate ?? entry.effectiveDate;
     final date = groupDay == null ? null : _groupDate(groupDay);
     if (groups.isEmpty ||
         groups.last.date != date ||
@@ -113,14 +120,12 @@ class TaskTiming {
     required this.effectiveDate,
     required this.nextChange,
     this.hasEffectiveTime = false,
-    DateTime? nextSortChange,
-  }) : _nextSortChange = nextSortChange;
+  });
   final DateTime availabilityStart;
   final bool available;
   final DateTime? effectiveDate;
   final bool hasEffectiveTime;
   final DateTime? nextChange;
-  final DateTime? _nextSortChange;
 }
 
 TaskTiming evaluateTaskTiming(TaskSchedule schedule, ViewTime time) =>
@@ -272,7 +277,6 @@ class _TaskTimingContext {
       effectiveDate: effective,
       hasEffectiveTime: preciseTime != null,
       nextChange: next,
-      nextSortChange: sortChange,
     );
   }
 }
@@ -317,7 +321,7 @@ TimedView<TaskView> projectTaskView(
     );
     final timing = context.evaluate(schedule);
     final done = row['completed'] == true;
-    var next = done ? timing._nextSortChange : timing.nextChange;
+    var next = done ? null : timing.nextChange;
     // Visible future-start hints switch from a calendar date to today's time
     // at local midnight, even when the start itself is later that day.
     if (!done && !timing.available && (includeUpcoming || searchActive)) {
@@ -386,17 +390,29 @@ TimedView<TaskView> projectTaskView(
     if (!searchActive && !done && !includeUpcoming && !timing.available) {
       continue;
     }
+    final completionCivil = done && row['completedInstant'] != null
+        ? context.localCivil(
+            row['completedMicros'] is int
+                ? DateTime.fromMicrosecondsSinceEpoch(
+                    row['completedMicros'] as int,
+                    isUtc: true,
+                  )
+                : decodeCompletionInstant(row['completedInstant']),
+          )
+        : null;
     (done ? completed : open).add((
       index,
       TaskViewEntry(
         row,
-        done
-            ? (row['completedAt'] is String
-                  ? parseCivilDate(
-                      (row['completedAt'] as String).substring(0, 10),
-                    )
-                  : null)
-            : timing.effectiveDate,
+        done ? null : timing.effectiveDate,
+        completedInstant: row['completedInstant'] as String?,
+        completionDate: completionCivil == null
+            ? null
+            : DateTime.utc(
+                completionCivil.year,
+                completionCivil.month,
+                completionCivil.day,
+              ),
         today: inToday,
         groupDate: inToday ? context.today : null,
         available: timing.available,
@@ -438,17 +454,19 @@ TimedView<TaskView> projectTaskView(
   }
 
   completed.sort((a, b) {
-    final x = a.$2.effectiveDate, y = b.$2.effectiveDate;
-    final dateOrder = x == null
+    final x = a.$2.completedInstant, y = b.$2.completedInstant;
+    final instantOrder = x == null
         ? (y == null ? 0 : 1)
         : y == null
         ? -1
         : y.compareTo(x);
-    if (dateOrder != 0) return dateOrder;
+    if (instantOrder != 0) return instantOrder;
     final order = (b.$2.task['completionOrder'] as String? ?? '').compareTo(
       a.$2.task['completionOrder'] as String? ?? '',
     );
-    return order != 0 ? order : a.$1.compareTo(b.$1);
+    return order != 0
+        ? order
+        : (a.$2.task['id'] as String).compareTo(b.$2.task['id'] as String);
   });
   return TimedView(
     TaskView(

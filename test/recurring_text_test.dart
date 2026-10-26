@@ -128,7 +128,7 @@ class _History {
     };
     corrupt?.call(proof);
     return append(writer, parent, 'task.completedWithText', {
-      'completedAt': '2030-05-10',
+      'completedInstant': '2030-05-10T00:00:00.000000Z',
       'successor': {
         'id': child,
         'title': fields['title']!.text,
@@ -360,7 +360,7 @@ void main() {
             ),
           );
           final scalar = h.append(_b, _parent, 'task.completed', {
-            'completedAt': '2030-05-10',
+            'completedInstant': '2030-05-10T00:00:00.000000Z',
             'successor': completion.data['successor'],
           });
           final undo = h.append(_b, _parent, 'task.recurringCompletionUndone', {
@@ -501,7 +501,10 @@ void main() {
                 completion.clock,
                 completion.entity,
                 completion.type,
-                {...completion.data, 'completedAt': '2030-05-11'},
+                {
+                  ...completion.data,
+                  'completedInstant': '2030-05-11T00:00:00.000000Z',
+                },
                 hash: completion.hash,
               ).encode(previousHash: completion.previousHash),
             );

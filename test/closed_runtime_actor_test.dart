@@ -111,7 +111,7 @@ class History {
       }
     }
     return append(writer, entity, 'task.completedWithText', {
-      'completedAt': '2030-05-10',
+      'completedInstant': '2030-05-10T00:00:00.000000Z',
       'successor': {
         'id': const Uuid().v5(entity, 'successor'),
         'title': fields['title']!.text,

@@ -56,7 +56,7 @@ void main() {
         parent,
         'task.completedWithChecklist',
         {
-          'completedAt': '2030-05-01',
+          'completedInstant': '2030-05-01T00:00:00.000000Z',
           'successor': {
             'id': successor,
             'title': 'Scalar',
@@ -128,7 +128,8 @@ void main() {
         final source = await store.addChecklistItem(parent, 'Original');
         final original = await store.complete(
           parent,
-          completionDay: DateTime(2030, 5, 1),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 1),
         );
         final child = const Uuid().v5(parent, 'successor');
         final copied = const Uuid().v5(child, 'checklist:${source.entity}');
@@ -146,7 +147,8 @@ void main() {
         await store.addChecklistItem(parent, 'Later old item');
         final recompleted = await store.complete(
           parent,
-          completionDay: DateTime(2030, 5, 2),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 2),
         );
         expect(recompleted.type, 'task.completedKeepingSuccessor');
         expect(jsonEncode(store.checklistItems(child)), before);

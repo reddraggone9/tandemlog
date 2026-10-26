@@ -1912,7 +1912,7 @@ void main() {
             original.entity,
             'task.completed',
             {
-              'completedAt': '2026-10-18T00:00:00Z',
+              'completedInstant': '2026-10-18T00:00:00.000000Z',
               'successor': {
                 'id': successor,
                 'title': 'Next',

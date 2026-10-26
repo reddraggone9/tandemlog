@@ -72,7 +72,11 @@ void registerContinuousDragTests() {
             });
           }
           if (hiddenKind == 'completed') {
-            await peer.complete(hiddenId, completionDay: DateTime.now());
+            await peer.complete(
+              hiddenId,
+              localZoneId: 'UTC',
+              completionInstant: DateTime.now().toUtc(),
+            );
           }
           for (final id in initial) {
             await peer.moveBefore(id, null);

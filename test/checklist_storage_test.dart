@@ -161,7 +161,11 @@ void main() {
     () async {
       final originalItem = await add('Original checklist item');
       await add('Another original checklist item');
-      await a.complete(parent, completionDay: DateTime(2030, 5, 1));
+      await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
       final descriptors = a.unified!.snapshot.tasks
           .where((e) => e.type == 'task.completedWithChecklist')
           .toList();
@@ -351,7 +355,8 @@ void main() {
       final fullBefore = history.fullTaskReadinessRuns;
       final first = await a.complete(
         plain,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       expect(first.type, 'task.completed');
       oracle();
@@ -359,7 +364,8 @@ void main() {
       oracle();
       final second = await a.complete(
         plain,
-        completionDay: DateTime(2030, 5, 2),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
       );
       await a.command(plain, 'task.completionUndone', {
         'completion': second.id,
@@ -368,7 +374,9 @@ void main() {
       expect(history.fullTaskReadinessRuns, fullBefore);
       final before = await folder.read('${a.writer}.applog');
       await expectLater(
-        a.command(parent, 'task.completed', {'completedAt': '2030-05-03'}),
+        a.command(parent, 'task.completed', {
+          'completedInstant': '2030-05-03T00:00:00.000000Z',
+        }),
         throwsA(isA<FormatFailure>()),
       );
       expect(await folder.read('${a.writer}.applog'), before);
@@ -381,7 +389,8 @@ void main() {
       await add('Original source');
       final first = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       expect((await a.undoOperations([first.id])).remaining, isEmpty);
       await add('New source after earlier copy');
@@ -403,7 +412,11 @@ void main() {
       });
       try {
         await expectLater(
-          a.complete(parent, completionDay: DateTime(2030, 5, 2)),
+          a.complete(
+            parent,
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 2),
+          ),
           throwsA(isA<FormatFailure>()),
         );
         expect(jsonEncode(a.rows), before);
@@ -497,7 +510,8 @@ void main() {
       final original = await add('Original copied item');
       final completion = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(parent, 'successor');
       final copied = const Uuid().v5(child, 'checklist:$original');
@@ -636,7 +650,8 @@ void main() {
       await a.command(second, 'checklist.itemMoved', {'before': first});
       final completion = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       expect(completion.type, 'task.completedWithChecklist');
       final child = const Uuid().v5(parent, 'successor');
@@ -677,12 +692,17 @@ void main() {
       await saveText(b, common, 'description', 'AYB notes');
       final doneA = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(parent, 'successor');
       final childCommon = const Uuid().v5(child, 'checklist:$common');
       await saveText(a, childCommon, 'title', 'AXBY');
-      await b.complete(parent, completionDay: DateTime(2030, 5, 1));
+      await b.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
       await converge();
       final shared = items(
         a,
@@ -730,7 +750,8 @@ void main() {
       expect(a.sharedTextInitialized, isFalse);
       final completion = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       expect(completion.type, 'task.completedWithChecklist');
       expect(completion.data.containsKey('inheritance'), isFalse);
@@ -756,7 +777,8 @@ void main() {
       });
       final original = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
       await a.initializeSharedText();
@@ -767,7 +789,8 @@ void main() {
       final before = jsonEncode(items(a, child));
       final again = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 2),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
       );
       expect(again.type, 'task.completedKeepingSuccessor');
       expect(jsonEncode(items(a, child)), before);
@@ -781,7 +804,8 @@ void main() {
       final second = await add('Two');
       final completion = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(parent, 'successor');
       final childFirst = const Uuid().v5(child, 'checklist:$first');
@@ -807,7 +831,11 @@ void main() {
       await copy(folder, remote);
       await b.refresh();
       await b.command(second, 'checklist.itemMoved', {'before': first});
-      await a.complete(parent, completionDay: DateTime(2030, 5, 1));
+      await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
       final child = const Uuid().v5(parent, 'successor');
       final copiedFirst = const Uuid().v5(child, 'checklist:$first');
       final copiedSecond = const Uuid().v5(child, 'checklist:$second');
@@ -815,7 +843,11 @@ void main() {
       await a.command(copiedSecond, 'checklist.itemEdited', {
         'completed': true,
       });
-      await b.complete(parent, completionDay: DateTime(2030, 5, 1));
+      await b.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
       await converge();
       expect(items(a, child).map((row) => row['id']), [
         copiedSecond,
@@ -844,7 +876,8 @@ void main() {
       final originalItem = await add('Original checklist', owner: scalar);
       final original = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
       await a.initializeSharedText();
@@ -854,7 +887,11 @@ void main() {
       await add('Later old item', owner: scalar);
       final before = jsonEncode(task(a, child));
       expect(
-        (await a.complete(scalar, completionDay: DateTime(2030, 5, 2))).type,
+        (await a.complete(
+          scalar,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 2),
+        )).type,
         'task.completedKeepingSuccessor',
       );
       expect(jsonEncode(task(a, child)), before);
@@ -871,7 +908,8 @@ void main() {
         await saveText(a, currentItem, 'title', 'AB $generation');
         completion = await a.complete(
           current,
-          completionDay: DateTime(2030, 5, 1 + generation),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 1 + generation),
         );
         current = const Uuid().v5(current, 'successor');
         currentItem = const Uuid().v5(current, 'checklist:$currentItem');
@@ -916,7 +954,8 @@ void main() {
       await add('One', notes: 'Notes');
       final completion = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(parent, 'successor');
       expect(items(a, child), hasLength(1));
@@ -925,7 +964,11 @@ void main() {
         1,
       );
       expect(a.rows.any((row) => row['id'] == child), isFalse);
-      await a.complete(parent, completionDay: DateTime(2030, 5, 2));
+      await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
+      );
       final before = a.rows;
       final bytes = <String, String>{};
       for (final file in await folder.list()) {

@@ -379,7 +379,11 @@ void main() {
             'assignee': id == hidden ? other : user,
           });
         }
-        await store.complete(completed, completionDay: DateTime(2026, 10, 8));
+        await store.complete(
+          completed,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 8),
+        );
         await store.createTasks({first: 'New'}, user);
         expect(taskIds(store), [first, completed, hidden, visible]);
         await store.command(first, 'task.edited', {'description': 'Triaged'});

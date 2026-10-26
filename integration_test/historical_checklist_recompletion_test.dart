@@ -194,7 +194,11 @@ void registerHistoricalChecklistRecompletionTests() {
         );
         final before = jsonEncode(peer.currentTextRow(child));
 
-        await offline.complete(parent, completionDay: DateTime(2026, 10, 8));
+        await offline.complete(
+          parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 8),
+        );
         await File(
           '${offlineFolder.path}/${offline.writer}.applog',
         ).copy('${folder.path}/${offline.writer}.applog');

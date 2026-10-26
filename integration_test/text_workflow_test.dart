@@ -392,7 +392,8 @@ void registerTextWorkflowTests() {
         // its parent must not silently rebase the child's native identities.
         final completion = await store.complete(
           task,
-          completionDay: DateTime(2026, 10, 1),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 1),
         );
         await store.command(const Uuid().v5(task, 'successor'), 'task.edited', {
           'title': 'Existing next occurrence',

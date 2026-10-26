@@ -223,13 +223,21 @@ void main() {
           tags: [],
           observedTagRefs: {},
         );
-        await store.complete(parent, completionDay: DateTime(2030, 5, 10));
+        await store.complete(
+          parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
+        );
         final child = const Uuid().v5(parent, 'successor'),
             grandchild = const Uuid().v5(
               const Uuid().v5(parent, 'successor'),
               'successor',
             );
-        await store.complete(child, completionDay: DateTime(2030, 5, 11));
+        await store.complete(
+          child,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 11),
+        );
         final all = store.unified!.snapshot.tasks;
         const historical = '00000000-0000-4000-8000-000000000019';
         final innerHead = all.where((e) => e.writer == historical).last;
@@ -374,7 +382,8 @@ void main() {
             OperationReceipt? completion;
             await store.complete(
               parent,
-              completionDay: DateTime(2030, 5, 10),
+              localZoneId: 'UTC',
+              completionInstant: DateTime.utc(2030, 5, 10),
               onPrepared: (value) => completion = value,
             );
             final child = const Uuid().v5(parent, 'successor');
@@ -397,7 +406,8 @@ void main() {
               );
               await store.complete(
                 parent,
-                completionDay: DateTime(2030, 5, 12),
+                localZoneId: 'UTC',
+                completionInstant: DateTime.utc(2030, 5, 12),
               );
             }
             final target = copied ? copy : child;
@@ -545,7 +555,8 @@ void main() {
             OperationReceipt? completion;
             await store.complete(
               parent,
-              completionDay: DateTime(2030, 5, 10),
+              localZoneId: 'UTC',
+              completionInstant: DateTime.utc(2030, 5, 10),
               onPrepared: (value) => completion = value,
             );
             final child = const Uuid().v5(parent, 'successor');
@@ -568,7 +579,8 @@ void main() {
               );
               await store.complete(
                 parent,
-                completionDay: DateTime(2030, 5, 12),
+                localZoneId: 'UTC',
+                completionInstant: DateTime.utc(2030, 5, 12),
               );
             }
             final target = action == 'checkbox' ? copy : child;
@@ -836,7 +848,8 @@ void main() {
           OperationReceipt? completion;
           await store.complete(
             unrelated,
-            completionDay: DateTime(2030, 5, 10),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 10),
             onPrepared: (value) => completion = value,
           );
           expect((await store.undoOperations([completion!.id])).error, isNull);
@@ -853,7 +866,11 @@ void main() {
           'Target item',
           notes: 'Target Notes',
         );
-        await store.complete(target, completionDay: DateTime(2030, 5, 10));
+        await store.complete(
+          target,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
+        );
         final child = const Uuid().v5(target, 'successor');
         final copy = copiedChecklistId(child, item.entity);
         final current = store.unified!.snapshot;
@@ -979,11 +996,16 @@ void main() {
               textEngine: engine,
             );
           }
-          await producer.complete(parent, completionDay: DateTime(2030, 5, 10));
+          await producer.complete(
+            parent,
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 10),
+          );
           if (competitor != null) {
             await competitor.complete(
               parent,
-              completionDay: DateTime(2030, 5, 10),
+              localZoneId: 'UTC',
+              completionInstant: DateTime.utc(2030, 5, 10),
             );
             await File(
               '${competitorShared!.path}/${competitor.writer}.applog',
@@ -1217,7 +1239,8 @@ void main() {
             );
             await producer.complete(
               legacy,
-              completionDay: DateTime(2030, 5, 10),
+              localZoneId: 'UTC',
+              completionInstant: DateTime.utc(2030, 5, 10),
             );
             final legacyChild = const Uuid().v5(legacy, 'successor');
             final capture = await producer.captureTaskText(legacyChild);

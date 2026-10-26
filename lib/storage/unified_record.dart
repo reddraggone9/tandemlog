@@ -431,7 +431,7 @@ class UnifiedDecodedCache {
           continue;
         }
         final fields = receipt.fields;
-        if (receipt.layout != 2 || fields == null || fields.length != 12) {
+        if (receipt.layout != 3 || fields == null || fields.length != 12) {
           throw const FormatException('Invalid cached Task field mapping.');
         }
         final event = LogEvent(

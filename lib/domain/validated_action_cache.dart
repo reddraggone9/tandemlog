@@ -15,7 +15,7 @@ final class ValidatedActionEffect {
   final int recordIndex, effectIndex;
   final String kind, raw;
   final List<Object?>? fields;
-  int get layout => 2;
+  int get layout => 3;
 }
 
 final class ValidatedCachedAction {
@@ -30,7 +30,7 @@ final class ValidatedCachedAction {
 /// authentication against replacement of both cache and its proof.
 final class ValidatedActionCache {
   const ValidatedActionCache._(this.records);
-  static const layout = 2;
+  static const layout = 3;
   static const maximumBytes = 16 * 1024 * 1024;
   final List<ValidatedCachedAction> records;
 

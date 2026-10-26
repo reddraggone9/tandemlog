@@ -44,7 +44,11 @@ void main() {
             'assignee': data.user,
             'schedule': {'dueDate': '2099-01-01'},
           });
-          await seed.complete(done, completionDay: DateTime.utc(2026, 10, 11));
+          await seed.complete(
+            done,
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2026, 10, 11),
+          );
         } finally {
           await seed.close();
         }

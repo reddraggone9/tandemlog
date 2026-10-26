@@ -112,7 +112,8 @@ void main() {
         oracle();
         final completed = await s.complete(
           parent,
-          completionDay: DateTime(2030, 5, 1),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 1),
         );
         final completion = s.unified!.snapshot.tasks.lastWhere(
           (e) => e.type == 'task.completedWithChecklist',

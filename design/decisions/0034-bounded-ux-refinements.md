@@ -20,10 +20,8 @@ The confirmed next24h Today rule includes timed tomorrow values, not untimed one
   YearPicker and InputDatePickerFormField. DatePickerDialog's pending selection is
   private, so an outer month jump cannot reliably preserve the selected day.
   Reject SDK forks, private-state traversal, shadow selection and dependencies.
-- Display recorded civil completion dates and reverse surviving completion order.
-  Do not fabricate precise completion timestamps from causal clocks. Invalidate
-  disposable projection witnesses for additive completion-order metadata; canonical
-  bytes and protocol meaning stay unchanged.
+- Completion-date presentation was the initial bounded implementation. Lee's
+  subsequent exact-instant/viewer-local decision is implemented in [ADR0035](0035-exact-completion-instants.md).
 - Today changes derived grouping only. Preserve original pinned instants through
   DST folds; if a sort bound changed the day, resolve that effective local value.
   Schedule future grouping boundaries without relying on another task or input.
@@ -40,11 +38,11 @@ The dialog swaps its calendar body for the month/year grid in place; it never st
 review corrections, replay/cache/Undo checks, visual observations and platform
 gaps. Existing performance budgets and candidate/native gates are not waived.
 No agent endpoint, menu redesign, schema migration or broad Food/game module is
-introduced. Exact actual completion-time capture would need separate semantics.
+introduced. Exact completion-time capture follows ADR0035.
 
 ## Revisit trigger
 
 Owner: Tandemlog maintainers. Revisit the small calendar layout at the next native
 candidate acceptance or when app localization expands; resolve any demonstrated
 accessibility/input/paint defect without weakening geometry or latency checks.
-Actual completion timestamps remain a separate future decision if requested.
+Completion timestamp semantics now follow ADR0035.

@@ -1,3 +1,4 @@
+import 'completion_instant.dart';
 import 'dart:convert';
 import 'current_operation.dart';
 import 'utf8_byte_limit.dart';
@@ -117,7 +118,11 @@ class LogEvent {
       family: payload.family,
       revision:
           operationRevision ??
-          (operationUsesAdditionalZone(payload.value) ? 2 : 1),
+          (isTaskCompletion(type) && data.containsKey('completedInstant')
+              ? 3
+              : operationUsesAdditionalZone(payload.value)
+              ? 2
+              : 1),
       value: payload.value,
       predecessor: predecessor!,
       referenceHash: hash,
@@ -267,6 +272,9 @@ class LogEvent {
         case 'task.completedWithText':
         case 'task.completedKeepingSuccessor':
         case 'task.completedWithChecklist':
+          if (d.containsKey('completedInstant')) {
+            decodeCompletionInstant(d['completedInstant']);
+          }
           if (d.containsKey('completedAt')) {
             if (d['completedAt'] is! String ||
                 DateTime.tryParse(d['completedAt']) == null) {
@@ -299,7 +307,8 @@ class LogEvent {
           }
           if (j['type'] == 'task.completedWithChecklist') {
             if (d['successor'] is! Map<String, dynamic> ||
-                !d.containsKey('completedAt')) {
+                (!d.containsKey('completedAt') &&
+                    !d.containsKey('completedInstant'))) {
               throw FormatFailure('Checklist recurrence requires a successor.');
             }
             validateChecklistCopy(
@@ -315,7 +324,8 @@ class LogEvent {
           }
           if (j['type'] == 'task.completedKeepingSuccessor') {
             final retained = d['retainedSuccessor'];
-            if (!d.containsKey('completedAt') ||
+            if ((!d.containsKey('completedAt') &&
+                    !d.containsKey('completedInstant')) ||
                 retained is! Map<String, dynamic> ||
                 !_keys(retained, {'id', 'completion', 'hash'}) ||
                 retained['id'] != const Uuid().v5(j['entity'], 'successor') ||
@@ -496,9 +506,14 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   state['completionOrder'] = activeEvents.isEmpty
       ? null
       : '${activeEvents.last.clock.sortKey}:${activeEvents.last.writer}:${activeEvents.last.sequence.toString().padLeft(20, '0')}';
-  state['completedAt'] = activeEvents.isEmpty
+  state.remove('completedAt');
+  final instant = activeEvents.isEmpty
       ? null
-      : activeEvents.last.data['completedAt'];
+      : activeEvents.last.data['completedInstant'];
+  state['completedInstant'] = instant;
+  state['completedMicros'] = instant == null
+      ? null
+      : decodeCompletionInstant(instant).microsecondsSinceEpoch;
   return state;
 }
 

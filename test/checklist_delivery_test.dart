@@ -228,7 +228,7 @@ class _DeliveryFixture {
         id: RecurringTextResolver(engine, history).resolve(id),
     };
     return {
-      'completedAt': '2030-05-10',
+      'completedInstant': '2030-05-10T00:00:00.000000Z',
       'successor': {
         'id': child,
         'title': 'Scalar parent',
@@ -407,7 +407,7 @@ void main() {
       final child = const Uuid().v5(f.parent, 'successor');
       final copy = f.copyItem(child, source);
       final descriptor = {
-        'completedAt': '2030-05-10',
+        'completedInstant': '2030-05-10T00:00:00.000000Z',
         'successor': {
           'id': child,
           'title': 'Scalar parent',
@@ -716,7 +716,11 @@ void main() {
         session.replace('description', 'Private old notes');
         final originalState =
             capture.fields['description']!.document.fullState.encoded;
-        await f.store.complete(f.parent, completionDay: DateTime(2030, 5, 10));
+        await f.store.complete(
+          f.parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
+        );
         final child = const Uuid().v5(f.parent, 'successor');
         expect(f.items(child).single['description'], 'Original notes');
         expect(

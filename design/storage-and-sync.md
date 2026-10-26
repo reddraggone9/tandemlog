@@ -47,3 +47,5 @@ selected text reads. Empty claims return an empty result; an untrusted scope
 falls back to the original SQL oracle. All competing/retracted claims and
 candidate claims are retained in compareEvents order. No new cache or size
 budget is introduced.
+
+See [ADR0035](decisions/0035-exact-completion-instants.md) for required revision3 completion instants, offline cutover approximation, viewer-local Completed/search chronology, and unchanged recurrence/Undo.

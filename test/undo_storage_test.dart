@@ -151,14 +151,19 @@ void main() {
       );
       final complete = await a.complete(
         id,
-        completionDay: DateTime.utc(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final successor = const Uuid().v5(id, 'successor');
       await a.command(successor, 'task.edited', {'title': 'Worked successor'});
       await a.undoOperations([complete.id]);
       expect(row(a, id)['completed'], false);
       expect(row(a, successor)['title'], 'Worked successor');
-      await a.complete(id, completionDay: DateTime.utc(2030, 5, 2));
+      await a.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
+      );
       final reopened = <OperationReceipt>[];
       await a.reopen(id, a.activeCompletionIds(id), onPrepared: reopened.add);
       expect(row(a, id)['completed'], false);
@@ -170,9 +175,14 @@ void main() {
       await b.refresh();
       final localComplete = await a.complete(
         plain,
-        completionDay: DateTime.utc(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
-      await b.complete(plain, completionDay: DateTime.utc(2030, 5, 2));
+      await b.complete(
+        plain,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
+      );
       await converge();
       await a.undoOperations([localComplete.id]);
       expect(row(a, plain)['completed'], true);

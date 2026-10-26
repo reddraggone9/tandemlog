@@ -279,7 +279,8 @@ void main() {
           });
           final original = await store.complete(
             _parent,
-            completionDay: DateTime(2026, 10, 8),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2026, 10, 8),
           );
           expect(original.type, 'task.completedWithText');
           if (adopted) {
@@ -290,7 +291,8 @@ void main() {
           final before = adopted ? jsonEncode(_childRow(store)) : null;
           final again = await store.complete(
             _parent,
-            completionDay: DateTime(2026, 10, 8),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2026, 10, 8),
           );
           expect(store.currentTextRow(_parent)!['completed'], true);
           if (adopted) {

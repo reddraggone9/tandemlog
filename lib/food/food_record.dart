@@ -114,7 +114,7 @@ class FoodRecord {
   /// arbitrary DTOs or caller-supplied successful callbacks are not accepted.
   factory FoodRecord.fromDecodedCache(ValidatedActionEffect receipt) {
     final fields = receipt.fields;
-    if (receipt.layout != 2 ||
+    if (receipt.layout != 3 ||
         !const {'food', 'history.food'}.contains(receipt.kind) ||
         fields == null ||
         fields.length != 12) {

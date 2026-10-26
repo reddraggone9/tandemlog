@@ -30,10 +30,14 @@ void main() {
         'title': 'Completed',
         'assignee': writer,
       });
-      final first = e(2, 'task.completed', {'completedAt': '2026-10-25'});
-      final last = e(3, 'task.completed', {'completedAt': '2026-10-26'});
+      final first = e(2, 'task.completed', {
+        'completedInstant': '2026-10-25T00:00:00.000000Z',
+      });
+      final last = e(3, 'task.completed', {
+        'completedInstant': '2026-10-26T00:00:00.000000Z',
+      });
       final both = project([last, created, first])!;
-      expect(both['completedAt'], '2026-10-26');
+      expect(both['completedInstant'], '2026-10-26T00:00:00.000000Z');
       final earlier = project([created, first])!;
       expect(
         (both['completionOrder'] as String).compareTo(
@@ -47,7 +51,7 @@ void main() {
         created,
         first,
       ])!;
-      expect(undone['completedAt'], '2026-10-25');
+      expect(undone['completedInstant'], '2026-10-25T00:00:00.000000Z');
       expect(undone['completionOrder'], earlier['completionOrder']);
     },
   );
@@ -93,17 +97,17 @@ void main() {
             completed: true,
             schedule: TaskSchedule(dueDate: '2099-01-01'),
           ),
-          'completedAt': '2026-10-25',
+          'completedInstant': '2026-10-25T00:00:00.000000Z',
           'completionOrder': '002',
         },
         {
           ...row('newer', completed: true),
-          'completedAt': '2026-10-26',
+          'completedInstant': '2026-10-26T00:00:00.000000Z',
           'completionOrder': '004',
         },
         {
           ...row('same-day', completed: true),
-          'completedAt': '2026-10-26',
+          'completedInstant': '2026-10-26T00:00:00.000000Z',
           'completionOrder': '003',
         },
         row('unknown', completed: true),
@@ -123,6 +127,56 @@ void main() {
         ]);
         expect(view.completed[0].hasEffectiveTime, isFalse);
         expect(view.completed[0].sharesOrderBucket(view.completed[1]), isFalse);
+      }
+    },
+  );
+
+  test(
+    'viewer-local chronology crosses dates; exact instant wins over causal order and manual position',
+    () {
+      final rows = [
+        {
+          ...row('late', completed: true),
+          'completedInstant': '2026-10-27T00:30:00.000000Z',
+          'completionOrder': '001',
+        },
+        {
+          ...row('early', completed: true),
+          'completedInstant': '2026-10-26T23:30:00.000000Z',
+          'completionOrder': '999',
+        },
+        {
+          ...row('tie-b', completed: true),
+          'completedInstant': '2026-10-26T23:30:00.000000Z',
+          'completionOrder': '999',
+        },
+        {
+          ...row('tie-a', completed: true),
+          'completedInstant': '2026-10-26T23:30:00.000000Z',
+          'completionOrder': '999',
+        },
+      ];
+      for (final search in [null, 'match']) {
+        final named = rows.map((r) => {...r, 'title': 'match'}).toList();
+        final utc = projectTaskView(
+          named,
+          at('2026-10-27T02:00:00Z'),
+          searchQuery: search,
+        ).value;
+        final chicago = projectTaskView(
+          named.reversed.toList(),
+          at('2026-10-27T02:00:00Z', 'America/Chicago'),
+          searchQuery: search,
+        ).value;
+        expect(ids(utc.completed), ['late', 'early', 'tie-a', 'tie-b']);
+        expect(ids(chicago.completed), ids(utc.completed));
+        expect(utc.completedGroups.map((g) => g.date), [
+          '2026-10-27',
+          '2026-10-26',
+        ]);
+        expect(chicago.completedGroups.single.date, '2026-10-26');
+        expect(chicago.completed.every((e) => e.effectiveDate == null), true);
+        expect(rows.first['completedInstant'], '2026-10-27T00:30:00.000000Z');
       }
     },
   );

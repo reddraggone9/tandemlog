@@ -120,7 +120,9 @@ void registerTagInputWorkflowTests() {
           tags: ['ArchivedOnly'],
           observedTagRefs: {},
         );
-        await peer.command(completed, 'task.completed', {});
+        await peer.command(completed, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        });
         await seedNativeProfile(profile.path, {
           'folder': shared.path,
           'user': user,

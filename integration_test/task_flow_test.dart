@@ -758,7 +758,11 @@ void main() {
           'schedule': {'dueDate': '2030-05-01'},
         });
         await writer.edit(id, {}, tags: tags, observedTagRefs: {});
-        if (done) await writer.command(id, 'task.completed', {});
+        if (done) {
+          await writer.command(id, 'task.completed', {
+            'completedInstant': '2026-10-12T12:00:00.000000Z',
+          });
+        }
       }
 
       await add('Review household supplies', ['Home']);
@@ -1246,7 +1250,11 @@ void main() {
         // This search scenario intentionally reorders organized tasks across
         // assignees. Raw Inbox captures use a separate manual-order bucket.
         await writer.editNativeFixtureTask(id, {'title': title});
-        if (done) await writer.command(id, 'task.completed', {});
+        if (done) {
+          await writer.command(id, 'task.completed', {
+            'completedInstant': '2026-10-12T12:00:00.000000Z',
+          });
+        }
       }
 
       await add('Planning available');
@@ -2339,7 +2347,11 @@ void main() {
         'schedule': future ? {'startDate': '2099-01-01'} : {},
       });
       await writer.edit(id, {}, tags: [tag], observedTagRefs: {});
-      if (done) await writer.command(id, 'task.completed', {});
+      if (done) {
+        await writer.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        });
+      }
     }
 
     await add('Ready household task', user);
@@ -2871,7 +2883,9 @@ void main() {
       expect(result.committedIds.toSet(), ids.toSet());
       expect(result.remainingIds, isEmpty);
       debugPrint('HEADER_CAPTURE_TASKS=1001 MS=${setup.elapsedMilliseconds}');
-      await store.command(ids.first, 'task.completed', {});
+      await store.command(ids.first, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       final tasks = store.rows.where((row) => row['kind'] == 'task').toList();
       expect(tasks, hasLength(1001));
       expect(tasks.where((row) => row['completed'] == true), hasLength(1));
@@ -3258,7 +3272,9 @@ void main() {
           observedTagRefs: {},
         );
       }
-      await writer.command(ids[4], 'task.completed', {});
+      await writer.command(ids[4], 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       await seedNativeProfile(profile.path, {
         'folder': folder.path,
         'user': user,
@@ -3830,7 +3846,8 @@ void main() {
       });
       await remote.complete(
         ids['Completed future history']!,
-        completionDay: DateTime.utc(2026, 9, 30),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 9, 30),
       );
       await seedNativeProfile(profile.path, {
         'folder': folder.path,

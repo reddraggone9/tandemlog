@@ -43,7 +43,11 @@ void registerStartHintTests() {
         'assignee': user,
         'schedule': schedule,
       });
-      if (done) await writer.command(id, 'task.completed', {});
+      if (done) {
+        await writer.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        });
+      }
     }
 
     await add('Later today', {'startDate': '2026-10-02', 'startTime': '17:00'});

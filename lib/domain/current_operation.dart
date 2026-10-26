@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'event_chain.dart';
+import 'completion_instant.dart';
 import 'utf8_byte_limit.dart';
 
 const currentOperationFormat = 1;
@@ -115,12 +116,26 @@ class CurrentOperation {
     final revision = operation['revision'] as int;
     final value = j['value'] as Map<String, dynamic>;
     if (revision != 1 &&
+        !(revision == 3 && module == 'tasks' && family == 'task.complete') &&
         !(revision == 2 &&
             module == 'tasks' &&
             _zoneFamilies.contains(family))) {
       throw const FormatException(
         'Unsupported required operation revision. Update the app; history was preserved.',
       );
+    }
+    if (family == 'task.complete') {
+      final values = value['values'];
+      if (values is! Map ||
+          revision == 3 &&
+              (values.containsKey('completedAt') ||
+                  values.containsKey('completionTimeZone')) ||
+          revision < 3 && values.containsKey('completedInstant')) {
+        throw const FormatException(
+          'Completion fields do not match required revision.',
+        );
+      }
+      if (revision == 3) decodeCompletionInstant(values['completedInstant']);
     }
     if (operationUsesAdditionalZone(value) &&
         (revision < 2 || !_zoneFamilies.contains(family))) {
@@ -217,15 +232,25 @@ void validateTaskActionFields(String type, Map<String, dynamic> data) {
       'schedule',
       'tagChanges',
     },
-    'task.completed' => {'completedAt', 'successor'},
-    'task.completedWithText' => {'completedAt', 'successor', 'inheritance'},
+    'task.completed' => {'completedAt', 'completedInstant', 'successor'},
+    'task.completedWithText' => {
+      'completedAt',
+      'completedInstant',
+      'successor',
+      'inheritance',
+    },
     'task.completedWithChecklist' => {
       'completedAt',
+      'completedInstant',
       'successor',
       'inheritance',
       'checklist',
     },
-    'task.completedKeepingSuccessor' => {'completedAt', 'retainedSuccessor'},
+    'task.completedKeepingSuccessor' => {
+      'completedAt',
+      'completedInstant',
+      'retainedSuccessor',
+    },
     'task.completionUndone' ||
     'task.recurringCompletionUndone' => {'completion'},
     'task.operationUndone' => {'operation'},

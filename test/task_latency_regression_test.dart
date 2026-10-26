@@ -78,7 +78,8 @@ void main() {
           };
           final operation = current.complete(
             task,
-            completionDay: DateTime.utc(2030, 5, 10),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 10),
             onPrepared: (_) {
               callbacks++;
               listsAtReservation = lists;
@@ -595,7 +596,8 @@ void main() {
         OperationReceipt? completed;
         await store.complete(
           task,
-          completionDay: DateTime(2026, 10, 22),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 22),
           onPrepared: (receipt) => completed = receipt,
         );
         expect(history.physicalSequence, ++sequence);
@@ -854,7 +856,8 @@ void main() {
         final beforeFreshBirth = store.unified!.fullTaskReadinessRuns;
         final first = await store.complete(
           parent,
-          completionDay: DateTime(2030, 5, 10),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
           onPrepared: (r) => firstReceipt = r,
         );
         expect(store.unified!.fullTaskReadinessRuns, beforeFreshBirth);
@@ -882,7 +885,11 @@ void main() {
         expect((await store.undoOperations([firstReceipt!.id])).error, isNull);
         expect(store.unified!.fullEffectValidationRuns, wholeEffects);
         final beforeRecomplete = store.unified!.fullTaskReadinessRuns;
-        await store.complete(parent, completionDay: DateTime(2030, 5, 10));
+        await store.complete(
+          parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
+        );
         expect(store.unified!.fullTaskReadinessRuns, beforeRecomplete);
         expect(store.unified!.fullEffectValidationRuns, wholeEffects);
         final repeatedCapture = await store.captureTaskText(initialCopy);
@@ -1117,13 +1124,14 @@ void main() {
       OperationReceipt? receipt;
       final first = await store.complete(
         parent,
-        completionDay: DateTime(2030, 5, 10),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 10),
         onPrepared: (value) => receipt = value,
       );
       expect((await store.undoOperations([receipt!.id])).error, isNull);
       final child = const Uuid().v5(parent, 'successor');
       await store.command(parent, 'task.completedKeepingSuccessor', {
-        'completedAt': '2030-05-10',
+        'completedInstant': '2030-05-10T00:00:00.000000Z',
         'retainedSuccessor': {
           'id': child,
           'completion': first.id,
@@ -1231,7 +1239,8 @@ void main() {
         OperationReceipt? completion;
         await store.complete(
           parent,
-          completionDay: DateTime(2030, 5, 10),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
           onPrepared: (r) => completion = r,
         );
         expect((await store.undoOperations([completion!.id])).error, isNull);

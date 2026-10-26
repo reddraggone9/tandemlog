@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../domain/event.dart';
+import '../domain/timed_view.dart';
 import '../storage/task_store.dart';
 
 /// Completion UI observes a refreshed checklist before preparing durable bytes.
@@ -10,7 +11,8 @@ class ChecklistCompletionCommand {
 
   Future<LogEvent?> complete(
     String entity, {
-    required DateTime completionInstant,
+    DateTime? completionInstant,
+    ViewTime Function()? observeCompletionTime,
     required String? localZoneId,
     required Future<bool> Function(List<Map<String, dynamic>> items)
     confirmUnfinished,
@@ -43,6 +45,7 @@ class ChecklistCompletionCommand {
         return await store.complete(
           entity,
           completionInstant: completionInstant,
+          observeCompletionTime: observeCompletionTime,
           localZoneId: localZoneId,
           expectedChecklistSnapshot: snapshot,
           requireIncomplete: true,

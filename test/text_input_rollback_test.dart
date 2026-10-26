@@ -41,7 +41,11 @@ void main() {
           observedTagRefs: {},
         );
         final item = await a.addChecklistItem(parent, 'Copied field');
-        await a.complete(parent, completionDay: DateTime(2030, 5, 10));
+        await a.complete(
+          parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
+        );
         b = await TaskStore.open(folder, '${root.path}/b', textEngine: engine);
         await a.refresh();
         final child = const Uuid().v5(parent, 'successor');
@@ -76,7 +80,11 @@ void main() {
           tags: [],
           observedTagRefs: {},
         );
-        await b.complete(parent, completionDay: DateTime(2030, 5, 11));
+        await b.complete(
+          parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 11),
+        );
         var fail = false, publications = 0, rejectedStage = false;
         await app.profile.serialize(() async {
           app.attachProjectionInProfileQueue(blocker, (snapshot) {

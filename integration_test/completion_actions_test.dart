@@ -86,7 +86,11 @@ void registerCompletionActionTests() {
             },
           });
         }
-        await writer.complete(plain, completionDay: DateTime.utc(2026, 10, 2));
+        await writer.complete(
+          plain,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 2),
+        );
         await seedNativeProfile(profile.path, {
           'folder': folder.path,
           'user': user,

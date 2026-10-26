@@ -192,7 +192,7 @@ class StartupDiagnostics(unittest.TestCase):
             key=hashlib.sha256(f'{shared}#app5:{epoch}'.encode()).hexdigest()
             decoded_key='app5.location.'+hashlib.sha256(str(shared).encode()).hexdigest()
             payload='synthetic opaque decoded payload'; proof=hashlib.sha256(payload.encode()).hexdigest()
-            task=json.dumps({'generation':4,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
+            task=json.dumps({'generation':5,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
             with closing(sqlite3.connect(profile/'local.sqlite')) as db, db:
                 db.execute('CREATE TABLE profile_metadata(key TEXT PRIMARY KEY,value TEXT)')
                 for name,value in [(f'app5.task.cache.{key}',task),(f'app5.decoded.proof.{decoded_key}',proof),
@@ -218,7 +218,7 @@ class StartupDiagnostics(unittest.TestCase):
             key=hashlib.sha256(f'{location}#app5:{epoch}'.encode()).hexdigest()
             decoded_key='app5.location.'+hashlib.sha256(location.encode()).hexdigest()
             payload='opaque synthetic decoded payload'
-            task=json.dumps({'generation':4,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
+            task=json.dumps({'generation':5,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
             with closing(sqlite3.connect(profile/'local.sqlite')) as db,db:
                 db.execute('CREATE TABLE profile_metadata(key TEXT PRIMARY KEY,value TEXT)')
                 db.executemany('INSERT INTO profile_metadata VALUES (?,?)',[

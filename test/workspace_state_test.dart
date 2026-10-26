@@ -164,7 +164,8 @@ void main() {
       expect((await tasks.undoOperations([edited.id])).error, isNull);
       final completed = await tasks.complete(
         fixture.container,
-        completionDay: DateTime.utc(2026, 10, 25),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 25),
       );
       expect((await tasks.undoOperations([completed.id])).error, isNull);
       expect(tasks.globalOrderRebuilds, rebuilds);

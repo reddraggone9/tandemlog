@@ -100,7 +100,8 @@ void main() {
         final beforeFreshText = a.unified!.fullTaskReadinessRuns;
         await a.complete(
           parent,
-          completionDay: DateTime(2030, 5, 10),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
           onPrepared: (r) => completionA = r,
         );
         expect(a.unified!.fullTaskReadinessRuns, beforeFreshText);
@@ -130,7 +131,11 @@ void main() {
           '${cd.path}/${c.writer}.applog',
         ).copy('${bd.path}/${c.writer}.applog');
         await b.refresh();
-        await b.complete(parent, completionDay: DateTime(2030, 5, 10));
+        await b.complete(
+          parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
+        );
         await File(
           '${bd.path}/${b.writer}.applog',
         ).copy('${ad.path}/${b.writer}.applog');

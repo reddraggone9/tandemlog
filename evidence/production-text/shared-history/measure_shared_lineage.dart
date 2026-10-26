@@ -132,7 +132,8 @@ Future<void> main() async {
       final watch = Stopwatch()..start();
       await store.complete(
         id,
-        completionDay: DateTime.utc(
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(
           2026,
           10,
           1,

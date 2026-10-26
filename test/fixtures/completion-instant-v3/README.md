@@ -1,0 +1,1 @@
+New revision3 vectors, generated independently by tool/normalization/generate_completion_goldens.py using Python JSON and SHA256. Not an accepted performance fixture, old fixture rewrite, or valid complete workspace.\n

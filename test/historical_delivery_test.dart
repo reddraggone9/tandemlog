@@ -83,7 +83,8 @@ void main() {
               b = await open(await Directory('${root.path}/b').create(), 'pb');
           final original = await b.complete(
             parent,
-            completionDay: DateTime(2030, 5, 10),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 10),
           );
           await File(
             '${fb.path}/${b.writer}.applog',
@@ -119,7 +120,8 @@ void main() {
               c = await open(await Directory('${root.path}/c').create(), 'pc');
           final marker = await c.complete(
             parent,
-            completionDay: DateTime(2030, 6, 10),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 6, 10),
           );
           expect(marker.type, 'task.completedKeepingSuccessor');
           expect(marker.data['retainedSuccessor'], {

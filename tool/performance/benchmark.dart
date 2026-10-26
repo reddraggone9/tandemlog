@@ -2314,7 +2314,8 @@ Future<void> firstDerivedPointAction(Audit a, int rep, String kind) async {
   );
   final completion = await a.tasks.complete(
     parent,
-    completionDay: DateTime(2026, 10, 22),
+    localZoneId: 'UTC',
+    completionInstant: DateTime.utc(2026, 10, 22),
   );
   final child = const Uuid().v5(parent, 'successor');
   final sourceItem = item.entity;

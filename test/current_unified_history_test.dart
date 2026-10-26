@@ -265,83 +265,105 @@ void main() {
       expect(await folder.read('tandemlog-space.json'), before);
     },
   );
-  test(
-    'unknown future operation blocks warm writes in both modules and cold admission',
-    () async {
-      tasks = await TaskStore.openUnified(h);
-      food = await FoodStore.openUnified(h);
-      await h.appendAtomic([user()]);
-      final old = h.snapshot.revision;
-      final r = await h.validateInProfileQueue([
-        (seq, clock, head) => UnifiedEffect(
-          'task',
-          LogEvent(h.manifest.space, writer, seq, clock, task, 'task.created', {
-            'title': 'Must stay invisible',
-            'description': '',
-            'assignee': person,
-          }).encode(previousHash: head),
-        ),
-        beans(),
-      ]);
-      final j = jsonDecode(r.records.single.encode()) as Map<String, dynamic>;
-      final op =
-          jsonDecode(((j['effects'] as List).last as Map)['raw'])
-              as Map<String, dynamic>;
-      (op['operation'] as Map)['revision'] = 99;
-      final body = Map<String, dynamic>.of(op)
-        ..remove('contentHash')
-        ..remove('referenceHash');
-      op['contentHash'] = sha256
-          .convert(
-            utf8.encode('tandemlog:operation:v1\n${canonicalDataJson(body)}'),
-          )
-          .toString();
-      op['referenceHash'] = op['contentHash'];
-      ((j['effects'] as List).last as Map)['raw'] = canonicalDataJson(op);
-      j.remove('hash');
-      j['hash'] = sha256
-          .convert(
-            utf8.encode('tandemlog:app-action:v5\n${canonicalDataJson(j)}'),
-          )
-          .toString();
-      await folder.append(
-        unifiedLogName(writer),
-        Uint8List.fromList(utf8.encode('${canonicalDataJson(j)}\n')),
-      );
-      await expectLater(h.refresh(), throwsA(isA<FormatFailure>()));
-      expect(h.snapshot.revision, old);
-      await expectLater(
-        tasks!.command(person, 'user.created', {'name': 'Blocked'}),
-        throwsA(isA<FormatFailure>()),
-      );
-      await expectLater(
-        food!.add(const FoodDetails(name: 'Blocked'), 1),
-        throwsA(isA<FormatFailure>()),
-      );
-      expect(
-        p.database.select(
-          "SELECT name FROM sqlite_schema WHERE type='table' AND name='protected_app_outbox'",
-        ),
-        isEmpty,
-      );
-      expect(tasks!.hasEntity(task), isFalse);
-      expect(food!.state.containers, isEmpty);
-      final cold = await profileAt('${root.path}/cold');
-      try {
+  for (final unknownFamily in ['food', 'completion']) {
+    test(
+      'unknown $unknownFamily revision blocks warm writes in both modules and cold admission',
+      () async {
+        tasks = await TaskStore.openUnified(h);
+        food = await FoodStore.openUnified(h);
+        await h.appendAtomic([user()]);
+        final old = h.snapshot.revision;
+        final r = await h.validateInProfileQueue([
+          (seq, clock, head) => UnifiedEffect(
+            'task',
+            LogEvent(
+              h.manifest.space,
+              writer,
+              seq,
+              clock,
+              task,
+              'task.created',
+              {
+                'title': 'Must stay invisible',
+                'description': '',
+                'assignee': person,
+              },
+            ).encode(previousHash: head),
+          ),
+          if (unknownFamily == 'completion')
+            (seq, clock, head) => UnifiedEffect(
+              'task',
+              LogEvent(
+                h.manifest.space,
+                writer,
+                seq,
+                clock,
+                task,
+                'task.completed',
+                {'completedInstant': '2026-10-26T12:00:00.123456Z'},
+              ).encode(previousHash: head),
+            ),
+          beans(),
+        ]);
+        final j = jsonDecode(r.records.single.encode()) as Map<String, dynamic>;
+        final op =
+            jsonDecode(((j['effects'] as List)[1] as Map)['raw'])
+                as Map<String, dynamic>;
+        (op['operation'] as Map)['revision'] = 99;
+        final body = Map<String, dynamic>.of(op)
+          ..remove('contentHash')
+          ..remove('referenceHash');
+        op['contentHash'] = sha256
+            .convert(
+              utf8.encode('tandemlog:operation:v1\n${canonicalDataJson(body)}'),
+            )
+            .toString();
+        op['referenceHash'] = op['contentHash'];
+        ((j['effects'] as List)[1] as Map)['raw'] = canonicalDataJson(op);
+        j.remove('hash');
+        j['hash'] = sha256
+            .convert(
+              utf8.encode('tandemlog:app-action:v5\n${canonicalDataJson(j)}'),
+            )
+            .toString();
+        await folder.append(
+          unifiedLogName(writer),
+          Uint8List.fromList(utf8.encode('${canonicalDataJson(j)}\n')),
+        );
+        await expectLater(food!.refresh(), throwsA(isA<FormatFailure>()));
+        expect(h.snapshot.revision, old);
         await expectLater(
-          UnifiedHistory.open(folder, profile: cold, writer: writer),
+          tasks!.command(person, 'user.created', {'name': 'Blocked'}),
+          throwsA(isA<FormatFailure>()),
+        );
+        await expectLater(
+          food!.add(const FoodDetails(name: 'Blocked'), 1),
           throwsA(isA<FormatFailure>()),
         );
         expect(
-          cold.database.select('SELECT * FROM protected_app_heads'),
+          p.database.select(
+            "SELECT name FROM sqlite_schema WHERE type='table' AND name='protected_app_outbox'",
+          ),
           isEmpty,
         );
-      } finally {
-        await cold.close();
-      }
-    },
-  );
-
+        expect(tasks!.hasEntity(task), isFalse);
+        expect(food!.state.containers, isEmpty);
+        final cold = await profileAt('${root.path}/cold');
+        try {
+          await expectLater(
+            UnifiedHistory.open(folder, profile: cold, writer: writer),
+            throwsA(isA<FormatFailure>()),
+          );
+          expect(
+            cold.database.select('SELECT * FROM protected_app_heads'),
+            isEmpty,
+          );
+        } finally {
+          await cold.close();
+        }
+      },
+    );
+  }
   test(
     'unsupported existing folder is rejected without initialization',
     () async {

@@ -8,6 +8,7 @@ import 'package:tandemlog/application/checklist_completion_command.dart';
 import 'package:tandemlog/application/task_text_session.dart';
 import 'package:tandemlog/application/text_save_command.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/domain/timed_view.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
@@ -162,7 +163,7 @@ class _BeforeCommitPeerStore implements TaskStore {
   @override
   Future<LogEvent> complete(
     String entity, {
-    DateTime? completionDay,
+    ViewTime Function()? observeCompletionTime,
     DateTime? completionInstant,
     String? localZoneId,
     String? expectedChecklistSnapshot,
@@ -175,7 +176,7 @@ class _BeforeCommitPeerStore implements TaskStore {
     }
     return actual.complete(
       entity,
-      completionDay: completionDay,
+      observeCompletionTime: observeCompletionTime,
       completionInstant: completionInstant,
       localZoneId: localZoneId,
       expectedChecklistSnapshot: expectedChecklistSnapshot,
@@ -194,6 +195,50 @@ void main() {
   late _CompletionFixture f;
   setUp(() async => f = await _CompletionFixture.create());
   tearDown(() async => f.close());
+
+  for (final cancel in [true, false]) {
+    test(
+      'clock is sampled only after final consent, across midnight (cancel=$cancel)',
+      () async {
+        var now = DateTime.utc(2030, 5, 10, 23, 59);
+        var samples = 0;
+        final result = await ChecklistCompletionCommand(f.a).complete(
+          f.parent,
+          observeCompletionTime: () {
+            samples++;
+            return ViewTime(
+              instant: now,
+              localZoneId: 'UTC',
+              localOffset: Duration.zero,
+            );
+          },
+          localZoneId: null,
+          confirmUnfinished: (_) async {
+            expect(samples, 0);
+            now = DateTime.utc(2030, 5, 11, 0, 1, 2, 3, 456);
+            return !cancel;
+          },
+        );
+        expect(samples, cancel ? 0 : 1);
+        if (cancel) {
+          expect(result, isNull);
+        } else {
+          expect(
+            result!.data['completedInstant'],
+            '2030-05-11T00:01:02.003456Z',
+          );
+          expect(result.operationRevision, 3);
+          expect(result.data.containsKey('completedAt'), isFalse);
+          expect(
+            f.a
+                .checklistItems(f.parent)
+                .every((item) => item['completed'] == false),
+            isTrue,
+          );
+        }
+      },
+    );
+  }
 
   test(
     'all checked items complete without warning and prepare exactly one receipt',
@@ -467,13 +512,22 @@ void main() {
     'incoming unchecked item at native preparation boundary retries confirmation before any receipt',
     () async {
       final proxy = _BeforeCommitPeerStore(f.a, f.b, f.parent);
-      var warnings = 0, prepared = 0;
+      var warnings = 0, prepared = 0, samples = 0;
       final result = await ChecklistCompletionCommand(proxy).complete(
         f.parent,
-        completionInstant: DateTime.utc(2030, 5, 10, 12),
+        observeCompletionTime: () {
+          samples++;
+          expect(warnings, 2);
+          return ViewTime(
+            instant: DateTime.utc(2030, 5, 10, 12),
+            localZoneId: 'UTC',
+            localOffset: Duration.zero,
+          );
+        },
         localZoneId: 'UTC',
         confirmUnfinished: (items) async {
           warnings++;
+          expect(samples, 0);
           expect(prepared, 0);
           expect(items, hasLength(warnings == 1 ? 2 : 3));
           if (warnings == 2) {

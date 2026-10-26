@@ -1,3 +1,5 @@
+import '../domain/completion_instant.dart';
+import '../domain/timed_view.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'local_durability.dart';
@@ -1030,8 +1032,8 @@ class TaskStore {
 
     bool simpleCompletion(LogEvent e) =>
         e.type == 'task.completed' &&
-        e.data.containsKey('completedAt') &&
-        e.data.keys.every((k) => k == 'completedAt');
+        e.data.containsKey('completedInstant') &&
+        e.data.keys.every((k) => k == 'completedInstant');
     bool taskMove(LogEvent e) =>
         e.type == 'task.moved' &&
         (e.data['before'] == null ||
@@ -2594,6 +2596,16 @@ class TaskStore {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) async {
+    if (isTaskCompletion(type)) {
+      if (data.containsKey('completedAt')) {
+        throw FormatFailure('New completions require only an instant.');
+      }
+      try {
+        decodeCompletionInstant(data['completedInstant']);
+      } on FormatException catch (error) {
+        throw FormatFailure(error.message);
+      }
+    }
     _requireWriterAppendReady();
     _requireTaskSnapshot(
       expectedTaskSnapshot,
@@ -4004,7 +4016,7 @@ class TaskStore {
 
   Future<LogEvent> complete(
     String entity, {
-    DateTime? completionDay,
+    ViewTime Function()? observeCompletionTime,
     DateTime? completionInstant,
     String? localZoneId,
     String? expectedChecklistSnapshot,
@@ -4026,15 +4038,20 @@ class TaskStore {
     final schedule = TaskSchedule.fromJson(
       Map<String, dynamic>.from(state['schedule'] as Map),
     );
-    if ((completionDay == null) == (completionInstant == null)) {
-      throw ArgumentError('Supply exactly one completion day or instant.');
+    if ((observeCompletionTime == null) == (completionInstant == null)) {
+      throw ArgumentError(
+        'Supply exactly one clock observation or explicit instant.',
+      );
     }
-    final day =
-        completionDay ??
-        civilDayAt(completionInstant!, schedule.timeZone ?? localZoneId);
+    _requireWriterAppendReady();
+    final observation = observeCompletionTime?.call();
+    final instant = observation?.instant ?? completionInstant!;
+    final day = civilDayAt(
+      instant,
+      schedule.timeZone ?? observation?.localZoneId ?? localZoneId,
+    );
     final data = <String, dynamic>{
-      'completedAt':
-          '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
+      'completedInstant': encodeCompletionInstant(instant),
     };
     final historical = schedule.recurrence == null
         ? null
@@ -5624,7 +5641,7 @@ class TaskSemanticValidator {
     );
     try {
       final proof = jsonDecode(proofRows.single['value'] as String) as Map;
-      if (proof['generation'] != 4 ||
+      if (proof['generation'] != 5 ||
           proof['manifest'] != manifestDigest ||
           proof['native'] != (textEngine != null)) {
         return;
@@ -5743,7 +5760,7 @@ class TaskSemanticValidator {
     source.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
       _proofKey,
       jsonEncode({
-        'generation': 4,
+        'generation': 5,
         'manifest': manifestDigest,
         'native': textEngine != null,
         'revision': _taskProjectionRevision(events),

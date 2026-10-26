@@ -342,7 +342,7 @@ void main() {
     'normalized completion/retraction variants preserve their domain meaning',
     () {
       for (final (type, data) in <(String, Map<String, dynamic>)>[
-        ('task.completed', {'completedAt': '2026-10-20T12:00:00Z'}),
+        ('task.completed', {'completedInstant': '2026-10-20T12:00:00.000000Z'}),
         ('task.completionUndone', {'completion': '$writer:1'}),
         ('task.recurringCompletionUndone', {'completion': '$writer:1'}),
         ('task.operationUndone', {'operation': '$writer:1'}),

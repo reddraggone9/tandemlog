@@ -22,7 +22,9 @@ void main() {
           'title': 'Later',
           'assignee': space,
         }),
-        LogEvent(space, writer, 4, testClock(4, 0), id, 'task.completed', {}),
+        LogEvent(space, writer, 4, testClock(4, 0), id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        }),
       ]);
       final expected = project([...events]);
       for (var i = 0; i < 20; i++) {
@@ -109,7 +111,9 @@ void main() {
         LogEvent(space, b, 1, testClock(2, 0), id, 'task.edited', {
           'title': 'B',
         }),
-        LogEvent(space, a, 3, testClock(3, 0), id, 'task.completed', {}),
+        LogEvent(space, a, 3, testClock(3, 0), id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        }),
         LogEvent(space, a, 4, testClock(4, 0), id, 'task.completionUndone', {
           'completion': '$a:3',
         }),
@@ -165,7 +169,7 @@ void main() {
           'schedule': {'futureField': 'value'},
         }),
         LogEvent(id, id, 1, testClock(1, 0), id, 'task.completed', {
-          'completedAt': '2026-02-30',
+          'completedInstant': '2026-02-30T00:00:00.000000Z',
         }),
         LogEvent(id, id, 1, testClock(1, 0), id, 'task.moved', {'before': id}),
         LogEvent(id, id, 1, testClock(1, 0), id, 'task.edited', {

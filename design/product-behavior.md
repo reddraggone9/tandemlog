@@ -346,3 +346,5 @@ calendar OK commits the draft date, so cancelling either chooser leaves it intac
 The jump is shared by Food and Tasks, with the same owner-lifetime/picker guards.
 
 Completed rows do not repeat the completion date already shown in their heading. Search results retain their completion-date metadata.
+
+See [ADR0035](decisions/0035-exact-completion-instants.md) for required revision3 completion instants, offline cutover approximation, viewer-local Completed/search chronology, and unchanged recurrence/Undo.

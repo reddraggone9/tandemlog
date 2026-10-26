@@ -195,7 +195,7 @@ def inspect_stopped_witness(profile, folder, *, folder_location=None):
         result['taskProofSHA256'] = hashlib.sha256(task.encode()).hexdigest()
         try:
             value = json.loads(task)
-            result['taskProofShapeValid'] = (value.get('generation') == 4 and
+            result['taskProofShapeValid'] = (value.get('generation') == 5 and
                 value.get('native') is True and all(isinstance(value.get(field), str) and
                 re.fullmatch('[0-9a-f]{64}', value[field]) for field in ('manifest','revision','digest')))
         except (ValueError, AttributeError):

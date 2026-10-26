@@ -410,10 +410,10 @@
       "boundary": "UI-only buffer/focus update. Below-100ms visible-response objective unchanged; faithful native timing pending. Integration task_input_mode_workflow_test covers input and saved filters."
     },
     {
-      "interaction": "Rolling next24h Today grouping and completed date chronology",
+      "interaction": "Rolling next24h Today grouping and exact completion-instant chronology",
       "productionAPI": "projectTaskView; project active completion metadata",
       "actualUIPath": "lib/domain/task_view.dart; lib/main.dart::_tasksAtWidth",
-      "boundary": "Synthetic projection correctness in task_chronology_view_test; existing task.view.openCompleted/search costs remain. Exact UI presentation/history-growth acceptance pending; no budget baseline change."
+      "boundary": "Strict r3/normalization/frozen-prefix correctness in completion_instant_test/completion_frozen_replay_test; late confirmation capture in checklist_completion_command_test; viewer-local projection in task_chronology_view_test; faithful UX path in ux_feedback_workflow_test. Existing task.complete.application and task.view.openCompleted/search boundaries/budgets remain. Exact UI presentation/history-growth acceptance pending; no budget baseline change."
     },
     {
       "interaction": "Food long press active group enters multiselect",

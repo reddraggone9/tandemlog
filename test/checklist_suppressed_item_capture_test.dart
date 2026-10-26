@@ -56,7 +56,8 @@ void main() {
         });
         final completed = await store.complete(
           parent,
-          completionDay: DateTime(2030, 5, 10),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
         );
         expect(completed.type, 'task.completedWithChecklist');
         final child = const Uuid().v5(parent, 'successor');
