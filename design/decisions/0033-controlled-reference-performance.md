@@ -76,8 +76,9 @@ receive exactly one official rerun of the unchanged relevant source.
 enforcing timing-only failure of the same identity, the prior request is not
 itself a rerun, and a recorded `role: diagnostic`, `qualifying: false` record
 covers every prior failing label, reproduces none and falls between the failure
-and the rerun request. The bundle carries the prior failed result and the hosted
-verifier recomputes eligibility. Budgets and limits are unchanged; the original
+and the rerun request. The request itself stays in the registered controller's
+field contract; a request-bound authorization file beside it, and the prior failed
+result, enter the bundle and the hosted verifier recomputes eligibility. Budgets and limits are unchanged; the original
 failure and diagnostics stay retained. Alternatives rejected: unlimited reruns
 (retry-until-green), and requiring a source change for every unreproducible spike
 (forces meaningless churn). Revisit if official reruns become frequent, which

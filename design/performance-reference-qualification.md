@@ -182,20 +182,28 @@ Eligibility is enforced by `reference_receipt.py`,not by an ad-hoc exception:
   reproduce none. Runs must start after the failed qualification finished;the
   record must precede the rerun request. Profiling and tracing belong only there.
 
+Issue an ordinary fresh request first,then authorize it beside the request:
+
 ```bash
-python3 tool/performance/reference_receipt.py request \
-  --repo "$qualification_source" --controller "$reviewed_controller" \
+python3 tool/performance/reference_receipt.py authorize-rerun \
+  --repo "$qualification_source" --request "$rerun_request" \
   --rerun-of-request "$failed_request" --rerun-of-result "$failed_run/gate-result.json" \
-  --diagnostic "$diagnostic_record" --output "$rerun_request"
+  --diagnostic "$diagnostic_record"
 ```
 
-The request embeds the prior request,prior result hash,prior failing labels and
-the diagnostic record as `officialRerun` (ordinal2). The launch preflight rechecks
-that block. Seal with `--prior-result "$failed_run/gate-result.json"`;the bundle
-carries it as `prior-gate-result.json` and the verifier recomputes eligibility.
-A first qualification bundle cannot carry a prior result. The local executor
-remains the trust boundary for not issuing a second rerun from the same failure;
-the original failed run,its bundle/logs and the diagnostic outputs stay retained.
+The request keeps exactly the nine fields the registered controller accepts;an
+earlier draft embedded the authorization inside the request and the controller
+correctly refused it before admission. `authorize-rerun` writes
+`$rerun_request.official-rerun.json`,binding the rerun request hash,the prior
+request,prior result hash,prior failing labels and the diagnostic record
+(ordinal2). It refuses when the failed request already has such a file:that
+failure was itself the official rerun and is repeatable. Seal with
+`--rerun-authorization "$rerun_request.official-rerun.json" --prior-result
+"$failed_run/gate-result.json"`;the bundle carries `official-rerun.json` and
+`prior-gate-result.json`,and the verifier recomputes eligibility. A first
+qualification bundle cannot carry a prior result. The local executor remains the
+trust boundary for presenting the failure:the original failed run,its logs and
+the diagnostic outputs stay retained.
 
 ## Existing manager payload — no wrapper ownership change
 

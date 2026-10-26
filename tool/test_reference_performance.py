@@ -423,16 +423,16 @@ class OfficialRerunTests(ReceiptFixture):
 
     def authorize(self, prior_request=None, diagnostic=None):
         write(self.prior_path, self.prior_report)
-        self.request['officialRerun'] = receipt.official_rerun(
-            self.repo, prior_request or self.prior_request, self.prior_report,
+        self.authorization = receipt.official_rerun(
+            self.repo, self.request, prior_request or self.prior_request, self.prior_report,
             receipt.digest(self.prior_path), diagnostic or self.diagnostic)
-        receipt.request_shape(self.request)
-        self.report['referenceBinding']['requestSHA256'] = receipt.canonical_digest(self.request)
+        write(self.bundle / receipt.AUTHORIZATION, self.authorization)
         (self.bundle / receipt.PRIOR_RESULT).write_bytes(self.prior_path.read_bytes())
         self.refresh()
 
     def test_rerun_after_nonreproducing_diagnostic_qualifies_with_unchanged_budgets(self):
-        self.assertEqual(self.request['officialRerun']['priorFailures'], self.failures)
+        self.assertEqual(self.authorization['priorFailures'], self.failures)
+        self.assertEqual(set(self.request), receipt.REQUEST_FIELDS)
         self.assertTrue(self.verify()['referencePerformanceQualified'])
         self.assertEqual(receipt.digest(self.tools / 'limits-v1.json'), self.host['limitsSHA256'])
 
@@ -452,10 +452,13 @@ class OfficialRerunTests(ReceiptFixture):
             with self.subTest(change=number), self.assertRaises(ValueError):
                 self.authorize(diagnostic=diagnostic)
 
-    def test_only_one_rerun_and_only_for_unchanged_source(self):
-        second = copy.deepcopy(self.request)
-        with self.assertRaisesRegex(ValueError, 'limit exceeded'):
-            self.authorize(prior_request=second)
+    def test_rerun_needs_a_different_prior_request_and_unchanged_source(self):
+        self.prior_report['referenceBinding'].update(requestId=self.request['requestId'],
+                                                     requestSHA256=receipt.canonical_digest(self.request))
+        with self.assertRaisesRegex(ValueError, 'unchanged relevant source'):
+            self.authorize(prior_request=copy.deepcopy(self.request))
+        self.prior_report['referenceBinding'].update(requestId=self.prior_request['requestId'],
+                                                     requestSHA256=receipt.canonical_digest(self.prior_request))
         (self.repo / 'lib/a.dart').write_text('const a = 2;\n')
         self.commit()
         with self.assertRaisesRegex(ValueError, 'fresh request'):
@@ -473,7 +476,7 @@ class OfficialRerunTests(ReceiptFixture):
             with self.assertRaises(ValueError):
                 self.authorize()
 
-    def test_bundle_must_carry_unchanged_prior_result(self):
+    def test_bundle_must_carry_unchanged_prior_result_and_bound_authorization(self):
         (self.bundle / receipt.PRIOR_RESULT).write_text('{}\n')
         self.refresh()
         with self.assertRaisesRegex(ValueError, 'prior failed result'):
@@ -482,32 +485,49 @@ class OfficialRerunTests(ReceiptFixture):
         self.refresh()
         with self.assertRaisesRegex(ValueError, 'prior failed result'):
             self.verify()
+        self.authorize()
+        write(self.bundle / receipt.AUTHORIZATION, {**self.authorization, 'requestId': '6' * 32})
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'not bound to this request'):
+            self.verify()
 
     def test_first_qualification_cannot_carry_a_prior_result(self):
-        del self.request['officialRerun']
-        self.report['referenceBinding']['requestSHA256'] = receipt.canonical_digest(self.request)
+        (self.bundle / receipt.AUTHORIZATION).unlink()
         self.refresh()
         with self.assertRaisesRegex(ValueError, 'Unexpected prior result'):
             self.verify()
 
-    def test_request_cli_requires_all_rerun_inputs(self):
-        write(self.repo / 'evidence/synthetic-prior/request.json', self.prior_request)
-        write(self.repo / 'evidence/synthetic-prior/diagnostic.json', self.diagnostic)
-        base = ['reference_receipt.py', 'request', '--repo', str(self.repo), '--controller', str(self.controller)]
+    def test_request_keeps_the_registered_controller_field_set(self):
+        self.request['officialRerun'] = {}
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'registered controller contract'):
+            self.verify()
+
+    def test_authorize_cli_writes_beside_request_and_refuses_a_second_rerun(self):
         prior = self.repo / 'evidence/synthetic-prior'
-        with patch.object(sys, 'argv', base + ['--output', str(prior / 'partial.json'),
-                                             '--rerun-of-request', str(prior / 'request.json')]):
-            with self.assertRaisesRegex(ValueError, 'needs prior request'):
+        write(prior / 'request.json', self.prior_request)
+        write(prior / 'diagnostic.json', self.diagnostic)
+        write(prior / 'rerun-request.json', self.request)
+        base = ['reference_receipt.py', 'authorize-rerun', '--repo', str(self.repo),
+                '--request', str(prior / 'rerun-request.json'), '--rerun-of-request', str(prior / 'request.json'),
+                '--rerun-of-result', str(self.prior_path), '--diagnostic', str(prior / 'diagnostic.json')]
+        with patch.object(sys, 'argv', base[:6]):
+            with self.assertRaisesRegex(ValueError, 'needs the fresh request'):
                 receipt.main()
-        self.assertFalse((prior / 'partial.json').exists())
-        with patch.object(sys, 'argv', base + ['--output', str(prior / 'rerun.json'),
-                                             '--rerun-of-request', str(prior / 'request.json'),
-                                             '--rerun-of-result', str(self.prior_path),
-                                             '--diagnostic', str(prior / 'diagnostic.json')]):
+        with patch.object(sys, 'argv', base):
             receipt.main()
-        value = receipt.read(prior / 'rerun.json')
-        self.assertEqual(value['officialRerun']['ordinal'], 2)
-        self.assertEqual(value['officialRerun']['priorFailures'], self.failures)
+        value = receipt.read(prior / ('rerun-request.json' + receipt.AUTHORIZATION_SUFFIX))
+        self.assertEqual(value['ordinal'], 2)
+        self.assertEqual(value['priorFailures'], self.failures)
+        # A failure of that rerun is repeatable: its authorization marks it, so no third run.
+        write(prior / 'third-request.json', {**self.request, 'requestId': '7' * 32})
+        third = base[:4] + ['--request', str(prior / 'third-request.json'),
+                            '--rerun-of-request', str(prior / 'rerun-request.json'),
+                            '--rerun-of-result', str(self.prior_path), '--diagnostic', str(prior / 'diagnostic.json')]
+        with patch.object(sys, 'argv', third):
+            with self.assertRaisesRegex(ValueError, 'limit exceeded'):
+                receipt.main()
+        self.assertFalse((prior / ('third-request.json' + receipt.AUTHORIZATION_SUFFIX)).exists())
 
 
 class ReferenceReceiptAliasTests(unittest.TestCase):
