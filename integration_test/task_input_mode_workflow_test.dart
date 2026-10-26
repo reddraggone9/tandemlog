@@ -55,7 +55,14 @@ void registerTaskInputModeTests() {
         tester.view.devicePixelRatio = 1;
         tester.platformDispatcher.textScaleFactorTestValue = variant.scale;
         try {
-          await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+          await tester.pumpWidget(
+            TandemlogApp(
+              profilePath: profile.path,
+              // Native Android runs use this app-private file fixture too;
+              // provider/SAF acceptance is a separate workflow.
+              folderFactory: LocalLogFolder.new,
+            ),
+          );
           await waitForUi(
             tester,
             () => find.text('Reference task').evaluate().isNotEmpty,
@@ -131,6 +138,10 @@ void registerTaskInputModeTests() {
             );
             expect(find.text('Unsaved changes'), findsNothing);
           }
+          // Filters are intentionally paused for a nonempty carried query.
+          // Clear via the public action before selecting a status filter.
+          await tester.tap(find.byTooltip('Clear search'));
+          await tester.pumpAndSettle();
           await filterChoice(tester, 'Completed');
           expect(input.hitTestable(), findsOneWidget);
           expect(state.showCompleted, isTrue);
@@ -159,7 +170,13 @@ void registerTaskInputModeTests() {
           expect(state.capture.text, isEmpty);
           expect(tester.widget<TextField>(capture).focusNode!.hasFocus, isTrue);
           await tester.enterText(capture, 'Captured three');
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          if (Platform.isAndroid) {
+            // Android's multiline IME Enter inserts a line; capture uses Add.
+            await waitForCaptureAction(tester);
+            await pixels.tap(tester, find.byKey(const ValueKey('capture-add')));
+          } else {
+            await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          }
           await waitForUi(
             tester,
             () =>

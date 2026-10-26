@@ -92,6 +92,15 @@ void registerHeaderSearchTests() {
             tester.widget(add),
             anyOf(isA<IconButton>(), isA<TextButton>()),
           );
+          expect(
+            tester.widget<TextField>(capture).controller!.text,
+            'Reference',
+          );
+          expect(toolbarButton(tester, add).onPressed, isNotNull);
+          // Exercise empty Enter deliberately: switching modes now carries
+          // the outgoing query rather than starting with an empty Add field.
+          await tester.enterText(capture, '');
+          await tester.pumpAndSettle();
           expect(toolbarButton(tester, add).onPressed, isNull);
           expect(toolbarButton(tester, add).tooltip, 'Add tasks');
           expect(
@@ -152,12 +161,15 @@ void registerHeaderSearchTests() {
           }
           expect(await folder.list().length, canonical.length);
           expect(find.byIcon(Icons.arrow_upward), findsNothing);
-          await tester.enterText(capture, 'Discarded capture draft');
+          await tester.enterText(capture, 'Carried capture draft');
           final controller = tester.widget<TextField>(capture).controller!;
           await flows.openSearchForTest(tester);
-          expect(controller.text, isEmpty);
+          expect(controller.text, 'Carried capture draft');
           expect(capture, findsNothing);
-          expect(tester.widget<TextField>(input).controller!.text, isEmpty);
+          expect(
+            tester.widget<TextField>(input).controller!.text,
+            'Carried capture draft',
+          );
           expect(tester.widget<TextField>(input).focusNode!.hasFocus, isTrue);
           expect(tester.getRect(toolbar), headerBefore);
           expect(tester.getRect(undo), undoBefore);

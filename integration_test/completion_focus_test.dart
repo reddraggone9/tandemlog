@@ -171,10 +171,20 @@ void registerCompletionFocusTests() {
               if (variant.repeating) 'recurrence': 'every week when done',
             },
           });
+          // The row is completed, so an incoming Due edit must not move it
+          // out of its recorded completion-date group. Wait for the admitted
+          // schedule itself rather than the retired scheduled-date heading.
+          final dynamic state = tester.state(find.byType(TasksPage));
           await flows.waitForUi(
             tester,
-            () => find.text('Sunday · 2026-10-04').evaluate().isNotEmpty,
+            () => (state.rows as List).any(
+              (dynamic row) =>
+                  row['id'] == task &&
+                  row['schedule']['dueDate'] == '2026-10-04',
+            ),
           );
+          expect(find.text('Friday · 2026-10-02'), findsOneWidget);
+          expect(find.text('Sunday · 2026-10-04'), findsNothing);
           expect(FocusManager.instance.primaryFocus, same(otherFocus));
 
           // Leaving the filtered view is different from regrouping a visible

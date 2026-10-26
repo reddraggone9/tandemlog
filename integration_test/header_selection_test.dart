@@ -258,7 +258,14 @@ void registerHeaderSelectionTests() {
             find.byKey(const ValueKey('compact-selection-actions')),
             findsNothing,
           );
-          expect(controller.text, isEmpty);
+          expect(controller.value, draft);
+          expect(
+            tester
+                .widget<TextField>(find.byKey(const ValueKey('task-search')))
+                .controller!
+                .value,
+            draft,
+          );
           await tester.enterText(
             find.byKey(const ValueKey('task-search')),
             'Reference task 36',
@@ -305,7 +312,7 @@ void registerHeaderSelectionTests() {
             tester.getRect(find.byKey(const ValueKey('task-header'))),
             wideHeader,
           );
-          expect(controller.text, isEmpty);
+          expect(controller.value, draft);
           await tester.tap(find.text('Cancel'));
           await tester.pumpAndSettle();
           await flows.openSettings(tester);
