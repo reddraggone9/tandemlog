@@ -165,6 +165,10 @@ void main() {
                   ),
                 ),
               );
+              await tester.pumpAndSettle();
+              await tester.runAsync(
+                () => Future<void>.delayed(const Duration(milliseconds: 300)),
+              );
               await touch(find.byTooltip('Choose Expiration'));
               await tester.pumpAndSettle();
               await touch(find.text('Month / year'));
@@ -176,13 +180,37 @@ void main() {
               await tester.pumpAndSettle();
               expect(find.byType(CivilYearGrid), findsOneWidget);
               await capture('year-grid');
+              await touch(
+                find.descendant(
+                  of: find.byType(CivilYearGrid),
+                  matching: find.text('2029'),
+                ),
+              );
+              await tester.pumpAndSettle();
+              await touch(find.text('Feb'));
+              await tester.pumpAndSettle();
+              expect(
+                tester
+                    .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
+                    .initialDate,
+                DateTime(2029, 2, 28),
+              );
+              await touch(find.text('OK'));
+              await tester.pumpAndSettle();
+              expect(controller.text, '2029-02-28');
+              await touch(find.byTooltip('Choose Expiration'));
+              await tester.pumpAndSettle();
+              await touch(find.text('Month / year'));
+              await tester.pumpAndSettle();
+              await touch(find.text('2029'));
+              await tester.pumpAndSettle();
               await tester.sendKeyEvent(LogicalKeyboardKey.escape);
               await tester.pumpAndSettle();
               expect(find.byType(CalendarDatePicker), findsOneWidget);
               await tester.sendKeyEvent(LogicalKeyboardKey.escape);
               await tester.pumpAndSettle();
               expect(find.byType(CivilDatePickerDialog), findsNothing);
-              expect(controller.text, '2028-02-29');
+              expect(controller.text, '2029-02-28');
               await tester.pumpWidget(const SizedBox());
               controller.dispose();
               expect(tester.takeException(), isNull);
