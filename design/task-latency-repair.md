@@ -13,6 +13,11 @@ keep the original full decoder. Snapshot, global order, visibility, semantic and
 append guards remain. A net latency improvement has not
 yet been measured; prior failed qualifications and budgets remain unchanged.
 
+The [focused Food tail investigation](../evidence/rc4-cloud-attribution-20261024/vex-food-tail-diagnostic-20261026.md)
+localizes the failed Save sample to its durable-append interval; Undo remains
+unattributed. Six focused replay/correctness checks passed without reproducing
+the spikes. No causal product fix or passing reference qualification is claimed.
+
 ## Reuse boundaries
 
 The incremental contract in [ADR0007](decisions/0007-canonical-history-integrity.md)
