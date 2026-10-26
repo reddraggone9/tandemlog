@@ -345,6 +345,6 @@ a jump seeds that month with the currently selected day clamped to its valid len
 calendar OK commits the draft date; Cancel dismisses the picker without changing the draft.
 The jump is shared by Food and Tasks, with the same owner-lifetime/picker guards.
 
-Completed rows do not repeat the completion date already shown in their heading. Search results retain their completion-date metadata.
+Completed rows do not repeat the completion date already shown in their heading, in the Completed view or in Search, where completed matches are grouped under the same viewer-local date headings.
 
 See [ADR0035](decisions/0035-exact-completion-instants.md) for required revision3 completion instants, offline cutover approximation, viewer-local Completed/search chronology, and unchanged recurrence/Undo.

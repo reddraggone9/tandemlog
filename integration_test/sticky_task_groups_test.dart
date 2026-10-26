@@ -234,7 +234,7 @@ void registerStickyTaskGroupTests() {
       expect(find.text('Open'), findsOneWidget);
       expect(find.text('Completed'), findsOneWidget);
       expect(find.text('Someday'), findsOneWidget);
-      expect(find.textContaining('Completed 2026-10-12'), findsOneWidget);
+      expect(find.textContaining('Completed 2026-'), findsNothing);
       await tester.enterText(
         find.byKey(const ValueKey('task-search')),
         'no matching reference',

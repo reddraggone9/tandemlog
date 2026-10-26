@@ -3709,10 +3709,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 .map((u) => u['name'])
                 .firstOrNull ??
             'Unknown user',
-      if (task['completed'] == true && searching)
-        entry.completionDate == null
-            ? 'Completion date unknown'
-            : 'Completed ${formatCivilDate(entry.completionDate!)}',
       if ((task['completed'] != true
               ? scheduleMetadata(
                   schedule,

@@ -87,7 +87,7 @@ void main() {
           'Completed history',
         );
         await tester.pumpAndSettle();
-        expect(find.textContaining('Completed 2026-10-11'), findsOneWidget);
+        expect(find.textContaining('Completed 2026-'), findsNothing);
         expect(find.text('Sunday · 2026-10-11'), findsOneWidget);
         expect(find.textContaining('2099'), findsNothing);
         await captureUx(tester, 'task-completed-search-800');
