@@ -76,7 +76,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food session Undo](decisions/0018-food-session-undo.md): accepted50-action stack and selective additive v2 retractions, released in stable2026.10.4/build71 with reviewed native/hosted coverage.
 
-- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): default Search and explicit clearing toggle, released in stable2026.10.4/build71.
+- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): default Search, released in stable2026.10.4/build71; the newer carried-text policy is implemented locally in ADR0034.
 
 - [Toolbar section navigation](decisions/0015-toolbar-section-navigation.md): approved Tasks/Food dropdown in the existing section identity, responsive labels and protected drafts.
 
@@ -107,3 +107,5 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Shared tag native acceptance](shared-tag-native-acceptance.md): historical synthetic fixture and exact source binding; completed device acceptance is recorded in the stable2026.10.2 receipt.
 
 - [One app-wide local DB](decisions/0013-app-wide-local-database.md): approved single permanent DB and temporary recovery-file exception; published stable2026.10.3/build56 with verified import, activation, cleanup and startup/switch wiring. [Native handoff](local-db-native-acceptance.md) records completed bounded Windows/Android acceptance; [release receipts](../evidence/stable-2026.10.3/README.md) bind final native/artifact and public verification.
+
+- [UX refinements2026-10-26](ux-improvements-20261026.md) and [ADR0034](decisions/0034-bounded-ux-refinements.md): local implementation, focused/full development checks; native/runtime/performance acceptance remains separate.

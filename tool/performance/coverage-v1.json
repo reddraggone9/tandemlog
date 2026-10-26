@@ -402,6 +402,36 @@
       "productionAPI": "TaskTextSession + TextSaveCommand + TaskStore.undoOperations",
       "actualUIPath": "Task editor combined Save",
       "boundary": "Actual editor capture outside Save timer, same live session through Undo; title+schedule+tag changes in one record; full oracle and zero full-readiness guard outside timers."
+    },
+    {
+      "interaction": "Task input mode carries current text without submitting; query pauses in Add",
+      "productionAPI": "_switchTaskInput; existing text controllers",
+      "actualUIPath": "lib/main.dart::_switchTaskInput",
+      "boundary": "UI-only buffer/focus update. Below-100ms visible-response objective unchanged; faithful native timing pending. Integration task_input_mode_workflow_test covers input and saved filters."
+    },
+    {
+      "interaction": "Rolling next24h Today grouping and completed date chronology",
+      "productionAPI": "projectTaskView; project active completion metadata",
+      "actualUIPath": "lib/domain/task_view.dart; lib/main.dart::_tasksAtWidth",
+      "boundary": "Synthetic projection correctness in task_chronology_view_test; existing task.view.openCompleted/search costs remain. Exact UI presentation/history-growth acceptance pending; no budget baseline change."
+    },
+    {
+      "interaction": "Food long press active group enters multiselect",
+      "productionAPI": "FoodInventoryPage::_group captured physical IDs",
+      "actualUIPath": "lib/food/food_page.dart::_group",
+      "boundary": "No write. Synthetic food_selection_deleted_edit_test verifies gesture; native below-100ms visible-response timing pending."
+    },
+    {
+      "interaction": "Deleted Food details Save and selective Undo keep tombstones",
+      "productionAPI": "FoodStore.changeDetails; FoodStore.undoOperations",
+      "actualUIPath": "lib/food/food_page.dart::_edit -> main.dart::_foodCommand",
+      "boundary": "Existing Food details Save/Undo absolute and growth budgets retained. Deleted-state synthetic workflow/store/replay assertions added; faithful deleted-row native timing pending."
+    },
+    {
+      "interaction": "Shared civil-date month/year jump",
+      "productionAPI": "CivilDateInput; Material CalendarDatePicker/InputDatePickerFormField; YearPicker",
+      "actualUIPath": "lib/presentation/civil_date_input.dart",
+      "boundary": "No storage action before editor Save. Fast-month tests cover leap/clamp/cancel/pending-day/manual-input; native popup and selected-month visible response below100ms pending."
     }
   ],
   "actualUITimingAccepted": false,
