@@ -842,8 +842,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     }
 
     void editGroup() {
-      if (deleted || pending || !_canUseGroupMenu(group, workspace)) return;
-      if (selecting) {
+      if (pending || !_canUseGroupMenu(group, workspace)) return;
+      if (selecting && !deleted) {
         toggleSelection();
       } else {
         _edit(group: group, detailsCommand: detailsCommand);
@@ -873,7 +873,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       if (action == 'restore') restoreGroup();
     }
 
-    final editable = !deleted && !widget.busy && !pending;
+    final editable = !widget.busy && !pending;
     return GestureDetector(
       // Replacing gesture state also binds pointer-down to the observed IDs and
       // deletion tokens. A peer arrival must not retarget pointer-up actions.
@@ -909,6 +909,15 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             });
           },
           onTap: editable ? editGroup : null,
+          onLongPress: !editable || deleted
+              ? null
+              : () {
+                  if (!_canUseGroupMenu(group, workspace)) return;
+                  setState(() {
+                    selecting = true;
+                    bulkSelected.addAll(group.containers.map((e) => e.id));
+                  });
+                },
           excludeFromSemantics: true,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -935,10 +944,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                   ),
                 Expanded(
                   child: Semantics(
-                    button: !deleted,
-                    enabled: deleted ? null : editable,
+                    button: true,
+                    enabled: editable,
                     label: [
-                      if (!deleted) selecting ? 'Select' : 'Edit',
+                      selecting && !deleted ? 'Select' : 'Edit',
                       details.name,
                       countLabel,
                       details.expiry ?? 'Needs expiration',
@@ -1176,7 +1185,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 (widget.hasPendingSave?.call() ?? widget.savePending) ||
                 group.containers.every(
                   (e) => widget.state.containers.any(
-                    (item) => item.id == e.id && !item.deleted,
+                    (item) =>
+                        item.id == e.id &&
+                        item.deleted == e.deleted &&
+                        item.deletions.length == e.deletions.length &&
+                        item.deletions.containsAll(e.deletions),
                   ),
                 )),
         areTargetsVisible: () =>

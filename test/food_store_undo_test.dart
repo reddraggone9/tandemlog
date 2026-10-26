@@ -122,6 +122,43 @@ void main() {
       );
 
   test(
+    'editing deleted Food preserves tombstones through Undo and replay',
+    () async {
+      await food.add(
+        const FoodDetails(name: 'Original', expiry: '2026-10-28'),
+        1,
+      );
+      final id = food.state.containers.single.id;
+      await food.remove([id]);
+      final tombstones = Set<String>.of(food.state.containers.single.deletions);
+      await food.changeDetails(
+        [id],
+        const FoodDetails(name: 'Corrected'),
+        ['name'],
+      );
+      final original = List<FoodRecord>.of(food.lastPreparedRecords);
+      expect(food.state.containers.single.deleted, isTrue);
+      expect(food.state.containers.single.deletions, tombstones);
+      expect(food.state.containers.single.details.name, 'Corrected');
+      await food.undoOperations(original);
+      expect(food.state.containers.single.details.name, 'Original');
+      expect(food.state.containers.single.deletions, tombstones);
+      await food.close();
+      await tasks.close();
+      tasks = await TaskStore.open(
+        folder,
+        profile.root,
+        profileDatabase: profile,
+        writerIdentity: installation,
+      );
+      food = await FoodStore.openUnified(tasks.unified!);
+      expect(food.state.containers.single.details.name, 'Original');
+      expect(food.state.containers.single.deletions, tombstones);
+      expect(food.state.containers.single.deleted, isTrue);
+    },
+  );
+
+  test(
     'failed projection never publishes candidate confirmation or retraction index',
     () async {
       await food.add(const FoodDetails(name: 'Rice', brand: 'Original'), 1);
