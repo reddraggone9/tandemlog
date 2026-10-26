@@ -90,6 +90,7 @@ class CivilDateInput extends StatelessWidget {
               },
       ),
       hintText: hint,
+      hintMaxLines: 2,
       errorText: errorText,
       errorMaxLines: 3,
     ),

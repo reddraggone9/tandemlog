@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/civil_date_input.dart';
-import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
+import 'food_expiry_guidance_test.dart'
+    show loadSdkRoboto, expectUntruncatedGuidance;
 
 void main() {
   setUpAll(loadSdkRoboto);
@@ -58,6 +59,40 @@ void main() {
       controller.dispose();
     });
   }
+
+  testWidgets('narrow large-text blank date keeps its entire format visible', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final controller = TextEditingController();
+    final focus = FocusNode();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(32),
+              child: CivilDateInput(
+                controller: controller,
+                focusNode: focus,
+                label: 'Expiration',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+    expect(focus.hasFocus, isTrue);
+    expectUntruncatedGuidance(tester);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    focus.dispose();
+    controller.dispose();
+  });
 
   testWidgets('picker preserves civil date and accepts manual date typing', (
     tester,
