@@ -146,84 +146,94 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
     'Dec',
   ];
 
-  Future<void> jump() async {
-    var year = displayedMonth.year;
-    var choosingYear = false;
-    final chosen = await showDialog<DateTime>(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, update) => AlertDialog(
-          title: const Text('Month / year'),
-          scrollable: true,
-          content: SizedBox(
-            width: 320,
-            height: 320,
-            child: Column(
-              children: [
-                TextButton.icon(
-                  onPressed: () => update(() => choosingYear = !choosingYear),
-                  icon: const Icon(Icons.arrow_drop_down),
-                  label: Text(
-                    MaterialLocalizations.of(
-                      context,
-                    ).formatYear(DateTime(year)),
-                  ),
-                ),
-                Expanded(
-                  child: choosingYear
-                      ? YearPicker(
-                          firstDate: widget.firstDate,
-                          lastDate: widget.lastDate,
-                          selectedDate: DateTime(year),
-                          onChanged: (value) => update(() {
-                            year = value.year;
-                            choosingYear = false;
-                          }),
-                        )
-                      : GridView.count(
-                          crossAxisCount: 3,
-                          childAspectRatio: 1.25,
-                          children: [
-                            for (var month = 1; month <= 12; month++)
-                              TextButton(
-                                onPressed: () => Navigator.pop(
-                                  context,
-                                  DateTime(year, month),
-                                ),
-                                child: Semantics(
-                                  label: MaterialLocalizations.of(
-                                    context,
-                                  ).formatMonthYear(DateTime(year, month)),
-                                  excludeSemantics: true,
-                                  child: Text(_months[month - 1]),
-                                ),
-                              ),
-                          ],
-                        ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (!mounted || chosen == null) return;
-    final day = math.min(
-      date.day,
-      DateTime(chosen.year, chosen.month + 1, 0).day,
-    );
+  bool monthMode = false;
+  bool choosingYear = false;
+  late int jumpYear = displayedMonth.year;
+  LocalHistoryEntry? jumpHistory;
+
+  void jump() {
+    if (monthMode) {
+      jumpHistory?.remove();
+      return;
+    }
     setState(() {
-      date = DateTime(chosen.year, chosen.month, day);
+      jumpYear = displayedMonth.year;
+      choosingYear = false;
+      monthMode = true;
+    });
+    jumpHistory = LocalHistoryEntry(
+      onRemove: () {
+        jumpHistory = null;
+        if (mounted) setState(() => monthMode = false);
+      },
+    );
+    ModalRoute.of(context)!.addLocalHistoryEntry(jumpHistory!);
+  }
+
+  void chooseMonth(int month) {
+    final day = math.min(date.day, DateTime(jumpYear, month + 1, 0).day);
+    final chosen = DateTime(jumpYear, month, day);
+    setState(() {
+      date = chosen.isBefore(widget.firstDate)
+          ? widget.firstDate
+          : chosen.isAfter(widget.lastDate)
+          ? widget.lastDate
+          : chosen;
       calendarSeed = date;
       displayedMonth = date;
     });
+    jumpHistory!.remove();
   }
+
+  Widget monthGrid(BuildContext context) => Column(
+    children: [
+      TextButton.icon(
+        onPressed: () => setState(() => choosingYear = !choosingYear),
+        icon: const Icon(Icons.arrow_drop_down),
+        label: Text(
+          MaterialLocalizations.of(context).formatYear(DateTime(jumpYear)),
+        ),
+      ),
+      Expanded(
+        child: choosingYear
+            ? YearPicker(
+                firstDate: widget.firstDate,
+                lastDate: widget.lastDate,
+                selectedDate: DateTime(jumpYear),
+                onChanged: (value) => setState(() {
+                  jumpYear = value.year;
+                  choosingYear = false;
+                }),
+              )
+            : GridView.count(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                crossAxisCount: 3,
+                childAspectRatio: 1.25,
+                children: [
+                  for (var month = 1; month <= 12; month++)
+                    TextButton(
+                      onPressed:
+                          DateTime(
+                                jumpYear,
+                                month + 1,
+                                0,
+                              ).isBefore(widget.firstDate) ||
+                              DateTime(jumpYear, month).isAfter(widget.lastDate)
+                          ? null
+                          : () => chooseMonth(month),
+                      child: Semantics(
+                        label: MaterialLocalizations.of(
+                          context,
+                        ).formatMonthYear(DateTime(jumpYear, month)),
+                        excludeSemantics: true,
+                        child: Text(_months[month - 1]),
+                      ),
+                    ),
+                ],
+              ),
+      ),
+    ],
+  );
 
   void confirm() {
     if (inputMode) {
@@ -271,8 +281,16 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                             ? Text(localizations.datePickerHelpText)
                             : TextButton.icon(
                                 onPressed: jump,
-                                icon: const Icon(Icons.calendar_month),
-                                label: const Text('Month / year'),
+                                icon: Icon(
+                                  monthMode
+                                      ? Icons.arrow_back
+                                      : Icons.calendar_month,
+                                ),
+                                label: Text(
+                                  monthMode
+                                      ? 'Back to calendar'
+                                      : 'Month / year',
+                                ),
                               ),
                       ),
                     ),
@@ -280,7 +298,7 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                       tooltip: inputMode
                           ? localizations.calendarModeButtonLabel
                           : localizations.inputDateModeButtonLabel,
-                      onPressed: toggleInput,
+                      onPressed: monthMode ? null : toggleInput,
                       icon: Icon(
                         inputMode ? Icons.calendar_today : Icons.edit_outlined,
                       ),
@@ -289,7 +307,9 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                 ),
               ),
               Expanded(
-                child: inputMode
+                child: monthMode
+                    ? monthGrid(context)
+                    : inputMode
                     ? SingleChildScrollView(
                         padding: const EdgeInsets.all(24),
                         child: Form(
@@ -324,7 +344,7 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                       child: Text(localizations.cancelButtonLabel),
                     ),
                     TextButton(
-                      onPressed: confirm,
+                      onPressed: monthMode ? null : confirm,
                       child: Text(localizations.okButtonLabel),
                     ),
                   ],

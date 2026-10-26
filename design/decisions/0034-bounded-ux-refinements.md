@@ -34,7 +34,7 @@ The shared picker benefits Task and Food inputs while leaving draft-owner lifeti
 manual entry, cancellation and confirmation intact. Compact month labels follow
 the current English app; full localized month/year semantics remain available.
 Existing day-cell measurements, both themes and enlarged text remain covered.
-The dialog adds app-owned layout, not a duplicate calendar/date-validation engine.
+The dialog swaps its calendar body for the month/year grid in place; it never stacks a second dialog. Back or Escape returns to the day calendar before closing. The dialog adds app-owned layout, not a duplicate calendar/date-validation engine.
 
 [Implementation evidence](../ux-improvements-20261026.md) records independent
 review corrections, replay/cache/Undo checks, visual observations and platform

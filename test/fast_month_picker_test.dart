@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'support/ux_capture.dart';
@@ -50,6 +51,8 @@ void main() {
         await tester.tap(find.text('Month / year').first);
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
+        expect(find.byType(Dialog), findsOneWidget);
+        expect(find.byType(CalendarDatePicker), findsNothing);
         await captureUx(
           tester,
           'month-grid-320-${brightness.name}-scale$scale',
@@ -99,6 +102,37 @@ void main() {
       },
     );
   }
+
+  testWidgets('escape and system back return to calendar before closing', (
+    tester,
+  ) async {
+    final controller = TextEditingController(text: '2028-02-29');
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CivilDateInput(controller: controller, label: 'Expiration'),
+        ),
+      ),
+    );
+    await tester.tap(find.byTooltip('Choose Expiration'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Month / year'));
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.byType(CalendarDatePicker), findsOneWidget);
+    await tester.tap(find.text('Month / year'));
+    await tester.pumpAndSettle();
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.byType(CalendarDatePicker), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.byType(CivilDatePickerDialog), findsNothing);
+    expect(controller.text, '2028-02-29');
+    await tester.pumpWidget(const SizedBox());
+    controller.dispose();
+  });
 
   testWidgets(
     'maximum supported year permits December without an invalid dialog',
