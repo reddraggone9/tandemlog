@@ -59,6 +59,10 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
     3,
     (i) => benchmarkId('writer:$baseIdentity:$i'),
   );
+  // A continuing installation is separate from the normalized source writers.
+  // Otherwise Task-only growth changes its next logical sequence and therefore
+  // completionOrder, violating the equal-current-state growth contract.
+  final continuingWriter = benchmarkId('continuing-writer:$baseIdentity');
   final users = List.generate(3, (i) => benchmarkId('user:$baseIdentity:$i'));
   final foodWriters = List.generate(
     3,
@@ -300,10 +304,10 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
       () => profile!.database.execute(
         'INSERT INTO protected_settings VALUES (1,?,?)',
         [
-          writers.first,
+          continuingWriter,
           utf8.encode(
             jsonEncode({
-              'writer': writers.first,
+              'writer': continuingWriter,
               'folder': shared.path,
               'user': users.first,
               'appearance': 'system',
@@ -316,7 +320,7 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
     history = await UnifiedHistory.open(
       LocalLogFolder(shared.path),
       profile: profile,
-      writer: writers.first,
+      writer: continuingWriter,
       textEngine: engine,
       now: () => DateTime.utc(2026, 10, 22),
     );
@@ -388,7 +392,7 @@ Future<Map<String, dynamic>> buildSyntheticFixture(
           .where((e) => e.food != null)
           .length,
       'taskRows': store.rows.length,
-      'writer': writers.first,
+      'writer': continuingWriter,
       'user': users.first,
       'workspace': shared.absolute.path,
     };

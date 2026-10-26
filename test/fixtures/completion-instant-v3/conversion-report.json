@@ -1,0 +1,30 @@
+{
+  "syntheticOnly": true,
+  "sourceHashes": {
+    "22222222-2222-4222-8222-222222222222.jsonl": "288c5695f760dc2abc4b4815c42b80bef3052b4f769086c21b3c2b66eebdbd5e",
+    "33333333-3333-4333-8333-333333333333.jsonl": "a358e34769fc7d58a909dba4e7ff12d9285e623e95198f2229732c5a4d248dde"
+  },
+  "completions": [
+    {
+      "reference": "22222222-2222-4222-8222-222222222222:13",
+      "recordedDay": "2026-03-08",
+      "evidencedZone": "America/Chicago",
+      "method": "noon",
+      "instant": "2026-03-08T17:00:00.000000Z"
+    },
+    {
+      "reference": "22222222-2222-4222-8222-222222222222:16",
+      "recordedDay": "2026-03-08",
+      "evidencedZone": "UTC",
+      "method": "noon",
+      "instant": "2026-03-08T12:00:00.000000Z"
+    },
+    {
+      "reference": "22222222-2222-4222-8222-222222222222:18",
+      "recordedDay": "2026-02-28",
+      "evidencedZone": "UTC",
+      "method": "noon",
+      "instant": "2026-02-28T12:00:00.000000Z"
+    }
+  ]
+}

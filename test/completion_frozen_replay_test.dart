@@ -4,6 +4,9 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart' as current;
 import 'package:tandemlog/domain/projection.dart' as projection;
+import 'package:tandemlog/storage/unified_record.dart';
+import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/log_folder.dart';
 import 'support/frozen_stable_v3/event.dart' as old;
 import 'support/frozen_stable_v3/projection.dart' as old_projection;
 import '../tool/normalization/completion_instant.dart';
@@ -11,7 +14,7 @@ import '../tool/normalization/completion_instant.dart';
 void main() {
   test(
     'unchanged stable inputs replay equally at every prefix, both writer arrival orders',
-    () {
+    () async {
       final root = Directory('test/fixtures/stable-v3-2026.10.0');
       final files =
           root
@@ -61,7 +64,6 @@ void main() {
       Map<String, dynamic>? oldRow(List<old.LogEvent> all, String id) =>
           old.project(all.where((e) => e.entity == id).toList());
       List<current.LogEvent> convert(List<old.LogEvent> source) {
-        final heads = <String, String>{};
         return [
           for (final e in source)
             (() {
@@ -93,13 +95,10 @@ void main() {
                   e.entity,
                   e.type,
                   data,
-                  previousHash:
-                      heads[e.writer] ??
-                      current.eventGenesisHash(e.space, e.writer),
+                  previousHash: e.previousHash,
                   hash: e.hash,
                 ).encode(),
               );
-              heads[e.writer] = event.integrityHash!;
               return event;
             })(),
         ];
@@ -168,6 +167,64 @@ void main() {
             prefixes++;
           }
         }
+      }
+      final goldenRoot = Directory(
+        'test/fixtures/completion-instant-v3/converted-stable-v3',
+      );
+      final complete = convert(perWriter.expand((events) => events).toList());
+      for (final file in goldenRoot.listSync().whereType<File>().where(
+        (f) => f.path.endsWith('.applog'),
+      )) {
+        final actions = LineSplitter.split(
+          file.readAsStringSync(),
+        ).map(UnifiedRecord.decode).toList();
+        final expected = complete
+            .where((e) => e.writer == actions.first.writer)
+            .map((e) => e.encode())
+            .toList();
+        expect(
+          actions.expand((a) => a.effects).map((e) => e.raw).toList(),
+          expected,
+        );
+      }
+      // The independently sealed output is an actual current workspace,
+      // not merely accepted JSON or a final-state flattened snapshot.
+      final trial = await Directory.systemTemp.createTemp(
+        'converted-r3-golden-',
+      );
+      TaskStore? store;
+      try {
+        final shared = await Directory('${trial.path}/shared').create();
+        for (final file in goldenRoot.listSync().whereType<File>()) {
+          await file.copy('${shared.path}/${file.uri.pathSegments.last}');
+        }
+        store = await TaskStore.open(
+          LocalLogFolder(shared.path),
+          '${trial.path}/profile',
+        );
+        final expected = jsonDecode(
+          File(
+            'test/fixtures/stable-v3-2026.10.0/expected-rows.json',
+          ).readAsStringSync(),
+        );
+        final actual = store.rows
+            .map(
+              (row) => Map<String, dynamic>.from(row)
+                ..remove('completedInstant')
+                ..remove('completedMicros')
+                ..remove('completionOrder'),
+            )
+            .toList();
+        final stripped = (expected as List)
+            .map(
+              (row) =>
+                  Map<String, dynamic>.from(row as Map)..remove('completedAt'),
+            )
+            .toList();
+        expect(actual, stripped);
+      } finally {
+        await store?.close();
+        await trial.delete(recursive: true);
       }
       expect(prefixes, greaterThan(40));
       for (final file in files) {
