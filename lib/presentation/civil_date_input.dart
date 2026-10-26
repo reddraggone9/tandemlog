@@ -69,7 +69,7 @@ class CivilDateInput extends StatelessWidget {
                 final parsed = DateTime.tryParse(controller.text);
                 onPickerChanged?.call(true);
                 try {
-                  final chosen = await showDatePicker(
+                  final chosen = await _showFastDatePicker(
                     context: context,
                     initialDate:
                         parsed != null &&
@@ -78,8 +78,7 @@ class CivilDateInput extends StatelessWidget {
                         ? parsed
                         : DateTime.now(),
                     firstDate: DateTime(1900),
-                    lastDate: DateTime(9999),
-                    builder: _readableCalendarDays,
+                    lastDate: DateTime(9999, 12, 31),
                   );
                   if (chosen != null &&
                       (isOwnerMounted?.call() ?? context.mounted)) {
@@ -97,14 +96,162 @@ class CivilDateInput extends StatelessWidget {
   );
 }
 
+Future<DateTime?> _showFastDatePicker({
+  required BuildContext context,
+  required DateTime initialDate,
+  required DateTime firstDate,
+  required DateTime lastDate,
+}) => showDialog<DateTime>(
+  context: context,
+  builder: (_) => _FastDatePicker(
+    initialDate: initialDate,
+    firstDate: firstDate,
+    lastDate: lastDate,
+  ),
+);
+
+class _FastDatePicker extends StatefulWidget {
+  const _FastDatePicker({
+    required this.initialDate,
+    required this.firstDate,
+    required this.lastDate,
+  });
+  final DateTime initialDate, firstDate, lastDate;
+  @override
+  State<_FastDatePicker> createState() => _FastDatePickerState();
+}
+
+class _FastDatePickerState extends State<_FastDatePicker> {
+  late DateTime date = widget.initialDate;
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  Future<void> jump() async {
+    var year = date.year;
+    var choosingYear = false;
+    final chosen = await showDialog<DateTime>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, update) => AlertDialog(
+          title: const Text('Month / year'),
+          scrollable: true,
+          content: SizedBox(
+            width: 320,
+            height: 320,
+            child: Column(
+              children: [
+                TextButton.icon(
+                  onPressed: () => update(() => choosingYear = !choosingYear),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  label: Text(
+                    MaterialLocalizations.of(
+                      context,
+                    ).formatYear(DateTime(year)),
+                  ),
+                ),
+                Expanded(
+                  child: choosingYear
+                      ? YearPicker(
+                          firstDate: widget.firstDate,
+                          lastDate: widget.lastDate,
+                          selectedDate: DateTime(year),
+                          onChanged: (value) => update(() {
+                            year = value.year;
+                            choosingYear = false;
+                          }),
+                        )
+                      : GridView.count(
+                          crossAxisCount: 3,
+                          childAspectRatio: 1.25,
+                          children: [
+                            for (var month = 1; month <= 12; month++)
+                              TextButton(
+                                onPressed: () => Navigator.pop(
+                                  context,
+                                  DateTime(year, month),
+                                ),
+                                child: Semantics(
+                                  label: MaterialLocalizations.of(
+                                    context,
+                                  ).formatMonthYear(DateTime(year, month)),
+                                  excludeSemantics: true,
+                                  child: Text(_months[month - 1]),
+                                ),
+                              ),
+                          ],
+                        ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted || chosen == null) return;
+    final day = math.min(
+      date.day,
+      DateTime(chosen.year, chosen.month + 1, 0).day,
+    );
+    setState(() => date = DateTime(chosen.year, chosen.month, day));
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Material(
+        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(24),
+        child: TextButton.icon(
+          onPressed: jump,
+          icon: const Icon(Icons.calendar_month),
+          label: const Text('Month / year'),
+        ),
+      ),
+      Flexible(
+        child: _readableCalendarDays(
+          context,
+          DatePickerDialog(
+            insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+            key: ValueKey(date),
+            initialDate: date,
+            firstDate: widget.firstDate,
+            lastDate: widget.lastDate,
+          ),
+          verticalInsets: 0,
+        ),
+      ),
+    ],
+  );
+}
+
 // The pinned Material3 portrait grid has 12px outer padding and 4px padding
 // inside each of seven day cells; DatePickerDialog has 16px side insets.
 // Fit localized day numbers to that width without changing the route's scaler,
 // header, date semantics, keyboard behavior or full-cell tap targets.
 Widget _readableCalendarDays(
   BuildContext context,
-  Widget? child,
-) => LayoutBuilder(
+  Widget? child, {
+  double verticalInsets = 48,
+}) => LayoutBuilder(
   builder: (context, constraints) {
     if (child == null) return const SizedBox.shrink();
     final pickerTheme = DatePickerTheme.of(context);
@@ -123,7 +270,7 @@ Widget _readableCalendarDays(
       constraints.maxHeight -
           media.padding.vertical -
           media.viewInsets.vertical -
-          48,
+          verticalInsets,
       568 * dialogScale,
     );
     final headerScale = dialogScale.clamp(1.0, 1.4);
