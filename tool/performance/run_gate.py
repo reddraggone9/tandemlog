@@ -214,21 +214,112 @@ def stop_owned_group(child):
         else:child.kill()
         child.wait(5)
 
+def _cleanup_need(value, reason):
+    if not value:raise RuntimeError(reason)
+
+def group_members(pgid, deadline):
+    """Bounded read-only witnesses; no command lines, new signals or reaping."""
+    result = {'observedMonotonic': time.monotonic(), 'complete': True, 'members': []}
+    try:
+        for item in pathlib.Path('/proc').iterdir():
+            if not item.name.isdecimal(): continue
+            if time.monotonic() >= deadline:
+                result['complete'] = False
+                break
+            try:
+                raw = (item/'stat').read_text()
+                fields = raw.rsplit(')', 1)[1].split()
+                if int(fields[2]) == pgid:
+                    result['members'].append({'pid': int(item.name), 'state': fields[0],
+                        'ppid': int(fields[1]), 'pgrp': int(fields[2]),
+                        'session': int(fields[3]), 'startTicks': fields[19]})
+                    if len(result['members']) >= 128:
+                        result['complete'] = False
+                        break
+            except FileNotFoundError:
+                continue  # Exited while inspecting; no claim about its former state.
+            except (OSError, ValueError, IndexError) as error:
+                result['complete'] = False
+                result.setdefault('errors', []).append(type(error).__name__)
+    except OSError as error:
+        result['complete'] = False
+        result['error'] = type(error).__name__
+    return result
+
+
+def wait_group_absent(pgid, deadline, evidence):
+    """Observe absence, including reaping; never ignore zombies or add a signal.
+
+    At most one second, within the ORIGINAL stage and batch deadline. A live,
+    zombie, reused or unobservable group that persists remains a failure.
+    """
+    until = min(deadline, time.monotonic()+1)
+    evidence['waitDeadlineMonotonic'] = until
+    first = True
+    while True:
+        try:
+            os.killpg(pgid, 0)
+        except ProcessLookupError:
+            evidence['absent'] = True
+            evidence['finishedMonotonic'] = time.monotonic()
+            _cleanup_need(evidence['finishedMonotonic'] <= deadline,
+                    'Original stage/batch deadline exceeded during cleanup')
+            return
+        if first:
+            evidence['firstResidual'] = group_members(pgid, min(until, time.monotonic()+.05))
+            first = False
+        if time.monotonic() >= until:
+            evidence['lastResidual'] = group_members(pgid, min(deadline, time.monotonic()+.05))
+            evidence['absent'] = False
+            evidence['finishedMonotonic'] = time.monotonic()
+            raise RuntimeError('Owned process group remains; stop batch before next cell')
+        time.sleep(min(.01, max(0, until-time.monotonic())))
+
+
 def run_child(command, log, env, timeout):
-    before=noise_snapshot(); start=time.monotonic(); child=None
+    before=noise_snapshot(); start=time.monotonic(); deadline=start+timeout
+    child=None; result=None; primary=None; identity=None
     try:
         with pathlib.Path(log).open('xb') as stream:
             child=subprocess.Popen(command,env=env,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
-            try: code=child.wait(timeout=timeout)
-            except BaseException:
-                stop_owned_group(child)
-                raise
+            stat=(pathlib.Path('/proc')/str(child.pid)/'stat').read_text().rsplit(')',1)[1].split()
+            identity={'pid':child.pid,'startTicks':stat[19],'pgrp':int(stat[2]),'session':int(stat[3])}
+            code=child.wait(timeout=max(.001,deadline-time.monotonic()))
         seconds=time.monotonic()-start
-        return {'exitCode':code,'seconds':seconds,'childPID':child.pid,
+        result={'exitCode':code,'seconds':seconds,'childPID':child.pid,
                 'childAbsent':not pathlib.Path('/proc',str(child.pid)).exists(),
-                'logSHA256':digest(log),'noise':noise_evidence(before,noise_snapshot(),seconds)}
+                'childGroupAbsent':False,'logSHA256':digest(log),
+                'noise':noise_evidence(before,noise_snapshot(),seconds)}
+        return result
+    except BaseException as error:
+        primary=type(error).__name__+': '+str(error)
+        raise
     finally:
-        if child is not None:stop_owned_group(child)
+        evidence={'primaryError':primary,'leaderIdentity':identity,'childGroupAbsent':False}
+        cleanup_error=None
+        if child is not None:
+            try:
+                witness=group_members(child.pid,min(deadline,time.monotonic()+.05))
+                evidence['beforeCallback']=witness
+                # An unreaped live leader reserves its PID/group identity. Once
+                # reaped, only observe group absence; do not signal a reused ID.
+                if child.poll() is None:
+                    current=(pathlib.Path('/proc')/str(child.pid)/'stat').read_text().rsplit(')',1)[1].split()
+                    leader={'pid':child.pid,'startTicks':current[19],
+                        'pgrp':int(current[2]),'session':int(current[3])}
+                    evidence['signalLeaderIdentity']=leader
+                    _cleanup_need(identity==leader and leader['pgrp']==leader['session']==child.pid,
+                        'Original leader identity changed; refuse group signal')
+                    stop_owned_group(child)
+                else:
+                    evidence['leaderAlreadyReaped']=True
+                wait_group_absent(child.pid,deadline,evidence)
+                evidence['childGroupAbsent']=True
+                if result is not None:result['childGroupAbsent']=True
+            except BaseException as error:
+                cleanup_error=error;evidence['cleanupError']=type(error).__name__+': '+str(error)
+        write_new(str(log)+'.cleanup.json',evidence)
+        if cleanup_error is not None and primary is None:raise cleanup_error
 
 def measurements(log):
     rows=[]; complete=False
@@ -395,7 +486,7 @@ def main():
                 require_binding(original,binding())
                 if args.diagnose_costs and execution['exitCode']==0:
                     validate_cost_measurements(log)
-                rows,complete=measurements(log);result={'size':size,'correctnessPassed':execution['exitCode']==0 and complete and execution['childAbsent'],'limitsSHA256':limits['sha256'],'observations':rows}
+                rows,complete=measurements(log);result={'size':size,'correctnessPassed':execution['exitCode']==0 and complete and execution['childAbsent'] and execution['childGroupAbsent'],'limitsSHA256':limits['sha256'],'observations':rows}
                 decision=evaluate(result,limits);item={'size':size,'attempt':attempt,'execution':execution,'binding':original,'result':result,'status':decision.status,'failures':decision.failures,'summaries':decision.summaries};report['attempts'].append(item);write_new(root/(size+'-attempt-'+str(attempt)+'-result.json'),item)
                 decisions[size]=decision;executions[size]=execution;summaries[size]=decision.summaries
                 if decision.status=='correctness-failed':raise RuntimeError('Correctness/coverage failed; retry prohibited')

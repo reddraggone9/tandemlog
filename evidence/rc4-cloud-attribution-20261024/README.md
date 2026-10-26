@@ -352,3 +352,12 @@ one retained local growth failure, third compilation guard abort; no fourth run.
 Later direction authorizes one bounded local replacement attempt after controller fix/tests;
 see the latest handoff, with all earlier outcomes retained. [Scratch UTF8 oracle](utf8-size-guard-functional-oracle.json)
 passes326708 functional comparisons, not integrated and not a timing measurement.
+
+
+2026-10-26: [R7 controller registration proof](reference-controller-r7-proof.json)
+independently verifies all four actual lifecycle cases while preserving prior
+failures. See the current [handoff](live-handoff-vex.md) and
+[operating protocol](../../design/performance-reference-qualification.md).
+This registers the controller and strengthens public child/counter verification;
+a fresh full three-shape reference qualification and exact-source CI are still
+pending. Runtime product remains2539; no budgets or native-presentation claims change.

@@ -127,7 +127,7 @@ class ReferenceReceiptTests(unittest.TestCase):
         self.bundle.mkdir(parents=True)
         self.log = b'synthetic regression log, not an execution\n'
         self.log_sha = hashlib.sha256(self.log).hexdigest()
-        execution = {'exitCode': 0, 'childAbsent': True, 'logSHA256': self.log_sha, 'noise': {}}
+        execution = {'exitCode': 0, 'childAbsent': True, 'childGroupAbsent': True, 'logSHA256': self.log_sha, 'noise': {}}
         fixtures = copy.deepcopy(json.loads((TOOLS.parents[1] / 'evidence/rc4-cloud-attribution-20261024/reference-034a57d-pins.json').read_text())['fixtures'])
         fixture_items = {}
         for size, contract in fixtures.items():
@@ -177,6 +177,8 @@ class ReferenceReceiptTests(unittest.TestCase):
         self.cleanup = {'requestId': self.request['requestId'], 'controllerSHA256': self.host['controllerSHA256'],
                         'ownedUnitsInactive': True, 'ownedProcessesAbsent': True, 'inputPinsUnchanged': True,
                         'withinDeadline': True, 'activeProcesses': 0, 'workloadSwapBytes': 0, 'oomKills': 0,
+                        'resourceCaptureBoundary': 'work-complete/pre-exit', 'verifiedCompletionCapture': True,
+                        'completionCaptureSHA256': 'c'*64,
                         'completedAtUTC': '2026-10-25T00:00:03Z', 'deadlineUTC': '2026-10-25T00:25:00Z', 'errors': []}
         (self.bundle / 'compile.log').write_bytes(self.log)
         self.refresh()
@@ -293,6 +295,28 @@ class ReferenceReceiptTests(unittest.TestCase):
                            ('errors', ['unverified']), ('completedAtUTC', '2026-10-25T00:30:00Z')]:
             self.cleanup = copy.deepcopy(original); self.cleanup[key] = value; self.refresh()
             with self.subTest(key=key), self.assertRaises(ValueError):
+                self.verify()
+
+    def test_every_stage_requires_original_process_group_absence(self):
+        for field in ('compile', 'generation', 'attempt'):
+            target = self.report['compile'] if field == 'compile' else next(iter(self.report['fixtures'].values()))['generation'] if field == 'generation' else self.report['attempts'][0]['execution']
+            target['childGroupAbsent'] = False; self.refresh()
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'Incomplete'):
+                self.verify()
+            target['childGroupAbsent'] = True
+
+    def test_live_counter_boundary_and_capture_attestation_are_required(self):
+        original = copy.deepcopy(self.cleanup)
+        for key, value in [('resourceCaptureBoundary', 'post-exit'),
+                           ('verifiedCompletionCapture', False),
+                           ('completionCaptureSHA256', ''), ('completionCaptureSHA256', True),
+                           ('completionCaptureSHA256', 1), ('completionCaptureSHA256', 'x'*64)]:
+            self.cleanup = copy.deepcopy(original); self.cleanup[key] = value; self.refresh()
+            with self.subTest(key=key, value=value), self.assertRaisesRegex(ValueError, 'completion-counter'):
+                self.verify()
+        for key in ('resourceCaptureBoundary', 'verifiedCompletionCapture', 'completionCaptureSHA256'):
+            self.cleanup = copy.deepcopy(original); del self.cleanup[key]; self.refresh()
+            with self.subTest(missing=key), self.assertRaisesRegex(ValueError, 'completion-counter'):
                 self.verify()
 
     def test_dirty_or_untracked_source_cannot_reuse_receipt(self):
@@ -433,7 +457,7 @@ class HostedRunnerTests(unittest.TestCase):
                 bad = failure == 'generation exit'
             else:
                 bad = failure == 'benchmark exit'
-            return {'exitCode': 1 if bad else 0, 'childAbsent': True, 'logSHA256': receipt.digest(log), 'noise': {}}
+            return {'exitCode': 1 if bad else 0, 'childAbsent': True, 'childGroupAbsent': True, 'logSHA256': receipt.digest(log), 'noise': {}}
         def observations(log):
             size = log.name.split('-attempt-')[0]
             return measured[size], failure != 'missing completion'

@@ -266,11 +266,11 @@ def validate_report(repo, report, request, host):
     need(type(retries) is int and retries in (0, 1) and len(attempts) == 3 * (retries + 1),
          'Missing/extra/repeated reference attempt')
     need(type(report['compile']['exitCode']) is int and report['compile']['exitCode'] == 0 and
-         report['compile']['childAbsent'] is True and report.get('binaryMode') == '0o700', 'Incomplete compile')
+         report['compile']['childAbsent'] is True and report['compile'].get('childGroupAbsent') is True and report.get('binaryMode') == '0o700', 'Incomplete compile')
     contracts = {size: item['contract'] for size, item in report['fixtures'].items()}
     need(set(contracts) == set(limits['historySizes']), 'Fixture inventory differs')
     need(all(type(v['generation']['exitCode']) is int and v['generation']['exitCode'] == 0 and
-             v['generation']['childAbsent'] is True for v in report['fixtures'].values()), 'Incomplete fixture generation')
+             v['generation']['childAbsent'] is True and v['generation'].get('childGroupAbsent') is True for v in report['fixtures'].values()), 'Incomplete fixture generation')
     need(all(type(a['attempt']) is int and 0 <= a['attempt'] <= retries for a in attempts), 'Invalid attempt ordinal')
     need(len(report['pairedScalingAttempts']) == (retries + 1) * len(scaling_specs(limits)) and
          all(type(p['attempt']) is int and 0 <= p['attempt'] <= retries for p in report['pairedScalingAttempts']),
@@ -282,7 +282,7 @@ def validate_report(repo, report, request, host):
         summaries = {}
         for item in batch:
             execution = item['execution']
-            need(type(execution['exitCode']) is int and execution['exitCode'] == 0 and execution['childAbsent'] is True,
+            need(type(execution['exitCode']) is int and execution['exitCode'] == 0 and execution['childAbsent'] is True and execution.get('childGroupAbsent') is True,
                  'Incomplete action execution')
             decision = evaluate(item['result'], limits)
             need(decision.status != 'correctness-failed' and decision.status == item['status'] and
@@ -366,6 +366,11 @@ def verify_bundle(repo, directory):
     need(all(type(cleanup.get(k)) is int and cleanup[k] == 0
              for k in ('activeProcesses', 'workloadSwapBytes', 'oomKills')) and not cleanup.get('errors'),
          'Incomplete reference cleanup/pressure proof')
+    need(cleanup.get('resourceCaptureBoundary') == 'work-complete/pre-exit' and
+         cleanup.get('verifiedCompletionCapture') is True and
+         isinstance(cleanup.get('completionCaptureSHA256'), str) and
+         re.fullmatch('[0-9a-f]{64}', cleanup['completionCaptureSHA256']) is not None,
+         'Missing/invalid live completion-counter capture attestation')
     need(instant(report['finishedAtUTC']) <= instant(cleanup['completedAtUTC']) <= instant(cleanup['deadlineUTC']),
          'Cleanup missing,late or predates measurement')
     need(manifest.get('binarySHA256VerifiedAtExport') == report['binarySHA256'] and

@@ -33,8 +33,8 @@ change is implied. Cloud is the sole repository writer;local source is immutable
 x86_64,kernel7.2.11-arch1-1,16logical CPUs,Python3.14.8 and ext4 measurement path,
 plus exact SDK/native/SQLite/dependency/lock/limits pins. The registration came
 from the parent's read-only collection,not a cloud host probe. The reviewed
-controller with the reviewed terminal-evidence correction is registered by SHA256
-`343ad5c1ebdf3c51ddf4ad0ca1b468e4bd79c9da9d9e843aaca828eac41372fb`.
+controller with the reviewed held-worker completion protocol and admission-ordering corrections is registered by SHA256
+`bd18287ab26734190d38f85f3ba332c1b0dd9457c51190ccf7e3ee12c802c389`.
 Its adjacent pressure module remains SHA256
 `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`.
 The source and original host fault evidence were reviewed privately;registration
@@ -85,8 +85,37 @@ these controls. Registration replaces the expected controller hash only:it does
 not install host files,create another request,reuse a consumed request or authorize
 another invocation. Private source/raw evidence remain outside the public repo.
 
+The R7 registration follows an independently reviewed actual four-case proof:
+normal success, original exit7 with captured counters, normal exit0 without
+capture, and exact manager SIGKILL with a TERM-resistant descendant. All106
+current-source host controls passed without skips. Descendants were contained
+in19.118s; independent original-clock cleanup completed in150.344s of the240s
+synthetic-proof bound. [Sanitized registration evidence](../evidence/rc4-cloud-attribution-20261024/reference-controller-r7-proof.json)
+publishes hashes and outcomes only. Private controller source and raw host
+artifacts remain private; prior failed controls/qualification remain retained.
+These synthetic cases validate the controller,not actual benchmark acceptance.
+
+The real workload completes its source/report/child checks,then remains alive
+at the explicit work-complete/pre-exit boundary. The manager reads actual live
+cgroup counters and publishes a hash-bound ACK; the original worker verifies it
+and exits normally. Captured counters do not substitute for original normal exit
+or independent post-exit unit/process/cgroup/deadline verification. Missing
+capture/ACK,failed/collected/default status or missing cleanup refuses qualification.
+Public verification now requires this boundary attestation and original group
+absence for compile,generation and every measured attempt. A bounded reap wait
+uses the original stage deadline; live/zombie residue is not ignored. A reaped
+leader receives no additional group signal; a live unreaped leader must match
+its original PID/start/session before owned cleanup.
+
+The controller fingerprints the existing invocation before the driver creates
+its fresh run directory,and verifies the created output's exact mount identity
+without symlink traversal before completion. Pre-admission blank loaded/dead
+status is pending under the original10s admission deadline; a cgroup alone does
+not prove a running process. Real failed starts and observed exits still retain
+their original status and cannot waive counter requirements.
+
 The existing management route must start the nonce manager with
-`systemd-run --wait --pipe --collect --service-type=exec`,the manager settings
+`systemd-run --wait --pipe --service-type=exec`,the manager settings
 above,and a clean environment running `/usr/bin/python3 -I -B` on the privately
 reviewed controller. Keep the existing supervised10second heartbeat stream open;
 EOF or35seconds without valid heartbeat cancels. Do not use a finite stdin pipe.

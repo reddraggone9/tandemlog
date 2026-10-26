@@ -1,8 +1,47 @@
 # Tandemlog engineering handoff to Vex
 
-**Snapshot: 2026-10-25 23:55 UTC. Pre-cutover; cloud remains the product writer.**
+**Snapshot: 2026-10-26 05:55 UTC. Pre-cutover; cloud remains the product writer.**
 Lee authorized assistance to Vex during the transfer. No cutover has occurred.
 This snapshot deliberately includes pending results; update it at final cutover.
+
+## Controller registration and next full reference — 2026-10-26
+
+Product remains the exact2539 bulk-selection repair. Its completed source-bound
+504-observation diagnostic retains all outcomes and demonstrates3 selected rows
+rather than796decoded rows; it does not establish causally paired speedup or
+qualification. The original failed full reference and every subsequent failed
+controller/profiler attempt remain unchanged.
+
+The privately reviewed R7 controller passed all106 actual-host controls and all
+four actual PID1 lifecycle cases. Cloud independently verified1639 raw inventory
+members, exact code bytes, original exits, both live counter/ACK hash chains,
+manager SIGKILL and19.118s containment, plus original-clock150.344s independent
+cleanup. The [sanitized proof](reference-controller-r7-proof.json) supports hash
+registration only; no real benchmark has run on the new frozen source yet.
+
+Public tooling now requires live completion-counter attestation and every
+original child group's absence. [Registration checks](reference-controller-r7-registration-checks.json)
+passed205tool tests with2skips; app/runtime/dependency/limit bytes are unchanged.
+Source/profile/tooling are frozen before
+ONE fresh full three-shape enforcing request is issued. It retains232metrics
+per shape, first-use/full-history trajectories, unchanged absolute and both
+growth budgets, original1500s execution plus shared20s cleanup, all source/tool/
+fixture/package/resource guards and the existing sole eligible internal noise
+retry. No outside retry or timing-green chase is authorized.
+
+Use [the operating protocol](../../design/performance-reference-qualification.md).
+After terminal reference review,import only an independently verified accepted
+bundle as an evidence-only descendant if it passes; retain a failed result
+without a seal otherwise. Coordinate exactly one exact-source hosted CI after
+the import decision,calibration=false. No CI was dispatched for this registration.
+Hosted functional/native/build/integrity checks remain mandatory and timing
+advisory. Reference failure cannot be bypassed. Physical Windows presentation,
+all-action native coverage and release/live authorization remain separate.
+
+The sole-writer cutoff is October26 13:00UTC. Parent coordinates Farnsworth;
+cloud does not access it. The actual fresh request/source hashes are supplied
+in the private execution handoff after the tested development push; do not use
+consumed synthetic proof requests or the old failed qualification nonce.
 
 ## Bulk selection repair and diagnostic preparation — 2026-10-25 23:55 UTC
 
