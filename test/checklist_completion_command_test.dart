@@ -13,6 +13,16 @@ import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 
+class _ObservedCompletionFolder extends LocalLogFolder {
+  _ObservedCompletionFolder(super.location);
+  Future<void> Function()? beforeList;
+  @override
+  Future<List<LogFileInfo>> list() async {
+    await beforeList?.call();
+    return super.list();
+  }
+}
+
 class _CompletionFixture {
   _CompletionFixture(
     this.root,
@@ -25,7 +35,7 @@ class _CompletionFixture {
     this.second,
   );
   final Directory root;
-  final LocalLogFolder folder;
+  final _ObservedCompletionFolder folder;
   final NativeTextEngine engine;
   final TaskStore a, b;
   final String parent, first, second;
@@ -33,7 +43,7 @@ class _CompletionFixture {
     final root = await Directory.systemTemp.createTemp(
       'checklist-completion-command-',
     );
-    final folder = LocalLogFolder(
+    final folder = _ObservedCompletionFolder(
       (await Directory('${root.path}/shared').create()).path,
     );
     final engine = NativeTextEngine(
@@ -195,6 +205,48 @@ void main() {
   late _CompletionFixture f;
   setUp(() async => f = await _CompletionFixture.create());
   tearDown(() async => f.close());
+
+  test(
+    'late preparation refresh renews consent without sampling a stale completion',
+    () async {
+      var warnings = 0, samples = 0, afterConsentLists = 0;
+      final result = await ChecklistCompletionCommand(f.a).complete(
+        f.parent,
+        observeCompletionTime: () {
+          samples++;
+          expect(warnings, 2);
+          return ViewTime(
+            instant: DateTime.utc(2030, 5, 11, 0, 1),
+            localZoneId: 'UTC',
+            localOffset: Duration.zero,
+          );
+        },
+        localZoneId: null,
+        confirmUnfinished: (items) async {
+          warnings++;
+          expect(samples, 0);
+          if (warnings == 1) {
+            f.folder.beforeList = () async {
+              if (++afterConsentLists == 3) {
+                f.folder.beforeList = null;
+                await f.b.addChecklistItem(
+                  f.parent,
+                  'Arrived at final refresh',
+                );
+              }
+            };
+          } else {
+            expect(items.last['title'], 'Arrived at final refresh');
+          }
+          return true;
+        },
+      );
+      expect(warnings, 2);
+      expect(samples, 1);
+      expect(result!.data['completedInstant'], '2030-05-11T00:01:00.000000Z');
+      expect(f.completions, hasLength(1));
+    },
+  );
 
   for (final cancel in [true, false]) {
     test(

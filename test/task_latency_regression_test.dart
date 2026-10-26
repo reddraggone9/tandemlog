@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/domain/timed_view.dart';
 import 'package:tandemlog/domain/checklist.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
@@ -76,47 +77,42 @@ void main() {
               await folder.create('$peer.applog', peerBytes);
             }
           };
+          var samples = 0;
           final operation = current.complete(
             task,
-            localZoneId: 'UTC',
-            completionInstant: DateTime.utc(2030, 5, 10),
+            observeCompletionTime: () {
+              samples++;
+              expect(lists, 2);
+              if (injectPeer)
+                expect(
+                  current.visibleTaskRow(task)!['schedule']['dueDate'],
+                  '2030-05-10',
+                );
+              return ViewTime(
+                instant: DateTime.utc(2030, 5, 10, 12, 34, 56, 123, 456),
+                localZoneId: 'UTC',
+                localOffset: Duration.zero,
+              );
+            },
             onPrepared: (_) {
               callbacks++;
               listsAtReservation = lists;
             },
           );
-          if (injectPeer) {
-            await expectLater(
-              operation,
-              throwsA(
-                isA<FormatFailure>().having(
-                  (error) => error.message,
-                  'reason',
-                  contains('changed while preparing'),
-                ),
-              ),
-            );
-            expect(callbacks, 0);
-            expect(current.unified!.hasPending, isFalse);
-            expect(current.unified!.physicalSequence, sequence);
-            expect(await folder.read(ownedName), original);
-            expect(current.visibleTaskRow(task)!['completed'], isFalse);
-            expect(
-              current.visibleTaskRow(task)!['schedule']['dueDate'],
-              '2030-05-10',
-            );
-          } else {
-            await operation;
-            expect(callbacks, 1);
-            expect(current.unified!.physicalSequence, sequence + 1);
-            expect(current.visibleTaskRow(task)!['completed'], isTrue);
-            expect(
-              listsAtReservation,
-              2,
-              reason:
-                  'One initial admission and reservation recheck before binding; commit confirmation is counted separately.',
-            );
-          }
+          final completion = await operation;
+          expect(samples, 1);
+          expect(
+            completion.data['completedInstant'],
+            '2030-05-10T12:34:56.123456Z',
+          );
+          expect(callbacks, 1);
+          expect(current.unified!.physicalSequence, sequence + 1);
+          expect(current.visibleTaskRow(task)!['completed'], isTrue);
+          expect(listsAtReservation, 2);
+          expect(
+            (await folder.read(ownedName)).take(original.length),
+            original,
+          );
         } finally {
           await store?.close();
           await root.delete(recursive: true);

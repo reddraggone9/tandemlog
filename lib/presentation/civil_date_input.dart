@@ -205,31 +205,39 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                   choosingYear = false;
                 }),
               )
-            : GridView.count(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                crossAxisCount: 3,
-                childAspectRatio: 1.25,
-                children: [
-                  for (var month = 1; month <= 12; month++)
-                    TextButton(
-                      onPressed:
-                          DateTime(
-                                jumpYear,
-                                month + 1,
-                                0,
-                              ).isBefore(widget.firstDate) ||
-                              DateTime(jumpYear, month).isAfter(widget.lastDate)
-                          ? null
-                          : () => chooseMonth(month),
-                      child: Semantics(
-                        label: MaterialLocalizations.of(
-                          context,
-                        ).formatMonthYear(DateTime(jumpYear, month)),
-                        excludeSemantics: true,
-                        child: Text(_months[month - 1]),
+            : LayoutBuilder(
+                builder: (context, constraints) => GridView.count(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  crossAxisCount: 3,
+                  childAspectRatio:
+                      (constraints.maxWidth - 24) /
+                      3 /
+                      math.max(48, constraints.maxHeight / 4),
+                  children: [
+                    for (var month = 1; month <= 12; month++)
+                      TextButton(
+                        onPressed:
+                            DateTime(
+                                  jumpYear,
+                                  month + 1,
+                                  0,
+                                ).isBefore(widget.firstDate) ||
+                                DateTime(
+                                  jumpYear,
+                                  month,
+                                ).isAfter(widget.lastDate)
+                            ? null
+                            : () => chooseMonth(month),
+                        child: Semantics(
+                          label: MaterialLocalizations.of(
+                            context,
+                          ).formatMonthYear(DateTime(jumpYear, month)),
+                          excludeSemantics: true,
+                          child: Text(_months[month - 1]),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
       ),
     ],
@@ -287,22 +295,23 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                                       : Icons.calendar_month,
                                 ),
                                 label: Text(
-                                  monthMode
-                                      ? 'Back to calendar'
-                                      : 'Month / year',
+                                  monthMode ? 'Calendar' : 'Month / year',
                                 ),
                               ),
                       ),
                     ),
-                    IconButton(
-                      tooltip: inputMode
-                          ? localizations.calendarModeButtonLabel
-                          : localizations.inputDateModeButtonLabel,
-                      onPressed: monthMode ? null : toggleInput,
-                      icon: Icon(
-                        inputMode ? Icons.calendar_today : Icons.edit_outlined,
+                    if (!monthMode)
+                      IconButton(
+                        tooltip: inputMode
+                            ? localizations.calendarModeButtonLabel
+                            : localizations.inputDateModeButtonLabel,
+                        onPressed: toggleInput,
+                        icon: Icon(
+                          inputMode
+                              ? Icons.calendar_today
+                              : Icons.edit_outlined,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -340,13 +349,17 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                   alignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        jumpHistory?.remove();
+                        Navigator.pop(context);
+                      },
                       child: Text(localizations.cancelButtonLabel),
                     ),
-                    TextButton(
-                      onPressed: monthMode ? null : confirm,
-                      child: Text(localizations.okButtonLabel),
-                    ),
+                    if (!monthMode)
+                      TextButton(
+                        onPressed: confirm,
+                        child: Text(localizations.okButtonLabel),
+                      ),
                   ],
                 ),
               ),

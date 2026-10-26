@@ -4024,114 +4024,121 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
-    final state = _projectEntity(entity);
-    if (state == null || state['kind'] != 'task' || state['deleted'] == true) {
-      throw FormatFailure('Unknown task.');
-    }
-    if (expectedChecklistSnapshot != null &&
-        expectedChecklistSnapshot != jsonEncode(state['checklist'] ?? [])) {
-      throw StaleTaskSnapshot();
-    }
-    if (requireIncomplete && state['completed'] == true) {
-      throw StaleTaskSnapshot();
-    }
-    final schedule = TaskSchedule.fromJson(
-      Map<String, dynamic>.from(state['schedule'] as Map),
-    );
-    if ((observeCompletionTime == null) == (completionInstant == null)) {
-      throw ArgumentError(
-        'Supply exactly one clock observation or explicit instant.',
-      );
-    }
-    _requireWriterAppendReady();
-    final observation = observeCompletionTime?.call();
-    final instant = observation?.instant ?? completionInstant!;
-    final day = civilDayAt(
-      instant,
-      schedule.timeZone ?? observation?.localZoneId ?? localZoneId,
-    );
-    final data = <String, dynamic>{
-      'completedInstant': encodeCompletionInstant(instant),
-    };
-    final historical = schedule.recurrence == null
-        ? null
-        : _historicalSuccessorInitialization(entity);
-    if (historical != null) {
-      data['retainedSuccessor'] = {
-        'id': const Uuid().v5(entity, 'successor'),
-        'completion': historical.id,
-        'hash': historical.hash,
-      };
-      return _commandAfterRefresh(
-        entity,
-        'task.completedKeepingSuccessor',
-        data,
-        onPrepared: onPrepared,
-      );
-    }
-    if (schedule.recurrence != null) {
-      final next = schedule.next(day);
-      if (schedule.hasSameOccurrenceDates(next)) {
-        throw FormatFailure(unchangedRecurrenceMessage);
+    List<(String, String, Map<String, dynamic>)> freshCompletion() {
+      final state = _projectEntity(entity);
+      if (state == null ||
+          state['kind'] != 'task' ||
+          state['deleted'] == true) {
+        throw FormatFailure('Unknown task.');
       }
-      data['successor'] = {
-        'id': const Uuid().v5(entity, 'successor'),
-        'title': state['title'],
-        'description': state['description'],
-        'assignee': state['assignee'],
-        'tags': state['tags'],
-        'schedule': next.toJson(),
+      if (expectedChecklistSnapshot != null &&
+          expectedChecklistSnapshot != jsonEncode(state['checklist'] ?? [])) {
+        throw StaleTaskSnapshot();
+      }
+      if (requireIncomplete && state['completed'] == true) {
+        throw StaleTaskSnapshot();
+      }
+      final schedule = TaskSchedule.fromJson(
+        Map<String, dynamic>.from(state['schedule'] as Map),
+      );
+      if ((observeCompletionTime == null) == (completionInstant == null)) {
+        throw ArgumentError(
+          'Supply exactly one clock observation or explicit instant.',
+        );
+      }
+      _requireWriterAppendReady();
+      final observation = observeCompletionTime?.call();
+      final instant = observation?.instant ?? completionInstant!;
+      final day = civilDayAt(
+        instant,
+        schedule.timeZone ?? observation?.localZoneId ?? localZoneId,
+      );
+      final data = <String, dynamic>{
+        'completedInstant': encodeCompletionInstant(instant),
       };
-    }
-    var type = 'task.completed';
-    if (data['successor'] != null &&
-        textEngine != null &&
-        db.select('SELECT 1 FROM ${tables.textFields} WHERE entity=? LIMIT 1', [
-          entity,
-        ]).isNotEmpty) {
-      final fields = _resolvedText(entity);
-      data['inheritance'] = {
-        'codec': 'yrs-v1',
-        'adapter': 2,
-        'frontiers': {
+      final historical = schedule.recurrence == null
+          ? null
+          : _historicalSuccessorInitialization(entity);
+      if (historical != null) {
+        data['retainedSuccessor'] = {
+          'id': const Uuid().v5(entity, 'successor'),
+          'completion': historical.id,
+          'hash': historical.hash,
+        };
+        return [(entity, 'task.completedKeepingSuccessor', data)];
+      }
+      if (schedule.recurrence != null) {
+        final next = schedule.next(day);
+        if (schedule.hasSameOccurrenceDates(next)) {
+          throw FormatFailure(unchangedRecurrenceMessage);
+        }
+        data['successor'] = {
+          'id': const Uuid().v5(entity, 'successor'),
+          'title': state['title'],
+          'description': state['description'],
+          'assignee': state['assignee'],
+          'tags': state['tags'],
+          'schedule': next.toJson(),
+        };
+      }
+      var type = 'task.completed';
+      if (data['successor'] != null &&
+          textEngine != null &&
+          db.select(
+            'SELECT 1 FROM ${tables.textFields} WHERE entity=? LIMIT 1',
+            [entity],
+          ).isNotEmpty) {
+        final fields = _resolvedText(entity);
+        data['inheritance'] = {
+          'codec': 'yrs-v1',
+          'adapter': 2,
+          'frontiers': {
+            for (final row in db.select(
+              'SELECT name,last_seq,chain_head FROM ${tables.streams}',
+            ))
+              (row['name'] as String).replaceFirst(RegExp(r'\.jsonl$'), ''): {
+                'seq': row['last_seq'],
+                'hash': row['chain_head'],
+              },
+          },
+          'fields': {
+            for (final entry in fields.entries)
+              entry.key: {
+                'parentContext': entry.value.context.hash,
+                'seedHash': entry.value.context.seedHash,
+                'historyHash': entry.value.historyReference!.hash,
+              },
+          },
+        };
+        type = 'task.completedWithText';
+      }
+      if (data['successor'] != null && state.containsKey('checklist')) {
+        final frontiers = <String, dynamic>{
           for (final row in db.select(
             'SELECT name,last_seq,chain_head FROM ${tables.streams}',
           ))
-            (row['name'] as String).replaceFirst(RegExp(r'\.jsonl$'), ''): {
+            (row['name'] as String).replaceFirst('.jsonl', ''): {
               'seq': row['last_seq'],
               'hash': row['chain_head'],
             },
-        },
-        'fields': {
-          for (final entry in fields.entries)
-            entry.key: {
-              'parentContext': entry.value.context.hash,
-              'seedHash': entry.value.context.seedHash,
-              'historyHash': entry.value.historyReference!.hash,
-            },
-        },
-      };
-      type = 'task.completedWithText';
+        };
+        data['checklist'] = _checklistCopy(
+          entity,
+          (data['successor'] as Map)['id'] as String,
+          (state['checklist'] as List).cast<Map<String, dynamic>>(),
+          frontiers,
+        );
+        type = 'task.completedWithChecklist';
+      }
+      return [(entity, type, data)];
     }
-    if (data['successor'] != null && state.containsKey('checklist')) {
-      final frontiers = <String, dynamic>{
-        for (final row in db.select(
-          'SELECT name,last_seq,chain_head FROM ${tables.streams}',
-        ))
-          (row['name'] as String).replaceFirst('.jsonl', ''): {
-            'seq': row['last_seq'],
-            'hash': row['chain_head'],
-          },
-      };
-      data['checklist'] = _checklistCopy(
-        entity,
-        (data['successor'] as Map)['id'] as String,
-        (state['checklist'] as List).cast<Map<String, dynamic>>(),
-        frontiers,
-      );
-      type = 'task.completedWithChecklist';
-    }
-    return _commandAfterRefresh(entity, type, data, onPrepared: onPrepared);
+
+    final receipts = await _appendUnifiedCommands(
+      [],
+      buildFreshCommands: freshCompletion,
+      onPrepared: onPrepared,
+    );
+    return _recurringTextMemo.decodeCanonical(receipts.single.raw);
   });
 
   /// Immutable comparison token for current task content and global order.
