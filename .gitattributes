@@ -57,3 +57,7 @@ evidence/rc4-cloud-attribution-20261024/utf8-size-guards-linux-close-stack.txt -
 
 # Native disposal diagnostic archives retain literal source-evidence bytes.
 evidence/rc4-cloud-attribution-20261024/linux-disposal-*.log.txt -text
+
+# Recovered stable-v3 readers are sealed against their original source bytes.
+# Windows autocrlf must not change the decoder provenance SHA256 values.
+test/support/frozen_stable_v3/** -text
