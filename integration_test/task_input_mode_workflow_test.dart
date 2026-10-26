@@ -28,7 +28,7 @@ void registerTaskInputModeTests() {
     (width: 320.0, scale: 2.5, theme: 'dark'),
   ]) {
     testWidgets(
-      'Search/Add clears explicit outgoing input and captures repeatedly ${variant.width} x${variant.scale}',
+      'Search/Add carries typed text and captures repeatedly ${variant.width} x${variant.scale}',
       (tester) async {
         final root = await Directory.systemTemp.createTemp('task-input-mode-');
         final folder = await Directory('${root.path}/shared').create();
@@ -112,18 +112,23 @@ void registerTaskInputModeTests() {
                 reason: 'The wide Search action label must stay on one line.',
               );
             }
-            expect(state.search.text, isEmpty);
+            expect(
+              tester.widget<TextField>(capture).controller!.text,
+              flip == 0 ? 'Reference' : 'Carried unfinished ${flip - 1}',
+            );
             expect(state.searchQuery, isEmpty);
             expect(
               tester.widget<TextField>(capture).focusNode!.hasFocus,
               isTrue,
             );
-            await tester.enterText(capture, 'Discarded unfinished $flip');
+            await tester.enterText(capture, 'Carried unfinished $flip');
             await pixels.tap(tester, find.byKey(const ValueKey('open-search')));
             await tester.pumpAndSettle();
             expect(capture, findsNothing);
-            expect(state.capture.text, isEmpty);
-            expect(tester.widget<TextField>(input).controller!.text, isEmpty);
+            expect(
+              tester.widget<TextField>(input).controller!.text,
+              'Carried unfinished $flip',
+            );
             expect(find.text('Unsaved changes'), findsNothing);
           }
           await filterChoice(tester, 'Completed');

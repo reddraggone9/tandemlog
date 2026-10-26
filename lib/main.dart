@@ -224,7 +224,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   final bodyFocusScope = FocusScopeNode(debugLabel: 'Task and Food body');
   late bool _lastTextFocus;
   bool captureMode = false;
-  String get searchQuery => search.text.trim();
+  String get searchQuery => captureMode ? '' : search.text.trim();
   bool get searching => searchQuery.isNotEmpty;
   List<TaskViewEntry> get visibleEntries => searching
       ? [...?taskView?.open, ...?taskView?.completed]
@@ -5100,16 +5100,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     setState(() {
       if (captureMode != nextCapture) {
-        if (captureMode) {
-          capture.clear();
-          captureValidation.reset();
-          if (error == 'Keep each task title under 500 characters.') {
-            error = null;
-          }
-        } else {
-          search.clear();
-          lastSearchText = '';
-        }
+        final outgoing = captureMode ? capture.value : search.value;
+        (nextCapture ? capture : search).value = outgoing;
+        if (!nextCapture) lastSearchText = outgoing.text;
+        captureValidation.reset();
+        if (error == 'Keep each task title under 500 characters.') error = null;
         captureMode = nextCapture;
       }
       _clearSelection();
