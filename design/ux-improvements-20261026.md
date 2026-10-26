@@ -177,3 +177,49 @@ Performance qualification remains out of scope and existing failed reference
 results/budgets are unchanged. Exact commands, pass/fail counts, source receipts,
 logs and review media are in Vex's dated native-check report, outside public
 product artifacts.
+
+
+## Lee’s UX feedback and exact completion instants — final local review, 2026-10-26
+
+Completed rows now omit repeated completion dates; search keeps its viewer-local
+completion date. Month/year grids replace the existing calendar dialog body.
+Back/Escape returns to the day calendar before dismissing it; Cancel preserves the
+draft. There is no stays-deleted note. Native screenshot iterations corrected the
+large-text selected-year offset, partial year rows and excess grid spacing.
+
+[ADR0035](decisions/0035-exact-completion-instants.md) supersedes the date-only
+completion decision: all live completion reservations require revision3 and a
+canonical UTC microsecond instant, sampled after the final fresh-input guards.
+Completed chronology uses viewer-local headings and instant order. Recurrence and
+Undo semantics are unchanged. Offline legacy approximation stores no approximate
+marker or separate date/zone. Independent goldens, 44 frozen legacy prefixes in
+both writer arrival orders, sealed converted cold replay, unchanged old-runtime
+fail-closed checks and owned-stream growth correctness are covered.
+
+Final code/check source: `d444f15947017e4a4e56d26fca41de60d0ead92a`.
+Full Flutter suite: **1586passed,0failed**; analyzer: **0issues**; formatter:
+**420files,0changes**. Linux native executed runs: **20passed,0failed**
+(8visual matrix,10completion lifecycle,1fixed-window demo,1sticky headings).
+Android11/API30 x86_64 as nibbler: **14passed,0failed** (4native-tap visual matrix,
+10completion lifecycle). Frozen old runtime: **1passed,0failed**. Python startup
+and cache boundary checks: **11passed,0failed**. Linux release/Android debug
+builds, payload/native-library/debug-signature checks, 2startup trials and 2normal
+disposal trials pass. The final serialized runner records **20commands,20exit0**;
+these counts include builds/cleanup and are not additive unique test cases.
+
+Review media cover Completed/search/month/year in light/dark at100/200% text,
+390dp Android and390/1200px GTK. Android video includes36actual OS taps; Linux
+video is a scripted native workflow with a visible X pointer. Private XDG runtime
+and GTK_USE_PORTAL=0 protected the desktop portal. Owned emulator/adb/Gradle were
+stopped and verified; Android settings restored; document portal remains mounted.
+Exact commands, logs, receipts and inspected media are recorded in the private
+`artifacts/tandemlog-ux-feedback-20261026/REVIEW.md` review bundle.
+
+No remote, release, live household profile or live conversion was touched. The
+external multi-format production normalizer was not supplied: its hookup, actual
+source-format inventory/installation mapping and frozen real-copy conversion
+acceptance remain unverified. Synthetic sealed outputs are not a live cutover
+receipt. Performance timing qualification, Windows, physical ARM, SAF/sync
+transport and broad physical OS-IME acceptance are not established here. Existing
+accepted legacy fixture bytes, performance budgets and reference results remain
+unchanged.
