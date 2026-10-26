@@ -16,6 +16,8 @@ class TaskViewEntry {
     this.completionUnavailableReason,
     this.inbox = false,
     this.hasEffectiveTime = false,
+    this.today = false,
+    this.groupDate,
   });
   final Map<String, dynamic> task;
   final DateTime? effectiveDate;
@@ -24,13 +26,16 @@ class TaskViewEntry {
   final String? completionUnavailableReason;
   final bool inbox;
   final bool hasEffectiveTime;
+  final bool today;
+  final DateTime? groupDate;
 
   /// Manual movement cannot cross Inbox/date groups, exact times, or history.
   bool sharesOrderBucket(TaskViewEntry other) =>
+      task['completed'] != true &&
+      other.task['completed'] != true &&
       inbox == other.inbox &&
       effectiveDate == other.effectiveDate &&
-      hasEffectiveTime == other.hasEffectiveTime &&
-      (task['completed'] == true) == (other.task['completed'] == true);
+      hasEffectiveTime == other.hasEffectiveTime;
 }
 
 class TaskViewGroup {
@@ -39,11 +44,13 @@ class TaskViewGroup {
     this.weekday,
     this.entries, {
     this.inbox = false,
+    this.today = false,
   });
   final String? date;
   final int? weekday;
   final List<TaskViewEntry> entries;
   final bool inbox;
+  final bool today;
 }
 
 class TaskView {
@@ -65,16 +72,19 @@ String _groupDate(DateTime value) =>
 List<TaskViewGroup> _groups(List<TaskViewEntry> entries) {
   final groups = <TaskViewGroup>[];
   for (final entry in entries) {
-    final date = entry.effectiveDate == null
-        ? null
-        : _groupDate(entry.effectiveDate!);
+    final groupDay = entry.groupDate ?? entry.effectiveDate;
+    final date = groupDay == null ? null : _groupDate(groupDay);
     if (groups.isEmpty ||
         groups.last.date != date ||
         groups.last.inbox != entry.inbox) {
       groups.add(
-        TaskViewGroup(date, entry.effectiveDate?.weekday, [
-          entry,
-        ], inbox: entry.inbox),
+        TaskViewGroup(
+          date,
+          groupDay?.weekday,
+          [entry],
+          inbox: entry.inbox,
+          today: entry.today,
+        ),
       );
     } else {
       groups.last.entries.add(entry);
@@ -87,6 +97,7 @@ List<TaskViewGroup> _groups(List<TaskViewEntry> entries) {
         group.weekday,
         List.unmodifiable(group.entries),
         inbox: group.inbox,
+        today: group.today,
       ),
     ),
   );
@@ -317,6 +328,38 @@ TimedView<TaskView> projectTaskView(
       final midnight = context.nextCompletionDay(schedule);
       if (next == null || midnight.isBefore(next)) next = midnight;
     }
+    var inToday = false;
+    final effective = timing.effectiveDate;
+    if (!done && effective != null) {
+      final day = DateTime.utc(effective.year, effective.month, effective.day);
+      inToday = day == context.today;
+      final tomorrow = DateTime.utc(
+        context.today.year,
+        context.today.month,
+        context.today.day + 1,
+      );
+      if (day == tomorrow && timing.hasEffectiveTime) {
+        final date = schedule.scheduledDate ?? schedule.dueDate;
+        final preciseTime = schedule.scheduledDate != null
+            ? schedule.scheduledTime
+            : schedule.dueTime;
+        final dueInstant = resolveCivilWallTime(
+          context.civil(date!, preciseTime),
+          schedule.timeZone ?? time.localZoneId,
+        ).instant;
+        final entersToday = dueInstant.subtract(const Duration(hours: 24));
+        inToday = !entersToday.isAfter(time.instant);
+        if (!inToday && (next == null || entersToday.isBefore(next))) {
+          next = entersToday;
+        }
+      }
+      // Today labels and the rolling 24-hour inclusion renew at local midnight.
+      final midnight = context.nextLocalDay();
+      if ((day == context.today || day == tomorrow) &&
+          (next == null || midnight.isBefore(next))) {
+        next = midnight;
+      }
+    }
     if (next != null && (nextChange == null || next.isBefore(nextChange))) {
       nextChange = next;
     }
@@ -327,14 +370,22 @@ TimedView<TaskView> projectTaskView(
       index,
       TaskViewEntry(
         row,
-        timing.effectiveDate,
+        done
+            ? (row['completedAt'] is String
+                  ? parseCivilDate(
+                      (row['completedAt'] as String).substring(0, 10),
+                    )
+                  : null)
+            : timing.effectiveDate,
+        today: inToday,
+        groupDate: inToday ? context.today : null,
         available: timing.available,
         availabilityStart: timing.availabilityStart,
         completionUnavailableReason: done
             ? null
             : context.completionUnavailableReason(schedule),
         inbox: !done && row['inbox'] == true,
-        hasEffectiveTime: timing.hasEffectiveTime,
+        hasEffectiveTime: !done && timing.hasEffectiveTime,
       ),
     ));
   }
@@ -366,8 +417,25 @@ TimedView<TaskView> projectTaskView(
     return List.unmodifiable(values.map((value) => value.$2));
   }
 
+  completed.sort((a, b) {
+    final x = a.$2.effectiveDate, y = b.$2.effectiveDate;
+    final dateOrder = x == null
+        ? (y == null ? 0 : 1)
+        : y == null
+        ? -1
+        : y.compareTo(x);
+    if (dateOrder != 0) return dateOrder;
+    final order = (b.$2.task['completionOrder'] as String? ?? '').compareTo(
+      a.$2.task['completionOrder'] as String? ?? '',
+    );
+    return order != 0 ? order : a.$1.compareTo(b.$1);
+  });
   return TimedView(
-    TaskView(sorted(open), sorted(completed), searchActive: searchActive),
+    TaskView(
+      sorted(open),
+      List.unmodifiable(completed.map((e) => e.$2)),
+      searchActive: searchActive,
+    ),
     nextChange: nextChange,
   );
 }

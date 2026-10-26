@@ -80,11 +80,7 @@ void main() {
         entries['day-a']!.sharesOrderBucket(entries['tomorrow']!),
         isFalse,
       );
-      expect(view.openGroups.map((group) => group.date), [
-        '2026-10-04',
-        '2026-10-05',
-        null,
-      ]);
+      expect(view.openGroups.map((group) => group.date), ['2026-10-04', null]);
       expect(jsonEncode(rows), before);
     },
   );
@@ -314,7 +310,7 @@ void main() {
         row('done', schedule: schedule, completed: true),
       ], time);
       expect(view.value.open, isEmpty);
-      expect(view.value.completed.single.effectiveDate, timing.effectiveDate);
+      expect(view.value.completed.single.effectiveDate, isNull);
       final absent = evaluateTaskTiming(TaskSchedule(), time);
       expect(absent.available, isTrue);
       expect(absent.availabilityStart, DateTime.parse('2026-10-02T05:00:00Z'));

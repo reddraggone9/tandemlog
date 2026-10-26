@@ -31,6 +31,7 @@ import 'presentation/list_row_surface.dart';
 import 'presentation/task_drop_indicator.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
+import 'domain/schedule.dart' show formatCivilDate;
 import 'domain/timed_view.dart';
 import 'domain/time_zone_policy.dart';
 import 'presentation/view_clock.dart';
@@ -3708,15 +3709,27 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 .map((u) => u['name'])
                 .firstOrNull ??
             'Unknown user',
-      if (scheduleMetadata(
-            schedule,
-            groupDate: groupDate,
-            localZoneId: taskViewZoneId!,
-            viewInstant: taskViewInstant!,
-            unavailableStart: !entry.available && task['completed'] != true
-                ? entry.availabilityStart
-                : null,
-          )
+      if (task['completed'] == true)
+        task['completedAt'] == null
+            ? 'Completion date unknown'
+            : 'Completed ${task['completedAt']}',
+      if ((task['completed'] != true
+              ? scheduleMetadata(
+                  schedule,
+                  groupDate:
+                      entry.today &&
+                          entry.effectiveDate != null &&
+                          formatCivilDate(entry.effectiveDate!) != groupDate
+                      ? null
+                      : groupDate,
+                  localZoneId: taskViewZoneId!,
+                  viewInstant: taskViewInstant!,
+                  unavailableStart:
+                      !entry.available && task['completed'] != true
+                      ? entry.availabilityStart
+                      : null,
+                )
+              : '')
           case final String details when details.isNotEmpty)
         details,
       for (final tag in task['tags'] as List? ?? []) '#$tag',
@@ -5588,6 +5601,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
     String groupTitle(TaskViewGroup group) {
       if (group.inbox) return 'Inbox';
+      final completed = group.entries.firstOrNull?.task['completed'] == true;
+      if (completed && group.date == null) return 'Completion date unknown';
+      if (!completed && group.today) return 'Today';
       const weekdays = [
         'Monday',
         'Tuesday',
@@ -5994,7 +6010,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                           Draggable<String>(
                                             data: task['id'],
                                             maxSimultaneousDrags:
-                                                busy ||
+                                                completed ||
+                                                    busy ||
                                                     (selecting &&
                                                         !selectedTasks.contains(
                                                           task['id'],

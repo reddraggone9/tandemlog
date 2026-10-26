@@ -493,6 +493,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   final activeEvents = events.where(
     (event) => isTaskCompletion(event.type) && active.contains(event.id),
   );
+  state['completionOrder'] = activeEvents.isEmpty
+      ? null
+      : '${activeEvents.last.clock.sortKey}:${activeEvents.last.writer}:${activeEvents.last.sequence.toString().padLeft(20, '0')}';
   state['completedAt'] = activeEvents.isEmpty
       ? null
       : activeEvents.last.data['completedAt'];

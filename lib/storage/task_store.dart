@@ -4887,7 +4887,7 @@ String _taskProjectionRevision(Iterable<LogEvent> events) {
   });
   return bytesDigest(
     utf8.encode(
-      'tandemlog:task-projection-cache:v2\n${ordered.length}\n${leaves.join('\n')}\n',
+      'tandemlog:task-projection-cache:v3\n${ordered.length}\n${leaves.join('\n')}\n',
     ),
   );
 }
@@ -5624,7 +5624,7 @@ class TaskSemanticValidator {
     );
     try {
       final proof = jsonDecode(proofRows.single['value'] as String) as Map;
-      if (proof['generation'] != 3 ||
+      if (proof['generation'] != 4 ||
           proof['manifest'] != manifestDigest ||
           proof['native'] != (textEngine != null)) {
         return;
@@ -5743,7 +5743,7 @@ class TaskSemanticValidator {
     source.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
       _proofKey,
       jsonEncode({
-        'generation': 3,
+        'generation': 4,
         'manifest': manifestDigest,
         'native': textEngine != null,
         'revision': _taskProjectionRevision(events),
