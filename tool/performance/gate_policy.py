@@ -105,6 +105,33 @@ def may_rerun(evaluation, attempt, noise, original_binding, current_binding):
             original_binding == current_binding and external_noise_overlapped(noise))
 
 
+OFFICIAL_RERUN_LIMIT = 1
+
+def diagnostic_did_not_reproduce(diagnostic, prior_request_id, source_sha256, prior_failures):
+    """A recorded, non-qualifying diagnostic must cover every prior failure and reproduce none.
+
+    This is the only basis for the single official rerun of an unchanged source identity
+    after an enforcing timing-only qualification failure. Budgets are never consulted or
+    changed here; a run that skipped a failing label or reproduced one is not eligible.
+    """
+    try:
+        runs = diagnostic["runs"]
+        failures = set(prior_failures)
+        return (diagnostic["schemaVersion"] == 1 and
+                diagnostic["kind"] == "reference-failure-diagnostic-v1" and
+                diagnostic["priorRequestId"] == prior_request_id and
+                diagnostic["relevantSourceSHA256"] == source_sha256 and
+                diagnostic["reproduced"] is False and
+                bool(failures) and isinstance(runs, list) and bool(runs) and
+                all(run["role"] == "diagnostic" and run["qualifying"] is False and
+                    isinstance(run["resultSHA256"], str) and len(run["resultSHA256"]) == 64 and
+                    set(run["resultSHA256"]) <= set("0123456789abcdef") and
+                    failures <= set(run["checkedFailures"]) and run["reproducedFailures"] == []
+                    for run in runs))
+    except (KeyError, TypeError):
+        return False
+
+
 def evaluate_scaling(summaries_by_size, scaling, contracts):
     """Check paired history growth after proving the live state is identical."""
     try:

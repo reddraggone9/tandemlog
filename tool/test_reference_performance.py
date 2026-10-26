@@ -62,7 +62,7 @@ class AdvisoryPolicyTests(unittest.TestCase):
             self.assertFalse((root / 'output').exists())
 
 
-class ReferenceReceiptTests(unittest.TestCase):
+class ReceiptFixture(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -203,6 +203,8 @@ class ReferenceReceiptTests(unittest.TestCase):
     def verify(self):
         return receipt.verify_bundle(self.repo, self.bundle)
 
+
+class ReferenceReceiptTests(ReceiptFixture):
     def test_fresh_complete_source_bound_receipt_passes(self):
         self.assertTrue(self.verify()['referencePerformanceQualified'])
         self.assertFalse(self.verify()['releaseOrNativeUIAccepted'])
@@ -391,6 +393,121 @@ class ReferenceReceiptTests(unittest.TestCase):
             receipt.main()
         self.assertTrue(receipt.verify_bundle(self.repo, output)['referencePerformanceQualified'])
         self.assertFalse((output / 'benchmark').exists())
+
+
+class OfficialRerunTests(ReceiptFixture):
+    """Lee's 2026-10-26 rule: one rerun of unchanged source after a non-reproducing diagnostic."""
+    def setUp(self):
+        super().setUp()
+        self.prior_request = {**copy.deepcopy(self.request), 'requestId': '3' * 32, 'issuedAtUTC': '2026-10-24T00:00:00Z'}
+        failed = copy.deepcopy(self.report)
+        failed.update(timingLimitsPassed=False, releaseGateAccepted=False, correctnessAccepted=False,
+                      error=receipt.TIMING_FAILURE, startedAtUTC='2026-10-24T00:00:01Z', finishedAtUTC='2026-10-24T00:10:00Z')
+        failed['referenceBinding'].update(requestId=self.prior_request['requestId'],
+                                          requestSHA256=receipt.canonical_digest(self.prior_request))
+        failed['attempts'][1].update(status='timing-failed', failures=['task.title.save'])
+        failed['pairedScalingAttempts'][0].update(status='timing-failed', failures=['scaling:task.title.save'])
+        self.prior_report = failed
+        self.failures = sorted([failed['attempts'][1]['size'] + ':task.title.save',
+                                failed['pairedScalingAttempts'][0]['comparison'] + ':scaling:task.title.save'])
+        self.diagnostic = {'schemaVersion': 1, 'kind': 'reference-failure-diagnostic-v1',
+                           'priorRequestId': self.prior_request['requestId'],
+                           'relevantSourceSHA256': self.identity['sha256'], 'reproduced': False,
+                           'recordedAtUTC': '2026-10-24T02:00:00Z',
+                           'runs': [{'role': 'diagnostic', 'qualifying': False, 'resultSHA256': 'd' * 64,
+                                     'startedAtUTC': '2026-10-24T01:00:00Z', 'finishedAtUTC': '2026-10-24T01:30:00Z',
+                                     'checkedFailures': list(self.failures), 'reproducedFailures': []}]}
+        self.prior_path = self.repo / 'evidence/synthetic-prior/gate-result.json'
+        write(self.prior_path, self.prior_report)
+        self.authorize()
+
+    def authorize(self, prior_request=None, diagnostic=None):
+        write(self.prior_path, self.prior_report)
+        self.request['officialRerun'] = receipt.official_rerun(
+            self.repo, prior_request or self.prior_request, self.prior_report,
+            receipt.digest(self.prior_path), diagnostic or self.diagnostic)
+        receipt.request_shape(self.request)
+        self.report['referenceBinding']['requestSHA256'] = receipt.canonical_digest(self.request)
+        (self.bundle / receipt.PRIOR_RESULT).write_bytes(self.prior_path.read_bytes())
+        self.refresh()
+
+    def test_rerun_after_nonreproducing_diagnostic_qualifies_with_unchanged_budgets(self):
+        self.assertEqual(self.request['officialRerun']['priorFailures'], self.failures)
+        self.assertTrue(self.verify()['referencePerformanceQualified'])
+        self.assertEqual(receipt.digest(self.tools / 'limits-v1.json'), self.host['limitsSHA256'])
+
+    def test_diagnostic_must_exist_cover_every_failure_and_not_reproduce(self):
+        changes = [lambda d: d.update(runs=[]), lambda d: d.update(reproduced=True),
+                   lambda d: d['runs'][0].update(reproducedFailures=[self.failures[0]]),
+                   lambda d: d['runs'][0].update(checkedFailures=self.failures[:1]),
+                   lambda d: d['runs'][0].update(role='qualification'),
+                   lambda d: d['runs'][0].update(qualifying=True),
+                   lambda d: d['runs'][0].update(resultSHA256='not-a-hash'),
+                   lambda d: d.update(priorRequestId='4' * 32),
+                   lambda d: d['runs'][0].update(startedAtUTC='2026-10-24T00:05:00Z'),
+                   lambda d: d.update(recordedAtUTC='2026-10-25T00:00:01Z'),
+                   lambda d: d.pop('runs')]
+        for number, change in enumerate(changes):
+            diagnostic = copy.deepcopy(self.diagnostic); change(diagnostic)
+            with self.subTest(change=number), self.assertRaises(ValueError):
+                self.authorize(diagnostic=diagnostic)
+
+    def test_only_one_rerun_and_only_for_unchanged_source(self):
+        second = copy.deepcopy(self.request)
+        with self.assertRaisesRegex(ValueError, 'limit exceeded'):
+            self.authorize(prior_request=second)
+        (self.repo / 'lib/a.dart').write_text('const a = 2;\n')
+        self.commit()
+        with self.assertRaisesRegex(ValueError, 'fresh request'):
+            self.authorize()
+
+    def test_correctness_execution_or_passing_priors_are_not_rerunnable(self):
+        original = copy.deepcopy(self.prior_report)
+        for change in [lambda r: r.update(error='Correctness/coverage failed; retry prohibited'),
+                       lambda r: r['attempts'][0].update(status='correctness-failed'),
+                       lambda r: r['attempts'][0]['execution'].update(exitCode=1),
+                       lambda r: r.update(timingRole='measure-only', measureOnly=True),
+                       lambda r: r.update(timingLimitsPassed=True),
+                       lambda r: r['referenceBinding'].update(requestId='5' * 32)]:
+            self.prior_report = copy.deepcopy(original); change(self.prior_report)
+            with self.assertRaises(ValueError):
+                self.authorize()
+
+    def test_bundle_must_carry_unchanged_prior_result(self):
+        (self.bundle / receipt.PRIOR_RESULT).write_text('{}\n')
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'prior failed result'):
+            self.verify()
+        (self.bundle / receipt.PRIOR_RESULT).unlink()
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'prior failed result'):
+            self.verify()
+
+    def test_first_qualification_cannot_carry_a_prior_result(self):
+        del self.request['officialRerun']
+        self.report['referenceBinding']['requestSHA256'] = receipt.canonical_digest(self.request)
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'Unexpected prior result'):
+            self.verify()
+
+    def test_request_cli_requires_all_rerun_inputs(self):
+        write(self.repo / 'evidence/synthetic-prior/request.json', self.prior_request)
+        write(self.repo / 'evidence/synthetic-prior/diagnostic.json', self.diagnostic)
+        base = ['reference_receipt.py', 'request', '--repo', str(self.repo), '--controller', str(self.controller)]
+        prior = self.repo / 'evidence/synthetic-prior'
+        with patch.object(sys, 'argv', base + ['--output', str(prior / 'partial.json'),
+                                             '--rerun-of-request', str(prior / 'request.json')]):
+            with self.assertRaisesRegex(ValueError, 'needs prior request'):
+                receipt.main()
+        self.assertFalse((prior / 'partial.json').exists())
+        with patch.object(sys, 'argv', base + ['--output', str(prior / 'rerun.json'),
+                                             '--rerun-of-request', str(prior / 'request.json'),
+                                             '--rerun-of-result', str(self.prior_path),
+                                             '--diagnostic', str(prior / 'diagnostic.json')]):
+            receipt.main()
+        value = receipt.read(prior / 'rerun.json')
+        self.assertEqual(value['officialRerun']['ordinal'], 2)
+        self.assertEqual(value['officialRerun']['priorFailures'], self.failures)
 
 
 class ReferenceReceiptAliasTests(unittest.TestCase):

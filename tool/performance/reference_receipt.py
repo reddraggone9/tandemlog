@@ -12,11 +12,14 @@ import shutil
 import subprocess
 import sys
 
-from gate_policy import evaluate, evaluate_scaling, validate_registered_coverage
+from gate_policy import (evaluate, evaluate_scaling, validate_registered_coverage,
+                         diagnostic_did_not_reproduce, OFFICIAL_RERUN_LIMIT)
 
 PROFILE = 'tool/performance/reference-host-v1.json'
 QUALIFICATION = 'evidence/reference-performance/current'
 EXCLUDED = ('evidence/', 'design/')
+PRIOR_RESULT = 'prior-gate-result.json'
+TIMING_FAILURE = 'Absolute or paired timing limit exceeded; no eligible further rerun'
 
 
 def need(condition, message):
@@ -143,6 +146,69 @@ def request_shape(value):
          'Not a reference qualification request')
     need(re.fullmatch('[0-9a-f]{32}', value.get('requestId', '')) is not None, 'Fresh request nonce required')
     instant(value['issuedAtUTC'])
+    if 'officialRerun' in value:
+        rerun = value['officialRerun']
+        need(isinstance(rerun, dict) and rerun.get('ordinal') == 1 + OFFICIAL_RERUN_LIMIT and
+             isinstance(rerun.get('priorRequest'), dict) and 'officialRerun' not in rerun['priorRequest'],
+             'Official rerun limit exceeded or malformed rerun request')
+        prior = rerun['priorRequest']
+        request_shape(prior)
+        need(prior['requestId'] != value['requestId'] and
+             prior['relevantSource']['sha256'] == value['relevantSource']['sha256'],
+             'Official rerun must repeat the failed request\'s unchanged relevant source')
+        diagnostic = rerun.get('diagnostic', {})
+        need(diagnostic_did_not_reproduce(diagnostic, prior['requestId'], prior['relevantSource']['sha256'],
+                                          rerun.get('priorFailures', [])),
+             'Official rerun lacks a recorded diagnostic that failed to reproduce every prior failure')
+        need(instant(diagnostic['recordedAtUTC']) <= instant(value['issuedAtUTC']) and
+             all(instant(rerun['priorFinishedAtUTC']) <= instant(r['startedAtUTC']) <= instant(r['finishedAtUTC'])
+                 <= instant(diagnostic['recordedAtUTC']) for r in diagnostic['runs']),
+             'Diagnostic must follow the failed qualification and precede the rerun request')
+
+
+def failed_qualification_failures(prior_request, report):
+    """Failing labels of an enforcing, complete, timing-only reference failure; else refuse."""
+    request_shape(prior_request)
+    binding = report.get('referenceBinding', {})
+    need(binding.get('requestId') == prior_request['requestId'] and
+         binding.get('requestSHA256') == canonical_digest(prior_request) and
+         binding.get('relevantSourceSHA256') == prior_request['relevantSource']['sha256'],
+         'Prior result is not bound to the prior qualification request')
+    need(report.get('timingRole') == 'enforcing' and report.get('measureOnly') is False and
+         report.get('costDiagnosticsEnabled') is False and report.get('releaseGateAccepted') is not True and
+         report.get('timingLimitsPassed') is not True and report.get('error') == TIMING_FAILURE,
+         'Only an enforcing timing-limit failure can be officially rerun')
+    attempts, pairs = report.get('attempts', []), report.get('pairedScalingAttempts', [])
+    need(bool(attempts) and all(a['status'] in ('passed', 'timing-failed') and a['execution']['exitCode'] == 0 and
+                                a['execution']['childAbsent'] is True for a in attempts) and
+         all(p['status'] in ('passed', 'timing-failed') for p in pairs),
+         'Correctness, coverage or execution failures are terminal and cannot be rerun')
+    last = max(a['attempt'] for a in attempts)
+    failures = sorted({a['size'] + ':' + f for a in attempts if a['attempt'] == last for f in a['failures']} |
+                      {p['comparison'] + ':' + f for p in pairs if p['attempt'] == last for f in p['failures']})
+    need(bool(failures), 'Prior result has no timing failure to rerun')
+    instant(report['finishedAtUTC'])
+    return failures
+
+
+def official_rerun(repo, prior_request, prior_report, prior_report_sha256, diagnostic):
+    """The single approved rerun of unchanged source; budgets and limits are untouched."""
+    need('officialRerun' not in prior_request, 'Official rerun limit exceeded: a rerun failure is repeatable')
+    need(prior_request['relevantSource'] == source_identity(repo), 'Changed source needs a fresh request, not a rerun')
+    return {'ordinal': 1 + OFFICIAL_RERUN_LIMIT, 'priorRequest': prior_request,
+            'priorResultSHA256': prior_report_sha256,
+            'priorFinishedAtUTC': prior_report['finishedAtUTC'],
+            'priorFailures': failed_qualification_failures(prior_request, prior_report),
+            'diagnostic': diagnostic}
+
+
+def check_official_rerun(repo, request, prior_report_path):
+    rerun = request['officialRerun']
+    need(prior_report_path.is_file() and digest(prior_report_path) == rerun['priorResultSHA256'],
+         'Official rerun prior failed result is missing or changed')
+    expected = official_rerun(repo, rerun['priorRequest'], read(prior_report_path),
+                              rerun['priorResultSHA256'], rerun['diagnostic'])
+    need(expected == rerun, 'Official rerun authorization differs from the prior failed result')
 
 
 def request_context(repo, request_path, output, bounds):
@@ -221,6 +287,7 @@ def validate_report(repo, report, request, host):
     repo = Path(repo).resolve()
     request_shape(request)
     for key in ('correctnessAccepted', 'measurementCompleted', 'allPinsMatch', 'releaseGateAccepted', 'timingLimitsPassed'):
+
         need(report.get(key) is True, 'Incomplete/incorrect reference result: ' + key)
     need(report.get('timingRole') == 'enforcing' and report.get('measureOnly') is False
          and report.get('costDiagnosticsEnabled') is False and not report.get('error'),
@@ -349,6 +416,10 @@ def verify_bundle(repo, directory):
         path = Path(name)
         need(not path.is_absolute() and '..' not in path.parts and '\\' not in name and digest(root / path) == value,
              'Qualification member changed')
+    if 'officialRerun' in request:
+        check_official_rerun(repo, request, root / PRIOR_RESULT)
+    else:
+        need(PRIOR_RESULT not in members, 'Unexpected prior result in a first qualification')
     report = read(root / 'gate-result.json')
     result = validate_report(repo, report, request, host)
     for label, item in [('compile', report['compile']),
@@ -388,7 +459,14 @@ def main():
     parser.add_argument('--run', type=Path)
     parser.add_argument('--cleanup', type=Path)
     parser.add_argument('--controller', type=Path)
+    parser.add_argument('--rerun-of-request', type=Path, help='Failed qualification request (official rerun only)')
+    parser.add_argument('--rerun-of-result', type=Path, help='Its original failed gate-result.json')
+    parser.add_argument('--diagnostic', type=Path, help='Recorded non-reproducing diagnostic (official rerun only)')
+    parser.add_argument('--prior-result', type=Path, help='Seal: the official rerun\'s prior failed gate-result.json')
     args = parser.parse_args()
+    rerun_inputs = (args.rerun_of_request, args.rerun_of_result, args.diagnostic)
+    need(args.mode == 'request' or rerun_inputs == (None, None, None), 'Rerun inputs only apply to request')
+    need(args.mode == 'seal' or args.prior_result is None, 'Prior result only applies to seal')
     if args.mode == 'fingerprint':
         need(args.output is not None, 'Existing output-parent path required')
         print(json.dumps(fingerprint(args.output), indent=2))
@@ -401,6 +479,11 @@ def main():
                  'sourceRevision': subprocess.check_output(['git', '-C', str(args.repo), 'rev-parse', 'HEAD'], text=True).strip(),
                  'relevantSource': source_identity(args.repo), 'hostProfileSHA256': digest(args.repo / PROFILE),
                  'controllerSHA256': host['controllerSHA256'], 'controllerPath': str(args.controller.resolve())}
+        if any(v is not None for v in rerun_inputs):
+            need(all(v is not None for v in rerun_inputs), 'Official rerun needs prior request, result and diagnostic')
+            value['officialRerun'] = official_rerun(args.repo, read(args.rerun_of_request), read(args.rerun_of_result),
+                                                    digest(args.rerun_of_result), read(args.diagnostic))
+            request_shape(value)
         with args.output.open('x') as stream:
             json.dump(value, stream, indent=2); stream.write('\n')
     elif args.mode == 'verify':
@@ -412,6 +495,10 @@ def main():
         report = read(args.run / 'gate-result.json')
         request = read(args.request)
         validate_report(args.repo, report, request, profile(args.repo))
+        need(('officialRerun' in request) == (args.prior_result is not None),
+             'An official rerun bundle must include exactly its prior failed result')
+        if args.prior_result is not None:
+            check_official_rerun(args.repo, request, args.prior_result)
         need(digest(args.run / 'benchmark') == report['binarySHA256'] and os.access(args.run / 'benchmark', os.X_OK),
              'Compiled binary changed or is not executable before export')
         for size, value in report['fixtures'].items():
@@ -422,6 +509,8 @@ def main():
         args.output.mkdir()
         shutil.copyfile(args.request, args.output / 'request.json')
         shutil.copyfile(args.cleanup, args.output / 'cleanup.json')
+        if args.prior_result is not None:
+            shutil.copyfile(args.prior_result, args.output / PRIOR_RESULT)
         for name in ['gate-result.json', 'compile.log',
                      *[size + '-generate.log' for size in report['fixtures']],
                      *[a['size'] + '-attempt-' + str(a['attempt']) + '.log' for a in report['attempts']],

@@ -31,3 +31,14 @@ Debug/test-runner wall-clock assertions mix compilation and scheduling noise wit
 ## Consequences and revisit triggers
 
 CI takes additional time and requires source-bound timing artifacts even on failure. Fixture dimensions, runner changes, new actions, storage changes and regressions trigger coverage/calibration review. An actual bottleneck must be investigated before a relaxation is proposed. Hardware changes do not silently rewrite accepted limits. Signing safeguards and prerelease/stable/live-data adoption gates remain independent.
+
+## Amendment 2026-10-26 — official rerun after non-reproduction
+
+Lee approved one further, separate allowance on 2026-10-26: when an enforcing
+reference qualification fails on timing only and separately recorded diagnostic
+runs of the same source cannot reproduce any failing label, one official rerun of
+that unchanged source is allowed. Pass proceeds; a second failure is repeatable
+and must be investigated and fixed. Limits, coverage and the in-run noise retry
+above are unchanged; retry-until-green remains prohibited. Tooling enforces the
+limit and the recorded-diagnostic precondition; see
+[ADR0033](0033-controlled-reference-performance.md#amendment-2026-10-26--official-rerun-after-non-reproduction).

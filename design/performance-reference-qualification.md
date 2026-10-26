@@ -17,6 +17,8 @@ reference receipt and exact-source hosted CI all pass. Do not promote old sample
   measure-only/advisory/diagnostic flags. Both absolute and both growth-rule sets
   must pass with existing2warmups/5samples. The original at-most-one externally
   justified full-suite timing retry is preserved,never retry-until-pass.
+  Separately,a failed qualification may receive the single
+  [official rerun](#official-rerun-after-non-reproduction) below.
 - Hosted `reference-performance` independently verifies the committed bundle.
   Missing or stale data fails;passing hosted timing never substitutes for it.
   `releaseGateAccepted` in the standalone result means only its AOT scope,not
@@ -154,6 +156,46 @@ Receipt/docs-only descendants remain valid only when the complete relevant
 identity is unchanged and the request commit is an ancestor. Changing runtime,
 tests,assets,workflow,gate tooling,host registration or limits requires a fresh
 request/run. No generic branch-name or age-only freshness shortcut exists.
+
+## Official rerun after non-reproduction
+
+Lee approved this rule on2026-10-26. A repeatable failure is a real performance
+problem:profile it in separate diagnostic runs,fix the cause and qualify the
+changed source with a fresh request. An isolated failure that diagnostics cannot
+reproduce may instead receive **exactly one** official rerun of the unchanged
+relevant source. Budgets,limits,coverage and the in-invocation noise retry are
+unchanged. A failed rerun counts as repeatable;there is no third qualification
+of that identity. Never rerun unchanged source merely to obtain a green result.
+
+Eligibility is enforced by `reference_receipt.py`,not by an ad-hoc exception:
+
+- The prior result must be an enforcing,uninstrumented qualification bound to its
+  request and the same relevant source identity,which failed only on timing
+  limits (`error` is the timing-limit refusal;every attempt completed with exit0
+  and only `passed`/`timing-failed` statuses). Correctness,coverage,execution,
+  binding,measure-only,advisory or diagnostic results are not rerunnable.
+- A prior request that is itself an official rerun is refused (limit1).
+- A recorded diagnostic (`reference-failure-diagnostic-v1`) must name the prior
+  request and source identity,contain at least one `role: diagnostic`,
+  `qualifying: false` run with its result hash,check **every** prior failing
+  label (absolute `size:action` and growth `comparison:scaling:action`) and
+  reproduce none. Runs must start after the failed qualification finished;the
+  record must precede the rerun request. Profiling and tracing belong only there.
+
+```bash
+python3 tool/performance/reference_receipt.py request \
+  --repo "$qualification_source" --controller "$reviewed_controller" \
+  --rerun-of-request "$failed_request" --rerun-of-result "$failed_run/gate-result.json" \
+  --diagnostic "$diagnostic_record" --output "$rerun_request"
+```
+
+The request embeds the prior request,prior result hash,prior failing labels and
+the diagnostic record as `officialRerun` (ordinal2). The launch preflight rechecks
+that block. Seal with `--prior-result "$failed_run/gate-result.json"`;the bundle
+carries it as `prior-gate-result.json` and the verifier recomputes eligibility.
+A first qualification bundle cannot carry a prior result. The local executor
+remains the trust boundary for not issuing a second rerun from the same failure;
+the original failed run,its bundle/logs and the diagnostic outputs stay retained.
 
 ## Existing manager payload — no wrapper ownership change
 

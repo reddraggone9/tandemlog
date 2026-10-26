@@ -12,6 +12,12 @@ Missing or stale reference qualification fails the separate required verifier.
 Old failures and measure-only passes retain their original status;implementation
 is not qualified until reviewed registration,a fresh enforcing receipt and CI pass.
 
+A failed reference qualification of unchanged source may receive exactly one
+official rerun,and only after a recorded non-qualifying diagnostic covered every
+failing label without reproducing any (Lee,2026-10-26). A second failure is
+repeatable and must be profiled and fixed. Budgets are unchanged. See
+[official rerun](performance-reference-qualification.md#official-rerun-after-non-reproduction).
+
 
 The standalone Dart executable measures production storage, application commands and readmodel queries in AOT release mode. It uses only generated public synthetic workspaces. There is no argument for a user workspace, mapping, profile, title or fixture import. Native text and SQLite libraries, compiler, package configuration, source and fixture bytes are sealed in the result.
 

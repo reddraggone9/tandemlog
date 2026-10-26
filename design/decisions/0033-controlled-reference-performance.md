@@ -65,3 +65,21 @@ Revisit on material host/toolchain/dependency/source change,repeated qualified
 misses,coverage change or measured cost demonstrating a genuine product tradeoff.
 Only Lee may approve looser existing limits. Native full-action acceptance and
 all signing/candidate/editorial/release/live gates remain separate.
+
+## Amendment 2026-10-26 — official rerun after non-reproduction
+
+Accepted by Lee 2026-10-26 17:00. A repeatable qualification failure is a real
+problem: profile it only in separate diagnostic runs, fix the cause and qualify
+the changed source. An isolated failure that diagnostics cannot reproduce may
+receive exactly one official rerun of the unchanged relevant source.
+`reference_receipt.py` refuses the rerun request unless the prior result is an
+enforcing timing-only failure of the same identity, the prior request is not
+itself a rerun, and a recorded `role: diagnostic`, `qualifying: false` record
+covers every prior failing label, reproduces none and falls between the failure
+and the rerun request. The bundle carries the prior failed result and the hosted
+verifier recomputes eligibility. Budgets and limits are unchanged; the original
+failure and diagnostics stay retained. Alternatives rejected: unlimited reruns
+(retry-until-green), and requiring a source change for every unreproducible spike
+(forces meaningless churn). Revisit if official reruns become frequent, which
+would indicate a host-control problem rather than isolated noise. Details:
+[operating protocol](../performance-reference-qualification.md#official-rerun-after-non-reproduction).
