@@ -36,8 +36,9 @@ Future<void> loadUxIcons() async {
       return;
     }
     final parent = directory.parent;
-    if (parent.path == directory.path)
+    if (parent.path == directory.path) {
       throw StateError('SDK MaterialIcons not found');
+    }
     directory = parent;
   }
 }
