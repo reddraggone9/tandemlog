@@ -1,7 +1,13 @@
 # 2026.10.7
 
-**Migration required before updating:** existing workspaces need a coordinated, offline conversion. Stop Tandemlog on every device and arrange the workspace conversion before opening this version. This release does not convert older workspaces; keep the previous version until your cutover is ready.
+**Migration required before updating:** this version cannot open older workspaces and does not convert them. Keep using the previous version until a separate, coordinated conversion is complete. Stop Tandemlog on every device, let sync finish, and convert the workspace with every writing installation included before updating or opening this version. Keep older versions stopped after cutover.
 
+- Task editors have simpler headers and field help for scheduling.
+- Forms explain errors beside their fields and offer Review errors; correcting an error restores Add/Save immediately. Empty task capture and user-name inputs stay quiet.
+- This occurrence now pairs date and time and requires Due and Repeat; removing either clears its draft value. Existing valid occurrence values without Due move to Due, which can change future repeats.
+- Removed the global checklist expand/collapse control.
+- Name this device in Settings. Task scheduling also supports CST6CDT, EST5EDT, MST7MDT and PST8PDT.
+- Fix stale Tasks after incoming changes while Food is open. Deleted Food dates use softer text.
 - Faster repeated startup, incoming sync updates, editing, Save and Undo in Tasks and Food, including recurring-task completion.
 - Today includes tomorrow’s timed tasks when they fall within the next 24 hours.
 
