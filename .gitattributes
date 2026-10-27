@@ -1,6 +1,11 @@
 # Canonical history fixtures are literal bytes, including LF record framing.
 # Never apply platform text conversion to compatibility evidence.
 test/fixtures/**/*.jsonl -text
+test/fixtures/**/*.applog -text
+
+# Frozen stable-v3 inputs and their converted goldens are compared byte-for-byte.
+test/fixtures/stable-v3-2026.10.0/** -text
+test/fixtures/completion-instant-v3/** -text
 
 # Released Food reader sources and packets are frozen compatibility bytes.
 test/fixtures/food-undo/** -text

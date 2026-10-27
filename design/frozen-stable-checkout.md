@@ -15,7 +15,18 @@ original hashes under the same checkout setting. The unchanged frozen-replay
 Flutter test then passed. No accepted source, fixture, provenance, assertion or
 application behavior was changed; no Windows native runtime test is claimed.
 
-The fix changes .gitattributes, which is included in the conservative reference
-source identity. The existing enforcing PASS is retained unchanged but cannot
-qualify this successor identity. Per the task stop condition, no new enforcing
-qualification, calibration, CI dispatch or release may be inferred from this fix.
+## Converted goldens (CI40422261050)
+
+With the readers fixed, the same Windows test reached replay and failed:
+`22222222-…applog: record 1, byte offset 0: Action hash or canonical bytes differ`.
+The converted canonical goldens in `test/fixtures/completion-instant-v3/converted-stable-v3/*.applog`
+were outside the `*.jsonl -text` rule. Converting only those two files to CRLF in a
+Linux checkout reproduces the identical message with Flutter3.47.5. The fix marks
+every `*.applog` fixture and both frozen stable-v3 fixture directories `-text`; a
+core.autocrlf=true checkout then preserves every frozen stable-v3, `.applog` and
+`.jsonl` fixture byte, and the unchanged frozen-replay and completion-instant tests
+pass. Parsed JSON inputs under `food-import/` and `utf8-size-guards/` still convert
+and already pass on Windows. No fixture, golden, assertion or application code changed.
+
+Each attribute change alters the conservative reference source identity, so each
+successor needs its own fresh enforcing qualification before CI.
