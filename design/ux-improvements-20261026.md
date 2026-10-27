@@ -26,6 +26,8 @@ ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
   Distant tasks schedule their own future grouping boundary; no unrelated activity
   is required. Date/manual ordering buckets do not change. Tomorrow rows inside
   Today retain their actual Due/occurrence date, avoiding an apparent today deadline.
+  Within tomorrow's date, rows already in Today sort ahead of those that are not, so a
+  pinned-zone time in the viewer's repeated fall-back hour cannot split Today.
 - Completed displays its recorded civil date, not the scheduled due date. Reverse
   date order uses the selected surviving completion's canonical clock/writer/
   sequence for same-date ties, without pretending that clock is actual completion
