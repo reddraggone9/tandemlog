@@ -1,0 +1,3873 @@
+{
+  "schemaVersion": 1,
+  "runId": 40143666264,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40143666264",
+  "source": "a71d0bac2981f93189c6dc9bdc7e3354027a7cb5",
+  "completedUTC": "2026-10-25T00:34:11Z",
+  "overall": "failure",
+  "jobs": {
+    "linux": "success",
+    "windows": "success",
+    "android": "success",
+    "performance": "failure"
+  },
+  "native": {
+    "passed": 203,
+    "failed": 0,
+    "elapsed": "40m52s",
+    "sessionUndoDiscardRegression": "passes unchanged complete native case with guard rebuild fix",
+    "logSHA256": "5a38b4b0453156e5a1431681b790d1a293cb0d5a66f82d3aad50785336899fae",
+    "log": "/workspace/scratch/rc4-food-id-native-ci-40143666264/job.log"
+  },
+  "performance": {
+    "environment": {
+      "architecture": "x86_64",
+      "kernel": "6.17.0-1022-azure",
+      "python": "3.12.3",
+      "logicalCPUs": 4,
+      "runnerImage": {},
+      "cpuModel": "AMD EPYC 7763 64-Core Processor"
+    },
+    "bounds": {
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "cpu.max": "200000 100000",
+      "pids.max": "128"
+    },
+    "correctnessAll3Shapes": true,
+    "metricsPerShape": 232,
+    "absoluteFailures": 54,
+    "medianFailures": 42,
+    "pairedFailures": 0,
+    "retryCount": 0,
+    "accepted": false,
+    "artifactId": 12579904094,
+    "artifactSHA256": "96a8ff41dcc9c37246dd1433476aec64eb6ccc3eda04aa8a787dc48744cfffa0",
+    "gateReport": "/workspace/scratch/rc4-food-id-ci-40143666264-refreshed/performance-results/gate-result.json",
+    "gateReportSHA256": "ca70ab1dac526332c0836bacf7cc8117d086a05139efdf12c3a9ef23b0751bb2",
+    "failuresByShape": {
+      "dense-1": [
+        "converted.task.bulkReorder.undo",
+        "converted.checklist.add",
+        "converted.checklist.titleAndNotes.undo",
+        "converted.checklist.complete",
+        "converted.checklist.uncomplete",
+        "converted.checklist.delete",
+        "converted.task.reopen.withChecklist",
+        "checklist.add",
+        "checklist.titleAndNotes.undo",
+        "checklist.uncomplete",
+        "checklist.reorder",
+        "checklist.delete",
+        "task.reopen.withChecklist",
+        "historical.food.restore.3",
+        "historical.food.restore.3.undo",
+        "startup.warm.total",
+        "startup.warm.history",
+        "startup.warm.taskAttach",
+        "startup.warm.cacheRestore",
+        "startup.cold.total",
+        "startup.cold.history",
+        "startup.cold.taskAttach",
+        "task.capture.3",
+        "recurring.complete.undoProtectedSuccessor"
+      ],
+      "dense-2": [
+        "converted.checklist.add",
+        "converted.checklist.titleAndNotes.undo",
+        "converted.checklist.complete",
+        "converted.checklist.uncomplete",
+        "converted.checklist.reorder",
+        "converted.checklist.delete",
+        "converted.task.reopen.withChecklist",
+        "checklist.add",
+        "checklist.titleAndNotes.undo",
+        "checklist.uncomplete",
+        "checklist.delete",
+        "task.reopen.withChecklist",
+        "food.restore.3.undo",
+        "startup.warm.total",
+        "startup.warm.history",
+        "startup.warm.cacheRestore",
+        "startup.cold.total",
+        "startup.cold.history",
+        "derivedSuccessor.complete.undo",
+        "recurring.complete.undoProtectedSuccessor",
+        "cardinality500.food.delete.3.undo"
+      ],
+      "dense-food": [
+        "converted.checklist.add",
+        "checklist.add",
+        "checklist.uncomplete",
+        "checklist.reorder",
+        "task.reopen.withChecklist",
+        "startup.warm.total",
+        "startup.warm.history",
+        "startup.cold.total",
+        "startup.cold.history"
+      ]
+    },
+    "comparisons": [
+      {
+        "attempt": 0,
+        "comparison": "task-own-history",
+        "smallSize": "dense-1",
+        "largeSize": "dense-2",
+        "status": "passed",
+        "failures": [],
+        "comparisons": {
+          "task.title.editorOpen": {
+            "smallMedianMs": 7.019,
+            "largeMedianMs": 6.689,
+            "medianBoundMs": 11.77375,
+            "smallMaximumMs": 8.175,
+            "largeMaximumMs": 7.652,
+            "maximumBoundMs": 16.445
+          },
+          "task.title.save": {
+            "smallMedianMs": 33.387,
+            "largeMedianMs": 32.284,
+            "medianBoundMs": 44.73375,
+            "smallMaximumMs": 38.485,
+            "largeMaximumMs": 45.158,
+            "maximumBoundMs": 58.879
+          },
+          "task.title.undo": {
+            "smallMedianMs": 30.391,
+            "largeMedianMs": 30.878,
+            "medianBoundMs": 40.988749999999996,
+            "smallMaximumMs": 36.874,
+            "largeMaximumMs": 37.445,
+            "maximumBoundMs": 56.6236
+          },
+          "task.notes.editorOpen": {
+            "smallMedianMs": 6.667,
+            "largeMedianMs": 6.375,
+            "medianBoundMs": 11.33375,
+            "smallMaximumMs": 8.255,
+            "largeMaximumMs": 7.909,
+            "maximumBoundMs": 16.557000000000002
+          },
+          "task.notes.save": {
+            "smallMedianMs": 34.754,
+            "largeMedianMs": 31.728,
+            "medianBoundMs": 46.442499999999995,
+            "smallMaximumMs": 39.35,
+            "largeMaximumMs": 39.207,
+            "maximumBoundMs": 60.089999999999996
+          },
+          "task.notes.undo": {
+            "smallMedianMs": 32.288,
+            "largeMedianMs": 30.562,
+            "medianBoundMs": 43.36,
+            "smallMaximumMs": 35.938,
+            "largeMaximumMs": 36.735,
+            "maximumBoundMs": 55.3132
+          },
+          "task.titleAndNotes.editorOpen": {
+            "smallMedianMs": 7.393,
+            "largeMedianMs": 6.749,
+            "medianBoundMs": 12.241249999999999,
+            "smallMaximumMs": 8.377,
+            "largeMaximumMs": 7.975,
+            "maximumBoundMs": 16.727800000000002
+          },
+          "task.titleAndNotes.save": {
+            "smallMedianMs": 43.731,
+            "largeMedianMs": 39.94,
+            "medianBoundMs": 57.66375,
+            "smallMaximumMs": 46.228,
+            "largeMaximumMs": 46.819,
+            "maximumBoundMs": 69.7192
+          },
+          "task.titleAndNotes.undo": {
+            "smallMedianMs": 38.922,
+            "largeMedianMs": 42.567,
+            "medianBoundMs": 51.652499999999996,
+            "smallMaximumMs": 48.321,
+            "largeMaximumMs": 46.569,
+            "maximumBoundMs": 72.64939999999999
+          },
+          "task.editorOpenCancel": {
+            "smallMedianMs": 8.928,
+            "largeMedianMs": 8.512,
+            "medianBoundMs": 14.16,
+            "smallMaximumMs": 9.953,
+            "largeMaximumMs": 9.744,
+            "maximumBoundMs": 18.934199999999997
+          },
+          "task.metadata.schedule": {
+            "smallMedianMs": 17.812,
+            "largeMedianMs": 19.281,
+            "medianBoundMs": 25.265,
+            "smallMaximumMs": 18.292,
+            "largeMaximumMs": 21.769,
+            "maximumBoundMs": 30.608800000000002
+          },
+          "task.metadata.schedule.undo": {
+            "smallMedianMs": 15.824,
+            "largeMedianMs": 18.686,
+            "medianBoundMs": 22.78,
+            "smallMaximumMs": 18.598,
+            "largeMaximumMs": 19.655,
+            "maximumBoundMs": 31.0372
+          },
+          "task.metadata.tags": {
+            "smallMedianMs": 17.614,
+            "largeMedianMs": 19.151,
+            "medianBoundMs": 25.017500000000002,
+            "smallMaximumMs": 18.063,
+            "largeMaximumMs": 20.232,
+            "maximumBoundMs": 30.288199999999996
+          },
+          "task.metadata.tags.undo": {
+            "smallMedianMs": 16.12,
+            "largeMedianMs": 16.439,
+            "medianBoundMs": 23.150000000000002,
+            "smallMaximumMs": 16.868,
+            "largeMaximumMs": 18.572,
+            "maximumBoundMs": 28.615199999999998
+          },
+          "task.metadata.assignee": {
+            "smallMedianMs": 17.56,
+            "largeMedianMs": 19.634,
+            "medianBoundMs": 24.95,
+            "smallMaximumMs": 18.469,
+            "largeMaximumMs": 20.443,
+            "maximumBoundMs": 30.8566
+          },
+          "task.metadata.assignee.undo": {
+            "smallMedianMs": 15.283,
+            "largeMedianMs": 17.035,
+            "medianBoundMs": 22.103749999999998,
+            "smallMaximumMs": 19.422,
+            "largeMaximumMs": 17.348,
+            "maximumBoundMs": 32.190799999999996
+          },
+          "task.delete": {
+            "smallMedianMs": 19.466,
+            "largeMedianMs": 21.073,
+            "medianBoundMs": 27.332500000000003,
+            "smallMaximumMs": 21.976,
+            "largeMaximumMs": 22.135,
+            "maximumBoundMs": 35.7664
+          },
+          "task.restoreViaUndo": {
+            "smallMedianMs": 23.042,
+            "largeMedianMs": 27.913,
+            "medianBoundMs": 31.802500000000002,
+            "smallMaximumMs": 23.398,
+            "largeMaximumMs": 30.053,
+            "maximumBoundMs": 37.7572
+          },
+          "task.reorder": {
+            "smallMedianMs": 38.572,
+            "largeMedianMs": 43.272,
+            "medianBoundMs": 51.215,
+            "smallMaximumMs": 40.467,
+            "largeMaximumMs": 47.231,
+            "maximumBoundMs": 61.6538
+          },
+          "task.reorder.undo": {
+            "smallMedianMs": 33.657,
+            "largeMedianMs": 32.771,
+            "medianBoundMs": 45.07124999999999,
+            "smallMaximumMs": 34.222,
+            "largeMaximumMs": 34.487,
+            "maximumBoundMs": 52.9108
+          },
+          "task.complete.application": {
+            "smallMedianMs": 20.329,
+            "largeMedianMs": 22.003,
+            "medianBoundMs": 28.411250000000003,
+            "smallMaximumMs": 22.644,
+            "largeMaximumMs": 28.507,
+            "maximumBoundMs": 36.7016
+          },
+          "task.reopen": {
+            "smallMedianMs": 17.081,
+            "largeMedianMs": 16.385,
+            "medianBoundMs": 24.35125,
+            "smallMaximumMs": 17.943,
+            "largeMaximumMs": 17.23,
+            "maximumBoundMs": 30.1202
+          },
+          "task.bulkEdit.three": {
+            "smallMedianMs": 35.946,
+            "largeMedianMs": 35.56,
+            "medianBoundMs": 47.9325,
+            "smallMaximumMs": 39.126,
+            "largeMaximumMs": 37.468,
+            "maximumBoundMs": 59.776399999999995
+          },
+          "task.bulkEdit.undo": {
+            "smallMedianMs": 27.403,
+            "largeMedianMs": 27.03,
+            "medianBoundMs": 37.25375,
+            "smallMaximumMs": 31.504,
+            "largeMaximumMs": 27.578,
+            "maximumBoundMs": 49.1056
+          },
+          "task.bulkDelete.three": {
+            "smallMedianMs": 35.027,
+            "largeMedianMs": 34.451,
+            "medianBoundMs": 46.78375,
+            "smallMaximumMs": 39.116,
+            "largeMaximumMs": 38.413,
+            "maximumBoundMs": 59.7624
+          },
+          "task.bulkDelete.undo": {
+            "smallMedianMs": 33.628,
+            "largeMedianMs": 35.191,
+            "medianBoundMs": 45.035,
+            "smallMaximumMs": 36.346,
+            "largeMaximumMs": 37.005,
+            "maximumBoundMs": 55.88439999999999
+          },
+          "task.bulkReorder.three": {
+            "smallMedianMs": 53.329,
+            "largeMedianMs": 52.629,
+            "medianBoundMs": 69.66125,
+            "smallMaximumMs": 60.083,
+            "largeMaximumMs": 55.516,
+            "maximumBoundMs": 89.11619999999999
+          },
+          "task.bulkReorder.undo": {
+            "smallMedianMs": 46.547,
+            "largeMedianMs": 45.619,
+            "medianBoundMs": 61.183749999999996,
+            "smallMaximumMs": 48.688,
+            "largeMaximumMs": 49.316,
+            "maximumBoundMs": 73.1632
+          },
+          "checklist.add": {
+            "smallMedianMs": 59.654,
+            "largeMedianMs": 55.299,
+            "medianBoundMs": 77.56750000000001,
+            "smallMaximumMs": 64.085,
+            "largeMaximumMs": 71.508,
+            "maximumBoundMs": 94.71899999999998
+          },
+          "checklist.titleAndNotes.editorOpen": {
+            "smallMedianMs": 3.804,
+            "largeMedianMs": 3.862,
+            "medianBoundMs": 7.755,
+            "smallMaximumMs": 3.881,
+            "largeMaximumMs": 3.941,
+            "maximumBoundMs": 10.433399999999999
+          },
+          "checklist.titleAndNotes.save": {
+            "smallMedianMs": 43.943,
+            "largeMedianMs": 45.798,
+            "medianBoundMs": 57.928749999999994,
+            "smallMaximumMs": 52.831,
+            "largeMaximumMs": 55.025,
+            "maximumBoundMs": 78.9634
+          },
+          "checklist.titleAndNotes.undo": {
+            "smallMedianMs": 43.171,
+            "largeMedianMs": 40.783,
+            "medianBoundMs": 56.96375,
+            "smallMaximumMs": 48.227,
+            "largeMaximumMs": 54.227,
+            "maximumBoundMs": 72.5178
+          },
+          "checklist.complete": {
+            "smallMedianMs": 39.127,
+            "largeMedianMs": 37.415,
+            "medianBoundMs": 51.908750000000005,
+            "smallMaximumMs": 47.224,
+            "largeMaximumMs": 49.744,
+            "maximumBoundMs": 71.11359999999999
+          },
+          "checklist.uncompleteViaUndo": {
+            "smallMedianMs": 38.683,
+            "largeMedianMs": 36.131,
+            "medianBoundMs": 51.35375,
+            "smallMaximumMs": 46.555,
+            "largeMaximumMs": 50.13,
+            "maximumBoundMs": 70.17699999999999
+          },
+          "checklist.reorder": {
+            "smallMedianMs": 39.549,
+            "largeMedianMs": 37.933,
+            "medianBoundMs": 52.43625,
+            "smallMaximumMs": 52.09,
+            "largeMaximumMs": 48.349,
+            "maximumBoundMs": 77.926
+          },
+          "checklist.reorder.undo": {
+            "smallMedianMs": 41.939,
+            "largeMedianMs": 42.467,
+            "medianBoundMs": 55.42375,
+            "smallMaximumMs": 52.183,
+            "largeMaximumMs": 48.768,
+            "maximumBoundMs": 78.05619999999999
+          },
+          "checklist.delete": {
+            "smallMedianMs": 35.374,
+            "largeMedianMs": 35.944,
+            "medianBoundMs": 47.2175,
+            "smallMaximumMs": 52.334,
+            "largeMaximumMs": 49.731,
+            "maximumBoundMs": 78.2676
+          },
+          "checklist.restoreViaUndo": {
+            "smallMedianMs": 41.629,
+            "largeMedianMs": 43.869,
+            "medianBoundMs": 55.036249999999995,
+            "smallMaximumMs": 52.213,
+            "largeMaximumMs": 45.715,
+            "maximumBoundMs": 78.09819999999999
+          },
+          "task.complete.checklistDecline": {
+            "smallMedianMs": 1.82,
+            "largeMedianMs": 1.547,
+            "medianBoundMs": 5.275,
+            "smallMaximumMs": 3.233,
+            "largeMaximumMs": 1.685,
+            "maximumBoundMs": 9.5262
+          },
+          "task.complete.checklistConfirm": {
+            "smallMedianMs": 63.222,
+            "largeMedianMs": 56.628,
+            "medianBoundMs": 82.0275,
+            "smallMaximumMs": 71.432,
+            "largeMaximumMs": 69.54,
+            "maximumBoundMs": 105.0048
+          },
+          "task.reopen.withChecklist": {
+            "smallMedianMs": 36.783,
+            "largeMedianMs": 36.548,
+            "medianBoundMs": 48.978750000000005,
+            "smallMaximumMs": 46.789,
+            "largeMaximumMs": 49.66,
+            "maximumBoundMs": 70.5046
+          },
+          "food.add.1": {
+            "smallMedianMs": 9.994,
+            "largeMedianMs": 10.056,
+            "medianBoundMs": 15.4925,
+            "smallMaximumMs": 11.57,
+            "largeMaximumMs": 10.466,
+            "maximumBoundMs": 21.198
+          },
+          "food.add.1.undo": {
+            "smallMedianMs": 10.601,
+            "largeMedianMs": 10.518,
+            "medianBoundMs": 16.25125,
+            "smallMaximumMs": 11.406,
+            "largeMaximumMs": 11.165,
+            "maximumBoundMs": 20.9684
+          },
+          "food.add.3": {
+            "smallMedianMs": 9.941,
+            "largeMedianMs": 11.816,
+            "medianBoundMs": 15.426250000000001,
+            "smallMaximumMs": 12.152,
+            "largeMaximumMs": 13.197,
+            "maximumBoundMs": 22.0128
+          },
+          "food.add.3.undo": {
+            "smallMedianMs": 10.575,
+            "largeMedianMs": 11.198,
+            "medianBoundMs": 16.21875,
+            "smallMaximumMs": 10.705,
+            "largeMaximumMs": 11.388,
+            "maximumBoundMs": 19.987
+          },
+          "food.details.1": {
+            "smallMedianMs": 11.346,
+            "largeMedianMs": 10.574,
+            "medianBoundMs": 17.1825,
+            "smallMaximumMs": 11.642,
+            "largeMaximumMs": 10.9,
+            "maximumBoundMs": 21.2988
+          },
+          "food.details.1.undo": {
+            "smallMedianMs": 12.392,
+            "largeMedianMs": 11.45,
+            "medianBoundMs": 18.49,
+            "smallMaximumMs": 13.293,
+            "largeMaximumMs": 11.732,
+            "maximumBoundMs": 23.6102
+          },
+          "food.details.3": {
+            "smallMedianMs": 11.813,
+            "largeMedianMs": 11.235,
+            "medianBoundMs": 17.76625,
+            "smallMaximumMs": 13.457,
+            "largeMaximumMs": 13.47,
+            "maximumBoundMs": 23.8398
+          },
+          "food.details.3.undo": {
+            "smallMedianMs": 12.764,
+            "largeMedianMs": 12.544,
+            "medianBoundMs": 18.955,
+            "smallMaximumMs": 14.261,
+            "largeMaximumMs": 14.7,
+            "maximumBoundMs": 24.9654
+          },
+          "food.contents.APIonly": {
+            "smallMedianMs": 11.759,
+            "largeMedianMs": 10.825,
+            "medianBoundMs": 17.69875,
+            "smallMaximumMs": 12.078,
+            "largeMaximumMs": 11.205,
+            "maximumBoundMs": 21.9092
+          },
+          "food.contents.APIonly.undo": {
+            "smallMedianMs": 12.199,
+            "largeMedianMs": 11.666,
+            "medianBoundMs": 18.24875,
+            "smallMaximumMs": 13.814,
+            "largeMaximumMs": 14.24,
+            "maximumBoundMs": 24.339599999999997
+          },
+          "food.delete.1": {
+            "smallMedianMs": 11.835,
+            "largeMedianMs": 10.692,
+            "medianBoundMs": 17.793750000000003,
+            "smallMaximumMs": 15.622,
+            "largeMaximumMs": 10.976,
+            "maximumBoundMs": 26.8708
+          },
+          "food.delete.1.undo": {
+            "smallMedianMs": 12.433,
+            "largeMedianMs": 12.092,
+            "medianBoundMs": 18.541249999999998,
+            "smallMaximumMs": 13.234,
+            "largeMaximumMs": 12.461,
+            "maximumBoundMs": 23.5276
+          },
+          "food.restore.1": {
+            "smallMedianMs": 11.355,
+            "largeMedianMs": 10.374,
+            "medianBoundMs": 17.19375,
+            "smallMaximumMs": 16.452,
+            "largeMaximumMs": 11.709,
+            "maximumBoundMs": 28.0328
+          },
+          "food.restore.1.undo": {
+            "smallMedianMs": 12.234,
+            "largeMedianMs": 12.069,
+            "medianBoundMs": 18.2925,
+            "smallMaximumMs": 13.353,
+            "largeMaximumMs": 13.776,
+            "maximumBoundMs": 23.6942
+          },
+          "food.delete.3": {
+            "smallMedianMs": 11.653,
+            "largeMedianMs": 10.449,
+            "medianBoundMs": 17.56625,
+            "smallMaximumMs": 13.843,
+            "largeMaximumMs": 13.558,
+            "maximumBoundMs": 24.3802
+          },
+          "food.delete.3.undo": {
+            "smallMedianMs": 12.561,
+            "largeMedianMs": 11.898,
+            "medianBoundMs": 18.70125,
+            "smallMaximumMs": 13.313,
+            "largeMaximumMs": 12.979,
+            "maximumBoundMs": 23.6382
+          },
+          "food.restore.3": {
+            "smallMedianMs": 16.23,
+            "largeMedianMs": 12.994,
+            "medianBoundMs": 23.2875,
+            "smallMaximumMs": 16.582,
+            "largeMaximumMs": 16.101,
+            "maximumBoundMs": 28.2148
+          },
+          "food.restore.3.undo": {
+            "smallMedianMs": 14.574,
+            "largeMedianMs": 15.567,
+            "medianBoundMs": 21.2175,
+            "smallMaximumMs": 15.043,
+            "largeMaximumMs": 15.646,
+            "maximumBoundMs": 26.0602
+          },
+          "task.rows.queryDecode": {
+            "smallMedianMs": 4.299,
+            "largeMedianMs": 4.176,
+            "medianBoundMs": 8.373750000000001,
+            "smallMaximumMs": 4.567,
+            "largeMaximumMs": 4.39,
+            "maximumBoundMs": 11.393799999999999
+          },
+          "task.snapshot.serializeAll": {
+            "smallMedianMs": 2.241,
+            "largeMedianMs": 2.136,
+            "medianBoundMs": 5.80125,
+            "smallMaximumMs": 2.304,
+            "largeMaximumMs": 2.24,
+            "maximumBoundMs": 8.2256
+          },
+          "task.view.openCompleted": {
+            "smallMedianMs": 1.955,
+            "largeMedianMs": 1.739,
+            "medianBoundMs": 5.44375,
+            "smallMaximumMs": 2.191,
+            "largeMaximumMs": 2.145,
+            "maximumBoundMs": 8.0674
+          },
+          "task.view.upcoming": {
+            "smallMedianMs": 1.761,
+            "largeMedianMs": 1.669,
+            "medianBoundMs": 5.20125,
+            "smallMaximumMs": 2.148,
+            "largeMaximumMs": 3.952,
+            "maximumBoundMs": 8.007200000000001
+          },
+          "task.view.assignee": {
+            "smallMedianMs": 0.844,
+            "largeMedianMs": 0.839,
+            "medianBoundMs": 4.055,
+            "smallMaximumMs": 0.926,
+            "largeMaximumMs": 0.881,
+            "maximumBoundMs": 6.2964
+          },
+          "task.view.tags": {
+            "smallMedianMs": 0.185,
+            "largeMedianMs": 0.186,
+            "medianBoundMs": 3.23125,
+            "smallMaximumMs": 0.191,
+            "largeMaximumMs": 0.192,
+            "maximumBoundMs": 5.2674
+          },
+          "task.view.search": {
+            "smallMedianMs": 0.359,
+            "largeMedianMs": 0.365,
+            "medianBoundMs": 3.44875,
+            "smallMaximumMs": 0.403,
+            "largeMaximumMs": 0.383,
+            "maximumBoundMs": 5.5642
+          },
+          "food.view.inventory": {
+            "smallMedianMs": 1.889,
+            "largeMedianMs": 1.895,
+            "medianBoundMs": 5.36125,
+            "smallMaximumMs": 1.903,
+            "largeMaximumMs": 1.898,
+            "maximumBoundMs": 7.664199999999999
+          },
+          "food.view.inbox": {
+            "smallMedianMs": 0.086,
+            "largeMedianMs": 0.084,
+            "medianBoundMs": 3.1075,
+            "smallMaximumMs": 0.095,
+            "largeMaximumMs": 0.1,
+            "maximumBoundMs": 5.133
+          },
+          "food.view.retained": {
+            "smallMedianMs": 0.892,
+            "largeMedianMs": 0.924,
+            "medianBoundMs": 4.115,
+            "smallMaximumMs": 2.048,
+            "largeMaximumMs": 1.03,
+            "maximumBoundMs": 7.8672
+          },
+          "food.view.deleted": {
+            "smallMedianMs": 0.018,
+            "largeMedianMs": 0.018,
+            "medianBoundMs": 3.0225,
+            "smallMaximumMs": 0.023,
+            "largeMaximumMs": 0.02,
+            "maximumBoundMs": 5.0322
+          },
+          "food.filter.search": {
+            "smallMedianMs": 0.474,
+            "largeMedianMs": 0.525,
+            "medianBoundMs": 3.5925000000000002,
+            "smallMaximumMs": 0.758,
+            "largeMaximumMs": 1.633,
+            "maximumBoundMs": 6.0611999999999995
+          },
+          "food.filter.brand": {
+            "smallMedianMs": 0.122,
+            "largeMedianMs": 0.11,
+            "medianBoundMs": 3.1525,
+            "smallMaximumMs": 0.143,
+            "largeMaximumMs": 0.128,
+            "maximumBoundMs": 5.2002
+          },
+          "food.filter.location": {
+            "smallMedianMs": 0.128,
+            "largeMedianMs": 0.114,
+            "medianBoundMs": 3.16,
+            "smallMaximumMs": 0.129,
+            "largeMaximumMs": 0.127,
+            "maximumBoundMs": 5.1806
+          },
+          "food.filter.retention": {
+            "smallMedianMs": 0.086,
+            "largeMedianMs": 0.081,
+            "medianBoundMs": 3.1075,
+            "smallMaximumMs": 0.112,
+            "largeMaximumMs": 0.086,
+            "maximumBoundMs": 5.1568
+          },
+          "refresh.tasks.unchanged": {
+            "smallMedianMs": 1.709,
+            "largeMedianMs": 1.71,
+            "medianBoundMs": 5.13625,
+            "smallMaximumMs": 1.849,
+            "largeMaximumMs": 1.831,
+            "maximumBoundMs": 7.5886
+          },
+          "refresh.food.unchanged": {
+            "smallMedianMs": 1.548,
+            "largeMedianMs": 1.489,
+            "medianBoundMs": 4.9350000000000005,
+            "smallMaximumMs": 1.73,
+            "largeMaximumMs": 1.787,
+            "maximumBoundMs": 7.422
+          },
+          "section.preference.food": {
+            "smallMedianMs": 0.547,
+            "largeMedianMs": 0.422,
+            "medianBoundMs": 3.68375,
+            "smallMaximumMs": 0.661,
+            "largeMaximumMs": 0.539,
+            "maximumBoundMs": 5.9254
+          },
+          "section.preference.tasks": {
+            "smallMedianMs": 0.531,
+            "largeMedianMs": 0.438,
+            "medianBoundMs": 3.6637500000000003,
+            "smallMaximumMs": 0.605,
+            "largeMaximumMs": 0.484,
+            "maximumBoundMs": 5.8469999999999995
+          },
+          "foreground.request.reconcileImmediate": {
+            "smallMedianMs": 1.488,
+            "largeMedianMs": 1.573,
+            "medianBoundMs": 4.859999999999999,
+            "smallMaximumMs": 1.699,
+            "largeMaximumMs": 1.647,
+            "maximumBoundMs": 7.3786000000000005
+          },
+          "task.capture.1": {
+            "smallMedianMs": 44.675,
+            "largeMedianMs": 42.985,
+            "medianBoundMs": 58.84375,
+            "smallMaximumMs": 46.022,
+            "largeMaximumMs": 43.078,
+            "maximumBoundMs": 69.43079999999999
+          },
+          "task.capture.3": {
+            "smallMedianMs": 60.227,
+            "largeMedianMs": 53.456,
+            "medianBoundMs": 78.28375,
+            "smallMaximumMs": 63.303,
+            "largeMaximumMs": 54.114,
+            "maximumBoundMs": 93.62419999999999
+          },
+          "task.matched.search": {
+            "smallMedianMs": 4.924,
+            "largeMedianMs": 4.711,
+            "medianBoundMs": 9.155000000000001,
+            "smallMaximumMs": 4.982,
+            "largeMaximumMs": 4.76,
+            "maximumBoundMs": 11.9748
+          },
+          "task.matched.tags": {
+            "smallMedianMs": 4.601,
+            "largeMedianMs": 4.561,
+            "medianBoundMs": 8.751249999999999,
+            "smallMaximumMs": 4.729,
+            "largeMaximumMs": 4.573,
+            "maximumBoundMs": 11.6206
+          },
+          "task.matched.assignee": {
+            "smallMedianMs": 5.329,
+            "largeMedianMs": 5.224,
+            "medianBoundMs": 9.661249999999999,
+            "smallMaximumMs": 5.525,
+            "largeMaximumMs": 5.271,
+            "maximumBoundMs": 12.735
+          },
+          "food.matched.search": {
+            "smallMedianMs": 0.612,
+            "largeMedianMs": 0.602,
+            "medianBoundMs": 3.765,
+            "smallMaximumMs": 0.69,
+            "largeMaximumMs": 0.607,
+            "maximumBoundMs": 5.966
+          },
+          "food.matched.brand": {
+            "smallMedianMs": 0.157,
+            "largeMedianMs": 0.163,
+            "medianBoundMs": 3.19625,
+            "smallMaximumMs": 0.169,
+            "largeMaximumMs": 0.177,
+            "maximumBoundMs": 5.2366
+          },
+          "food.matched.location": {
+            "smallMedianMs": 0.202,
+            "largeMedianMs": 0.163,
+            "medianBoundMs": 3.2525,
+            "smallMaximumMs": 0.252,
+            "largeMaximumMs": 0.174,
+            "maximumBoundMs": 5.3528
+          },
+          "food.matched.retention": {
+            "smallMedianMs": 0.123,
+            "largeMedianMs": 0.108,
+            "medianBoundMs": 3.15375,
+            "smallMaximumMs": 0.139,
+            "largeMaximumMs": 0.118,
+            "maximumBoundMs": 5.1946
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "smallMedianMs": 39.181,
+            "largeMedianMs": 46.356,
+            "medianBoundMs": 51.97624999999999,
+            "smallMaximumMs": 43.639,
+            "largeMaximumMs": 46.483,
+            "maximumBoundMs": 66.0946
+          },
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "smallMedianMs": 7.692,
+            "largeMedianMs": 10.763,
+            "medianBoundMs": 12.615,
+            "smallMaximumMs": 13.239,
+            "largeMaximumMs": 14.105,
+            "maximumBoundMs": 23.5346
+          },
+          "recurring.complete.nativeChecklist": {
+            "smallMedianMs": 60.955,
+            "largeMedianMs": 55.442,
+            "medianBoundMs": 79.19375,
+            "smallMaximumMs": 63.779,
+            "largeMaximumMs": 62.201,
+            "maximumBoundMs": 94.2906
+          },
+          "recurring.complete.undoUntouched": {
+            "smallMedianMs": 61.257,
+            "largeMedianMs": 62.11,
+            "medianBoundMs": 79.57124999999999,
+            "smallMaximumMs": 64.591,
+            "largeMaximumMs": 64.887,
+            "maximumBoundMs": 95.42739999999999
+          },
+          "recurring.recomplete.nativeChecklist": {
+            "smallMedianMs": 66.839,
+            "largeMedianMs": 62.381,
+            "medianBoundMs": 86.54875,
+            "smallMaximumMs": 70.23,
+            "largeMaximumMs": 64.548,
+            "maximumBoundMs": 103.322
+          },
+          "derivedSuccessor.titleAndNotes.editorOpen": {
+            "smallMedianMs": 6.227,
+            "largeMedianMs": 6.109,
+            "medianBoundMs": 10.783750000000001,
+            "smallMaximumMs": 6.488,
+            "largeMaximumMs": 6.221,
+            "maximumBoundMs": 14.0832
+          },
+          "derivedSuccessor.titleAndNotes.save": {
+            "smallMedianMs": 45.956,
+            "largeMedianMs": 47.885,
+            "medianBoundMs": 60.44500000000001,
+            "smallMaximumMs": 49.17,
+            "largeMaximumMs": 53.951,
+            "maximumBoundMs": 73.838
+          },
+          "derivedSuccessor.titleAndNotes.undo": {
+            "smallMedianMs": 27.307,
+            "largeMedianMs": 27.366,
+            "medianBoundMs": 37.13375,
+            "smallMaximumMs": 33.945,
+            "largeMaximumMs": 27.807,
+            "maximumBoundMs": 52.522999999999996
+          },
+          "copiedChecklist.titleAndNotes.editorOpen": {
+            "smallMedianMs": 4.088,
+            "largeMedianMs": 4.097,
+            "medianBoundMs": 8.11,
+            "smallMaximumMs": 5.091,
+            "largeMaximumMs": 4.174,
+            "maximumBoundMs": 12.1274
+          },
+          "copiedChecklist.titleAndNotes.save": {
+            "smallMedianMs": 32.418,
+            "largeMedianMs": 32.104,
+            "medianBoundMs": 43.5225,
+            "smallMaximumMs": 33.186,
+            "largeMaximumMs": 36.863,
+            "maximumBoundMs": 51.4604
+          },
+          "copiedChecklist.titleAndNotes.undo": {
+            "smallMedianMs": 29.838,
+            "largeMedianMs": 30.365,
+            "medianBoundMs": 40.2975,
+            "smallMaximumMs": 32.411,
+            "largeMaximumMs": 33.291,
+            "maximumBoundMs": 50.3754
+          },
+          "derivedSuccessor.metadata.tags": {
+            "smallMedianMs": 27.211,
+            "largeMedianMs": 27.134,
+            "medianBoundMs": 37.01375,
+            "smallMaximumMs": 27.645,
+            "largeMaximumMs": 28.876,
+            "maximumBoundMs": 43.702999999999996
+          },
+          "derivedSuccessor.metadata.undo": {
+            "smallMedianMs": 22.268,
+            "largeMedianMs": 23.321,
+            "medianBoundMs": 30.835,
+            "smallMaximumMs": 23.283,
+            "largeMaximumMs": 26.082,
+            "maximumBoundMs": 37.5962
+          },
+          "copiedChecklist.metadata.complete": {
+            "smallMedianMs": 24.985,
+            "largeMedianMs": 23.193,
+            "medianBoundMs": 34.23125,
+            "smallMaximumMs": 26.156,
+            "largeMaximumMs": 24.472,
+            "maximumBoundMs": 41.618399999999994
+          },
+          "copiedChecklist.metadata.undo": {
+            "smallMedianMs": 22.656,
+            "largeMedianMs": 23.17,
+            "medianBoundMs": 31.32,
+            "smallMaximumMs": 24.469,
+            "largeMaximumMs": 24.035,
+            "maximumBoundMs": 39.2566
+          },
+          "derivedSuccessor.complete.nativeChecklist": {
+            "smallMedianMs": 60.928,
+            "largeMedianMs": 61.409,
+            "medianBoundMs": 79.16,
+            "smallMaximumMs": 64.396,
+            "largeMaximumMs": 66.112,
+            "maximumBoundMs": 95.1544
+          },
+          "derivedSuccessor.complete.undo": {
+            "smallMedianMs": 69.769,
+            "largeMedianMs": 70.81,
+            "medianBoundMs": 90.21125,
+            "smallMaximumMs": 72.544,
+            "largeMaximumMs": 78.508,
+            "maximumBoundMs": 106.56159999999998
+          },
+          "derivedSuccessor.recomplete.nativeChecklist": {
+            "smallMedianMs": 71.441,
+            "largeMedianMs": 72.013,
+            "medianBoundMs": 92.30125000000001,
+            "smallMaximumMs": 74.055,
+            "largeMaximumMs": 72.293,
+            "maximumBoundMs": 108.677
+          },
+          "recurring.complete.undoProtectedSuccessor": {
+            "smallMedianMs": 70.628,
+            "largeMedianMs": 73.111,
+            "medianBoundMs": 91.285,
+            "smallMaximumMs": 74.026,
+            "largeMaximumMs": 76.253,
+            "maximumBoundMs": 108.6364
+          },
+          "recurring.recomplete.keepProtectedSuccessor": {
+            "smallMedianMs": 54.422,
+            "largeMedianMs": 57.706,
+            "medianBoundMs": 71.0275,
+            "smallMaximumMs": 55.659,
+            "largeMaximumMs": 57.889,
+            "maximumBoundMs": 82.92259999999999
+          },
+          "startup.cold.total": {
+            "smallMedianMs": 1472.788,
+            "largeMedianMs": 1835.18,
+            "medianBoundMs": 3413.773,
+            "smallMaximumMs": 1516.051,
+            "largeMaximumMs": 1900.786,
+            "maximumBoundMs": 3990.1274999999996
+          },
+          "startup.cold.history": {
+            "smallMedianMs": 1423.821,
+            "largeMedianMs": 1762.005,
+            "medianBoundMs": 3303.59725,
+            "smallMaximumMs": 1464.034,
+            "largeMaximumMs": 1830.499,
+            "maximumBoundMs": 3860.085
+          },
+          "startup.cold.taskAttach": {
+            "smallMedianMs": 46.593,
+            "largeMedianMs": 66.255,
+            "medianBoundMs": 204.83425,
+            "smallMaximumMs": 50.494,
+            "largeMaximumMs": 68.422,
+            "maximumBoundMs": 326.235
+          },
+          "startup.warm.total": {
+            "smallMedianMs": 304.552,
+            "largeMedianMs": 519.558,
+            "medianBoundMs": 785.2420000000001,
+            "smallMaximumMs": 309.792,
+            "largeMaximumMs": 530.807,
+            "maximumBoundMs": 974.4799999999999
+          },
+          "startup.warm.history": {
+            "smallMedianMs": 292.243,
+            "largeMedianMs": 507.406,
+            "medianBoundMs": 757.54675,
+            "smallMaximumMs": 294.22,
+            "largeMaximumMs": 519.264,
+            "maximumBoundMs": 935.5500000000001
+          },
+          "startup.warm.proof": {
+            "smallMedianMs": 54.424,
+            "largeMedianMs": 87.956,
+            "medianBoundMs": 222.454,
+            "smallMaximumMs": 67.09,
+            "largeMaximumMs": 89.346,
+            "maximumBoundMs": 367.725
+          },
+          "startup.warm.cacheRestore": {
+            "smallMedianMs": 20.816,
+            "largeMedianMs": 39.325,
+            "medianBoundMs": 146.836,
+            "smallMaximumMs": 24.238,
+            "largeMaximumMs": 40.467,
+            "maximumBoundMs": 260.595
+          },
+          "startup.warm.taskAttach": {
+            "smallMedianMs": 8.693,
+            "largeMedianMs": 10.004,
+            "medianBoundMs": 119.55924999999999,
+            "smallMaximumMs": 15.75,
+            "largeMaximumMs": 11.679,
+            "maximumBoundMs": 239.375
+          },
+          "checklist.uncomplete": {
+            "smallMedianMs": 39.619,
+            "largeMedianMs": 41.388,
+            "medianBoundMs": 52.52375,
+            "smallMaximumMs": 46.112,
+            "largeMaximumMs": 48.465,
+            "maximumBoundMs": 69.5568
+          },
+          "checklist.recompleteViaUndo": {
+            "smallMedianMs": 35.202,
+            "largeMedianMs": 36.112,
+            "medianBoundMs": 47.0025,
+            "smallMaximumMs": 43.88,
+            "largeMaximumMs": 45.645,
+            "maximumBoundMs": 66.432
+          },
+          "historical.food.add.1": {
+            "smallMedianMs": 10.793,
+            "largeMedianMs": 10.867,
+            "medianBoundMs": 16.49125,
+            "smallMaximumMs": 11.877,
+            "largeMaximumMs": 12.227,
+            "maximumBoundMs": 21.6278
+          },
+          "historical.food.add.1.undo": {
+            "smallMedianMs": 11.6,
+            "largeMedianMs": 11.171,
+            "medianBoundMs": 17.5,
+            "smallMaximumMs": 13.053,
+            "largeMaximumMs": 11.418,
+            "maximumBoundMs": 23.2742
+          },
+          "historical.food.add.3": {
+            "smallMedianMs": 11.106,
+            "largeMedianMs": 10.383,
+            "medianBoundMs": 16.8825,
+            "smallMaximumMs": 13.263,
+            "largeMaximumMs": 10.547,
+            "maximumBoundMs": 23.568199999999997
+          },
+          "historical.food.add.3.undo": {
+            "smallMedianMs": 11.215,
+            "largeMedianMs": 11.037,
+            "medianBoundMs": 17.01875,
+            "smallMaximumMs": 11.778,
+            "largeMaximumMs": 12.422,
+            "maximumBoundMs": 21.4892
+          },
+          "historical.food.contents.APIonly": {
+            "smallMedianMs": 10.303,
+            "largeMedianMs": 9.964,
+            "medianBoundMs": 15.87875,
+            "smallMaximumMs": 10.811,
+            "largeMaximumMs": 11.594,
+            "maximumBoundMs": 20.135399999999997
+          },
+          "historical.food.contents.APIonly.undo": {
+            "smallMedianMs": 11.641,
+            "largeMedianMs": 11.48,
+            "medianBoundMs": 17.55125,
+            "smallMaximumMs": 12.805,
+            "largeMaximumMs": 13.466,
+            "maximumBoundMs": 22.927
+          },
+          "historical.food.delete.1": {
+            "smallMedianMs": 10.841,
+            "largeMedianMs": 10.254,
+            "medianBoundMs": 16.55125,
+            "smallMaximumMs": 11.128,
+            "largeMaximumMs": 11.342,
+            "maximumBoundMs": 20.5792
+          },
+          "historical.food.delete.1.undo": {
+            "smallMedianMs": 11.685,
+            "largeMedianMs": 11.409,
+            "medianBoundMs": 17.606250000000003,
+            "smallMaximumMs": 12.401,
+            "largeMaximumMs": 13.105,
+            "maximumBoundMs": 22.3614
+          },
+          "historical.food.delete.3": {
+            "smallMedianMs": 11.495,
+            "largeMedianMs": 11.558,
+            "medianBoundMs": 17.36875,
+            "smallMaximumMs": 12.264,
+            "largeMaximumMs": 13.348,
+            "maximumBoundMs": 22.1696
+          },
+          "historical.food.delete.3.undo": {
+            "smallMedianMs": 12.267,
+            "largeMedianMs": 12.208,
+            "medianBoundMs": 18.33375,
+            "smallMaximumMs": 15.152,
+            "largeMaximumMs": 13.519,
+            "maximumBoundMs": 26.212799999999998
+          },
+          "historical.food.details.1": {
+            "smallMedianMs": 11.298,
+            "largeMedianMs": 10.31,
+            "medianBoundMs": 17.122500000000002,
+            "smallMaximumMs": 13.987,
+            "largeMaximumMs": 11.744,
+            "maximumBoundMs": 24.581799999999998
+          },
+          "historical.food.details.1.undo": {
+            "smallMedianMs": 11.361,
+            "largeMedianMs": 11.779,
+            "medianBoundMs": 17.20125,
+            "smallMaximumMs": 13.279,
+            "largeMaximumMs": 12.175,
+            "maximumBoundMs": 23.5906
+          },
+          "historical.food.details.3": {
+            "smallMedianMs": 10.8,
+            "largeMedianMs": 11.218,
+            "medianBoundMs": 16.5,
+            "smallMaximumMs": 11.282,
+            "largeMaximumMs": 12.285,
+            "maximumBoundMs": 20.7948
+          },
+          "historical.food.details.3.undo": {
+            "smallMedianMs": 13.262,
+            "largeMedianMs": 11.54,
+            "medianBoundMs": 19.5775,
+            "smallMaximumMs": 14.289,
+            "largeMaximumMs": 12.059,
+            "maximumBoundMs": 25.0046
+          },
+          "historical.food.restore.1": {
+            "smallMedianMs": 12.729,
+            "largeMedianMs": 10.177,
+            "medianBoundMs": 18.91125,
+            "smallMaximumMs": 14.01,
+            "largeMaximumMs": 12.692,
+            "maximumBoundMs": 24.613999999999997
+          },
+          "historical.food.restore.1.undo": {
+            "smallMedianMs": 12.136,
+            "largeMedianMs": 11.244,
+            "medianBoundMs": 18.169999999999998,
+            "smallMaximumMs": 12.715,
+            "largeMaximumMs": 11.551,
+            "maximumBoundMs": 22.801
+          },
+          "historical.food.restore.3": {
+            "smallMedianMs": 17.875,
+            "largeMedianMs": 13.261,
+            "medianBoundMs": 25.34375,
+            "smallMaximumMs": 19.825,
+            "largeMaximumMs": 15.379,
+            "maximumBoundMs": 32.754999999999995
+          },
+          "historical.food.restore.3.undo": {
+            "smallMedianMs": 15.292,
+            "largeMedianMs": 14.161,
+            "medianBoundMs": 22.115,
+            "smallMaximumMs": 19.328,
+            "largeMaximumMs": 14.891,
+            "maximumBoundMs": 32.0592
+          },
+          "explicitTask.title.editorOpen": {
+            "smallMedianMs": 4.937,
+            "largeMedianMs": 5.29,
+            "medianBoundMs": 9.17125,
+            "smallMaximumMs": 7.146,
+            "largeMaximumMs": 5.535,
+            "maximumBoundMs": 15.004399999999999
+          },
+          "explicitTask.title.save": {
+            "smallMedianMs": 22.803,
+            "largeMedianMs": 23.118,
+            "medianBoundMs": 31.50375,
+            "smallMaximumMs": 24.709,
+            "largeMaximumMs": 27.097,
+            "maximumBoundMs": 39.5926
+          },
+          "explicitTask.title.undo": {
+            "smallMedianMs": 23.89,
+            "largeMedianMs": 23.942,
+            "medianBoundMs": 32.8625,
+            "smallMaximumMs": 26.714,
+            "largeMaximumMs": 27.745,
+            "maximumBoundMs": 42.39959999999999
+          },
+          "explicitTask.notes.editorOpen": {
+            "smallMedianMs": 5.088,
+            "largeMedianMs": 5.628,
+            "medianBoundMs": 9.36,
+            "smallMaximumMs": 5.354,
+            "largeMaximumMs": 6.657,
+            "maximumBoundMs": 12.4956
+          },
+          "explicitTask.notes.save": {
+            "smallMedianMs": 22.186,
+            "largeMedianMs": 22.936,
+            "medianBoundMs": 30.7325,
+            "smallMaximumMs": 25.137,
+            "largeMaximumMs": 26.529,
+            "maximumBoundMs": 40.1918
+          },
+          "explicitTask.notes.undo": {
+            "smallMedianMs": 22.973,
+            "largeMedianMs": 23.608,
+            "medianBoundMs": 31.71625,
+            "smallMaximumMs": 25.116,
+            "largeMaximumMs": 28.061,
+            "maximumBoundMs": 40.1624
+          },
+          "explicitTask.titleAndNotes.editorOpen": {
+            "smallMedianMs": 5.477,
+            "largeMedianMs": 5.271,
+            "medianBoundMs": 9.846250000000001,
+            "smallMaximumMs": 6.239,
+            "largeMaximumMs": 6.295,
+            "maximumBoundMs": 13.734599999999999
+          },
+          "explicitTask.titleAndNotes.save": {
+            "smallMedianMs": 25.044,
+            "largeMedianMs": 25.265,
+            "medianBoundMs": 34.305,
+            "smallMaximumMs": 30.63,
+            "largeMaximumMs": 30.457,
+            "maximumBoundMs": 47.882
+          },
+          "explicitTask.titleAndNotes.undo": {
+            "smallMedianMs": 25.966,
+            "largeMedianMs": 29.545,
+            "medianBoundMs": 35.4575,
+            "smallMaximumMs": 31.585,
+            "largeMaximumMs": 32.042,
+            "maximumBoundMs": 49.219
+          },
+          "explicitTask.editorOpenCancel": {
+            "smallMedianMs": 5.437,
+            "largeMedianMs": 5.613,
+            "medianBoundMs": 9.79625,
+            "smallMaximumMs": 6.402,
+            "largeMaximumMs": 6.053,
+            "maximumBoundMs": 13.9628
+          },
+          "converted.checklist.add": {
+            "smallMedianMs": 58.241,
+            "largeMedianMs": 61.219,
+            "medianBoundMs": 75.80125,
+            "smallMaximumMs": 66.971,
+            "largeMaximumMs": 74.868,
+            "maximumBoundMs": 98.7594
+          },
+          "converted.checklist.complete": {
+            "smallMedianMs": 40.247,
+            "largeMedianMs": 41.691,
+            "medianBoundMs": 53.30875,
+            "smallMaximumMs": 48.204,
+            "largeMaximumMs": 50.719,
+            "maximumBoundMs": 72.48559999999999
+          },
+          "converted.checklist.delete": {
+            "smallMedianMs": 41.435,
+            "largeMedianMs": 40.155,
+            "medianBoundMs": 54.79375,
+            "smallMaximumMs": 47.94,
+            "largeMaximumMs": 53.882,
+            "maximumBoundMs": 72.116
+          },
+          "converted.checklist.recompleteViaUndo": {
+            "smallMedianMs": 35.732,
+            "largeMedianMs": 41.247,
+            "medianBoundMs": 47.665,
+            "smallMaximumMs": 50.823,
+            "largeMaximumMs": 45.123,
+            "maximumBoundMs": 76.1522
+          },
+          "converted.checklist.reorder": {
+            "smallMedianMs": 43.42,
+            "largeMedianMs": 37.507,
+            "medianBoundMs": 57.275000000000006,
+            "smallMaximumMs": 51.835,
+            "largeMaximumMs": 57.269,
+            "maximumBoundMs": 77.569
+          },
+          "converted.checklist.reorder.undo": {
+            "smallMedianMs": 39.547,
+            "largeMedianMs": 43.843,
+            "medianBoundMs": 52.433749999999996,
+            "smallMaximumMs": 49.892,
+            "largeMaximumMs": 52.798,
+            "maximumBoundMs": 74.8488
+          },
+          "converted.checklist.restoreViaUndo": {
+            "smallMedianMs": 42.154,
+            "largeMedianMs": 42.629,
+            "medianBoundMs": 55.6925,
+            "smallMaximumMs": 47.857,
+            "largeMaximumMs": 52.545,
+            "maximumBoundMs": 71.9998
+          },
+          "converted.checklist.titleAndNotes.editorOpen": {
+            "smallMedianMs": 3.914,
+            "largeMedianMs": 4.399,
+            "medianBoundMs": 7.8925,
+            "smallMaximumMs": 3.963,
+            "largeMaximumMs": 6.681,
+            "maximumBoundMs": 10.5482
+          },
+          "converted.checklist.titleAndNotes.save": {
+            "smallMedianMs": 39.95,
+            "largeMedianMs": 41.625,
+            "medianBoundMs": 52.9375,
+            "smallMaximumMs": 49.564,
+            "largeMaximumMs": 55.699,
+            "maximumBoundMs": 74.3896
+          },
+          "converted.checklist.titleAndNotes.undo": {
+            "smallMedianMs": 39.799,
+            "largeMedianMs": 41.543,
+            "medianBoundMs": 52.74875,
+            "smallMaximumMs": 57.464,
+            "largeMaximumMs": 55.246,
+            "maximumBoundMs": 85.44959999999999
+          },
+          "converted.checklist.uncomplete": {
+            "smallMedianMs": 40.707,
+            "largeMedianMs": 41.524,
+            "medianBoundMs": 53.88375,
+            "smallMaximumMs": 52.62,
+            "largeMaximumMs": 45.737,
+            "maximumBoundMs": 78.66799999999999
+          },
+          "converted.checklist.uncompleteViaUndo": {
+            "smallMedianMs": 35.646,
+            "largeMedianMs": 38.167,
+            "medianBoundMs": 47.557500000000005,
+            "smallMaximumMs": 51.437,
+            "largeMaximumMs": 45.214,
+            "maximumBoundMs": 77.0118
+          },
+          "converted.food.paired.details.save": {
+            "smallMedianMs": 9.923,
+            "largeMedianMs": 11.337,
+            "medianBoundMs": 15.40375,
+            "smallMaximumMs": 11.069,
+            "largeMaximumMs": 11.791,
+            "maximumBoundMs": 20.4966
+          },
+          "converted.food.paired.details.undo": {
+            "smallMedianMs": 10.218,
+            "largeMedianMs": 12.708,
+            "medianBoundMs": 15.7725,
+            "smallMaximumMs": 10.524,
+            "largeMaximumMs": 16.582,
+            "maximumBoundMs": 19.733599999999996
+          },
+          "converted.task.bulkDelete.three": {
+            "smallMedianMs": 41.184,
+            "largeMedianMs": 37.314,
+            "medianBoundMs": 54.48,
+            "smallMaximumMs": 44.369,
+            "largeMaximumMs": 41.862,
+            "maximumBoundMs": 67.1166
+          },
+          "converted.task.bulkDelete.undo": {
+            "smallMedianMs": 39.628,
+            "largeMedianMs": 38.922,
+            "medianBoundMs": 52.535,
+            "smallMaximumMs": 40.691,
+            "largeMaximumMs": 41.562,
+            "maximumBoundMs": 61.9674
+          },
+          "converted.task.bulkEdit.three": {
+            "smallMedianMs": 41.555,
+            "largeMedianMs": 39.02,
+            "medianBoundMs": 54.94375,
+            "smallMaximumMs": 45.083,
+            "largeMaximumMs": 42.723,
+            "maximumBoundMs": 68.11619999999999
+          },
+          "converted.task.bulkEdit.undo": {
+            "smallMedianMs": 31.549,
+            "largeMedianMs": 29.732,
+            "medianBoundMs": 42.43625,
+            "smallMaximumMs": 34.505,
+            "largeMaximumMs": 32.718,
+            "maximumBoundMs": 53.307
+          },
+          "converted.task.bulkReorder.three": {
+            "smallMedianMs": 57.297,
+            "largeMedianMs": 57.213,
+            "medianBoundMs": 74.62125,
+            "smallMaximumMs": 61.916,
+            "largeMaximumMs": 61.273,
+            "maximumBoundMs": 91.68239999999999
+          },
+          "converted.task.bulkReorder.undo": {
+            "smallMedianMs": 51.209,
+            "largeMedianMs": 49.337,
+            "medianBoundMs": 67.01125,
+            "smallMaximumMs": 53.735,
+            "largeMaximumMs": 52.081,
+            "maximumBoundMs": 80.229
+          },
+          "converted.task.complete.application": {
+            "smallMedianMs": 24.747,
+            "largeMedianMs": 25.038,
+            "medianBoundMs": 33.93375,
+            "smallMaximumMs": 26.22,
+            "largeMaximumMs": 27.775,
+            "maximumBoundMs": 41.708
+          },
+          "converted.task.complete.checklistConfirm": {
+            "smallMedianMs": 63.223,
+            "largeMedianMs": 56.879,
+            "medianBoundMs": 82.02875,
+            "smallMaximumMs": 71.358,
+            "largeMaximumMs": 80.916,
+            "maximumBoundMs": 104.9012
+          },
+          "converted.task.complete.checklistDecline": {
+            "smallMedianMs": 1.532,
+            "largeMedianMs": 1.517,
+            "medianBoundMs": 4.915,
+            "smallMaximumMs": 2.163,
+            "largeMaximumMs": 1.689,
+            "maximumBoundMs": 8.0282
+          },
+          "converted.task.delete": {
+            "smallMedianMs": 22.862,
+            "largeMedianMs": 23.222,
+            "medianBoundMs": 31.577499999999997,
+            "smallMaximumMs": 23.626,
+            "largeMaximumMs": 25.508,
+            "maximumBoundMs": 38.0764
+          },
+          "converted.task.editorOpenCancel": {
+            "smallMedianMs": 6.869,
+            "largeMedianMs": 6.475,
+            "medianBoundMs": 11.58625,
+            "smallMaximumMs": 6.938,
+            "largeMaximumMs": 6.608,
+            "maximumBoundMs": 14.713199999999999
+          },
+          "converted.task.metadata.assignee": {
+            "smallMedianMs": 20.039,
+            "largeMedianMs": 21.823,
+            "medianBoundMs": 28.048750000000002,
+            "smallMaximumMs": 22.927,
+            "largeMaximumMs": 22.55,
+            "maximumBoundMs": 37.0978
+          },
+          "converted.task.metadata.assignee.undo": {
+            "smallMedianMs": 18.611,
+            "largeMedianMs": 19.556,
+            "medianBoundMs": 26.26375,
+            "smallMaximumMs": 20.821,
+            "largeMaximumMs": 22.041,
+            "maximumBoundMs": 34.1494
+          },
+          "converted.task.metadata.schedule": {
+            "smallMedianMs": 20.997,
+            "largeMedianMs": 22.076,
+            "medianBoundMs": 29.24625,
+            "smallMaximumMs": 23.69,
+            "largeMaximumMs": 24.942,
+            "maximumBoundMs": 38.166
+          },
+          "converted.task.metadata.schedule.undo": {
+            "smallMedianMs": 19.272,
+            "largeMedianMs": 20.793,
+            "medianBoundMs": 27.089999999999996,
+            "smallMaximumMs": 19.978,
+            "largeMaximumMs": 22.658,
+            "maximumBoundMs": 32.9692
+          },
+          "converted.task.metadata.tags": {
+            "smallMedianMs": 20.04,
+            "largeMedianMs": 21.998,
+            "medianBoundMs": 28.049999999999997,
+            "smallMaximumMs": 24.534,
+            "largeMaximumMs": 22.812,
+            "maximumBoundMs": 39.34759999999999
+          },
+          "converted.task.metadata.tags.undo": {
+            "smallMedianMs": 18.408,
+            "largeMedianMs": 19.702,
+            "medianBoundMs": 26.01,
+            "smallMaximumMs": 20.459,
+            "largeMaximumMs": 20.292,
+            "maximumBoundMs": 33.6426
+          },
+          "converted.task.notes.editorOpen": {
+            "smallMedianMs": 5.232,
+            "largeMedianMs": 5.573,
+            "medianBoundMs": 9.54,
+            "smallMaximumMs": 5.425,
+            "largeMaximumMs": 6.261,
+            "maximumBoundMs": 12.594999999999999
+          },
+          "converted.task.notes.save": {
+            "smallMedianMs": 22.886,
+            "largeMedianMs": 24.602,
+            "medianBoundMs": 31.607499999999998,
+            "smallMaximumMs": 23.788,
+            "largeMaximumMs": 31.711,
+            "maximumBoundMs": 38.3032
+          },
+          "converted.task.notes.undo": {
+            "smallMedianMs": 23.76,
+            "largeMedianMs": 25.737,
+            "medianBoundMs": 32.7,
+            "smallMaximumMs": 26.096,
+            "largeMaximumMs": 27.829,
+            "maximumBoundMs": 41.5344
+          },
+          "converted.task.reopen": {
+            "smallMedianMs": 19.036,
+            "largeMedianMs": 19.62,
+            "medianBoundMs": 26.795,
+            "smallMaximumMs": 21.471,
+            "largeMaximumMs": 22.244,
+            "maximumBoundMs": 35.0594
+          },
+          "converted.task.reopen.withChecklist": {
+            "smallMedianMs": 41.287,
+            "largeMedianMs": 37.607,
+            "medianBoundMs": 54.60875,
+            "smallMaximumMs": 49.915,
+            "largeMaximumMs": 53.333,
+            "maximumBoundMs": 74.881
+          },
+          "converted.task.reorder": {
+            "smallMedianMs": 42.219,
+            "largeMedianMs": 42.878,
+            "medianBoundMs": 55.77375,
+            "smallMaximumMs": 44.871,
+            "largeMaximumMs": 49.911,
+            "maximumBoundMs": 67.8194
+          },
+          "converted.task.reorder.undo": {
+            "smallMedianMs": 34.789,
+            "largeMedianMs": 33.048,
+            "medianBoundMs": 46.48625,
+            "smallMaximumMs": 37.379,
+            "largeMaximumMs": 37.721,
+            "maximumBoundMs": 57.3306
+          },
+          "converted.task.restoreViaUndo": {
+            "smallMedianMs": 27.268,
+            "largeMedianMs": 28.062,
+            "medianBoundMs": 37.085,
+            "smallMaximumMs": 30.374,
+            "largeMaximumMs": 31.098,
+            "maximumBoundMs": 47.523599999999995
+          },
+          "converted.task.title.editorOpen": {
+            "smallMedianMs": 4.935,
+            "largeMedianMs": 4.492,
+            "medianBoundMs": 9.16875,
+            "smallMaximumMs": 5.111,
+            "largeMaximumMs": 4.943,
+            "maximumBoundMs": 12.1554
+          },
+          "converted.task.title.save": {
+            "smallMedianMs": 22.067,
+            "largeMedianMs": 24.239,
+            "medianBoundMs": 30.583750000000002,
+            "smallMaximumMs": 22.598,
+            "largeMaximumMs": 26.546,
+            "maximumBoundMs": 36.63719999999999
+          },
+          "converted.task.title.undo": {
+            "smallMedianMs": 21.796,
+            "largeMedianMs": 24.695,
+            "medianBoundMs": 30.244999999999997,
+            "smallMaximumMs": 26.214,
+            "largeMaximumMs": 25.984,
+            "maximumBoundMs": 41.6996
+          },
+          "converted.task.titleAndNotes.editorOpen": {
+            "smallMedianMs": 6.191,
+            "largeMedianMs": 5.846,
+            "medianBoundMs": 10.73875,
+            "smallMaximumMs": 6.328,
+            "largeMaximumMs": 6.485,
+            "maximumBoundMs": 13.8592
+          },
+          "converted.task.titleAndNotes.save": {
+            "smallMedianMs": 29.559,
+            "largeMedianMs": 29.399,
+            "medianBoundMs": 39.948750000000004,
+            "smallMaximumMs": 30.905,
+            "largeMaximumMs": 34.264,
+            "maximumBoundMs": 48.266999999999996
+          },
+          "converted.task.titleAndNotes.undo": {
+            "smallMedianMs": 33.001,
+            "largeMedianMs": 33.818,
+            "medianBoundMs": 44.25125,
+            "smallMaximumMs": 40.167,
+            "largeMaximumMs": 34.669,
+            "maximumBoundMs": 61.233799999999995
+          },
+          "cardinality500.food.add.1": {
+            "smallMedianMs": 10.598,
+            "largeMedianMs": 10.752,
+            "medianBoundMs": 16.247500000000002,
+            "smallMaximumMs": 13.004,
+            "largeMaximumMs": 10.955,
+            "maximumBoundMs": 23.205599999999997
+          },
+          "cardinality500.food.add.1.undo": {
+            "smallMedianMs": 11.184,
+            "largeMedianMs": 11.649,
+            "medianBoundMs": 16.979999999999997,
+            "smallMaximumMs": 14.226,
+            "largeMaximumMs": 13.488,
+            "maximumBoundMs": 24.9164
+          },
+          "cardinality500.food.add.3": {
+            "smallMedianMs": 10.782,
+            "largeMedianMs": 11.173,
+            "medianBoundMs": 16.4775,
+            "smallMaximumMs": 13.613,
+            "largeMaximumMs": 11.756,
+            "maximumBoundMs": 24.0582
+          },
+          "cardinality500.food.add.3.undo": {
+            "smallMedianMs": 11.682,
+            "largeMedianMs": 11.766,
+            "medianBoundMs": 17.6025,
+            "smallMaximumMs": 16.172,
+            "largeMaximumMs": 14.433,
+            "maximumBoundMs": 27.6408
+          },
+          "cardinality500.food.contents.APIonly": {
+            "smallMedianMs": 11.669,
+            "largeMedianMs": 11.206,
+            "medianBoundMs": 17.58625,
+            "smallMaximumMs": 15.29,
+            "largeMaximumMs": 11.772,
+            "maximumBoundMs": 26.406
+          },
+          "cardinality500.food.contents.APIonly.undo": {
+            "smallMedianMs": 12.148,
+            "largeMedianMs": 12.226,
+            "medianBoundMs": 18.185,
+            "smallMaximumMs": 14.069,
+            "largeMaximumMs": 12.85,
+            "maximumBoundMs": 24.6966
+          },
+          "cardinality500.food.delete.1": {
+            "smallMedianMs": 11.093,
+            "largeMedianMs": 11.298,
+            "medianBoundMs": 16.86625,
+            "smallMaximumMs": 12.289,
+            "largeMaximumMs": 11.792,
+            "maximumBoundMs": 22.2046
+          },
+          "cardinality500.food.delete.1.undo": {
+            "smallMedianMs": 11.732,
+            "largeMedianMs": 14.635,
+            "medianBoundMs": 17.665,
+            "smallMaximumMs": 13.058,
+            "largeMaximumMs": 16.294,
+            "maximumBoundMs": 23.2812
+          },
+          "cardinality500.food.delete.3": {
+            "smallMedianMs": 11.304,
+            "largeMedianMs": 11.87,
+            "medianBoundMs": 17.130000000000003,
+            "smallMaximumMs": 12.665,
+            "largeMaximumMs": 12.255,
+            "maximumBoundMs": 22.730999999999998
+          },
+          "cardinality500.food.delete.3.undo": {
+            "smallMedianMs": 12.699,
+            "largeMedianMs": 15.738,
+            "medianBoundMs": 18.87375,
+            "smallMaximumMs": 13.972,
+            "largeMaximumMs": 16.374,
+            "maximumBoundMs": 24.560799999999997
+          },
+          "cardinality500.food.details.1": {
+            "smallMedianMs": 11.39,
+            "largeMedianMs": 11.615,
+            "medianBoundMs": 17.2375,
+            "smallMaximumMs": 12.761,
+            "largeMaximumMs": 12.207,
+            "maximumBoundMs": 22.865399999999998
+          },
+          "cardinality500.food.details.1.undo": {
+            "smallMedianMs": 12.059,
+            "largeMedianMs": 14.757,
+            "medianBoundMs": 18.073749999999997,
+            "smallMaximumMs": 14.651,
+            "largeMaximumMs": 15.441,
+            "maximumBoundMs": 25.5114
+          },
+          "cardinality500.food.details.3": {
+            "smallMedianMs": 11.882,
+            "largeMedianMs": 12.26,
+            "medianBoundMs": 17.8525,
+            "smallMaximumMs": 13.555,
+            "largeMaximumMs": 12.976,
+            "maximumBoundMs": 23.976999999999997
+          },
+          "cardinality500.food.details.3.undo": {
+            "smallMedianMs": 12.69,
+            "largeMedianMs": 12.983,
+            "medianBoundMs": 18.862499999999997,
+            "smallMaximumMs": 15.772,
+            "largeMaximumMs": 13.301,
+            "maximumBoundMs": 27.0808
+          },
+          "cardinality500.food.restore.1": {
+            "smallMedianMs": 11.003,
+            "largeMedianMs": 10.92,
+            "medianBoundMs": 16.75375,
+            "smallMaximumMs": 12.412,
+            "largeMaximumMs": 11.757,
+            "maximumBoundMs": 22.3768
+          },
+          "cardinality500.food.restore.1.undo": {
+            "smallMedianMs": 11.977,
+            "largeMedianMs": 12.327,
+            "medianBoundMs": 17.97125,
+            "smallMaximumMs": 12.735,
+            "largeMaximumMs": 12.588,
+            "maximumBoundMs": 22.828999999999997
+          },
+          "cardinality500.food.restore.3": {
+            "smallMedianMs": 13.515,
+            "largeMedianMs": 13.746,
+            "medianBoundMs": 19.89375,
+            "smallMaximumMs": 16.982,
+            "largeMaximumMs": 14.22,
+            "maximumBoundMs": 28.7748
+          },
+          "cardinality500.food.restore.3.undo": {
+            "smallMedianMs": 14.9,
+            "largeMedianMs": 15.224,
+            "medianBoundMs": 21.625,
+            "smallMaximumMs": 18.199,
+            "largeMaximumMs": 15.578,
+            "maximumBoundMs": 30.4786
+          },
+          "cardinality500.food.filter.brand": {
+            "smallMedianMs": 0.193,
+            "largeMedianMs": 0.212,
+            "medianBoundMs": 3.24125,
+            "smallMaximumMs": 0.251,
+            "largeMaximumMs": 0.293,
+            "maximumBoundMs": 5.3514
+          },
+          "cardinality500.food.filter.location": {
+            "smallMedianMs": 0.217,
+            "largeMedianMs": 0.241,
+            "medianBoundMs": 3.27125,
+            "smallMaximumMs": 0.263,
+            "largeMaximumMs": 0.258,
+            "maximumBoundMs": 5.3682
+          },
+          "cardinality500.food.filter.retention": {
+            "smallMedianMs": 0.159,
+            "largeMedianMs": 0.179,
+            "medianBoundMs": 3.19875,
+            "smallMaximumMs": 0.175,
+            "largeMaximumMs": 0.19,
+            "maximumBoundMs": 5.245
+          },
+          "cardinality500.food.filter.search": {
+            "smallMedianMs": 0.77,
+            "largeMedianMs": 0.833,
+            "medianBoundMs": 3.9625,
+            "smallMaximumMs": 1.231,
+            "largeMaximumMs": 0.861,
+            "maximumBoundMs": 6.7234
+          },
+          "cardinality500.food.matched.brand": {
+            "smallMedianMs": 0.268,
+            "largeMedianMs": 0.263,
+            "medianBoundMs": 3.335,
+            "smallMaximumMs": 0.305,
+            "largeMaximumMs": 0.296,
+            "maximumBoundMs": 5.427
+          },
+          "cardinality500.food.matched.location": {
+            "smallMedianMs": 0.251,
+            "largeMedianMs": 0.287,
+            "medianBoundMs": 3.3137499999999998,
+            "smallMaximumMs": 0.315,
+            "largeMaximumMs": 0.331,
+            "maximumBoundMs": 5.441
+          },
+          "cardinality500.food.matched.retention": {
+            "smallMedianMs": 0.169,
+            "largeMedianMs": 0.195,
+            "medianBoundMs": 3.21125,
+            "smallMaximumMs": 0.193,
+            "largeMaximumMs": 0.202,
+            "maximumBoundMs": 5.2702
+          },
+          "cardinality500.food.matched.search": {
+            "smallMedianMs": 0.964,
+            "largeMedianMs": 0.973,
+            "medianBoundMs": 4.205,
+            "smallMaximumMs": 1.015,
+            "largeMaximumMs": 0.996,
+            "maximumBoundMs": 6.420999999999999
+          },
+          "cardinality500.food.view.deleted": {
+            "smallMedianMs": 0.088,
+            "largeMedianMs": 0.112,
+            "medianBoundMs": 3.11,
+            "smallMaximumMs": 0.094,
+            "largeMaximumMs": 0.117,
+            "maximumBoundMs": 5.1316
+          },
+          "cardinality500.food.view.inbox": {
+            "smallMedianMs": 0.179,
+            "largeMedianMs": 0.191,
+            "medianBoundMs": 3.22375,
+            "smallMaximumMs": 0.232,
+            "largeMaximumMs": 0.224,
+            "maximumBoundMs": 5.3248
+          },
+          "cardinality500.food.view.inventory": {
+            "smallMedianMs": 3.49,
+            "largeMedianMs": 3.482,
+            "medianBoundMs": 7.362500000000001,
+            "smallMaximumMs": 3.611,
+            "largeMaximumMs": 3.617,
+            "maximumBoundMs": 10.055399999999999
+          },
+          "cardinality500.food.view.retained": {
+            "smallMedianMs": 1.012,
+            "largeMedianMs": 1.04,
+            "medianBoundMs": 4.265000000000001,
+            "smallMaximumMs": 1.031,
+            "largeMaximumMs": 1.056,
+            "maximumBoundMs": 6.4434
+          },
+          "cardinality500.refresh.food.unchanged": {
+            "smallMedianMs": 1.628,
+            "largeMedianMs": 1.727,
+            "medianBoundMs": 5.035,
+            "smallMaximumMs": 1.783,
+            "largeMaximumMs": 1.767,
+            "maximumBoundMs": 7.4962
+          },
+          "cardinality500.food.paired.details.save": {
+            "smallMedianMs": 11.132,
+            "largeMedianMs": 11.639,
+            "medianBoundMs": 16.915,
+            "smallMaximumMs": 14.857,
+            "largeMaximumMs": 12.167,
+            "maximumBoundMs": 25.799799999999998
+          },
+          "cardinality500.food.paired.details.undo": {
+            "smallMedianMs": 11.659,
+            "largeMedianMs": 12.123,
+            "medianBoundMs": 17.57375,
+            "smallMaximumMs": 12.544,
+            "largeMaximumMs": 16.452,
+            "maximumBoundMs": 22.5616
+          },
+          "converted.food.paired.details.confirmedSave": {
+            "smallMedianMs": 10.176,
+            "largeMedianMs": 10.659,
+            "medianBoundMs": 15.72,
+            "smallMaximumMs": 10.363,
+            "largeMaximumMs": 12.969,
+            "maximumBoundMs": 19.5082
+          },
+          "converted.food.paired.details.confirmedUndo": {
+            "smallMedianMs": 11.009,
+            "largeMedianMs": 10.998,
+            "medianBoundMs": 16.76125,
+            "smallMaximumMs": 13.466,
+            "largeMaximumMs": 11.634,
+            "maximumBoundMs": 23.8524
+          },
+          "firstDerived.metadata.tags": {
+            "smallMedianMs": 16.482,
+            "largeMedianMs": 19.469,
+            "medianBoundMs": 23.6025,
+            "smallMaximumMs": 18.794,
+            "largeMaximumMs": 20.079,
+            "maximumBoundMs": 31.3116
+          },
+          "firstDerived.metadata.tags.undo": {
+            "smallMedianMs": 14.134,
+            "largeMedianMs": 15.571,
+            "medianBoundMs": 20.6675,
+            "smallMaximumMs": 14.641,
+            "largeMaximumMs": 15.998,
+            "maximumBoundMs": 25.4974
+          },
+          "firstCopied.metadata.complete": {
+            "smallMedianMs": 16.501,
+            "largeMedianMs": 17.272,
+            "medianBoundMs": 23.626250000000002,
+            "smallMaximumMs": 17.821,
+            "largeMaximumMs": 17.629,
+            "maximumBoundMs": 29.9494
+          },
+          "firstCopied.metadata.complete.undo": {
+            "smallMedianMs": 14.533,
+            "largeMedianMs": 16.066,
+            "medianBoundMs": 21.166249999999998,
+            "smallMaximumMs": 14.831,
+            "largeMaximumMs": 16.197,
+            "maximumBoundMs": 25.763399999999997
+          },
+          "firstDerived.mixed.save": {
+            "smallMedianMs": 21.912,
+            "largeMedianMs": 22.341,
+            "medianBoundMs": 30.39,
+            "smallMaximumMs": 22.109,
+            "largeMaximumMs": 25.281,
+            "maximumBoundMs": 35.952600000000004
+          },
+          "firstDerived.mixed.undo": {
+            "smallMedianMs": 19.925,
+            "largeMedianMs": 18.659,
+            "medianBoundMs": 27.90625,
+            "smallMaximumMs": 21.892,
+            "largeMaximumMs": 19.855,
+            "maximumBoundMs": 35.648799999999994
+          }
+        }
+      },
+      {
+        "attempt": 0,
+        "comparison": "food-own-history",
+        "smallSize": "dense-1",
+        "largeSize": "dense-food",
+        "status": "passed",
+        "failures": [],
+        "comparisons": {
+          "task.title.editorOpen": {
+            "smallMedianMs": 7.019,
+            "largeMedianMs": 5.809,
+            "medianBoundMs": 11.77375,
+            "smallMaximumMs": 8.175,
+            "largeMaximumMs": 7.003,
+            "maximumBoundMs": 16.445
+          },
+          "task.title.save": {
+            "smallMedianMs": 33.387,
+            "largeMedianMs": 30.285,
+            "medianBoundMs": 44.73375,
+            "smallMaximumMs": 38.485,
+            "largeMaximumMs": 34.181,
+            "maximumBoundMs": 58.879
+          },
+          "task.title.undo": {
+            "smallMedianMs": 30.391,
+            "largeMedianMs": 27.605,
+            "medianBoundMs": 40.988749999999996,
+            "smallMaximumMs": 36.874,
+            "largeMaximumMs": 34.183,
+            "maximumBoundMs": 56.6236
+          },
+          "task.notes.editorOpen": {
+            "smallMedianMs": 6.667,
+            "largeMedianMs": 5.918,
+            "medianBoundMs": 11.33375,
+            "smallMaximumMs": 8.255,
+            "largeMaximumMs": 7.486,
+            "maximumBoundMs": 16.557000000000002
+          },
+          "task.notes.save": {
+            "smallMedianMs": 34.754,
+            "largeMedianMs": 29.725,
+            "medianBoundMs": 46.442499999999995,
+            "smallMaximumMs": 39.35,
+            "largeMaximumMs": 35.175,
+            "maximumBoundMs": 60.089999999999996
+          },
+          "task.notes.undo": {
+            "smallMedianMs": 32.288,
+            "largeMedianMs": 30.193,
+            "medianBoundMs": 43.36,
+            "smallMaximumMs": 35.938,
+            "largeMaximumMs": 32.836,
+            "maximumBoundMs": 55.3132
+          },
+          "task.titleAndNotes.editorOpen": {
+            "smallMedianMs": 7.393,
+            "largeMedianMs": 6.346,
+            "medianBoundMs": 12.241249999999999,
+            "smallMaximumMs": 8.377,
+            "largeMaximumMs": 7.383,
+            "maximumBoundMs": 16.727800000000002
+          },
+          "task.titleAndNotes.save": {
+            "smallMedianMs": 43.731,
+            "largeMedianMs": 35.052,
+            "medianBoundMs": 57.66375,
+            "smallMaximumMs": 46.228,
+            "largeMaximumMs": 42.791,
+            "maximumBoundMs": 69.7192
+          },
+          "task.titleAndNotes.undo": {
+            "smallMedianMs": 38.922,
+            "largeMedianMs": 35.405,
+            "medianBoundMs": 51.652499999999996,
+            "smallMaximumMs": 48.321,
+            "largeMaximumMs": 49.272,
+            "maximumBoundMs": 72.64939999999999
+          },
+          "task.editorOpenCancel": {
+            "smallMedianMs": 8.928,
+            "largeMedianMs": 8.155,
+            "medianBoundMs": 14.16,
+            "smallMaximumMs": 9.953,
+            "largeMaximumMs": 9.684,
+            "maximumBoundMs": 18.934199999999997
+          },
+          "task.metadata.schedule": {
+            "smallMedianMs": 17.812,
+            "largeMedianMs": 16.018,
+            "medianBoundMs": 25.265,
+            "smallMaximumMs": 18.292,
+            "largeMaximumMs": 19.241,
+            "maximumBoundMs": 30.608800000000002
+          },
+          "task.metadata.schedule.undo": {
+            "smallMedianMs": 15.824,
+            "largeMedianMs": 13.762,
+            "medianBoundMs": 22.78,
+            "smallMaximumMs": 18.598,
+            "largeMaximumMs": 15.088,
+            "maximumBoundMs": 31.0372
+          },
+          "task.metadata.tags": {
+            "smallMedianMs": 17.614,
+            "largeMedianMs": 16.249,
+            "medianBoundMs": 25.017500000000002,
+            "smallMaximumMs": 18.063,
+            "largeMaximumMs": 17.819,
+            "maximumBoundMs": 30.288199999999996
+          },
+          "task.metadata.tags.undo": {
+            "smallMedianMs": 16.12,
+            "largeMedianMs": 14.514,
+            "medianBoundMs": 23.150000000000002,
+            "smallMaximumMs": 16.868,
+            "largeMaximumMs": 15.327,
+            "maximumBoundMs": 28.615199999999998
+          },
+          "task.metadata.assignee": {
+            "smallMedianMs": 17.56,
+            "largeMedianMs": 15.606,
+            "medianBoundMs": 24.95,
+            "smallMaximumMs": 18.469,
+            "largeMaximumMs": 17.517,
+            "maximumBoundMs": 30.8566
+          },
+          "task.metadata.assignee.undo": {
+            "smallMedianMs": 15.283,
+            "largeMedianMs": 13.843,
+            "medianBoundMs": 22.103749999999998,
+            "smallMaximumMs": 19.422,
+            "largeMaximumMs": 15.847,
+            "maximumBoundMs": 32.190799999999996
+          },
+          "task.delete": {
+            "smallMedianMs": 19.466,
+            "largeMedianMs": 17.888,
+            "medianBoundMs": 27.332500000000003,
+            "smallMaximumMs": 21.976,
+            "largeMaximumMs": 18.456,
+            "maximumBoundMs": 35.7664
+          },
+          "task.restoreViaUndo": {
+            "smallMedianMs": 23.042,
+            "largeMedianMs": 20.817,
+            "medianBoundMs": 31.802500000000002,
+            "smallMaximumMs": 23.398,
+            "largeMaximumMs": 26.1,
+            "maximumBoundMs": 37.7572
+          },
+          "task.reorder": {
+            "smallMedianMs": 38.572,
+            "largeMedianMs": 35.08,
+            "medianBoundMs": 51.215,
+            "smallMaximumMs": 40.467,
+            "largeMaximumMs": 37.666,
+            "maximumBoundMs": 61.6538
+          },
+          "task.reorder.undo": {
+            "smallMedianMs": 33.657,
+            "largeMedianMs": 31.136,
+            "medianBoundMs": 45.07124999999999,
+            "smallMaximumMs": 34.222,
+            "largeMaximumMs": 34.0,
+            "maximumBoundMs": 52.9108
+          },
+          "task.complete.application": {
+            "smallMedianMs": 20.329,
+            "largeMedianMs": 18.689,
+            "medianBoundMs": 28.411250000000003,
+            "smallMaximumMs": 22.644,
+            "largeMaximumMs": 19.319,
+            "maximumBoundMs": 36.7016
+          },
+          "task.reopen": {
+            "smallMedianMs": 17.081,
+            "largeMedianMs": 16.046,
+            "medianBoundMs": 24.35125,
+            "smallMaximumMs": 17.943,
+            "largeMaximumMs": 16.89,
+            "maximumBoundMs": 30.1202
+          },
+          "task.bulkEdit.three": {
+            "smallMedianMs": 35.946,
+            "largeMedianMs": 32.936,
+            "medianBoundMs": 47.9325,
+            "smallMaximumMs": 39.126,
+            "largeMaximumMs": 37.328,
+            "maximumBoundMs": 59.776399999999995
+          },
+          "task.bulkEdit.undo": {
+            "smallMedianMs": 27.403,
+            "largeMedianMs": 24.553,
+            "medianBoundMs": 37.25375,
+            "smallMaximumMs": 31.504,
+            "largeMaximumMs": 26.185,
+            "maximumBoundMs": 49.1056
+          },
+          "task.bulkDelete.three": {
+            "smallMedianMs": 35.027,
+            "largeMedianMs": 31.749,
+            "medianBoundMs": 46.78375,
+            "smallMaximumMs": 39.116,
+            "largeMaximumMs": 35.751,
+            "maximumBoundMs": 59.7624
+          },
+          "task.bulkDelete.undo": {
+            "smallMedianMs": 33.628,
+            "largeMedianMs": 31.256,
+            "medianBoundMs": 45.035,
+            "smallMaximumMs": 36.346,
+            "largeMaximumMs": 34.831,
+            "maximumBoundMs": 55.88439999999999
+          },
+          "task.bulkReorder.three": {
+            "smallMedianMs": 53.329,
+            "largeMedianMs": 49.841,
+            "medianBoundMs": 69.66125,
+            "smallMaximumMs": 60.083,
+            "largeMaximumMs": 52.841,
+            "maximumBoundMs": 89.11619999999999
+          },
+          "task.bulkReorder.undo": {
+            "smallMedianMs": 46.547,
+            "largeMedianMs": 41.682,
+            "medianBoundMs": 61.183749999999996,
+            "smallMaximumMs": 48.688,
+            "largeMaximumMs": 43.88,
+            "maximumBoundMs": 73.1632
+          },
+          "checklist.add": {
+            "smallMedianMs": 59.654,
+            "largeMedianMs": 49.263,
+            "medianBoundMs": 77.56750000000001,
+            "smallMaximumMs": 64.085,
+            "largeMaximumMs": 65.803,
+            "maximumBoundMs": 94.71899999999998
+          },
+          "checklist.titleAndNotes.editorOpen": {
+            "smallMedianMs": 3.804,
+            "largeMedianMs": 3.333,
+            "medianBoundMs": 7.755,
+            "smallMaximumMs": 3.881,
+            "largeMaximumMs": 3.387,
+            "maximumBoundMs": 10.433399999999999
+          },
+          "checklist.titleAndNotes.save": {
+            "smallMedianMs": 43.943,
+            "largeMedianMs": 37.159,
+            "medianBoundMs": 57.928749999999994,
+            "smallMaximumMs": 52.831,
+            "largeMaximumMs": 48.829,
+            "maximumBoundMs": 78.9634
+          },
+          "checklist.titleAndNotes.undo": {
+            "smallMedianMs": 43.171,
+            "largeMedianMs": 36.181,
+            "medianBoundMs": 56.96375,
+            "smallMaximumMs": 48.227,
+            "largeMaximumMs": 50.966,
+            "maximumBoundMs": 72.5178
+          },
+          "checklist.complete": {
+            "smallMedianMs": 39.127,
+            "largeMedianMs": 34.63,
+            "medianBoundMs": 51.908750000000005,
+            "smallMaximumMs": 47.224,
+            "largeMaximumMs": 46.804,
+            "maximumBoundMs": 71.11359999999999
+          },
+          "checklist.uncompleteViaUndo": {
+            "smallMedianMs": 38.683,
+            "largeMedianMs": 37.204,
+            "medianBoundMs": 51.35375,
+            "smallMaximumMs": 46.555,
+            "largeMaximumMs": 46.8,
+            "maximumBoundMs": 70.17699999999999
+          },
+          "checklist.reorder": {
+            "smallMedianMs": 39.549,
+            "largeMedianMs": 38.439,
+            "medianBoundMs": 52.43625,
+            "smallMaximumMs": 52.09,
+            "largeMaximumMs": 52.764,
+            "maximumBoundMs": 77.926
+          },
+          "checklist.reorder.undo": {
+            "smallMedianMs": 41.939,
+            "largeMedianMs": 33.256,
+            "medianBoundMs": 55.42375,
+            "smallMaximumMs": 52.183,
+            "largeMaximumMs": 50.08,
+            "maximumBoundMs": 78.05619999999999
+          },
+          "checklist.delete": {
+            "smallMedianMs": 35.374,
+            "largeMedianMs": 33.441,
+            "medianBoundMs": 47.2175,
+            "smallMaximumMs": 52.334,
+            "largeMaximumMs": 42.172,
+            "maximumBoundMs": 78.2676
+          },
+          "checklist.restoreViaUndo": {
+            "smallMedianMs": 41.629,
+            "largeMedianMs": 33.617,
+            "medianBoundMs": 55.036249999999995,
+            "smallMaximumMs": 52.213,
+            "largeMaximumMs": 44.127,
+            "maximumBoundMs": 78.09819999999999
+          },
+          "task.complete.checklistDecline": {
+            "smallMedianMs": 1.82,
+            "largeMedianMs": 1.352,
+            "medianBoundMs": 5.275,
+            "smallMaximumMs": 3.233,
+            "largeMaximumMs": 1.635,
+            "maximumBoundMs": 9.5262
+          },
+          "task.complete.checklistConfirm": {
+            "smallMedianMs": 63.222,
+            "largeMedianMs": 51.567,
+            "medianBoundMs": 82.0275,
+            "smallMaximumMs": 71.432,
+            "largeMaximumMs": 67.374,
+            "maximumBoundMs": 105.0048
+          },
+          "task.reopen.withChecklist": {
+            "smallMedianMs": 36.783,
+            "largeMedianMs": 38.334,
+            "medianBoundMs": 48.978750000000005,
+            "smallMaximumMs": 46.789,
+            "largeMaximumMs": 42.543,
+            "maximumBoundMs": 70.5046
+          },
+          "food.add.1": {
+            "smallMedianMs": 9.994,
+            "largeMedianMs": 10.268,
+            "medianBoundMs": 15.4925,
+            "smallMaximumMs": 11.57,
+            "largeMaximumMs": 10.961,
+            "maximumBoundMs": 21.198
+          },
+          "food.add.1.undo": {
+            "smallMedianMs": 10.601,
+            "largeMedianMs": 10.257,
+            "medianBoundMs": 16.25125,
+            "smallMaximumMs": 11.406,
+            "largeMaximumMs": 11.578,
+            "maximumBoundMs": 20.9684
+          },
+          "food.add.3": {
+            "smallMedianMs": 9.941,
+            "largeMedianMs": 9.564,
+            "medianBoundMs": 15.426250000000001,
+            "smallMaximumMs": 12.152,
+            "largeMaximumMs": 11.134,
+            "maximumBoundMs": 22.0128
+          },
+          "food.add.3.undo": {
+            "smallMedianMs": 10.575,
+            "largeMedianMs": 10.702,
+            "medianBoundMs": 16.21875,
+            "smallMaximumMs": 10.705,
+            "largeMaximumMs": 11.33,
+            "maximumBoundMs": 19.987
+          },
+          "food.details.1": {
+            "smallMedianMs": 11.346,
+            "largeMedianMs": 10.137,
+            "medianBoundMs": 17.1825,
+            "smallMaximumMs": 11.642,
+            "largeMaximumMs": 11.042,
+            "maximumBoundMs": 21.2988
+          },
+          "food.details.1.undo": {
+            "smallMedianMs": 12.392,
+            "largeMedianMs": 10.859,
+            "medianBoundMs": 18.49,
+            "smallMaximumMs": 13.293,
+            "largeMaximumMs": 11.842,
+            "maximumBoundMs": 23.6102
+          },
+          "food.details.3": {
+            "smallMedianMs": 11.813,
+            "largeMedianMs": 11.088,
+            "medianBoundMs": 17.76625,
+            "smallMaximumMs": 13.457,
+            "largeMaximumMs": 14.037,
+            "maximumBoundMs": 23.8398
+          },
+          "food.details.3.undo": {
+            "smallMedianMs": 12.764,
+            "largeMedianMs": 11.358,
+            "medianBoundMs": 18.955,
+            "smallMaximumMs": 14.261,
+            "largeMaximumMs": 11.547,
+            "maximumBoundMs": 24.9654
+          },
+          "food.contents.APIonly": {
+            "smallMedianMs": 11.759,
+            "largeMedianMs": 10.221,
+            "medianBoundMs": 17.69875,
+            "smallMaximumMs": 12.078,
+            "largeMaximumMs": 10.659,
+            "maximumBoundMs": 21.9092
+          },
+          "food.contents.APIonly.undo": {
+            "smallMedianMs": 12.199,
+            "largeMedianMs": 12.265,
+            "medianBoundMs": 18.24875,
+            "smallMaximumMs": 13.814,
+            "largeMaximumMs": 14.66,
+            "maximumBoundMs": 24.339599999999997
+          },
+          "food.delete.1": {
+            "smallMedianMs": 11.835,
+            "largeMedianMs": 10.158,
+            "medianBoundMs": 17.793750000000003,
+            "smallMaximumMs": 15.622,
+            "largeMaximumMs": 11.219,
+            "maximumBoundMs": 26.8708
+          },
+          "food.delete.1.undo": {
+            "smallMedianMs": 12.433,
+            "largeMedianMs": 11.078,
+            "medianBoundMs": 18.541249999999998,
+            "smallMaximumMs": 13.234,
+            "largeMaximumMs": 11.843,
+            "maximumBoundMs": 23.5276
+          },
+          "food.restore.1": {
+            "smallMedianMs": 11.355,
+            "largeMedianMs": 10.719,
+            "medianBoundMs": 17.19375,
+            "smallMaximumMs": 16.452,
+            "largeMaximumMs": 11.764,
+            "maximumBoundMs": 28.0328
+          },
+          "food.restore.1.undo": {
+            "smallMedianMs": 12.234,
+            "largeMedianMs": 10.852,
+            "medianBoundMs": 18.2925,
+            "smallMaximumMs": 13.353,
+            "largeMaximumMs": 10.973,
+            "maximumBoundMs": 23.6942
+          },
+          "food.delete.3": {
+            "smallMedianMs": 11.653,
+            "largeMedianMs": 10.968,
+            "medianBoundMs": 17.56625,
+            "smallMaximumMs": 13.843,
+            "largeMaximumMs": 12.652,
+            "maximumBoundMs": 24.3802
+          },
+          "food.delete.3.undo": {
+            "smallMedianMs": 12.561,
+            "largeMedianMs": 11.969,
+            "medianBoundMs": 18.70125,
+            "smallMaximumMs": 13.313,
+            "largeMaximumMs": 14.434,
+            "maximumBoundMs": 23.6382
+          },
+          "food.restore.3": {
+            "smallMedianMs": 16.23,
+            "largeMedianMs": 12.225,
+            "medianBoundMs": 23.2875,
+            "smallMaximumMs": 16.582,
+            "largeMaximumMs": 13.671,
+            "maximumBoundMs": 28.2148
+          },
+          "food.restore.3.undo": {
+            "smallMedianMs": 14.574,
+            "largeMedianMs": 13.584,
+            "medianBoundMs": 21.2175,
+            "smallMaximumMs": 15.043,
+            "largeMaximumMs": 15.229,
+            "maximumBoundMs": 26.0602
+          },
+          "task.rows.queryDecode": {
+            "smallMedianMs": 4.299,
+            "largeMedianMs": 3.92,
+            "medianBoundMs": 8.373750000000001,
+            "smallMaximumMs": 4.567,
+            "largeMaximumMs": 3.936,
+            "maximumBoundMs": 11.393799999999999
+          },
+          "task.snapshot.serializeAll": {
+            "smallMedianMs": 2.241,
+            "largeMedianMs": 1.737,
+            "medianBoundMs": 5.80125,
+            "smallMaximumMs": 2.304,
+            "largeMaximumMs": 1.764,
+            "maximumBoundMs": 8.2256
+          },
+          "task.view.openCompleted": {
+            "smallMedianMs": 1.955,
+            "largeMedianMs": 1.795,
+            "medianBoundMs": 5.44375,
+            "smallMaximumMs": 2.191,
+            "largeMaximumMs": 1.977,
+            "maximumBoundMs": 8.0674
+          },
+          "task.view.upcoming": {
+            "smallMedianMs": 1.761,
+            "largeMedianMs": 2.553,
+            "medianBoundMs": 5.20125,
+            "smallMaximumMs": 2.148,
+            "largeMaximumMs": 2.972,
+            "maximumBoundMs": 8.007200000000001
+          },
+          "task.view.assignee": {
+            "smallMedianMs": 0.844,
+            "largeMedianMs": 0.568,
+            "medianBoundMs": 4.055,
+            "smallMaximumMs": 0.926,
+            "largeMaximumMs": 0.792,
+            "maximumBoundMs": 6.2964
+          },
+          "task.view.tags": {
+            "smallMedianMs": 0.185,
+            "largeMedianMs": 0.058,
+            "medianBoundMs": 3.23125,
+            "smallMaximumMs": 0.191,
+            "largeMaximumMs": 0.074,
+            "maximumBoundMs": 5.2674
+          },
+          "task.view.search": {
+            "smallMedianMs": 0.359,
+            "largeMedianMs": 0.146,
+            "medianBoundMs": 3.44875,
+            "smallMaximumMs": 0.403,
+            "largeMaximumMs": 0.163,
+            "maximumBoundMs": 5.5642
+          },
+          "food.view.inventory": {
+            "smallMedianMs": 1.889,
+            "largeMedianMs": 1.735,
+            "medianBoundMs": 5.36125,
+            "smallMaximumMs": 1.903,
+            "largeMaximumMs": 1.754,
+            "maximumBoundMs": 7.664199999999999
+          },
+          "food.view.inbox": {
+            "smallMedianMs": 0.086,
+            "largeMedianMs": 0.04,
+            "medianBoundMs": 3.1075,
+            "smallMaximumMs": 0.095,
+            "largeMaximumMs": 0.041,
+            "maximumBoundMs": 5.133
+          },
+          "food.view.retained": {
+            "smallMedianMs": 0.892,
+            "largeMedianMs": 0.806,
+            "medianBoundMs": 4.115,
+            "smallMaximumMs": 2.048,
+            "largeMaximumMs": 0.81,
+            "maximumBoundMs": 7.8672
+          },
+          "food.view.deleted": {
+            "smallMedianMs": 0.018,
+            "largeMedianMs": 0.008,
+            "medianBoundMs": 3.0225,
+            "smallMaximumMs": 0.023,
+            "largeMaximumMs": 0.009,
+            "maximumBoundMs": 5.0322
+          },
+          "food.filter.search": {
+            "smallMedianMs": 0.474,
+            "largeMedianMs": 0.42,
+            "medianBoundMs": 3.5925000000000002,
+            "smallMaximumMs": 0.758,
+            "largeMaximumMs": 0.67,
+            "maximumBoundMs": 6.0611999999999995
+          },
+          "food.filter.brand": {
+            "smallMedianMs": 0.122,
+            "largeMedianMs": 0.037,
+            "medianBoundMs": 3.1525,
+            "smallMaximumMs": 0.143,
+            "largeMaximumMs": 0.049,
+            "maximumBoundMs": 5.2002
+          },
+          "food.filter.location": {
+            "smallMedianMs": 0.128,
+            "largeMedianMs": 0.039,
+            "medianBoundMs": 3.16,
+            "smallMaximumMs": 0.129,
+            "largeMaximumMs": 0.063,
+            "maximumBoundMs": 5.1806
+          },
+          "food.filter.retention": {
+            "smallMedianMs": 0.086,
+            "largeMedianMs": 0.036,
+            "medianBoundMs": 3.1075,
+            "smallMaximumMs": 0.112,
+            "largeMaximumMs": 0.04,
+            "maximumBoundMs": 5.1568
+          },
+          "refresh.tasks.unchanged": {
+            "smallMedianMs": 1.709,
+            "largeMedianMs": 1.523,
+            "medianBoundMs": 5.13625,
+            "smallMaximumMs": 1.849,
+            "largeMaximumMs": 1.548,
+            "maximumBoundMs": 7.5886
+          },
+          "refresh.food.unchanged": {
+            "smallMedianMs": 1.548,
+            "largeMedianMs": 1.281,
+            "medianBoundMs": 4.9350000000000005,
+            "smallMaximumMs": 1.73,
+            "largeMaximumMs": 1.335,
+            "maximumBoundMs": 7.422
+          },
+          "section.preference.food": {
+            "smallMedianMs": 0.547,
+            "largeMedianMs": 0.362,
+            "medianBoundMs": 3.68375,
+            "smallMaximumMs": 0.661,
+            "largeMaximumMs": 0.454,
+            "maximumBoundMs": 5.9254
+          },
+          "section.preference.tasks": {
+            "smallMedianMs": 0.531,
+            "largeMedianMs": 0.361,
+            "medianBoundMs": 3.6637500000000003,
+            "smallMaximumMs": 0.605,
+            "largeMaximumMs": 0.426,
+            "maximumBoundMs": 5.8469999999999995
+          },
+          "foreground.request.reconcileImmediate": {
+            "smallMedianMs": 1.488,
+            "largeMedianMs": 1.248,
+            "medianBoundMs": 4.859999999999999,
+            "smallMaximumMs": 1.699,
+            "largeMaximumMs": 1.351,
+            "maximumBoundMs": 7.3786000000000005
+          },
+          "task.capture.1": {
+            "smallMedianMs": 44.675,
+            "largeMedianMs": 38.92,
+            "medianBoundMs": 58.84375,
+            "smallMaximumMs": 46.022,
+            "largeMaximumMs": 41.882,
+            "maximumBoundMs": 69.43079999999999
+          },
+          "task.capture.3": {
+            "smallMedianMs": 60.227,
+            "largeMedianMs": 52.881,
+            "medianBoundMs": 78.28375,
+            "smallMaximumMs": 63.303,
+            "largeMaximumMs": 54.075,
+            "maximumBoundMs": 93.62419999999999
+          },
+          "task.matched.search": {
+            "smallMedianMs": 4.924,
+            "largeMedianMs": 4.249,
+            "medianBoundMs": 9.155000000000001,
+            "smallMaximumMs": 4.982,
+            "largeMaximumMs": 4.285,
+            "maximumBoundMs": 11.9748
+          },
+          "task.matched.tags": {
+            "smallMedianMs": 4.601,
+            "largeMedianMs": 4.126,
+            "medianBoundMs": 8.751249999999999,
+            "smallMaximumMs": 4.729,
+            "largeMaximumMs": 4.308,
+            "maximumBoundMs": 11.6206
+          },
+          "task.matched.assignee": {
+            "smallMedianMs": 5.329,
+            "largeMedianMs": 4.637,
+            "medianBoundMs": 9.661249999999999,
+            "smallMaximumMs": 5.525,
+            "largeMaximumMs": 4.652,
+            "maximumBoundMs": 12.735
+          },
+          "food.matched.search": {
+            "smallMedianMs": 0.612,
+            "largeMedianMs": 0.52,
+            "medianBoundMs": 3.765,
+            "smallMaximumMs": 0.69,
+            "largeMaximumMs": 0.528,
+            "maximumBoundMs": 5.966
+          },
+          "food.matched.brand": {
+            "smallMedianMs": 0.157,
+            "largeMedianMs": 0.062,
+            "medianBoundMs": 3.19625,
+            "smallMaximumMs": 0.169,
+            "largeMaximumMs": 0.07,
+            "maximumBoundMs": 5.2366
+          },
+          "food.matched.location": {
+            "smallMedianMs": 0.202,
+            "largeMedianMs": 0.064,
+            "medianBoundMs": 3.2525,
+            "smallMaximumMs": 0.252,
+            "largeMaximumMs": 0.098,
+            "maximumBoundMs": 5.3528
+          },
+          "food.matched.retention": {
+            "smallMedianMs": 0.123,
+            "largeMedianMs": 0.052,
+            "medianBoundMs": 3.15375,
+            "smallMaximumMs": 0.139,
+            "largeMaximumMs": 0.069,
+            "maximumBoundMs": 5.1946
+          },
+          "sync.peerTask.whileFood.storageAdmission": {
+            "smallMedianMs": 39.181,
+            "largeMedianMs": 33.752,
+            "medianBoundMs": 51.97624999999999,
+            "smallMaximumMs": 43.639,
+            "largeMaximumMs": 40.884,
+            "maximumBoundMs": 66.0946
+          },
+          "sync.peerFood.whileTasks.storageAdmission": {
+            "smallMedianMs": 7.692,
+            "largeMedianMs": 10.967,
+            "medianBoundMs": 12.615,
+            "smallMaximumMs": 13.239,
+            "largeMaximumMs": 12.18,
+            "maximumBoundMs": 23.5346
+          },
+          "recurring.complete.nativeChecklist": {
+            "smallMedianMs": 60.955,
+            "largeMedianMs": 52.243,
+            "medianBoundMs": 79.19375,
+            "smallMaximumMs": 63.779,
+            "largeMaximumMs": 52.642,
+            "maximumBoundMs": 94.2906
+          },
+          "recurring.complete.undoUntouched": {
+            "smallMedianMs": 61.257,
+            "largeMedianMs": 54.073,
+            "medianBoundMs": 79.57124999999999,
+            "smallMaximumMs": 64.591,
+            "largeMaximumMs": 54.685,
+            "maximumBoundMs": 95.42739999999999
+          },
+          "recurring.recomplete.nativeChecklist": {
+            "smallMedianMs": 66.839,
+            "largeMedianMs": 58.748,
+            "medianBoundMs": 86.54875,
+            "smallMaximumMs": 70.23,
+            "largeMaximumMs": 59.148,
+            "maximumBoundMs": 103.322
+          },
+          "derivedSuccessor.titleAndNotes.editorOpen": {
+            "smallMedianMs": 6.227,
+            "largeMedianMs": 5.504,
+            "medianBoundMs": 10.783750000000001,
+            "smallMaximumMs": 6.488,
+            "largeMaximumMs": 7.151,
+            "maximumBoundMs": 14.0832
+          },
+          "derivedSuccessor.titleAndNotes.save": {
+            "smallMedianMs": 45.956,
+            "largeMedianMs": 38.081,
+            "medianBoundMs": 60.44500000000001,
+            "smallMaximumMs": 49.17,
+            "largeMaximumMs": 40.145,
+            "maximumBoundMs": 73.838
+          },
+          "derivedSuccessor.titleAndNotes.undo": {
+            "smallMedianMs": 27.307,
+            "largeMedianMs": 25.082,
+            "medianBoundMs": 37.13375,
+            "smallMaximumMs": 33.945,
+            "largeMaximumMs": 26.677,
+            "maximumBoundMs": 52.522999999999996
+          },
+          "copiedChecklist.titleAndNotes.editorOpen": {
+            "smallMedianMs": 4.088,
+            "largeMedianMs": 3.596,
+            "medianBoundMs": 8.11,
+            "smallMaximumMs": 5.091,
+            "largeMaximumMs": 5.03,
+            "maximumBoundMs": 12.1274
+          },
+          "copiedChecklist.titleAndNotes.save": {
+            "smallMedianMs": 32.418,
+            "largeMedianMs": 28.133,
+            "medianBoundMs": 43.5225,
+            "smallMaximumMs": 33.186,
+            "largeMaximumMs": 29.542,
+            "maximumBoundMs": 51.4604
+          },
+          "copiedChecklist.titleAndNotes.undo": {
+            "smallMedianMs": 29.838,
+            "largeMedianMs": 26.61,
+            "medianBoundMs": 40.2975,
+            "smallMaximumMs": 32.411,
+            "largeMaximumMs": 29.773,
+            "maximumBoundMs": 50.3754
+          },
+          "derivedSuccessor.metadata.tags": {
+            "smallMedianMs": 27.211,
+            "largeMedianMs": 23.845,
+            "medianBoundMs": 37.01375,
+            "smallMaximumMs": 27.645,
+            "largeMaximumMs": 24.583,
+            "maximumBoundMs": 43.702999999999996
+          },
+          "derivedSuccessor.metadata.undo": {
+            "smallMedianMs": 22.268,
+            "largeMedianMs": 20.737,
+            "medianBoundMs": 30.835,
+            "smallMaximumMs": 23.283,
+            "largeMaximumMs": 21.606,
+            "maximumBoundMs": 37.5962
+          },
+          "copiedChecklist.metadata.complete": {
+            "smallMedianMs": 24.985,
+            "largeMedianMs": 20.317,
+            "medianBoundMs": 34.23125,
+            "smallMaximumMs": 26.156,
+            "largeMaximumMs": 23.137,
+            "maximumBoundMs": 41.618399999999994
+          },
+          "copiedChecklist.metadata.undo": {
+            "smallMedianMs": 22.656,
+            "largeMedianMs": 20.587,
+            "medianBoundMs": 31.32,
+            "smallMaximumMs": 24.469,
+            "largeMaximumMs": 23.373,
+            "maximumBoundMs": 39.2566
+          },
+          "derivedSuccessor.complete.nativeChecklist": {
+            "smallMedianMs": 60.928,
+            "largeMedianMs": 55.255,
+            "medianBoundMs": 79.16,
+            "smallMaximumMs": 64.396,
+            "largeMaximumMs": 56.648,
+            "maximumBoundMs": 95.1544
+          },
+          "derivedSuccessor.complete.undo": {
+            "smallMedianMs": 69.769,
+            "largeMedianMs": 61.423,
+            "medianBoundMs": 90.21125,
+            "smallMaximumMs": 72.544,
+            "largeMaximumMs": 62.66,
+            "maximumBoundMs": 106.56159999999998
+          },
+          "derivedSuccessor.recomplete.nativeChecklist": {
+            "smallMedianMs": 71.441,
+            "largeMedianMs": 62.557,
+            "medianBoundMs": 92.30125000000001,
+            "smallMaximumMs": 74.055,
+            "largeMaximumMs": 67.589,
+            "maximumBoundMs": 108.677
+          },
+          "recurring.complete.undoProtectedSuccessor": {
+            "smallMedianMs": 70.628,
+            "largeMedianMs": 64.166,
+            "medianBoundMs": 91.285,
+            "smallMaximumMs": 74.026,
+            "largeMaximumMs": 66.668,
+            "maximumBoundMs": 108.6364
+          },
+          "recurring.recomplete.keepProtectedSuccessor": {
+            "smallMedianMs": 54.422,
+            "largeMedianMs": 50.036,
+            "medianBoundMs": 71.0275,
+            "smallMaximumMs": 55.659,
+            "largeMaximumMs": 50.97,
+            "maximumBoundMs": 82.92259999999999
+          },
+          "startup.cold.total": {
+            "smallMedianMs": 1472.788,
+            "largeMedianMs": 1948.813,
+            "medianBoundMs": 3413.773,
+            "smallMaximumMs": 1516.051,
+            "largeMaximumMs": 1968.665,
+            "maximumBoundMs": 3990.1274999999996
+          },
+          "startup.cold.history": {
+            "smallMedianMs": 1423.821,
+            "largeMedianMs": 1906.626,
+            "medianBoundMs": 3303.59725,
+            "smallMaximumMs": 1464.034,
+            "largeMaximumMs": 1923.483,
+            "maximumBoundMs": 3860.085
+          },
+          "startup.cold.taskAttach": {
+            "smallMedianMs": 46.593,
+            "largeMedianMs": 38.243,
+            "medianBoundMs": 204.83425,
+            "smallMaximumMs": 50.494,
+            "largeMaximumMs": 41.142,
+            "maximumBoundMs": 326.235
+          },
+          "startup.warm.total": {
+            "smallMedianMs": 304.552,
+            "largeMedianMs": 573.593,
+            "medianBoundMs": 785.2420000000001,
+            "smallMaximumMs": 309.792,
+            "largeMaximumMs": 584.481,
+            "maximumBoundMs": 974.4799999999999
+          },
+          "startup.warm.history": {
+            "smallMedianMs": 292.243,
+            "largeMedianMs": 564.205,
+            "medianBoundMs": 757.54675,
+            "smallMaximumMs": 294.22,
+            "largeMaximumMs": 575.197,
+            "maximumBoundMs": 935.5500000000001
+          },
+          "startup.warm.proof": {
+            "smallMedianMs": 54.424,
+            "largeMedianMs": 52.512,
+            "medianBoundMs": 222.454,
+            "smallMaximumMs": 67.09,
+            "largeMaximumMs": 61.999,
+            "maximumBoundMs": 367.725
+          },
+          "startup.warm.cacheRestore": {
+            "smallMedianMs": 20.816,
+            "largeMedianMs": 14.839,
+            "medianBoundMs": 146.836,
+            "smallMaximumMs": 24.238,
+            "largeMaximumMs": 22.67,
+            "maximumBoundMs": 260.595
+          },
+          "startup.warm.taskAttach": {
+            "smallMedianMs": 8.693,
+            "largeMedianMs": 7.974,
+            "medianBoundMs": 119.55924999999999,
+            "smallMaximumMs": 15.75,
+            "largeMaximumMs": 9.127,
+            "maximumBoundMs": 239.375
+          },
+          "checklist.uncomplete": {
+            "smallMedianMs": 39.619,
+            "largeMedianMs": 36.582,
+            "medianBoundMs": 52.52375,
+            "smallMaximumMs": 46.112,
+            "largeMaximumMs": 46.467,
+            "maximumBoundMs": 69.5568
+          },
+          "checklist.recompleteViaUndo": {
+            "smallMedianMs": 35.202,
+            "largeMedianMs": 36.35,
+            "medianBoundMs": 47.0025,
+            "smallMaximumMs": 43.88,
+            "largeMaximumMs": 45.586,
+            "maximumBoundMs": 66.432
+          },
+          "historical.food.add.1": {
+            "smallMedianMs": 10.793,
+            "largeMedianMs": 9.441,
+            "medianBoundMs": 16.49125,
+            "smallMaximumMs": 11.877,
+            "largeMaximumMs": 10.988,
+            "maximumBoundMs": 21.6278
+          },
+          "historical.food.add.1.undo": {
+            "smallMedianMs": 11.6,
+            "largeMedianMs": 10.521,
+            "medianBoundMs": 17.5,
+            "smallMaximumMs": 13.053,
+            "largeMaximumMs": 11.469,
+            "maximumBoundMs": 23.2742
+          },
+          "historical.food.add.3": {
+            "smallMedianMs": 11.106,
+            "largeMedianMs": 9.571,
+            "medianBoundMs": 16.8825,
+            "smallMaximumMs": 13.263,
+            "largeMaximumMs": 10.819,
+            "maximumBoundMs": 23.568199999999997
+          },
+          "historical.food.add.3.undo": {
+            "smallMedianMs": 11.215,
+            "largeMedianMs": 10.213,
+            "medianBoundMs": 17.01875,
+            "smallMaximumMs": 11.778,
+            "largeMaximumMs": 12.354,
+            "maximumBoundMs": 21.4892
+          },
+          "historical.food.contents.APIonly": {
+            "smallMedianMs": 10.303,
+            "largeMedianMs": 11.815,
+            "medianBoundMs": 15.87875,
+            "smallMaximumMs": 10.811,
+            "largeMaximumMs": 12.427,
+            "maximumBoundMs": 20.135399999999997
+          },
+          "historical.food.contents.APIonly.undo": {
+            "smallMedianMs": 11.641,
+            "largeMedianMs": 11.082,
+            "medianBoundMs": 17.55125,
+            "smallMaximumMs": 12.805,
+            "largeMaximumMs": 11.776,
+            "maximumBoundMs": 22.927
+          },
+          "historical.food.delete.1": {
+            "smallMedianMs": 10.841,
+            "largeMedianMs": 9.447,
+            "medianBoundMs": 16.55125,
+            "smallMaximumMs": 11.128,
+            "largeMaximumMs": 10.308,
+            "maximumBoundMs": 20.5792
+          },
+          "historical.food.delete.1.undo": {
+            "smallMedianMs": 11.685,
+            "largeMedianMs": 11.316,
+            "medianBoundMs": 17.606250000000003,
+            "smallMaximumMs": 12.401,
+            "largeMaximumMs": 11.872,
+            "maximumBoundMs": 22.3614
+          },
+          "historical.food.delete.3": {
+            "smallMedianMs": 11.495,
+            "largeMedianMs": 10.099,
+            "medianBoundMs": 17.36875,
+            "smallMaximumMs": 12.264,
+            "largeMaximumMs": 10.507,
+            "maximumBoundMs": 22.1696
+          },
+          "historical.food.delete.3.undo": {
+            "smallMedianMs": 12.267,
+            "largeMedianMs": 11.32,
+            "medianBoundMs": 18.33375,
+            "smallMaximumMs": 15.152,
+            "largeMaximumMs": 11.72,
+            "maximumBoundMs": 26.212799999999998
+          },
+          "historical.food.details.1": {
+            "smallMedianMs": 11.298,
+            "largeMedianMs": 10.348,
+            "medianBoundMs": 17.122500000000002,
+            "smallMaximumMs": 13.987,
+            "largeMaximumMs": 10.679,
+            "maximumBoundMs": 24.581799999999998
+          },
+          "historical.food.details.1.undo": {
+            "smallMedianMs": 11.361,
+            "largeMedianMs": 10.585,
+            "medianBoundMs": 17.20125,
+            "smallMaximumMs": 13.279,
+            "largeMaximumMs": 11.361,
+            "maximumBoundMs": 23.5906
+          },
+          "historical.food.details.3": {
+            "smallMedianMs": 10.8,
+            "largeMedianMs": 10.417,
+            "medianBoundMs": 16.5,
+            "smallMaximumMs": 11.282,
+            "largeMaximumMs": 10.702,
+            "maximumBoundMs": 20.7948
+          },
+          "historical.food.details.3.undo": {
+            "smallMedianMs": 13.262,
+            "largeMedianMs": 11.359,
+            "medianBoundMs": 19.5775,
+            "smallMaximumMs": 14.289,
+            "largeMaximumMs": 13.419,
+            "maximumBoundMs": 25.0046
+          },
+          "historical.food.restore.1": {
+            "smallMedianMs": 12.729,
+            "largeMedianMs": 9.665,
+            "medianBoundMs": 18.91125,
+            "smallMaximumMs": 14.01,
+            "largeMaximumMs": 9.917,
+            "maximumBoundMs": 24.613999999999997
+          },
+          "historical.food.restore.1.undo": {
+            "smallMedianMs": 12.136,
+            "largeMedianMs": 12.444,
+            "medianBoundMs": 18.169999999999998,
+            "smallMaximumMs": 12.715,
+            "largeMaximumMs": 13.958,
+            "maximumBoundMs": 22.801
+          },
+          "historical.food.restore.3": {
+            "smallMedianMs": 17.875,
+            "largeMedianMs": 12.503,
+            "medianBoundMs": 25.34375,
+            "smallMaximumMs": 19.825,
+            "largeMaximumMs": 15.286,
+            "maximumBoundMs": 32.754999999999995
+          },
+          "historical.food.restore.3.undo": {
+            "smallMedianMs": 15.292,
+            "largeMedianMs": 14.03,
+            "medianBoundMs": 22.115,
+            "smallMaximumMs": 19.328,
+            "largeMaximumMs": 15.065,
+            "maximumBoundMs": 32.0592
+          },
+          "explicitTask.title.editorOpen": {
+            "smallMedianMs": 4.937,
+            "largeMedianMs": 4.626,
+            "medianBoundMs": 9.17125,
+            "smallMaximumMs": 7.146,
+            "largeMaximumMs": 4.874,
+            "maximumBoundMs": 15.004399999999999
+          },
+          "explicitTask.title.save": {
+            "smallMedianMs": 22.803,
+            "largeMedianMs": 20.697,
+            "medianBoundMs": 31.50375,
+            "smallMaximumMs": 24.709,
+            "largeMaximumMs": 23.964,
+            "maximumBoundMs": 39.5926
+          },
+          "explicitTask.title.undo": {
+            "smallMedianMs": 23.89,
+            "largeMedianMs": 22.022,
+            "medianBoundMs": 32.8625,
+            "smallMaximumMs": 26.714,
+            "largeMaximumMs": 23.721,
+            "maximumBoundMs": 42.39959999999999
+          },
+          "explicitTask.notes.editorOpen": {
+            "smallMedianMs": 5.088,
+            "largeMedianMs": 4.406,
+            "medianBoundMs": 9.36,
+            "smallMaximumMs": 5.354,
+            "largeMaximumMs": 5.202,
+            "maximumBoundMs": 12.4956
+          },
+          "explicitTask.notes.save": {
+            "smallMedianMs": 22.186,
+            "largeMedianMs": 20.528,
+            "medianBoundMs": 30.7325,
+            "smallMaximumMs": 25.137,
+            "largeMaximumMs": 21.362,
+            "maximumBoundMs": 40.1918
+          },
+          "explicitTask.notes.undo": {
+            "smallMedianMs": 22.973,
+            "largeMedianMs": 20.6,
+            "medianBoundMs": 31.71625,
+            "smallMaximumMs": 25.116,
+            "largeMaximumMs": 23.495,
+            "maximumBoundMs": 40.1624
+          },
+          "explicitTask.titleAndNotes.editorOpen": {
+            "smallMedianMs": 5.477,
+            "largeMedianMs": 4.71,
+            "medianBoundMs": 9.846250000000001,
+            "smallMaximumMs": 6.239,
+            "largeMaximumMs": 5.267,
+            "maximumBoundMs": 13.734599999999999
+          },
+          "explicitTask.titleAndNotes.save": {
+            "smallMedianMs": 25.044,
+            "largeMedianMs": 22.585,
+            "medianBoundMs": 34.305,
+            "smallMaximumMs": 30.63,
+            "largeMaximumMs": 24.82,
+            "maximumBoundMs": 47.882
+          },
+          "explicitTask.titleAndNotes.undo": {
+            "smallMedianMs": 25.966,
+            "largeMedianMs": 25.534,
+            "medianBoundMs": 35.4575,
+            "smallMaximumMs": 31.585,
+            "largeMaximumMs": 29.02,
+            "maximumBoundMs": 49.219
+          },
+          "explicitTask.editorOpenCancel": {
+            "smallMedianMs": 5.437,
+            "largeMedianMs": 4.667,
+            "medianBoundMs": 9.79625,
+            "smallMaximumMs": 6.402,
+            "largeMaximumMs": 5.83,
+            "maximumBoundMs": 13.9628
+          },
+          "converted.checklist.add": {
+            "smallMedianMs": 58.241,
+            "largeMedianMs": 56.001,
+            "medianBoundMs": 75.80125,
+            "smallMaximumMs": 66.971,
+            "largeMaximumMs": 65.751,
+            "maximumBoundMs": 98.7594
+          },
+          "converted.checklist.complete": {
+            "smallMedianMs": 40.247,
+            "largeMedianMs": 38.208,
+            "medianBoundMs": 53.30875,
+            "smallMaximumMs": 48.204,
+            "largeMaximumMs": 43.731,
+            "maximumBoundMs": 72.48559999999999
+          },
+          "converted.checklist.delete": {
+            "smallMedianMs": 41.435,
+            "largeMedianMs": 38.034,
+            "medianBoundMs": 54.79375,
+            "smallMaximumMs": 47.94,
+            "largeMaximumMs": 49.971,
+            "maximumBoundMs": 72.116
+          },
+          "converted.checklist.recompleteViaUndo": {
+            "smallMedianMs": 35.732,
+            "largeMedianMs": 34.54,
+            "medianBoundMs": 47.665,
+            "smallMaximumMs": 50.823,
+            "largeMaximumMs": 46.646,
+            "maximumBoundMs": 76.1522
+          },
+          "converted.checklist.reorder": {
+            "smallMedianMs": 43.42,
+            "largeMedianMs": 37.254,
+            "medianBoundMs": 57.275000000000006,
+            "smallMaximumMs": 51.835,
+            "largeMaximumMs": 53.903,
+            "maximumBoundMs": 77.569
+          },
+          "converted.checklist.reorder.undo": {
+            "smallMedianMs": 39.547,
+            "largeMedianMs": 37.637,
+            "medianBoundMs": 52.433749999999996,
+            "smallMaximumMs": 49.892,
+            "largeMaximumMs": 49.442,
+            "maximumBoundMs": 74.8488
+          },
+          "converted.checklist.restoreViaUndo": {
+            "smallMedianMs": 42.154,
+            "largeMedianMs": 39.906,
+            "medianBoundMs": 55.6925,
+            "smallMaximumMs": 47.857,
+            "largeMaximumMs": 47.498,
+            "maximumBoundMs": 71.9998
+          },
+          "converted.checklist.titleAndNotes.editorOpen": {
+            "smallMedianMs": 3.914,
+            "largeMedianMs": 3.735,
+            "medianBoundMs": 7.8925,
+            "smallMaximumMs": 3.963,
+            "largeMaximumMs": 5.081,
+            "maximumBoundMs": 10.5482
+          },
+          "converted.checklist.titleAndNotes.save": {
+            "smallMedianMs": 39.95,
+            "largeMedianMs": 42.826,
+            "medianBoundMs": 52.9375,
+            "smallMaximumMs": 49.564,
+            "largeMaximumMs": 47.704,
+            "maximumBoundMs": 74.3896
+          },
+          "converted.checklist.titleAndNotes.undo": {
+            "smallMedianMs": 39.799,
+            "largeMedianMs": 41.986,
+            "medianBoundMs": 52.74875,
+            "smallMaximumMs": 57.464,
+            "largeMaximumMs": 46.293,
+            "maximumBoundMs": 85.44959999999999
+          },
+          "converted.checklist.uncomplete": {
+            "smallMedianMs": 40.707,
+            "largeMedianMs": 37.927,
+            "medianBoundMs": 53.88375,
+            "smallMaximumMs": 52.62,
+            "largeMaximumMs": 47.532,
+            "maximumBoundMs": 78.66799999999999
+          },
+          "converted.checklist.uncompleteViaUndo": {
+            "smallMedianMs": 35.646,
+            "largeMedianMs": 33.912,
+            "medianBoundMs": 47.557500000000005,
+            "smallMaximumMs": 51.437,
+            "largeMaximumMs": 48.564,
+            "maximumBoundMs": 77.0118
+          },
+          "converted.food.paired.details.save": {
+            "smallMedianMs": 9.923,
+            "largeMedianMs": 10.329,
+            "medianBoundMs": 15.40375,
+            "smallMaximumMs": 11.069,
+            "largeMaximumMs": 10.83,
+            "maximumBoundMs": 20.4966
+          },
+          "converted.food.paired.details.undo": {
+            "smallMedianMs": 10.218,
+            "largeMedianMs": 10.655,
+            "medianBoundMs": 15.7725,
+            "smallMaximumMs": 10.524,
+            "largeMaximumMs": 13.506,
+            "maximumBoundMs": 19.733599999999996
+          },
+          "converted.task.bulkDelete.three": {
+            "smallMedianMs": 41.184,
+            "largeMedianMs": 35.093,
+            "medianBoundMs": 54.48,
+            "smallMaximumMs": 44.369,
+            "largeMaximumMs": 35.75,
+            "maximumBoundMs": 67.1166
+          },
+          "converted.task.bulkDelete.undo": {
+            "smallMedianMs": 39.628,
+            "largeMedianMs": 35.7,
+            "medianBoundMs": 52.535,
+            "smallMaximumMs": 40.691,
+            "largeMaximumMs": 39.768,
+            "maximumBoundMs": 61.9674
+          },
+          "converted.task.bulkEdit.three": {
+            "smallMedianMs": 41.555,
+            "largeMedianMs": 37.209,
+            "medianBoundMs": 54.94375,
+            "smallMaximumMs": 45.083,
+            "largeMaximumMs": 39.203,
+            "maximumBoundMs": 68.11619999999999
+          },
+          "converted.task.bulkEdit.undo": {
+            "smallMedianMs": 31.549,
+            "largeMedianMs": 27.378,
+            "medianBoundMs": 42.43625,
+            "smallMaximumMs": 34.505,
+            "largeMaximumMs": 29.245,
+            "maximumBoundMs": 53.307
+          },
+          "converted.task.bulkReorder.three": {
+            "smallMedianMs": 57.297,
+            "largeMedianMs": 52.632,
+            "medianBoundMs": 74.62125,
+            "smallMaximumMs": 61.916,
+            "largeMaximumMs": 54.753,
+            "maximumBoundMs": 91.68239999999999
+          },
+          "converted.task.bulkReorder.undo": {
+            "smallMedianMs": 51.209,
+            "largeMedianMs": 44.009,
+            "medianBoundMs": 67.01125,
+            "smallMaximumMs": 53.735,
+            "largeMaximumMs": 47.038,
+            "maximumBoundMs": 80.229
+          },
+          "converted.task.complete.application": {
+            "smallMedianMs": 24.747,
+            "largeMedianMs": 21.044,
+            "medianBoundMs": 33.93375,
+            "smallMaximumMs": 26.22,
+            "largeMaximumMs": 23.465,
+            "maximumBoundMs": 41.708
+          },
+          "converted.task.complete.checklistConfirm": {
+            "smallMedianMs": 63.223,
+            "largeMedianMs": 54.515,
+            "medianBoundMs": 82.02875,
+            "smallMaximumMs": 71.358,
+            "largeMaximumMs": 71.04,
+            "maximumBoundMs": 104.9012
+          },
+          "converted.task.complete.checklistDecline": {
+            "smallMedianMs": 1.532,
+            "largeMedianMs": 1.519,
+            "medianBoundMs": 4.915,
+            "smallMaximumMs": 2.163,
+            "largeMaximumMs": 1.588,
+            "maximumBoundMs": 8.0282
+          },
+          "converted.task.delete": {
+            "smallMedianMs": 22.862,
+            "largeMedianMs": 20.035,
+            "medianBoundMs": 31.577499999999997,
+            "smallMaximumMs": 23.626,
+            "largeMaximumMs": 22.305,
+            "maximumBoundMs": 38.0764
+          },
+          "converted.task.editorOpenCancel": {
+            "smallMedianMs": 6.869,
+            "largeMedianMs": 6.082,
+            "medianBoundMs": 11.58625,
+            "smallMaximumMs": 6.938,
+            "largeMaximumMs": 6.183,
+            "maximumBoundMs": 14.713199999999999
+          },
+          "converted.task.metadata.assignee": {
+            "smallMedianMs": 20.039,
+            "largeMedianMs": 17.979,
+            "medianBoundMs": 28.048750000000002,
+            "smallMaximumMs": 22.927,
+            "largeMaximumMs": 18.565,
+            "maximumBoundMs": 37.0978
+          },
+          "converted.task.metadata.assignee.undo": {
+            "smallMedianMs": 18.611,
+            "largeMedianMs": 15.92,
+            "medianBoundMs": 26.26375,
+            "smallMaximumMs": 20.821,
+            "largeMaximumMs": 16.567,
+            "maximumBoundMs": 34.1494
+          },
+          "converted.task.metadata.schedule": {
+            "smallMedianMs": 20.997,
+            "largeMedianMs": 18.887,
+            "medianBoundMs": 29.24625,
+            "smallMaximumMs": 23.69,
+            "largeMaximumMs": 19.27,
+            "maximumBoundMs": 38.166
+          },
+          "converted.task.metadata.schedule.undo": {
+            "smallMedianMs": 19.272,
+            "largeMedianMs": 17.1,
+            "medianBoundMs": 27.089999999999996,
+            "smallMaximumMs": 19.978,
+            "largeMaximumMs": 18.692,
+            "maximumBoundMs": 32.9692
+          },
+          "converted.task.metadata.tags": {
+            "smallMedianMs": 20.04,
+            "largeMedianMs": 18.159,
+            "medianBoundMs": 28.049999999999997,
+            "smallMaximumMs": 24.534,
+            "largeMaximumMs": 18.689,
+            "maximumBoundMs": 39.34759999999999
+          },
+          "converted.task.metadata.tags.undo": {
+            "smallMedianMs": 18.408,
+            "largeMedianMs": 16.042,
+            "medianBoundMs": 26.01,
+            "smallMaximumMs": 20.459,
+            "largeMaximumMs": 18.164,
+            "maximumBoundMs": 33.6426
+          },
+          "converted.task.notes.editorOpen": {
+            "smallMedianMs": 5.232,
+            "largeMedianMs": 4.727,
+            "medianBoundMs": 9.54,
+            "smallMaximumMs": 5.425,
+            "largeMaximumMs": 5.329,
+            "maximumBoundMs": 12.594999999999999
+          },
+          "converted.task.notes.save": {
+            "smallMedianMs": 22.886,
+            "largeMedianMs": 22.023,
+            "medianBoundMs": 31.607499999999998,
+            "smallMaximumMs": 23.788,
+            "largeMaximumMs": 22.502,
+            "maximumBoundMs": 38.3032
+          },
+          "converted.task.notes.undo": {
+            "smallMedianMs": 23.76,
+            "largeMedianMs": 22.301,
+            "medianBoundMs": 32.7,
+            "smallMaximumMs": 26.096,
+            "largeMaximumMs": 25.713,
+            "maximumBoundMs": 41.5344
+          },
+          "converted.task.reopen": {
+            "smallMedianMs": 19.036,
+            "largeMedianMs": 16.601,
+            "medianBoundMs": 26.795,
+            "smallMaximumMs": 21.471,
+            "largeMaximumMs": 16.824,
+            "maximumBoundMs": 35.0594
+          },
+          "converted.task.reopen.withChecklist": {
+            "smallMedianMs": 41.287,
+            "largeMedianMs": 36.06,
+            "medianBoundMs": 54.60875,
+            "smallMaximumMs": 49.915,
+            "largeMaximumMs": 44.605,
+            "maximumBoundMs": 74.881
+          },
+          "converted.task.reorder": {
+            "smallMedianMs": 42.219,
+            "largeMedianMs": 36.814,
+            "medianBoundMs": 55.77375,
+            "smallMaximumMs": 44.871,
+            "largeMaximumMs": 43.584,
+            "maximumBoundMs": 67.8194
+          },
+          "converted.task.reorder.undo": {
+            "smallMedianMs": 34.789,
+            "largeMedianMs": 29.374,
+            "medianBoundMs": 46.48625,
+            "smallMaximumMs": 37.379,
+            "largeMaximumMs": 32.165,
+            "maximumBoundMs": 57.3306
+          },
+          "converted.task.restoreViaUndo": {
+            "smallMedianMs": 27.268,
+            "largeMedianMs": 23.472,
+            "medianBoundMs": 37.085,
+            "smallMaximumMs": 30.374,
+            "largeMaximumMs": 26.471,
+            "maximumBoundMs": 47.523599999999995
+          },
+          "converted.task.title.editorOpen": {
+            "smallMedianMs": 4.935,
+            "largeMedianMs": 3.976,
+            "medianBoundMs": 9.16875,
+            "smallMaximumMs": 5.111,
+            "largeMaximumMs": 4.356,
+            "maximumBoundMs": 12.1554
+          },
+          "converted.task.title.save": {
+            "smallMedianMs": 22.067,
+            "largeMedianMs": 19.741,
+            "medianBoundMs": 30.583750000000002,
+            "smallMaximumMs": 22.598,
+            "largeMaximumMs": 21.113,
+            "maximumBoundMs": 36.63719999999999
+          },
+          "converted.task.title.undo": {
+            "smallMedianMs": 21.796,
+            "largeMedianMs": 20.718,
+            "medianBoundMs": 30.244999999999997,
+            "smallMaximumMs": 26.214,
+            "largeMaximumMs": 22.787,
+            "maximumBoundMs": 41.6996
+          },
+          "converted.task.titleAndNotes.editorOpen": {
+            "smallMedianMs": 6.191,
+            "largeMedianMs": 5.52,
+            "medianBoundMs": 10.73875,
+            "smallMaximumMs": 6.328,
+            "largeMaximumMs": 5.782,
+            "maximumBoundMs": 13.8592
+          },
+          "converted.task.titleAndNotes.save": {
+            "smallMedianMs": 29.559,
+            "largeMedianMs": 27.296,
+            "medianBoundMs": 39.948750000000004,
+            "smallMaximumMs": 30.905,
+            "largeMaximumMs": 28.307,
+            "maximumBoundMs": 48.266999999999996
+          },
+          "converted.task.titleAndNotes.undo": {
+            "smallMedianMs": 33.001,
+            "largeMedianMs": 29.561,
+            "medianBoundMs": 44.25125,
+            "smallMaximumMs": 40.167,
+            "largeMaximumMs": 33.163,
+            "maximumBoundMs": 61.233799999999995
+          },
+          "cardinality500.food.add.1": {
+            "smallMedianMs": 10.598,
+            "largeMedianMs": 9.936,
+            "medianBoundMs": 16.247500000000002,
+            "smallMaximumMs": 13.004,
+            "largeMaximumMs": 10.599,
+            "maximumBoundMs": 23.205599999999997
+          },
+          "cardinality500.food.add.1.undo": {
+            "smallMedianMs": 11.184,
+            "largeMedianMs": 10.851,
+            "medianBoundMs": 16.979999999999997,
+            "smallMaximumMs": 14.226,
+            "largeMaximumMs": 12.665,
+            "maximumBoundMs": 24.9164
+          },
+          "cardinality500.food.add.3": {
+            "smallMedianMs": 10.782,
+            "largeMedianMs": 10.161,
+            "medianBoundMs": 16.4775,
+            "smallMaximumMs": 13.613,
+            "largeMaximumMs": 10.651,
+            "maximumBoundMs": 24.0582
+          },
+          "cardinality500.food.add.3.undo": {
+            "smallMedianMs": 11.682,
+            "largeMedianMs": 11.371,
+            "medianBoundMs": 17.6025,
+            "smallMaximumMs": 16.172,
+            "largeMaximumMs": 13.798,
+            "maximumBoundMs": 27.6408
+          },
+          "cardinality500.food.contents.APIonly": {
+            "smallMedianMs": 11.669,
+            "largeMedianMs": 10.683,
+            "medianBoundMs": 17.58625,
+            "smallMaximumMs": 15.29,
+            "largeMaximumMs": 15.075,
+            "maximumBoundMs": 26.406
+          },
+          "cardinality500.food.contents.APIonly.undo": {
+            "smallMedianMs": 12.148,
+            "largeMedianMs": 11.321,
+            "medianBoundMs": 18.185,
+            "smallMaximumMs": 14.069,
+            "largeMaximumMs": 11.926,
+            "maximumBoundMs": 24.6966
+          },
+          "cardinality500.food.delete.1": {
+            "smallMedianMs": 11.093,
+            "largeMedianMs": 10.496,
+            "medianBoundMs": 16.86625,
+            "smallMaximumMs": 12.289,
+            "largeMaximumMs": 11.055,
+            "maximumBoundMs": 22.2046
+          },
+          "cardinality500.food.delete.1.undo": {
+            "smallMedianMs": 11.732,
+            "largeMedianMs": 11.494,
+            "medianBoundMs": 17.665,
+            "smallMaximumMs": 13.058,
+            "largeMaximumMs": 11.694,
+            "maximumBoundMs": 23.2812
+          },
+          "cardinality500.food.delete.3": {
+            "smallMedianMs": 11.304,
+            "largeMedianMs": 10.458,
+            "medianBoundMs": 17.130000000000003,
+            "smallMaximumMs": 12.665,
+            "largeMaximumMs": 10.639,
+            "maximumBoundMs": 22.730999999999998
+          },
+          "cardinality500.food.delete.3.undo": {
+            "smallMedianMs": 12.699,
+            "largeMedianMs": 12.06,
+            "medianBoundMs": 18.87375,
+            "smallMaximumMs": 13.972,
+            "largeMaximumMs": 12.657,
+            "maximumBoundMs": 24.560799999999997
+          },
+          "cardinality500.food.details.1": {
+            "smallMedianMs": 11.39,
+            "largeMedianMs": 10.695,
+            "medianBoundMs": 17.2375,
+            "smallMaximumMs": 12.761,
+            "largeMaximumMs": 11.366,
+            "maximumBoundMs": 22.865399999999998
+          },
+          "cardinality500.food.details.1.undo": {
+            "smallMedianMs": 12.059,
+            "largeMedianMs": 11.422,
+            "medianBoundMs": 18.073749999999997,
+            "smallMaximumMs": 14.651,
+            "largeMaximumMs": 11.683,
+            "maximumBoundMs": 25.5114
+          },
+          "cardinality500.food.details.3": {
+            "smallMedianMs": 11.882,
+            "largeMedianMs": 11.157,
+            "medianBoundMs": 17.8525,
+            "smallMaximumMs": 13.555,
+            "largeMaximumMs": 14.398,
+            "maximumBoundMs": 23.976999999999997
+          },
+          "cardinality500.food.details.3.undo": {
+            "smallMedianMs": 12.69,
+            "largeMedianMs": 13.2,
+            "medianBoundMs": 18.862499999999997,
+            "smallMaximumMs": 15.772,
+            "largeMaximumMs": 13.531,
+            "maximumBoundMs": 27.0808
+          },
+          "cardinality500.food.restore.1": {
+            "smallMedianMs": 11.003,
+            "largeMedianMs": 12.806,
+            "medianBoundMs": 16.75375,
+            "smallMaximumMs": 12.412,
+            "largeMaximumMs": 13.544,
+            "maximumBoundMs": 22.3768
+          },
+          "cardinality500.food.restore.1.undo": {
+            "smallMedianMs": 11.977,
+            "largeMedianMs": 11.703,
+            "medianBoundMs": 17.97125,
+            "smallMaximumMs": 12.735,
+            "largeMaximumMs": 11.881,
+            "maximumBoundMs": 22.828999999999997
+          },
+          "cardinality500.food.restore.3": {
+            "smallMedianMs": 13.515,
+            "largeMedianMs": 16.128,
+            "medianBoundMs": 19.89375,
+            "smallMaximumMs": 16.982,
+            "largeMaximumMs": 17.126,
+            "maximumBoundMs": 28.7748
+          },
+          "cardinality500.food.restore.3.undo": {
+            "smallMedianMs": 14.9,
+            "largeMedianMs": 13.901,
+            "medianBoundMs": 21.625,
+            "smallMaximumMs": 18.199,
+            "largeMaximumMs": 14.484,
+            "maximumBoundMs": 30.4786
+          },
+          "cardinality500.food.filter.brand": {
+            "smallMedianMs": 0.193,
+            "largeMedianMs": 0.064,
+            "medianBoundMs": 3.24125,
+            "smallMaximumMs": 0.251,
+            "largeMaximumMs": 0.097,
+            "maximumBoundMs": 5.3514
+          },
+          "cardinality500.food.filter.location": {
+            "smallMedianMs": 0.217,
+            "largeMedianMs": 0.063,
+            "medianBoundMs": 3.27125,
+            "smallMaximumMs": 0.263,
+            "largeMaximumMs": 0.079,
+            "maximumBoundMs": 5.3682
+          },
+          "cardinality500.food.filter.retention": {
+            "smallMedianMs": 0.159,
+            "largeMedianMs": 0.055,
+            "medianBoundMs": 3.19875,
+            "smallMaximumMs": 0.175,
+            "largeMaximumMs": 0.061,
+            "maximumBoundMs": 5.245
+          },
+          "cardinality500.food.filter.search": {
+            "smallMedianMs": 0.77,
+            "largeMedianMs": 0.612,
+            "medianBoundMs": 3.9625,
+            "smallMaximumMs": 1.231,
+            "largeMaximumMs": 0.656,
+            "maximumBoundMs": 6.7234
+          },
+          "cardinality500.food.matched.brand": {
+            "smallMedianMs": 0.268,
+            "largeMedianMs": 0.087,
+            "medianBoundMs": 3.335,
+            "smallMaximumMs": 0.305,
+            "largeMaximumMs": 0.088,
+            "maximumBoundMs": 5.427
+          },
+          "cardinality500.food.matched.location": {
+            "smallMedianMs": 0.251,
+            "largeMedianMs": 0.103,
+            "medianBoundMs": 3.3137499999999998,
+            "smallMaximumMs": 0.315,
+            "largeMaximumMs": 0.121,
+            "maximumBoundMs": 5.441
+          },
+          "cardinality500.food.matched.retention": {
+            "smallMedianMs": 0.169,
+            "largeMedianMs": 0.074,
+            "medianBoundMs": 3.21125,
+            "smallMaximumMs": 0.193,
+            "largeMaximumMs": 0.076,
+            "maximumBoundMs": 5.2702
+          },
+          "cardinality500.food.matched.search": {
+            "smallMedianMs": 0.964,
+            "largeMedianMs": 0.748,
+            "medianBoundMs": 4.205,
+            "smallMaximumMs": 1.015,
+            "largeMaximumMs": 0.749,
+            "maximumBoundMs": 6.420999999999999
+          },
+          "cardinality500.food.view.deleted": {
+            "smallMedianMs": 0.088,
+            "largeMedianMs": 0.044,
+            "medianBoundMs": 3.11,
+            "smallMaximumMs": 0.094,
+            "largeMaximumMs": 0.044,
+            "maximumBoundMs": 5.1316
+          },
+          "cardinality500.food.view.inbox": {
+            "smallMedianMs": 0.179,
+            "largeMedianMs": 0.071,
+            "medianBoundMs": 3.22375,
+            "smallMaximumMs": 0.232,
+            "largeMaximumMs": 0.071,
+            "maximumBoundMs": 5.3248
+          },
+          "cardinality500.food.view.inventory": {
+            "smallMedianMs": 3.49,
+            "largeMedianMs": 3.148,
+            "medianBoundMs": 7.362500000000001,
+            "smallMaximumMs": 3.611,
+            "largeMaximumMs": 3.181,
+            "maximumBoundMs": 10.055399999999999
+          },
+          "cardinality500.food.view.retained": {
+            "smallMedianMs": 1.012,
+            "largeMedianMs": 0.831,
+            "medianBoundMs": 4.265000000000001,
+            "smallMaximumMs": 1.031,
+            "largeMaximumMs": 0.846,
+            "maximumBoundMs": 6.4434
+          },
+          "cardinality500.refresh.food.unchanged": {
+            "smallMedianMs": 1.628,
+            "largeMedianMs": 1.551,
+            "medianBoundMs": 5.035,
+            "smallMaximumMs": 1.783,
+            "largeMaximumMs": 1.593,
+            "maximumBoundMs": 7.4962
+          },
+          "cardinality500.food.paired.details.save": {
+            "smallMedianMs": 11.132,
+            "largeMedianMs": 10.612,
+            "medianBoundMs": 16.915,
+            "smallMaximumMs": 14.857,
+            "largeMaximumMs": 11.931,
+            "maximumBoundMs": 25.799799999999998
+          },
+          "cardinality500.food.paired.details.undo": {
+            "smallMedianMs": 11.659,
+            "largeMedianMs": 11.41,
+            "medianBoundMs": 17.57375,
+            "smallMaximumMs": 12.544,
+            "largeMaximumMs": 12.685,
+            "maximumBoundMs": 22.5616
+          },
+          "converted.food.paired.details.confirmedSave": {
+            "smallMedianMs": 10.176,
+            "largeMedianMs": 9.569,
+            "medianBoundMs": 15.72,
+            "smallMaximumMs": 10.363,
+            "largeMaximumMs": 10.637,
+            "maximumBoundMs": 19.5082
+          },
+          "converted.food.paired.details.confirmedUndo": {
+            "smallMedianMs": 11.009,
+            "largeMedianMs": 10.497,
+            "medianBoundMs": 16.76125,
+            "smallMaximumMs": 13.466,
+            "largeMaximumMs": 11.812,
+            "maximumBoundMs": 23.8524
+          },
+          "firstDerived.metadata.tags": {
+            "smallMedianMs": 16.482,
+            "largeMedianMs": 16.835,
+            "medianBoundMs": 23.6025,
+            "smallMaximumMs": 18.794,
+            "largeMaximumMs": 18.27,
+            "maximumBoundMs": 31.3116
+          },
+          "firstDerived.metadata.tags.undo": {
+            "smallMedianMs": 14.134,
+            "largeMedianMs": 14.804,
+            "medianBoundMs": 20.6675,
+            "smallMaximumMs": 14.641,
+            "largeMaximumMs": 15.958,
+            "maximumBoundMs": 25.4974
+          },
+          "firstCopied.metadata.complete": {
+            "smallMedianMs": 16.501,
+            "largeMedianMs": 15.388,
+            "medianBoundMs": 23.626250000000002,
+            "smallMaximumMs": 17.821,
+            "largeMaximumMs": 16.15,
+            "maximumBoundMs": 29.9494
+          },
+          "firstCopied.metadata.complete.undo": {
+            "smallMedianMs": 14.533,
+            "largeMedianMs": 16.017,
+            "medianBoundMs": 21.166249999999998,
+            "smallMaximumMs": 14.831,
+            "largeMaximumMs": 19.757,
+            "maximumBoundMs": 25.763399999999997
+          },
+          "firstDerived.mixed.save": {
+            "smallMedianMs": 21.912,
+            "largeMedianMs": 20.479,
+            "medianBoundMs": 30.39,
+            "smallMaximumMs": 22.109,
+            "largeMaximumMs": 25.181,
+            "maximumBoundMs": 35.952600000000004
+          },
+          "firstDerived.mixed.undo": {
+            "smallMedianMs": 19.925,
+            "largeMedianMs": 18.066,
+            "medianBoundMs": 27.90625,
+            "smallMaximumMs": 21.892,
+            "largeMaximumMs": 19.083,
+            "maximumBoundMs": 35.648799999999994
+          }
+        }
+      }
+    ]
+  },
+  "normalClose": {
+    "exitCodes": [
+      0,
+      0
+    ],
+    "closeMs": [
+      927.927,
+      76.767
+    ],
+    "coreCount": 0,
+    "artifactId": 12580365191,
+    "artifactSHA256": "4ea74ff5c61fe293250e95fbb6cbbe9938a26cb07699d6b0d03ff137870ffdd8",
+    "historicalSIGSEGVCleared": false
+  },
+  "qualifications": [
+    "Different CPU model from retained baseline9V45; no controlled code speed claim",
+    "No hardware Windows or Android interaction acceptance",
+    "Native-close SIGSEGV remains unwaived",
+    "No limits/retry/coverage/signing/release/live changes"
+  ],
+  "artifactAccess": {
+    "originalPreparedFileURLExpiredUTC": "2026-10-25T00:04:50Z",
+    "originalGET": 403,
+    "savedBytes": 0,
+    "retryCount": 1,
+    "basis": "Explicit expiry proof, then fresh same authorized artifact URL",
+    "outcome": "verified successful artifact read"
+  }
+}

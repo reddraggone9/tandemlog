@@ -1,0 +1,1 @@
+Exact original stable-v3 domain/decoder sources, recovered locally from the fixture-producing accepted commit. Never update these to accept current semantics. No old fixture bytes, hashes or expected rows were edited. Old timezone package import retains its historical meaning; these synthetic cases use supported zones.

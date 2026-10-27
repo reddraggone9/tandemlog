@@ -8,6 +8,7 @@ import 'package:tandemlog/application/text_save_command.dart';
 import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/checklist_copy_index.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:uuid/uuid.dart';
 
@@ -156,6 +157,395 @@ void main() {
   });
 
   test(
+    'settled simple completion and both Undo forms match full replay beside copied checklists',
+    () async {
+      final originalItem = await add('Original checklist item');
+      await add('Another original checklist item');
+      await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
+      final descriptors = a.unified!.snapshot.tasks
+          .where((e) => e.type == 'task.completedWithChecklist')
+          .toList();
+      final index = ChecklistCopyIndex.build(descriptors.reversed)!;
+      final claims =
+          (descriptors.single.data['checklist'] as Map)['items'] as List;
+      for (final item in claims) {
+        final id = (item as Map)['id'] as String;
+        final sql = a.db.select(
+          "SELECT e.id,i.value FROM ${a.tables.events} e JOIN json_each(json_extract(e.semantic,'\$.data.checklist.items')) i WHERE json_extract(e.semantic,'\$.type')='task.completedWithChecklist' AND json_extract(i.value,'\$.id')=? ORDER BY e.clock,e.writer,e.seq",
+          [id],
+        );
+        expect(index[id].map((v) => v.$1.id), sql.map((r) => r['id']));
+        expect(
+          index[id].map((v) => v.$2),
+          sql.map((r) => jsonDecode(r['value'] as String)),
+        );
+        expect(() => index[id].clear(), throwsUnsupportedError);
+        expect(() => index[id].first.$2['id'] = user, throwsUnsupportedError);
+      }
+      expect(index[user], isEmpty);
+      expect(ChecklistCopyIndex.build(descriptors, maximumClaims: 1), isNull);
+      expect(
+        ChecklistCopyIndex.build(descriptors, maximumPayloadBytes: 1),
+        isNull,
+      );
+      final plain = const Uuid().v4();
+      await a.command(plain, 'task.createdWithText', {
+        'title': 'Plain task',
+        'description': '',
+        'assignee': user,
+        'schedule': <String, dynamic>{},
+        'text': seed('Plain task', ''),
+      });
+      final history = a.unified!;
+      void oracle() {
+        final events = history.snapshot.tasks.toList();
+        final revision = TaskStore.canonicalTaskRevision(events);
+        expect(
+          history.verifiesTaskRevision(history.snapshot, revision),
+          isTrue,
+        );
+        expect(
+          history.verifiesTaskRevision(b.unified!.snapshot, revision),
+          isFalse,
+        );
+        expect(
+          history.verifiesTaskRevision(history.snapshot, 'different'),
+          isFalse,
+        );
+        expect(
+          a.rows,
+          TaskStore.validateSemanticHistory(
+            events,
+            space: a.space,
+            writer: a.writer,
+            textEngine: engine,
+          ),
+        );
+        final validator = TaskSemanticValidator(
+          space: a.space,
+          writer: a.writer,
+          textEngine: engine,
+        );
+        try {
+          expect(history.snapshot.readyTaskIds, validator.validate(events));
+        } finally {
+          validator.close();
+        }
+      }
+
+      oracle();
+      final added = const Uuid().v4();
+      // Exercise the settled capture path with an explicit ready anchor.
+      // First activity against a derived anchor deliberately keeps full replay.
+      final firstVisible =
+          a.rows.firstWhere((r) => r['kind'] == 'task')['id'] as String;
+      if (firstVisible != plain) {
+        await a.command(plain, 'task.moved', {'before': firstVisible});
+        oracle();
+      }
+      expect(a.rows.firstWhere((r) => r['kind'] == 'task')['id'], plain);
+      final beforeCapture = history.fullTaskReadinessRuns;
+      await a.createTasks({added: 'Additional native task'}, user);
+      expect(history.fullTaskReadinessRuns, beforeCapture);
+      oracle();
+      final edited = await a.command(plain, 'task.edited', {
+        'schedule': {'dueDate': '2030-05-04'},
+      });
+      oracle();
+      expect((await a.undoOperations([edited.id])).remaining, isEmpty);
+      oracle();
+      final deleted = await a.command(plain, 'task.deleted', {});
+      oracle();
+      expect((await a.undoOperations([deleted.id])).remaining, isEmpty);
+      oracle();
+      final toggled = await a.command(originalItem, 'checklist.itemEdited', {
+        'completed': true,
+      });
+      oracle();
+      expect((await a.undoOperations([toggled.id])).remaining, isEmpty);
+      oracle();
+      final user2 = const Uuid().v4();
+      await a.command(user2, 'user.created', {'name': 'Second synthetic user'});
+      oracle();
+      final assigned = await a.command(plain, 'task.edited', {
+        'assignee': user2,
+      });
+      oracle();
+      expect((await a.undoOperations([assigned.id])).remaining, isEmpty);
+      oracle();
+      final tagged = await a.command(plain, 'task.edited', {
+        'tagChanges': {
+          'add': ['Synthetic tag'],
+          'remove': <String>[],
+        },
+      });
+      oracle();
+      final untagged = await a.command(plain, 'task.edited', {
+        'tagChanges': {
+          'add': <String>[],
+          'remove': ['${tagged.id}:0'],
+        },
+      });
+      oracle();
+      expect((await a.undoOperations([untagged.id])).remaining, isEmpty);
+      oracle();
+      final moved = await a.command(plain, 'task.moved', {'before': added});
+      oracle();
+      expect((await a.undoOperations([moved.id])).remaining, isEmpty);
+      oracle();
+      final firstItem = await a.addChecklistItem(plain, 'First explicit item');
+      oracle();
+      final secondItem = await a.addChecklistItem(
+        plain,
+        'Second explicit item',
+        before: firstItem.entity,
+      );
+      oracle();
+      final itemMove = await a.moveChecklistItem(
+        firstItem.entity,
+        secondItem.entity,
+      );
+      oracle();
+      expect((await a.undoOperations([itemMove.id])).remaining, isEmpty);
+      oracle();
+      final itemDelete = await a.deleteChecklistItem(firstItem.entity);
+      oracle();
+      expect((await a.undoOperations([itemDelete.id])).remaining, isEmpty);
+      oracle();
+      await copy(folder, remote);
+      await b.refresh();
+      final exactRevision = TaskStore.canonicalTaskRevision(
+        history.snapshot.tasks,
+      );
+      expect(
+        TaskStore.canonicalTaskRevision(b.unified!.snapshot.tasks),
+        exactRevision,
+      );
+      expect(
+        history.verifiesTaskRevision(b.unified!.snapshot, exactRevision),
+        isFalse,
+      );
+      final beforeInvalid = await folder.read('${a.writer}.applog');
+      final userBirth = history.snapshot.tasks.firstWhere(
+        (e) => e.type == 'user.created',
+      );
+      await expectLater(
+        a.command(plain, 'task.edited', {
+          'tagChanges': {
+            'add': <String>[],
+            'remove': ['${userBirth.id}:0'],
+          },
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+      await expectLater(
+        a.command(plain, 'task.moved', {'before': user}),
+        throwsA(isA<FormatFailure>()),
+      );
+      await expectLater(
+        a.moveChecklistItem(firstItem.entity, originalItem),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await folder.read('${a.writer}.applog'), beforeInvalid);
+      oracle();
+      final fullBefore = history.fullTaskReadinessRuns;
+      final first = await a.complete(
+        plain,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
+      expect(first.type, 'task.completed');
+      oracle();
+      expect((await a.undoOperations([first.id])).remaining, isEmpty);
+      oracle();
+      final second = await a.complete(
+        plain,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
+      );
+      await a.command(plain, 'task.completionUndone', {
+        'completion': second.id,
+      });
+      oracle();
+      expect(history.fullTaskReadinessRuns, fullBefore);
+      final before = await folder.read('${a.writer}.applog');
+      await expectLater(
+        a.command(parent, 'task.completed', {
+          'completedInstant': '2030-05-03T00:00:00.000000Z',
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await folder.read('${a.writer}.applog'), before);
+    },
+  );
+
+  test(
+    'copied-claim staging rollback preserves old state and exact recovery',
+    () async {
+      await add('Original source');
+      final first = await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
+      expect((await a.undoOperations([first.id])).remaining, isEmpty);
+      await add('New source after earlier copy');
+      final before = jsonEncode(a.rows), sequence = a.unified!.physicalSequence;
+      final history = a.unified!,
+          profile = a.profileDatabase!,
+          attachment = Object();
+      await profile.serialize(() async {
+        history.attachProjectionInProfileQueue(attachment, (candidate) {
+          if (candidate.records.any(
+            (r) => r.writer == a.writer && r.sequence > sequence,
+          )) {
+            throw FormatFailure(
+              'Synthetic later projection rejects copied rows',
+            );
+          }
+          return () {};
+        });
+      });
+      try {
+        await expectLater(
+          a.complete(
+            parent,
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 2),
+          ),
+          throwsA(isA<FormatFailure>()),
+        );
+        expect(jsonEncode(a.rows), before);
+        expect(history.hasPending, isTrue);
+        final exact = history.pendingRecords.map((r) => r.encode()).toList();
+        await profile.serialize(() async {
+          history.detachProjectionInProfileQueue(attachment);
+        });
+        await history.recoverPrepared();
+        expect(history.hasPending, isFalse);
+        expect(
+          history.snapshot.records
+              .where((r) => r.writer == a.writer && r.sequence > sequence)
+              .map((r) => r.encode())
+              .toList(),
+          exact,
+        );
+        expect(
+          a.rows,
+          TaskStore.validateSemanticHistory(
+            history.snapshot.tasks,
+            space: a.space,
+            writer: a.writer,
+            textEngine: engine,
+          ),
+        );
+        final successor = const Uuid().v5(parent, 'successor');
+        expect(a.checklistItems(successor).map((r) => r['title']), [
+          'Original source',
+          'New source after earlier copy',
+        ]);
+      } finally {
+        await profile.serialize(() async {
+          history.detachProjectionInProfileQueue(attachment);
+        });
+      }
+    },
+  );
+
+  test(
+    'settled checklist Save keeps parent eligibility and native Undo deletion exception',
+    () async {
+      final item = await add('Original item');
+      final capture = await a.captureTaskText(item);
+      final session = TaskTextSession(
+        capture,
+        registerDraftActor: (field, allocation, actor) =>
+            a.registerTextDraftActor(capture, field, allocation, actor),
+      );
+      try {
+        session.replace('title', 'Saved item');
+        final prepared = session.prepare();
+        final deletion = await a.command(parent, 'task.deleted', {});
+        final before = await folder.read('${a.writer}.applog');
+        var receipts = 0;
+        await expectLater(
+          a.editNativeTask(
+            item,
+            prepared.changes,
+            onPrepared: (_) => receipts++,
+          ),
+          throwsA(isA<FormatFailure>()),
+        );
+        expect(receipts, 0);
+        expect(await folder.read('${a.writer}.applog'), before);
+        expect((await a.undoOperations([deletion.id])).remaining, isEmpty);
+        final saved = await TextSaveCommand(
+          a,
+          session,
+        ).save(fields: {}, tags: [], observedTagRefs: {});
+        expect(saved.receipt, isNotNull);
+        final removed = await a.command(item, 'checklist.itemDeleted', {});
+        expect(items(a, parent), isEmpty);
+        // Undo of committed text retains the existing policy even while hidden.
+        expect(
+          (await a.undoOperations([saved.receipt!.id])).remaining,
+          isEmpty,
+        );
+        expect((await a.undoOperations([removed.id])).remaining, isEmpty);
+        expect(items(a, parent).single['title'], 'Original item');
+      } finally {
+        session.cancel();
+        a.releaseTextCapture(capture);
+      }
+    },
+  );
+
+  test(
+    'unpublished copied-item draft cannot bypass a suppressed parent',
+    () async {
+      final original = await add('Original copied item');
+      final completion = await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
+      final child = const Uuid().v5(parent, 'successor');
+      final copied = const Uuid().v5(child, 'checklist:$original');
+      final capture = await a.captureTaskText(copied);
+      final session = TaskTextSession(
+        capture,
+        registerDraftActor: (field, allocation, actor) =>
+            a.registerTextDraftActor(capture, field, allocation, actor),
+      );
+      try {
+        session.replace('title', 'Private copied draft');
+        final prepared = session.prepare();
+        expect((await a.undoOperations([completion.id])).remaining, isEmpty);
+        expect(a.rows.where((r) => r['id'] == child), isEmpty);
+        final before = await folder.read('${a.writer}.applog');
+        var receipts = 0;
+        await expectLater(
+          a.editNativeTask(
+            copied,
+            prepared.changes,
+            onPrepared: (_) => receipts++,
+          ),
+          throwsA(isA<FormatFailure>()),
+        );
+        expect(receipts, 0);
+        expect(await folder.read('${a.writer}.applog'), before);
+      } finally {
+        session.cancel();
+        a.releaseTextCapture(capture);
+      }
+    },
+  );
+
+  test(
     'one-level items have native title/notes, completion, order and targeted Undo',
     () async {
       final first = await add('Pack bag', notes: 'Passport\nCharger');
@@ -260,7 +650,8 @@ void main() {
       await a.command(second, 'checklist.itemMoved', {'before': first});
       final completion = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       expect(completion.type, 'task.completedWithChecklist');
       final child = const Uuid().v5(parent, 'successor');
@@ -301,12 +692,17 @@ void main() {
       await saveText(b, common, 'description', 'AYB notes');
       final doneA = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(parent, 'successor');
       final childCommon = const Uuid().v5(child, 'checklist:$common');
       await saveText(a, childCommon, 'title', 'AXBY');
-      await b.complete(parent, completionDay: DateTime(2030, 5, 1));
+      await b.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
       await converge();
       final shared = items(
         a,
@@ -354,7 +750,8 @@ void main() {
       expect(a.sharedTextInitialized, isFalse);
       final completion = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       expect(completion.type, 'task.completedWithChecklist');
       expect(completion.data.containsKey('inheritance'), isFalse);
@@ -380,7 +777,8 @@ void main() {
       });
       final original = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
       await a.initializeSharedText();
@@ -391,7 +789,8 @@ void main() {
       final before = jsonEncode(items(a, child));
       final again = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 2),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
       );
       expect(again.type, 'task.completedKeepingSuccessor');
       expect(jsonEncode(items(a, child)), before);
@@ -405,7 +804,8 @@ void main() {
       final second = await add('Two');
       final completion = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(parent, 'successor');
       final childFirst = const Uuid().v5(child, 'checklist:$first');
@@ -431,7 +831,11 @@ void main() {
       await copy(folder, remote);
       await b.refresh();
       await b.command(second, 'checklist.itemMoved', {'before': first});
-      await a.complete(parent, completionDay: DateTime(2030, 5, 1));
+      await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
       final child = const Uuid().v5(parent, 'successor');
       final copiedFirst = const Uuid().v5(child, 'checklist:$first');
       final copiedSecond = const Uuid().v5(child, 'checklist:$second');
@@ -439,7 +843,11 @@ void main() {
       await a.command(copiedSecond, 'checklist.itemEdited', {
         'completed': true,
       });
-      await b.complete(parent, completionDay: DateTime(2030, 5, 1));
+      await b.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
+      );
       await converge();
       expect(items(a, child).map((row) => row['id']), [
         copiedSecond,
@@ -468,7 +876,8 @@ void main() {
       final originalItem = await add('Original checklist', owner: scalar);
       final original = await a.complete(
         scalar,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
       await a.initializeSharedText();
@@ -478,7 +887,11 @@ void main() {
       await add('Later old item', owner: scalar);
       final before = jsonEncode(task(a, child));
       expect(
-        (await a.complete(scalar, completionDay: DateTime(2030, 5, 2))).type,
+        (await a.complete(
+          scalar,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 2),
+        )).type,
         'task.completedKeepingSuccessor',
       );
       expect(jsonEncode(task(a, child)), before);
@@ -495,7 +908,8 @@ void main() {
         await saveText(a, currentItem, 'title', 'AB $generation');
         completion = await a.complete(
           current,
-          completionDay: DateTime(2030, 5, 1 + generation),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 1 + generation),
         );
         current = const Uuid().v5(current, 'successor');
         currentItem = const Uuid().v5(current, 'checklist:$currentItem');
@@ -540,7 +954,8 @@ void main() {
       await add('One', notes: 'Notes');
       final completion = await a.complete(
         parent,
-        completionDay: DateTime(2030, 5, 1),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 1),
       );
       final child = const Uuid().v5(parent, 'successor');
       expect(items(a, child), hasLength(1));
@@ -549,7 +964,11 @@ void main() {
         1,
       );
       expect(a.rows.any((row) => row['id'] == child), isFalse);
-      await a.complete(parent, completionDay: DateTime(2030, 5, 2));
+      await a.complete(
+        parent,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
+      );
       final before = a.rows;
       final bytes = <String, String>{};
       for (final file in await folder.list()) {

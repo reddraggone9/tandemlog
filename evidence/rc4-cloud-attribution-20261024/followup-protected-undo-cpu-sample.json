@@ -1,0 +1,194 @@
+{
+  "scope": "Own synthetic process user-CPU samples only during protected-successor Undo bodies,997Hz; sampled data are diagnostic, include instrument-control overhead, and do not establish wall latency or acceptance.",
+  "source": "a71d0bac2981f93189c6dc9bdc7e3354027a7cb5",
+  "sampleCount": 407,
+  "lostSamples": 0,
+  "sampleWeightNs": 408224663,
+  "runs": 7,
+  "correctnessReplayAndPrefixes": true,
+  "twoWarmupsAndFiveMeasuredCases": true,
+  "rawStackMemoryRecorded": false,
+  "timingAccepted": false,
+  "inclusiveSharesOverlap": true,
+  "topInclusiveNonVMPercent": [
+    {
+      "symbol": "TaskStore._withCopySeedIndex",
+      "percent": 48.649
+    },
+    {
+      "symbol": "UnifiedHistory._prepareInProfileQueue",
+      "percent": 30.467
+    },
+    {
+      "symbol": "TaskSemanticValidator.validateAppend",
+      "percent": 28.01
+    },
+    {
+      "symbol": "TaskSemanticValidator.validateAppend.<anonymous closure>",
+      "percent": 28.01
+    },
+    {
+      "symbol": "UnifiedHistory._validateLocalAppend",
+      "percent": 28.01
+    },
+    {
+      "symbol": "TaskStore._semanticReadyIds",
+      "percent": 19.902
+    },
+    {
+      "symbol": "UnifiedHistory._confirmPreparedAction",
+      "percent": 19.41
+    },
+    {
+      "symbol": "TaskStore._stageUnifiedProjection.<anonymous closure>",
+      "percent": 18.919
+    },
+    {
+      "symbol": "UnifiedHistory._confirmPreparedAction.<anonymous closure>",
+      "percent": 16.708
+    },
+    {
+      "symbol": "TaskStore._stageUnifiedProjection",
+      "percent": 16.462
+    },
+    {
+      "symbol": "TaskStore._stageUnifiedProjectionIndexed",
+      "percent": 16.462
+    },
+    {
+      "symbol": "TaskStore._replaySemanticEvents",
+      "percent": 14.251
+    },
+    {
+      "symbol": "TaskStore._projectEntity",
+      "percent": 12.531
+    },
+    {
+      "symbol": "TaskStore._materializeText",
+      "percent": 11.057
+    },
+    {
+      "symbol": "RecurringTextResolver._resolve",
+      "percent": 10.319
+    },
+    {
+      "symbol": "RecurringTextResolver.resolve",
+      "percent": 10.319
+    },
+    {
+      "symbol": "TaskStore._nextProjectionView",
+      "percent": 9.091
+    },
+    {
+      "symbol": "NativeTextEngine.checkpointHasPending",
+      "percent": 7.125
+    },
+    {
+      "symbol": "TaskStore._undoOperations",
+      "percent": 4.914
+    },
+    {
+      "symbol": "TaskStore._undoOperations.<anonymous closure>",
+      "percent": 4.423
+    },
+    {
+      "symbol": "TaskStore._rebuildOrder",
+      "percent": 4.177
+    },
+    {
+      "symbol": "TaskStore.rows",
+      "percent": 4.177
+    },
+    {
+      "symbol": "RecurringTextResolver._resolve.<anonymous closure>",
+      "percent": 3.931
+    },
+    {
+      "symbol": "TaskStore.rows.<anonymous closure>",
+      "percent": 3.686
+    }
+  ],
+  "topLeafPercent": [
+    {
+      "symbol": "[unknown]",
+      "percent": 34.398
+    },
+    {
+      "symbol": "jsonTranslateTextToBlob",
+      "percent": 3.931
+    },
+    {
+      "symbol": "_LinkedHashMapMixin._getValueOrData",
+      "percent": 2.703
+    },
+    {
+      "symbol": "_Sha32BitSink.updateHash",
+      "percent": 2.457
+    },
+    {
+      "symbol": "sqlite3VdbeExec",
+      "percent": 2.457
+    },
+    {
+      "symbol": "String.hashCode",
+      "percent": 1.966
+    },
+    {
+      "symbol": "String.==",
+      "percent": 1.72
+    },
+    {
+      "symbol": "List.add",
+      "percent": 1.474
+    },
+    {
+      "symbol": "_Utf8Encoder._fillBuffer",
+      "percent": 1.229
+    },
+    {
+      "symbol": "List._grow",
+      "percent": 1.229
+    },
+    {
+      "symbol": "_Base64Decoder.decodeChunk",
+      "percent": 1.229
+    },
+    {
+      "symbol": "_string",
+      "percent": 1.229
+    },
+    {
+      "symbol": "_JsonStringifier.writeStringContent",
+      "percent": 0.983
+    },
+    {
+      "symbol": "pcache1Fetch",
+      "percent": 0.983
+    },
+    {
+      "symbol": "pthread_mutex_lock",
+      "percent": 0.983
+    },
+    {
+      "symbol": "assert type is String",
+      "percent": 0.983
+    },
+    {
+      "symbol": "_LinkedHashMapMixin._findValueOrInsertPoint",
+      "percent": 0.983
+    },
+    {
+      "symbol": "stub AllocateArray",
+      "percent": 0.983
+    }
+  ],
+  "nextHypothesis": "Full readiness repeatedly decodes projected rows to inspect textUnavailable. Test bounded exact-raw-row reuse without skipping live SQL, native readiness or dependencies. No such product change yet.",
+  "root": "/workspace/scratch/rc4-warm-undo-cpu-profile-v2",
+  "driverSHA256": "7a0556da592621a410b2448c34e38264e2873c42bde65a7dd33fb7c37beed565",
+  "logSHA256": "85a944663a3559c311d3747cba3958f728f22f2a25ff1ccc816fa3b003095049",
+  "priorHarnessFailure": {
+    "retained": "/workspace/toolchains/logs/rc4-warm-undo-cpu-profile.log",
+    "exitCode": 255,
+    "cause": "Controller consumed newline but not trailing NUL; official perf ack is five bytes97,99,107,10,0. Corrected in fresh output root; no timing gate retry."
+  }
+}

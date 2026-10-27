@@ -4,6 +4,8 @@ import 'package:crypto/crypto.dart';
 
 import '../domain/event.dart';
 import '../food/food_record.dart';
+import '../domain/validated_action_cache.dart';
+import '../domain/utf8_byte_limit.dart';
 
 const unifiedProtocol = 5;
 const maximumUnifiedFileBytes = 32 * 1024 * 1024;
@@ -58,7 +60,14 @@ class UnifiedEffect {
       _food = FoodRecord.decode(raw);
     }
   }
+  UnifiedEffect._cachedTask(this.kind, this.raw, this._task);
+  UnifiedEffect._cachedFood(this.kind, this.raw, this._food);
   final String kind, raw;
+  // Exact source identity for pure admission memo keys. Compute once per
+  // immutable decoded effect instead of reserializing every prior payload.
+  late final String validationDigest = sha256
+      .convert(utf8.encode(raw))
+      .toString();
   String? _name;
   String? get name => _name;
   bool get isData => task != null || food != null;
@@ -84,7 +93,10 @@ class UnifiedEffect {
   String get integrityHash => task?.integrityHash ?? food!.integrityHash;
   String get semanticHash => task?.hash ?? food!.hash;
   String get previousHash => task?.previousHash ?? food!.previousHash;
-  String get key => '${task == null ? 'food:' : 'task:'}$space:$id';
+  // This immutable envelope identity carries no readiness or admission proof.
+  // Keep its String/hash representation instead of rebuilding it per refresh.
+  late final String _key = '${task == null ? 'food:' : 'task:'}$space:$id';
+  String get key => _key;
   Map<String, dynamic> toJson() => {'kind': kind, 'raw': raw};
 }
 
@@ -182,12 +194,35 @@ class UnifiedRecord {
           utf8.encode('tandemlog:app-action:v5\n${canonicalDataJson(_body())}'),
         )
         .toString();
-    if (utf8.encode(encode()).length > maximumUnifiedRecordBytes) {
+    if (exceedsUtf8ByteLimit(encode(), maximumUnifiedRecordBytes)) {
       throw FormatFailure(
         'Action exceeds safe record size; nothing was written.',
       );
     }
   }
+  UnifiedRecord._cached(Map<String, dynamic> value, this.effects, String raw)
+    : space = value['space'] as String,
+      epoch = value['epoch'] as String,
+      writer = value['writer'] as String,
+      sequence = value['seq'] as int,
+      clock = EventClock.fromJson(value['clock']),
+      previousHash = value['previousHash'] as String,
+      observed = Map.unmodifiable(
+        (value['observed'] as Map<String, dynamic>).map((key, value) {
+          final head = value as Map;
+          return MapEntry(
+            key,
+            UnifiedFrontier(head['seq'] as int, head['hash'] as String),
+          );
+        }),
+      ),
+      provenance = value['provenance'] == null
+          ? null
+          : Map<String, dynamic>.unmodifiable(value['provenance'] as Map) {
+    hash = value['hash'] as String;
+    _encoded = raw;
+  }
+
   final String space, epoch, writer, previousHash;
   final int sequence;
   final EventClock clock;
@@ -215,10 +250,11 @@ class UnifiedRecord {
     'effects': effects.map((e) => e.toJson()).toList(),
     'provenance': provenance,
   };
-  String encode() => canonicalDataJson({..._body(), 'hash': hash});
+  String? _encoded;
+  String encode() => _encoded ??= canonicalDataJson({..._body(), 'hash': hash});
   factory UnifiedRecord.decode(String raw) {
     try {
-      if (utf8.encode(raw).length > maximumUnifiedRecordBytes) {
+      if (exceedsUtf8ByteLimit(raw, maximumUnifiedRecordBytes)) {
         throw FormatFailure('Action exceeds safe read limits.');
       }
       final j = jsonDecode(raw);
@@ -279,6 +315,147 @@ class UnifiedRecord {
         'Unknown action fields. Update the app; history was preserved.',
       );
     }
+  }
+}
+
+/// Disposable, clean-close decode reuse. The receipt detects corruption/staleness;
+/// it is not authentication against replacement of cache AND its profile proof.
+/// Only this whole-batch verifier can construct private cached records/effects.
+class UnifiedDecodedCache {
+  // Bump the receipt layout for closed validation/normalization changes.
+  static const generation = ValidatedActionCache.layout;
+  static const maximumBytes = ValidatedActionCache.maximumBytes;
+
+  static String encode(List<UnifiedRecord> records, String binding) =>
+      jsonEncode({
+        'generation': generation,
+        'binding': binding,
+        'records': [
+          for (final record in records)
+            [
+              record.encode(),
+              [
+                for (final effect in record.effects)
+                  if (effect.task != null)
+                    [effect.kind, _task(effect.task!)]
+                  else if (effect.food != null)
+                    [effect.kind, _food(effect.food!)]
+                  else
+                    null,
+              ],
+            ],
+        ],
+      });
+
+  static List<Object?> _task(LogEvent event) => [
+    event.space,
+    event.writer,
+    event.sequence,
+    event.clock.toJson(),
+    event.entity,
+    event.type,
+    event.data,
+    event.previousHash,
+    event.hash,
+    event.attributedWriter,
+    event.integrityHash,
+    event.operationRevision,
+  ];
+
+  static List<Object?> _food(FoodRecord event) => [
+    event.space,
+    event.writer,
+    event.sequence,
+    event.clock.toJson(),
+    event.operation.toJson(),
+    event.previousHash,
+    event.unified,
+    event.attributedWriter,
+    event.retainedReferenceHash,
+    event.createdWith,
+    event.hash,
+    event.integrityHash,
+  ];
+
+  static List<UnifiedRecord> restore(
+    String payload,
+    String expectedDigest,
+    String expectedBinding,
+  ) {
+    final batch = ValidatedActionCache.verify(
+      payload,
+      expectedDigest,
+      expectedBinding,
+    );
+    return restoreVerifiedBatch(batch);
+  }
+
+  /// Reconstruct only from the existing opaque, deeply immutable verifier
+  /// receipt. Startup may perform pure verification in a short-lived isolate;
+  /// native owners, profile objects and contextual admission remain here.
+  static List<UnifiedRecord> restoreVerifiedBatch(ValidatedActionCache batch) {
+    final records = <UnifiedRecord>[];
+    for (final action in batch.records) {
+      final value = action.value;
+      UnifiedRecord._keys(value, {
+        'v',
+        'space',
+        'epoch',
+        'writer',
+        'seq',
+        'clock',
+        'previousHash',
+        'observed',
+        'effects',
+        'provenance',
+        'hash',
+      });
+      if (value['v'] != unifiedProtocol) {
+        throw const FormatException('Unknown cached action generation.');
+      }
+      final effects = <UnifiedEffect>[];
+      for (final receipt in action.effects) {
+        final kind = receipt.kind, raw = receipt.raw;
+        if (kind == 'food' || kind == 'history.food') {
+          effects.add(
+            UnifiedEffect._cachedFood(
+              kind,
+              raw,
+              FoodRecord.fromDecodedCache(receipt),
+            ),
+          );
+          continue;
+        }
+        if (kind != 'task' && kind != 'history.task') {
+          effects.add(UnifiedEffect(kind, raw));
+          continue;
+        }
+        final fields = receipt.fields;
+        if (receipt.layout != 3 || fields == null || fields.length != 12) {
+          throw const FormatException('Invalid cached Task field mapping.');
+        }
+        final event = LogEvent(
+          fields[0] as String,
+          fields[1] as String,
+          fields[2] as int,
+          EventClock.fromJson(fields[3]),
+          fields[4] as String,
+          fields[5] as String,
+          fields[6] as Map<String, dynamic>,
+          previousHash: fields[7] as String?,
+          hash: fields[8] as String?,
+          attributedWriter: fields[9] as String?,
+          integrityHash: fields[10] as String?,
+          operationRevision: fields[11] as int?,
+          canonicalRaw: raw,
+        );
+        effects.add(UnifiedEffect._cachedTask(kind, raw, event));
+      }
+      records.add(
+        UnifiedRecord._cached(value, List.unmodifiable(effects), action.raw),
+      );
+    }
+    return List.unmodifiable(records);
   }
 }
 

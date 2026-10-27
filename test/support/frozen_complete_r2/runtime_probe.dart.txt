@@ -1,0 +1,76 @@
+// Run ONLY against the unchanged bdb0f05 library archive, not the current app.
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_history.dart';
+import 'package:tandemlog/storage/unified_record.dart';
+
+const writer = '22222222-2222-4222-8222-222222222222';
+const person = '33333333-3333-4333-8333-333333333333';
+const task = '55555555-5555-4555-8555-555555555555';
+Future<LocalProfileDatabase> profileAt(String root) async {
+  final p = await LocalProfileDatabase.open(root);
+  if(p.database.select('SELECT 1 FROM protected_settings').isEmpty) {
+    p.transaction(()=>p.database.execute('INSERT INTO protected_settings VALUES (1,?,?)', [writer,utf8.encode(jsonEncode({'writer':writer,'appearance':'system'}))]));
+  }
+  return p;
+}
+void main() {
+  test('actual frozen r2 runtime refuses r3 on Food refresh and cold open without writes', () async {
+    final root = await Directory.systemTemp.createTemp('r2-required-revision-');
+    final folder = LocalLogFolder((await Directory('${root.path}/shared').create()).path);
+    final p = await profileAt('${root.path}/warm');
+    final h = await UnifiedHistory.create(folder,profile:p,writer:writer);
+    final tasks = await TaskStore.openUnified(h);
+    final food = await FoodStore.openUnified(h);
+    try {
+      await tasks.command(person,'user.created',{'name':'Synthetic'});
+      await tasks.command(task,'task.created',{'title':'Keep last good task','description':'','assignee':person});
+      await food.add(const FoodDetails(name:'Keep last good food'),1);
+      final oldRevision = h.snapshot.revision;
+      final oldTasks = jsonEncode(tasks.rows);
+      final oldFood = food.state.containers.map((item)=>item.id).toList();
+      final reserved = await h.validateInProfileQueue([
+        (seq,clock,head)=>UnifiedEffect('task',LogEvent(h.manifest.space,writer,seq,clock,task,'task.completed',{'completedAt':'2026-10-26'}).encode(previousHash:head)),
+      ]);
+      final record = jsonDecode(reserved.records.single.encode()) as Map<String,dynamic>;
+      final effect = (record['effects'] as List).single as Map;
+      final operation = jsonDecode(effect['raw'] as String) as Map<String,dynamic>;
+      (operation['operation'] as Map)['revision']=3;
+      (operation['value'] as Map)['values']={'completedInstant':'2026-10-26T12:00:00.123456Z'};
+      final body = Map<String,dynamic>.from(operation)..remove('contentHash')..remove('referenceHash');
+      operation['contentHash']=sha256.convert(utf8.encode('tandemlog:operation:v1\n${canonicalDataJson(body)}')).toString();
+      operation['referenceHash']=operation['contentHash'];
+      effect['raw']=canonicalDataJson(operation);
+      record.remove('hash');
+      record['hash']=sha256.convert(utf8.encode('tandemlog:app-action:v5\n${canonicalDataJson(record)}')).toString();
+      await folder.append(unifiedLogName(writer),Uint8List.fromList(utf8.encode('${canonicalDataJson(record)}\n')));
+      Future<Map<String,String>> bytes() async => {for(final f in await folder.list()) f.name:base64Encode(await folder.read(f.name))};
+      final saved = await bytes();
+      // Food owns the active refresh; unsupported Task meaning blocks both.
+      await expectLater(food.refresh(),throwsA(isA<FormatFailure>()));
+      expect(h.snapshot.revision,oldRevision);
+      expect(jsonEncode(tasks.rows),oldTasks);
+      expect(food.state.containers.map((item)=>item.id).toList(),oldFood);
+      await expectLater(tasks.command(person,'user.created',{'name':'Blocked'}),throwsA(isA<FormatFailure>()));
+      await expectLater(food.add(const FoodDetails(name:'Blocked'),1),throwsA(isA<FormatFailure>()));
+      expect(await bytes(),saved);
+      final cold = await profileAt('${root.path}/cold');
+      try {
+        await expectLater(UnifiedHistory.open(folder,profile:cold,writer:writer),throwsA(isA<FormatFailure>()));
+        expect(cold.database.select('SELECT * FROM protected_app_heads'),isEmpty);
+        expect(await bytes(),saved);
+      } finally { await cold.close(); }
+    } finally {
+      await food.close(); await tasks.close(); await h.close(); await p.close(); await root.delete(recursive:true);
+    }
+  });
+}

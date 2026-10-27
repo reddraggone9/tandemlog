@@ -69,7 +69,8 @@ void main() {
           await _save(store, entity, 'Task $generation');
           final completion = await store.complete(
             entity,
-            completionDay: DateTime(2030, 5, 10 + generation),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 10 + generation),
           );
           final proof = completion.data['inheritance'] as Map;
           expect(proof['adapter'], 2);

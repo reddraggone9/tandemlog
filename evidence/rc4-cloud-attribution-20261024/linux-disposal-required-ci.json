@@ -1,0 +1,103 @@
+{
+  "snapshotUTC": "2026-10-25T06:59:05.920475+00:00",
+  "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "runId": 40167598688,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40167598688",
+  "createdUTC": "2026-10-25T06:01:07Z",
+  "state": "completed",
+  "calibratePerformanceRequested": false,
+  "dispatchCount": 1,
+  "dispatchExitCode": 0,
+  "previousSameBranchRunsTerminalBeforeDispatch": true,
+  "initialListingLagCheckedWithoutRedispatch": true,
+  "jobIds": {
+    "android": 121091718752,
+    "performance": 121091718835,
+    "windows": 121091718843,
+    "linux": 121091718895
+  },
+  "localValidationSourcePinsMatchExactCommit": true,
+  "sourcePinCount": 447,
+  "nativeChangeGenuineNewSource": true,
+  "dartAndAOTPerformanceAlgorithmChange": false,
+  "separatePerformanceRetry": false,
+  "priorFailingRun": 40164354926,
+  "priorCrashAndTimingsRetained": true,
+  "releaseGateAccepted": false,
+  "nativeHardwareAccepted": false,
+  "hostedChecks": {
+    "originalUninstrumentedFreshWarm": "pass;normalexit0,warmproofreuse",
+    "deterministicDisposalFreshWarm": "pass;window/view/engine finalized same owning thread before loop return",
+    "artifactDigestsVerified": true,
+    "receipt": "linux-disposal-hosted-checks.json",
+    "coreCount": 0
+  },
+  "performance": {
+    "status": "completed",
+    "conclusion": "failure",
+    "absoluteFailures": 5,
+    "absoluteMedianFailures": 0,
+    "absoluteMaximumFailures": 5,
+    "pairedFailures": 3,
+    "pairedMedianFailures": 1,
+    "pairedMaximumFailures": 3,
+    "rerunsUsed": 0,
+    "all3Shapes232CorrectnessPassed": true,
+    "artifactId": 12589850277,
+    "artifactSHA256": "f341b1d4db1be8a361e0d8b6f8eab810292a59011ff11c9ad9ccbad17005adbc",
+    "artifactDigestVerified": true,
+    "receipt": "linux-disposal-enforcing-performance.json",
+    "sameAOTBinarySourceToolsFixtureBindingAndCapsAsPrevious179_105Run": true
+  },
+  "jobs": {
+    "linux": {
+      "id": 121091718895,
+      "status": "completed",
+      "conclusion": "success",
+      "unitTestsPassed": 1515,
+      "toolTestsPassed": 174,
+      "nativeTestsPassed": 203,
+      "nativeTestElapsed": "39m28s",
+      "nativeStepStartedUTC": "2026-10-25T06:12:11Z",
+      "nativeFinalPassLine": "2026-10-25T06:51:53.9637488Z 39:28 +203: All tests passed!",
+      "sessionUndoRegressionLine": "2026-10-25T06:50:01.8242249Z 37:36 +198: session Undo survives notices, protects drafts and preserves newer synced edits",
+      "formatAnalysisBuildPayloadOriginalCloseDisposalPackagingAndInstall": "all passed",
+      "decodedJobLogSHA256": "60a6e17176fae62d563debe5cca435f800c9e0e1116563022a6b02b416622b21",
+      "decodedJobLogBytes": 980316
+    },
+    "windows": {
+      "id": 121091718843,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "android": {
+      "id": 121091718752,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "performance": {
+      "id": 121091718835,
+      "status": "completed",
+      "conclusion": "failure",
+      "all3Shapes232CorrectnessPassed": true,
+      "absoluteFailures": 5,
+      "absoluteMedianFailures": 0,
+      "absoluteMaximumFailures": 5,
+      "pairedFailures": 3,
+      "pairedMedianFailures": 1,
+      "pairedMaximumFailures": 3,
+      "rerunsUsed": 0,
+      "limitsChanged": false,
+      "receipt": "linux-disposal-enforcing-performance.json"
+    }
+  },
+  "liveNativeLogAvailability": {
+    "priorOutcome": "404 BlobNotFound during active job",
+    "newEvidence": "job reached completed/success",
+    "completedLogFetch": "success;no alternate route or active-log retries"
+  },
+  "conclusion": "failure",
+  "completedUTCAsRunUpdated": "2026-10-25T06:51:58Z",
+  "terminalReceipt": "linux-disposal-terminal-ci.json",
+  "activeOwnedCommands": []
+}

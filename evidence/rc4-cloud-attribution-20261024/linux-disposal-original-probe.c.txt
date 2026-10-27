@@ -1,0 +1,68 @@
+#define _GNU_SOURCE
+#include <gtk/gtk.h>
+#include <dlfcn.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+
+typedef struct {
+  const char* name;
+  GObject* object;
+  gboolean destroyed;
+  gboolean finalized;
+} Watch;
+static Watch watches[3] = {{"window", NULL, FALSE, FALSE},
+                           {"view", NULL, FALSE, FALSE},
+                           {"engine", NULL, FALSE, FALSE}};
+static void emit(const char* event, const char* object) {
+  fprintf(stderr, "TANDEMLOG_LIFECYCLE_PROBE event=%s object=%s thread=%ld\n",
+          event, object, (long)syscall(SYS_gettid));
+}
+static void finalized(gpointer data, GObject* object) {
+  Watch* watch = data;
+  watch->finalized = TRUE;
+  watch->object = NULL;
+  emit("finalized", watch->name);
+}
+static void destroyed(GtkWidget* object, gpointer data) {
+  Watch* watch = data;
+  watch->destroyed = TRUE;
+  emit("destroyed", watch->name);
+}
+static void watch(unsigned index, GObject* object, gboolean widget) {
+  Watch* entry = &watches[index];
+  if (entry->object || entry->finalized || object == NULL) return;
+  entry->object = object;  // Observation only: never retain or dispose it.
+  g_object_weak_ref(object, finalized, entry);
+  if (widget) g_signal_connect(object, "destroy", G_CALLBACK(destroyed), entry);
+  emit("watch", entry->name);
+}
+void gtk_window_set_application(GtkWindow* window, GtkApplication* application) {
+  typedef void (*Real)(GtkWindow*, GtkApplication*);
+  Real real = (Real)dlsym(RTLD_NEXT, "gtk_window_set_application");
+  if (application == NULL && watches[0].object == NULL && !watches[0].finalized) {
+    watch(0, G_OBJECT(window), TRUE);
+    GtkWidget* child = gtk_bin_get_child(GTK_BIN(window));
+    if (child != NULL && g_strcmp0(G_OBJECT_TYPE_NAME(child), "FlView") == 0) {
+      watch(1, G_OBJECT(child), TRUE);
+      typedef gpointer (*GetEngine)(gpointer);
+      GetEngine get_engine = (GetEngine)dlsym(RTLD_DEFAULT, "fl_view_get_engine");
+      if (get_engine != NULL) watch(2, G_OBJECT(get_engine(child)), FALSE);
+    }
+    emit("detach", "window");
+  }
+  real(window, application);
+}
+int g_application_run(GApplication* application, int argc, char** argv) {
+  typedef int (*Real)(GApplication*, int, char**);
+  Real real = (Real)dlsym(RTLD_NEXT, "g_application_run");
+  int result = real(application, argc, argv);
+  for (unsigned i = 0; i < 3; ++i) {
+    fprintf(stderr, "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=%s "
+                    "watched=%d destroyed=%d finalized=%d thread=%ld\n",
+            watches[i].name, watches[i].object != NULL || watches[i].finalized,
+            watches[i].destroyed, watches[i].finalized,
+            (long)syscall(SYS_gettid));
+  }
+  return result;
+}

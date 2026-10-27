@@ -758,7 +758,11 @@ void main() {
           'schedule': {'dueDate': '2030-05-01'},
         });
         await writer.edit(id, {}, tags: tags, observedTagRefs: {});
-        if (done) await writer.command(id, 'task.completed', {});
+        if (done) {
+          await writer.command(id, 'task.completed', {
+            'completedInstant': '2026-10-12T12:00:00.000000Z',
+          });
+        }
       }
 
       await add('Review household supplies', ['Home']);
@@ -1211,7 +1215,7 @@ void main() {
   );
 
   testWidgets(
-    'workspace search preserves filters and completion sections while discarding Add drafts',
+    'workspace search preserves filters and completion sections while carrying Add drafts',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
@@ -1246,7 +1250,11 @@ void main() {
         // This search scenario intentionally reorders organized tasks across
         // assignees. Raw Inbox captures use a separate manual-order bucket.
         await writer.editNativeFixtureTask(id, {'title': title});
-        if (done) await writer.command(id, 'task.completed', {});
+        if (done) {
+          await writer.command(id, 'task.completed', {
+            'completedInstant': '2026-10-12T12:00:00.000000Z',
+          });
+        }
       }
 
       await add('Planning available');
@@ -1361,18 +1369,30 @@ void main() {
       expect(find.text('Planning available'), findsNothing);
       await filterChoice(tester, 'Open');
       await openCaptureForTest(tester);
+      Future<Map<String, String>> canonicalContents() async => {
+        await for (final entry in folder.list())
+          if (entry is File)
+            entry.path: base64Encode(await entry.readAsBytes()),
+      };
+      final beforeToggle = await canonicalContents();
       await tester.enterText(capture, 'Unsubmitted household draft');
+      final captureController = tester.widget<TextField>(capture).controller!;
+      final carried = captureController.value.copyWith(
+        selection: const TextSelection(baseOffset: 3, extentOffset: 15),
+      );
+      captureController.value = carried;
       await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
       await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
       await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
       await tester.pumpAndSettle();
+      expect(tester.widget<TextField>(searchField).controller!.value, carried);
+      expect(captureController.value, carried);
+      expect(await canonicalContents(), beforeToggle);
       await tester.enterText(searchField, 'planning');
       await tester.pumpAndSettle();
       expect(capture, findsNothing);
-      expect(
-        (tester.state(find.byType(TasksPage)) as dynamic).capture.text,
-        isEmpty,
-      );
+      expect(captureController.value, carried);
+      expect(await canonicalContents(), beforeToggle);
       await writer.createNativeFixtureTask(const Uuid().v4(), {
         'title': 'Planning incoming',
         'description': '',
@@ -2327,7 +2347,11 @@ void main() {
         'schedule': future ? {'startDate': '2099-01-01'} : {},
       });
       await writer.edit(id, {}, tags: [tag], observedTagRefs: {});
-      if (done) await writer.command(id, 'task.completed', {});
+      if (done) {
+        await writer.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        });
+      }
     }
 
     await add('Ready household task', user);
@@ -2859,7 +2883,9 @@ void main() {
       expect(result.committedIds.toSet(), ids.toSet());
       expect(result.remainingIds, isEmpty);
       debugPrint('HEADER_CAPTURE_TASKS=1001 MS=${setup.elapsedMilliseconds}');
-      await store.command(ids.first, 'task.completed', {});
+      await store.command(ids.first, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       final tasks = store.rows.where((row) => row['kind'] == 'task').toList();
       expect(tasks, hasLength(1001));
       expect(tasks.where((row) => row['completed'] == true), hasLength(1));
@@ -3246,7 +3272,9 @@ void main() {
           observedTagRefs: {},
         );
       }
-      await writer.command(ids[4], 'task.completed', {});
+      await writer.command(ids[4], 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       await seedNativeProfile(profile.path, {
         'folder': folder.path,
         'user': user,
@@ -3818,7 +3846,8 @@ void main() {
       });
       await remote.complete(
         ids['Completed future history']!,
-        completionDay: DateTime.utc(2026, 9, 30),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 9, 30),
       );
       await seedNativeProfile(profile.path, {
         'folder': folder.path,
@@ -4172,6 +4201,12 @@ void main() {
             .text,
         'Unsaved notes',
       );
+      expect(
+        toolbarButton(tester, undo).onPressed,
+        isNotNull,
+        reason: 'Cancelling the dirty close must re-enable session Undo.',
+      );
+      await captureNativeFixtureUi(tester, 'session-undo-cancel-retains-draft');
       await tester.tap(undo);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Discard'));

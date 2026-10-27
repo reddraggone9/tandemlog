@@ -1,0 +1,51 @@
+{
+  "sourceBase": "a71d0ba",
+  "fullUnitTests": 1508,
+  "fullUnitSeconds": 398,
+  "loadedFocusedTests": 45,
+  "additionalCacheInheritanceTests": 1,
+  "initialFocusedCommandExit": 1,
+  "initialFocusedCommandCause": "Nonexistent text_cache_test.dart; other45 tests passed. Correct text_cache_inheritance_test.dart executed separately and passed. Failure log retained.",
+  "analysis": "clean",
+  "formattedFiles": 395,
+  "formatChanges": 0,
+  "nativePendingAndLimitChecks": "actual production FFI pending/complete/corrupt checkpoints and exact native limit tests pass",
+  "compatibility": "original parser equality through8MiB; identical empty/max+1/max+2 errors; input subview/caller mutation/output buffer isolation",
+  "logs": {
+    "rc4-owned-state-focused.log": {
+      "sha256": "ef25408f31708d7b62ea5b4f1ddc656346e2cd9396a1c5ba3d253e8688c1d65a",
+      "tail": [
+        "Failing tests:",
+        "  /workspace/tandemlog/test/text_cache_test.dart: loading /workspace/tandemlog/test/text_cache_test.dart"
+      ]
+    },
+    "rc4-owned-state-cache-focused.log": {
+      "sha256": "ff6320e0629af54a3ad3e5b994e8e755685d4c36c77a04f165f4fb3292516fee",
+      "tail": [
+        "00:00 +0: resolved inherited cache preserves original claims and rebuilds corrupt disposable state",
+        "00:00 +1: All tests passed!"
+      ]
+    },
+    "rc4-owned-state-full-unit.log": {
+      "sha256": "bed9cfb801b48cbce4c31e62f306bb7618908778631918a8f4301c2c249440a3",
+      "tail": [
+        "{\"adaptiveHistoricalRecords\":450,\"notesChars\":9900,\"selectedRecords\":6,\"relationLookups\":26,\"strictSelectedAndHeadDecodes\":8}",
+        "06:38 +1508: All tests passed!"
+      ]
+    },
+    "rc4-owned-state-analysis.log": {
+      "sha256": "c3fbeb9cd60620eddba5136e1a1e4b1f7a1ff9dfba84526dd39c8afdd735738a",
+      "tail": [
+        "Analyzing tandemlog...                                          ",
+        "No issues found! (ran in 1.7s)"
+      ]
+    },
+    "rc4-owned-state-format-check.log": {
+      "sha256": "45306febef3bd79c245e20017a38968b0e4b9edc2d2d87f01e22443c5d6fdeda",
+      "tail": [
+        "Formatted 395 files (0 changed) in 2.27 seconds."
+      ]
+    }
+  },
+  "hostedAcceptance": false
+}

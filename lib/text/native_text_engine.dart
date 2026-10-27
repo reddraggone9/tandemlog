@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:uuid/uuid.dart';
+import '../diagnostics/operation_observer.dart';
 
 const _operationBytes = 1024 * 1024;
 const _stateBytes = 8 * 1024 * 1024;
@@ -91,6 +92,25 @@ class NativeTextState {
     encoded is String ? encoded : '',
     _decodeBytes(encoded, _stateBytes, 'Text state'),
   );
+
+  /// Own a SQL checkpoint's bytes without encoding and parsing our own Base64.
+  /// String inputs still use [parse] to verify their canonical representation.
+  factory NativeTextState.fromBytes(Uint8List bytes) {
+    if (bytes.isEmpty || bytes.length > _stateBytes) {
+      // Preserve parse(base64Encode(bytes)) failures, including the final
+      // partial Base64 block at the byte limit, before allocating a copy.
+      final encodedLength = ((bytes.length + 2) ~/ 3) * 4;
+      final maximumEncodedLength = ((_stateBytes + 2) ~/ 3) * 4;
+      throw FormatException(
+        bytes.isEmpty || encodedLength > maximumEncodedLength
+            ? 'Text state must be a bounded canonical Base64 string'
+            : 'Text state must preserve exact canonical Base64 bytes',
+      );
+    }
+    final owned = Uint8List.fromList(bytes).asUnmodifiableView();
+    return NativeTextState._(base64Encode(owned), owned);
+  }
+
   final String encoded;
   final Uint8List bytes;
 }
@@ -164,6 +184,8 @@ class NativeTextEngine {
   NativeTextEngine({String? libraryPath})
     : _bindings = _NativeBindings.load(libraryPath ?? _defaultLibrary());
   final _NativeBindings _bindings;
+  OperationDiagnosticObserver? diagnosticObserver;
+  int diagnosticCallbackFailures = 0;
   final String ownerId = const Uuid().v4();
   final Set<NativeTextDocument> _documents = {};
   final Set<NativeTextMaterializer> _materializers = {};
@@ -171,6 +193,10 @@ class NativeTextEngine {
   int _inspectionPayloadBytes = 0;
   int get cachedInspectionCount => _inspectionCache.length;
   int get cachedInspectionPayloadBytes => _inspectionPayloadBytes;
+  final _checkpointPending = <String, bool>{};
+  int _checkpointPendingPayloadBytes = 0;
+  int get cachedCheckpointPendingCount => _checkpointPending.length;
+  int get cachedCheckpointPendingPayloadBytes => _checkpointPendingPayloadBytes;
   bool _closed = false;
   void _ensureOpen() {
     if (_closed) throw StateError('Native text engine owner is disposed');
@@ -178,7 +204,28 @@ class NativeTextEngine {
 
   Map<String, dynamic> _call(String operation, Map<String, Object?> data) {
     _ensureOpen();
-    return _bindings.call(operation, data);
+    final observer = diagnosticObserver;
+    if (observer == null) return _bindings.call(operation, data);
+    Object? token;
+    try {
+      token = observer.start('native.api.$operation');
+    } catch (_) {
+      diagnosticCallbackFailures++;
+    }
+    var succeeded = false;
+    try {
+      final value = _bindings.call(operation, data);
+      succeeded = true;
+      return value;
+    } finally {
+      if (token != null) {
+        try {
+          observer.finish(token, succeeded);
+        } catch (_) {
+          diagnosticCallbackFailures++;
+        }
+      }
+    }
   }
 
   NativeTextUpdate seedText(String text) {
@@ -227,6 +274,46 @@ class NativeTextEngine {
     return _create('restore', actorClientId, limits, {
       'checkpoint': checkpoint.toJson(),
     });
+  }
+
+  /// Pure readiness of an exact immutable checkpoint under exact native limits.
+  /// No native handle, editor allocation, ownership or admission proof is reused.
+  bool checkpointHasPending(
+    NativeTextCheckpoint checkpoint, {
+    required NativeTextLimits limits,
+  }) {
+    _ensureOpen();
+    final key = '${jsonEncode(limits.toJson())}:${checkpoint.state.encoded}';
+    final remembered = _checkpointPending.remove(key);
+    if (remembered != null) {
+      _checkpointPending[key] = remembered;
+      return remembered;
+    }
+    final document = restoreDocument(
+      actorClientId: 2,
+      limits: limits,
+      checkpoint: checkpoint,
+    );
+    final bool pending;
+    try {
+      pending = document.read().pending;
+    } finally {
+      document.dispose();
+    }
+    final cost = key.length * 2;
+    const budget = 4 * 1024 * 1024;
+    if (cost <= budget) {
+      while (_checkpointPending.isNotEmpty &&
+          (_checkpointPending.length >= 2048 ||
+              _checkpointPendingPayloadBytes + cost > budget)) {
+        final oldest = _checkpointPending.keys.first;
+        _checkpointPending.remove(oldest);
+        _checkpointPendingPayloadBytes -= oldest.length * 2;
+      }
+      _checkpointPending[key] = pending;
+      _checkpointPendingPayloadBytes += cost;
+    }
+    return pending;
   }
 
   NativeTextDocument _create(
@@ -356,6 +443,8 @@ class NativeTextEngine {
     if (_closed) return;
     _inspectionCache.clear();
     _inspectionPayloadBytes = 0;
+    _checkpointPending.clear();
+    _checkpointPendingPayloadBytes = 0;
     Object? failure;
     for (final materializer in _materializers.toList()) {
       try {

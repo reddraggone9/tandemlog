@@ -156,6 +156,7 @@ Future<void> captureNativeFixtureUi(
     expect(moved.exitCode, 0);
     final resized = await Process.run('xdotool', [
       'windowsize',
+      '--sync',
       window,
       tester.view.physicalSize.width.round().toString(),
       tester.view.physicalSize.height.round().toString(),
@@ -178,16 +179,31 @@ Future<void> captureNativeFixtureUi(
   } finally {
     final resized = await Process.run('xdotool', [
       'windowsize',
+      '--sync',
       window,
       before['WIDTH']!,
       before['HEIGHT']!,
     ]);
     expect(resized.exitCode, 0);
+    // XGetGeometry reports client coordinates; managed absolute moves use
+    // frame coordinates. Subtract the observed decorations on restoration.
+    final frame = await Process.run('xprop', [
+      '-id',
+      window,
+      '_NET_FRAME_EXTENTS',
+    ]);
+    expect(frame.exitCode, 0);
+    final extents = RegExp(
+      r'=\s*(\d+),\s*\d+,\s*(\d+),\s*\d+',
+    ).firstMatch(frame.stdout as String);
+    final left = extents == null ? 0 : int.parse(extents.group(1)!);
+    final top = extents == null ? 0 : int.parse(extents.group(2)!);
     final moved = await Process.run('xdotool', [
       'windowmove',
+      '--sync',
       window,
-      before['X']!,
-      before['Y']!,
+      '${int.parse(before['X']!) - left}',
+      '${int.parse(before['Y']!) - top}',
     ]);
     expect(moved.exitCode, 0);
     await tester.runAsync(

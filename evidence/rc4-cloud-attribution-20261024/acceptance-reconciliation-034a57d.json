@@ -1,0 +1,45 @@
+{
+  "snapshotUTC": "2026-10-25T12:37:49.921958+00:00",
+  "sourceSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "scope": "Read-only documentation reconciliation;no policy/harness/product changes or benchmark run",
+  "registeredMetrics": 232,
+  "ordinary": 224,
+  "startup": 8,
+  "groups": {
+    "cardinality33": 33,
+    "original146": 146,
+    "convertedExisting45": 45,
+    "confirmation2": 2,
+    "firstPoint6": 6
+  },
+  "frozenOriginalIdsRetained": true,
+  "allThreeAbsoluteInventoriesAndBothGrowthRulesExactlyMatch": true,
+  "nativeTimingAccepted": false,
+  "windowsScenarioMappingQualification": "Three nearest converted Task3 scenario correspondences only. Does not prove identical profile/native-owner lifetime or allow subtraction/cross-platform causal comparison.",
+  "apiOnlyMetrics": [
+    "cardinality500.food.contents.APIonly",
+    "cardinality500.food.contents.APIonly.undo",
+    "food.contents.APIonly",
+    "food.contents.APIonly.undo",
+    "historical.food.contents.APIonly",
+    "historical.food.contents.APIonly.undo"
+  ],
+  "uiInventoryDescriptions": 28,
+  "sourcePins": {
+    "tool/performance/coverage-v1.json": "26552d70380568076f87dd0852233064fcdab001ac2f943e69ce4a10c2293572",
+    "tool/performance/original-action-ids-v1.json": "9983b285eef9d661f83c8c2df1fb7240f0dff83a30fe8ee4e554020b8a23e04e",
+    "tool/performance/limits-v1.json": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+    "design/performance-gate.md": "7027c4937be3d8a248007b24a44489873bf1219e2473a06ceb1fb4780032432d",
+    "design/decisions/0032-release-performance-gate.md": "7c509fb56106b4e27bc7273eb16d3e6c3f458e8ba734bbbce7e395df1b3af88c"
+  },
+  "matrixSHA256": "6a288a46e88ea41450054b72090e5afe68eca89aa804e0a22b6423b3f6548343",
+  "knownNativeBoundaryGaps": [
+    "Food editor/controller open and cancel have no separately invoked storage operation; actual Flutter preparation and paint remain a native UI timing gap.",
+    "Checklist draft cancellation/capture release occurs outside the timed checklist labels; it has no standalone cancel metric.",
+    "Section preference timing does not measure actual Tasks/Food navigation or workspace publication.",
+    "Storage startup does not include main occurrence maintenance, workspace binding/publication or first useful visible rows.",
+    "The fixed inherited task.title/notes/titleAndNotes targets are warmed before reported samples. Fresh-per-repetition derivedSuccessor.titleAndNotes.save and copiedChecklist.titleAndNotes.save already cover their stated first-touch boundaries. First copied-item Save before any parent activity is covered by oversized-descriptor correctness, without a separate timing distribution."
+  ],
+  "limitsChanged": false,
+  "matrixIsNewAcceptancePolicy": false
+}

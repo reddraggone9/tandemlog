@@ -1,3 +1,23 @@
+# RC4 repair continuation — 2026-10-25
+
+Exact source `5dc4e3e398e63e7956312ddff258ac88b6465649` was exercised in a native
+Linux GTK release bundle from CI40148192820, under isolated1200×800 Xvfb in dark
+theme. Actual pointer/keyboard Save, dirty-edit Undo → Cancel, then Undo → Discard
+passed visual inspection. Cancel left canonical bytes identical; Save and Undo
+added exactly two actions, retained every original prefix and restored all three
+synthetic task titles/notes. Independent fresh-profile replay passed without
+changing its canonical copy. Normal WM_DELETE exit0; all owned processes stopped.
+The saved desktop demonstration visibly includes the pointer; idle observation
+pauses are removed with action speed unchanged. Detailed media remains private.
+[Sanitized proof](../evidence/rc4-cloud-attribution-20261024/followup-owned-state-native-demo.json).
+
+This Linux software-rendered workflow establishes neither Windows presentation
+latency nor complete action performance acceptance. Android native workflow/video
+and separately coordinated Windows foreground validation remain pending. CI's
+current performance result fails60 absolute/45 paired checks,0 retries, despite
+all three shapes/232 correctness metrics passing. Limits remain unchanged; no
+release/live cutover is authorized. Historical evidence below keeps its attribution.
+
 # Coordinated cutover RC.4/build99 - qualified development acceptance
 
 ## Latest development result - 2026-10-21

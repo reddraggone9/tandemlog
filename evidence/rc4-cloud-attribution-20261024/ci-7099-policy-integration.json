@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Recoverable hosted policy integration defect;not reference qualification",
+  "testedBase": "7099bbd9e92189f309f8113287302f67952f31c8",
+  "originalRun": {
+    "id": 40212054595,
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40212054595",
+    "calibratePerformance": false,
+    "dispatchCount": 1,
+    "linuxStatus": "completed/success",
+    "androidConclusion": "success",
+    "windowsConclusion": "failure",
+    "windowsTooling": {
+      "tests": 196,
+      "failures": 4,
+      "errors": 10,
+      "skipped": 25,
+      "reason": [
+        "Synthetic Linux runner orchestration called on unsupported Windows platform",
+        "Synthetic Linux receipt paths accidentally contain Windows separators",
+        "Verifier expected relative project names use host separators rather than receipt POSIX names"
+      ]
+    },
+    "referenceConclusion": "failure",
+    "referenceReason": "Missing qualification receipt;expected,not bypassed",
+    "performance": {
+      "conclusion": "success",
+      "correctnessAccepted": true,
+      "measurementCompleted": true,
+      "allPinsMatch": true,
+      "timingLimitsPassed": false,
+      "releaseGateAccepted": false,
+      "rerunsUsed": 0,
+      "metricsPerShape": 232,
+      "observationsPerShape": 1624,
+      "pairedTaskFailingActions": 1,
+      "pairedFoodFailingActions": 0,
+      "artifactID": 12606875977,
+      "artifactSHA256": "cd789ea1e84aa706398bf3e9cc4eab53b1019f6da06ade96c370292892c50c0e",
+      "absoluteFailingActionShapeEntries": 26,
+      "absoluteMedianMisses": 19,
+      "absoluteMaximumMisses": 20,
+      "pairedTaskMiss": {
+        "action": "converted.task.title.editorOpen",
+        "kind": "maximum-only",
+        "smallMaximumMs": 4.598,
+        "largeMaximumMs": 13.068,
+        "maximumBoundMs": 11.4372,
+        "smallMedianMs": 4.359,
+        "largeMedianMs": 3.86,
+        "medianBoundMs": 8.44875
+      },
+      "reportSHA256": "a668471a05a458f0fdf5e75b8f638359ed58998f82293c03576fe011c8d54d8e"
+    },
+    "linuxChecks": {
+      "unitPassed": 1515,
+      "nativeContractsPassed": 107,
+      "toolingTests": 196,
+      "nativePassed": 203,
+      "nativeDuration": "40m43s",
+      "completedUTC": "2026-10-25T17:26:39Z"
+    },
+    "windowsUnitPassed": 1513,
+    "windowsUnitSkipped": 2,
+    "allJobsTerminal": true,
+    "requiredOverallAcceptance": false
+  },
+  "candidate": {
+    "files": [
+      "tool/performance/reference_receipt.py",
+      "tool/performance/run_gate.py",
+      "tool/test_reference_performance.py"
+    ],
+    "changes": [
+      "Use POSIX project-relative receipt names on every validator host; keep report input validation strict",
+      "Keep Linux orchestrator tests Linux-only;portable policy and receipt tests remain cross-platform",
+      "Validate bad CLI mode combinations before unsupported-platform rejection;valid non-Linux invocation still fails before output",
+      "Add non-Linux fail-before-output regression;ensure invalid-mode tests cannot pass because of platform rejection"
+    ],
+    "isolatedValidation": {
+      "focusedTests": 22,
+      "focusedSeconds": 5.463,
+      "fullToolingTests": 197,
+      "fullToolingSkipped": 2,
+      "fullToolingSeconds": 6.634,
+      "pythonCompile": "Three changed files pass",
+      "realWindowsExecution": "Pending;Linux simulation is not native Windows proof"
+    },
+    "runtimeSourceChanged": false,
+    "limitsChanged": false,
+    "controllerChanged": false,
+    "referenceRequestCreated": false,
+    "qualificationRetried": false,
+    "workflowDispatched": false,
+    "originalBranchUnchangedDuringCI": true
+  },
+  "logsSHA256": {
+    "linux": "1db096bca7ca3a410f8e8516bf5396b0d1c2c14411b4886d9f45947cf88624b4",
+    "windows": "618bfe6abc10cb402ce4dcd0826354e35bdf0205d499dfa62343d9ca462fe076",
+    "android": "b624bd13be552623f54a43c13f9528b94530dd9c512549060272596b4d8246de",
+    "performance": "afb105dab8b109edd00f4912fb4415e886a4145e428b41e4ca123417c3194148",
+    "reference": "781afe23b4eaa60812f93a554e282aa04f4846b46475e3c515d64faa4994825b"
+  }
+}

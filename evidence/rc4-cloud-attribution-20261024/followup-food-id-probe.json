@@ -1,0 +1,1408 @@
+{
+  "schemaVersion": 1,
+  "snapshotUTC": "2026-10-24T23:16:41.474130+00:00",
+  "base": "fb13f68ee4c22cc92515c4ebe7e2379cb71238b4",
+  "change": "FoodRecord.id retains one derived immutable writer:sequence string on each existing record, matching LogEvent.id. No validation branch changes.",
+  "limitsUnchangedSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "scope": "Standalone uninstrumented AOT existing scenario functions; cloud development observation, no CI/native/UI/release acceptance.",
+  "warmups": 2,
+  "measuredSamples": 5,
+  "comparisons": {
+    "peer": {
+      "before": {
+        "sourcePinsMatch": true,
+        "sourcePinsSHA256": "bd28e1d31e0ca714fb2080be90cf20318435ca1ffa64f0032473fee3867d99f1",
+        "logSHA256": "32a700700be8a542c1f94a7f049de368281b41408b64e3122e80ae47eb5bad38",
+        "entrypointSHA256": "9a468d5fd9e094653fe39ddb4b400d7ec54bd9a4de5e890c51a75934e79f4ce3",
+        "sourceRoot": "/workspace/scratch/rc4-food-id-comparison/before",
+        "log": "/workspace/toolchains/logs/rc4-food-id-before.log",
+        "correctnessReplayAndPrefixesAll3Shapes": true,
+        "shapes": {
+          "dense-1": {
+            "sync.peerFood.whileTasks.storageAdmission": {
+              "samplesUs": [
+                5966,
+                5987,
+                6388,
+                9909,
+                6267
+              ],
+              "medianUs": 6267,
+              "maximumUs": 9909
+            },
+            "sync.peerTask.whileFood.storageAdmission": {
+              "samplesUs": [
+                29810,
+                33724,
+                30876,
+                27545,
+                27281
+              ],
+              "medianUs": 29810,
+              "maximumUs": 33724
+            }
+          },
+          "dense-2": {
+            "sync.peerFood.whileTasks.storageAdmission": {
+              "samplesUs": [
+                8900,
+                10510,
+                14500,
+                10809,
+                10142
+              ],
+              "medianUs": 10510,
+              "maximumUs": 14500
+            },
+            "sync.peerTask.whileFood.storageAdmission": {
+              "samplesUs": [
+                36089,
+                32333,
+                43603,
+                52323,
+                36830
+              ],
+              "medianUs": 36830,
+              "maximumUs": 52323
+            }
+          },
+          "dense-food": {
+            "sync.peerFood.whileTasks.storageAdmission": {
+              "samplesUs": [
+                11679,
+                9768,
+                10166,
+                10325,
+                20840
+              ],
+              "medianUs": 10325,
+              "maximumUs": 20840
+            },
+            "sync.peerTask.whileFood.storageAdmission": {
+              "samplesUs": [
+                34279,
+                35299,
+                49263,
+                36656,
+                46341
+              ],
+              "medianUs": 36656,
+              "maximumUs": 49263
+            }
+          }
+        }
+      },
+      "after": {
+        "sourcePinsMatch": true,
+        "sourcePinsSHA256": "6e33708b07dbfe254009d6b6b4a55edc31d3d34ce23ee63202b170586efec84c",
+        "logSHA256": "ee0b45fea32a098f92fa5e92ffb4395507a38a90049819feaae3b011470bc254",
+        "entrypointSHA256": "8b0a8f622f34f3a95920e393fb532638dc31e00f4a7fd030c92268afd5f3090f",
+        "sourceRoot": "/workspace/scratch/rc4-food-id-comparison/after",
+        "log": "/workspace/toolchains/logs/rc4-food-id-after.log",
+        "correctnessReplayAndPrefixesAll3Shapes": true,
+        "shapes": {
+          "dense-1": {
+            "sync.peerFood.whileTasks.storageAdmission": {
+              "samplesUs": [
+                5821,
+                5323,
+                5695,
+                6613,
+                9155
+              ],
+              "medianUs": 5821,
+              "maximumUs": 9155
+            },
+            "sync.peerTask.whileFood.storageAdmission": {
+              "samplesUs": [
+                33217,
+                28989,
+                31675,
+                28161,
+                27046
+              ],
+              "medianUs": 28989,
+              "maximumUs": 33217
+            }
+          },
+          "dense-2": {
+            "sync.peerFood.whileTasks.storageAdmission": {
+              "samplesUs": [
+                7966,
+                7217,
+                7440,
+                8103,
+                7883
+              ],
+              "medianUs": 7883,
+              "maximumUs": 8103
+            },
+            "sync.peerTask.whileFood.storageAdmission": {
+              "samplesUs": [
+                38816,
+                39278,
+                39161,
+                38783,
+                39425
+              ],
+              "medianUs": 39161,
+              "maximumUs": 39425
+            }
+          },
+          "dense-food": {
+            "sync.peerFood.whileTasks.storageAdmission": {
+              "samplesUs": [
+                8355,
+                8467,
+                8142,
+                8294,
+                7911
+              ],
+              "medianUs": 8294,
+              "maximumUs": 8467
+            },
+            "sync.peerTask.whileFood.storageAdmission": {
+              "samplesUs": [
+                30423,
+                33695,
+                27641,
+                28045,
+                31169
+              ],
+              "medianUs": 30423,
+              "maximumUs": 33695
+            }
+          }
+        }
+      }
+    },
+    "food": {
+      "before": {
+        "sourcePinsMatch": true,
+        "sourcePinsSHA256": "8a10a9728380114761942057e93048c1fd30ae20077a1b502df6decdb4168d4e",
+        "logSHA256": "058952c0b754bec3c35b359fc87818cae2c40fee2b6ad1813560299d3d923891",
+        "entrypointSHA256": "05cedbac695a192c66412e9c8f79e1bfbd6647a0f413307f75b5567a489b5f3d",
+        "sourceRoot": "/workspace/scratch/rc4-food-id-comparison/before",
+        "log": "/workspace/toolchains/logs/rc4-food-id-before-food.log",
+        "correctnessReplayAndPrefixesAll3Shapes": true,
+        "shapes": {
+          "dense-1": {
+            "food.add.1": {
+              "samplesUs": [
+                7039,
+                6849,
+                7144,
+                6966,
+                6954
+              ],
+              "medianUs": 6966,
+              "maximumUs": 7144
+            },
+            "food.add.1.undo": {
+              "samplesUs": [
+                7388,
+                6982,
+                8258,
+                7945,
+                7436
+              ],
+              "medianUs": 7436,
+              "maximumUs": 8258
+            },
+            "food.add.3": {
+              "samplesUs": [
+                7012,
+                8615,
+                6902,
+                7021,
+                6548
+              ],
+              "medianUs": 7012,
+              "maximumUs": 8615
+            },
+            "food.add.3.undo": {
+              "samplesUs": [
+                7721,
+                7067,
+                7644,
+                7234,
+                8025
+              ],
+              "medianUs": 7644,
+              "maximumUs": 8025
+            },
+            "food.contents.APIonly": {
+              "samplesUs": [
+                7852,
+                7178,
+                8577,
+                9360,
+                10674
+              ],
+              "medianUs": 8577,
+              "maximumUs": 10674
+            },
+            "food.contents.APIonly.undo": {
+              "samplesUs": [
+                8194,
+                7840,
+                8746,
+                8080,
+                9130
+              ],
+              "medianUs": 8194,
+              "maximumUs": 9130
+            },
+            "food.delete.1": {
+              "samplesUs": [
+                7579,
+                6938,
+                7551,
+                6988,
+                8220
+              ],
+              "medianUs": 7551,
+              "maximumUs": 8220
+            },
+            "food.delete.1.undo": {
+              "samplesUs": [
+                7829,
+                8130,
+                8108,
+                8128,
+                8470
+              ],
+              "medianUs": 8128,
+              "maximumUs": 8470
+            },
+            "food.delete.3": {
+              "samplesUs": [
+                6729,
+                6953,
+                7508,
+                7933,
+                9710
+              ],
+              "medianUs": 7508,
+              "maximumUs": 9710
+            },
+            "food.delete.3.undo": {
+              "samplesUs": [
+                8100,
+                8464,
+                8121,
+                8497,
+                8719
+              ],
+              "medianUs": 8464,
+              "maximumUs": 8719
+            },
+            "food.details.1": {
+              "samplesUs": [
+                6955,
+                6936,
+                7687,
+                7960,
+                7390
+              ],
+              "medianUs": 7390,
+              "maximumUs": 7960
+            },
+            "food.details.1.undo": {
+              "samplesUs": [
+                7597,
+                8462,
+                8153,
+                7559,
+                8391
+              ],
+              "medianUs": 8153,
+              "maximumUs": 8462
+            },
+            "food.details.3": {
+              "samplesUs": [
+                7945,
+                7284,
+                8704,
+                7696,
+                7756
+              ],
+              "medianUs": 7756,
+              "maximumUs": 8704
+            },
+            "food.details.3.undo": {
+              "samplesUs": [
+                9295,
+                9302,
+                8529,
+                7896,
+                9328
+              ],
+              "medianUs": 9295,
+              "maximumUs": 9328
+            },
+            "food.restore.1": {
+              "samplesUs": [
+                9022,
+                7924,
+                7961,
+                6895,
+                7802
+              ],
+              "medianUs": 7924,
+              "maximumUs": 9022
+            },
+            "food.restore.1.undo": {
+              "samplesUs": [
+                7909,
+                8317,
+                10885,
+                15768,
+                11148
+              ],
+              "medianUs": 10885,
+              "maximumUs": 15768
+            },
+            "food.restore.3": {
+              "samplesUs": [
+                12252,
+                8304,
+                8862,
+                9379,
+                9615
+              ],
+              "medianUs": 9379,
+              "maximumUs": 12252
+            },
+            "food.restore.3.undo": {
+              "samplesUs": [
+                9639,
+                10967,
+                11361,
+                11383,
+                13963
+              ],
+              "medianUs": 11361,
+              "maximumUs": 13963
+            }
+          },
+          "dense-2": {
+            "food.add.1": {
+              "samplesUs": [
+                7047,
+                6492,
+                6862,
+                7649,
+                6760
+              ],
+              "medianUs": 6862,
+              "maximumUs": 7649
+            },
+            "food.add.1.undo": {
+              "samplesUs": [
+                6948,
+                7077,
+                7051,
+                7014,
+                6827
+              ],
+              "medianUs": 7014,
+              "maximumUs": 7077
+            },
+            "food.add.3": {
+              "samplesUs": [
+                6699,
+                7267,
+                6698,
+                7621,
+                7547
+              ],
+              "medianUs": 7267,
+              "maximumUs": 7621
+            },
+            "food.add.3.undo": {
+              "samplesUs": [
+                6848,
+                7404,
+                6670,
+                7207,
+                6916
+              ],
+              "medianUs": 6916,
+              "maximumUs": 7404
+            },
+            "food.contents.APIonly": {
+              "samplesUs": [
+                7488,
+                7289,
+                7910,
+                7114,
+                7159
+              ],
+              "medianUs": 7289,
+              "maximumUs": 7910
+            },
+            "food.contents.APIonly.undo": {
+              "samplesUs": [
+                7293,
+                8583,
+                9919,
+                9242,
+                9798
+              ],
+              "medianUs": 9242,
+              "maximumUs": 9919
+            },
+            "food.delete.1": {
+              "samplesUs": [
+                9981,
+                8232,
+                8122,
+                7753,
+                7857
+              ],
+              "medianUs": 8122,
+              "maximumUs": 9981
+            },
+            "food.delete.1.undo": {
+              "samplesUs": [
+                8307,
+                9923,
+                9198,
+                7783,
+                8033
+              ],
+              "medianUs": 8307,
+              "maximumUs": 9923
+            },
+            "food.delete.3": {
+              "samplesUs": [
+                6822,
+                8196,
+                9800,
+                9812,
+                9154
+              ],
+              "medianUs": 9154,
+              "maximumUs": 9812
+            },
+            "food.delete.3.undo": {
+              "samplesUs": [
+                8983,
+                9437,
+                8438,
+                8596,
+                8615
+              ],
+              "medianUs": 8615,
+              "maximumUs": 9437
+            },
+            "food.details.1": {
+              "samplesUs": [
+                7729,
+                7355,
+                7837,
+                8115,
+                8746
+              ],
+              "medianUs": 7837,
+              "maximumUs": 8746
+            },
+            "food.details.1.undo": {
+              "samplesUs": [
+                7747,
+                8280,
+                9141,
+                7521,
+                7895
+              ],
+              "medianUs": 7895,
+              "maximumUs": 9141
+            },
+            "food.details.3": {
+              "samplesUs": [
+                7766,
+                9500,
+                8201,
+                7741,
+                8031
+              ],
+              "medianUs": 8031,
+              "maximumUs": 9500
+            },
+            "food.details.3.undo": {
+              "samplesUs": [
+                9961,
+                9773,
+                8834,
+                8176,
+                8228
+              ],
+              "medianUs": 8834,
+              "maximumUs": 9961
+            },
+            "food.restore.1": {
+              "samplesUs": [
+                6709,
+                8205,
+                7617,
+                7472,
+                7506
+              ],
+              "medianUs": 7506,
+              "maximumUs": 8205
+            },
+            "food.restore.1.undo": {
+              "samplesUs": [
+                7174,
+                8967,
+                8564,
+                9767,
+                8544
+              ],
+              "medianUs": 8564,
+              "maximumUs": 9767
+            },
+            "food.restore.3": {
+              "samplesUs": [
+                9142,
+                9071,
+                9923,
+                8912,
+                9101
+              ],
+              "medianUs": 9101,
+              "maximumUs": 9923
+            },
+            "food.restore.3.undo": {
+              "samplesUs": [
+                9112,
+                11155,
+                9937,
+                9473,
+                9902
+              ],
+              "medianUs": 9902,
+              "maximumUs": 11155
+            }
+          },
+          "dense-food": {
+            "food.add.1": {
+              "samplesUs": [
+                6985,
+                7119,
+                7387,
+                7562,
+                7995
+              ],
+              "medianUs": 7387,
+              "maximumUs": 7995
+            },
+            "food.add.1.undo": {
+              "samplesUs": [
+                7442,
+                8182,
+                8983,
+                7644,
+                9718
+              ],
+              "medianUs": 8182,
+              "maximumUs": 9718
+            },
+            "food.add.3": {
+              "samplesUs": [
+                8897,
+                7678,
+                8231,
+                7578,
+                7613
+              ],
+              "medianUs": 7678,
+              "maximumUs": 8897
+            },
+            "food.add.3.undo": {
+              "samplesUs": [
+                9931,
+                7277,
+                7479,
+                8427,
+                8281
+              ],
+              "medianUs": 8281,
+              "maximumUs": 9931
+            },
+            "food.contents.APIonly": {
+              "samplesUs": [
+                7936,
+                8905,
+                8107,
+                7763,
+                9860
+              ],
+              "medianUs": 8107,
+              "maximumUs": 9860
+            },
+            "food.contents.APIonly.undo": {
+              "samplesUs": [
+                8486,
+                8124,
+                9010,
+                7810,
+                9069
+              ],
+              "medianUs": 8486,
+              "maximumUs": 9069
+            },
+            "food.delete.1": {
+              "samplesUs": [
+                7093,
+                8614,
+                10044,
+                9453,
+                9771
+              ],
+              "medianUs": 9453,
+              "maximumUs": 10044
+            },
+            "food.delete.1.undo": {
+              "samplesUs": [
+                8893,
+                8473,
+                14304,
+                11623,
+                13319
+              ],
+              "medianUs": 11623,
+              "maximumUs": 14304
+            },
+            "food.delete.3": {
+              "samplesUs": [
+                9062,
+                9325,
+                13715,
+                9703,
+                10431
+              ],
+              "medianUs": 9703,
+              "maximumUs": 13715
+            },
+            "food.delete.3.undo": {
+              "samplesUs": [
+                8430,
+                9758,
+                10646,
+                10973,
+                11018
+              ],
+              "medianUs": 10646,
+              "maximumUs": 11018
+            },
+            "food.details.1": {
+              "samplesUs": [
+                7245,
+                8931,
+                13488,
+                9929,
+                11199
+              ],
+              "medianUs": 9929,
+              "maximumUs": 13488
+            },
+            "food.details.1.undo": {
+              "samplesUs": [
+                9414,
+                9031,
+                9007,
+                11824,
+                13289
+              ],
+              "medianUs": 9414,
+              "maximumUs": 13289
+            },
+            "food.details.3": {
+              "samplesUs": [
+                9318,
+                7956,
+                8624,
+                9202,
+                8536
+              ],
+              "medianUs": 8624,
+              "maximumUs": 9318
+            },
+            "food.details.3.undo": {
+              "samplesUs": [
+                8161,
+                9751,
+                9640,
+                9199,
+                9268
+              ],
+              "medianUs": 9268,
+              "maximumUs": 9751
+            },
+            "food.restore.1": {
+              "samplesUs": [
+                8428,
+                7775,
+                8032,
+                7672,
+                8849
+              ],
+              "medianUs": 8032,
+              "maximumUs": 8849
+            },
+            "food.restore.1.undo": {
+              "samplesUs": [
+                9384,
+                9586,
+                8917,
+                9100,
+                8664
+              ],
+              "medianUs": 9100,
+              "maximumUs": 9586
+            },
+            "food.restore.3": {
+              "samplesUs": [
+                14322,
+                10125,
+                9754,
+                11177,
+                18895
+              ],
+              "medianUs": 11177,
+              "maximumUs": 18895
+            },
+            "food.restore.3.undo": {
+              "samplesUs": [
+                10620,
+                10850,
+                10963,
+                14742,
+                11224
+              ],
+              "medianUs": 10963,
+              "maximumUs": 14742
+            }
+          }
+        }
+      },
+      "after": {
+        "sourcePinsMatch": true,
+        "sourcePinsSHA256": "d520115ce9740e13112906f99ac9678e7d44586de59041465c03ee8ed854d44d",
+        "logSHA256": "502001f0a690c06b1eafb7d3055c446b696dfb67f479ef20cbcb56c39c76a7a7",
+        "entrypointSHA256": "b55d081c2bb5765e1322e1a39dca92accc9e19774fc66e770db72b6a2e2980d4",
+        "sourceRoot": "/workspace/scratch/rc4-food-id-comparison/after",
+        "log": "/workspace/toolchains/logs/rc4-food-id-after-food.log",
+        "correctnessReplayAndPrefixesAll3Shapes": true,
+        "shapes": {
+          "dense-1": {
+            "food.add.1": {
+              "samplesUs": [
+                7043,
+                6136,
+                6666,
+                6318,
+                6253
+              ],
+              "medianUs": 6318,
+              "maximumUs": 7043
+            },
+            "food.add.1.undo": {
+              "samplesUs": [
+                7473,
+                6437,
+                6606,
+                6508,
+                7011
+              ],
+              "medianUs": 6606,
+              "maximumUs": 7473
+            },
+            "food.add.3": {
+              "samplesUs": [
+                7125,
+                6969,
+                6407,
+                7545,
+                6099
+              ],
+              "medianUs": 6969,
+              "maximumUs": 7545
+            },
+            "food.add.3.undo": {
+              "samplesUs": [
+                7938,
+                9074,
+                6716,
+                6812,
+                6729
+              ],
+              "medianUs": 6812,
+              "maximumUs": 9074
+            },
+            "food.contents.APIonly": {
+              "samplesUs": [
+                8671,
+                9062,
+                8186,
+                8628,
+                9496
+              ],
+              "medianUs": 8671,
+              "maximumUs": 9496
+            },
+            "food.contents.APIonly.undo": {
+              "samplesUs": [
+                8433,
+                8461,
+                8024,
+                8279,
+                8994
+              ],
+              "medianUs": 8433,
+              "maximumUs": 8994
+            },
+            "food.delete.1": {
+              "samplesUs": [
+                7885,
+                7322,
+                6831,
+                7582,
+                7792
+              ],
+              "medianUs": 7582,
+              "maximumUs": 7885
+            },
+            "food.delete.1.undo": {
+              "samplesUs": [
+                7825,
+                8148,
+                7650,
+                8096,
+                8591
+              ],
+              "medianUs": 8096,
+              "maximumUs": 8591
+            },
+            "food.delete.3": {
+              "samplesUs": [
+                6960,
+                8312,
+                6367,
+                8091,
+                7196
+              ],
+              "medianUs": 7196,
+              "maximumUs": 8312
+            },
+            "food.delete.3.undo": {
+              "samplesUs": [
+                8417,
+                8305,
+                7858,
+                8943,
+                8369
+              ],
+              "medianUs": 8369,
+              "maximumUs": 8943
+            },
+            "food.details.1": {
+              "samplesUs": [
+                7287,
+                7404,
+                6667,
+                6481,
+                11811
+              ],
+              "medianUs": 7287,
+              "maximumUs": 11811
+            },
+            "food.details.1.undo": {
+              "samplesUs": [
+                8560,
+                7899,
+                6950,
+                7856,
+                8752
+              ],
+              "medianUs": 7899,
+              "maximumUs": 8752
+            },
+            "food.details.3": {
+              "samplesUs": [
+                8019,
+                7869,
+                8040,
+                8014,
+                8668
+              ],
+              "medianUs": 8019,
+              "maximumUs": 8668
+            },
+            "food.details.3.undo": {
+              "samplesUs": [
+                8269,
+                8805,
+                7661,
+                8112,
+                8938
+              ],
+              "medianUs": 8269,
+              "maximumUs": 8938
+            },
+            "food.restore.1": {
+              "samplesUs": [
+                7706,
+                7056,
+                6943,
+                7634,
+                7323
+              ],
+              "medianUs": 7323,
+              "maximumUs": 7706
+            },
+            "food.restore.1.undo": {
+              "samplesUs": [
+                10914,
+                9572,
+                9620,
+                10708,
+                9983
+              ],
+              "medianUs": 9983,
+              "maximumUs": 10914
+            },
+            "food.restore.3": {
+              "samplesUs": [
+                9285,
+                9395,
+                8207,
+                10532,
+                9899
+              ],
+              "medianUs": 9395,
+              "maximumUs": 10532
+            },
+            "food.restore.3.undo": {
+              "samplesUs": [
+                11349,
+                13615,
+                10643,
+                12301,
+                10981
+              ],
+              "medianUs": 11349,
+              "maximumUs": 13615
+            }
+          },
+          "dense-2": {
+            "food.add.1": {
+              "samplesUs": [
+                7380,
+                7052,
+                7039,
+                6593,
+                6274
+              ],
+              "medianUs": 7039,
+              "maximumUs": 7380
+            },
+            "food.add.1.undo": {
+              "samplesUs": [
+                8426,
+                7588,
+                7297,
+                6848,
+                6972
+              ],
+              "medianUs": 7297,
+              "maximumUs": 8426
+            },
+            "food.add.3": {
+              "samplesUs": [
+                8171,
+                9807,
+                6822,
+                8498,
+                7375
+              ],
+              "medianUs": 8171,
+              "maximumUs": 9807
+            },
+            "food.add.3.undo": {
+              "samplesUs": [
+                8120,
+                8798,
+                7502,
+                11790,
+                7557
+              ],
+              "medianUs": 8120,
+              "maximumUs": 11790
+            },
+            "food.contents.APIonly": {
+              "samplesUs": [
+                7481,
+                8119,
+                7701,
+                9024,
+                8345
+              ],
+              "medianUs": 8119,
+              "maximumUs": 9024
+            },
+            "food.contents.APIonly.undo": {
+              "samplesUs": [
+                8834,
+                8911,
+                10466,
+                10638,
+                11190
+              ],
+              "medianUs": 10466,
+              "maximumUs": 11190
+            },
+            "food.delete.1": {
+              "samplesUs": [
+                9687,
+                8060,
+                8874,
+                8061,
+                8378
+              ],
+              "medianUs": 8378,
+              "maximumUs": 9687
+            },
+            "food.delete.1.undo": {
+              "samplesUs": [
+                10291,
+                9339,
+                8357,
+                8275,
+                9661
+              ],
+              "medianUs": 9339,
+              "maximumUs": 10291
+            },
+            "food.delete.3": {
+              "samplesUs": [
+                6841,
+                7845,
+                10825,
+                9350,
+                9440
+              ],
+              "medianUs": 9350,
+              "maximumUs": 10825
+            },
+            "food.delete.3.undo": {
+              "samplesUs": [
+                10440,
+                8640,
+                9218,
+                7848,
+                8564
+              ],
+              "medianUs": 8640,
+              "maximumUs": 10440
+            },
+            "food.details.1": {
+              "samplesUs": [
+                10440,
+                8301,
+                8109,
+                9479,
+                8366
+              ],
+              "medianUs": 8366,
+              "maximumUs": 10440
+            },
+            "food.details.1.undo": {
+              "samplesUs": [
+                8034,
+                9339,
+                8772,
+                7942,
+                8602
+              ],
+              "medianUs": 8602,
+              "maximumUs": 9339
+            },
+            "food.details.3": {
+              "samplesUs": [
+                7306,
+                10126,
+                8521,
+                7860,
+                8432
+              ],
+              "medianUs": 8432,
+              "maximumUs": 10126
+            },
+            "food.details.3.undo": {
+              "samplesUs": [
+                7604,
+                10139,
+                8925,
+                9810,
+                10113
+              ],
+              "medianUs": 9810,
+              "maximumUs": 10139
+            },
+            "food.restore.1": {
+              "samplesUs": [
+                6992,
+                10273,
+                8091,
+                7302,
+                8514
+              ],
+              "medianUs": 8091,
+              "maximumUs": 10273
+            },
+            "food.restore.1.undo": {
+              "samplesUs": [
+                7881,
+                10354,
+                10465,
+                8957,
+                8594
+              ],
+              "medianUs": 8957,
+              "maximumUs": 10465
+            },
+            "food.restore.3": {
+              "samplesUs": [
+                8658,
+                9884,
+                9177,
+                9899,
+                9321
+              ],
+              "medianUs": 9321,
+              "maximumUs": 9899
+            },
+            "food.restore.3.undo": {
+              "samplesUs": [
+                9070,
+                13750,
+                9766,
+                10577,
+                10517
+              ],
+              "medianUs": 10517,
+              "maximumUs": 13750
+            }
+          },
+          "dense-food": {
+            "food.add.1": {
+              "samplesUs": [
+                7001,
+                7626,
+                7380,
+                6939,
+                6652
+              ],
+              "medianUs": 7001,
+              "maximumUs": 7626
+            },
+            "food.add.1.undo": {
+              "samplesUs": [
+                7847,
+                8204,
+                7296,
+                7671,
+                9130
+              ],
+              "medianUs": 7847,
+              "maximumUs": 9130
+            },
+            "food.add.3": {
+              "samplesUs": [
+                7405,
+                6822,
+                9741,
+                7517,
+                8564
+              ],
+              "medianUs": 7517,
+              "maximumUs": 9741
+            },
+            "food.add.3.undo": {
+              "samplesUs": [
+                10231,
+                8235,
+                9254,
+                8234,
+                7721
+              ],
+              "medianUs": 8235,
+              "maximumUs": 10231
+            },
+            "food.contents.APIonly": {
+              "samplesUs": [
+                8665,
+                9552,
+                10281,
+                8931,
+                9183
+              ],
+              "medianUs": 9183,
+              "maximumUs": 10281
+            },
+            "food.contents.APIonly.undo": {
+              "samplesUs": [
+                8850,
+                10606,
+                9481,
+                9390,
+                9497
+              ],
+              "medianUs": 9481,
+              "maximumUs": 10606
+            },
+            "food.delete.1": {
+              "samplesUs": [
+                8364,
+                9664,
+                9329,
+                12797,
+                9210
+              ],
+              "medianUs": 9329,
+              "maximumUs": 12797
+            },
+            "food.delete.1.undo": {
+              "samplesUs": [
+                8961,
+                8389,
+                12113,
+                17298,
+                9854
+              ],
+              "medianUs": 9854,
+              "maximumUs": 17298
+            },
+            "food.delete.3": {
+              "samplesUs": [
+                7774,
+                12582,
+                8635,
+                8624,
+                8533
+              ],
+              "medianUs": 8624,
+              "maximumUs": 12582
+            },
+            "food.delete.3.undo": {
+              "samplesUs": [
+                8559,
+                10974,
+                9445,
+                10058,
+                10703
+              ],
+              "medianUs": 10058,
+              "maximumUs": 10974
+            },
+            "food.details.1": {
+              "samplesUs": [
+                12085,
+                8597,
+                8500,
+                8580,
+                8956
+              ],
+              "medianUs": 8597,
+              "maximumUs": 12085
+            },
+            "food.details.1.undo": {
+              "samplesUs": [
+                8945,
+                9289,
+                13049,
+                8628,
+                9492
+              ],
+              "medianUs": 9289,
+              "maximumUs": 13049
+            },
+            "food.details.3": {
+              "samplesUs": [
+                11421,
+                8529,
+                10447,
+                10939,
+                10795
+              ],
+              "medianUs": 10795,
+              "maximumUs": 11421
+            },
+            "food.details.3.undo": {
+              "samplesUs": [
+                9230,
+                9567,
+                9223,
+                9912,
+                11046
+              ],
+              "medianUs": 9567,
+              "maximumUs": 11046
+            },
+            "food.restore.1": {
+              "samplesUs": [
+                9677,
+                7811,
+                8834,
+                12473,
+                10646
+              ],
+              "medianUs": 9677,
+              "maximumUs": 12473
+            },
+            "food.restore.1.undo": {
+              "samplesUs": [
+                9619,
+                9026,
+                9342,
+                12782,
+                9742
+              ],
+              "medianUs": 9619,
+              "maximumUs": 12782
+            },
+            "food.restore.3": {
+              "samplesUs": [
+                10794,
+                11557,
+                16557,
+                11168,
+                13170
+              ],
+              "medianUs": 11557,
+              "maximumUs": 16557
+            },
+            "food.restore.3.undo": {
+              "samplesUs": [
+                12809,
+                11299,
+                11070,
+                10858,
+                11540
+              ],
+              "medianUs": 11299,
+              "maximumUs": 12809
+            }
+          }
+        }
+      }
+    }
+  },
+  "interpretation": "Peer-Food medians improved in this finite sequence; broader Food command timings were mixed. These observations do not establish full-gate acceptance or a guaranteed improvement.",
+  "productionCandidateFocusedTests": 97,
+  "fullCandidateAOT": "completed; correctness/232 metrics/all3 shapes/all source seals pass; 11 absolute and4 paired failures retained; measure-only, no retry, not release/native acceptance",
+  "accepted": false
+}

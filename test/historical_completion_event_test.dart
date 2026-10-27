@@ -28,7 +28,7 @@ LogEvent _event(
 
 void main() {
   final source = _event(_a, 1, 1, 'task.completed', {
-    'completedAt': '2030-05-10',
+    'completedInstant': '2030-05-10T00:00:00.000000Z',
     'successor': {
       'id': _child,
       'title': 'Original child',
@@ -39,7 +39,7 @@ void main() {
     },
   });
   Map<String, dynamic> payload() => {
-    'completedAt': '2030-06-10',
+    'completedInstant': '2030-06-10T00:00:00.000000Z',
     'retainedSuccessor': {
       'id': _child,
       'completion': source.id,
@@ -68,7 +68,7 @@ void main() {
       );
       final altered = _event(_a, 1, 1, source.type, {
         ...source.data,
-        'completedAt': '2030-05-11',
+        'completedInstant': '2030-05-11T00:00:00.000000Z',
       });
       expect(
         () => verifyHistoricalCompletion(marker, altered),
@@ -84,7 +84,7 @@ void main() {
         (data) => data['retainedSuccessor']['completion'] = '$_b:2',
         (data) => data['retainedSuccessor']['context'] = 'f' * 64,
         (data) => data['retainedSuccessor']['id'] = _parent,
-        (data) => data.remove('completedAt'),
+        (data) => data.remove('completedInstant'),
       ]) {
         final data = payload();
         mutate(data);

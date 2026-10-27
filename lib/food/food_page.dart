@@ -199,15 +199,24 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       await _requestEditorClose?.call() ?? true;
   String? _actionError;
   late final FoodExpirationClock _expirationClock;
+  late bool _lastTextFocus;
   @override
   void initState() {
     super.initState();
+    _lastTextFocus = _textHasFocus;
     _expirationClock = FoodExpirationClock(now: widget.now)
-      ..addListener(_focusChanged);
+      ..addListener(_expirationChanged);
     FocusManager.instance.addListener(_focusChanged);
   }
 
   void _focusChanged() {
+    if (!mounted) return;
+    final textHasFocus = _textHasFocus;
+    if (textHasFocus == _lastTextFocus) return;
+    setState(() => _lastTextFocus = textHasFocus);
+  }
+
+  void _expirationChanged() {
     if (mounted) setState(() {});
   }
 
@@ -230,7 +239,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   @override
   void dispose() {
     FocusManager.instance.removeListener(_focusChanged);
-    _expirationClock.removeListener(_focusChanged);
+    _expirationClock.removeListener(_expirationChanged);
     _expirationClock.dispose();
     search.dispose();
     // An editor requested just before page disposal may never mount, so no
@@ -242,6 +251,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textHasFocus = _textHasFocus;
+    _lastTextFocus = textHasFocus;
     final addCommand = widget.onAdd, undoCommand = widget.onUndo;
     final pending = widget.hasPendingSave?.call() ?? widget.savePending;
     final querying = search.text.trim().isNotEmpty;
@@ -264,7 +275,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         // end field focus. Auxiliary routes still reserve their own insets.
         resizeToAvoidBottomInset:
             (ModalRoute.isCurrentOf(context) ?? true) &&
-            (_editorBuilder != null || _textHasFocus),
+            (_editorBuilder != null || textHasFocus),
         body: Actions(
           actions: {
             if (_editorBuilder != null)
@@ -818,11 +829,16 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final workspace = widget.workspaceIdentity;
     final addCommand = widget.onAdd;
     final pending = widget.hasPendingSave?.call() ?? widget.savePending;
-    void toggleSelection() {
-      if (!_canUseGroupMenu(group, workspace)) return;
+    void toggleSelection({bool enter = false}) {
+      if (deleted ||
+          (widget.hasPendingSave?.call() ?? widget.savePending) ||
+          !_canUseGroupMenu(group, workspace)) {
+        return;
+      }
       setState(() {
+        if (enter) selecting = true;
         final ids = group.containers.map((e) => e.id);
-        if (ids.every(bulkSelected.contains)) {
+        if (!enter && ids.every(bulkSelected.contains)) {
           bulkSelected.removeAll(ids);
         } else {
           bulkSelected.addAll(ids);
@@ -831,8 +847,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     }
 
     void editGroup() {
-      if (deleted || pending || !_canUseGroupMenu(group, workspace)) return;
-      if (selecting) {
+      if (pending || !_canUseGroupMenu(group, workspace)) return;
+      if (selecting && !deleted) {
         toggleSelection();
       } else {
         _edit(group: group, detailsCommand: detailsCommand);
@@ -862,7 +878,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       if (action == 'restore') restoreGroup();
     }
 
-    final editable = !deleted && !widget.busy && !pending;
+    final editable = !widget.busy && !pending;
     return GestureDetector(
       // Replacing gesture state also binds pointer-down to the observed IDs and
       // deletion tokens. A peer arrival must not retarget pointer-up actions.
@@ -898,6 +914,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             });
           },
           onTap: editable ? editGroup : null,
+          onLongPress: !editable || deleted
+              ? null
+              : () => toggleSelection(enter: true),
           excludeFromSemantics: true,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -924,10 +943,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                   ),
                 Expanded(
                   child: Semantics(
-                    button: !deleted,
-                    enabled: deleted ? null : editable,
+                    button: true,
+                    enabled: editable,
                     label: [
-                      if (!deleted) selecting ? 'Select' : 'Edit',
+                      selecting && !deleted ? 'Select' : 'Edit',
                       details.name,
                       countLabel,
                       details.expiry ?? 'Needs expiration',
@@ -1165,7 +1184,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 (widget.hasPendingSave?.call() ?? widget.savePending) ||
                 group.containers.every(
                   (e) => widget.state.containers.any(
-                    (item) => item.id == e.id && !item.deleted,
+                    (item) =>
+                        item.id == e.id &&
+                        item.deleted == e.deleted &&
+                        item.deletions.length == e.deletions.length &&
+                        item.deletions.containsAll(e.deletions),
                   ),
                 )),
         areTargetsVisible: () =>

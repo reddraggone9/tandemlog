@@ -1,0 +1,210 @@
+{
+  "diagnosticOnly": true,
+  "performanceAcceptance": false,
+  "passed": true,
+  "applicationReruns": 0,
+  "results": [
+    {
+      "run": 1,
+      "passed": false,
+      "cleanWitnessVerified": false,
+      "closeMode": "normal",
+      "external_ms": 546,
+      "marker": "TANDEMLOG_READY_MS=376 FILES_READ=2",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=142",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+        "TANDEMLOG_READY_MS=376 FILES_READ=2"
+      ],
+      "external_main_ms": 166,
+      "external_first_frame_ms": 312,
+      "shutdown": {
+        "requestedMode": "normal",
+        "normalExitVerified": true,
+        "method": "owned-window-WM_DELETE_WINDOW",
+        "pid": 66156,
+        "window": "2097155",
+        "globalFocusOrInput": false,
+        "processExit": 0,
+        "elapsedMs": 95.865
+      },
+      "process_exit": 0,
+      "witnessBeforeLaunch": {
+        "taskProofPresent": false,
+        "decodedProofPresent": false,
+        "taskProofShapeValid": false,
+        "decodedPayloadHashMatches": false,
+        "productionReuseVerified": false
+      },
+      "previousNormalExitVerified": false,
+      "canonical_payload_reads": 2,
+      "canonical_files": 1,
+      "startupCacheCounters": {
+        "warmTaskProjectionReuses": 0,
+        "decodedCacheReuses": 0,
+        "strictDecodedRecords": 3
+      },
+      "cleanTaskWitnessVerified": false,
+      "cleanDecodedWitnessVerified": false,
+      "disposal": {
+        "objectsFinalizedBeforeLoopReturn": [
+          "engine",
+          "view",
+          "window"
+        ],
+        "sameOwningThread": true,
+        "events": {
+          "view": [
+            "watch",
+            "destroyed",
+            "finalized",
+            "run-return"
+          ],
+          "window": [
+            "watch",
+            "detach",
+            "destroyed",
+            "finalized",
+            "run-return"
+          ],
+          "engine": [
+            "watch",
+            "finalized",
+            "run-return"
+          ]
+        }
+      }
+    },
+    {
+      "run": 2,
+      "passed": false,
+      "cleanWitnessVerified": true,
+      "closeMode": "normal",
+      "external_ms": 539,
+      "marker": "TANDEMLOG_READY_MS=363 FILES_READ=2",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=142",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":1,\"decodedCacheReuses\":3,\"strictDecodedRecords\":0}",
+        "TANDEMLOG_READY_MS=363 FILES_READ=2"
+      ],
+      "external_main_ms": 171,
+      "external_first_frame_ms": 317,
+      "shutdown": {
+        "requestedMode": "normal",
+        "normalExitVerified": true,
+        "method": "owned-window-WM_DELETE_WINDOW",
+        "pid": 66209,
+        "window": "2097155",
+        "globalFocusOrInput": false,
+        "processExit": 0,
+        "elapsedMs": 104.733
+      },
+      "process_exit": 0,
+      "witnessBeforeLaunch": {
+        "taskProofPresent": true,
+        "decodedProofPresent": true,
+        "taskProofShapeValid": true,
+        "decodedPayloadHashMatches": true,
+        "productionReuseVerified": false,
+        "taskProofSHA256": "33c1c8f6efd46c532c7803eb07d7a2d3852d4744c3f70eacd42e29b573db0803",
+        "decodedPayloadSHA256": "cabd1bd722a74aa2c8bde0f69fbc1ee33348c56e82566c3c382a855a392ea581"
+      },
+      "previousNormalExitVerified": true,
+      "canonical_payload_reads": 2,
+      "canonical_files": 1,
+      "startupCacheCounters": {
+        "warmTaskProjectionReuses": 1,
+        "decodedCacheReuses": 3,
+        "strictDecodedRecords": 0
+      },
+      "cleanTaskWitnessVerified": true,
+      "cleanDecodedWitnessVerified": true,
+      "disposal": {
+        "objectsFinalizedBeforeLoopReturn": [
+          "engine",
+          "view",
+          "window"
+        ],
+        "sameOwningThread": true,
+        "events": {
+          "view": [
+            "watch",
+            "destroyed",
+            "finalized",
+            "run-return"
+          ],
+          "window": [
+            "watch",
+            "detach",
+            "destroyed",
+            "finalized",
+            "run-return"
+          ],
+          "engine": [
+            "watch",
+            "finalized",
+            "run-return"
+          ]
+        }
+      }
+    }
+  ],
+  "bundlePins": {
+    "data/flutter_assets/AssetManifest.bin": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665",
+    "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+    "data/flutter_assets/NOTICES.Z": "2f5db52ea3ed04d9db3f1ca10e37b19778e83b96b5855f1bb15eb7a3165f2a2e",
+    "data/flutter_assets/NativeAssetsManifest.json": "cac6ed54604e88a281fdf937e13069ee88123bf111e9a4af1ad323b3a561b3f0",
+    "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "189d98623b97ac8b82eff01a24c7760d928fdc0420cd047e392c62c3a4a5ebda",
+    "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": "4a869fdca16eb36a8970867f4cde5faa7df7894440c49bc6716ba82adbd13d39",
+    "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+    "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+    "data/flutter_assets/version.json": "203ec4c0b09f2dfe3caa04f522217997c7b0dd3be845f2d311c029c6bcd5e5be",
+    "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+    "lib/libapp.so": "ba841bdf05b330d79b0a9ad0474756d2235961c1bfc7e546a170c279847f2d6b",
+    "lib/libdartjni.so": "459814394724dbf74cbdeb4719c3a686f3487cc2c11fec9ea60e58d37eb30c4f",
+    "lib/libfile_selector_linux_plugin.so": "27793a7333f9a1060bbcf4d7bd0f4fe95e00bf5628f628a61b0afd4e4d1fda65",
+    "lib/libflutter_linux_gtk.so": "d57449a5c2ee39e77b9e3488f0703b165c67e0b3c554089f388db96484ae62f1",
+    "lib/libsqlite3.so": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace",
+    "lib/libtandemlog_text.so": "ca9a4eecd7fe626762cb7ac945d0585cbe342fc40969d9fad62ba25296f70bf8",
+    "lib/liburl_launcher_linux_plugin.so": "1f4c6b0b3f2892b13acdc0d715f4959ad40cb875ee5d90ddf75885fa81243bbc",
+    "lib/native_assets.json": "837488387762d603148954a2fdae6e051a1c09a02ac97c3c1f90a9f70134cde1",
+    "tandemlog": "8ae884350515f7f174f319763472194cbde9a64f0966f1ef400f21e06548153c"
+  },
+  "sourcePins": {
+    "verify_linux_disposal.py": "b023a32329d2e9a5be5987f860a2c0b0e0896d2edf76a5aa9ba85a765243e30d",
+    "linux_lifecycle_probe.c": "851679ca8a7df035c23051e381062973342351a2cf3260e11c4bd260d3f1cfa5",
+    "measure_startup.py": "e623d12b63e331d1686aaa2ff5d2dfc459f050cadd0ef7f6669cf676ebdf104a",
+    "synthetic_text_fixture.py": "4fc233e688d18038c4e9f16c264cf8194daa9cf70b20a8c2a1218b8bf11efa79"
+  },
+  "probeSHA256": "f3dcdb1d052cd6600db434bdad94753133a65bbfe463d532ee7245d30fbf466d",
+  "fixture": {
+    "synthetic": true,
+    "initialized": true,
+    "format": "app-action-v5",
+    "baseline": "25051750-a57f-4e63-a4f8-e788210ce209:12",
+    "writer": "25051750-a57f-4e63-a4f8-e788210ce209",
+    "user": "0d365047-aeb7-436a-89e9-9ad7e726a62a",
+    "rows": 11,
+    "settings_sha256": "882e93930da7a34a9358214be7ed7085a1a6e73e93f16f3d63ffcc9edf3bba00",
+    "native_sha256": "ca9a4eecd7fe626762cb7ac945d0585cbe342fc40969d9fad62ba25296f70bf8"
+  },
+  "bundleBytesUnchanged": true,
+  "snapshotUTC": "2026-10-25T05:51:56.190887+00:00",
+  "currentCandidateProductPins": {
+    "linux/runner/main.cc": "546bd23f20d3010cdb31ea46dac8da04265570cca0e135f049f35d79d61b6c78",
+    "linux/runner/my_application.cc": "1f1603e4950906aec47d09d6c35c8224d6902a60f2aeb0788288e3a0b8ef142b",
+    "linux/runner/my_application.h": "342790a8a3543dea87a8daf8c44b1a38c314544e4979473d8f2a04033880f462"
+  },
+  "productChangeCommitted": false,
+  "fullValidation": "running in session27948",
+  "prototypeSourceAttestation": "Original hosted bundle before-proof byte pins verified. Interim window-only prototype binary was not separately retained before rebuild; negative logs remain, no binary attestation claimed.",
+  "warningsRetained": [
+    "FlutterEngineRemoveView rejected implicit view removal in pinned SDK",
+    "Three FlBinaryMessenger handler warnings while engine disposes"
+  ],
+  "qualification": "Object lifetime/normal-exit correctness proof only; different cloud graphics stack, instrumented library loading, no crash clearance or timing acceptance. Original SIGSEGV and enforcing failures stay retained."
+}

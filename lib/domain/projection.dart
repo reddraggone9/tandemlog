@@ -38,11 +38,15 @@ List<String> projectOrder(
 ) {
   final available = availableInCreationOrder.toSet();
   final ordered = <String>[];
+  // Every placed ID remains in the order: moves only remove it temporarily.
+  // Keep membership separately so creation/fallback do not scan the growing
+  // list for every ID. Deferred moves and insertion order stay unchanged.
+  final placed = <String>{};
   final pending = <(String, String?)>[];
   final seeded = <String>{};
   bool move(String entity, String? before) {
-    if (!ordered.contains(entity) ||
-        (before != null && !ordered.contains(before))) {
+    if (!placed.contains(entity) ||
+        (before != null && !placed.contains(before))) {
       return false;
     }
     ordered.remove(entity);
@@ -61,7 +65,7 @@ List<String> projectOrder(
       if (next == null || !seeded.add(next) || !available.contains(next)) {
         continue;
       }
-      if (!ordered.contains(next)) ordered.add(next);
+      if (placed.add(next)) ordered.add(next);
       if (!move(next, action.entity)) pending.add((next, action.entity));
       settlePending();
     } else if (action.type == 'task.moved') {
@@ -72,13 +76,14 @@ List<String> projectOrder(
             action.type == 'task.createdWithText' ||
             action.type == 'user.created') &&
         available.contains(action.entity) &&
-        !ordered.contains(action.entity)) {
+        !placed.contains(action.entity)) {
       ordered.add(action.entity);
+      placed.add(action.entity);
       settlePending();
     }
   }
   for (final id in available) {
-    if (!ordered.contains(id)) ordered.add(id);
+    if (placed.add(id)) ordered.add(id);
   }
   settlePending();
   return ordered;

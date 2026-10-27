@@ -28,7 +28,7 @@ void registerTaskInputModeTests() {
     (width: 320.0, scale: 2.5, theme: 'dark'),
   ]) {
     testWidgets(
-      'Search/Add clears explicit outgoing input and captures repeatedly ${variant.width} x${variant.scale}',
+      'Search/Add carries typed text and captures repeatedly ${variant.width} x${variant.scale}',
       (tester) async {
         final root = await Directory.systemTemp.createTemp('task-input-mode-');
         final folder = await Directory('${root.path}/shared').create();
@@ -55,7 +55,14 @@ void registerTaskInputModeTests() {
         tester.view.devicePixelRatio = 1;
         tester.platformDispatcher.textScaleFactorTestValue = variant.scale;
         try {
-          await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+          await tester.pumpWidget(
+            TandemlogApp(
+              profilePath: profile.path,
+              // Native Android runs use this app-private file fixture too;
+              // provider/SAF acceptance is a separate workflow.
+              folderFactory: LocalLogFolder.new,
+            ),
+          );
           await waitForUi(
             tester,
             () => find.text('Reference task').evaluate().isNotEmpty,
@@ -112,20 +119,29 @@ void registerTaskInputModeTests() {
                 reason: 'The wide Search action label must stay on one line.',
               );
             }
-            expect(state.search.text, isEmpty);
+            expect(
+              tester.widget<TextField>(capture).controller!.text,
+              flip == 0 ? 'Reference' : 'Carried unfinished ${flip - 1}',
+            );
             expect(state.searchQuery, isEmpty);
             expect(
               tester.widget<TextField>(capture).focusNode!.hasFocus,
               isTrue,
             );
-            await tester.enterText(capture, 'Discarded unfinished $flip');
+            await tester.enterText(capture, 'Carried unfinished $flip');
             await pixels.tap(tester, find.byKey(const ValueKey('open-search')));
             await tester.pumpAndSettle();
             expect(capture, findsNothing);
-            expect(state.capture.text, isEmpty);
-            expect(tester.widget<TextField>(input).controller!.text, isEmpty);
+            expect(
+              tester.widget<TextField>(input).controller!.text,
+              'Carried unfinished $flip',
+            );
             expect(find.text('Unsaved changes'), findsNothing);
           }
+          // Filters are intentionally paused for a nonempty carried query.
+          // Clear via the public action before selecting a status filter.
+          await tester.tap(find.byTooltip('Clear search'));
+          await tester.pumpAndSettle();
           await filterChoice(tester, 'Completed');
           expect(input.hitTestable(), findsOneWidget);
           expect(state.showCompleted, isTrue);
@@ -154,7 +170,13 @@ void registerTaskInputModeTests() {
           expect(state.capture.text, isEmpty);
           expect(tester.widget<TextField>(capture).focusNode!.hasFocus, isTrue);
           await tester.enterText(capture, 'Captured three');
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          if (Platform.isAndroid) {
+            // Android's multiline IME Enter inserts a line; capture uses Add.
+            await waitForCaptureAction(tester);
+            await pixels.tap(tester, find.byKey(const ValueKey('capture-add')));
+          } else {
+            await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          }
           await waitForUi(
             tester,
             () =>
@@ -176,7 +198,7 @@ void registerTaskInputModeTests() {
           }
           expect(
             titles.any(
-              (value) => value.toString().startsWith('Discarded unfinished'),
+              (value) => value.toString().startsWith('Carried unfinished'),
             ),
             isFalse,
           );

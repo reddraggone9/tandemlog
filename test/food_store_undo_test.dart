@@ -122,6 +122,103 @@ void main() {
       );
 
   test(
+    'editing deleted Food preserves tombstones through Undo and replay',
+    () async {
+      await food.add(
+        const FoodDetails(name: 'Original', expiry: '2026-10-28'),
+        1,
+      );
+      final id = food.state.containers.single.id;
+      await food.remove([id]);
+      final tombstones = Set<String>.of(food.state.containers.single.deletions);
+      await food.changeDetails(
+        [id],
+        const FoodDetails(name: 'Corrected'),
+        ['name'],
+      );
+      final original = List<FoodRecord>.of(food.lastPreparedRecords);
+      expect(food.state.containers.single.deleted, isTrue);
+      expect(food.state.containers.single.deletions, tombstones);
+      expect(food.state.containers.single.details.name, 'Corrected');
+      await food.undoOperations(original);
+      expect(food.state.containers.single.details.name, 'Original');
+      expect(food.state.containers.single.deletions, tombstones);
+      await food.close();
+      await tasks.close();
+      tasks = await TaskStore.open(
+        folder,
+        profile.root,
+        profileDatabase: profile,
+        writerIdentity: installation,
+      );
+      food = await FoodStore.openUnified(tasks.unified!);
+      expect(food.state.containers.single.details.name, 'Original');
+      expect(food.state.containers.single.deletions, tombstones);
+      expect(food.state.containers.single.deleted, isTrue);
+    },
+  );
+
+  test(
+    'failed projection never publishes candidate confirmation or retraction index',
+    () async {
+      await food.add(const FoodDetails(name: 'Rice', brand: 'Original'), 1);
+      final id = food.state.active.single.id;
+      await food.changeDetails(
+        [id],
+        const FoodDetails(name: 'Rice', brand: 'Changed'),
+        ['brand'],
+      );
+      final edit = food.lastPreparedRecords.single;
+      final app = tasks.unified!;
+      final oldView = jsonEncode(
+        food.state.containers.map((c) => c.toJson()).toList(),
+      );
+      final oldRevision = app.snapshot.revision;
+      final attachment = Object();
+      var reject = false;
+      await profile.serialize(() async {
+        app.attachProjectionInProfileQueue(attachment, (snapshot) {
+          if (reject && snapshot.revision != oldRevision) {
+            throw FormatFailure(
+              'Synthetic late Food index publication failure',
+            );
+          }
+          return () {};
+        });
+      });
+      try {
+        reject = true;
+        await expectLater(inverse([edit]), throwsA(isA<FormatFailure>()));
+        final prepared = List<FoodRecord>.of(food.lastPreparedRecords);
+        expect(prepared, hasLength(1));
+        expect(food.isAdmitted(edit), isTrue);
+        expect(food.isAdmitted(prepared.single), isFalse);
+        expect(app.snapshot.foodAdmission.hasReadyRetraction(edit.id), isFalse);
+        expect(
+          jsonEncode(food.state.containers.map((c) => c.toJson()).toList()),
+          oldView,
+        );
+        expect(app.snapshot.revision, oldRevision);
+        expect(app.hasPending, isTrue);
+        reject = false;
+        await food.recoverPrepared();
+        expect(prepared.every(food.isAdmitted), isTrue);
+        expect(app.snapshot.foodAdmission.hasReadyRetraction(edit.id), isTrue);
+        expect(food.state.active.single.details.brand, 'Original');
+        final bytes = await folder.read(unifiedLogName(food.writer));
+        final lastPrepared = food.lastPreparedRecords;
+        expect(await inverse([edit]), isEmpty);
+        expect(identical(food.lastPreparedRecords, lastPrepared), isTrue);
+        expect(await folder.read(unifiedLogName(food.writer)), bytes);
+      } finally {
+        await profile.serialize(() async {
+          app.detachProjectionInProfileQueue(attachment);
+        });
+      }
+    },
+  );
+
+  test(
     'Undo each saved Food action preserves IDs and exact original log bytes',
     () async {
       await food.add(const FoodDetails(name: 'Rice', expiry: '2026-10-15'), 2);

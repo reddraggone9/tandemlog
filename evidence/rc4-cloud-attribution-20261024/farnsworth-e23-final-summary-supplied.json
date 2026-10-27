@@ -1,0 +1,158 @@
+{
+  "provenance": {
+    "kind": "parent-supplied local-executor final summary",
+    "receivedByCloudUTC": "2026-10-25T04:27:29.903862+00:00",
+    "localReviewFile": "FINAL-COMPARISON-REVIEW.md",
+    "rawLocalArtifactsReadByCloud": false,
+    "rawArtifactHashesSupplied": false,
+    "qualification": "Local validation/cleanup/compiled-pin claims are attributed to the executor; cloud has not independently inspected raw local evidence."
+  },
+  "sourceSHA": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "hosted": {
+    "runId": 40151805818,
+    "absoluteFailures": 28,
+    "pairedFailures": 3
+  },
+  "localRuns": [
+    {
+      "ordinal": 1,
+      "completed": true,
+      "all3Shapes232Metrics": "reported valid",
+      "sourceToolFixtureResourceCorrectness": "reported valid",
+      "absoluteFailures": 0,
+      "pairedFailures": 0
+    },
+    {
+      "ordinal": 2,
+      "completed": true,
+      "all3Shapes232Metrics": "reported valid",
+      "sourceToolFixtureResourceCorrectness": "reported valid",
+      "absoluteFailures": 0,
+      "pairedFailures": 1
+    },
+    {
+      "ordinal": 3,
+      "completed": false,
+      "stage": "AOT compilation",
+      "secondsBeforeAbort": 2.038,
+      "timedSamples": 0,
+      "reason": "54.17MiB global swap allocation growth guard",
+      "workloadSwap": 0,
+      "workloadOOM": 0,
+      "diskSwapoutIncreased": false
+    }
+  ],
+  "fourthRun": false,
+  "sourceAndToolPins": "117 reported matches",
+  "compiledPins": {
+    "examinedAsReported": 5389,
+    "exceptionsAsReported": 2,
+    "exceptionKind": "environment package configurations; contents not independently read by cloud"
+  },
+  "remainingLocalFailure": {
+    "metricAsSupplied": "copiedChecklist.metadata.complete",
+    "growth": "Task history",
+    "smallMs": [
+      "9.662",
+      "9.778",
+      "10.084",
+      "9.719",
+      "9.708"
+    ],
+    "largeMs": [
+      "10.521",
+      "20.643",
+      "11.156",
+      "10.658",
+      "10.181"
+    ],
+    "boundFormula": "1.4 * 10.084 + 5",
+    "boundMs": "19.1176",
+    "maximumMs": "20.643",
+    "reportedSlowSample": {
+      "bracketedCpuMs": 9.639,
+      "appendMs": 0.858,
+      "quotaThrottle": 0,
+      "intervalsNonexclusive": true
+    },
+    "interpretation": "Retained paired maximum failure; cause not established by nonexclusive counters."
+  },
+  "baselineMediansMs": {
+    "titleSave": {
+      "hosted": 28.503,
+      "local1": 14.863,
+      "local2": 14.918
+    },
+    "Undo": {
+      "hosted": 27.049,
+      "local1": 14.207,
+      "local2": 14.214
+    },
+    "completion": {
+      "hosted": 18.648,
+      "local1": 9.138,
+      "local2": 9.168
+    },
+    "confirmedFoodSave": {
+      "hosted": 8.878,
+      "local1": 4.807,
+      "local2": 4.96
+    }
+  },
+  "memoryAccountingAsReported": {
+    "installedZfsReview": "MemAvailable excludes ARC data",
+    "explicitlyEvictableGiB": 16.71,
+    "approvedBy": "Lee",
+    "location": "external controller only",
+    "conservativeFormula": "raw >= 2GiB AND raw + min(evictableR/2, 6GiB) >= 8GiB",
+    "eligibility": "R constrained by ARCmin and stable snapshots, per supplied local review",
+    "runtimeResourceCapsChanged": false,
+    "interpretation": "Accounting correction is not a performance-budget change. Global swap allocation growth with no workload swap/OOM or disk swapout increase does not prove benchmark swapping."
+  },
+  "cleanup": "all workloads and managers stopped, as reported",
+  "applicationOrUiAcceptance": false,
+  "releaseGateAccepted": false,
+  "nextState": "Additional bounded local attempt authorized as above;source e23 unchanged;no cloud performance run;proposed optimization not integrated;Android helper remains local-only",
+  "snapshotStatus": "Historical supplied final summary,before the later additional-attempt authorization",
+  "additionalAttemptLaterAuthorized": {
+    "authority": "subsequent parent delegation reporting Lee direction",
+    "scope": "ONE fresh bounded attempt for missing third complete timing measurement,after external controller fix/tests",
+    "executor": "local executor",
+    "completedRunsOrFailedSamplesRepeated": false,
+    "historicalAbortsRetained": true,
+    "measurementSourceUnchanged": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+    "reason": "global swap allocation growth alone was not pressure evidence;workloadswap0 and no disk-swapout increase",
+    "executionOutcome": "not supplied yet;cloud did not execute it",
+    "gateOrBudgetChanges": false
+  },
+  "replacementCompletionUpdate": {
+    "receivedByCloudUTC": "2026-10-25T05:08:25.224617+00:00",
+    "provenance": "Parent supplied local-executor completion/validation report in this delegated thread",
+    "rawArtifactsReadByCloud": false,
+    "sourceSHA": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+    "completed": true,
+    "all3Shapes232MetricsCorrectnessPins": "reported valid",
+    "absoluteFailures": 0,
+    "pairedFailures": 0,
+    "completeRunResultsInOrder": [
+      {
+        "absoluteFailures": 0,
+        "pairedFailures": 0
+      },
+      {
+        "absoluteFailures": 0,
+        "pairedFailures": 1
+      },
+      {
+        "absoluteFailures": 0,
+        "pairedFailures": 0
+      }
+    ],
+    "priorOutlierAndInfrastructureAbortsRetained": true,
+    "pressureController": "Corrected controller reportedly allowed completion; cloud has not audited the external controller",
+    "comparisonCleanup": "reported complete before Android launch",
+    "android": "Exact e23 APK launched; functional checks ongoing, not a completed acceptance result",
+    "budgetsOrGatePolicyChanged": false,
+    "qualification": "Supplied local-executor evidence; no direct raw review or automatic hosted/UI/release gate clearance"
+  }
+}

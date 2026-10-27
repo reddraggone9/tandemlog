@@ -1,0 +1,73 @@
+{
+  "snapshotUTC": "2026-10-25T05:28:03.719153+00:00",
+  "runId": 40164354926,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40164354926",
+  "headSHA": "6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6",
+  "branch": "fix/rc4-task-latency-20261022",
+  "event": "workflow_dispatch",
+  "calibratePerformanceRequested": false,
+  "dispatchCount": 1,
+  "dispatchExitCode": 0,
+  "previousSameBranchRunsTerminalBeforeDispatch": true,
+  "initialListingLag": "Immediate post-dispatch list omitted run; a later read found exact queued run. No second dispatch.",
+  "createdUTC": "2026-10-25T05:07:01Z",
+  "state": "completed",
+  "jobIds": {
+    "windows": 121082227145,
+    "android": 121082227329,
+    "linux": 121082227356,
+    "performance": 121082227421
+  },
+  "releaseGateAccepted": false,
+  "nativeUIAcceptance": false,
+  "qualification": "Pending results; old e23 enforcing failure retained. This new source is independently validated, not an unchanged retry or local-pass substitution.",
+  "jobs": {
+    "android": {
+      "status": "completed",
+      "conclusion": "success",
+      "artifactId": 12587946316,
+      "artifactArchiveSHA256": "07b4cb8f77883be921f8570e6da0e76e7541ce38667c92fb7600cca180238ce4",
+      "archiveVerified": true,
+      "apkSHA256": "15503b8d5ce3c434372f7ffa06dc5b1d5ff1d288bf5aee44f0311a37e5030eae",
+      "deviceAcceptance": false
+    },
+    "linux": {
+      "status": "completed",
+      "conclusion": "failure",
+      "unitTestsPassed": 1515,
+      "failedStep": "Smoke-test native release startup with fresh and warm cache",
+      "signal": "SIGSEGV",
+      "stackCaptured": true,
+      "receipt": "utf8-size-guards-linux-close.json"
+    },
+    "windows": {
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "performance": {
+      "status": "completed",
+      "conclusion": "failure",
+      "all3Shapes232CorrectnessPassed": true,
+      "absoluteFailures": 179,
+      "absoluteMedianFailures": 13,
+      "absoluteMaximumFailures": 179,
+      "pairedFailures": 105,
+      "pairedMedianFailures": 12,
+      "pairedMaximumFailures": 103,
+      "rerunsUsed": 0,
+      "artifactId": 12588340616,
+      "artifactSHA256": "33c471f95f600dc3e626da8bd86b8eecc016fcbc491e636e73026b6bd9f45046",
+      "artifactVerified": true,
+      "sourcePinsMatchAtInspection": true,
+      "sourcePinCount": 118,
+      "allPinsMatchFlag": null,
+      "measurementCompletedFlag": null
+    }
+  },
+  "conclusion": "failure",
+  "completedUTCAsRunUpdated": "2026-10-25T05:24:31Z",
+  "monitorFinished": true,
+  "activeOwnedLocalCommands": [],
+  "nextLifecycleChange": "Held for review beyond latest UTF8-only equivalence scope; no lifecycle edits or rerun performed",
+  "enforcingPerformanceReceipt": "utf8-size-guards-enforcing-performance.json"
+}

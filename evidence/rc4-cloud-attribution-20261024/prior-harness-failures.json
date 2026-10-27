@@ -1,0 +1,34 @@
+{
+  "rc4-linux-action-dense1-controller": {
+    "originalReportSHA256": "eec33609b75538ac832dfbe89a7aa65a1ecc4183a2ab33617db09e72b1c67905",
+    "error": "RuntimeError('framework diagnostic suite failed')",
+    "functionalPass": false,
+    "allPartitionsComplete": false,
+    "shutdown": {
+      "requestedMode": "normal",
+      "normalExitVerified": false,
+      "forcedTerminationUsed": true,
+      "method": "SIGTERM",
+      "processExit": -15,
+      "elapsedMs": 15.491
+    },
+    "controllerSHA256": null,
+    "sourcePinsSHA256": null
+  },
+  "rc4-linux-action-dense1-v2-controller": {
+    "originalReportSHA256": "f99c3223f9d990365f6689a6f1919c54e2a2459e4802d5d4d3aeae2c2f04ec37",
+    "error": "RuntimeError('framework diagnostic suite failed')",
+    "functionalPass": false,
+    "allPartitionsComplete": true,
+    "shutdown": {
+      "requestedMode": "normal",
+      "normalExitVerified": false,
+      "forcedTerminationUsed": true,
+      "method": "SIGTERM",
+      "processExit": -15,
+      "elapsedMs": 15.545
+    },
+    "controllerSHA256": null,
+    "sourcePinsSHA256": null
+  }
+}

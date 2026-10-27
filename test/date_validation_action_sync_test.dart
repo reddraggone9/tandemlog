@@ -1,3 +1,4 @@
+import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/form_validation.dart';
@@ -93,7 +94,7 @@ void main() {
       await _tap(
         tester,
         find.descendant(
-          of: find.byType(DatePickerDialog),
+          of: find.byType(CivilDatePickerDialog),
           matching: find.text('Cancel'),
         ),
       );

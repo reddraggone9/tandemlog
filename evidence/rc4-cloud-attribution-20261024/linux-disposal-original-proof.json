@@ -1,0 +1,22 @@
+{
+  "source": "6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6",
+  "unmodifiedFailingHostedBundle": true,
+  "bundleBytesUnchanged": true,
+  "observerSourceSHA256": "68e4fb2e0e3f3612b9d3d9dc8d279aa7ef6dd6bfb7c7ccc80cb9bd3613bb70cc",
+  "observerBinarySHA256": "14903d8d35d916dae8a71dd0d10464d40adf2369d2da233f702a66d692c21a37",
+  "diagnosticOnly": true,
+  "controllerPassed": true,
+  "crashReproduced": false,
+  "focusedOwnershipProof": "window/view/engine remain alive after g_application_run returns",
+  "expectedNegativeWitness": true,
+  "markers": [
+    "TANDEMLOG_LIFECYCLE_PROBE event=watch object=window thread=64940",
+    "TANDEMLOG_LIFECYCLE_PROBE event=watch object=view thread=64940",
+    "TANDEMLOG_LIFECYCLE_PROBE event=watch object=engine thread=64940",
+    "TANDEMLOG_LIFECYCLE_PROBE event=detach object=window thread=64940",
+    "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=window watched=1 destroyed=0 finalized=0 thread=64940",
+    "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=view watched=1 destroyed=0 finalized=0 thread=64940",
+    "TANDEMLOG_LIFECYCLE_PROBE event=run-return object=engine watched=1 destroyed=0 finalized=0 thread=64940"
+  ],
+  "qualification": "LD_PRELOAD observation perturbs timing/library loading, no crash clearance or timing acceptance. No SQL/state/ownership mutation by observer; public GTK weak notifications and destroy signals only."
+}

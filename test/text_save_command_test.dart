@@ -260,6 +260,110 @@ void main() {
         },
       );
 
+      // API safety controls for the target-only editor contract. UI argument
+      // wiring is verified separately; this command also retains its optional
+      // whole-workspace snapshot guard for callers that need it.
+      for (final changesTarget in [false, true]) {
+        test(
+          'peer metadata arriving during Save changesTarget=$changesTarget',
+          () async {
+            final fixture = await _Fixture.open();
+            addTearDown(fixture.close);
+            final other = const Uuid().v4();
+            await fixture.store.createTasks({
+              other: 'Other',
+            }, fixture.row['assignee'] as String);
+            final session = await fixture.session();
+            final observedRefs = fixture.tagRefs;
+            String baseline(Map<String, dynamic> row) => jsonEncode({
+              for (final key in [
+                'id',
+                'schedule',
+                'assignee',
+                'tagRefs',
+                'completed',
+              ])
+                key: row[key],
+            });
+            final frozenTarget = baseline(fixture.row);
+            final originalSnapshot = fixture.store.taskSnapshot;
+            final owner = session.capture.fields['title']!.document;
+            final originalState = owner.fullState.encoded;
+            final ownFile = '${fixture.store.writer}.applog';
+            final originalBytes = await fixture.folder.read(ownFile);
+            session.replace('title', 'AX');
+            final peer = await TaskStore.open(
+              LocalLogFolder(fixture.folder.location),
+              '${fixture.root.path}/peer',
+              textEngine: fixture.engine,
+            );
+            try {
+              var peerArrivals = 0, preparedCount = 0, guardCalls = 0;
+              String? refreshedSnapshot;
+              fixture.folder.beforeList = () async {
+                peerArrivals++;
+                await peer.edit(
+                  changesTarget ? fixture.task : other,
+                  {
+                    'schedule': {'dueDate': '2026-10-09'},
+                  },
+                  tags: changesTarget ? ['old'] : [],
+                  observedTagRefs: changesTarget ? observedRefs : {},
+                );
+              };
+              final save = TextSaveCommand(fixture.store, session).save(
+                fields: {},
+                tags: ['old'],
+                observedTagRefs: observedRefs,
+                canCommit: () {
+                  guardCalls++;
+                  refreshedSnapshot = fixture.store.taskSnapshot;
+                  final current = fixture.store.visibleTaskRow(fixture.task);
+                  return current != null && baseline(current) == frozenTarget;
+                },
+                onPrepared: (_) => preparedCount++,
+              );
+              if (changesTarget) {
+                await expectLater(save, throwsA(isA<StaleTaskSnapshot>()));
+                expect(preparedCount, 0);
+                expect(session.hasPendingReceipt, isFalse);
+                expect(session.prepare().receipt, isNull);
+                expect(session.text('title'), 'AX');
+                expect(owner.fullState.encoded, originalState);
+                expect(await fixture.folder.read(ownFile), originalBytes);
+                expect(fixture.row['title'], 'A');
+                expect(fixture.row['schedule'], {'dueDate': '2026-10-09'});
+              } else {
+                final result = await save;
+                expect(result.status, TextSaveStatus.saved);
+                expect(preparedCount, 1);
+                expect(fixture.store.confirmedOperations([result.receipt!]), {
+                  result.receipt!.id,
+                });
+                expect(result.currentRow!['title'], 'AX');
+                expect(baseline(result.currentRow!), frozenTarget);
+                final undo = await fixture.store.undoOperations([
+                  result.receipt!.id,
+                ]);
+                expect(undo.remaining, isEmpty, reason: undo.error?.toString());
+                expect(fixture.row['title'], 'A');
+                expect(baseline(fixture.row), frozenTarget);
+                expect(fixture.store.visibleTaskRow(other)!['schedule'], {
+                  'dueDate': '2026-10-09',
+                });
+              }
+              expect(peerArrivals, 1);
+              expect(guardCalls, greaterThan(0));
+              expect(refreshedSnapshot, isNot(originalSnapshot));
+              expect(fixture.folder.beforeList, isNull);
+            } finally {
+              fixture.folder.beforeList = null;
+              await peer.close();
+            }
+          },
+        );
+      }
+
       test(
         'remote text merges into the returned row without rebasing private intent',
         () async {
@@ -510,10 +614,17 @@ class _AppendFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   final LocalLogFolder inner;
   bool failNext = false, throwAfterWriting = false;
   void Function()? beforeAppend;
+  Future<void> Function()? beforeList;
   @override
   String get location => inner.location;
   @override
-  Future<List<LogFileInfo>> list() => inner.list();
+  Future<List<LogFileInfo>> list() async {
+    final callback = beforeList;
+    beforeList = null;
+    await callback?.call();
+    return inner.list();
+  }
+
   @override
   Future<Uint8List> read(String name) => inner.read(name);
   @override

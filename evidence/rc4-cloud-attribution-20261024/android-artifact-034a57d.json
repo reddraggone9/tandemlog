@@ -1,0 +1,82 @@
+{
+  "snapshotUTC": "2026-10-25T08:13:09.256142+00:00",
+  "productSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "runId": 40167598688,
+  "runURL": "https://github.com/reddraggone9/tandemlog/actions/runs/40167598688",
+  "androidJobId": 121091718752,
+  "androidJobConclusion": "success",
+  "artifactId": 12588729911,
+  "artifactName": "android",
+  "artifactExpiresUTC": "2026-10-30T06:07:21Z",
+  "archiveSHA256": "f6474faab844df1250dd77c7722ccc4f496261d3438f6a7eb2c034313acd0078",
+  "archiveDigestIndependentlyVerified": true,
+  "apkName": "tandemlog-android-test-only.apk",
+  "apkSHA256": "11e685b28a0c76d7159d67430321e30ecb16d5d1e4c7360a3a1e9e719b26f600",
+  "apkBytes": 165629425,
+  "files": {
+    "android-SHA256SUMS.txt": {
+      "bytes": 98,
+      "sha256": "053772d44d76805ed26b9f268523520bd07c2c5ceb42e01773a0bcd2d6fe842f"
+    },
+    "android-signature.txt": {
+      "bytes": 307,
+      "sha256": "a57110c25526a94428519a7fb79d753ff00b896ec4df7f2c78b44a7915e98882"
+    },
+    "tandemlog-android-test-only.apk": {
+      "bytes": 165629425,
+      "sha256": "11e685b28a0c76d7159d67430321e30ecb16d5d1e4c7360a3a1e9e719b26f600"
+    }
+  },
+  "embeddedChecksumMatches": true,
+  "ciSignatureReceipt": {
+    "kind": "Android Debug",
+    "certificateSHA256": "5deef41d8133fb3f9a041215da536efbffceb7768baf4743af50f742b75f86e7",
+    "independentlyReverifiedWithApksigner": false,
+    "oldE23CertificateSHA256": "9b0e3e85490bd9c4246c3843235b7405b9055c3af37f2265db4ef8cb25ff250c",
+    "sameCertificateAsE23": false
+  },
+  "sourceExpectedIdentity": {
+    "packageName": "com.reddraggone9.tandemlog",
+    "versionName": "2026.10.7-rc.5",
+    "versionCode": 100,
+    "debuggable": true,
+    "qualification": "Expected from exact debug source/build. Cloud has not rerun Android manifest/signature tools; local executor must verify actual values and types."
+  },
+  "cloudSDKToolsAvailable": false,
+  "fullAndroidPayloadGateCI": "passed exact Android job; no new build",
+  "apkInstalledOrLaunchedByCloud": false,
+  "deviceAcceptance": false,
+  "staticEntryComparisonToE23": [
+    {
+      "entry": "AndroidManifest.xml",
+      "bytes": 6956,
+      "sha256": "39e8f0d42cf24e6bbb26178eccb4197905d2093d288a03e573f30238ec5ee3f6",
+      "byteIdenticalToE23": true
+    },
+    {
+      "entry": "assets/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt",
+      "bytes": 1967143,
+      "sha256": "4a869fdca16eb36a8970867f4cde5faa7df7894440c49bc6716ba82adbd13d39",
+      "byteIdenticalToE23": true
+    },
+    {
+      "entry": "lib/arm64-v8a/libtandemlog_text.so",
+      "bytes": 1043960,
+      "sha256": "1c3a263665da274226f628857e8da2b555a360df9feca19849b657cc4c4a1319",
+      "byteIdenticalToE23": true
+    },
+    {
+      "entry": "lib/armeabi-v7a/libtandemlog_text.so",
+      "bytes": 793300,
+      "sha256": "f9a2e208b7025e5c61a715591234d9eabf800b28b4f699b17dea7af6b92ac071",
+      "byteIdenticalToE23": true
+    },
+    {
+      "entry": "lib/x86_64/libtandemlog_text.so",
+      "bytes": 1192968,
+      "sha256": "f1c05081759942597ad89a79897a03de885ad2a27cc473722aa9509529b5f57a",
+      "byteIdenticalToE23": true
+    }
+  ],
+  "qualification": "Cloud independently verified archive/APK/checksum and selected manifest/native/notices byte equality to the retained e23 APK. CI signature text is retained provenance, not an independent local signature verification. Exact debug artifact only; no owner-signed candidate, device run or hardware-presentation acceptance."
+}

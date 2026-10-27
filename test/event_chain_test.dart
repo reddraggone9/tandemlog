@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
@@ -27,6 +28,73 @@ String seal(Map<String, dynamic> record) {
 }
 
 void main() {
+  test('canonical literal and escaped runs retain independent JSON bytes', () {
+    final random = Random(1320);
+    for (var sample = 0; sample < 3000; sample++) {
+      final scalars = <int>[];
+      for (var i = 0; i < sample % 257; i++) {
+        var scalar = random.nextInt(0x110000);
+        if (scalar >= 0xd800 && scalar <= 0xdfff) scalar += 0x800;
+        scalars.add(scalar);
+      }
+      final literal = String.fromCharCodes(scalars);
+      final value = switch (sample % 3) {
+        0 => literal,
+        1 => '\u0000\n"\\$literal',
+        _ => '$literal\t\r\b\f"\\',
+      };
+      expect(canonicalDataJson(value), jsonEncode(value), reason: '$sample');
+      expect(
+        canonicalDataJson([value, value]),
+        jsonEncode([value, value]),
+        reason: 'nested $sample',
+      );
+    }
+  });
+  test('surrogate rejection survives both literal and escaped prefixes', () {
+    for (final prefix in ['', 'ordinary', '\n', '"\\', '\u{1f642}\n']) {
+      for (final suffix in ['', 'ordinary', '\t']) {
+        for (final unit in [0xd800, 0xdbff, 0xdc00, 0xdfff]) {
+          expect(
+            () =>
+                canonicalDataJson('$prefix${String.fromCharCode(unit)}$suffix'),
+            throwsA(
+              isA<FormatException>().having(
+                (error) => error.message,
+                'original error',
+                'Unpaired Unicode surrogate in event.',
+              ),
+            ),
+          );
+        }
+      }
+    }
+  });
+  test(
+    'canonical strings preserve all Unicode scalars and control escapes',
+    () {
+      final value = String.fromCharCodes([
+        for (var scalar = 0; scalar <= 0xffff; scalar++)
+          if (scalar < 0xd800 || scalar > 0xdfff) scalar,
+        0x10000,
+        0x1f642,
+        0x10ffff,
+      ]);
+      final encoded = canonicalDataJson(value);
+      expect(jsonDecode(encoded), value);
+      expect(encoded, jsonEncode(value));
+      for (final malformed in [
+        String.fromCharCode(0xd800),
+        String.fromCharCode(0xdfff),
+        'before${String.fromCharCode(0xd800)}after',
+        String.fromCharCodes([0xd800, 0xd800, 0xdc00]),
+        String.fromCharCodes([0xd800, 0xdc00, 0xdc00]),
+      ]) {
+        expect(() => canonicalDataJson(malformed), throwsFormatException);
+      }
+    },
+  );
+
   test(
     'Python SHA256 current fixture is byte-exact including UTF-8 and predecessor chaining',
     () {

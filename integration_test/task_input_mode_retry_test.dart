@@ -191,7 +191,14 @@ void registerTaskInputModeRetryTests() {
       await _withWorkspace(tester, 1200, (folder, anchor) async {
         final before = await _records(folder.delegate);
         final capture = await _openCapture(tester);
-        await tester.enterText(capture, 'Unsubmitted capture draft');
+        const draft = TextEditingValue(
+          text: 'Unsubmitted capture draft',
+          selection: TextSelection(baseOffset: 11, extentOffset: 3),
+        );
+        final captureController = tester.widget<TextField>(capture).controller!;
+        captureController.value = draft;
+        final dynamic state = tester.state(find.byType(TasksPage));
+        final searchBefore = state.search.value;
         await tester.tap(find.byKey(ValueKey('task-title-$anchor')));
         await tester.pumpAndSettle();
         final notes = find.widgetWithText(TextField, 'Notes');
@@ -203,10 +210,10 @@ void registerTaskInputModeRetryTests() {
         await tester.pumpAndSettle();
         expect(find.byType(TaskEditor), findsOneWidget);
         expect(find.byKey(const ValueKey('task-search')), findsNothing);
-        expect(
-          tester.widget<TextField>(capture).controller!.text,
-          'Unsubmitted capture draft',
-        );
+        expect(captureController.value, draft);
+        expect(state.search.value, searchBefore);
+        expect(state.captureMode, isTrue);
+        expect(state.searchQuery, isEmpty);
         expect(
           tester.widget<TextField>(notes).controller!.text,
           'Unsaved editor draft',
@@ -220,9 +227,16 @@ void registerTaskInputModeRetryTests() {
         expect(find.byType(TaskEditor), findsNothing);
         expect(find.byKey(const ValueKey('task-search')), findsOneWidget);
         expect(capture, findsNothing);
+        expect(state.search.value, draft);
+        expect(captureController.value, draft);
+        expect(state.searchQuery, draft.text);
+        expect(await _records(folder.delegate), before);
         await tester.tap(find.byKey(const ValueKey('open-capture')));
         await tester.pumpAndSettle();
-        expect(tester.widget<TextField>(capture).controller!.text, isEmpty);
+        expect(captureController.value, draft);
+        expect(state.search.value, draft);
+        expect(state.searchQuery, isEmpty);
+        expect(find.byKey(ValueKey('task-body-$anchor')), findsOneWidget);
         expect(await _records(folder.delegate), before);
         expect(tester.takeException(), isNull);
       });
@@ -230,7 +244,7 @@ void registerTaskInputModeRetryTests() {
   );
 
   testWidgets(
-    'Explicit input mode switch clears compact selection and its hidden editor',
+    'Explicit input mode switch carries text and clears compact selection and its hidden editor',
     (tester) async {
       await _withWorkspace(tester, 390, (folder, anchor) async {
         final before = await _records(folder.delegate);
@@ -264,7 +278,18 @@ void registerTaskInputModeRetryTests() {
         expect(capture.hitTestable(), findsOneWidget);
         expect(find.text('1 selected'), findsNothing);
         expect(input, findsNothing);
-        await tester.enterText(capture, 'Discarded selected capture draft');
+        final dynamic state = tester.state(find.byType(TasksPage));
+        expect(
+          tester.widget<TextField>(capture).controller!.value,
+          state.search.value,
+        );
+        expect(state.searchQuery, isEmpty);
+        const draft = TextEditingValue(
+          text: 'Carried selected capture draft',
+          selection: TextSelection(baseOffset: 7, extentOffset: 15),
+        );
+        final captureController = tester.widget<TextField>(capture).controller!;
+        captureController.value = draft;
         await tester.longPress(body);
         await tester.pumpAndSettle();
         expect(find.text('1 selected'), findsOneWidget);
@@ -272,9 +297,19 @@ void registerTaskInputModeRetryTests() {
         await tester.tap(find.byKey(const ValueKey('open-search')));
         await tester.pumpAndSettle();
         expect(input.hitTestable(), findsOneWidget);
-        expect(tester.widget<TextField>(input).controller!.text, isEmpty);
+        expect(tester.widget<TextField>(input).controller!.value, draft);
+        expect(captureController.value, draft);
+        expect(state.searchQuery, draft.text);
         expect(find.text('1 selected'), findsNothing);
         expect(find.byType(TaskEditor), findsNothing);
+        expect(await _records(folder.delegate), before);
+        // The carried query does not match the anchor. Clear through the public
+        // action before opening its editor; this must not erase hidden Add text.
+        await tester.tap(find.byTooltip('Clear search'));
+        await tester.pumpAndSettle();
+        expect(tester.widget<TextField>(input).controller!.text, isEmpty);
+        expect(captureController.value, draft);
+        expect(body.hitTestable(), findsOneWidget);
         await tester.tap(body);
         await tester.pumpAndSettle();
         expect(find.byType(TaskEditor), findsOneWidget);
@@ -282,7 +317,11 @@ void registerTaskInputModeRetryTests() {
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('open-capture')));
         await tester.pumpAndSettle();
+        // The explicitly cleared Search, not the retained older Add draft,
+        // becomes the outgoing value for this accepted switch.
         expect(tester.widget<TextField>(capture).controller!.text, isEmpty);
+        expect(state.search.text, isEmpty);
+        expect(state.searchQuery, isEmpty);
         expect(await _records(folder.delegate), before);
         expect(tester.takeException(), isNull);
       });

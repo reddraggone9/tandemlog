@@ -1,0 +1,39 @@
+{
+  "sourceFoodRecordSHA256": "6c88eddc52b627416ca0bd03fbfa3e317b81c3479a3dd0a1e58700f0cb89da5b",
+  "focusedTests": 97,
+  "fullUnits": 1505,
+  "fullUnitSeconds": 385,
+  "analysis": "clean",
+  "formattedFiles": 395,
+  "formatChanges": 0,
+  "logs": {
+    "rc4-food-id-regressions.log": {
+      "sha256": "96127bcf0198f6a60e1d2982e1b05f7934dae1b1ec08b957074c4a3af7375664",
+      "tail": [
+        "00:04 +96: /workspace/tandemlog/test/unified_history_test.dart: a complete decreasing-clock action cannot be admitted below the trusted common head",
+        "00:04 +97: All tests passed!"
+      ]
+    },
+    "rc4-food-id-full-unit.log": {
+      "sha256": "3d9e202687f92ba29e2b9cdad83479556e426232d9a13da5d32fde09effc3778",
+      "tail": [
+        "{\"adaptiveHistoricalRecords\":450,\"notesChars\":9900,\"selectedRecords\":6,\"relationLookups\":26,\"strictSelectedAndHeadDecodes\":8}",
+        "06:25 +1505: All tests passed!"
+      ]
+    },
+    "rc4-food-id-final-format.log": {
+      "sha256": "94194929d66105036776b7054a41a80fdbbcd93ae861160a60aeaa2be24a690c",
+      "tail": [
+        "Formatted 395 files (0 changed) in 2.26 seconds."
+      ]
+    },
+    "rc4-food-id-final-analysis.log": {
+      "sha256": "36ea093d5073e7ff0558f4656d687e135300afa8cd7623452f970595fa57be6f",
+      "tail": [
+        "Analyzing tandemlog...                                          ",
+        "No issues found! (ran in 1.8s)"
+      ]
+    }
+  },
+  "hostedAcceptance": false
+}

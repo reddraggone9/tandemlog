@@ -1,5 +1,7 @@
+import 'completion_instant.dart';
 import 'dart:convert';
 import 'current_operation.dart';
+import 'utf8_byte_limit.dart';
 import 'event_chain.dart';
 export 'event_chain.dart';
 import 'event_clock.dart';
@@ -89,7 +91,10 @@ class LogEvent {
     this.integrityHash,
     this.operationRevision,
   });
-  String get id => '$writer:$sequence';
+  // Identity uses immutable envelope fields, independently of payload/replay.
+  // Reuse its representation during repeated history/set reconstruction.
+  late final String _id = '$writer:$sequence';
+  String get id => _id;
   String get author => attributedWriter ?? writer;
   CurrentOperation currentOperation({String? previousHash}) {
     final predecessor =
@@ -113,7 +118,11 @@ class LogEvent {
       family: payload.family,
       revision:
           operationRevision ??
-          (operationUsesAdditionalZone(payload.value) ? 2 : 1),
+          (isTaskCompletion(type) && data.containsKey('completedInstant')
+              ? 3
+              : operationUsesAdditionalZone(payload.value)
+              ? 2
+              : 1),
       value: payload.value,
       predecessor: predecessor!,
       referenceHash: hash,
@@ -138,7 +147,7 @@ class LogEvent {
 
   factory LogEvent.decode(String raw) {
     try {
-      if (raw.length > 1024 * 1024 || utf8.encode(raw).length > 1024 * 1024) {
+      if (raw.length > 1024 * 1024 || exceedsUtf8ByteLimit(raw, 1024 * 1024)) {
         throw FormatFailure('Oversized event.');
       }
       final operation = CurrentOperation.decode(raw, module: 'tasks');
@@ -263,6 +272,9 @@ class LogEvent {
         case 'task.completedWithText':
         case 'task.completedKeepingSuccessor':
         case 'task.completedWithChecklist':
+          if (d.containsKey('completedInstant')) {
+            decodeCompletionInstant(d['completedInstant']);
+          }
           if (d.containsKey('completedAt')) {
             if (d['completedAt'] is! String ||
                 DateTime.tryParse(d['completedAt']) == null) {
@@ -295,7 +307,8 @@ class LogEvent {
           }
           if (j['type'] == 'task.completedWithChecklist') {
             if (d['successor'] is! Map<String, dynamic> ||
-                !d.containsKey('completedAt')) {
+                (!d.containsKey('completedAt') &&
+                    !d.containsKey('completedInstant'))) {
               throw FormatFailure('Checklist recurrence requires a successor.');
             }
             validateChecklistCopy(
@@ -311,7 +324,8 @@ class LogEvent {
           }
           if (j['type'] == 'task.completedKeepingSuccessor') {
             final retained = d['retainedSuccessor'];
-            if (!d.containsKey('completedAt') ||
+            if ((!d.containsKey('completedAt') &&
+                    !d.containsKey('completedInstant')) ||
                 retained is! Map<String, dynamic> ||
                 !_keys(retained, {'id', 'completion', 'hash'}) ||
                 retained['id'] != const Uuid().v5(j['entity'], 'successor') ||
@@ -489,9 +503,17 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   final activeEvents = events.where(
     (event) => isTaskCompletion(event.type) && active.contains(event.id),
   );
-  state['completedAt'] = activeEvents.isEmpty
+  state['completionOrder'] = activeEvents.isEmpty
       ? null
-      : activeEvents.last.data['completedAt'];
+      : '${activeEvents.last.clock.sortKey}:${activeEvents.last.writer}:${activeEvents.last.sequence.toString().padLeft(20, '0')}';
+  state.remove('completedAt');
+  final instant = activeEvents.isEmpty
+      ? null
+      : activeEvents.last.data['completedInstant'];
+  state['completedInstant'] = instant;
+  state['completedMicros'] = instant == null
+      ? null
+      : decodeCompletionInstant(instant).microsecondsSinceEpoch;
   return state;
 }
 

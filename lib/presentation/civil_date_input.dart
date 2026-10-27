@@ -69,7 +69,7 @@ class CivilDateInput extends StatelessWidget {
                 final parsed = DateTime.tryParse(controller.text);
                 onPickerChanged?.call(true);
                 try {
-                  final chosen = await showDatePicker(
+                  final chosen = await _showFastDatePicker(
                     context: context,
                     initialDate:
                         parsed != null &&
@@ -78,8 +78,7 @@ class CivilDateInput extends StatelessWidget {
                         ? parsed
                         : DateTime.now(),
                     firstDate: DateTime(1900),
-                    lastDate: DateTime(9999),
-                    builder: _readableCalendarDays,
+                    lastDate: DateTime(9999, 12, 31),
                   );
                   if (chosen != null &&
                       (isOwnerMounted?.call() ?? context.mounted)) {
@@ -91,20 +90,297 @@ class CivilDateInput extends StatelessWidget {
               },
       ),
       hintText: hint,
+      hintMaxLines: 2,
       errorText: errorText,
       errorMaxLines: 3,
     ),
   );
 }
 
+Future<DateTime?> _showFastDatePicker({
+  required BuildContext context,
+  required DateTime initialDate,
+  required DateTime firstDate,
+  required DateTime lastDate,
+}) => showDialog<DateTime>(
+  context: context,
+  builder: (_) => CivilDatePickerDialog(
+    initialDate: initialDate,
+    firstDate: firstDate,
+    lastDate: lastDate,
+  ),
+);
+
+class CivilDatePickerDialog extends StatefulWidget {
+  CivilDatePickerDialog({
+    super.key,
+    required DateTime initialDate,
+    required DateTime firstDate,
+    required DateTime lastDate,
+  }) : initialDate = DateUtils.dateOnly(initialDate),
+       firstDate = DateUtils.dateOnly(firstDate),
+       lastDate = DateUtils.dateOnly(lastDate);
+  final DateTime initialDate, firstDate, lastDate;
+  @override
+  State<CivilDatePickerDialog> createState() => _CivilDatePickerDialogState();
+}
+
+class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
+  late DateTime date = widget.initialDate;
+  late DateTime calendarSeed = date;
+  late DateTime displayedMonth = date;
+  bool inputMode = false;
+  final inputForm = GlobalKey<FormState>();
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  bool monthMode = false;
+  bool choosingYear = false;
+  late int jumpYear = displayedMonth.year;
+  LocalHistoryEntry? jumpHistory;
+
+  void jump() {
+    if (monthMode) {
+      jumpHistory?.remove();
+      return;
+    }
+    setState(() {
+      jumpYear = displayedMonth.year;
+      choosingYear = false;
+      monthMode = true;
+    });
+    jumpHistory = LocalHistoryEntry(
+      onRemove: () {
+        jumpHistory = null;
+        if (mounted) setState(() => monthMode = false);
+      },
+    );
+    ModalRoute.of(context)!.addLocalHistoryEntry(jumpHistory!);
+  }
+
+  void chooseMonth(int month) {
+    final day = math.min(date.day, DateTime(jumpYear, month + 1, 0).day);
+    final chosen = DateTime(jumpYear, month, day);
+    setState(() {
+      date = chosen.isBefore(widget.firstDate)
+          ? widget.firstDate
+          : chosen.isAfter(widget.lastDate)
+          ? widget.lastDate
+          : chosen;
+      calendarSeed = date;
+      displayedMonth = date;
+    });
+    jumpHistory!.remove();
+  }
+
+  Widget monthGrid(BuildContext context) => Column(
+    children: [
+      TextButton.icon(
+        onPressed: () => setState(() => choosingYear = !choosingYear),
+        icon: const Icon(Icons.arrow_drop_down),
+        label: Text(
+          MaterialLocalizations.of(context).formatYear(DateTime(jumpYear)),
+        ),
+      ),
+      Expanded(
+        child: choosingYear
+            ? CivilYearGrid(
+                firstDate: widget.firstDate,
+                lastDate: widget.lastDate,
+                selectedDate: DateTime(jumpYear),
+                onChanged: (value) => setState(() {
+                  jumpYear = value.year;
+                  choosingYear = false;
+                }),
+              )
+            : LayoutBuilder(
+                builder: (context, constraints) => GridView.count(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  crossAxisCount: 3,
+                  childAspectRatio:
+                      (constraints.maxWidth - 24) /
+                      3 /
+                      math.max(48, constraints.maxHeight / 4),
+                  children: [
+                    for (var month = 1; month <= 12; month++)
+                      TextButton(
+                        onPressed:
+                            DateTime(
+                                  jumpYear,
+                                  month + 1,
+                                  0,
+                                ).isBefore(widget.firstDate) ||
+                                DateTime(
+                                  jumpYear,
+                                  month,
+                                ).isAfter(widget.lastDate)
+                            ? null
+                            : () => chooseMonth(month),
+                        child: Semantics(
+                          label: MaterialLocalizations.of(
+                            context,
+                          ).formatMonthYear(DateTime(jumpYear, month)),
+                          excludeSemantics: true,
+                          child: Text(_months[month - 1]),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+      ),
+    ],
+  );
+
+  void confirm() {
+    if (inputMode) {
+      if (!(inputForm.currentState?.validate() ?? false)) return;
+      inputForm.currentState!.save();
+    }
+    Navigator.pop(context, date);
+  }
+
+  void toggleInput() {
+    if (inputMode) {
+      if (!(inputForm.currentState?.validate() ?? false)) return;
+      inputForm.currentState!.save();
+    }
+    setState(() {
+      inputMode = !inputMode;
+      calendarSeed = date;
+      displayedMonth = date;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = MaterialLocalizations.of(context);
+    final scale =
+        MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 3).scale(14) /
+        14;
+    return _readableCalendarDays(
+      context,
+      Dialog(
+        insetPadding: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: 360 * scale,
+          height: 568 * scale,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 8, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: inputMode
+                            ? Text(localizations.datePickerHelpText)
+                            : TextButton.icon(
+                                onPressed: jump,
+                                icon: Icon(
+                                  monthMode
+                                      ? Icons.arrow_back
+                                      : Icons.calendar_month,
+                                ),
+                                label: Text(
+                                  monthMode ? 'Calendar' : 'Month / year',
+                                ),
+                              ),
+                      ),
+                    ),
+                    if (!monthMode)
+                      IconButton(
+                        tooltip: inputMode
+                            ? localizations.calendarModeButtonLabel
+                            : localizations.inputDateModeButtonLabel,
+                        onPressed: toggleInput,
+                        icon: Icon(
+                          inputMode
+                              ? Icons.calendar_today
+                              : Icons.edit_outlined,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: monthMode
+                    ? monthGrid(context)
+                    : inputMode
+                    ? SingleChildScrollView(
+                        padding: const EdgeInsets.all(24),
+                        child: Form(
+                          key: inputForm,
+                          child: InputDatePickerFormField(
+                            initialDate: date,
+                            firstDate: widget.firstDate,
+                            lastDate: widget.lastDate,
+                            autofocus: true,
+                            onDateSaved: (value) => date = value,
+                            onDateSubmitted: (_) => confirm(),
+                          ),
+                        ),
+                      )
+                    : CalendarDatePicker(
+                        key: ValueKey(calendarSeed),
+                        initialDate: date,
+                        firstDate: widget.firstDate,
+                        lastDate: widget.lastDate,
+                        onDateChanged: (value) => setState(() => date = value),
+                        onDisplayedMonthChanged: (value) =>
+                            displayedMonth = value,
+                      ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: OverflowBar(
+                  alignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        jumpHistory?.remove();
+                        Navigator.pop(context);
+                      },
+                      child: Text(localizations.cancelButtonLabel),
+                    ),
+                    if (!monthMode)
+                      TextButton(
+                        onPressed: confirm,
+                        child: Text(localizations.okButtonLabel),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      verticalInsets: 32,
+    );
+  }
+}
+
 // The pinned Material3 portrait grid has 12px outer padding and 4px padding
-// inside each of seven day cells; DatePickerDialog has 16px side insets.
+// inside each of seven day cells; the app dialog retains 16px side insets.
 // Fit localized day numbers to that width without changing the route's scaler,
 // header, date semantics, keyboard behavior or full-cell tap targets.
 Widget _readableCalendarDays(
   BuildContext context,
-  Widget? child,
-) => LayoutBuilder(
+  Widget? child, {
+  double verticalInsets = 48,
+}) => LayoutBuilder(
   builder: (context, constraints) {
     if (child == null) return const SizedBox.shrink();
     final pickerTheme = DatePickerTheme.of(context);
@@ -123,13 +399,14 @@ Widget _readableCalendarDays(
       constraints.maxHeight -
           media.padding.vertical -
           media.viewInsets.vertical -
-          48,
+          verticalInsets,
       568 * dialogScale,
     );
     final headerScale = dialogScale.clamp(1.0, 1.4);
     final headerHeight = 120 * (headerScale > 1.3 ? headerScale - .2 : 1);
     final gridScale = media.textScaler.clamp(maxScaleFactor: 2).scale(14) / 14;
-    // Pinned SDK: 52px actions, 52px month navigation, seven grid rows.
+    // Conservatively reserve the SDK header plus 52px actions/navigation and
+    // seven grid rows; the app header is no taller.
     final rowHeight = math.min(
       48 + (gridScale > 1.3 ? (gridScale - 1) * 30 : 0),
       (dialogHeight - headerHeight - 104) / 7,
@@ -191,3 +468,102 @@ Widget _readableCalendarDays(
     );
   },
 );
+
+/// App-owned year geometry keeps the selected year visible at enlarged text.
+/// Material YearPicker's initial offset assumes three columns even when its
+/// own large-text layout switches to two. Keep public scrolling/focus APIs.
+class CivilYearGrid extends StatefulWidget {
+  const CivilYearGrid({
+    super.key,
+    required this.firstDate,
+    required this.lastDate,
+    required this.selectedDate,
+    required this.onChanged,
+  });
+  final DateTime firstDate, lastDate, selectedDate;
+  final ValueChanged<DateTime> onChanged;
+  @override
+  State<CivilYearGrid> createState() => _CivilYearGridState();
+}
+
+class _CivilYearGridState extends State<CivilYearGrid> {
+  ScrollController? controller;
+  (int, double, double)? geometry;
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final scaler = MediaQuery.textScalerOf(context);
+      final columns =
+          (constraints.maxWidth / math.max(104, scaler.scale(18) * 4))
+              .floor()
+              .clamp(1, 3);
+      final minimumRowHeight = math.max(48.0, scaler.scale(20) + 24);
+      final visibleRows = math.max(
+        1,
+        (constraints.maxHeight / minimumRowHeight).floor(),
+      );
+      final rowHeight = constraints.maxHeight / visibleRows;
+      final nextGeometry = (columns, rowHeight, constraints.maxHeight);
+      final count = widget.lastDate.year - widget.firstDate.year + 1;
+      final selectedRow =
+          (widget.selectedDate.year - widget.firstDate.year) ~/ columns;
+      final offset = math.max(
+        0.0,
+        (selectedRow - visibleRows ~/ 2) * rowHeight,
+      );
+      controller ??= ScrollController(initialScrollOffset: offset);
+      if (geometry != null && geometry != nextGeometry) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && controller!.hasClients) {
+            controller!.jumpTo(
+              offset.clamp(0.0, controller!.position.maxScrollExtent),
+            );
+          }
+        });
+      }
+      geometry = nextGeometry;
+      return GridView.builder(
+        key: const ValueKey('civil-year-grid'),
+        controller: controller,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: columns,
+          mainAxisExtent: rowHeight,
+        ),
+        itemCount: count,
+        itemBuilder: (context, index) {
+          final year = widget.firstDate.year + index;
+          final selected = year == widget.selectedDate.year;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Semantics(
+              selected: selected,
+              child: TextButton(
+                autofocus: selected,
+                style: selected
+                    ? TextButton.styleFrom(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.secondaryContainer,
+                        foregroundColor: Theme.of(
+                          context,
+                        ).colorScheme.onSecondaryContainer,
+                      )
+                    : null,
+                onPressed: () => widget.onChanged(DateTime(year)),
+                child: Text(
+                  MaterialLocalizations.of(context).formatYear(DateTime(year)),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}

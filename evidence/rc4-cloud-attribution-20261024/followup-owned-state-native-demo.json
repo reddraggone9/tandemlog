@@ -1,0 +1,47 @@
+{
+  "syntheticOnly": true,
+  "source": "5dc4e3e398e63e7956312ddff258ac88b6465649",
+  "cancelWritesNoCanonicalBytes": true,
+  "saveAndUndoAddExactlyTwoActions": true,
+  "originalCanonicalPrefixesPreserved": {
+    "db094f13-d1a3-4115-b6b7-958b2884aabc.applog": {
+      "originalPrefixSHA256": "a58699869d2fa433e12bdfca387bd2953a2c810925170b709f5887c8c93c3147",
+      "originalBytes": 5741,
+      "addedRecords": 2,
+      "finalSHA256": "c421f3ac8d022dc4232cfff6dade89ee209147cdedd16fefe7fd105639b55034"
+    },
+    "tandemlog-space.json": {
+      "unchanged": true
+    }
+  },
+  "allThreeTaskTitlesAndNotesRestored": true,
+  "normalExit": true,
+  "notTimingAcceptance": true,
+  "independentFreshProfileReplayPassed": true,
+  "replayCanonicalCopyUnchanged": true,
+  "videoOriginalDurationSeconds": 188.15,
+  "deliverableDurationSeconds": 40.45,
+  "observationPausesRemoved": true,
+  "actionPlaybackSpeedUnchanged": true,
+  "platform": "Native Linux GTK release under isolated Xvfb",
+  "viewport": [
+    1200,
+    800
+  ],
+  "theme": "dark",
+  "artifactId": 12582470580,
+  "artifactSHA256": "03e5931c73014e69eb49268cb50e32b83b2e59aae54f5f7f00020a56be54b390",
+  "realPointerAndKeyboard": true,
+  "pointerVisuallyVerifiedInEncodedVideo": true,
+  "videoSHA256": "c46845d5399e791865543b1688015f27d1600f319327f087a64a28808d9c06fb",
+  "librarySaved": true,
+  "separateAcceptancePending": [
+    "Android native workflow/video",
+    "Windows real foreground full-action hardware timing"
+  ],
+  "qualifications": [
+    "synthetic fixture only",
+    "software-rendered Linux does not establish hardware presentation latency",
+    "clean normal exit does not clear historical intermittent SIGSEGV"
+  ]
+}

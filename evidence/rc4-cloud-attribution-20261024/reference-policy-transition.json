@@ -1,0 +1,48 @@
+{
+  "snapshotUTC": "2026-10-25T13:26:04.041610+00:00",
+  "stage": "tested tooling preparation;pending reviewed local controller registration/fresh reference receipt/exact-source CI",
+  "policyAuthority": "Lee approved prospective controlled Farnsworth absolute+growth qualification,mandatory hosted correctness/advisory timing,no hardware multipliers on2026-10-25",
+  "productRuntimeRemains": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "budgetsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "budgetOrCoverageChange": false,
+  "tests": {
+    "fullFlutterUnits": {
+      "result": 1515,
+      "logSHA256": "8db51bf148c06ae156ef70040008a544e5ef1ae21f88de8fd8be01310084155b"
+    },
+    "fullTooling": {
+      "result": 196,
+      "logSHA256": "50ea7a39ba610456a0a638326dee409e8a83cf336113245ba483cc7166d6f3e0"
+    },
+    "analysis": {
+      "result": "No issues found",
+      "logSHA256": "bba386c7066d2987ab8a7c231c54a232604048d537a295ff10fd36a0efdb2425"
+    },
+    "format": {
+      "result": "399 files,0changed",
+      "logSHA256": "86f2ce6608fa159adf6a05c9adea4da85fb3c51f2f0172c6820acd0f71ee398f"
+    }
+  },
+  "newCIOrReferenceRunStarted": false,
+  "controllerRegistered": false,
+  "referenceReceiptPresent": false,
+  "foregroundAuthorized": false,
+  "priorFailuresRewritten": false,
+  "initialRegressionFailure": {
+    "result": "one isolated preflight test fixture omitted new reference_receipt.py companion module",
+    "fix": "included required companion in isolated tooling copy;unchanged stale-registry rejection expectation",
+    "final": "all196tooltests pass"
+  },
+  "nextLocalAction": "Review/adapt existing bounded controller to one enforcing invocation,request/cleanup/export protocol;return reviewed controller SHA before profile activation. No persistent infrastructure change.",
+  "protocol": "design/performance-reference-qualification.md",
+  "toolingInputPins": {
+    "tool/performance/reference_receipt.py": "b0733869d884d03319d80e7338053fb525db52b66e6c62e09d5cd6bd806b6a83",
+    "tool/performance/reference-host-v1.json": "3f75ce7b691373f62312e83085320213c111198875f4d0a53e6cc4bb7d3654e3",
+    "tool/performance/run_gate.py": "778478452f0165737995a4355f3616ff272ee7e1e75463e93e51aefef506d221",
+    "tool/performance/gate_policy.py": "402fc062addce3e228a219f90f62168be64156c0ad7b8451c43428c98037a2c1",
+    "tool/performance/run_ci.sh": "1037c78ddd0d5dff7c2c2e69d9d509fd5df2970641ecb148379baee1ddc2116d",
+    "tool/test_performance_gate.py": "3ea5b0613e4d028572867f2476f6f5a2e2e7c20534b543f8672225814501f18b",
+    "tool/test_reference_performance.py": "5701f01fd9d1d0bf11cc86a5afd642094f87830fbe8bd3c482eb3524b7837fc9",
+    ".github/workflows/validate.yml": "7bf042b9636f8c1b79e4d8f729880fee50e8ab96353bb888ab469b34bc3a4b44"
+  }
+}

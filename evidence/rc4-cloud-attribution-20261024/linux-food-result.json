@@ -1,0 +1,1144 @@
+{
+  "shape": "food:2640",
+  "controllerSHA256": "f0e5eb109366fedac8b156325fc0246c544e69e7a1a764fbae6efa32547fad77",
+  "sourcePinsSHA256": "687baf44a1813c7d1ee9bfd2d4f7f43bbd4134d9acfd4aa97dce95bf4ddaa2cd",
+  "bundlePins": {
+    "tandemlog": "1ccd4440ea99d66798ce3cecac6ef2f414402af1713d0d443a9a934a31da9ee8",
+    "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+    "lib/libfile_selector_linux_plugin.so": "44aa86429c03811781bb52fc8fc6531eeb7011b5ce0400e69acea2c68a1ee3f8",
+    "lib/libsqlite3.so": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace",
+    "lib/libapp.so": "a72aea79cdaa6c15f6ec6e322a802ebbde10649f2a64b93487432a9d22ae5ad7",
+    "lib/libdartjni.so": "459814394724dbf74cbdeb4719c3a686f3487cc2c11fec9ea60e58d37eb30c4f",
+    "lib/libflutter_linux_gtk.so": "d57449a5c2ee39e77b9e3488f0703b165c67e0b3c554089f388db96484ae62f1",
+    "lib/liburl_launcher_linux_plugin.so": "1a49b885dfe0481d8c53e861bf8d5cc2fea3d2ea9e66a44435a2ab5a2ffd027a",
+    "lib/libtandemlog_text.so": "ca9a4eecd7fe626762cb7ac945d0585cbe342fc40969d9fad62ba25296f70bf8",
+    "data/flutter_assets/NativeAssetsManifest.json": "cac6ed54604e88a281fdf937e13069ee88123bf111e9a4af1ad323b3a561b3f0",
+    "data/flutter_assets/NOTICES.Z": "2f5db52ea3ed04d9db3f1ca10e37b19778e83b96b5855f1bb15eb7a3165f2a2e",
+    "data/flutter_assets/version.json": "203ec4c0b09f2dfe3caa04f522217997c7b0dd3be845f2d311c029c6bcd5e5be",
+    "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+    "data/flutter_assets/AssetManifest.bin": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665",
+    "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "189d98623b97ac8b82eff01a24c7760d928fdc0420cd047e392c62c3a4a5ebda",
+    "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+    "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+    "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": "4a869fdca16eb36a8970867f4cde5faa7df7894440c49bc6716ba82adbd13d39"
+  },
+  "scope": "Linux release framework/API diagnostics on cloud Xvfb; no OS input or hardware presentation acceptance",
+  "sourceToBinaryBuildAttestation": false,
+  "releaseGateAccepted": false,
+  "nativeVisibleResponseAccepted": false,
+  "shutdown": {
+    "requestedMode": "normal",
+    "normalExitVerified": true,
+    "method": "owned-window-WM_DELETE_WINDOW",
+    "pid": 14928,
+    "window": "2097155",
+    "globalFocusOrInput": false,
+    "processExit": 0,
+    "elapsedMs": 41.129
+  },
+  "error": null,
+  "actions": [
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "task-open",
+      "inputReturnUs": 12658,
+      "stateReadyUs": 95516,
+      "frameworkPostFrameUs": 112773,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": true,
+      "costs": {
+        "complete": true,
+        "totalUs": 112773,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 3788,
+          "nativeApi": 1474,
+          "durabilityApi": 0,
+          "providerApi": 13297,
+          "queueWait": 33,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 9,
+          "transactionOther": 0,
+          "historyRefreshOther": 18420,
+          "unclassified": 75752
+        },
+        "coverageSumUs": 112773,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "sqlite.api.select": {
+            "calls": 23,
+            "inclusiveUs": 2833,
+            "failedCalls": 0
+          },
+          "profile.queueWait": {
+            "calls": 1,
+            "inclusiveUs": 33,
+            "failedCalls": 0
+          },
+          "provider.readBounded": {
+            "calls": 1,
+            "inclusiveUs": 7495,
+            "failedCalls": 0
+          },
+          "provider.list": {
+            "calls": 1,
+            "inclusiveUs": 5802,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 7,
+            "inclusiveUs": 952,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 1,
+            "inclusiveUs": 14,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 1,
+            "inclusiveUs": 9,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 1,
+            "inclusiveUs": 4,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 1,
+            "inclusiveUs": 27,
+            "failedCalls": 0
+          },
+          "history.refresh": {
+            "calls": 1,
+            "inclusiveUs": 31857,
+            "failedCalls": 0
+          },
+          "native.api.seed": {
+            "calls": 2,
+            "inclusiveUs": 201,
+            "failedCalls": 0
+          },
+          "native.api.restore": {
+            "calls": 4,
+            "inclusiveUs": 806,
+            "failedCalls": 0
+          },
+          "native.api.read": {
+            "calls": 6,
+            "inclusiveUs": 204,
+            "failedCalls": 0
+          },
+          "native.api.state": {
+            "calls": 2,
+            "inclusiveUs": 72,
+            "failedCalls": 0
+          },
+          "native.api.cancel": {
+            "calls": 2,
+            "inclusiveUs": 96,
+            "failedCalls": 0
+          },
+          "native.api.draft": {
+            "calls": 2,
+            "inclusiveUs": 95,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "title-save",
+      "inputReturnUs": 8101,
+      "stateReadyUs": 363513,
+      "frameworkPostFrameUs": 378972,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": true,
+      "costs": {
+        "complete": true,
+        "totalUs": 378972,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 4991,
+          "nativeApi": 13700,
+          "durabilityApi": 7963,
+          "providerApi": 190383,
+          "queueWait": 9,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 1674,
+          "transactionOther": 11,
+          "historyRefreshOther": 91667,
+          "unclassified": 68574
+        },
+        "coverageSumUs": 378972,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "profile.queueWait": {
+            "calls": 2,
+            "inclusiveUs": 9,
+            "failedCalls": 0
+          },
+          "sqlite.api.select": {
+            "calls": 78,
+            "inclusiveUs": 3773,
+            "failedCalls": 0
+          },
+          "provider.readBounded": {
+            "calls": 3,
+            "inclusiveUs": 60250,
+            "failedCalls": 0
+          },
+          "provider.list": {
+            "calls": 4,
+            "inclusiveUs": 69025,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 16,
+            "inclusiveUs": 1207,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 4,
+            "inclusiveUs": 73,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 4,
+            "inclusiveUs": 5812,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 4,
+            "inclusiveUs": 951,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 4,
+            "inclusiveUs": 6847,
+            "failedCalls": 0
+          },
+          "history.refresh": {
+            "calls": 3,
+            "inclusiveUs": 237470,
+            "failedCalls": 0
+          },
+          "native.api.prepare": {
+            "calls": 1,
+            "inclusiveUs": 197,
+            "failedCalls": 0
+          },
+          "native.api.checkpoint": {
+            "calls": 1,
+            "inclusiveUs": 53,
+            "failedCalls": 0
+          },
+          "native.api.inspect": {
+            "calls": 1,
+            "inclusiveUs": 133,
+            "failedCalls": 0
+          },
+          "native.api.seed": {
+            "calls": 4,
+            "inclusiveUs": 1647,
+            "failedCalls": 0
+          },
+          "native.api.restore": {
+            "calls": 6,
+            "inclusiveUs": 506,
+            "failedCalls": 0
+          },
+          "native.api.apply": {
+            "calls": 2,
+            "inclusiveUs": 208,
+            "failedCalls": 0
+          },
+          "native.api.read": {
+            "calls": 7,
+            "inclusiveUs": 762,
+            "failedCalls": 0
+          },
+          "native.api.state": {
+            "calls": 4,
+            "inclusiveUs": 135,
+            "failedCalls": 0
+          },
+          "native.api.cancel": {
+            "calls": 11,
+            "inclusiveUs": 6092,
+            "failedCalls": 0
+          },
+          "provider.readFromBounded": {
+            "calls": 2,
+            "inclusiveUs": 61108,
+            "failedCalls": 0
+          },
+          "durability.append+barrier": {
+            "calls": 1,
+            "inclusiveUs": 7963,
+            "failedCalls": 0
+          },
+          "native.api.apply_local": {
+            "calls": 1,
+            "inclusiveUs": 3750,
+            "failedCalls": 0
+          },
+          "native.api.draft": {
+            "calls": 2,
+            "inclusiveUs": 120,
+            "failedCalls": 0
+          },
+          "native.api.apply_owned": {
+            "calls": 1,
+            "inclusiveUs": 97,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "title-undo",
+      "inputReturnUs": 2552,
+      "stateReadyUs": 390744,
+      "frameworkPostFrameUs": 409140,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": true,
+      "costs": {
+        "complete": true,
+        "totalUs": 409140,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 5027,
+          "nativeApi": 7515,
+          "durabilityApi": 2269,
+          "providerApi": 268925,
+          "queueWait": 65,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 1765,
+          "transactionOther": 17,
+          "historyRefreshOther": 93927,
+          "unclassified": 29630
+        },
+        "coverageSumUs": 409140,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "profile.queueWait": {
+            "calls": 3,
+            "inclusiveUs": 65,
+            "failedCalls": 0
+          },
+          "sqlite.api.select": {
+            "calls": 78,
+            "inclusiveUs": 3835,
+            "failedCalls": 0
+          },
+          "provider.readBounded": {
+            "calls": 5,
+            "inclusiveUs": 122072,
+            "failedCalls": 0
+          },
+          "provider.list": {
+            "calls": 6,
+            "inclusiveUs": 88437,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 21,
+            "inclusiveUs": 1168,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 6,
+            "inclusiveUs": 113,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 6,
+            "inclusiveUs": 3945,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 6,
+            "inclusiveUs": 895,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 6,
+            "inclusiveUs": 4970,
+            "failedCalls": 0
+          },
+          "history.refresh": {
+            "calls": 5,
+            "inclusiveUs": 301534,
+            "failedCalls": 0
+          },
+          "native.api.prepare_operation_undo": {
+            "calls": 1,
+            "inclusiveUs": 289,
+            "failedCalls": 0
+          },
+          "native.api.inspect": {
+            "calls": 1,
+            "inclusiveUs": 5459,
+            "failedCalls": 0
+          },
+          "native.api.seed": {
+            "calls": 4,
+            "inclusiveUs": 360,
+            "failedCalls": 0
+          },
+          "native.api.restore": {
+            "calls": 5,
+            "inclusiveUs": 470,
+            "failedCalls": 0
+          },
+          "native.api.apply": {
+            "calls": 2,
+            "inclusiveUs": 223,
+            "failedCalls": 0
+          },
+          "native.api.read": {
+            "calls": 5,
+            "inclusiveUs": 233,
+            "failedCalls": 0
+          },
+          "native.api.state": {
+            "calls": 4,
+            "inclusiveUs": 119,
+            "failedCalls": 0
+          },
+          "native.api.cancel": {
+            "calls": 5,
+            "inclusiveUs": 167,
+            "failedCalls": 0
+          },
+          "provider.readFromBounded": {
+            "calls": 2,
+            "inclusiveUs": 58416,
+            "failedCalls": 0
+          },
+          "durability.append+barrier": {
+            "calls": 1,
+            "inclusiveUs": 2269,
+            "failedCalls": 0
+          },
+          "native.api.commit_undo": {
+            "calls": 1,
+            "inclusiveUs": 195,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "task-complete",
+      "inputReturnUs": 2438,
+      "stateReadyUs": 613554,
+      "frameworkPostFrameUs": 635106,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": true,
+      "costs": {
+        "complete": true,
+        "totalUs": 635106,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 13934,
+          "nativeApi": 5683,
+          "durabilityApi": 6161,
+          "providerApi": 356100,
+          "queueWait": 23,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 1746,
+          "transactionOther": 25,
+          "historyRefreshOther": 204707,
+          "unclassified": 46727
+        },
+        "coverageSumUs": 635106,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "provider.readBounded": {
+            "calls": 6,
+            "inclusiveUs": 180828,
+            "failedCalls": 0
+          },
+          "sqlite.api.select": {
+            "calls": 87,
+            "inclusiveUs": 4517,
+            "failedCalls": 0
+          },
+          "provider.list": {
+            "calls": 7,
+            "inclusiveUs": 148359,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 26,
+            "inclusiveUs": 9401,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 7,
+            "inclusiveUs": 172,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 7,
+            "inclusiveUs": 3913,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 7,
+            "inclusiveUs": 800,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 7,
+            "inclusiveUs": 4910,
+            "failedCalls": 0
+          },
+          "history.refresh": {
+            "calls": 6,
+            "inclusiveUs": 545551,
+            "failedCalls": 0
+          },
+          "profile.queueWait": {
+            "calls": 4,
+            "inclusiveUs": 23,
+            "failedCalls": 0
+          },
+          "native.api.seed": {
+            "calls": 6,
+            "inclusiveUs": 458,
+            "failedCalls": 0
+          },
+          "native.api.restore": {
+            "calls": 6,
+            "inclusiveUs": 606,
+            "failedCalls": 0
+          },
+          "native.api.read": {
+            "calls": 6,
+            "inclusiveUs": 249,
+            "failedCalls": 0
+          },
+          "native.api.state": {
+            "calls": 6,
+            "inclusiveUs": 165,
+            "failedCalls": 0
+          },
+          "native.api.cancel": {
+            "calls": 6,
+            "inclusiveUs": 4205,
+            "failedCalls": 0
+          },
+          "provider.readFromBounded": {
+            "calls": 2,
+            "inclusiveUs": 26913,
+            "failedCalls": 0
+          },
+          "durability.append+barrier": {
+            "calls": 1,
+            "inclusiveUs": 6161,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "completion-undo",
+      "inputReturnUs": 5729,
+      "stateReadyUs": 521010,
+      "frameworkPostFrameUs": 542635,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": true,
+      "costs": {
+        "complete": true,
+        "totalUs": 542635,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 4700,
+          "nativeApi": 10460,
+          "durabilityApi": 3784,
+          "providerApi": 338495,
+          "queueWait": 21,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 1604,
+          "transactionOther": 11,
+          "historyRefreshOther": 153216,
+          "unclassified": 30344
+        },
+        "coverageSumUs": 542635,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "provider.readBounded": {
+            "calls": 5,
+            "inclusiveUs": 155148,
+            "failedCalls": 0
+          },
+          "sqlite.api.select": {
+            "calls": 74,
+            "inclusiveUs": 3533,
+            "failedCalls": 0
+          },
+          "provider.list": {
+            "calls": 6,
+            "inclusiveUs": 154891,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 20,
+            "inclusiveUs": 1146,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 6,
+            "inclusiveUs": 173,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 6,
+            "inclusiveUs": 12922,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 6,
+            "inclusiveUs": 828,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 6,
+            "inclusiveUs": 13934,
+            "failedCalls": 0
+          },
+          "history.refresh": {
+            "calls": 5,
+            "inclusiveUs": 448396,
+            "failedCalls": 0
+          },
+          "profile.queueWait": {
+            "calls": 3,
+            "inclusiveUs": 21,
+            "failedCalls": 0
+          },
+          "native.api.seed": {
+            "calls": 4,
+            "inclusiveUs": 5715,
+            "failedCalls": 0
+          },
+          "native.api.restore": {
+            "calls": 4,
+            "inclusiveUs": 4251,
+            "failedCalls": 0
+          },
+          "native.api.read": {
+            "calls": 4,
+            "inclusiveUs": 184,
+            "failedCalls": 0
+          },
+          "native.api.state": {
+            "calls": 4,
+            "inclusiveUs": 137,
+            "failedCalls": 0
+          },
+          "native.api.cancel": {
+            "calls": 4,
+            "inclusiveUs": 173,
+            "failedCalls": 0
+          },
+          "provider.readFromBounded": {
+            "calls": 2,
+            "inclusiveUs": 28456,
+            "failedCalls": 0
+          },
+          "durability.append+barrier": {
+            "calls": 1,
+            "inclusiveUs": 3784,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "food-section",
+      "inputReturnUs": 4731,
+      "stateReadyUs": 85878,
+      "frameworkPostFrameUs": 99236,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": false,
+      "costs": {
+        "complete": true,
+        "totalUs": 99236,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 1156,
+          "nativeApi": 0,
+          "durabilityApi": 0,
+          "providerApi": 0,
+          "queueWait": 14,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 8,
+          "transactionOther": 2,
+          "historyRefreshOther": 0,
+          "unclassified": 98056
+        },
+        "coverageSumUs": 99236,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "profile.queueWait": {
+            "calls": 1,
+            "inclusiveUs": 14,
+            "failedCalls": 0
+          },
+          "sqlite.api.select": {
+            "calls": 1,
+            "inclusiveUs": 82,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 3,
+            "inclusiveUs": 1070,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 1,
+            "inclusiveUs": 5,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 1,
+            "inclusiveUs": 30,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 1,
+            "inclusiveUs": 1047,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 1,
+            "inclusiveUs": 1084,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "food-open",
+      "inputReturnUs": 2786,
+      "stateReadyUs": 19186,
+      "frameworkPostFrameUs": 36998,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": false,
+      "costs": {
+        "complete": true,
+        "totalUs": 36998,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 0,
+          "nativeApi": 0,
+          "durabilityApi": 0,
+          "providerApi": 0,
+          "queueWait": 0,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 0,
+          "transactionOther": 0,
+          "historyRefreshOther": 0,
+          "unclassified": 36998
+        },
+        "coverageSumUs": 36998,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {},
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "food-save",
+      "inputReturnUs": 2605,
+      "stateReadyUs": 211965,
+      "frameworkPostFrameUs": 239677,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": true,
+      "costs": {
+        "complete": true,
+        "totalUs": 239677,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 6111,
+          "nativeApi": 0,
+          "durabilityApi": 5694,
+          "providerApi": 153256,
+          "queueWait": 73,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 2612,
+          "transactionOther": 9,
+          "historyRefreshOther": 30326,
+          "unclassified": 41596
+        },
+        "coverageSumUs": 239677,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "profile.queueWait": {
+            "calls": 2,
+            "inclusiveUs": 73,
+            "failedCalls": 0
+          },
+          "sqlite.api.select": {
+            "calls": 19,
+            "inclusiveUs": 1073,
+            "failedCalls": 0
+          },
+          "provider.readBounded": {
+            "calls": 2,
+            "inclusiveUs": 69905,
+            "failedCalls": 0
+          },
+          "provider.list": {
+            "calls": 3,
+            "inclusiveUs": 50808,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 7,
+            "inclusiveUs": 5029,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 3,
+            "inclusiveUs": 63,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 3,
+            "inclusiveUs": 2679,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 3,
+            "inclusiveUs": 4908,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 3,
+            "inclusiveUs": 7659,
+            "failedCalls": 0
+          },
+          "history.refresh": {
+            "calls": 2,
+            "inclusiveUs": 146293,
+            "failedCalls": 0
+          },
+          "provider.readFromBounded": {
+            "calls": 2,
+            "inclusiveUs": 32543,
+            "failedCalls": 0
+          },
+          "durability.append+barrier": {
+            "calls": 1,
+            "inclusiveUs": 5694,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    },
+    {
+      "phase": "action",
+      "shape": "food:2640",
+      "pid": 14928,
+      "release": true,
+      "platform": "linux",
+      "osInputMeasured": false,
+      "presentationMeasured": false,
+      "releaseGateAccepted": false,
+      "name": "food-undo",
+      "inputReturnUs": 1006,
+      "stateReadyUs": 70871,
+      "frameworkPostFrameUs": 85760,
+      "ordinaryVisibleResponseObjectiveUs": 100000,
+      "objectiveExceededAtThisFrameworkBoundary": false,
+      "costs": {
+        "complete": true,
+        "totalUs": 85760,
+        "exclusiveCoverageUs": {
+          "sqliteApi": 1674,
+          "nativeApi": 0,
+          "durabilityApi": 686,
+          "providerApi": 52407,
+          "queueWait": 12,
+          "semanticValidationOther": 0,
+          "transactionBodyOther": 2120,
+          "transactionOther": 10,
+          "historyRefreshOther": 14134,
+          "unclassified": 14717
+        },
+        "coverageSumUs": 85760,
+        "reconciled": true,
+        "overlapPrecedence": [
+          "sqliteApi",
+          "nativeApi",
+          "durabilityApi",
+          "providerApi",
+          "queueWait",
+          "semanticValidationOther",
+          "transactionBodyOther",
+          "transactionOther",
+          "historyRefreshOther",
+          "unclassified"
+        ],
+        "causalParentAttributionClaimed": false,
+        "operations": {
+          "provider.readBounded": {
+            "calls": 5,
+            "inclusiveUs": 21663,
+            "failedCalls": 0
+          },
+          "sqlite.api.select": {
+            "calls": 33,
+            "inclusiveUs": 1056,
+            "failedCalls": 0
+          },
+          "provider.list": {
+            "calls": 6,
+            "inclusiveUs": 28434,
+            "failedCalls": 0
+          },
+          "sqlite.api.execute": {
+            "calls": 13,
+            "inclusiveUs": 607,
+            "failedCalls": 0
+          },
+          "sqlite.begin": {
+            "calls": 6,
+            "inclusiveUs": 54,
+            "failedCalls": 0
+          },
+          "sqlite.body": {
+            "calls": 6,
+            "inclusiveUs": 2145,
+            "failedCalls": 0
+          },
+          "sqlite.commit": {
+            "calls": 6,
+            "inclusiveUs": 539,
+            "failedCalls": 0
+          },
+          "sqlite.transaction": {
+            "calls": 6,
+            "inclusiveUs": 2748,
+            "failedCalls": 0
+          },
+          "history.refresh": {
+            "calls": 5,
+            "inclusiveUs": 65307,
+            "failedCalls": 0
+          },
+          "profile.queueWait": {
+            "calls": 2,
+            "inclusiveUs": 12,
+            "failedCalls": 0
+          },
+          "provider.readFromBounded": {
+            "calls": 2,
+            "inclusiveUs": 2310,
+            "failedCalls": 0
+          },
+          "durability.append+barrier": {
+            "calls": 1,
+            "inclusiveUs": 686,
+            "failedCalls": 0
+          }
+        },
+        "inclusiveOperationTotalsMustNotBeSummed": true
+      },
+      "pollingForcesFrames": false
+    }
+  ],
+  "captured": [
+    "food",
+    "tasks"
+  ],
+  "functionalPass": true,
+  "allPartitionsComplete": true,
+  "frameworkBoundary100msMisses": [
+    "task-open",
+    "title-save",
+    "title-undo",
+    "task-complete",
+    "completion-undo",
+    "food-save"
+  ]
+}

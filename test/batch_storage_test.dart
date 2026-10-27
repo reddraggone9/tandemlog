@@ -31,10 +31,11 @@ void main() {
             final before = store.cacheTransactions;
             await operation();
             expect(folder.appends, 1);
-            // The common authority revalidates all canonical bytes before/after
-            // append; the number of provider calls is independent of batch size.
-            expect(folder.lists, 5);
-            expect(folder.reads, 9);
+            // One coherent snapshot plus exact owned readback; this provider
+            // lacks bounded range capability and uses conservative full reads.
+            // Provider call counts remain independent of batch size.
+            expect(folder.lists, 4);
+            expect(folder.reads, 7);
             expect(store.cacheTransactions - before, 1);
           }
 

@@ -1,0 +1,22 @@
+{
+  "functionalOraclePassed": true,
+  "comparisons": 326708,
+  "randomStrings": 30000,
+  "fullUnicodeScalarCorpus": true,
+  "malformedUtf16AndExactBudgetBoundaries": true,
+  "branches": {
+    "lower-bound rejection": 59367,
+    "upper-bound acceptance": 120637,
+    "original exact fallback": 146704
+  },
+  "performanceMeasured": false,
+  "productIntegrated": false,
+  "reference": "Original Dart utf8.encode(value).length > maximumBytes",
+  "scope": "Scratch functional prototype only,not application integration or performance measurement",
+  "callerIntegrationTestsRun": false,
+  "sourceProductStillPinned": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "oracleSourceSHA256": "688a0901e502a30f7afe1b601ba980bf38f2243ffed1d1ecaeec84a1992c5277",
+  "dartSHA256": "327991241585ee23f10d8b239a3f8484cb55e5060c665700d19d7e01e62ec94a",
+  "sdkVersion": "3.13.4",
+  "exitCode": 0
+}

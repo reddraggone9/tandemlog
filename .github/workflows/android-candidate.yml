@@ -25,6 +25,8 @@ jobs:
   checks:
     needs: candidate
     uses: ./.github/workflows/validate.yml
+    with:
+      performance_calibration: false
   signed-android:
     needs: checks
     runs-on: ubuntu-24.04

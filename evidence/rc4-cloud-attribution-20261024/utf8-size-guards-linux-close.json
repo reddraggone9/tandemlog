@@ -1,0 +1,111 @@
+{
+  "snapshotUTC": "2026-10-25T05:22:55.238358+00:00",
+  "runId": 40164354926,
+  "jobId": 121082227356,
+  "headSHA": "6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6",
+  "jobConclusion": "failure",
+  "all1515UnitTestsPassed": true,
+  "formatAnalysisToolsBuildAndNativePayloadChecksPassed": true,
+  "normalClose": {
+    "run": 1,
+    "passed": false,
+    "cleanWitnessVerified": false,
+    "closeMode": "normal",
+    "external_ms": 8338,
+    "marker": "TANDEMLOG_READY_MS=1732 FILES_READ=2",
+    "phases": [
+      "TANDEMLOG_MAIN",
+      "TANDEMLOG_FIRST_FRAME_MS=100",
+      "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+      "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+      "TANDEMLOG_READY_MS=1732 FILES_READ=2"
+    ],
+    "external_main_ms": 6601,
+    "external_first_frame_ms": 6705,
+    "shutdown": {
+      "requestedMode": "normal",
+      "normalExitVerified": false,
+      "method": "owned-window-WM_DELETE_WINDOW",
+      "pid": 9551,
+      "window": "2097155",
+      "globalFocusOrInput": false,
+      "processExit": -11,
+      "elapsedMs": 2781.761
+    },
+    "process_exit": -11,
+    "error": "Normal owned window close was not verified; forced cleanup is not a clean-close benchmark"
+  },
+  "postmortem": {
+    "diagnosticOnly": true,
+    "acceptance": false,
+    "applicationRerunByCollector": false,
+    "rawCoresUploaded": false,
+    "collectorSHA256": "1e2cf7cab18be19696b0f9772b6d3cc78fecf96087b8b0f7171b5f36e3ff7fdb",
+    "sourceRevision": "6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6",
+    "binarySHA256": "a1ddd8b7877b4467767e15f441158138a75a75b2e2e372ac617232d2a7020343",
+    "cores": [
+      {
+        "name": "core.9551",
+        "bytes": 803553280,
+        "allocatedBytes": 232001536,
+        "maximumAllocatedBytes": 536870912,
+        "sha256": null,
+        "prefixSHA256": "0cd299e14784cbe80375186ff0a5b3bb1fe0bc00c5953b911e55ad6f46e7349c",
+        "hashScope": "first-64KiB-only; whole sparse core not scanned",
+        "hashReadBytes": 65536,
+        "stackFile": "core.9551.stack.txt",
+        "gdbExit": 0,
+        "nativeSignal": "SIGSEGV",
+        "stackCaptured": true
+      }
+    ],
+    "certifiedApplicationPIDs": [
+      9551
+    ],
+    "coreCount": 1
+  },
+  "artifact": {
+    "id": 12588086221,
+    "sha256": "e3f7fd6a06bab9e4e67dd7da8cfa6c0d52eb2b857f9bcc083baa9df65a2d6203",
+    "verified": true
+  },
+  "diagnosticsArtifact": {
+    "id": 12587951465,
+    "sha256": "6912245ae2e2a346ad7981e83ed902a201784bf74de33ce27418277cfff9e10f",
+    "verified": true
+  },
+  "decodedJobLogSHA256": "796c98ce81c5b84a7581385b6c1d54f1f45fe7b66151cea7ef6cd314f32edf9c",
+  "stackSHA256": "32bc1cb00aba5c6b78e29e557ac9d2a192cbb16cc6ce74d1b030abc718c04a13",
+  "stackSource": "utf8-size-guards-linux-close-stack.txt",
+  "rawCoresReadOrUploadedByCloud": false,
+  "appRerunForThisAnalysis": false,
+  "warmStartupExecuted": false,
+  "downstream203NativeLinuxCasesExecuted": false,
+  "faultingThreadObserved": [
+    "llvm::EVT::isExtendedFixedLengthVector",
+    "llvm::SelectionDAG::Combine",
+    "llvm::MCJIT::finalizeObject",
+    "LLVMGetPointerToGlobal",
+    "libgallium-25.2.8-0ubuntu0.24.04.4.so",
+    "libflutter_linux_gtk.so"
+  ],
+  "mainThreadObserved": [
+    "libLLVM.so.20.1",
+    "__run_exit_handlers",
+    "__GI_exit",
+    "__libc_start_call_main"
+  ],
+  "hypothesis": "Active graphics compilation during process teardown; window/view/engine disposal ordering merits review. This stack does not prove root-cause ownership.",
+  "productFixApplied": false,
+  "sdkChanged": false,
+  "securitySettingsChanged": false,
+  "sdkSourceReview": {
+    "commit": "6a19cca56475dbfba1478ee68d7bd0c2ef891da1",
+    "files": {
+      "engine/src/flutter/shell/platform/linux/fl_platform_handler.cc": "8dee63786b4b0083f3087fd1c48219db5a398f1b73ea5a3f9f24bb7ad3e55f3f",
+      "engine/src/flutter/shell/platform/linux/fl_view.cc": "1e6b7a26c40eaf6af501bdab455ce0c07ebfc7c909aff535ef8d679b55022e66",
+      "engine/src/flutter/shell/platform/linux/fl_engine.cc": "1768f417b1a99b028842cbd5660bbedb659c41f45bfac86a087c68efd5f2dd1a"
+    }
+  },
+  "scope": "Diagnostic failure evidence; no acceptance, force-exit workaround, dependency upgrade or repeated CI"
+}

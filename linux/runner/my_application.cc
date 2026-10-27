@@ -8,12 +8,36 @@
 
 #include "flutter/generated_plugin_registrant.h"
 
+struct WindowRefs {
+  GWeakRef window;
+  GWeakRef engine;
+};
+
 struct _MyApplication {
   GtkApplication parent_instance;
   char** dart_entrypoint_arguments;
+  GPtrArray* window_refs;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
+
+static void free_window_ref(gpointer data) {
+  auto* ref = static_cast<WindowRefs*>(data);
+  g_weak_ref_clear(&ref->window);
+  g_weak_ref_clear(&ref->engine);
+  g_free(ref);
+}
+
+gboolean my_application_shutdown_complete(MyApplication* self) {
+  for (guint i = 0; i < self->window_refs->len; ++i) {
+    auto* ref = static_cast<WindowRefs*>(g_ptr_array_index(self->window_refs, i));
+    g_autoptr(GObject) engine = G_OBJECT(g_weak_ref_get(&ref->engine));
+    if (engine != nullptr) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
 
 // Called when first Flutter frame received.
 static void first_frame_cb(MyApplication* self, FlView* view) {
@@ -25,6 +49,10 @@ static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
+  auto* window_ref = g_new0(WindowRefs, 1);
+  g_weak_ref_init(&window_ref->window, window);
+  g_weak_ref_init(&window_ref->engine, nullptr);
+  g_ptr_array_add(self->window_refs, window_ref);
 
   // Use a header bar when running in GNOME as this is the common style used
   // by applications and is the setup most users will be using (e.g. Ubuntu
@@ -60,6 +88,7 @@ static void my_application_activate(GApplication* application) {
       project, self->dart_entrypoint_arguments);
 
   FlView* view = fl_view_new(project);
+  g_weak_ref_set(&window_ref->engine, fl_view_get_engine(view));
   GdkRGBA background_color;
   // Background defaults to black, override it here if necessary, e.g. #00000000
   // for transparent.
@@ -112,9 +141,33 @@ static void my_application_startup(GApplication* application) {
 
 // Implements GApplication::shutdown.
 static void my_application_shutdown(GApplication* application) {
-  // MyApplication* self = MY_APPLICATION(object);
+  MyApplication* self = MY_APPLICATION(application);
+  // Flutter detaches windows before quitting, so GtkApplication no longer owns
+  // their teardown. After accepted exit, destroy our surviving windows so their
+  // views release the engine before main returns and process teardown begins.
+  // A canceled Dart exit never reaches this shutdown callback.
+  for (guint i = 0; i < self->window_refs->len; ++i) {
+    auto* ref = static_cast<WindowRefs*>(g_ptr_array_index(self->window_refs, i));
+    g_autoptr(GObject) window = G_OBJECT(g_weak_ref_get(&ref->window));
+    if (window != nullptr) {
+      gtk_widget_destroy(GTK_WIDGET(window));
+    }
+  }
 
-  // Perform any actions required at application shutdown.
+  // View removal queues a GTask that retains its engine until the GTK context
+  // dispatches its completion. Finish already-ready callbacks on this owning
+  // thread; do not sleep, wait for new work, or drain unrelated sources forever.
+  // The cap bounds a continuously-ready source. Incomplete teardown is an exit
+  // failure, never a clean-close witness.
+  for (guint dispatched = 0;
+       dispatched < 256 && !my_application_shutdown_complete(self) &&
+       g_main_context_pending(nullptr);
+       ++dispatched) {
+    g_main_context_iteration(nullptr, FALSE);
+  }
+  if (!my_application_shutdown_complete(self)) {
+    g_warning("Flutter engines did not complete normal shutdown");
+  }
 
   G_APPLICATION_CLASS(my_application_parent_class)->shutdown(application);
 }
@@ -123,6 +176,7 @@ static void my_application_shutdown(GApplication* application) {
 static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  g_clear_pointer(&self->window_refs, g_ptr_array_unref);
   G_OBJECT_CLASS(my_application_parent_class)->dispose(object);
 }
 
@@ -135,7 +189,9 @@ static void my_application_class_init(MyApplicationClass* klass) {
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 
-static void my_application_init(MyApplication* self) {}
+static void my_application_init(MyApplication* self) {
+  self->window_refs = g_ptr_array_new_with_free_func(free_window_ref);
+}
 
 MyApplication* my_application_new() {
   // Set the program name to the application ID, which helps various systems

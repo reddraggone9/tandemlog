@@ -1,0 +1,1215 @@
+{
+  "source": "732ddac905bc67410731b7ef3f1c42eaf77701b8",
+  "productSource": "8005430e10be7b2af614565754779639301101f0",
+  "runURL": "https://github.com/reddraggone9/tandemlog/actions/runs/40139838647",
+  "accepted": false,
+  "rerunsUsed": 0,
+  "artifactId": 12578626814,
+  "artifactSHA256": "e2f9d2cacd07e31fb57afcbb4405068c59d8cddaa7f1a22a59e09a9a534a1af8",
+  "report": "/workspace/scratch/rc4-order-performance-ci-40139838647/performance-results/gate-result.json",
+  "reportSHA256": "f3ce4948e00aa70d006150d3bdcec3acbf5af142cdda59afb389803c20585abc",
+  "environment": {
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "python": "3.12.3",
+    "logicalCPUs": 4,
+    "runnerImage": {},
+    "cpuModel": "AMD EPYC 9V45 96-Core Processor"
+  },
+  "resourceBounds": {
+    "memory.max": "6442450944",
+    "memory.swap.max": "0",
+    "cpu.max": "200000 100000",
+    "pids.max": "128"
+  },
+  "limitsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "allAbsoluteMediansPass": true,
+  "qualifications": [
+    "Different CPU from previous run; no controlled whole-run speedup claim",
+    "Append and CPU brackets overlap; append is not native fsync-only service time",
+    "Required timing gate remains failed, no eligible unchanged retry"
+  ],
+  "shapes": {
+    "dense-1": {
+      "correctnessPassed": true,
+      "metrics": 232,
+      "execution": {
+        "exitCode": 0,
+        "seconds": 141.868533345,
+        "childPID": 3161,
+        "childAbsent": true,
+        "logSHA256": "b5faa21fe8569be1a4c94bd9f582454b8e0b2b635e3ab9ba4bc9f1d6611f3a12",
+        "noise": {
+          "kind": "observed-external-cpu-load",
+          "sampleWindowCovered": true,
+          "windowSeconds": 141.868533345,
+          "cpuSomeStallMicrosecondsDelta": 2935018,
+          "otherCpuMicrosecondsDelta": 1036783,
+          "ownWorkExcluded": true,
+          "basis": "Other sibling systemd services; own service excluded",
+          "qualification": "Aggregate external pressure during entire attempt; suspected timing noise, not proof that every slow sample was affected."
+        }
+      },
+      "absoluteFailures": [
+        {
+          "action": "converted.task.title.save",
+          "summary": {
+            "allSamplesMs": [
+              12.095,
+              12.654,
+              12.901,
+              12.928,
+              74.916
+            ],
+            "medianMs": 12.901,
+            "maxMs": 74.916,
+            "warmupSamplesMs": [
+              13.389,
+              13.202
+            ]
+          },
+          "bounds": {
+            "medianMs": 35,
+            "maxMs": 45
+          },
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "converted-task-text",
+            "action": "converted.task.title.save",
+            "rep": 6,
+            "microseconds": 74916,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1743010,
+              "appendCalls": 1,
+              "appendMicroseconds": 57347,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 13569,
+                "cgroup.user_usec": 11630,
+                "cgroup.system_usec": 1939,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 4677,
+                "processIo.wchar": 80022,
+                "processIo.syscr": 13,
+                "processIo.syscw": 39,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 90112,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 109965312
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "food.delete.3.undo",
+          "summary": {
+            "allSamplesMs": [
+              7.806,
+              5.901,
+              27.731,
+              7.171,
+              6.151
+            ],
+            "medianMs": 7.171,
+            "maxMs": 27.731,
+            "warmupSamplesMs": [
+              5.801,
+              5.752
+            ]
+          },
+          "bounds": {
+            "medianMs": 15,
+            "maxMs": 20
+          },
+          "slowestRawObservation": {
+            "index": 4,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food",
+            "action": "food.delete.3.undo",
+            "rep": 4,
+            "microseconds": 27731,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 16167,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 12575,
+                "cgroup.user_usec": 9406,
+                "cgroup.system_usec": 3168,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 6177,
+                "processIo.wchar": 6069,
+                "processIo.syscr": 15,
+                "processIo.syscw": 3,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 16384,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 125911040
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 332,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "historical.food.details.3",
+          "summary": {
+            "allSamplesMs": [
+              23.372,
+              7.081,
+              5.759,
+              5.873,
+              6.52
+            ],
+            "medianMs": 6.52,
+            "maxMs": 23.372,
+            "warmupSamplesMs": [
+              5.239,
+              5.384
+            ]
+          },
+          "bounds": {
+            "medianMs": 15,
+            "maxMs": 20
+          },
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food-historical",
+            "action": "historical.food.details.3",
+            "rep": 2,
+            "microseconds": 23372,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 309,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 5527,
+                "cgroup.user_usec": 4405,
+                "cgroup.system_usec": 1123,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 5148,
+                "processIo.wchar": 6329,
+                "processIo.syscr": 13,
+                "processIo.syscw": 3,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 12288,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 124227584
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "historical.food.delete.1.undo",
+          "summary": {
+            "allSamplesMs": [
+              5.908,
+              6.455,
+              21.221,
+              6.024,
+              6.112
+            ],
+            "medianMs": 6.112,
+            "maxMs": 21.221,
+            "warmupSamplesMs": [
+              5.278,
+              6.093
+            ]
+          },
+          "bounds": {
+            "medianMs": 15,
+            "maxMs": 20
+          },
+          "slowestRawObservation": {
+            "index": 4,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food-historical",
+            "action": "historical.food.delete.1.undo",
+            "rep": 4,
+            "microseconds": 21221,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 15076,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 7292,
+                "cgroup.user_usec": 4200,
+                "cgroup.system_usec": 3092,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 5922,
+                "processIo.wchar": 5814,
+                "processIo.syscr": 15,
+                "processIo.syscw": 3,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 16384,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 129269760
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "historical.food.delete.3",
+          "summary": {
+            "allSamplesMs": [
+              5.095,
+              5.643,
+              5.66,
+              5.722,
+              31.941
+            ],
+            "medianMs": 5.66,
+            "maxMs": 31.941,
+            "warmupSamplesMs": [
+              4.881,
+              6.353
+            ]
+          },
+          "bounds": {
+            "medianMs": 15,
+            "maxMs": 20
+          },
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food-historical",
+            "action": "historical.food.delete.3",
+            "rep": 6,
+            "microseconds": 31941,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 13208,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 7008,
+                "cgroup.user_usec": 6007,
+                "cgroup.system_usec": 1001,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 4941,
+                "processIo.wchar": 6122,
+                "processIo.syscr": 13,
+                "processIo.syscw": 3,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 16384,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 126410752
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "cardinality500.food.contents.APIonly",
+          "summary": {
+            "allSamplesMs": [
+              6.596,
+              6.12,
+              24.095,
+              5.675,
+              15.427
+            ],
+            "medianMs": 6.596,
+            "maxMs": 24.095,
+            "warmupSamplesMs": [
+              5.604,
+              5.438
+            ]
+          },
+          "bounds": {
+            "medianMs": 20,
+            "maxMs": 20
+          },
+          "slowestRawObservation": {
+            "index": 4,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food-cardinality500",
+            "action": "cardinality500.food.contents.APIonly",
+            "rep": 4,
+            "microseconds": 24095,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 1155,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 20696,
+                "cgroup.user_usec": 12260,
+                "cgroup.system_usec": 8436,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 4734,
+                "processIo.wchar": 5913,
+                "processIo.syscr": 13,
+                "processIo.syscw": 3,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 12288,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 126992384
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 503,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        }
+      ],
+      "startup": {
+        "startup.warm.total": {
+          "allSamplesMs": [
+            186.704,
+            181.641,
+            176.153,
+            175.977,
+            182.469
+          ],
+          "medianMs": 181.641,
+          "maxMs": 186.704,
+          "warmupSamplesMs": [
+            180.969,
+            179.908
+          ]
+        },
+        "startup.warm.history": {
+          "allSamplesMs": [
+            174.144,
+            167.76,
+            169.715,
+            169.285,
+            170.885
+          ],
+          "medianMs": 169.715,
+          "maxMs": 174.144,
+          "warmupSamplesMs": [
+            174.207,
+            173.137
+          ]
+        },
+        "startup.warm.taskAttach": {
+          "allSamplesMs": [
+            11.226,
+            5.058,
+            5.11,
+            5.252,
+            10.271
+          ],
+          "medianMs": 5.252,
+          "maxMs": 11.226,
+          "warmupSamplesMs": [
+            5.331,
+            5.281
+          ]
+        },
+        "startup.warm.proof": {
+          "allSamplesMs": [
+            39.624,
+            36.477,
+            30.656,
+            31.583,
+            38.289
+          ],
+          "medianMs": 36.477,
+          "maxMs": 39.624,
+          "warmupSamplesMs": [
+            31.098,
+            30.852
+          ]
+        },
+        "startup.warm.cacheRestore": {
+          "allSamplesMs": [
+            10.034,
+            9.518,
+            13.297,
+            12.79,
+            9.655
+          ],
+          "medianMs": 10.034,
+          "maxMs": 13.297,
+          "warmupSamplesMs": [
+            16.845,
+            14.637
+          ]
+        },
+        "startup.cold.total": {
+          "allSamplesMs": [
+            646.998,
+            686.834,
+            655.364,
+            666.627,
+            660.796
+          ],
+          "medianMs": 660.796,
+          "maxMs": 686.834,
+          "warmupSamplesMs": [
+            694.533,
+            665.752
+          ]
+        },
+        "startup.cold.history": {
+          "allSamplesMs": [
+            612.78,
+            640.89,
+            621.659,
+            620.164,
+            623.601
+          ],
+          "medianMs": 621.659,
+          "maxMs": 640.89,
+          "warmupSamplesMs": [
+            652.199,
+            625.959
+          ]
+        },
+        "startup.cold.taskAttach": {
+          "allSamplesMs": [
+            29.933,
+            36.989,
+            29.679,
+            37.462,
+            32.871
+          ],
+          "medianMs": 32.871,
+          "maxMs": 37.462,
+          "warmupSamplesMs": [
+            37.699,
+            35.779
+          ]
+        }
+      }
+    },
+    "dense-2": {
+      "correctnessPassed": true,
+      "metrics": 232,
+      "execution": {
+        "exitCode": 0,
+        "seconds": 184.30596514299998,
+        "childPID": 3289,
+        "childAbsent": true,
+        "logSHA256": "729e1bf0d1da264d4f01460289cb3e74019d46cc7d793c58addef40e9bfd8a9e",
+        "noise": {
+          "kind": "observed-external-cpu-load",
+          "sampleWindowCovered": true,
+          "windowSeconds": 184.30596514299998,
+          "cpuSomeStallMicrosecondsDelta": 6610818,
+          "otherCpuMicrosecondsDelta": 1021976,
+          "ownWorkExcluded": true,
+          "basis": "Other sibling systemd services; own service excluded",
+          "qualification": "Aggregate external pressure during entire attempt; suspected timing noise, not proof that every slow sample was affected."
+        }
+      },
+      "absoluteFailures": [
+        {
+          "action": "recurring.complete.undoProtectedSuccessor",
+          "summary": {
+            "allSamplesMs": [
+              119.819,
+              45.36,
+              46.861,
+              46.717,
+              44.007
+            ],
+            "medianMs": 46.717,
+            "maxMs": 119.819,
+            "warmupSamplesMs": [
+              45.935,
+              48.428
+            ]
+          },
+          "bounds": {
+            "medianMs": 70,
+            "maxMs": 75
+          },
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "derived-recurring",
+            "action": "recurring.complete.undoProtectedSuccessor",
+            "rep": 2,
+            "microseconds": 119819,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1752266,
+              "appendCalls": 1,
+              "appendMicroseconds": 394,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 46930,
+                "cgroup.user_usec": 42957,
+                "cgroup.system_usec": 3973,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2170024,
+                "processIo.wchar": 265225,
+                "processIo.syscr": 544,
+                "processIo.syscw": 129,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 294912,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 194277376
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 799,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "firstDerived.metadata.tags.undo",
+          "summary": {
+            "allSamplesMs": [
+              8.382,
+              50.245,
+              8.281,
+              8.855,
+              9.293
+            ],
+            "medianMs": 8.855,
+            "maxMs": 50.245,
+            "warmupSamplesMs": [
+              11.205,
+              9.048
+            ]
+          },
+          "bounds": {
+            "medianMs": 40,
+            "maxMs": 45
+          },
+          "slowestRawObservation": {
+            "index": 3,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "first-derived-tags",
+            "action": "firstDerived.metadata.tags.undo",
+            "rep": 3,
+            "microseconds": 50245,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1749678,
+              "appendCalls": 1,
+              "appendMicroseconds": 40910,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 9692,
+                "cgroup.user_usec": 7407,
+                "cgroup.system_usec": 2285,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 5779,
+                "processIo.wchar": 83944,
+                "processIo.syscr": 15,
+                "processIo.syscw": 41,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 94208,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 204177408
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 1,
+            "taskRows": 798,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        }
+      ],
+      "startup": {
+        "startup.warm.total": {
+          "allSamplesMs": [
+            286.112,
+            364.683,
+            300.313,
+            307.474,
+            315.071
+          ],
+          "medianMs": 307.474,
+          "maxMs": 364.683,
+          "warmupSamplesMs": [
+            295.997,
+            298.972
+          ]
+        },
+        "startup.warm.history": {
+          "allSamplesMs": [
+            277.223,
+            354.868,
+            292.57,
+            299.659,
+            307.504
+          ],
+          "medianMs": 299.659,
+          "maxMs": 354.868,
+          "warmupSamplesMs": [
+            288.825,
+            291.335
+          ]
+        },
+        "startup.warm.taskAttach": {
+          "allSamplesMs": [
+            7.268,
+            5.805,
+            5.946,
+            6.101,
+            5.892
+          ],
+          "medianMs": 5.946,
+          "maxMs": 7.268,
+          "warmupSamplesMs": [
+            5.723,
+            5.914
+          ]
+        },
+        "startup.warm.proof": {
+          "allSamplesMs": [
+            46.448,
+            45.64,
+            52.266,
+            53.9,
+            54.39
+          ],
+          "medianMs": 52.266,
+          "maxMs": 54.39,
+          "warmupSamplesMs": [
+            53.526,
+            56.643
+          ]
+        },
+        "startup.warm.cacheRestore": {
+          "allSamplesMs": [
+            18.342,
+            29.753,
+            28.349,
+            32.497,
+            25.496
+          ],
+          "medianMs": 28.349,
+          "maxMs": 32.497,
+          "warmupSamplesMs": [
+            16.818,
+            14.408
+          ]
+        },
+        "startup.cold.total": {
+          "allSamplesMs": [
+            966.361,
+            960.17,
+            993.732,
+            1005.691,
+            970.376
+          ],
+          "medianMs": 970.376,
+          "maxMs": 1005.691,
+          "warmupSamplesMs": [
+            974.336,
+            1002.804
+          ]
+        },
+        "startup.cold.history": {
+          "allSamplesMs": [
+            888.247,
+            877.0,
+            911.057,
+            916.79,
+            892.171
+          ],
+          "medianMs": 892.171,
+          "maxMs": 916.79,
+          "warmupSamplesMs": [
+            904.94,
+            911.907
+          ]
+        },
+        "startup.cold.taskAttach": {
+          "allSamplesMs": [
+            73.626,
+            78.708,
+            78.403,
+            84.456,
+            74.273
+          ],
+          "medianMs": 78.403,
+          "maxMs": 84.456,
+          "warmupSamplesMs": [
+            65.258,
+            86.758
+          ]
+        }
+      }
+    },
+    "dense-food": {
+      "correctnessPassed": true,
+      "metrics": 232,
+      "execution": {
+        "exitCode": 0,
+        "seconds": 188.87666785700003,
+        "childPID": 3442,
+        "childAbsent": true,
+        "logSHA256": "8e442545c2e17ed8fb90b8548ed2475f005958cde82720fc53693747421352e9",
+        "noise": {
+          "kind": "observed-external-cpu-load",
+          "sampleWindowCovered": true,
+          "windowSeconds": 188.87666785700003,
+          "cpuSomeStallMicrosecondsDelta": 3226232,
+          "otherCpuMicrosecondsDelta": 1132743,
+          "ownWorkExcluded": true,
+          "basis": "Other sibling systemd services; own service excluded",
+          "qualification": "Aggregate external pressure during entire attempt; suspected timing noise, not proof that every slow sample was affected."
+        }
+      },
+      "absoluteFailures": [
+        {
+          "action": "task.editorOpenCancel",
+          "summary": {
+            "allSamplesMs": [
+              17.955,
+              4.736,
+              7.956,
+              6.747,
+              7.636
+            ],
+            "medianMs": 7.636,
+            "maxMs": 17.955,
+            "warmupSamplesMs": [
+              5.248,
+              5.544
+            ]
+          },
+          "bounds": {
+            "medianMs": 10,
+            "maxMs": 15
+          },
+          "slowestRawObservation": {
+            "index": 2,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "task-text",
+            "action": "task.editorOpenCancel",
+            "rep": 2,
+            "microseconds": 17955,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 1743010,
+              "appendCalls": 0,
+              "appendMicroseconds": 0,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 4760,
+                "cgroup.user_usec": 3884,
+                "cgroup.system_usec": 875,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 1,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 7879,
+                "processIo.wchar": 20600,
+                "processIo.syscr": 12,
+                "processIo.syscw": 10,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 24576,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 97239040
+            },
+            "ownPhysicalDelta": 0,
+            "readFilesDelta": 0,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 329,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        },
+        {
+          "action": "cardinality500.food.contents.APIonly",
+          "summary": {
+            "allSamplesMs": [
+              6.781,
+              7.045,
+              7.159,
+              8.673,
+              20.551
+            ],
+            "medianMs": 7.159,
+            "maxMs": 20.551,
+            "warmupSamplesMs": [
+              5.796,
+              6.589
+            ]
+          },
+          "bounds": {
+            "medianMs": 20,
+            "maxMs": 20
+          },
+          "slowestRawObservation": {
+            "index": 6,
+            "warmup": false,
+            "measurement": "broad-action",
+            "family": "food-cardinality500",
+            "action": "cardinality500.food.contents.APIonly",
+            "rep": 6,
+            "microseconds": 20551,
+            "diagnostics": {
+              "semanticTaskSortsDelta": 0,
+              "taskSnapshotRowsDecodedDelta": 0,
+              "taskSnapshotRetainedBytesAfter": 0,
+              "appendCalls": 1,
+              "appendMicroseconds": 402,
+              "resourceInterval": "bracketed; probe overhead outside action timer",
+              "resourcesAvailable": true,
+              "resourceDeltas": {
+                "cgroup.usage_usec": 10565,
+                "cgroup.user_usec": 5183,
+                "cgroup.system_usec": 5381,
+                "cgroup.nice_usec": 0,
+                "cgroup.core_sched.force_idle_usec": 0,
+                "cgroup.nr_periods": 0,
+                "cgroup.nr_throttled": 0,
+                "cgroup.throttled_usec": 0,
+                "cgroup.nr_bursts": 0,
+                "cgroup.burst_usec": 0,
+                "processIo.rchar": 2654853,
+                "processIo.wchar": 2656027,
+                "processIo.syscr": 660,
+                "processIo.syscw": 650,
+                "processIo.read_bytes": 0,
+                "processIo.write_bytes": 2662400,
+                "processIo.cancelled_write_bytes": 0
+              },
+              "rssBytesAfter": 204894208
+            },
+            "ownPhysicalDelta": 1,
+            "readFilesDelta": 2,
+            "semanticValidationsDelta": 0,
+            "taskRows": 796,
+            "foodContainers": 503,
+            "scope": "standalone AOT storage/application; no UI"
+          }
+        }
+      ],
+      "startup": {
+        "startup.warm.total": {
+          "allSamplesMs": [
+            343.564,
+            333.113,
+            349.161,
+            344.701,
+            330.235
+          ],
+          "medianMs": 343.564,
+          "maxMs": 349.161,
+          "warmupSamplesMs": [
+            363.735,
+            360.783
+          ]
+        },
+        "startup.warm.history": {
+          "allSamplesMs": [
+            337.001,
+            326.927,
+            342.651,
+            337.489,
+            323.292
+          ],
+          "medianMs": 337.001,
+          "maxMs": 342.651,
+          "warmupSamplesMs": [
+            356.737,
+            353.043
+          ]
+        },
+        "startup.warm.taskAttach": {
+          "allSamplesMs": [
+            5.003,
+            4.807,
+            4.882,
+            5.58,
+            5.207
+          ],
+          "medianMs": 5.003,
+          "maxMs": 5.58,
+          "warmupSamplesMs": [
+            5.261,
+            5.824
+          ]
+        },
+        "startup.warm.proof": {
+          "allSamplesMs": [
+            30.691,
+            28.741,
+            28.706,
+            29.8,
+            29.077
+          ],
+          "medianMs": 29.077,
+          "maxMs": 30.691,
+          "warmupSamplesMs": [
+            29.658,
+            30.432
+          ]
+        },
+        "startup.warm.cacheRestore": {
+          "allSamplesMs": [
+            13.635,
+            13.052,
+            23.369,
+            23.288,
+            13.576
+          ],
+          "medianMs": 13.635,
+          "maxMs": 23.369,
+          "warmupSamplesMs": [
+            25.977,
+            25.516
+          ]
+        },
+        "startup.cold.total": {
+          "allSamplesMs": [
+            938.985,
+            942.028,
+            995.497,
+            967.723,
+            954.346
+          ],
+          "medianMs": 954.346,
+          "maxMs": 995.497,
+          "warmupSamplesMs": [
+            1023.243,
+            983.758
+          ]
+        },
+        "startup.cold.history": {
+          "allSamplesMs": [
+            904.741,
+            907.885,
+            953.514,
+            933.087,
+            915.459
+          ],
+          "medianMs": 915.459,
+          "maxMs": 953.514,
+          "warmupSamplesMs": [
+            971.504,
+            948.684
+          ]
+        },
+        "startup.cold.taskAttach": {
+          "allSamplesMs": [
+            29.442,
+            29.596,
+            37.044,
+            27.745,
+            30.32
+          ],
+          "medianMs": 29.596,
+          "maxMs": 37.044,
+          "warmupSamplesMs": [
+            46.475,
+            30.23
+          ]
+        }
+      }
+    }
+  },
+  "paired": [
+    {
+      "comparison": "task-own-history",
+      "status": "timing-failed",
+      "failures": {
+        "task.reopen": {
+          "smallMedianMs": 10.13,
+          "largeMedianMs": 11.338,
+          "medianBoundMs": 15.662500000000001,
+          "smallMaximumMs": 11.007,
+          "largeMaximumMs": 29.246,
+          "maximumBoundMs": 20.409799999999997
+        },
+        "recurring.complete.undoProtectedSuccessor": {
+          "smallMedianMs": 42.521,
+          "largeMedianMs": 46.717,
+          "medianBoundMs": 56.151250000000005,
+          "smallMaximumMs": 47.598,
+          "largeMaximumMs": 119.819,
+          "maximumBoundMs": 71.63719999999999
+        },
+        "cardinality500.food.details.1": {
+          "smallMedianMs": 6.14,
+          "largeMedianMs": 5.875,
+          "medianBoundMs": 10.675,
+          "smallMaximumMs": 7.088,
+          "largeMaximumMs": 15.465,
+          "maximumBoundMs": 14.9232
+        },
+        "firstDerived.metadata.tags.undo": {
+          "smallMedianMs": 8.479,
+          "largeMedianMs": 8.855,
+          "medianBoundMs": 13.598749999999999,
+          "smallMaximumMs": 8.538,
+          "largeMaximumMs": 50.245,
+          "maximumBoundMs": 16.9532
+        }
+      }
+    },
+    {
+      "comparison": "food-own-history",
+      "status": "timing-failed",
+      "failures": {
+        "task.editorOpenCancel": {
+          "smallMedianMs": 4.893,
+          "largeMedianMs": 7.636,
+          "medianBoundMs": 9.11625,
+          "smallMaximumMs": 5.076,
+          "largeMaximumMs": 17.955,
+          "maximumBoundMs": 12.106399999999999
+        },
+        "food.restore.1": {
+          "smallMedianMs": 5.375,
+          "largeMedianMs": 10.668,
+          "medianBoundMs": 9.71875,
+          "smallMaximumMs": 5.981,
+          "largeMaximumMs": 11.014,
+          "maximumBoundMs": 13.3734
+        },
+        "sync.peerFood.whileTasks.storageAdmission": {
+          "smallMedianMs": 5.238,
+          "largeMedianMs": 10.379,
+          "medianBoundMs": 9.5475,
+          "smallMaximumMs": 18.642,
+          "largeMaximumMs": 20.46,
+          "maximumBoundMs": 31.098799999999997
+        },
+        "copiedChecklist.titleAndNotes.undo": {
+          "smallMedianMs": 15.596,
+          "largeMedianMs": 22.778,
+          "medianBoundMs": 22.495,
+          "smallMaximumMs": 16.356,
+          "largeMaximumMs": 26.845,
+          "maximumBoundMs": 27.898400000000002
+        },
+        "converted.food.paired.details.confirmedSave": {
+          "smallMedianMs": 5.511,
+          "largeMedianMs": 7.935,
+          "medianBoundMs": 9.88875,
+          "smallMaximumMs": 6.403,
+          "largeMaximumMs": 16.102,
+          "maximumBoundMs": 13.964199999999998
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "snapshotUTC": "2026-10-25T06:59:05.920475+00:00",
+  "runId": 40167598688,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40167598688",
+  "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "state": "completed",
+  "conclusion": "failure",
+  "completedUTCAsRunUpdated": "2026-10-25T06:51:58Z",
+  "calibratePerformanceRequested": false,
+  "dispatchCount": 1,
+  "jobs": {
+    "linux": {
+      "id": 121091718895,
+      "status": "completed",
+      "conclusion": "success",
+      "unitTestsPassed": 1515,
+      "toolTestsPassed": 174,
+      "nativeTestsPassed": 203,
+      "nativeTestElapsed": "39m28s",
+      "nativeStepStartedUTC": "2026-10-25T06:12:11Z",
+      "nativeFinalPassLine": "2026-10-25T06:51:53.9637488Z 39:28 +203: All tests passed!",
+      "sessionUndoRegressionLine": "2026-10-25T06:50:01.8242249Z 37:36 +198: session Undo survives notices, protects drafts and preserves newer synced edits",
+      "formatAnalysisBuildPayloadOriginalCloseDisposalPackagingAndInstall": "all passed",
+      "decodedJobLogSHA256": "60a6e17176fae62d563debe5cca435f800c9e0e1116563022a6b02b416622b21",
+      "decodedJobLogBytes": 980316
+    },
+    "windows": {
+      "id": 121091718843,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "android": {
+      "id": 121091718752,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "performance": {
+      "id": 121091718835,
+      "status": "completed",
+      "conclusion": "failure",
+      "all3Shapes232CorrectnessPassed": true,
+      "absoluteFailures": 5,
+      "absoluteMedianFailures": 0,
+      "absoluteMaximumFailures": 5,
+      "pairedFailures": 3,
+      "pairedMedianFailures": 1,
+      "pairedMaximumFailures": 3,
+      "rerunsUsed": 0,
+      "limitsChanged": false,
+      "receipt": "linux-disposal-enforcing-performance.json"
+    }
+  },
+  "artifacts": [
+    {
+      "id": 12589850277,
+      "name": "release-performance",
+      "digest": "sha256:f341b1d4db1be8a361e0d8b6f8eab810292a59011ff11c9ad9ccbad17005adbc",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": true
+    },
+    {
+      "id": 12589760697,
+      "name": "linux",
+      "digest": "sha256:6b9f32b60234d3144620133db10eb7c599704f16ce682f892f754cff11edd1d6",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": false
+    },
+    {
+      "id": 12589635646,
+      "name": "linux-disposal",
+      "digest": "sha256:c5723a75abdc7bb3b557bf5a21aeeaf2dfc36fc98ace67c27afd9182779df89b",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": true
+    },
+    {
+      "id": 12589500796,
+      "name": "RC4-required-ci-linux-close",
+      "digest": "sha256:d014d6128a2c4c209108a2cfd8e7576f44a2e9e81734ea96f88938fc54926166",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": true
+    },
+    {
+      "id": 12589031293,
+      "name": "windows-storage-harness",
+      "digest": "sha256:09cc87fa9506b19693506e347c09704e0060f77cf23af86ef3ad617bd739149e",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": false
+    },
+    {
+      "id": 12588951520,
+      "name": "windows",
+      "digest": "sha256:c8dfb80c48358e96a57ed81823cd23e18d411211f2acc4e1a4e1488ccc7d87ea",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": false
+    },
+    {
+      "id": 12588946241,
+      "name": "windows-unit-tests",
+      "digest": "sha256:7ebf8acf26c080a14c322829259128ead9e74bb52e36c36795676b54335ef2d1",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": false
+    },
+    {
+      "id": 12588729911,
+      "name": "android",
+      "digest": "sha256:f6474faab844df1250dd77c7722ccc4f496261d3438f6a7eb2c034313acd0078",
+      "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+      "archiveDigestIndependentlyVerified": false
+    }
+  ],
+  "hostedOwnershipProof": "linux-disposal-hosted-checks.json",
+  "historicalFaultEvidence": "utf8-size-guards-linux-close.json",
+  "historicalFailedAndIntermediateProofsRetained": true,
+  "all447LocalValidationSourcePinsStillMatch": true,
+  "sameAOTBinaryAsPrevious179_105FailureRun": true,
+  "liveLogEarlier404ResolvedAfterTerminalState": {
+    "priorOutcome": "404 BlobNotFound during active job",
+    "newEvidence": "job reached completed/success",
+    "completedLogFetch": "success;no alternate route or active-log retries"
+  },
+  "activeOwnedCommands": [],
+  "releaseOrLiveOperation": false,
+  "nativeHardwareAcceptance": false,
+  "qualification": "Underlying detached-object lifetime defect corrected and verified by deterministic local/hosted proof plus full native suite. Historical intermittent SIGSEGV remains documented; no universal crash-elimination or hardware-presentation claim. Overall CI remains failed on unchanged performance limits."
+}

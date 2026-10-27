@@ -53,7 +53,9 @@ void registerStickyTaskGroupTests() {
         });
       }
     }
-    await writer.command(ids.last, 'task.completed', {});
+    await writer.command(ids.last, 'task.completed', {
+      'completedInstant': '2026-10-12T12:00:00.000000Z',
+    });
     await seedNativeProfile(profile.path, {
       'folder': folder.path,
       'user': user,
@@ -190,19 +192,19 @@ void registerStickyTaskGroupTests() {
         reason: 'Dropping on a heading never targets an obscured row.',
       );
       await tester.scrollUntilVisible(
-        find.text('Friday · 2026-10-02'),
+        find.text('Today'),
         200,
         scrollable: scrollable,
       );
       await tester.pumpAndSettle();
-      final nextRect = tester.getRect(heading('Friday · 2026-10-02'));
+      final nextRect = tester.getRect(heading('Today'));
       final viewportTop = tester.getRect(viewport).top;
       position().jumpTo(
         position().pixels + nextRect.top - viewportTop - nextRect.height / 2,
       );
       await tester.pumpAndSettle();
       final previousRect = tester.getRect(heading('Thursday · 2026-10-01'));
-      final pushedRect = tester.getRect(heading('Friday · 2026-10-02'));
+      final pushedRect = tester.getRect(heading('Today'));
       expect(previousRect.top, lessThan(viewportTop));
       expect(previousRect.bottom, closeTo(pushedRect.top, .1));
       await tester.scrollUntilVisible(
@@ -231,7 +233,8 @@ void registerStickyTaskGroupTests() {
       await tester.pumpAndSettle();
       expect(find.text('Open'), findsOneWidget);
       expect(find.text('Completed'), findsOneWidget);
-      expect(find.text('Someday'), findsNWidgets(2));
+      expect(find.text('Someday'), findsOneWidget);
+      expect(find.textContaining('Completed 2026-'), findsNothing);
       await tester.enterText(
         find.byKey(const ValueKey('task-search')),
         'no matching reference',

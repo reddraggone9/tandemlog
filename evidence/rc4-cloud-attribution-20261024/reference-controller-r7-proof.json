@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "purpose": "reviewed-reference-controller-lifecycle-registration",
+  "reviewedAtUTC": "2026-10-26T05:47:41.435892+00:00",
+  "controllerSHA256": "bd18287ab26734190d38f85f3ba332c1b0dd9457c51190ccf7e3ee12c802c389",
+  "sourceEvidenceSHA256": "06844c8363c4bc5af1d38fc79aa2117b9d004c2236caaf5ad1259e19030dbe7d",
+  "sourceEvidenceInventorySHA256": "190e71a664dc039fcf5a98322575bbfbafffc255a111df68f8549d2dae371dbb",
+  "reviewMethod": "Cloud independently verified supplied private raw archives, code bytes, original exits, capture hash chains, original deadlines and post-exit cleanup; no direct cloud host access.",
+  "hostControls": {
+    "tests": 106,
+    "passed": 106,
+    "skipped": 0,
+    "allSourcePinsUnchanged": true
+  },
+  "cases": {
+    "success": {
+      "passed": true,
+      "originalWorkerExit": 0,
+      "driverExit": 0,
+      "liveCaptureAndAckVerified": true,
+      "managerAccepted": true,
+      "captureSHA256": "48bca8b3c2500209256776184e385d16630df19514ca7cdf74fcda600b633f40"
+    },
+    "failed7": {
+      "passed": true,
+      "originalWorkerExit": 7,
+      "driverExit": 7,
+      "liveCaptureAndAckVerified": true,
+      "managerAccepted": false,
+      "captureSHA256": "04e095e30f6ec145576b3a8e61cd991023bc3b2e73c24729318c6366b002c91a"
+    },
+    "missing-completion": {
+      "passed": true,
+      "originalWorkerExit": 0,
+      "noCaptureOrAck": true,
+      "managerAccepted": false
+    },
+    "manager-loss": {
+      "passed": true,
+      "originalManagerSignal": 9,
+      "ownedDescendantContainmentSeconds": 19.11770352900203,
+      "sharedContainmentLimitSeconds": 20,
+      "managerAccepted": false,
+      "finalizationRefused": true
+    }
+  },
+  "independentCleanup": {
+    "allNineExactUnitsInactive": true,
+    "allOriginalIdentitiesAbsent": true,
+    "allOwnedCgroupsEmpty": true,
+    "allInputPinsUnchanged": true,
+    "elapsedSecondsFromOriginalActivation": 150.34371098599513,
+    "originalTotalBoundSeconds": 240
+  },
+  "fullControllerProofAccepted": true,
+  "performanceQualificationAccepted": false,
+  "benchmarkRun": false,
+  "privateSourceAndRawEvidencePublished": false,
+  "earlierFailuresRetained": true
+}

@@ -109,14 +109,14 @@ extension ChecklistStore on TaskStore {
           "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='checklist.itemCreated' AND json_extract(semantic,'\$.data.parent')=?",
           [parent],
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     final copies = db
         .select(
           "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedWithChecklist' AND json_extract(semantic,'\$.data.successor.id')=?",
           [parent],
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     final ids = <String>{
       ...creations.map((event) => event.entity),
@@ -132,22 +132,79 @@ extension ChecklistStore on TaskStore {
               'SELECT raw FROM ${tables.events} WHERE entity IN (${List.filled(ids.length, '?').join(',')})',
               ids.toList(),
             )
-            .map((row) => LogEvent.decode(row['raw'] as String)),
+            .map(
+              (row) => _recurringTextMemo.decodeCanonical(row['raw'] as String),
+            ),
     ];
   }
 
-  List<(LogEvent, Map<String, dynamic>)> _itemCopySeeds(String entity) => db
-      .select(
-        "SELECT e.raw,i.value FROM ${tables.events} e JOIN json_each(json_extract(e.semantic,'\$.data.checklist.items')) i WHERE json_extract(e.semantic,'\$.type')='task.completedWithChecklist' AND json_extract(i.value,'\$.id')=? ORDER BY e.clock,e.writer,e.seq",
-        [entity],
-      )
-      .map(
-        (row) => (
-          LogEvent.decode(row['raw'] as String),
-          jsonDecode(row['value'] as String) as Map<String, dynamic>,
-        ),
-      )
-      .toList();
+  List<(LogEvent, Map<String, dynamic>)> _itemCopySeeds(String entity) {
+    final snapshot = _textStageSnapshot ?? _stagedSnapshot;
+    final selection =
+        _textReadOwner?._selectCopySeedRaws(entity) ??
+        (snapshot == null
+            ? null
+            : unified?.selectTaskCopySeedRaws(snapshot, entity));
+    if (selection != null) {
+      // All exact claims for this identity remain visible, including competing
+      // and retracted completions. An empty point result avoids unrelated text
+      // closures; an untrusted scope still uses the full SQL oracle below.
+      final completions =
+          selection
+              .map(_recurringTextMemo.decodeCanonical)
+              .where((event) => event.type == 'task.completedWithChecklist')
+              .toList()
+            ..sort(compareEvents);
+      final result = <(LogEvent, Map<String, dynamic>)>[];
+      for (final completion in completions) {
+        for (final item
+            in (completion.data['checklist'] as Map)['items'] as List) {
+          final value = item as Map<String, dynamic>;
+          if (value['id'] == entity) result.add((completion, value));
+        }
+      }
+      selectedCopySeedReads++;
+      selectedCopySeedRecords += completions.length;
+      return result;
+    }
+    if (_copySeedScopeDepth > 0 && !_copySeedIndexUnavailable) {
+      if (_copySeedIndex == null) {
+        // Check a cheap bounded payload total before loading whole descriptors.
+        final size =
+            db
+                    .select(
+                      "SELECT COALESCE(SUM(length(CAST(raw AS BLOB))),0) AS bytes FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedWithChecklist'",
+                    )
+                    .single['bytes']
+                as int;
+        if (size * 4 <= 4 * 1024 * 1024) {
+          _copySeedIndex = ChecklistCopyIndex.build(
+            db
+                .select(
+                  "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedWithChecklist' ORDER BY clock,writer,seq",
+                )
+                .map(
+                  (r) => _recurringTextMemo.decodeCanonical(r['raw'] as String),
+                ),
+          );
+        }
+        if (_copySeedIndex == null) _copySeedIndexUnavailable = true;
+      }
+      if (_copySeedIndex != null) return _copySeedIndex![entity];
+    }
+    return db
+        .select(
+          "SELECT e.raw,i.value FROM ${tables.events} e JOIN json_each(json_extract(e.semantic,'\$.data.checklist.items')) i WHERE json_extract(e.semantic,'\$.type')='task.completedWithChecklist' AND json_extract(i.value,'\$.id')=? ORDER BY e.clock,e.writer,e.seq",
+          [entity],
+        )
+        .map(
+          (row) => (
+            _recurringTextMemo.decodeCanonical(row['raw'] as String),
+            jsonDecode(row['value'] as String) as Map<String, dynamic>,
+          ),
+        )
+        .toList();
+  }
 
   void _attachChecklist(
     Map<String, dynamic> state, {
@@ -159,7 +216,12 @@ extension ChecklistStore on TaskStore {
     if (history.isEmpty) return;
     final items = projectChecklist(history, state['id'] as String);
     resolution ??= items.any((item) => _hasInheritedText(item['id'] as String))
-        ? _textResolution()
+        ? _textResolution(
+            entities: [
+              state['id'] as String,
+              ...items.map((item) => item['id'] as String),
+            ],
+          )
         : null;
     for (final item in items) {
       _materializeText(
@@ -177,12 +239,17 @@ extension ChecklistStore on TaskStore {
   bool _hasChecklistActivity(String parent) =>
       hasDurableChecklistActivity(_checklistHistory(parent), parent);
 
-  void _validateChecklistReferences([LogEvent? pending]) {
+  void _validateChecklistReferences(
+    LogEvent? pending, {
+    bool scoped = false,
+    bool enforceLocalAvailability = true,
+  }) {
     final references = db
         .select(
-          "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('checklist.itemCreated','checklist.itemMoved')",
+          "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('checklist.itemCreated','checklist.itemMoved')${scoped ? " AND (entity=? OR json_extract(semantic,'\$.data.parent')=? OR json_extract(semantic,'\$.data.before')=?)" : ''}",
+          scoped ? [pending!.entity, pending.entity, pending.entity] : [],
         )
-        .map((row) => LogEvent.decode(row['raw'] as String))
+        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
         .toList();
     if (pending != null &&
         {
@@ -191,8 +258,15 @@ extension ChecklistStore on TaskStore {
         }.contains(pending.type)) {
       references.add(pending);
     }
-    Map<String, dynamic>? state(String id) =>
-        project([..._entityEvents(id), if (pending?.entity == id) pending!]);
+    final pendingInserted =
+        pending != null &&
+        db.select('SELECT 1 FROM ${tables.events} WHERE id=?', [
+          pending.id,
+        ]).isNotEmpty;
+    Map<String, dynamic>? state(String id) => project([
+      ..._entityEvents(id),
+      if (!pendingInserted && pending?.entity == id) pending!,
+    ]);
     for (final reference in references) {
       final owner = state(reference.entity);
       if (owner == null) continue;
@@ -208,7 +282,9 @@ extension ChecklistStore on TaskStore {
           'Checklist parent must be a task in ${reference.id}.',
         );
       }
-      if (identical(reference, pending) && !_checklistParentAvailable(parent)) {
+      if (enforceLocalAvailability &&
+          identical(reference, pending) &&
+          !_checklistParentAvailable(parent)) {
         throw FormatFailure('Choose an existing task for the checklist.');
       }
       final before = reference.data['before'];
@@ -220,13 +296,24 @@ extension ChecklistStore on TaskStore {
           'Checklist order anchor belongs to another parent in ${reference.id}.',
         );
       }
-      if (identical(reference, pending) && anchor == null) {
+      if (enforceLocalAvailability &&
+          identical(reference, pending) &&
+          anchor == null) {
         throw FormatFailure('Checklist order anchor is missing.');
       }
     }
-    if (pending != null &&
-        (pending.type.startsWith('checklist.') ||
-            pending.type == 'task.textEdited')) {
+    if (enforceLocalAvailability && pending != null) {
+      _validatePendingChecklistEligibility(pending);
+    }
+  }
+
+  // Local availability is still checked even when unchanged global references
+  // have a settled-graph proof.
+  void _validatePendingChecklistEligibility(LogEvent pending) {
+    Map<String, dynamic>? state(String id) =>
+        project([..._entityEvents(id), if (pending.entity == id) pending]);
+    if (pending.type.startsWith('checklist.') ||
+        pending.type == 'task.textEdited') {
       final owner = state(pending.entity);
       if (owner?['kind'] == 'checklistItem') {
         final parent = state(owner!['parent'] as String);
@@ -251,46 +338,96 @@ extension ChecklistStore on TaskStore {
     }
   }
 
-  void _validateChecklistCompletions([LogEvent? pending]) {
-    final completions = db
-        .select(
-          "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedWithChecklist'",
-        )
-        .map((row) => LogEvent.decode(row['raw'] as String))
-        .toList();
+  void _requireObservedTextFrontiers(
+    Map<String, dynamic> descriptor,
+    LogEvent pending,
+  ) {
+    for (final entry in (descriptor['frontiers'] as Map).entries) {
+      final writer = entry.key as String, frontier = entry.value as Map;
+      final sequence = frontier['seq'] as int;
+      if (writer == pending.writer && sequence >= pending.sequence) {
+        throw FormatFailure(
+          'Text inheritance cannot reference a forward operation.',
+        );
+      }
+      if (sequence == 0) {
+        if (frontier['hash'] != eventGenesisHash(space, writer)) {
+          throw FormatFailure('Text inheritance genesis hash mismatch.');
+        }
+        continue;
+      }
+      final rows = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
+        '$writer:$sequence',
+      ]);
+      if (rows.isEmpty) {
+        throw FormatFailure(
+          'Completion requires its observed canonical history.',
+        );
+      }
+      final head = _recurringTextMemo.decodeCanonical(
+        rows.single['raw'] as String,
+      );
+      if (head.hash != frontier['hash'] || head.clock >= pending.clock) {
+        throw FormatFailure(
+          'Text inheritance frontier differs from observed history.',
+        );
+      }
+    }
+  }
+
+  void _validateChecklistCompletions([
+    LogEvent? pending,
+    bool auditExisting = true,
+    RecurringTextResolver? suppliedResolution,
+  ]) {
+    final completions = !auditExisting
+        ? <LogEvent>[]
+        : db
+              .select(
+                "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='task.completedWithChecklist'",
+              )
+              .map(
+                (row) =>
+                    _recurringTextMemo.decodeCanonical(row['raw'] as String),
+              )
+              .toList();
     if (pending?.type == 'task.completedWithChecklist') {
       completions.add(pending!);
     }
     if (completions.isEmpty) return;
-    final canonical = db
-        .select('SELECT raw FROM ${tables.events}')
-        .map((row) => LogEvent.decode(row['raw'] as String))
-        .toList();
-    final resolution = _textResolution(
-      pending: pending == null ? [] : [pending],
-    );
+    // This is the exact committed/transactional SQL input. A preparation
+    // overlay is kept only in its separate resolver and cannot supply a missing
+    // frontier here; post-INSERT replay sees its actual inserted rows.
+    final roots = <String>{for (final event in completions) event.entity};
+    final canonicalInput = _textInput(entities: roots);
+    final resolution =
+        suppliedResolution ??
+        _textResolution(
+          pending: pending == null ? [] : [pending],
+          entities: roots,
+        );
     for (final completion in completions) {
       final descriptor = completion.data['checklist'] as Map;
       final declared = (descriptor['items'] as List)
           .cast<Map<String, dynamic>>();
-      final verification = verifyTextInheritance(
-        {
-          'codec': descriptor['codec'],
-          'adapter': descriptor['adapter'],
-          'frontiers': descriptor['frontiers'],
-          'fields': declared.isNotEmpty
-              ? declared.first['fields']
-              : {
-                  for (final field in ['title', 'description'])
-                    field: {
-                      'parentContext': '0' * 64,
-                      'seedHash': '0' * 64,
-                      'historyHash': '0' * 64,
-                    },
-                },
-        },
+      final cut = <String, dynamic>{
+        'codec': descriptor['codec'],
+        'adapter': descriptor['adapter'],
+        'frontiers': descriptor['frontiers'],
+        'fields': declared.isNotEmpty
+            ? declared.first['fields']
+            : {
+                for (final field in ['title', 'description'])
+                  field: {
+                    'parentContext': '0' * 64,
+                    'seedHash': '0' * 64,
+                    'historyHash': '0' * 64,
+                  },
+              },
+      };
+      final verification = canonicalInput.verifyInheritance(
+        cut,
         completion: completion,
-        available: canonical,
       );
       if (verification.isPending) {
         if (identical(completion, pending)) {
@@ -300,36 +437,56 @@ extension ChecklistStore on TaskStore {
         }
         continue;
       }
-      final observed = projectChecklist(
-        verification.observedPrefix.toList(),
-        completion.entity,
-      );
-      if (jsonEncode(observed.map((item) => item['id']).toList()) !=
-          jsonEncode(declared.map((item) => item['source']).toList())) {
-        throw FormatFailure(
-          'Observed checklist membership/order differs in ${completion.id}.',
+      final baselineScope =
+          '${_textBaseline?.hash ?? ''}|${textWriteBlocked ?? ''}';
+      if (!_recurringTextMemo.hasVerifiedChecklistInputCut(
+        textEngine!,
+        baselineScope,
+        completion,
+        canonicalInput,
+        cut,
+      )) {
+        final observed = canonicalInput.observedChecklist(
+          completion.entity,
+          cut,
+          completion: completion,
+        );
+        if (jsonEncode(observed.map((item) => item['id']).toList()) !=
+            jsonEncode(declared.map((item) => item['source']).toList())) {
+          throw FormatFailure(
+            'Observed checklist membership/order differs in ${completion.id}.',
+          );
+        }
+        final nativeParent =
+            verification.recordsForResolution.any(
+              (event) =>
+                  event.entity == completion.entity &&
+                  isNativeTextCreation(event.type),
+            ) ||
+            textContributions(
+              verification.recordsForResolution,
+              completion.entity,
+            ).isNotEmpty ||
+            _legacyTextRoots(
+                  completion.entity,
+                  verification.recordsForResolution,
+                )?.isNotEmpty ==
+                true;
+        if (nativeParent != hasNativeTaskSuccessor(completion)) {
+          throw FormatFailure(
+            'Checklist completion parent text mode differs in ${completion.id}.',
+          );
+        }
+        _recurringTextMemo.rememberVerifiedChecklistInputCut(
+          textEngine!,
+          baselineScope,
+          completion,
+          canonicalInput,
+          cut,
         );
       }
-      final nativeParent =
-          verification.observedPrefix.any(
-            (event) =>
-                event.entity == completion.entity &&
-                isNativeTextCreation(event.type),
-          ) ||
-          textContributions(
-            verification.observedPrefix,
-            completion.entity,
-          ).isNotEmpty ||
-          _legacyTextRoots(
-                completion.entity,
-                verification.observedPrefix,
-              )?.isNotEmpty ==
-              true;
-      if (nativeParent != hasNativeTaskSuccessor(completion)) {
-        throw FormatFailure(
-          'Checklist completion parent text mode differs in ${completion.id}.',
-        );
-      }
+      // Reuse only the proved immutable predicates. Never rebuild an existing
+      // cut entry on a hit; current global native lineage/collision checks remain.
       if (hasNativeTaskSuccessor(completion)) {
         resolution.resolve(
           (completion.data['successor'] as Map)['id'] as String,
@@ -352,7 +509,9 @@ extension ChecklistStore on TaskStore {
         'This checklist exceeds the recurring-copy item limit.',
       );
     }
-    final resolution = _textResolution();
+    final resolution = _textResolution(
+      entities: [parent, ...items.map((item) => item['id'] as String)],
+    );
     return {
       'codec': 'yrs-v1',
       'adapter': 2,

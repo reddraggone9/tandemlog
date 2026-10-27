@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUTC": "2026-10-26T05:57:01.365963+00:00",
+  "purpose": "Reference controller registration and public tooling validation; not performance qualification",
+  "runtimeProductBase": "2539f4e633dc607e8c1cb446541291f661726f01",
+  "applicationSourcesDependenciesAndLimitsChanged": false,
+  "controllerSHA256": "bd18287ab26734190d38f85f3ba332c1b0dd9457c51190ccf7e3ee12c802c389",
+  "pythonToolSuite": {
+    "tests": 207,
+    "passed": 205,
+    "skipped": 2,
+    "failures": 0,
+    "errors": 0
+  },
+  "focusedOriginalGroupControls": {
+    "tests": 7,
+    "passed": 7
+  },
+  "nativeControllerHostControls": {
+    "tests": 106,
+    "passed": 106,
+    "skipped": 0
+  },
+  "controllerLifecycleCases": 4,
+  "initialToolFailureRetainedPrivately": true,
+  "initialToolFailureCorrection": "Verify the still-unreaped original leader before owned timeout cleanup; no extra signal after reaping.",
+  "sourcePins": {
+    "tool/performance/reference-host-v1.json": "c24e4824572028aba161cee7eab2145072f6ecc702853a6e6e37033277b03408",
+    "tool/performance/reference_receipt.py": "586dbdb581a504cb0a495d3190a8dab8063cb2a10a5d7eb1d477942e0fed3c6d",
+    "tool/performance/run_gate.py": "46aa6aea8a59b0799d10ec80e837c6965d11bb236fec1695a17dad830eb45ed6",
+    "tool/test_reference_performance.py": "30921b5a809c2e8b9dd11b76787adaa9f0023d50e2c5e971c0e69216803ee9ea",
+    "tool/test_performance_child_cleanup.py": "8f5d1f3cea34533e63e5b9350740a1e08cca3c6a81f771821817cae97558b50a"
+  },
+  "limitsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "budgetsRelaxed": false,
+  "benchmarkRun": false,
+  "ciDispatched": false,
+  "registrationAcceptsPerformance": false,
+  "privateControllerSourcePublished": false
+}

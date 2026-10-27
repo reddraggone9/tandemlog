@@ -118,16 +118,46 @@ void registerDataIntegrityTests() {
           tester,
           () => find.text('Captured reference').evaluate().isNotEmpty,
         );
-        await tester.enterText(capture, 'Unsubmitted capture draft');
-        await flows.openSearchForTest(tester);
+        // Quick capture itself is not an Undo-history action. Make a real
+        // confirmed edit so this fixture actually tests preserving owned Undo.
+        final dynamic state = tester.state(find.byType(TasksPage));
+        await tester.tap(find.byKey(ValueKey('task-body-$task')));
         await tester.pumpAndSettle();
         await tester.enterText(
-          find.byKey(const ValueKey('task-search')),
-          'Reference',
+          find.widgetWithText(TextField, 'Notes'),
+          'Confirmed integrity Undo anchor',
         );
         await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('task-save-action')));
+        await flows.waitForUi(
+          tester,
+          () =>
+              !state.busy &&
+              state.editingTask == null &&
+              state.undoHistory.latest != null,
+        );
+        const captureDraft = TextEditingValue(
+          text: 'Unsubmitted capture draft',
+          selection: TextSelection(baseOffset: 11, extentOffset: 3),
+        );
+        tester.widget<TextField>(capture).controller!.value = captureDraft;
+        await flows.openSearchForTest(tester);
+        await tester.pumpAndSettle();
+        final search = find.byKey(const ValueKey('task-search'));
+        final searchController = tester.widget<TextField>(search).controller!;
+        expect(searchController.value, captureDraft);
+        const searchDraft = TextEditingValue(
+          text: 'Reference',
+          selection: TextSelection(baseOffset: 2, extentOffset: 7),
+        );
+        await tester.enterText(search, searchDraft.text);
+        searchController.value = searchDraft;
+        await tester.pumpAndSettle();
         await flows.selectTask(tester, task);
-        final dynamic state = tester.state(find.byType(TasksPage));
+        expect(state.capture.value, captureDraft);
+        final undoBefore = state.undoHistory.latest;
+        expect(undoBefore, isNotNull);
+        final undoOperations = Set<String>.of(undoBefore.operations);
         final before = await _logs(shared);
         await _check(tester);
         expect(_report(tester), contains('check passed'));
@@ -144,19 +174,19 @@ void registerDataIntegrityTests() {
         await tester.tap(find.text('Done').last);
         await tester.pumpAndSettle();
         expect(capture, findsNothing);
-        expect(state.capture.text, isEmpty);
-        expect(
-          tester
-              .widget<TextField>(find.byKey(const ValueKey('task-search')))
-              .controller!
-              .text,
-          'Reference',
-        );
+        expect(state.capture.value, captureDraft);
+        expect(searchController.value, searchDraft);
+        expect(state.searchQuery, searchDraft.text);
         expect(state.selectedTasks, contains(task));
+        expect(state.undoHistory.latest, same(undoBefore));
+        expect(state.undoHistory.latest.operations, undoOperations);
         expect(find.byKey(const ValueKey('undo-task-action')), findsOneWidget);
 
         await tester.tap(find.byTooltip('Clear search'));
         await tester.pumpAndSettle();
+        expect(searchController.text, isEmpty);
+        expect(state.capture.value, captureDraft);
+        expect(await _logs(shared), before);
         await tester.tap(find.text('Reference task'));
         await tester.pumpAndSettle();
         final title = find.widgetWithText(TextField, 'Title');
@@ -184,6 +214,10 @@ void registerDataIntegrityTests() {
         );
         expect(state.store.hasEntity(incoming), isTrue);
         expect(find.text('Incoming reference'), findsOneWidget);
+        expect(state.capture.value, captureDraft);
+        expect(searchController.text, isEmpty);
+        expect(state.undoHistory.latest, same(undoBefore));
+        expect(state.undoHistory.latest.operations, undoOperations);
 
         final log = File(
           grown.keys.firstWhere(

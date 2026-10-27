@@ -27,6 +27,12 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
+
+- [Controlled reference performance](decisions/0033-controlled-reference-performance.md): Lee-approved prospective Farnsworth absolute/growth qualification with unchanged budgets,mandatory hosted correctness and advisory hosted timing;[operating protocol](performance-reference-qualification.md),fresh enforcing receipt and exact-source CI required. No persistent runner or multiplier.
+
+- [Task latency repair](task-latency-repair.md): bounded exact-byte decode reuse and disposable projection indexes address RC4 startup/edit/Save/Undo/completion pauses; development validation and private-copy benchmarks are separate from future native candidate acceptance.
+
 - [Coordinated unified-only cutover](decisions/0031-coordinated-unified-cutover.md): approved successor to the transition mechanisms below. Current action records, required revisions on first persistence, settings-only local reset and external normalization have passed [qualified development validation](../evidence/coordinated-cutover-build99/README.md). Actual physical mapping and fresh frozen real-copy replay remain cutover prerequisites. No live conversion or release is implied; earlier build98 evidence retains its original attribution.
 
 - [Required support for additional time zone names](decisions/0030-required-time-zone-reader-capability.md):
@@ -70,7 +76,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food session Undo](decisions/0018-food-session-undo.md): accepted50-action stack and selective additive v2 retractions, released in stable2026.10.4/build71 with reviewed native/hosted coverage.
 
-- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): default Search and explicit clearing toggle, released in stable2026.10.4/build71.
+- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): default Search, released in stable2026.10.4/build71; the newer carried-text policy is implemented locally in ADR0034.
 
 - [Toolbar section navigation](decisions/0015-toolbar-section-navigation.md): approved Tasks/Food dropdown in the existing section identity, responsive labels and protected drafts.
 
@@ -101,3 +107,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Shared tag native acceptance](shared-tag-native-acceptance.md): historical synthetic fixture and exact source binding; completed device acceptance is recorded in the stable2026.10.2 receipt.
 
 - [One app-wide local DB](decisions/0013-app-wide-local-database.md): approved single permanent DB and temporary recovery-file exception; published stable2026.10.3/build56 with verified import, activation, cleanup and startup/switch wiring. [Native handoff](local-db-native-acceptance.md) records completed bounded Windows/Android acceptance; [release receipts](../evidence/stable-2026.10.3/README.md) bind final native/artifact and public verification.
+
+- [UX refinements2026-10-26](ux-improvements-20261026.md) and [ADR0034](decisions/0034-bounded-ux-refinements.md): local implementation, focused/full development checks; native/runtime/performance acceptance remains separate.
+
+See [ADR0035](decisions/0035-exact-completion-instants.md) for required revision3 completion instants, offline cutover approximation, viewer-local Completed/search chronology, and unchanged recurrence/Undo.

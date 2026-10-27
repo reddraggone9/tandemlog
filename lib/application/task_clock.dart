@@ -3,7 +3,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../domain/wall_time.dart';
 
 /// Convert an explicitly captured instant to a calendar day for a command.
-/// Persist that day; replay must never consult the device clock or timezone.
+/// Bake recurrence into the successor at capture; replay never consults a device clock or timezone.
 DateTime civilDayAt(DateTime instant, String? timeZone) {
   final DateTime local;
   if (timeZone == null) {

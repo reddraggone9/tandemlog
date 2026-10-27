@@ -1,0 +1,34 @@
+#define _GNU_SOURCE
+#include <gtk/gtk.h>
+#include <flutter_linux/flutter_linux.h>
+#include <dlfcn.h>
+#include <execinfo.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+static _Thread_local const char* active_channel;
+FlMethodChannel* fl_method_channel_new(FlBinaryMessenger* messenger,
+                                     const gchar* name, FlMethodCodec* codec) {
+  typedef FlMethodChannel* (*Real)(FlBinaryMessenger*, const gchar*, FlMethodCodec*);
+  Real real = (Real)dlsym(RTLD_NEXT, "fl_method_channel_new");
+  const char* previous = active_channel;
+  active_channel = name;
+  FlMethodChannel* result = real(messenger, name, codec);
+  active_channel = previous;
+  return result;
+}
+static void warning(const gchar* domain, GLogLevelFlags flags,
+                    const gchar* message, gpointer data) {
+  g_log_default_handler(domain, flags, message, data);  // Preserve original log.
+  if (message && strstr(message, "FlBinaryMessenger without an engine")) {
+    fprintf(stderr, "TANDEMLOG_WARNING_ORIGIN channel=%s\n",
+            active_channel ? active_channel : "unknown");
+    void* frames[20];
+    int count = backtrace(frames, 20);
+    backtrace_symbols_fd(frames, count, STDERR_FILENO);  // Addresses, no args/data.
+  }
+}
+__attribute__((constructor)) static void install(void) {
+  g_log_set_handler(NULL, G_LOG_LEVEL_WARNING | G_LOG_FLAG_FATAL |
+                         G_LOG_FLAG_RECURSION, warning, NULL);
+}

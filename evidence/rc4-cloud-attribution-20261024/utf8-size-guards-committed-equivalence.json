@@ -1,0 +1,56 @@
+{
+  "timestampUTC": "2026-10-25T05:10:18.654933+00:00",
+  "candidateCommit": "6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6",
+  "baselineProduct": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+  "canonicalFiles": [
+    {
+      "relativePath": "fixture-dense-1/workspace/19c88387-f660-56fb-89b5-305d65a7be79.applog",
+      "SHA256": "4789c6ecf6aba6b90fd699e83437705ed0b78dd9601c644e851b8a44a531ef80",
+      "byteCount": 558672
+    },
+    {
+      "relativePath": "fixture-dense-1/workspace/e4aee5d1-c43f-5fdd-90f4-22c28e836e30.applog",
+      "SHA256": "cea2cbc18f2aa099badeaaf629fef2a79fd19b69c32e0e848479127b0c63ced6",
+      "byteCount": 571420
+    },
+    {
+      "relativePath": "fixture-dense-1/workspace/ffbbdb20-8d1c-5aa3-a45c-1eca78faf2f8.applog",
+      "SHA256": "0467029391a51db7f1a60e3a83715ba4664002aeca18cb8ac13d56e9448d8977",
+      "byteCount": 558758
+    },
+    {
+      "relativePath": "fixture-dense-2/workspace/19c88387-f660-56fb-89b5-305d65a7be79.applog",
+      "SHA256": "4df98ef713991c554e1dbc15f5d827cd5f920cb8b7e73472bc3ed779689015d8",
+      "byteCount": 1055799
+    },
+    {
+      "relativePath": "fixture-dense-2/workspace/e4aee5d1-c43f-5fdd-90f4-22c28e836e30.applog",
+      "SHA256": "3ae6699b6015781d60f72be4b164a00375f93ea371400a49df49b4995730bdc2",
+      "byteCount": 1068521
+    },
+    {
+      "relativePath": "fixture-dense-2/workspace/ffbbdb20-8d1c-5aa3-a45c-1eca78faf2f8.applog",
+      "SHA256": "67032784a3f304e431b16d07e8afc55fe41c0e8ddd016c48d5d75829196e7077",
+      "byteCount": 1055861
+    },
+    {
+      "relativePath": "fixture-dense-food/workspace/19c88387-f660-56fb-89b5-305d65a7be79.applog",
+      "SHA256": "6612b009ad5018f07b87bf866f5c931de157fa37fbab22b123150fb2b27db007",
+      "byteCount": 1238882
+    },
+    {
+      "relativePath": "fixture-dense-food/workspace/e4aee5d1-c43f-5fdd-90f4-22c28e836e30.applog",
+      "SHA256": "0b0e53c8e19e5729710da9ae2bfa82447887bcd848593fa9cc34a3b5ee5af7b7",
+      "byteCount": 1255138
+    },
+    {
+      "relativePath": "fixture-dense-food/workspace/ffbbdb20-8d1c-5aa3-a45c-1eca78faf2f8.applog",
+      "SHA256": "2e1e876cea0c6c0170de23c7ec4bae07eb4862f4df3be5242c00b972b81187a1",
+      "byteCount": 1238968
+    }
+  ],
+  "committedSourcePinsMatch": true,
+  "performanceComparisonClaimed": false,
+  "committedSourcePinCount": 118,
+  "canonicalFilesByteIdenticalToOldCloudE23": true
+}

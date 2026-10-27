@@ -1,0 +1,66 @@
+{
+  "snapshotUTC": "2026-10-25T08:13:09.612683+00:00",
+  "provenance": "Parent-supplied local-executor final reference evidence; raw local artifacts not accessed or independently reviewed by cloud",
+  "sourceSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "referenceProtocol": "reference-034a57d.md",
+  "plannedCompleteObservations": 3,
+  "completedObservations": 3,
+  "shapesPerObservation": 3,
+  "metricsPerShape": 232,
+  "csvRowsAsReported": 2088,
+  "resultsAsReported": [
+    {
+      "observation": 1,
+      "absoluteMedianMisses": 0,
+      "absoluteMaximumMisses": 0,
+      "pairedMedianMisses": 0,
+      "pairedMaximumMisses": 0
+    },
+    {
+      "observation": 2,
+      "absoluteMedianMisses": 0,
+      "absoluteMaximumMisses": 0,
+      "pairedMedianMisses": 0,
+      "pairedMaximumMisses": 0
+    },
+    {
+      "observation": 3,
+      "absoluteMedianMisses": 0,
+      "absoluteMaximumMisses": 0,
+      "pairedMedianMisses": 0,
+      "pairedMaximumMisses": 0
+    }
+  ],
+  "sourcePinsAsReported": 118,
+  "compiledInventoryPinsAsReported": 5390,
+  "checksReportedPassed": [
+    "all source pins",
+    "compiled inventory",
+    "fixture contracts",
+    "correctness/replay",
+    "sample counts",
+    "package-configuration checks"
+  ],
+  "timingRetries": 0,
+  "replacementObservations": 0,
+  "budgetsUnchanged": true,
+  "localEvidenceRootAsSupplied": "/home/nibbler/tandemlog-perf-20261022-evidence/reference-034a57d-20261025",
+  "comparisonReportSHA256AsSupplied": "73629403341640bcf0185e6e3db710e2e44b1d74079be56f98f6200d5a10a32b",
+  "cleanupAsReported": {
+    "managerFinishedUTC": "2026-10-25T07:59:11Z",
+    "ownedUnitCount": 4,
+    "allUnitsAbsentOrInactive": true,
+    "allMainPIDs": 0,
+    "sourceClean": true
+  },
+  "hostedRunStillFailed": 40167598688,
+  "retainedHostedFailures": {
+    "absolute": 5,
+    "paired": 3,
+    "pairedMedian": 1
+  },
+  "gatePolicyChanged": false,
+  "releaseGateAccepted": false,
+  "hardwarePresentationAccepted": false,
+  "qualification": "Current-source repeated local reference evidence supports platform-dependent results and does not reproduce the hosted Food paired median. It does not identify virtualization as the cause or replace the failed enforcing gate. No native/UI or release acceptance follows automatically."
+}

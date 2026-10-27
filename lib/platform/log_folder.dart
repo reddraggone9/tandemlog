@@ -10,7 +10,13 @@ class AndroidLogFileInfo extends LogFileInfo {
     this.documentId,
     super.size,
     this.modifiedMillis,
-  }) : super(name, '');
+  }) : super(
+         name,
+         documentId != null && modifiedMillis != null && modifiedMillis > 0
+             ? '$documentId:$modifiedMillis:$size'
+             : '',
+         identity: documentId,
+       );
   final String? documentId;
   final int? modifiedMillis;
 }
@@ -19,6 +25,7 @@ class AndroidLogFolder
     implements
         LogFolder,
         RangeLogFolder,
+        BoundedRangeLogFolder,
         BoundedLogFolder,
         CheckedReplaceLogFolder,
         TailTruncateLogFolder {
@@ -246,6 +253,23 @@ class AndroidLogFolder
       'tree': location,
       'name': name,
       'offset': offset,
+    });
+  }
+
+  @override
+  Future<Uint8List?> readFromBounded(
+    String name,
+    int offset,
+    int maximumBytes,
+  ) async {
+    if (offset < 0 || maximumBytes < 0 || maximumBytes > 32 * 1024 * 1024) {
+      throw ArgumentError('Invalid bounded range.');
+    }
+    return _invoke<Uint8List>('readFrom', {
+      'tree': location,
+      'name': name,
+      'offset': offset,
+      'maximumBytes': maximumBytes,
     });
   }
 

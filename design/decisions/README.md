@@ -12,3 +12,9 @@
 - [0014 — Food inventory alongside tasks](0014-food-inventory.md): accepted scope; first-slice preview implemented, persistence and release gates pending.
 
 Record consequential choices with status, context, alternatives, consequences, validation and revisit trigger. Link specifications instead of duplicating them. Product/stack commitments need Lee; routine reversible maintenance does not.
+
+- [0032: release performance gate](0032-release-performance-gate.md) — accepted policy; initial activation pending calibration review.
+
+- [0033: controlled reference performance](0033-controlled-reference-performance.md) — accepted prospective host-role change;unchanged budgets,mandatory hosted correctness/advisory timing,fresh source-bound Farnsworth qualification.
+
+- [0034: bounded UX refinements](0034-bounded-ux-refinements.md) — accepted requested scope; local implementation with explicit native/performance gaps.

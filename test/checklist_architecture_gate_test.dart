@@ -97,7 +97,8 @@ void main() {
         );
         final completion = await f.store.complete(
           f.parent,
-          completionDay: DateTime(2030, 5, 10),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
         );
         final child = const Uuid().v5(f.parent, 'successor');
         final copied = const Uuid().v5(child, 'checklist:${source.entity}');
@@ -151,7 +152,8 @@ void main() {
         );
         final completed = await f.store.complete(
           f.parent,
-          completionDay: DateTime(2030, 5, 10),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 10),
         );
         final child = const Uuid().v5(f.parent, 'successor');
         final copied = const Uuid().v5(child, 'checklist:${original.entity}');

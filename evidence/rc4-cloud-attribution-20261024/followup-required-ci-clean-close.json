@@ -1,0 +1,138 @@
+{
+  "diagnosticOnly": true,
+  "acceptance": false,
+  "applicationRerunByCollector": false,
+  "rawCoresUploaded": false,
+  "collectorSHA256": "1e2cf7cab18be19696b0f9772b6d3cc78fecf96087b8b0f7171b5f36e3ff7fdb",
+  "sourceRevision": "6a0acddba036727b0b1c2519260dbb86295342f1",
+  "binarySHA256": "a1ddd8b7877b4467767e15f441158138a75a75b2e2e372ac617232d2a7020343",
+  "cores": [],
+  "certifiedApplicationPIDs": [
+    9762,
+    9837
+  ],
+  "coreCount": 0,
+  "runURL": "https://github.com/reddraggone9/tandemlog/actions/runs/40134281681",
+  "artifactId": 12576173355,
+  "artifactSHA256": "3bb30e2e577c7a672cd4cf48bbe816593388b43e48b1c47ab9bf767a396e497d",
+  "originalIntermittentFailureCleared": false,
+  "runs": [
+    {
+      "run": 1,
+      "passed": true,
+      "cleanWitnessVerified": false,
+      "closeMode": "normal",
+      "external_ms": 5810,
+      "marker": "TANDEMLOG_READY_MS=2077 FILES_READ=2",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=65",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+        "TANDEMLOG_READY_MS=2077 FILES_READ=2"
+      ],
+      "external_main_ms": 3726,
+      "external_first_frame_ms": 3796,
+      "shutdown": {
+        "requestedMode": "normal",
+        "normalExitVerified": true,
+        "method": "owned-window-WM_DELETE_WINDOW",
+        "pid": 9762,
+        "window": "2097155",
+        "globalFocusOrInput": false,
+        "processExit": 0,
+        "elapsedMs": 178.425
+      },
+      "process_exit": 0,
+      "witnessBeforeLaunch": {
+        "taskProofPresent": false,
+        "decodedProofPresent": false,
+        "taskProofShapeValid": false,
+        "decodedPayloadHashMatches": false,
+        "productionReuseVerified": false
+      },
+      "previousNormalExitVerified": false,
+      "canonical_payload_reads": 2,
+      "canonical_files": 1,
+      "startupCacheCounters": {
+        "warmTaskProjectionReuses": 0,
+        "decodedCacheReuses": 0,
+        "strictDecodedRecords": 3
+      },
+      "cleanTaskWitnessVerified": false,
+      "cleanDecodedWitnessVerified": false,
+      "witnessAfterClose": {
+        "taskProofPresent": true,
+        "decodedProofPresent": true,
+        "taskProofShapeValid": true,
+        "decodedPayloadHashMatches": true,
+        "productionReuseVerified": false,
+        "taskProofSHA256": "bc55dfcd6807b4bb8a4b5e6ee342d475659c1092d62b1a89f7afb292d7f59e8d",
+        "decodedPayloadSHA256": "c67626efc926fc9d92c410236968c53ffbe7aab0f64edffc9cea8402be1dce93"
+      },
+      "cache": "first-launch-no-cold-boot-claim"
+    },
+    {
+      "run": 2,
+      "passed": true,
+      "cleanWitnessVerified": true,
+      "closeMode": "normal",
+      "external_ms": 464,
+      "marker": "TANDEMLOG_READY_MS=262 FILES_READ=2",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=65",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":1,\"decodedCacheReuses\":3,\"strictDecodedRecords\":0}",
+        "TANDEMLOG_READY_MS=262 FILES_READ=2"
+      ],
+      "external_main_ms": 196,
+      "external_first_frame_ms": 266,
+      "shutdown": {
+        "requestedMode": "normal",
+        "normalExitVerified": true,
+        "method": "owned-window-WM_DELETE_WINDOW",
+        "pid": 9837,
+        "window": "2097155",
+        "globalFocusOrInput": false,
+        "processExit": 0,
+        "elapsedMs": 79.319
+      },
+      "process_exit": 0,
+      "witnessBeforeLaunch": {
+        "taskProofPresent": true,
+        "decodedProofPresent": true,
+        "taskProofShapeValid": true,
+        "decodedPayloadHashMatches": true,
+        "productionReuseVerified": false,
+        "taskProofSHA256": "bc55dfcd6807b4bb8a4b5e6ee342d475659c1092d62b1a89f7afb292d7f59e8d",
+        "decodedPayloadSHA256": "c67626efc926fc9d92c410236968c53ffbe7aab0f64edffc9cea8402be1dce93"
+      },
+      "previousNormalExitVerified": true,
+      "canonical_payload_reads": 2,
+      "canonical_files": 1,
+      "startupCacheCounters": {
+        "warmTaskProjectionReuses": 1,
+        "decodedCacheReuses": 3,
+        "strictDecodedRecords": 0
+      },
+      "cleanTaskWitnessVerified": true,
+      "cleanDecodedWitnessVerified": true,
+      "witnessAfterClose": {
+        "taskProofPresent": true,
+        "decodedProofPresent": true,
+        "taskProofShapeValid": true,
+        "decodedPayloadHashMatches": true,
+        "productionReuseVerified": false,
+        "taskProofSHA256": "bc55dfcd6807b4bb8a4b5e6ee342d475659c1092d62b1a89f7afb292d7f59e8d",
+        "decodedPayloadSHA256": "c67626efc926fc9d92c410236968c53ffbe7aab0f64edffc9cea8402be1dce93"
+      },
+      "cache": "verified-clean-repeat"
+    }
+  ],
+  "bundleNativeHashes": {
+    "build/linux/x64/release/bundle/lib/libapp.so": "4ae5e6b124dde087fdbbcc5e6d7b22bb6a6be64999f67b4e5d898792ecd627aa",
+    "build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so": "d57449a5c2ee39e77b9e3488f0703b165c67e0b3c554089f388db96484ae62f1",
+    "build/linux/x64/release/bundle/lib/libtandemlog_text.so": "d33124d01cbcc7be76e6bbf421362c44d3d2b8e7f5ce1a1fc5b9ddcd9dd1ad83"
+  }
+}

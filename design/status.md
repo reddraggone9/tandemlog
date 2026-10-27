@@ -1,4 +1,102 @@
-# Coordinated cutover development validation complete
+# Development status
+
+## Reference-host performance transition — 2026-10-25
+
+Lee approved [ADR0033](decisions/0033-controlled-reference-performance.md):unchanged
+absolute/growth budgets qualify on controlled Farnsworth;hosted correctness,
+replay,integrity/source/fixture/completeness remain mandatory and timing advisory.
+No multipliers or budget changes. Tested tooling passes1515units/196tools,
+analysis/format;reviewed controller registration,fresh enforcing reference receipt
+and one exact-sourceCI remain pending. Missing/stale qualification fails closed.
+[Operating protocol](performance-reference-qualification.md) and
+[validation/checkpoint](../evidence/rc4-cloud-attribution-20261024/reference-policy-transition.json).
+Earlier failures/measure-only observations retain their status. Runtime product
+remains034a57d;no foreground,release,live or persistent-access change.
+
+## RC4 latency repair checkpoint - 2026-10-24
+
+The [cloud attribution checkpoint](../evidence/rc4-cloud-attribution-20261024/README.md)
+records the verified source-only handoff, optional API/queue/provider/native
+diagnostics, bounded exact-row snapshot representation reuse, and skipped Task
+sorting after unchanged canonical-set proof. Full local units passed1500 cases;
+the final targeted set passed120, tooling166 and Windows harness controls20.
+Linux release diagnostics pass restoration, fresh replay, canonical byte checks
+and normal process exit on all three realistic synthetic shapes. Timings still
+fail limits; no release or native visible-response acceptance is claimed.
+Windows hardware/full-action validation remains pending separately. Budgets,
+rejected-Save/continued-typing, peer-change and tail-cleanup guarantees remain.
+
+The final uninstrumented timing recheck passed correctness on all three shapes,
+retained absolute/paired timing failures and used zero retries. Exact development
+CI remains separately associated with the pushed source; earlier failed samples
+remain retained in the checkpoint.
+No release, production conversion, signing or dependency change is included.
+
+Exact-source CI40124976992 on cb1ea0e passed Windows/Android, Linux1500 units,
+166 tools and the release build/payload, then failed normal Linux startup close
+with SIGSEGV. The enforcing AOT job failed absolute and paired timing with no
+eligible retry. Packaging/later native Linux checks were therefore not completed.
+A separate bounded Linux GDB diagnostic captures native-close evidence without
+altering the required gates or retrying the unchanged performance experiment.
+That diagnostic40126806083 completed three clean GDB closes and preserved the
+exact bundle; it did not reproduce or clear the original SIGSEGV. No crash
+workaround or SDK change was made without an identifying stack. Current local
+tooling passes168 cases. Timing acceptance and the native close failure remain
+open, with [resumable evidence](../evidence/rc4-cloud-attribution-20261024/README.md).
+
+The next bounded repair caches two immutable identity-string representations.
+Local1500 units,170 tools, analysis and formatting pass; the existing narrow peer
+scenario preserves correctness/replay on all three sealed shapes and observes
+peer-Food medians6.159/10.412/9.654ms. These are not full-gate or visible-response
+acceptance. [Exact cost/failure synthesis](../evidence/rc4-cloud-attribution-20261024/followup-identity-analysis.md)
+separates retained absolute/paired misses, observed change and remaining gaps.
+An original-source close diagnostic now uses cb1ea0e, matching native/package
+setup and the unchanged startup harness, with post-fault core/stack capture.
+It performs no timing retry; raw cores are excluded from uploaded artifacts.
+
+The identity-repair exact CI40129495617 passed Windows/Android and all Linux
+unit/build checks, but Linux normal close again crashed. Its enforcing AOT run
+passed correctness/232 metrics across all three shapes, with39 absolute failures
+and one paired Food-history maximum failure; Task-history pairing passed.
+Zero timing retries were used. The corrected full-prefix original-source control
+40132695520 closed normally and produced no core, leaving the observed crash
+unresolved. No native lifetime workaround is inferred from clean controls.
+
+The next proof-encoding repair retains the same row/ready-ID digest bytes while
+avoiding a full intermediate JSON string. Component and same-fixture startup
+probes preserve correctness/replay and observe lower warm proof/total medians;
+cold startup did not improve. Focused29 tests,171 tooling checks, analysis and
+formatting pass. Full current units pass1502 cases in6m28s; exact-commit CI is
+required next.
+The actual Linux CI startup step now prepares bounded post-fault stack capture
+on the repair branch, retaining its original launch, failure status and raw-core
+exclusion. All budgets and native/hardware acceptance qualifications remain.
+
+Exact6a0acdd CI40134281681 passed Windows/Android and Linux startup, normal
+close and package/lifecycle checks; its Linux native suite remains active.
+Enforcing correctness passes232 metrics on all shapes, but timing fails202
+absolute and123 paired checks with zero eligible retries. The AMD host differs
+from the previous run. Large append/non-CPU tails remain unexplained; the local
+syscall control did not reproduce them. No earlier failure is waived.
+
+The next [ordering repair](../evidence/rc4-cloud-attribution-20261024/followup-order-analysis.md)
+replaces repeated growing-List membership scans with a temporary placed-ID Set,
+retaining every move/seed/fallback result and storage guard. Full1504 units,
+171 tools, analysis and formatting pass. Both existing checklist families on all
+three sealed shapes pass source-frozen correctness/replay. Fresh exact-source
+CI remains required; budgets and held native/hardware acceptance are unchanged.
+
+The native Session Undo failure now has a deterministic reproduction: a rebuilt
+Undo toolbar remains disabled after Cancel releases the editor-close flag.
+Rebuilding on guard acquisition/release restores the intended readiness. Cancel
+still preserves notes, Undo identity and canonical bytes; subsequent Discard
+writes exactly one Undo. Full1505 units,12 focused route/exit checks and the
+original native case pass locally. [Evidence](../evidence/rc4-cloud-attribution-20261024/undo-cancel-rendered-readiness.json).
+Exact CI40139838647 remains on the preceding732ddac source: enforcing correctness
+passes but10 absolute maxima and9 paired checks fail; no retry or acceptance.
+Cloud remains sole writer until coordinated cutover, with hard stop2026-10-26
+13:00 UTC. [Configuration locations](../evidence/rc4-cloud-attribution-20261024/configuration-locations-vex.md)
+contain no secret values. No release or live change is authorized.
 
 ## Latest development result - 2026-10-21
 

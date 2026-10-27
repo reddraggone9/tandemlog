@@ -47,7 +47,8 @@ class _Fixture {
     });
     final original = await store.complete(
       parent,
-      completionDay: DateTime(2030, 5, 10),
+      localZoneId: 'UTC',
+      completionInstant: DateTime.utc(2030, 5, 10),
     );
     await store.command(child, 'task.edited', {
       'title': 'Independent child',
@@ -138,11 +139,13 @@ void main() {
         final before = jsonEncode(f.row(f.child));
         final a = await f.store.complete(
           f.parent,
-          completionDay: DateTime(2030, 8, 1),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 8, 1),
         );
         final b = await peer.complete(
           f.parent,
-          completionDay: DateTime(2030, 8, 2),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 8, 2),
         );
         await File(
           '${peerFolder.path}/${peer.writer}.applog',
@@ -189,7 +192,7 @@ void main() {
         var prepared = false;
         await expectLater(
           f.store.command(f.parent, 'task.completedKeepingSuccessor', {
-            'completedAt': '2030-08-01',
+            'completedInstant': '2030-08-01T00:00:00.000000Z',
             'retainedSuccessor': {
               'id': f.child,
               'completion': f.original.id,
@@ -221,7 +224,8 @@ void main() {
         final before = jsonEncode(f.row(f.child));
         final completion = await f.store.complete(
           f.parent,
-          completionDay: DateTime(2030, 8, 1),
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 8, 1),
         );
         expect(completion.type, 'task.completedKeepingSuccessor');
         expect(completion.data['retainedSuccessor'], {
@@ -259,7 +263,8 @@ void main() {
           if (disposition == 'completed') {
             await f.store.complete(
               f.child,
-              completionDay: DateTime(2030, 7, 20),
+              localZoneId: 'UTC',
+              completionInstant: DateTime.utc(2030, 7, 20),
             );
           } else if (disposition == 'deleted') {
             await f.store.command(f.child, 'task.deleted', {});
@@ -272,7 +277,11 @@ void main() {
               )
               .map((r) => Map<String, dynamic>.from(r))
               .toList();
-          await f.store.complete(f.parent, completionDay: DateTime(2030, 8, 1));
+          await f.store.complete(
+            f.parent,
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 8, 1),
+          );
           expect(jsonEncode(f.row(f.child)), before);
           final snapshot = jsonEncode(f.store.taskSnapshot),
               canonical = await f.canonical();

@@ -1,6 +1,11 @@
 # Canonical history fixtures are literal bytes, including LF record framing.
 # Never apply platform text conversion to compatibility evidence.
 test/fixtures/**/*.jsonl -text
+test/fixtures/**/*.applog -text
+
+# Frozen stable-v3 inputs and their converted goldens are compared byte-for-byte.
+test/fixtures/stable-v3-2026.10.0/** -text
+test/fixtures/completion-instant-v3/** -text
 
 # Released Food reader sources and packets are frozen compatibility bytes.
 test/fixtures/food-undo/** -text
@@ -36,3 +41,28 @@ test/fixtures/timezone-additional-2026e/** -text
 
 # Independent current-operation golden bytes must survive Windows checkouts.
 test/fixtures/current-operation-v1/** -text
+
+# The release workflow pins this policy by literal SHA256 on all platforms.
+tool/performance/limits-v1.json -text
+
+# Reviewed Windows QA target and helper byte pins must survive autocrlf checkout.
+integration_test/windows_release_widget_viability.dart -text
+tool/windows_widget_qa/** -text
+
+# Generated Flutter plugin inputs must retain literal bytes across QA worktrees.
+linux/flutter/generated_plugin_registrant.cc -text
+linux/flutter/generated_plugin_registrant.h -text
+linux/flutter/generated_plugins.cmake -text
+windows/flutter/generated_plugin_registrant.cc -text
+windows/flutter/generated_plugin_registrant.h -text
+windows/flutter/generated_plugins.cmake -text
+
+# Actual-fault sanitized stack retains its artifact bytes for handoff review.
+evidence/rc4-cloud-attribution-20261024/utf8-size-guards-linux-close-stack.txt -text
+
+# Native disposal diagnostic archives retain literal source-evidence bytes.
+evidence/rc4-cloud-attribution-20261024/linux-disposal-*.log.txt -text
+
+# Recovered stable-v3 readers are sealed against their original source bytes.
+# Windows autocrlf must not change the decoder provenance SHA256 values.
+test/support/frozen_stable_v3/** -text

@@ -1,0 +1,238 @@
+{
+  "sourceBase": "a71d0ba",
+  "scope": "same-binary AOT representation-only comparison,2 warmups5 measured,old/new order alternates; not whole-action/UI/release acceptance",
+  "constructorsPerBatch": 512,
+  "sourcePinsMatch": true,
+  "checksumEquivalence": true,
+  "samples": [
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 256,
+      "batch": 512,
+      "sample": 0,
+      "warmup": true,
+      "oldUs": 2016,
+      "ownedUs": 736,
+      "checksum": 109669
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 256,
+      "batch": 512,
+      "sample": 1,
+      "warmup": true,
+      "oldUs": 1763,
+      "ownedUs": 809,
+      "checksum": 109669
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 256,
+      "batch": 512,
+      "sample": 2,
+      "warmup": false,
+      "oldUs": 1691,
+      "ownedUs": 672,
+      "checksum": 109669
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 256,
+      "batch": 512,
+      "sample": 3,
+      "warmup": false,
+      "oldUs": 1707,
+      "ownedUs": 576,
+      "checksum": 109669
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 256,
+      "batch": 512,
+      "sample": 4,
+      "warmup": false,
+      "oldUs": 1787,
+      "ownedUs": 576,
+      "checksum": 109669
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 256,
+      "batch": 512,
+      "sample": 5,
+      "warmup": false,
+      "oldUs": 1707,
+      "ownedUs": 606,
+      "checksum": 109669
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 256,
+      "batch": 512,
+      "sample": 6,
+      "warmup": false,
+      "oldUs": 1653,
+      "ownedUs": 597,
+      "checksum": 109669
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 1024,
+      "batch": 512,
+      "sample": 0,
+      "warmup": true,
+      "oldUs": 6655,
+      "ownedUs": 2322,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 1024,
+      "batch": 512,
+      "sample": 1,
+      "warmup": true,
+      "oldUs": 6571,
+      "ownedUs": 2274,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 1024,
+      "batch": 512,
+      "sample": 2,
+      "warmup": false,
+      "oldUs": 6537,
+      "ownedUs": 2274,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 1024,
+      "batch": 512,
+      "sample": 3,
+      "warmup": false,
+      "oldUs": 6570,
+      "ownedUs": 2280,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 1024,
+      "batch": 512,
+      "sample": 4,
+      "warmup": false,
+      "oldUs": 6760,
+      "ownedUs": 2386,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 1024,
+      "batch": 512,
+      "sample": 5,
+      "warmup": false,
+      "oldUs": 6711,
+      "ownedUs": 2302,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 1024,
+      "batch": 512,
+      "sample": 6,
+      "warmup": false,
+      "oldUs": 6673,
+      "ownedUs": 2372,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 16384,
+      "batch": 512,
+      "sample": 0,
+      "warmup": true,
+      "oldUs": 135955,
+      "ownedUs": 49507,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 16384,
+      "batch": 512,
+      "sample": 1,
+      "warmup": true,
+      "oldUs": 113370,
+      "ownedUs": 38294,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 16384,
+      "batch": 512,
+      "sample": 2,
+      "warmup": false,
+      "oldUs": 110281,
+      "ownedUs": 37165,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 16384,
+      "batch": 512,
+      "sample": 3,
+      "warmup": false,
+      "oldUs": 118981,
+      "ownedUs": 38652,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 16384,
+      "batch": 512,
+      "sample": 4,
+      "warmup": false,
+      "oldUs": 110216,
+      "ownedUs": 37988,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 16384,
+      "batch": 512,
+      "sample": 5,
+      "warmup": false,
+      "oldUs": 110976,
+      "ownedUs": 38853,
+      "checksum": 109525
+    },
+    {
+      "scope": "AOT representation-only; no native/UI/release acceptance",
+      "length": 16384,
+      "batch": 512,
+      "sample": 6,
+      "warmup": false,
+      "oldUs": 109833,
+      "ownedUs": 36269,
+      "checksum": 109525
+    }
+  ],
+  "summaryByBytes": {
+    "256": {
+      "oldMedianUs": 1707,
+      "ownedMedianUs": 597
+    },
+    "1024": {
+      "oldMedianUs": 6673,
+      "ownedMedianUs": 2302
+    },
+    "16384": {
+      "oldMedianUs": 110281,
+      "ownedMedianUs": 37988
+    }
+  },
+  "root": "/workspace/scratch/rc4-owned-state-codec",
+  "sourcePinsSHA256": "ba222d85a9008fe6a0441380cd4e35af52ca418280e8c9f535cfcb91282e132b",
+  "driverSHA256": "e556cbb933548e683b17af171bf758a2248291dd436e8172ff3f6a319358382e",
+  "sevenSQLSelfRoundtripsRemoved": true,
+  "fullCurrentSourceAOT": "completed; all3 shapes/232 metrics/replay/prefix/source seals pass,10 absolute9 paired failures retained;0 retries; not acceptance"
+}

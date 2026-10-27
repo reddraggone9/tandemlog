@@ -1,0 +1,25 @@
+[IMPORTANT:flutter/shell/platform/embedder/embedder_surface_gl_impeller.cc(126)] Using the Impeller rendering backend (OpenGLESSDF).
+TANDEMLOG_MAIN
+TANDEMLOG_FIRST_FRAME_MS=143
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_STARTUP_CACHE {"warmTaskProjectionReuses":1,"decodedCacheReuses":3,"strictDecodedRecords":0}
+TANDEMLOG_READY_MS=340 FILES_READ=2
+TANDEMLOG_LIFECYCLE_PROBE event=watch object=window thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=watch object=view thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=watch object=engine thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=detach object=window thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=destroyed object=window thread=69579
+embedder.cc (2615): 'FlutterEngineRemoveView' returned 'kInvalidArguments'. Remove view info was invalid. The implicit view cannot be removed.
+TANDEMLOG_LIFECYCLE_PROBE event=destroyed object=view thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=finalized object=view thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=finalized object=window thread=69579
+
+** (com.reddraggone9.tandemlog:69579): WARNING **: 05:55:12.270: Attempted to set message handler on an FlBinaryMessenger without an engine
+
+** (com.reddraggone9.tandemlog:69579): WARNING **: 05:55:12.270: Attempted to set message handler on an FlBinaryMessenger without an engine
+
+** (com.reddraggone9.tandemlog:69579): WARNING **: 05:55:12.270: Attempted to set message handler on an FlBinaryMessenger without an engine
+TANDEMLOG_LIFECYCLE_PROBE event=finalized object=engine thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=run-return object=window watched=1 destroyed=1 finalized=1 thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=run-return object=view watched=1 destroyed=1 finalized=1 thread=69579
+TANDEMLOG_LIFECYCLE_PROBE event=run-return object=engine watched=1 destroyed=0 finalized=1 thread=69579

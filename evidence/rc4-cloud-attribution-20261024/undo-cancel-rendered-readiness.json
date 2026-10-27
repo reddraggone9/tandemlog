@@ -1,0 +1,79 @@
+{
+  "scope": "native Undo/Cancel rendered-readiness bug, not a storage-format or budget change",
+  "base": "732ddac905bc67410731b7ef3f1c42eaf77701b8",
+  "cause": "closingEditor reset without a rebuild could leave rendered Undo disabled after a focus/viewport rebuild during confirmation",
+  "before": {
+    "native": "same missing Discard at4177 reproduced in52s",
+    "host": "closingEditor false but rendered Undo onPressed null after Cancel"
+  },
+  "after": {
+    "focused": 12,
+    "native": "original complete case passes in72s; dirty Cancel, Discard/Undo, peer newer text, deletion Undo and restart assertions retained",
+    "fullUnits": 1505,
+    "unitSeconds": 388,
+    "tools": 171,
+    "analysis": "clean",
+    "formatFiles": 395,
+    "formatChanges": 0
+  },
+  "guarantees": [
+    "Cancel preserves dirty notes and the same Undo entry and writes no canonical bytes",
+    "Subsequent Discard performs exactly one Undo action",
+    "Unmount/disposal avoids setState on unmounted state",
+    "No freshness/receipt/peer/tail/durability/budget guard removed"
+  ],
+  "visualInspection": {
+    "platform": "Linux GTK/Xvfb software, native debug test target",
+    "viewport": "1200x800",
+    "theme": "dark",
+    "observations": "Cancelled editor retains Unsaved notes; Undo visible/enabled. Restored task view consistent with original Undo assertions.",
+    "hardwarePresentationAcceptance": false,
+    "demoVideos": "not yet recorded; Android/device and Windows foreground coordination remain pending"
+  },
+  "screenshots": [
+    {
+      "file": "session-undo-cancel-retains-draft.png",
+      "sha256": "e506f2f052469811b7248201a9e159d915cfd78e4d111c89aa08dfd79e3c430d"
+    },
+    {
+      "file": "session-second-undo-restored.png",
+      "sha256": "f0254abc9fdecfa483f2df6988d20385eb327c32ea1bfa383a37642fcccbd334"
+    }
+  ],
+  "logs": {
+    "rc4-native-session-undo-reproduction.log": {
+      "path": "/workspace/toolchains/logs/rc4-native-session-undo-reproduction.log",
+      "sha256": "f8b4227f5f8a0eeeea7699e1631c4da8215a505271e641d0d51a1c7940eb30ed"
+    },
+    "rc4-undo-cancel-host-before.log": {
+      "path": "/workspace/toolchains/logs/rc4-undo-cancel-host-before.log",
+      "sha256": "f49bffe20e5218f61ce6472a1e6694e72cb41bc8936ce7f060e3def89a09f3fd"
+    },
+    "rc4-undo-cancel-focused-after.log": {
+      "path": "/workspace/toolchains/logs/rc4-undo-cancel-focused-after.log",
+      "sha256": "f4087a8968d2f6c55e4d2826c81d3bca6e2aa065317ae18ca49bc2a5155b6490"
+    },
+    "rc4-native-session-undo-after.log": {
+      "path": "/workspace/toolchains/logs/rc4-native-session-undo-after.log",
+      "sha256": "21aef18a0a7da574cc2eab86c4a05fe002eb8a20934be2a55f0607198de1390e"
+    },
+    "rc4-undo-cancel-full-unit.log": {
+      "path": "/workspace/toolchains/logs/rc4-undo-cancel-full-unit.log",
+      "sha256": "1ea157eab49395c0dd090e7eca9d02d4b162fc5a387bb99d0a50c92cbdde00b7"
+    },
+    "rc4-undo-cancel-final-analysis.log": {
+      "path": "/workspace/toolchains/logs/rc4-undo-cancel-final-analysis.log",
+      "sha256": "9e57a5d96c7f009a58bf68f77f2c4d82d1636ed18ae5588e6932682c8f60d5d0"
+    },
+    "rc4-undo-cancel-final-format.log": {
+      "path": "/workspace/toolchains/logs/rc4-undo-cancel-final-format.log",
+      "sha256": "fad76d5852d2e9b3649908969c506cf0ca99ed3a52d0b03624e9764c6eb0b58f"
+    },
+    "rc4-undo-cancel-tools.log": {
+      "path": "/workspace/toolchains/logs/rc4-undo-cancel-tools.log",
+      "sha256": "f133267095d809560c6431471e953c878dae96fdb49c3648cc0ec2ca9e6b7764"
+    }
+  },
+  "mainSourceSHA256": "6588140945142bb1b42dfdaf20e3afbc540e14d6babcd7e40a09e5ef542a3383",
+  "performanceAccepted": false
+}

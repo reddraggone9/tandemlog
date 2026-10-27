@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'event_chain.dart';
+import 'completion_instant.dart';
+import 'utf8_byte_limit.dart';
 
 const currentOperationFormat = 1;
 const _domain = 'tandemlog:operation:v1\n';
@@ -29,10 +31,11 @@ class CurrentOperation {
     required this.subject,
     required this.family,
     required this.revision,
-    required this.value,
+    required Map<String, dynamic> value,
     required this.predecessor,
     String? referenceHash,
-  }) : retainedReferenceHash = referenceHash;
+  }) : value = _freezeOperationValue(value) as Map<String, dynamic>,
+       retainedReferenceHash = referenceHash;
   final String module,
       space,
       author,
@@ -57,7 +60,7 @@ class CurrentOperation {
     'value': value,
     'predecessor': predecessor,
   };
-  String get contentHash => sha256
+  late final String contentHash = sha256
       .convert(utf8.encode('$_domain${canonicalDataJson(_body)}'))
       .toString();
   String get referenceHash => retainedReferenceHash ?? contentHash;
@@ -66,7 +69,8 @@ class CurrentOperation {
     'referenceHash': referenceHash,
     'contentHash': contentHash,
   };
-  String encode() => canonicalDataJson(toJson());
+  late final String _encoded = canonicalDataJson(toJson());
+  String encode() => _encoded;
 
   static void _keys(Map value, Set<String> keys) {
     if (value.length != keys.length || !value.keys.every(keys.contains)) {
@@ -77,7 +81,7 @@ class CurrentOperation {
   }
 
   factory CurrentOperation.decode(String raw, {required String module}) {
-    if (utf8.encode(raw).length > 1024 * 1024) {
+    if (exceedsUtf8ByteLimit(raw, 1024 * 1024)) {
       throw const FormatException('Oversized current operation.');
     }
     final j = jsonDecode(raw);
@@ -112,12 +116,26 @@ class CurrentOperation {
     final revision = operation['revision'] as int;
     final value = j['value'] as Map<String, dynamic>;
     if (revision != 1 &&
+        !(revision == 3 && module == 'tasks' && family == 'task.complete') &&
         !(revision == 2 &&
             module == 'tasks' &&
             _zoneFamilies.contains(family))) {
       throw const FormatException(
         'Unsupported required operation revision. Update the app; history was preserved.',
       );
+    }
+    if (family == 'task.complete') {
+      final values = value['values'];
+      if (values is! Map ||
+          revision == 3 &&
+              (values.containsKey('completedAt') ||
+                  values.containsKey('completionTimeZone')) ||
+          revision < 3 && values.containsKey('completedInstant')) {
+        throw const FormatException(
+          'Completion fields do not match required revision.',
+        );
+      }
+      if (revision == 3) decodeCompletionInstant(values['completedInstant']);
     }
     if (operationUsesAdditionalZone(value) &&
         (revision < 2 || !_zoneFamilies.contains(family))) {
@@ -165,6 +183,19 @@ class CurrentOperation {
   }
 }
 
+// Hash/encoding reuse requires ownership of every JSON collection. Preserve
+// unsupported leaves/keys for the unchanged canonical encoder to reject.
+Object? _freezeOperationValue(Object? value) => switch (value) {
+  Map<String, dynamic>() => Map<String, dynamic>.unmodifiable(
+    value.map((key, item) => MapEntry(key, _freezeOperationValue(item))),
+  ),
+  Map() => Map.unmodifiable(
+    value.map((key, item) => MapEntry(key, _freezeOperationValue(item))),
+  ),
+  List() => List<Object?>.unmodifiable(value.map(_freezeOperationValue)),
+  _ => value,
+};
+
 class TaskOperationPayload {
   const TaskOperationPayload(this.family, this.value);
   final String family;
@@ -201,15 +232,25 @@ void validateTaskActionFields(String type, Map<String, dynamic> data) {
       'schedule',
       'tagChanges',
     },
-    'task.completed' => {'completedAt', 'successor'},
-    'task.completedWithText' => {'completedAt', 'successor', 'inheritance'},
+    'task.completed' => {'completedAt', 'completedInstant', 'successor'},
+    'task.completedWithText' => {
+      'completedAt',
+      'completedInstant',
+      'successor',
+      'inheritance',
+    },
     'task.completedWithChecklist' => {
       'completedAt',
+      'completedInstant',
       'successor',
       'inheritance',
       'checklist',
     },
-    'task.completedKeepingSuccessor' => {'completedAt', 'retainedSuccessor'},
+    'task.completedKeepingSuccessor' => {
+      'completedAt',
+      'completedInstant',
+      'retainedSuccessor',
+    },
     'task.completionUndone' ||
     'task.recurringCompletionUndone' => {'completion'},
     'task.operationUndone' => {'operation'},

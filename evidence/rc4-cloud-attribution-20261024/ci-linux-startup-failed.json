@@ -1,0 +1,29 @@
+{
+  "run": 1,
+  "passed": false,
+  "cleanWitnessVerified": false,
+  "closeMode": "normal",
+  "external_ms": 2810,
+  "marker": "TANDEMLOG_READY_MS=1212 FILES_READ=2",
+  "phases": [
+    "TANDEMLOG_MAIN",
+    "TANDEMLOG_FIRST_FRAME_MS=56",
+    "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+    "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+    "TANDEMLOG_READY_MS=1212 FILES_READ=2"
+  ],
+  "external_main_ms": 1591,
+  "external_first_frame_ms": 1651,
+  "shutdown": {
+    "requestedMode": "normal",
+    "normalExitVerified": false,
+    "method": "owned-window-WM_DELETE_WINDOW",
+    "pid": 9312,
+    "window": "2097155",
+    "globalFocusOrInput": false,
+    "processExit": -11,
+    "elapsedMs": 1585.523
+  },
+  "process_exit": -11,
+  "error": "Normal owned window close was not verified; forced cleanup is not a clean-close benchmark"
+}

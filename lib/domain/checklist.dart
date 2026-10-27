@@ -244,10 +244,14 @@ List<Map<String, dynamic>> projectChecklist(
       );
     }
   }
-  final creations = history.where(
-    (event) =>
-        event.type == 'checklist.itemCreated' && event.data['parent'] == parent,
-  );
+  final creations = history
+      .where(
+        (event) =>
+            event.type == 'checklist.itemCreated' &&
+            event.data['parent'] == parent,
+      )
+      .toList();
+  final creationSet = creations.toSet();
   final ids = {...seeds.keys, ...creations.map((event) => event.entity)};
   final states = <String, Map<String, dynamic>>{};
   for (final id in ids) {
@@ -260,7 +264,7 @@ List<Map<String, dynamic>> projectChecklist(
   final actions = <OrderAction>[
     for (final id in initial) OrderAction(id, 'task.created'),
     for (final event in history)
-      if (creations.contains(event)) ...[
+      if (creationSet.contains(event)) ...[
         OrderAction(event.entity, 'task.created'),
         OrderAction(
           event.entity,

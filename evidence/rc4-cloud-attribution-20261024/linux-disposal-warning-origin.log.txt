@@ -1,0 +1,76 @@
+[IMPORTANT:flutter/shell/platform/embedder/embedder_surface_gl_impeller.cc(126)] Using the Impeller rendering backend (OpenGLESSDF).
+TANDEMLOG_MAIN
+TANDEMLOG_FIRST_FRAME_MS=143
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_STARTUP_CACHE {"warmTaskProjectionReuses":0,"decodedCacheReuses":0,"strictDecodedRecords":3}
+TANDEMLOG_READY_MS=334 FILES_READ=2
+embedder.cc (2615): 'FlutterEngineRemoveView' returned 'kInvalidArguments'. Remove view info was invalid. The implicit view cannot be removed.
+
+** (com.reddraggone9.tandemlog:70631): WARNING **: 06:05:35.492: Attempted to set message handler on an FlBinaryMessenger without an engine
+TANDEMLOG_WARNING_ORIGIN channel=unknown
+/workspace/scratch/rc4-linux-disposal-warning-origin/warning_probe.so(+0x12f4) [0x7fab9545c2f4]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_logv+0x21b) [0x7fab933bb16b]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_log+0x93) [0x7fab933bb4c3]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fb559) [0x7fab948a9559]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(fl_basic_message_channel_new+0x176) [0x7fab948a74c6]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/liburl_launcher_linux_plugin.so(+0x2dd7) [0x7fab9544bdd7]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/liburl_launcher_linux_plugin.so(+0x3477) [0x7fab9544c477]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/liburl_launcher_linux_plugin.so(+0x3100) [0x7fab9544c100]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4f9722) [0x7fab948a7722]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fb46a) [0x7fab948a946a]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(+0x48873) [0x7fab9339c873]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_hash_table_remove_all+0x60) [0x7fab9339e3b0]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fbbe0) [0x7fab948a9be0]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x502e31) [0x7fab948b0e31]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0(+0xbb530) [0x7fab935cb530]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x2ee) [0x7fab934ca4fe]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(+0x5a1bd) [0x7fab933ae1bd]
+
+** (com.reddraggone9.tandemlog:70631): WARNING **: 06:05:35.495: Attempted to set message handler on an FlBinaryMessenger without an engine
+TANDEMLOG_WARNING_ORIGIN channel=unknown
+/workspace/scratch/rc4-linux-disposal-warning-origin/warning_probe.so(+0x12f4) [0x7fab9545c2f4]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_logv+0x21b) [0x7fab933bb16b]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_log+0x93) [0x7fab933bb4c3]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fb559) [0x7fab948a9559]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(fl_basic_message_channel_new+0x176) [0x7fab948a74c6]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/liburl_launcher_linux_plugin.so(+0x2e0a) [0x7fab9544be0a]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/liburl_launcher_linux_plugin.so(+0x3477) [0x7fab9544c477]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/liburl_launcher_linux_plugin.so(+0x3100) [0x7fab9544c100]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4f9722) [0x7fab948a7722]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fb46a) [0x7fab948a946a]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(+0x48873) [0x7fab9339c873]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_hash_table_remove_all+0x60) [0x7fab9339e3b0]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fbbe0) [0x7fab948a9be0]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x502e31) [0x7fab948b0e31]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0(+0xbb530) [0x7fab935cb530]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x2ee) [0x7fab934ca4fe]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(+0x5a1bd) [0x7fab933ae1bd]
+
+** (com.reddraggone9.tandemlog:70631): WARNING **: 06:05:35.495: Attempted to set message handler on an FlBinaryMessenger without an engine
+TANDEMLOG_WARNING_ORIGIN channel=unknown
+/workspace/scratch/rc4-linux-disposal-warning-origin/warning_probe.so(+0x12f4) [0x7fab9545c2f4]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_logv+0x21b) [0x7fab933bb16b]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_log+0x93) [0x7fab933bb4c3]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fb559) [0x7fab948a9559]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(fl_basic_message_channel_new+0x176) [0x7fab948a74c6]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libfile_selector_linux_plugin.so(+0x6005) [0x7fab95456005]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libfile_selector_linux_plugin.so(+0x2cd7) [0x7fab95452cd7]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libfile_selector_linux_plugin.so(+0x6920) [0x7fab95456920]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4f9722) [0x7fab948a7722]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fb46a) [0x7fab948a946a]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(+0x48873) [0x7fab9339c873]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(g_hash_table_remove_all+0x60) [0x7fab9339e3b0]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x4fbbe0) [0x7fab948a9be0]
+/workspace/tandemlog/build/linux/x64/release/bundle/lib/libflutter_linux_gtk.so(+0x502e31) [0x7fab948b0e31]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x79) [0x7fab934ca289]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0(+0xbb530) [0x7fab935cb530]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0(g_object_unref+0x2ee) [0x7fab934ca4fe]
+/workspace/toolchains/sysroot/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0(+0x5a1bd) [0x7fab933ae1bd]

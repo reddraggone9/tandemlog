@@ -1,0 +1,199 @@
+{
+  "snapshotUTC": "2026-10-25T09:21:12.080806+00:00",
+  "scope": "Single build-only Windows QA artifact preparation;noforeground run,no release or broad CI",
+  "sourceSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "qaBranch": "qa/windows-widget-034a57d-20261025",
+  "runId": 40179769562,
+  "runURL": "https://github.com/reddraggone9/tandemlog/actions/runs/40179769562",
+  "jobId": 121128132296,
+  "dispatchCount": 1,
+  "createdUTC": "2026-10-25T09:13:42Z",
+  "jobStartedUTC": "2026-10-25T09:13:45Z",
+  "jobTimeoutMinutes": 40,
+  "workflowPermissions": {
+    "contents": "read"
+  },
+  "concurrencyCancelInProgress": false,
+  "state": "completed",
+  "lastKnownStep": "Complete job;all steps success",
+  "localPureControllerTestsPassed": 20,
+  "sourcePinsAtDispatch": {
+    ".github/workflows/windows-widget-qa.yml": "78bf3c892b57a5fe87df64a46810513c7f1bca963b22a04b850491e0c7eb43fe",
+    "tool/windows_widget_qa/package_qa.py": "ad8c2a295a5636d5f268dab76c2a0b10b900dd0f23cae747e9704c5fc692823f",
+    "tool/windows_widget_qa/windows_widget_controller.py": "fdbf515fc49c3288b63cdddde12c7ab34e2c2587fc9805660e265efbed8e27e7",
+    "tool/windows_widget_qa/windows_widget_controller.ps1": "eedba0daffe74c354a85c1e6623cd01b8f66b89086704dbedb651419280626e5",
+    "integration_test/windows_release_widget_viability.dart": "1a4af30cb2ea9a9d95f49e5de4d3a3ecc434381480574923158efe58e33bba6f",
+    "integration_test/native_text_fixtures.dart": "430ffcc9f8ad02387c0ef1577c8dacce45f59c6c8767281bd86dabeffd372338",
+    "tool/windows_widget_qa/probe_cost_trace.dart": "c8a7b671127f35815fe6f7475bc6bc4836bad1d2d90bcc8609893b54bae87e6f",
+    "tool/performance/cost_trace.dart": "84c7e34f3bb42805b634c2e3237ac5e838ee836872b4022fd875922480d619ce"
+  },
+  "productEdits": 0,
+  "harnessEdits": 0,
+  "foregroundExecuted": false,
+  "releaseOrBroadCIDispatched": false,
+  "newCredentialsRequested": false,
+  "qualification": "Single exact034a57d test-entrypoint release-mode QA build;CI executes native DLL ABI smoke but never app. Archive/manifest/payload/helper pins and explicit Windows checkout conversions verified by cloud. External local fixture/member and foreground wrapper bindings still need local read-only preflight. Mocked framework input/state/postframe timings cover one Task open/Save/closed-editor Undo only,not hardware/full-action/native IME/installer/release performance.",
+  "conclusion": "success",
+  "terminalRun": {
+    "conclusion": "success",
+    "createdAt": "2026-10-25T09:13:42Z",
+    "databaseId": 40179769562,
+    "event": "workflow_dispatch",
+    "headBranch": "qa/windows-widget-034a57d-20261025",
+    "headSha": "034a57dbc7092e242889d23d12e22091fed08b0c",
+    "jobs": [
+      {
+        "completedAt": "2026-10-25T09:17:10Z",
+        "conclusion": "success",
+        "databaseId": 121128132296,
+        "name": "build-only",
+        "startedAt": "2026-10-25T09:13:45Z",
+        "status": "completed",
+        "steps": [
+          {
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Require reviewed development-branch QA build",
+            "number": 3,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run ./.github/actions/setup-flutter",
+            "number": 4,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run ./.github/actions/setup-text-engine",
+            "number": 5,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Create isolated QA source and native-output trees",
+            "number": 6,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Gate QA controller pure ownership layout and deadline controls",
+            "number": 7,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Build separate release-QA and smoke native ABI without app execution",
+            "number": 8,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+            "number": 9,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 18,
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 19,
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40179769562/job/121128132296"
+      }
+    ],
+    "status": "completed",
+    "updatedAt": "2026-10-25T09:17:10Z",
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/40179769562"
+  },
+  "artifactId": 12594136006,
+  "artifactName": "TEST-ONLY-windows-widget-viability-qa",
+  "artifactArchiveSHA256": "ab24194addf11faf9bc4e16a2ba59528bef73db22bd4a75722ab4dae7c5eb091",
+  "archiveDigestVerified": true,
+  "artifactExpiresUTC": "2026-10-30T09:17:03Z",
+  "manifestSHA256": "a6335dd0cc575efbd2b4a8d8603266cd92113a709b5e76180d28014fd238164e",
+  "originalManifest": "windows-qa-034a57d-artifact-manifest.json",
+  "originalChecksums": "windows-qa-034a57d-qa-sha256sums.txt",
+  "originalChecksumsSHA256": "8029656b512f07ecbcd15a88785265c2e2af9c9dcff1822cbbfa8891c8357f8d",
+  "memberVerification": {
+    "bundleMembers": 17,
+    "checksumEntries": 21,
+    "allSizesAndHashesVerified": true,
+    "extraOrMissingMembers": false
+  },
+  "sourceVerification": {
+    "sourcePinCount": 191,
+    "literalGitBytes": 70,
+    "exactWindowsCheckoutCRLF": 121,
+    "otherDifferences": 0,
+    "proof": "windows-qa-034a57d-source-proof.json",
+    "rawGitByteIdentityForAllPinsClaimed": false
+  },
+  "nativeLibrary": {
+    "nativeX64PE32PlusDLL": true,
+    "requiredExports": [
+      "tandemlog_text_json",
+      "tandemlog_text_free",
+      "tandemlog_text_alloc",
+      "tandemlog_text_release_input"
+    ],
+    "staticInspectionOnly": true,
+    "dllSHA256": "91430a7a5d59be671cc9dde506a8bdf42e059969591dda8f50da8de9ec8d9b33"
+  },
+  "nativeNoticeVerification": {
+    "sha256": "8a2cc0a76f5dd6adae2f4772745155dbd495ce641c7e32d512c085e36d13b839",
+    "gitLF_SHA256": "4a869fdca16eb36a8970867f4cde5faa7df7894440c49bc6716ba82adbd13d39",
+    "exactCheckoutCRLFConversionOnly": true
+  },
+  "helperPins": {
+    "windows_widget_controller.py": "fdbf515fc49c3288b63cdddde12c7ab34e2c2587fc9805660e265efbed8e27e7",
+    "windows_widget_controller.ps1": "eedba0daffe74c354a85c1e6623cd01b8f66b89086704dbedb651419280626e5",
+    "package_qa.py": "ad8c2a295a5636d5f268dab76c2a0b10b900dd0f23cae747e9704c5fc692823f"
+  },
+  "completeDependencySourceClosureClaimed": false,
+  "decodedCompletedJobLog": {
+    "bytes": 67085,
+    "sha256": "6d9ae1bc4fee655f081209fbe38003856db6b74871ebc476122c71d2b2928799",
+    "runtimeABIExecutedOnlyByCI": true
+  },
+  "foregroundOrAppExecuted": false,
+  "publicFixture": {
+    "contractSHA256": "74f0c24ce01a26792ff4d8a1730c36b1aacdf6a918b90df8310a79386753aeb1",
+    "targetAndControllerAgree": true,
+    "baselinePhysicalRecords": 1325,
+    "canonicalMemberCount": 4,
+    "includedInArtifact": false,
+    "rawFixtureAccessedByCloud": false,
+    "localReadOnlyPreflightRequired": "Verify existing sealed contract hash and every declared canonical member hash;do not substitute/regenerate/reseal to bypass a refusal."
+  },
+  "initialStrictVerificationFailuresRetained": [
+    {
+      "step": "raw Git blob equality",
+      "outcome": "rejected121CRLF-only Windows checkout pins;no other mismatch",
+      "resolution": "explicit per-file canonical Git and actual Windows byte hashes recorded,no artifact rewriting"
+    },
+    {
+      "step": "raw native notice equality",
+      "outcome": "rejected CRLF-only Windows checkout notice",
+      "resolution": "exact LF-to-CRLF equality confirmed;actual Windows bytes retained"
+    }
+  ]
+}

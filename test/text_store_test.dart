@@ -376,7 +376,8 @@ void main() {
               var prepared = false;
               final completion = await store.complete(
                 task,
-                completionDay: DateTime(2030, 5, 10),
+                localZoneId: 'UTC',
+                completionInstant: DateTime.utc(2030, 5, 10),
                 onPrepared: (_) => prepared = true,
               );
               expect(completion.type, 'task.completedWithText');
@@ -523,7 +524,8 @@ void main() {
             await store.command(task, 'task.created', data);
             final old = await store.complete(
               task,
-              completionDay: DateTime(2030, 5, 10),
+              localZoneId: 'UTC',
+              completionInstant: DateTime.utc(2030, 5, 10),
             );
             expect(old.type, 'task.completed');
             await store.initializeSharedText();
@@ -534,7 +536,7 @@ void main() {
             var prepared = false;
             await expectLater(
               store.command(task, 'task.completedWithText', {
-                'completedAt': '2030-05-10',
+                'completedInstant': '2030-05-10T00:00:00.000000Z',
                 'successor': old.data['successor'],
                 'inheritance': {
                   'codec': 'yrs-v1',
@@ -1402,6 +1404,17 @@ void main() {
               c.rows.singleWhere((row) => row['id'] == task)['title'],
               'Shared legacy basis',
             );
+            final oracle = TaskStore.validateSemanticHistory(
+              c.unified!.snapshot.tasks,
+              space: c.space,
+              writer: c.writer,
+              textEngine: engine,
+            );
+            expect(
+              {for (final row in c.rows) row['id']: row},
+              {for (final row in oracle) row['id']: row},
+            );
+
             final lateTask = const Uuid().v4();
             await c.command(lateTask, 'task.created', {
               'title': 'Late old creation',

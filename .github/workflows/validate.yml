@@ -1,6 +1,11 @@
 name: Validate and build
 on:
   workflow_call:
+    inputs:
+      performance_calibration:
+        description: Development timing collection only; signed candidates use false
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -9,7 +14,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11 flatpak librsvg2-common
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb xdotool dbus-x11 flatpak librsvg2-common ${{ github.ref == 'refs/heads/fix/rc4-task-latency-20261022' && 'gdb' || '' }}
       - name: Prepare reviewed AppStream packaging tools
         run: python3 packaging/linux/prepare_appstream_tools.py --destination "$RUNNER_TEMP/reviewed-appstream" --github-path "$GITHUB_PATH"
       - uses: ./.github/actions/setup-flutter
@@ -39,9 +44,43 @@ jobs:
       - run: python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle
       - name: Smoke-test native release startup with fresh and warm cache
         id: linux-startup
+        timeout-minutes: 8
         run: |
           mkdir -p linux-startup-diagnostics
+          if [[ "$GITHUB_REF" == refs/heads/fix/rc4-task-latency-20261022 ]]; then
+            mkdir "$RUNNER_TEMP/rc4-startup-cores"
+            original_pattern="$(cat /proc/sys/kernel/core_pattern)"
+            trap 'printf "%s\n" "$original_pattern" | sudo tee /proc/sys/kernel/core_pattern > /dev/null' EXIT
+            trap 'exit 130' INT
+            trap 'exit 143' TERM
+            printf '%s\n' "$RUNNER_TEMP/rc4-startup-cores/core.%p" | sudo tee /proc/sys/kernel/core_pattern > /dev/null
+            ulimit -c 524288
+          fi
+          set +e
           xvfb-run -a dbus-run-session -- python3 tool/measure_startup.py --tasks 10 --runs 2 --workspace "$RUNNER_TEMP/tandemlog-performance" --diagnostics linux-startup-diagnostics > linux-startup.json 2> linux-startup-diagnostics/harness.stderr.log
+          original_status=$?
+          set -e
+          if [[ "$GITHUB_REF" == refs/heads/fix/rc4-task-latency-20261022 ]]; then
+            set +e
+            python3 tool/collect_linux_core_stacks.py --source "$GITHUB_WORKSPACE" --cores "$RUNNER_TEMP/rc4-startup-cores" --output linux-startup-diagnostics/postmortem
+            collector_status=$?
+            set -e
+            if [[ "$original_status" == 0 ]]; then exit "$collector_status"; fi
+          fi
+          exit "$original_status"
+      - name: Preserve RC4 postmortem and exact test-only bundle
+        if: always() && github.ref == 'refs/heads/fix/rc4-task-latency-20261022' && steps.linux-startup.outcome != 'skipped'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: RC4-required-ci-linux-close
+          path: |
+            linux-startup.json
+            linux-startup-diagnostics/**/*.json
+            linux-startup-diagnostics/**/*.txt
+            linux-startup-diagnostics/**/*.log
+            build/linux/x64/release/bundle/**
+          retention-days: 5
+          if-no-files-found: warn
       - name: Preserve failed startup diagnostics
         if: failure() && steps.linux-startup.outcome == 'failure'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
@@ -52,6 +91,21 @@ jobs:
             linux-startup-diagnostics/*
           retention-days: 5
           if-no-files-found: warn
+      - name: Require normal-exit GTK and Flutter disposal
+        id: linux-disposal
+        timeout-minutes: 3
+        run: xvfb-run -a dbus-run-session -- python3 tool/verify_linux_disposal.py --output linux-disposal-diagnostics
+      - name: Preserve native disposal evidence
+        if: always() && steps.linux-disposal.outcome != 'skipped'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: linux-disposal
+          path: |
+            linux-disposal-diagnostics/*.json
+            linux-disposal-diagnostics/*.log
+            linux-disposal-diagnostics/*.so
+          retention-days: 5
+          if-no-files-found: error
       - run: |
           mkdir dist
           cp linux-startup.json dist/
@@ -240,3 +294,60 @@ jobs:
           path: dist/*
           retention-days: 5
           if-no-files-found: error
+
+  performance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: linux
+      - run: flutter pub get --enforce-lockfile
+      - name: Build reviewed native text library
+        run: |
+          python3 tool/build_text_engine.py --platform linux --output-dir "$RUNNER_TEMP/performance-native"
+          python3 tool/native_build_gates.py verify_library "$RUNNER_TEMP/performance-native/libtandemlog_text.so"
+          echo "TANDEMLOG_TEXT_LIBRARY=$RUNNER_TEMP/performance-native/libtandemlog_text.so" >> "$GITHUB_ENV"
+      - name: Verify SQLite profile adapter and materialize locked native assets
+        run: flutter test --no-pub test/local_profile_database_test.dart
+      - name: Require hosted AOT correctness and retain advisory timings
+        timeout-minutes: 56
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/performance-diagnostics"
+          # Hosted correctness/bindings remain mandatory. The same absolute and
+          # growth limits qualify separately on the controlled reference host.
+          limits_sha="50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e"
+          mode=(--hosted-advisory)
+          if [[ "${{ inputs.performance_calibration }}" == true ]]; then
+            mode=(--measure-only)
+          fi
+          bash tool/performance/run_ci.sh "$limits_sha" "${mode[@]}" \
+            > "$RUNNER_TEMP/performance-diagnostics/runner.stdout.log" \
+            2> "$RUNNER_TEMP/performance-diagnostics/runner.stderr.log"
+      - name: Retain every performance attempt and preflight diagnostic
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: release-performance
+          path: |
+            ${{ runner.temp }}/performance-diagnostics/*.log
+            ${{ runner.temp }}/performance-results/gate-result.json
+            ${{ runner.temp }}/performance-results/*-result.json
+            ${{ runner.temp }}/performance-results/*.log
+            ${{ runner.temp }}/performance-results/fixture-*/fixture.json
+          retention-days: 5
+          if-no-files-found: warn
+
+  reference-performance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Require fresh source-bound controlled-reference qualification
+        run: python3 tool/performance/reference_receipt.py verify --repo "$GITHUB_WORKSPACE"

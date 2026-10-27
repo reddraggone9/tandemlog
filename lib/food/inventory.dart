@@ -677,18 +677,21 @@ List<FoodGroup> _group(Iterable<FoodContainer> values) {
   for (final item in values) {
     grouped.putIfAbsent(item.details.displayGroupKey, () => []).add(item);
   }
-  final result = grouped.values
-      .map((items) => FoodGroup(items..sort((a, b) => a.id.compareTo(b.id))))
+  final result = grouped.entries
+      .map(
+        (entry) => MapEntry(
+          entry.key,
+          FoodGroup(entry.value..sort((a, b) => a.id.compareTo(b.id))),
+        ),
+      )
       .toList();
   result.sort((a, b) {
-    final date = (a.details.expiry ?? '9999-99-99').compareTo(
-      b.details.expiry ?? '9999-99-99',
+    final date = (a.value.details.expiry ?? '9999-99-99').compareTo(
+      b.value.details.expiry ?? '9999-99-99',
     );
-    return date != 0
-        ? date
-        : a.details.displayGroupKey.compareTo(b.details.displayGroupKey);
+    return date != 0 ? date : a.key.compareTo(b.key);
   });
-  return result;
+  return result.map((entry) => entry.value).toList();
 }
 
 Never _invalid(String field) => throw FormatException('Invalid food $field.');

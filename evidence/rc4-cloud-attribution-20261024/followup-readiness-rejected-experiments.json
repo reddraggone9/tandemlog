@@ -1,0 +1,363 @@
+{
+  "scope": "unaccepted availability memo/projection research; not committed as executable code",
+  "memoSummary": {
+    "scope": "uncommitted bounded availability memo experiment; not accepted",
+    "sourceBase": "a71d0ba",
+    "focusedTests": 84,
+    "newTests": 6,
+    "analysis": "clean",
+    "formatFiles": 397,
+    "all3ShapesCorrectness": true,
+    "allPinsMatch": true,
+    "retryCount": 0,
+    "absoluteFailures": 13,
+    "pairedFailures": 20,
+    "report": "/workspace/scratch/rc4-readiness-final-full-aot/gate-result.json",
+    "reportSHA256": "8c11842510b35b0859254aa9dd87d21cdeebe51c5c7170d9bcb43047e4011e45",
+    "patchSHA256": "0619672a94a4ce86f5fdb40e95d8e5ef6f67da2126c65a27e7ab1acbc2f08a4a",
+    "next": "isolate transient availability-only projection without memo before choosing final source"
+  },
+  "matchedVariants": {
+    "sourceBase": "a71d0ba",
+    "scope": "matched isolated stock/full memo/no-retention availability projection; finite development observations, not acceptance",
+    "variants": {
+      "stock": {
+        "all27ScenarioGroupsCorrectnessReplayPrefixesPass": true,
+        "allSourcePinsMatch": true,
+        "shapes": {
+          "dense-1": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 52.389,
+              "maxMs": 61.339,
+              "samplesMs": [
+                57.743,
+                52.132,
+                51.428,
+                52.389,
+                61.339
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 8.377,
+              "maxMs": 10.886,
+              "samplesMs": [
+                8.377,
+                9.242,
+                10.886,
+                7.817,
+                7.764
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 875.313,
+              "maxMs": 927.091,
+              "samplesMs": [
+                875.313,
+                927.091,
+                853.908,
+                899.064,
+                852.006
+              ]
+            }
+          },
+          "dense-2": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 52.284,
+              "maxMs": 62.476,
+              "samplesMs": [
+                50.072,
+                52.284,
+                62.476,
+                53.68,
+                52.234
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 8.933,
+              "maxMs": 11.652,
+              "samplesMs": [
+                8.933,
+                11.652,
+                8.655,
+                8.382,
+                11.308
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 1355.792,
+              "maxMs": 1418.018,
+              "samplesMs": [
+                1369.292,
+                1355.792,
+                1418.018,
+                1351.023,
+                1348.947
+              ]
+            }
+          },
+          "dense-food": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 58.429,
+              "maxMs": 60.635,
+              "samplesMs": [
+                60.635,
+                60.601,
+                58.429,
+                49.406,
+                51.247
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 9.49,
+              "maxMs": 12.063,
+              "samplesMs": [
+                9.626,
+                9.474,
+                12.063,
+                9.49,
+                9.277
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 1405.094,
+              "maxMs": 1428.328,
+              "samplesMs": [
+                1427.499,
+                1405.094,
+                1428.328,
+                1304.285,
+                1372.328
+              ]
+            }
+          }
+        }
+      },
+      "memo": {
+        "all27ScenarioGroupsCorrectnessReplayPrefixesPass": true,
+        "allSourcePinsMatch": true,
+        "shapes": {
+          "dense-1": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 51.971,
+              "maxMs": 53.718,
+              "samplesMs": [
+                51.971,
+                53.718,
+                52.771,
+                48.509,
+                46.297
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 8.004,
+              "maxMs": 10.749,
+              "samplesMs": [
+                8.088,
+                7.468,
+                10.749,
+                8.004,
+                7.874
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 956.21,
+              "maxMs": 1011.992,
+              "samplesMs": [
+                894.923,
+                1009.257,
+                1011.992,
+                956.21,
+                875.889
+              ]
+            }
+          },
+          "dense-2": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 53.273,
+              "maxMs": 56.986,
+              "samplesMs": [
+                53.273,
+                53.94,
+                50.717,
+                52.937,
+                56.986
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 8.839,
+              "maxMs": 12.744,
+              "samplesMs": [
+                8.384,
+                8.839,
+                12.744,
+                8.567,
+                8.926
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 1372.817,
+              "maxMs": 1390.566,
+              "samplesMs": [
+                1390.566,
+                1372.817,
+                1294.492,
+                1385.502,
+                1367.989
+              ]
+            }
+          },
+          "dense-food": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 47.495,
+              "maxMs": 55.454,
+              "samplesMs": [
+                51.591,
+                45.402,
+                55.454,
+                46.438,
+                47.495
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 10.257,
+              "maxMs": 10.877,
+              "samplesMs": [
+                10.537,
+                10.877,
+                8.821,
+                8.699,
+                10.257
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 1345.63,
+              "maxMs": 1481.827,
+              "samplesMs": [
+                1345.63,
+                1304.245,
+                1292.154,
+                1481.827,
+                1359.455
+              ]
+            }
+          }
+        }
+      },
+      "projection": {
+        "all27ScenarioGroupsCorrectnessReplayPrefixesPass": true,
+        "allSourcePinsMatch": true,
+        "shapes": {
+          "dense-1": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 48.464,
+              "maxMs": 52.523,
+              "samplesMs": [
+                48.464,
+                48.157,
+                49.827,
+                48.429,
+                52.523
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 8.702,
+              "maxMs": 11.235,
+              "samplesMs": [
+                11.235,
+                7.778,
+                8.702,
+                9.896,
+                7.88
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 951.153,
+              "maxMs": 967.359,
+              "samplesMs": [
+                898.745,
+                967.359,
+                951.011,
+                962.482,
+                951.153
+              ]
+            }
+          },
+          "dense-2": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 55.55,
+              "maxMs": 59.387,
+              "samplesMs": [
+                54.199,
+                54.017,
+                59.387,
+                55.55,
+                57.144
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 8.278,
+              "maxMs": 10.312,
+              "samplesMs": [
+                9.665,
+                7.463,
+                7.432,
+                10.312,
+                8.278
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 1372.499,
+              "maxMs": 1478.065,
+              "samplesMs": [
+                1378.585,
+                1287.829,
+                1258.204,
+                1372.499,
+                1478.065
+              ]
+            }
+          },
+          "dense-food": {
+            "recurring.complete.undoProtectedSuccessor": {
+              "medianMs": 52.279,
+              "maxMs": 60.882,
+              "samplesMs": [
+                59.02,
+                60.882,
+                52.279,
+                48.824,
+                50.766
+              ]
+            },
+            "cardinality500.food.paired.details.undo": {
+              "medianMs": 9.057,
+              "maxMs": 9.719,
+              "samplesMs": [
+                9.216,
+                8.433,
+                9.719,
+                8.59,
+                9.057
+              ]
+            },
+            "startup.cold.total": {
+              "medianMs": 1332.856,
+              "maxMs": 1448.816,
+              "samplesMs": [
+                1315.307,
+                1306.474,
+                1336.887,
+                1448.816,
+                1332.856
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "decision": "Mixed timings and a possible unrelated-path median regression do not justify retained state. Removed all availability memo/projection changes; preserve complete patch, full failed AOT/source and component tests. Next repair is deterministic checkpoint self-roundtrip removal.",
+  "sourcePatch": "rejected-readiness-memo.patch.gz (lossless compressed evidence only; do not apply as accepted repair)",
+  "uncompressedPatchSHA256": "0619672a94a4ce86f5fdb40e95d8e5ef6f67da2126c65a27e7ab1acbc2f08a4a",
+  "compressedPatchSHA256": "b2e8f1ab13e72b7080909012b325b52be3290b4c6ac9b2e9779812c7f91c82c1"
+}

@@ -1,0 +1,5095 @@
+{
+  "snapshotUTC": "2026-10-25T07:18:58.624588+00:00",
+  "scope": "Read-only retained-evidence triage; no new measurement, product edit or CI dispatch",
+  "productSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "hosted": {
+    "runId": 40167598688,
+    "reportSHA256": "8e70445a8a3264da2e86bca5a22a9b0d906c1c70fd45128ab1c33feae5ee8031",
+    "failureCounts": {
+      "absoluteMetrics": 5,
+      "absoluteMedianMisses": 0,
+      "absoluteMaximumMisses": 5,
+      "pairedMetrics": 3,
+      "pairedMedianMisses": 1,
+      "pairedMaximumMisses": 3,
+      "absoluteStartupMetrics": 0
+    },
+    "correctnessAllShapes": true,
+    "rerunsUsed": 0,
+    "measurementCompleted": null,
+    "allPinsMatch": null,
+    "releaseGateAccepted": false,
+    "environment": {
+      "architecture": "x86_64",
+      "kernel": "6.17.0-1022-azure",
+      "python": "3.12.3",
+      "logicalCPUs": 4,
+      "runnerImage": {},
+      "cpuModel": "AMD EPYC 9V45 96-Core Processor"
+    },
+    "resourceBounds": {
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "cpu.max": "200000 100000",
+      "pids.max": "128"
+    }
+  },
+  "priorHosted": {
+    "runId": 40164354926,
+    "reportSHA256": "9df6695e3086ef57ae4700484bc8fc763f314d0dde3c0d0116166d3e198c2a64",
+    "failureCounts": {
+      "absoluteMetrics": 179,
+      "absoluteMedianMisses": 13,
+      "absoluteMaximumMisses": 179,
+      "pairedMetrics": 105,
+      "pairedMedianMisses": 12,
+      "pairedMaximumMisses": 103,
+      "absoluteStartupMetrics": 5
+    },
+    "environment": {
+      "architecture": "x86_64",
+      "kernel": "6.17.0-1022-azure",
+      "python": "3.12.3",
+      "logicalCPUs": 4,
+      "runnerImage": {},
+      "cpuModel": "AMD EPYC 9V74 80-Core Processor"
+    },
+    "identicalInputsAndBinaryToCurrent": {
+      "binarySHA256": true,
+      "sourcePins": true,
+      "compiledSourceAndDependencyPins": true,
+      "toolPins": true,
+      "resourceBounds": true,
+      "everyOriginalBinding": true
+    }
+  },
+  "cloudLocal": {
+    "originalProductSHA": "6e400f7a69e3b4f48ec0c87266c30d3c4a5068e6",
+    "sameApplicationStorageSourceAsCurrent": true,
+    "reportSHA256": "7c0cd8e6e57ba4944a79db9fba1736f2d3eddefe4124da0439fb36d3c50baf04",
+    "failureCounts": {
+      "absoluteMetrics": 4,
+      "absoluteMedianMisses": 0,
+      "absoluteMaximumMisses": 4,
+      "pairedMetrics": 0,
+      "pairedMedianMisses": 0,
+      "pairedMaximumMisses": 0,
+      "absoluteStartupMetrics": 4
+    },
+    "allPinsMatch": true,
+    "measurementCompleted": true,
+    "environment": {
+      "architecture": "x86_64",
+      "kernel": "6.18.55",
+      "python": "3.12.14",
+      "logicalCPUs": 5,
+      "runnerImage": {},
+      "cpuModel": "AMD EPYC 9V74 80-Core Processor"
+    },
+    "resourceBounds": {
+      "memory.max": "17179869184",
+      "memory.swap.max": "max",
+      "cpu.max": "400000 100000",
+      "pids.max": "max"
+    },
+    "qualification": "Different resource bounds, CPU/kernel/native build; not a controlled performance acceptance comparison."
+  },
+  "selectedMetrics": [
+    {
+      "size": "dense-1",
+      "action": "converted.food.paired.details.confirmedSave",
+      "absoluteFailure": false,
+      "hostedSummary": {
+        "allSamplesMs": [
+          4.742,
+          5.05,
+          4.926,
+          5.132,
+          5.55
+        ],
+        "medianMs": 5.05,
+        "maxMs": 5.55,
+        "warmupSamplesMs": [
+          5.669,
+          4.711
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          7.247,
+          6.775,
+          6.634,
+          7.699,
+          6.89
+        ],
+        "medianMs": 6.89,
+        "maxMs": 7.699,
+        "warmupSamplesMs": [
+          7.885,
+          7.302
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 3,
+        "warmup": false,
+        "microseconds": 5050,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 302,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 5550,
+            "cgroup.user_usec": 4514,
+            "cgroup.system_usec": 1036,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 1,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 4875,
+            "processIo.wchar": 6058,
+            "processIo.syscr": 13,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 218320896
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 6,
+        "warmup": false,
+        "microseconds": 5550,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 419,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 5721,
+            "cgroup.user_usec": 5516,
+            "cgroup.system_usec": 205,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 4875,
+            "processIo.wchar": 6058,
+            "processIo.syscr": 13,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 16384,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 222924800
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 4742,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 288,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 4834,
+              "cgroup.user_usec": 3733,
+              "cgroup.system_usec": 1102,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4875,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 217149440
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 5050,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 302,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5550,
+              "cgroup.user_usec": 4514,
+              "cgroup.system_usec": 1036,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4875,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 218320896
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 4926,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 276,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5624,
+              "cgroup.user_usec": 4460,
+              "cgroup.system_usec": 1163,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4875,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 220549120
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 5132,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 450,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5140,
+              "cgroup.user_usec": 3982,
+              "cgroup.system_usec": 1159,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4875,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 221732864
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 5550,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 419,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5721,
+              "cgroup.user_usec": 5516,
+              "cgroup.system_usec": 205,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4875,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 222924800
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-1",
+      "action": "converted.food.paired.details.confirmedUndo",
+      "absoluteFailure": false,
+      "hostedSummary": {
+        "allSamplesMs": [
+          5.305,
+          5.876,
+          5.294,
+          5.426,
+          5.984
+        ],
+        "medianMs": 5.426,
+        "maxMs": 5.984,
+        "warmupSamplesMs": [
+          5.246,
+          6.218
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          9.143,
+          11.437,
+          7.014,
+          7.025,
+          9.755
+        ],
+        "medianMs": 9.143,
+        "maxMs": 11.437,
+        "warmupSamplesMs": [
+          7.895,
+          9.46
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 5,
+        "warmup": false,
+        "microseconds": 5426,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 291,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 5796,
+            "cgroup.user_usec": 4752,
+            "cgroup.system_usec": 1044,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5920,
+            "processIo.wchar": 5814,
+            "processIo.syscr": 15,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 16384,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 222326784
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 6,
+        "warmup": false,
+        "microseconds": 5984,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 348,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 5929,
+            "cgroup.user_usec": 4662,
+            "cgroup.system_usec": 1267,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5920,
+            "processIo.wchar": 5814,
+            "processIo.syscr": 15,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 223522816
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 5305,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 395,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5933,
+              "cgroup.user_usec": 2896,
+              "cgroup.system_usec": 3037,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5920,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 217735168
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 5876,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 379,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6257,
+              "cgroup.user_usec": 4302,
+              "cgroup.system_usec": 1954,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5920,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 219959296
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 5294,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 311,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5713,
+              "cgroup.user_usec": 5638,
+              "cgroup.system_usec": 76,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5920,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 221138944
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 5426,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 291,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5796,
+              "cgroup.user_usec": 4752,
+              "cgroup.system_usec": 1044,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5920,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 222326784
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 5984,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 348,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5929,
+              "cgroup.user_usec": 4662,
+              "cgroup.system_usec": 1267,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5920,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 223522816
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-1",
+      "action": "converted.task.metadata.assignee",
+      "absoluteFailure": true,
+      "hostedSummary": {
+        "allSamplesMs": [
+          176.982,
+          11.488,
+          11.45,
+          12.063,
+          10.604
+        ],
+        "medianMs": 11.488,
+        "maxMs": 176.982,
+        "warmupSamplesMs": [
+          9.954,
+          23.884
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 35,
+        "maxMs": 45
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          14.72,
+          13.631,
+          13.034,
+          13.236,
+          16.639
+        ],
+        "medianMs": 13.631,
+        "maxMs": 16.639,
+        "warmupSamplesMs": [
+          12.866,
+          19.511
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 3,
+        "warmup": false,
+        "microseconds": 11488,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1743010,
+          "appendCalls": 1,
+          "appendMicroseconds": 423,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 12001,
+            "cgroup.user_usec": 11904,
+            "cgroup.system_usec": 97,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5750,
+            "processIo.wchar": 92168,
+            "processIo.syscr": 15,
+            "processIo.syscw": 45,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 98304,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 114372608
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 2,
+        "warmup": false,
+        "microseconds": 176982,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1743010,
+          "appendCalls": 1,
+          "appendMicroseconds": 10235,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 11190,
+            "cgroup.user_usec": 8236,
+            "cgroup.system_usec": 2953,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 2,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5750,
+            "processIo.wchar": 96288,
+            "processIo.syscr": 15,
+            "processIo.syscw": 47,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 102400,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 114851840
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 176982,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 10235,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 11190,
+              "cgroup.user_usec": 8236,
+              "cgroup.system_usec": 2953,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 2,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5750,
+              "processIo.wchar": 96288,
+              "processIo.syscr": 15,
+              "processIo.syscw": 47,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 102400,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 114851840
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 11488,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 423,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 12001,
+              "cgroup.user_usec": 11904,
+              "cgroup.system_usec": 97,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5750,
+              "processIo.wchar": 92168,
+              "processIo.syscr": 15,
+              "processIo.syscw": 45,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 98304,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 114372608
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 11450,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 371,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 11686,
+              "cgroup.user_usec": 8794,
+              "cgroup.system_usec": 2892,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5750,
+              "processIo.wchar": 67448,
+              "processIo.syscr": 15,
+              "processIo.syscw": 33,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 73728,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 115593216
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 12063,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 436,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 17987,
+              "cgroup.user_usec": 16145,
+              "cgroup.system_usec": 1842,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5750,
+              "processIo.wchar": 67480,
+              "processIo.syscr": 15,
+              "processIo.syscw": 34,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 81920,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 116477952
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 10604,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 303,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 10520,
+              "cgroup.user_usec": 9580,
+              "cgroup.system_usec": 940,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 9846,
+              "processIo.wchar": 67448,
+              "processIo.syscr": 16,
+              "processIo.syscw": 33,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 73728,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 116436992
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-1",
+      "action": "converted.task.metadata.assignee.undo",
+      "absoluteFailure": true,
+      "hostedSummary": {
+        "allSamplesMs": [
+          46.142,
+          9.852,
+          9.794,
+          10.844,
+          9.255
+        ],
+        "medianMs": 9.852,
+        "maxMs": 46.142,
+        "warmupSamplesMs": [
+          8.686,
+          10.76
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 40,
+        "maxMs": 45
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          11.492,
+          13.728,
+          12.034,
+          11.419,
+          13.491
+        ],
+        "medianMs": 12.034,
+        "maxMs": 13.728,
+        "warmupSamplesMs": [
+          11.082,
+          16.351
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 3,
+        "warmup": false,
+        "microseconds": 9852,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1743010,
+          "appendCalls": 1,
+          "appendMicroseconds": 477,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 9797,
+            "cgroup.user_usec": 9780,
+            "cgroup.system_usec": 16,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 1,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5766,
+            "processIo.wchar": 59224,
+            "processIo.syscr": 15,
+            "processIo.syscw": 29,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 69632,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 115011584
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 2,
+        "warmup": false,
+        "microseconds": 46142,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1743010,
+          "appendCalls": 1,
+          "appendMicroseconds": 19763,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 10346,
+            "cgroup.user_usec": 7301,
+            "cgroup.system_usec": 3045,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5766,
+            "processIo.wchar": 71584,
+            "processIo.syscr": 15,
+            "processIo.syscw": 35,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 77824,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 115470336
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 46142,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 19763,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 10346,
+              "cgroup.user_usec": 7301,
+              "cgroup.system_usec": 3045,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5766,
+              "processIo.wchar": 71584,
+              "processIo.syscr": 15,
+              "processIo.syscw": 35,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 77824,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 115470336
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 9852,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 477,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 9797,
+              "cgroup.user_usec": 9780,
+              "cgroup.system_usec": 16,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5766,
+              "processIo.wchar": 59224,
+              "processIo.syscr": 15,
+              "processIo.syscw": 29,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 69632,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 115011584
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 9794,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 358,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 10221,
+              "cgroup.user_usec": 10220,
+              "cgroup.system_usec": 0,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5766,
+              "processIo.wchar": 71584,
+              "processIo.syscr": 15,
+              "processIo.syscw": 35,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 77824,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 116248576
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 10844,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 368,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 11089,
+              "cgroup.user_usec": 8918,
+              "cgroup.system_usec": 2171,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5766,
+              "processIo.wchar": 71584,
+              "processIo.syscr": 15,
+              "processIo.syscw": 35,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 77824,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 115982336
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 9255,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1743010,
+            "appendCalls": 1,
+            "appendMicroseconds": 298,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 9430,
+              "cgroup.user_usec": 9375,
+              "cgroup.system_usec": 55,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 13958,
+              "processIo.wchar": 71584,
+              "processIo.syscr": 17,
+              "processIo.syscw": 35,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 77824,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 117129216
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-1",
+      "action": "task.complete.checklistConfirm",
+      "absoluteFailure": false,
+      "hostedSummary": {
+        "allSamplesMs": [
+          19.948,
+          24.857,
+          30.987,
+          31.132,
+          33.367
+        ],
+        "medianMs": 30.987,
+        "maxMs": 33.367,
+        "warmupSamplesMs": [
+          12.984,
+          16.243
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 70,
+        "maxMs": 80
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          35.211,
+          36.174,
+          37.35,
+          43.623,
+          45.794
+        ],
+        "medianMs": 37.35,
+        "maxMs": 45.794,
+        "warmupSamplesMs": [
+          20.973,
+          22.617
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 4,
+        "warmup": false,
+        "microseconds": 30987,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1755420,
+          "appendCalls": 1,
+          "appendMicroseconds": 304,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 26713,
+            "cgroup.user_usec": 20242,
+            "cgroup.system_usec": 6471,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 381065,
+            "processIo.wchar": 835785,
+            "processIo.syscr": 110,
+            "processIo.syscw": 319,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 933888,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 119975936
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 797,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 6,
+        "warmup": false,
+        "microseconds": 33367,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1759956,
+          "appendCalls": 1,
+          "appendMicroseconds": 295,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 28311,
+            "cgroup.user_usec": 23860,
+            "cgroup.system_usec": 4452,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 8329,
+            "processIo.wchar": 598929,
+            "processIo.syscr": 19,
+            "processIo.syscw": 291,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 729088,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 121982976
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 797,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 19948,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1750884,
+            "appendCalls": 1,
+            "appendMicroseconds": 326,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 19169,
+              "cgroup.user_usec": 15989,
+              "cgroup.system_usec": 3180,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8329,
+              "processIo.wchar": 310529,
+              "processIo.syscr": 19,
+              "processIo.syscw": 151,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 376832,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 124006400
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 24857,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1753152,
+            "appendCalls": 1,
+            "appendMicroseconds": 363,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 21658,
+              "cgroup.user_usec": 15235,
+              "cgroup.system_usec": 6423,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 16521,
+              "processIo.wchar": 397049,
+              "processIo.syscr": 21,
+              "processIo.syscw": 193,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 479232,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 121249792
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 30987,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1755420,
+            "appendCalls": 1,
+            "appendMicroseconds": 304,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 26713,
+              "cgroup.user_usec": 20242,
+              "cgroup.system_usec": 6471,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 381065,
+              "processIo.wchar": 835785,
+              "processIo.syscr": 110,
+              "processIo.syscw": 319,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 933888,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 119975936
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 31132,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1757688,
+            "appendCalls": 1,
+            "appendMicroseconds": 362,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 35157,
+              "cgroup.user_usec": 29607,
+              "cgroup.system_usec": 5549,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8329,
+              "processIo.wchar": 495929,
+              "processIo.syscr": 19,
+              "processIo.syscw": 241,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 610304,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 120020992
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 33367,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1759956,
+            "appendCalls": 1,
+            "appendMicroseconds": 295,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 28311,
+              "cgroup.user_usec": 23860,
+              "cgroup.system_usec": 4452,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8329,
+              "processIo.wchar": 598929,
+              "processIo.syscr": 19,
+              "processIo.syscw": 291,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 729088,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 121982976
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-1",
+      "action": "task.metadata.schedule",
+      "absoluteFailure": true,
+      "hostedSummary": {
+        "allSamplesMs": [
+          10.095,
+          10.576,
+          9.403,
+          9.589,
+          143.987
+        ],
+        "medianMs": 10.095,
+        "maxMs": 143.987,
+        "warmupSamplesMs": [
+          11.463,
+          8.674
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 35,
+        "maxMs": 40
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          11.233,
+          13.722,
+          11.424,
+          11.443,
+          11.974
+        ],
+        "medianMs": 11.443,
+        "maxMs": 13.722,
+        "warmupSamplesMs": [
+          12.038,
+          11.968
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 2,
+        "warmup": false,
+        "microseconds": 10095,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1751546,
+          "appendCalls": 1,
+          "appendMicroseconds": 346,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 15809,
+            "cgroup.user_usec": 12668,
+            "cgroup.system_usec": 3142,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 1,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5915,
+            "processIo.wchar": 75855,
+            "processIo.syscr": 15,
+            "processIo.syscw": 37,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 81920,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 105730048
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 800,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 6,
+        "warmup": false,
+        "microseconds": 143987,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1751546,
+          "appendCalls": 1,
+          "appendMicroseconds": 125369,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 21374,
+            "cgroup.user_usec": 17504,
+            "cgroup.system_usec": 3869,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 1,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5915,
+            "processIo.wchar": 75855,
+            "processIo.syscr": 15,
+            "processIo.syscw": 37,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 86016,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 108478464
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 800,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 10095,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1751546,
+            "appendCalls": 1,
+            "appendMicroseconds": 346,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 15809,
+              "cgroup.user_usec": 12668,
+              "cgroup.system_usec": 3142,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5915,
+              "processIo.wchar": 75855,
+              "processIo.syscr": 15,
+              "processIo.syscw": 37,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 81920,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 105730048
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 800,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 10576,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1751546,
+            "appendCalls": 1,
+            "appendMicroseconds": 406,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 10958,
+              "cgroup.user_usec": 8802,
+              "cgroup.system_usec": 2157,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5915,
+              "processIo.wchar": 75855,
+              "processIo.syscr": 15,
+              "processIo.syscw": 37,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 81920,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 107270144
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 800,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 9403,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1751546,
+            "appendCalls": 1,
+            "appendMicroseconds": 350,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 9747,
+              "cgroup.user_usec": 7467,
+              "cgroup.system_usec": 2281,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5915,
+              "processIo.wchar": 88215,
+              "processIo.syscr": 15,
+              "processIo.syscw": 43,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 94208,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 110829568
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 800,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 9589,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1751546,
+            "appendCalls": 1,
+            "appendMicroseconds": 406,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 10155,
+              "cgroup.user_usec": 10025,
+              "cgroup.system_usec": 130,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5915,
+              "processIo.wchar": 88215,
+              "processIo.syscr": 15,
+              "processIo.syscw": 43,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 98304,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 111304704
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 800,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 143987,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1751546,
+            "appendCalls": 1,
+            "appendMicroseconds": 125369,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 21374,
+              "cgroup.user_usec": 17504,
+              "cgroup.system_usec": 3869,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5915,
+              "processIo.wchar": 75855,
+              "processIo.syscr": 15,
+              "processIo.syscw": 37,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 86016,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 108478464
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 800,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-2",
+      "action": "converted.food.paired.details.confirmedSave",
+      "absoluteFailure": true,
+      "hostedSummary": {
+        "allSamplesMs": [
+          7.344,
+          9.984,
+          29.243,
+          18.543,
+          5.568
+        ],
+        "medianMs": 9.984,
+        "maxMs": 29.243,
+        "warmupSamplesMs": [
+          7.12,
+          9.072
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          8.142,
+          6.917,
+          10.806,
+          7.326,
+          7.034
+        ],
+        "medianMs": 7.326,
+        "maxMs": 10.806,
+        "warmupSamplesMs": [
+          8.531,
+          9.39
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 3,
+        "warmup": false,
+        "microseconds": 9984,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 476,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 10044,
+            "cgroup.user_usec": 9011,
+            "cgroup.system_usec": 1032,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 4880,
+            "processIo.wchar": 6058,
+            "processIo.syscr": 13,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 16384,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 199081984
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 4,
+        "warmup": false,
+        "microseconds": 29243,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 2382,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 28956,
+            "cgroup.user_usec": 18394,
+            "cgroup.system_usec": 10562,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 4880,
+            "processIo.wchar": 6058,
+            "processIo.syscr": 13,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 194789376
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 7344,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 473,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 8117,
+              "cgroup.user_usec": 8117,
+              "cgroup.system_usec": 0,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 196915200
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 9984,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 476,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 10044,
+              "cgroup.user_usec": 9011,
+              "cgroup.system_usec": 1032,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 199081984
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 29243,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 2382,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 28956,
+              "cgroup.user_usec": 18394,
+              "cgroup.system_usec": 10562,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 194789376
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 18543,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 1581,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 17858,
+              "cgroup.user_usec": 12713,
+              "cgroup.system_usec": 5145,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 196968448
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 5568,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 378,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5172,
+              "cgroup.user_usec": 5116,
+              "cgroup.system_usec": 56,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 199680000
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-2",
+      "action": "converted.food.paired.details.confirmedUndo",
+      "absoluteFailure": true,
+      "hostedSummary": {
+        "allSamplesMs": [
+          32.813,
+          7.306,
+          20.837,
+          6.788,
+          6.157
+        ],
+        "medianMs": 7.306,
+        "maxMs": 32.813,
+        "warmupSamplesMs": [
+          9.807,
+          6.323
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          7.481,
+          8.293,
+          9.711,
+          7.234,
+          7.641
+        ],
+        "medianMs": 7.641,
+        "maxMs": 9.711,
+        "warmupSamplesMs": [
+          7.742,
+          11.502
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 3,
+        "warmup": false,
+        "microseconds": 7306,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 385,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 10436,
+            "cgroup.user_usec": 7336,
+            "cgroup.system_usec": 3099,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5925,
+            "processIo.wchar": 5814,
+            "processIo.syscr": 15,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 200167424
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 2,
+        "warmup": false,
+        "microseconds": 32813,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 1755,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 28778,
+            "cgroup.user_usec": 21547,
+            "cgroup.system_usec": 7231,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5925,
+            "processIo.wchar": 5814,
+            "processIo.syscr": 15,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 197996544
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 32813,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 1755,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 28778,
+              "cgroup.user_usec": 21547,
+              "cgroup.system_usec": 7231,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 197996544
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 7306,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 385,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 10436,
+              "cgroup.user_usec": 7336,
+              "cgroup.system_usec": 3099,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 200167424
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 20837,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 1412,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 18363,
+              "cgroup.user_usec": 15059,
+              "cgroup.system_usec": 3304,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 195878912
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 6788,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 451,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 7143,
+              "cgroup.user_usec": 5476,
+              "cgroup.system_usec": 1666,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 198586368
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 6157,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 435,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6539,
+              "cgroup.user_usec": 5406,
+              "cgroup.system_usec": 1132,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 200777728
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-2",
+      "action": "task.complete.checklistConfirm",
+      "absoluteFailure": false,
+      "hostedSummary": {
+        "allSamplesMs": [
+          23.534,
+          24.556,
+          28.17,
+          38.285,
+          36.925
+        ],
+        "medianMs": 28.17,
+        "maxMs": 38.285,
+        "warmupSamplesMs": [
+          14.723,
+          17.727
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 70,
+        "maxMs": 80
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          30.945,
+          35.264,
+          41.258,
+          39.988,
+          50.576
+        ],
+        "medianMs": 39.988,
+        "maxMs": 50.576,
+        "warmupSamplesMs": [
+          19.832,
+          24.689
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 4,
+        "warmup": false,
+        "microseconds": 28170,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1755420,
+          "appendCalls": 1,
+          "appendMicroseconds": 386,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 24307,
+            "cgroup.user_usec": 20333,
+            "cgroup.system_usec": 3975,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 16527,
+            "processIo.wchar": 462969,
+            "processIo.syscr": 21,
+            "processIo.syscw": 225,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 561152,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 162775040
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 797,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 5,
+        "warmup": false,
+        "microseconds": 38285,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1757688,
+          "appendCalls": 1,
+          "appendMicroseconds": 357,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 33841,
+            "cgroup.user_usec": 31064,
+            "cgroup.system_usec": 2778,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 393359,
+            "processIo.wchar": 876865,
+            "processIo.syscr": 113,
+            "processIo.syscw": 334,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 991232,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 163680256
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 797,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 23534,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1750884,
+            "appendCalls": 1,
+            "appendMicroseconds": 372,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 21487,
+              "cgroup.user_usec": 17475,
+              "cgroup.system_usec": 4013,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8335,
+              "processIo.wchar": 314649,
+              "processIo.syscr": 19,
+              "processIo.syscw": 153,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 376832,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 161497088
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 24556,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1753152,
+            "appendCalls": 1,
+            "appendMicroseconds": 422,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 21584,
+              "cgroup.user_usec": 16186,
+              "cgroup.system_usec": 5399,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8335,
+              "processIo.wchar": 388809,
+              "processIo.syscr": 19,
+              "processIo.syscw": 189,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 471040,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 165126144
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 28170,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1755420,
+            "appendCalls": 1,
+            "appendMicroseconds": 386,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 24307,
+              "cgroup.user_usec": 20333,
+              "cgroup.system_usec": 3975,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 16527,
+              "processIo.wchar": 462969,
+              "processIo.syscr": 21,
+              "processIo.syscw": 225,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 561152,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 162775040
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 38285,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1757688,
+            "appendCalls": 1,
+            "appendMicroseconds": 357,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 33841,
+              "cgroup.user_usec": 31064,
+              "cgroup.system_usec": 2778,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 393359,
+              "processIo.wchar": 876865,
+              "processIo.syscr": 113,
+              "processIo.syscw": 334,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 991232,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 163680256
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 36925,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1759956,
+            "appendCalls": 1,
+            "appendMicroseconds": 489,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 32936,
+              "cgroup.user_usec": 19907,
+              "cgroup.system_usec": 13029,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8335,
+              "processIo.wchar": 582449,
+              "processIo.syscr": 19,
+              "processIo.syscw": 283,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 716800,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 162914304
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-food",
+      "action": "converted.food.paired.details.confirmedSave",
+      "absoluteFailure": false,
+      "hostedSummary": {
+        "allSamplesMs": [
+          6.528,
+          6.738,
+          6.058,
+          6.564,
+          5.982
+        ],
+        "medianMs": 6.528,
+        "maxMs": 6.738,
+        "warmupSamplesMs": [
+          7.522,
+          5.844
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          7.239,
+          7.596,
+          7.157,
+          7.346,
+          7.525
+        ],
+        "medianMs": 7.346,
+        "maxMs": 7.596,
+        "warmupSamplesMs": [
+          7.992,
+          6.893
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 2,
+        "warmup": false,
+        "microseconds": 6528,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 414,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 6734,
+            "cgroup.user_usec": 1009,
+            "cgroup.system_usec": 5725,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 4880,
+            "processIo.wchar": 6058,
+            "processIo.syscr": 13,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 209072128
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 3,
+        "warmup": false,
+        "microseconds": 6738,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 349,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 6839,
+            "cgroup.user_usec": 5710,
+            "cgroup.system_usec": 1128,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 4880,
+            "processIo.wchar": 6058,
+            "processIo.syscr": 13,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 211738624
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 6528,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 414,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6734,
+              "cgroup.user_usec": 1009,
+              "cgroup.system_usec": 5725,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 209072128
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 6738,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 349,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6839,
+              "cgroup.user_usec": 5710,
+              "cgroup.system_usec": 1128,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 211738624
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 6058,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 473,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6530,
+              "cgroup.user_usec": 5490,
+              "cgroup.system_usec": 1041,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 214286336
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 6564,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 502,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 7377,
+              "cgroup.user_usec": 5127,
+              "cgroup.system_usec": 2251,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 210153472
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 5982,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 486,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 5982,
+              "cgroup.user_usec": 5860,
+              "cgroup.system_usec": 121,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 4880,
+              "processIo.wchar": 6058,
+              "processIo.syscr": 13,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 212713472
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-food",
+      "action": "converted.food.paired.details.confirmedUndo",
+      "absoluteFailure": false,
+      "hostedSummary": {
+        "allSamplesMs": [
+          6.395,
+          6.422,
+          7.359,
+          6.204,
+          6.583
+        ],
+        "medianMs": 6.422,
+        "maxMs": 7.359,
+        "warmupSamplesMs": [
+          6.264,
+          8.837
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          7.388,
+          7.316,
+          9.022,
+          8.526,
+          8.02
+        ],
+        "medianMs": 8.02,
+        "maxMs": 9.022,
+        "warmupSamplesMs": [
+          6.983,
+          9.361
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 3,
+        "warmup": false,
+        "microseconds": 6422,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 301,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 6901,
+            "cgroup.user_usec": 4721,
+            "cgroup.system_usec": 2180,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5925,
+            "processIo.wchar": 5814,
+            "processIo.syscr": 15,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 213012480
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 4,
+        "warmup": false,
+        "microseconds": 7359,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 0,
+          "appendCalls": 1,
+          "appendMicroseconds": 342,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 11477,
+            "cgroup.user_usec": 10281,
+            "cgroup.system_usec": 1197,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 5925,
+            "processIo.wchar": 5814,
+            "processIo.syscr": 15,
+            "processIo.syscw": 3,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 12288,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 215560192
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 0,
+        "taskRows": 796,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 6395,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 449,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6909,
+              "cgroup.user_usec": 4588,
+              "cgroup.system_usec": 2321,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 210341888
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 6422,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 301,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6901,
+              "cgroup.user_usec": 4721,
+              "cgroup.system_usec": 2180,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 213012480
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 7359,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 342,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 11477,
+              "cgroup.user_usec": 10281,
+              "cgroup.system_usec": 1197,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 215560192
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 6204,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 319,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6643,
+              "cgroup.user_usec": 4770,
+              "cgroup.system_usec": 1873,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 16384,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 211431424
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 6583,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 0,
+            "appendCalls": 1,
+            "appendMicroseconds": 347,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 6602,
+              "cgroup.user_usec": 4536,
+              "cgroup.system_usec": 2065,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 5925,
+              "processIo.wchar": 5814,
+              "processIo.syscr": 15,
+              "processIo.syscw": 3,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 12288,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 214519808
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 0,
+          "taskRows": 796,
+          "foodContainers": 329
+        }
+      ]
+    },
+    {
+      "size": "dense-food",
+      "action": "task.complete.checklistConfirm",
+      "absoluteFailure": false,
+      "hostedSummary": {
+        "allSamplesMs": [
+          60.819,
+          26.509,
+          28.421,
+          35.85,
+          38.081
+        ],
+        "medianMs": 35.85,
+        "maxMs": 60.819,
+        "warmupSamplesMs": [
+          15.527,
+          21.683
+        ]
+      },
+      "absoluteBudget": {
+        "medianMs": 70,
+        "maxMs": 80
+      },
+      "sourceSealedLocalSummary": {
+        "allSamplesMs": [
+          30.05,
+          37.939,
+          44.803,
+          55.698,
+          43.475
+        ],
+        "medianMs": 43.475,
+        "maxMs": 55.698,
+        "warmupSamplesMs": [
+          18.851,
+          23.997
+        ]
+      },
+      "hostedMedianSample": {
+        "index": 5,
+        "warmup": false,
+        "microseconds": 35850,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1757688,
+          "appendCalls": 1,
+          "appendMicroseconds": 419,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 31668,
+            "cgroup.user_usec": 23413,
+            "cgroup.system_usec": 8256,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 0,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 8335,
+            "processIo.wchar": 491809,
+            "processIo.syscr": 19,
+            "processIo.syscw": 239,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 610304,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 179544064
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 797,
+        "foodContainers": 329
+      },
+      "hostedMaximumSample": {
+        "index": 2,
+        "warmup": false,
+        "microseconds": 60819,
+        "diagnostics": {
+          "semanticTaskSortsDelta": 0,
+          "taskSnapshotRowsDecodedDelta": 0,
+          "taskSnapshotRetainedBytesAfter": 1750884,
+          "appendCalls": 1,
+          "appendMicroseconds": 321,
+          "resourceInterval": "bracketed; probe overhead outside action timer",
+          "resourcesAvailable": true,
+          "resourceDeltas": {
+            "cgroup.usage_usec": 18516,
+            "cgroup.user_usec": 17282,
+            "cgroup.system_usec": 1234,
+            "cgroup.nice_usec": 0,
+            "cgroup.core_sched.force_idle_usec": 0,
+            "cgroup.nr_periods": 1,
+            "cgroup.nr_throttled": 0,
+            "cgroup.throttled_usec": 0,
+            "cgroup.nr_bursts": 0,
+            "cgroup.burst_usec": 0,
+            "processIo.rchar": 8335,
+            "processIo.wchar": 314649,
+            "processIo.syscr": 19,
+            "processIo.syscw": 153,
+            "processIo.read_bytes": 0,
+            "processIo.write_bytes": 376832,
+            "processIo.cancelled_write_bytes": 0
+          },
+          "rssBytesAfter": 183603200
+        },
+        "ownPhysicalDelta": 1,
+        "readFilesDelta": 2,
+        "semanticValidationsDelta": 1,
+        "taskRows": 797,
+        "foodContainers": 329
+      },
+      "allFiveHostSamples": [
+        {
+          "index": 2,
+          "warmup": false,
+          "microseconds": 60819,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1750884,
+            "appendCalls": 1,
+            "appendMicroseconds": 321,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 18516,
+              "cgroup.user_usec": 17282,
+              "cgroup.system_usec": 1234,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8335,
+              "processIo.wchar": 314649,
+              "processIo.syscr": 19,
+              "processIo.syscw": 153,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 376832,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 183603200
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 3,
+          "warmup": false,
+          "microseconds": 26509,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1753152,
+            "appendCalls": 1,
+            "appendMicroseconds": 371,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 30779,
+              "cgroup.user_usec": 22030,
+              "cgroup.system_usec": 8748,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 16527,
+              "processIo.wchar": 401169,
+              "processIo.syscr": 21,
+              "processIo.syscw": 195,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 479232,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 178708480
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 4,
+          "warmup": false,
+          "microseconds": 28421,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1755420,
+            "appendCalls": 1,
+            "appendMicroseconds": 311,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 24834,
+              "cgroup.user_usec": 20068,
+              "cgroup.system_usec": 4767,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 381071,
+              "processIo.wchar": 844049,
+              "processIo.syscr": 110,
+              "processIo.syscw": 324,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 942080,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 185425920
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 5,
+          "warmup": false,
+          "microseconds": 35850,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1757688,
+            "appendCalls": 1,
+            "appendMicroseconds": 419,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 31668,
+              "cgroup.user_usec": 23413,
+              "cgroup.system_usec": 8256,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 0,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8335,
+              "processIo.wchar": 491809,
+              "processIo.syscr": 19,
+              "processIo.syscw": 239,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 610304,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 179544064
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        },
+        {
+          "index": 6,
+          "warmup": false,
+          "microseconds": 38081,
+          "diagnostics": {
+            "semanticTaskSortsDelta": 0,
+            "taskSnapshotRowsDecodedDelta": 0,
+            "taskSnapshotRetainedBytesAfter": 1759956,
+            "appendCalls": 1,
+            "appendMicroseconds": 321,
+            "resourceInterval": "bracketed; probe overhead outside action timer",
+            "resourcesAvailable": true,
+            "resourceDeltas": {
+              "cgroup.usage_usec": 33382,
+              "cgroup.user_usec": 25482,
+              "cgroup.system_usec": 7900,
+              "cgroup.nice_usec": 0,
+              "cgroup.core_sched.force_idle_usec": 0,
+              "cgroup.nr_periods": 1,
+              "cgroup.nr_throttled": 0,
+              "cgroup.throttled_usec": 0,
+              "cgroup.nr_bursts": 0,
+              "cgroup.burst_usec": 0,
+              "processIo.rchar": 8335,
+              "processIo.wchar": 578329,
+              "processIo.syscr": 19,
+              "processIo.syscw": 281,
+              "processIo.read_bytes": 0,
+              "processIo.write_bytes": 708608,
+              "processIo.cancelled_write_bytes": 0
+            },
+            "rssBytesAfter": 186425344
+          },
+          "ownPhysicalDelta": 1,
+          "readFilesDelta": 2,
+          "semanticValidationsDelta": 1,
+          "taskRows": 797,
+          "foodContainers": 329
+        }
+      ]
+    }
+  ],
+  "startupMetrics": [
+    {
+      "size": "dense-1",
+      "action": "startup.warm.total",
+      "hosted": {
+        "allSamplesMs": [
+          161.605,
+          159.506,
+          163.603,
+          163.583,
+          164.875
+        ],
+        "medianMs": 163.583,
+        "maxMs": 164.875,
+        "warmupSamplesMs": [
+          165.388,
+          160.449
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          240.936,
+          254.74,
+          243.628,
+          242.724,
+          245.912
+        ],
+        "medianMs": 243.628,
+        "maxMs": 254.74,
+        "warmupSamplesMs": [
+          225.055,
+          242.016
+        ]
+      },
+      "budget": {
+        "medianMs": 280,
+        "maxMs": 285
+      }
+    },
+    {
+      "size": "dense-1",
+      "action": "startup.warm.history",
+      "hosted": {
+        "allSamplesMs": [
+          155.785,
+          153.735,
+          157.143,
+          157.359,
+          159.083
+        ],
+        "medianMs": 157.143,
+        "maxMs": 159.083,
+        "warmupSamplesMs": [
+          159.458,
+          154.095
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          233.159,
+          246.727,
+          235.824,
+          234.832,
+          238.15
+        ],
+        "medianMs": 235.824,
+        "maxMs": 246.727,
+        "warmupSamplesMs": [
+          217.4,
+          234.046
+        ]
+      },
+      "budget": {
+        "medianMs": 270,
+        "maxMs": 275
+      }
+    },
+    {
+      "size": "dense-1",
+      "action": "startup.warm.taskAttach",
+      "hosted": {
+        "allSamplesMs": [
+          4.847,
+          4.775,
+          5.276,
+          5.029,
+          4.842
+        ],
+        "medianMs": 4.847,
+        "maxMs": 5.276,
+        "warmupSamplesMs": [
+          4.883,
+          5.283
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          6.368,
+          6.551,
+          6.417,
+          6.526,
+          6.4
+        ],
+        "medianMs": 6.417,
+        "maxMs": 6.551,
+        "warmupSamplesMs": [
+          6.402,
+          6.533
+        ]
+      },
+      "budget": {
+        "medianMs": 15,
+        "maxMs": 15
+      }
+    },
+    {
+      "size": "dense-1",
+      "action": "startup.warm.proof",
+      "hosted": {
+        "allSamplesMs": [
+          39.154,
+          29.792,
+          32.263,
+          39.3,
+          30.409
+        ],
+        "medianMs": 32.263,
+        "maxMs": 39.3,
+        "warmupSamplesMs": [
+          31.507,
+          33.02
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          46.692,
+          47.063,
+          59.645,
+          45.941,
+          48.57
+        ],
+        "medianMs": 47.063,
+        "maxMs": 59.645,
+        "warmupSamplesMs": [
+          46.453,
+          63.018
+        ]
+      },
+      "budget": {
+        "medianMs": 75,
+        "maxMs": 85
+      }
+    },
+    {
+      "size": "dense-1",
+      "action": "startup.warm.cacheRestore",
+      "hosted": {
+        "allSamplesMs": [
+          9.028,
+          12.97,
+          9.524,
+          8.98,
+          14.8
+        ],
+        "medianMs": 9.524,
+        "maxMs": 14.8,
+        "warmupSamplesMs": [
+          13.492,
+          9.268
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          21.147,
+          18.206,
+          13.243,
+          27.98,
+          16.054
+        ],
+        "medianMs": 18.206,
+        "maxMs": 27.98,
+        "warmupSamplesMs": [
+          13.075,
+          13.227
+        ]
+      },
+      "budget": {
+        "medianMs": 20,
+        "maxMs": 25
+      }
+    },
+    {
+      "size": "dense-1",
+      "action": "startup.cold.total",
+      "hosted": {
+        "allSamplesMs": [
+          625.736,
+          610.649,
+          633.089,
+          664.123,
+          641.287
+        ],
+        "medianMs": 633.089,
+        "maxMs": 664.123,
+        "warmupSamplesMs": [
+          646.545,
+          612.373
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          831.979,
+          861.537,
+          935.458,
+          940.157,
+          881.083
+        ],
+        "medianMs": 881.083,
+        "maxMs": 940.157,
+        "warmupSamplesMs": [
+          851.869,
+          843.803
+        ]
+      },
+      "budget": {
+        "medianMs": 925,
+        "maxMs": 935
+      }
+    },
+    {
+      "size": "dense-1",
+      "action": "startup.cold.history",
+      "hosted": {
+        "allSamplesMs": [
+          585.73,
+          577.485,
+          603.225,
+          626.759,
+          607.918
+        ],
+        "medianMs": 603.225,
+        "maxMs": 626.759,
+        "warmupSamplesMs": [
+          606.505,
+          577.886
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          793.839,
+          827.041,
+          896.958,
+          897.509,
+          843.859
+        ],
+        "medianMs": 843.859,
+        "maxMs": 897.509,
+        "warmupSamplesMs": [
+          815.909,
+          805.181
+        ]
+      },
+      "budget": {
+        "medianMs": 880,
+        "maxMs": 890
+      }
+    },
+    {
+      "size": "dense-1",
+      "action": "startup.cold.taskAttach",
+      "hosted": {
+        "allSamplesMs": [
+          36.087,
+          29.632,
+          25.982,
+          28.058,
+          29.523
+        ],
+        "medianMs": 29.523,
+        "maxMs": 36.087,
+        "warmupSamplesMs": [
+          34.771,
+          30.834
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          34.05,
+          30.821,
+          34.043,
+          37.979,
+          32.771
+        ],
+        "medianMs": 34.043,
+        "maxMs": 37.979,
+        "warmupSamplesMs": [
+          30.729,
+          33.552
+        ]
+      },
+      "budget": {
+        "medianMs": 40,
+        "maxMs": 45
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.warm.total",
+      "hosted": {
+        "allSamplesMs": [
+          295.573,
+          293.158,
+          279.066,
+          295.359,
+          295.825
+        ],
+        "medianMs": 295.359,
+        "maxMs": 295.825,
+        "warmupSamplesMs": [
+          296.514,
+          306.638
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          421.357,
+          400.304,
+          419.678,
+          390.157,
+          394.332
+        ],
+        "medianMs": 400.304,
+        "maxMs": 421.357,
+        "warmupSamplesMs": [
+          424.961,
+          397.455
+        ]
+      },
+      "budget": {
+        "medianMs": 465,
+        "maxMs": 470
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.warm.history",
+      "hosted": {
+        "allSamplesMs": [
+          288.117,
+          284.717,
+          270.446,
+          287.722,
+          288.799
+        ],
+        "medianMs": 287.722,
+        "maxMs": 288.799,
+        "warmupSamplesMs": [
+          289.225,
+          298.788
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          412.858,
+          391.212,
+          407.471,
+          381.602,
+          385.727
+        ],
+        "medianMs": 391.212,
+        "maxMs": 412.858,
+        "warmupSamplesMs": [
+          415.913,
+          388.528
+        ]
+      },
+      "budget": {
+        "medianMs": 450,
+        "maxMs": 460
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.warm.taskAttach",
+      "hosted": {
+        "allSamplesMs": [
+          5.886,
+          7.049,
+          7.051,
+          5.982,
+          5.609
+        ],
+        "medianMs": 5.982,
+        "maxMs": 7.051,
+        "warmupSamplesMs": [
+          5.742,
+          6.137
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          7.019,
+          7.487,
+          10.723,
+          7.029,
+          7.016
+        ],
+        "medianMs": 7.029,
+        "maxMs": 10.723,
+        "warmupSamplesMs": [
+          7.54,
+          7.388
+        ]
+      },
+      "budget": {
+        "medianMs": 15,
+        "maxMs": 20
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.warm.proof",
+      "hosted": {
+        "allSamplesMs": [
+          51.808,
+          47.856,
+          47.802,
+          51.64,
+          52.345
+        ],
+        "medianMs": 51.64,
+        "maxMs": 52.345,
+        "warmupSamplesMs": [
+          48.169,
+          54.996
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          77.154,
+          80.507,
+          70.374,
+          75.596,
+          81.524
+        ],
+        "medianMs": 77.154,
+        "maxMs": 81.524,
+        "warmupSamplesMs": [
+          69.759,
+          75.586
+        ]
+      },
+      "budget": {
+        "medianMs": 120,
+        "maxMs": 130
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.warm.cacheRestore",
+      "hosted": {
+        "allSamplesMs": [
+          28.854,
+          19.196,
+          18.301,
+          24.691,
+          28.219
+        ],
+        "medianMs": 24.691,
+        "maxMs": 28.854,
+        "warmupSamplesMs": [
+          23.787,
+          29.097
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          38.839,
+          19.044,
+          42.192,
+          28.442,
+          18.775
+        ],
+        "medianMs": 28.442,
+        "maxMs": 42.192,
+        "warmupSamplesMs": [
+          38.01,
+          38.347
+        ]
+      },
+      "budget": {
+        "medianMs": 30,
+        "maxMs": 40
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.cold.total",
+      "hosted": {
+        "allSamplesMs": [
+          923.588,
+          910.234,
+          915.735,
+          914.888,
+          910.453
+        ],
+        "medianMs": 914.888,
+        "maxMs": 923.588,
+        "warmupSamplesMs": [
+          914.293,
+          894.368
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          1164.386,
+          1144.222,
+          1162.143,
+          1170.116,
+          1178.2
+        ],
+        "medianMs": 1164.386,
+        "maxMs": 1178.2,
+        "warmupSamplesMs": [
+          1193.66,
+          1262.242
+        ]
+      },
+      "budget": {
+        "medianMs": 1335,
+        "maxMs": 1370
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.cold.history",
+      "hosted": {
+        "allSamplesMs": [
+          843.672,
+          828.587,
+          835.211,
+          828.341,
+          829.988
+        ],
+        "medianMs": 829.988,
+        "maxMs": 843.672,
+        "warmupSamplesMs": [
+          842.486,
+          819.244
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          1106.736,
+          1085.441,
+          1104.928,
+          1111.773,
+          1119.488
+        ],
+        "medianMs": 1106.736,
+        "maxMs": 1119.488,
+        "warmupSamplesMs": [
+          1136.367,
+          1198.893
+        ]
+      },
+      "budget": {
+        "medianMs": 1240,
+        "maxMs": 1260
+      }
+    },
+    {
+      "size": "dense-2",
+      "action": "startup.cold.taskAttach",
+      "hosted": {
+        "allSamplesMs": [
+          75.63,
+          77.306,
+          75.737,
+          82.229,
+          75.938
+        ],
+        "medianMs": 75.938,
+        "maxMs": 82.229,
+        "warmupSamplesMs": [
+          67.636,
+          70.739
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          53.173,
+          52.661,
+          51.618,
+          53.182,
+          53.991
+        ],
+        "medianMs": 53.173,
+        "maxMs": 53.991,
+        "warmupSamplesMs": [
+          51.977,
+          58.335
+        ]
+      },
+      "budget": {
+        "medianMs": 105,
+        "maxMs": 115
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.warm.total",
+      "hosted": {
+        "allSamplesMs": [
+          352.874,
+          363.214,
+          349.683,
+          372.691,
+          343.374
+        ],
+        "medianMs": 352.874,
+        "maxMs": 372.691,
+        "warmupSamplesMs": [
+          349.318,
+          359.747
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          496.208,
+          505.546,
+          484.134,
+          489.07,
+          485.444
+        ],
+        "medianMs": 489.07,
+        "maxMs": 505.546,
+        "warmupSamplesMs": [
+          491.231,
+          486.872
+        ]
+      },
+      "budget": {
+        "medianMs": 530,
+        "maxMs": 555
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.warm.history",
+      "hosted": {
+        "allSamplesMs": [
+          346.023,
+          356.151,
+          342.819,
+          363.654,
+          337.046
+        ],
+        "medianMs": 346.023,
+        "maxMs": 363.654,
+        "warmupSamplesMs": [
+          342.85,
+          351.123
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          487.865,
+          496.97,
+          472.738,
+          476.986,
+          477.323
+        ],
+        "medianMs": 477.323,
+        "maxMs": 496.97,
+        "warmupSamplesMs": [
+          483.202,
+          475.435
+        ]
+      },
+      "budget": {
+        "medianMs": 520,
+        "maxMs": 540
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.warm.taskAttach",
+      "hosted": {
+        "allSamplesMs": [
+          5.196,
+          5.459,
+          5.282,
+          7.412,
+          5.066
+        ],
+        "medianMs": 5.282,
+        "maxMs": 7.412,
+        "warmupSamplesMs": [
+          5.068,
+          7.172
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          6.613,
+          6.776,
+          9.767,
+          10.446,
+          6.463
+        ],
+        "medianMs": 6.776,
+        "maxMs": 10.446,
+        "warmupSamplesMs": [
+          6.465,
+          9.879
+        ]
+      },
+      "budget": {
+        "medianMs": 15,
+        "maxMs": 20
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.warm.proof",
+      "hosted": {
+        "allSamplesMs": [
+          37.312,
+          44.536,
+          30.542,
+          31.174,
+          38.027
+        ],
+        "medianMs": 37.312,
+        "maxMs": 44.536,
+        "warmupSamplesMs": [
+          30.925,
+          30.263
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          53.668,
+          62.394,
+          45.745,
+          45.854,
+          54.732
+        ],
+        "medianMs": 53.668,
+        "maxMs": 62.394,
+        "warmupSamplesMs": [
+          51.01,
+          45.453
+        ]
+      },
+      "budget": {
+        "medianMs": 80,
+        "maxMs": 85
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.warm.cacheRestore",
+      "hosted": {
+        "allSamplesMs": [
+          9.388,
+          9.321,
+          13.716,
+          22.266,
+          9.285
+        ],
+        "medianMs": 9.388,
+        "maxMs": 22.266,
+        "warmupSamplesMs": [
+          13.381,
+          19.696
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          12.476,
+          12.649,
+          17.102,
+          27.988,
+          12.739
+        ],
+        "medianMs": 12.739,
+        "maxMs": 27.988,
+        "warmupSamplesMs": [
+          17.327,
+          27.193
+        ]
+      },
+      "budget": {
+        "medianMs": 30,
+        "maxMs": 35
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.cold.total",
+      "hosted": {
+        "allSamplesMs": [
+          933.677,
+          933.711,
+          937.121,
+          935.2,
+          962.36
+        ],
+        "medianMs": 935.2,
+        "maxMs": 962.36,
+        "warmupSamplesMs": [
+          931.507,
+          932.084
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          1329.441,
+          1245.945,
+          1264.259,
+          1279.612,
+          1222.924
+        ],
+        "medianMs": 1264.259,
+        "maxMs": 1329.441,
+        "warmupSamplesMs": [
+          1376.055,
+          1412.688
+        ]
+      },
+      "budget": {
+        "medianMs": 1400,
+        "maxMs": 1635
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.cold.history",
+      "hosted": {
+        "allSamplesMs": [
+          898.392,
+          895.027,
+          901.528,
+          900.671,
+          925.042
+        ],
+        "medianMs": 900.671,
+        "maxMs": 925.042,
+        "warmupSamplesMs": [
+          889.161,
+          898.782
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          1290.589,
+          1210.101,
+          1225.967,
+          1242.264,
+          1185.406
+        ],
+        "medianMs": 1225.967,
+        "maxMs": 1290.589,
+        "warmupSamplesMs": [
+          1337.91,
+          1371.219
+        ]
+      },
+      "budget": {
+        "medianMs": 1345,
+        "maxMs": 1580
+      }
+    },
+    {
+      "size": "dense-food",
+      "action": "startup.cold.taskAttach",
+      "hosted": {
+        "allSamplesMs": [
+          30.659,
+          28.522,
+          30.851,
+          30.021,
+          32.95
+        ],
+        "medianMs": 30.659,
+        "maxMs": 32.95,
+        "warmupSamplesMs": [
+          37.81,
+          28.728
+        ]
+      },
+      "local": {
+        "allSamplesMs": [
+          33.098,
+          30.893,
+          33.08,
+          32.581,
+          32.009
+        ],
+        "medianMs": 32.581,
+        "maxMs": 33.098,
+        "warmupSamplesMs": [
+          33.175,
+          36.196
+        ]
+      },
+      "budget": {
+        "medianMs": 45,
+        "maxMs": 60
+      }
+    }
+  ],
+  "pairedFailures": [
+    {
+      "comparison": "task-own-history",
+      "action": "converted.food.paired.details.confirmedSave",
+      "values": {
+        "smallMedianMs": 5.05,
+        "largeMedianMs": 9.984,
+        "medianBoundMs": 9.3125,
+        "smallMaximumMs": 5.55,
+        "largeMaximumMs": 29.243,
+        "maximumBoundMs": 12.77
+      }
+    },
+    {
+      "comparison": "task-own-history",
+      "action": "converted.food.paired.details.confirmedUndo",
+      "values": {
+        "smallMedianMs": 5.426,
+        "largeMedianMs": 7.306,
+        "medianBoundMs": 9.7825,
+        "smallMaximumMs": 5.984,
+        "largeMaximumMs": 32.813,
+        "maximumBoundMs": 13.3776
+      }
+    },
+    {
+      "comparison": "food-own-history",
+      "action": "task.complete.checklistConfirm",
+      "values": {
+        "smallMedianMs": 30.987,
+        "largeMedianMs": 35.85,
+        "medianBoundMs": 41.73375,
+        "smallMaximumMs": 33.367,
+        "largeMaximumMs": 60.819,
+        "maximumBoundMs": 51.71379999999999
+      }
+    }
+  ],
+  "retainedStartupProfile": {
+    "source": "e23f00f9640ee5724f4b646d37bc352ca58dc6f1",
+    "sampleCount": 21404,
+    "sampleWeightNs": 21468404636,
+    "lostEventRecordsReported": 0,
+    "scope": "Own process user CPU only during21fresh-profile opens across3shapes,2warmups5samples each;inclusive shares overlap;control/report overhead included;not wall/kernel/presentation timing",
+    "topInclusive": [
+      {
+        "symbol": "UnifiedHistory._refreshObserved",
+        "percent": 72.314
+      },
+      {
+        "symbol": "UnifiedHistory._decodeRecord",
+        "percent": 37.979
+      },
+      {
+        "symbol": "new UnifiedRecord.decode",
+        "percent": 37.484
+      },
+      {
+        "symbol": "UnifiedHistory._validateEffects",
+        "percent": 30.616
+      },
+      {
+        "symbol": "UnifiedHistory._validateEffects.<anonymous closure>",
+        "percent": 30.616
+      },
+      {
+        "symbol": "UnifiedHistory._validateObservedEffects",
+        "percent": 30.616
+      },
+      {
+        "symbol": "TaskStore._withCopySeedIndex",
+        "percent": 28.803
+      },
+      {
+        "symbol": "TaskSemanticValidator.validate",
+        "percent": 27.182
+      },
+      {
+        "symbol": "TaskSemanticValidator._validateFull",
+        "percent": 27.177
+      },
+      {
+        "symbol": "TaskSemanticValidator._validateFull.<anonymous closure>",
+        "percent": 27.14
+      },
+      {
+        "symbol": "TaskStore._replaySemanticEvents",
+        "percent": 26.168
+      },
+      {
+        "symbol": "_value",
+        "percent": 20.244
+      },
+      {
+        "symbol": "new UnifiedRecord.decode.<anonymous closure>",
+        "percent": 19.893
+      },
+      {
+        "symbol": "new UnifiedEffect",
+        "percent": 19.842
+      },
+      {
+        "symbol": "new CurrentOperation.decode",
+        "percent": 17.698
+      },
+      {
+        "symbol": "new LogEvent.decode",
+        "percent": 16.875
+      },
+      {
+        "symbol": "_value.<anonymous closure>",
+        "percent": 15.32
+      },
+      {
+        "symbol": "new UnifiedRecord",
+        "percent": 13.61
+      },
+      {
+        "symbol": "TaskStore._projectEntity",
+        "percent": 12.521
+      },
+      {
+        "symbol": "TaskStore._materializeText",
+        "percent": 10.806
+      },
+      {
+        "symbol": "TaskStore._validateTextBaseline",
+        "percent": 10.526
+      },
+      {
+        "symbol": "_Sha32BitSink.updateHash",
+        "percent": 10.106
+      },
+      {
+        "symbol": "TaskStore._baselineSeedFields",
+        "percent": 9.704
+      },
+      {
+        "symbol": "CurrentOperation.contentHash",
+        "percent": 9.671
+      },
+      {
+        "symbol": "_string",
+        "percent": 9.199
+      },
+      {
+        "symbol": "CurrentOperation._encoded",
+        "percent": 8.835
+      },
+      {
+        "symbol": "TaskStore._baselineSeedFields.<anonymous closure>",
+        "percent": 8.653
+      },
+      {
+        "symbol": "UnifiedRecord.encode",
+        "percent": 3.854
+      },
+      {
+        "symbol": "NativeTextEngine._call",
+        "percent": 3.597
+      },
+      {
+        "symbol": "CurrentOperation.toJson",
+        "percent": 2.486
+      },
+      {
+        "symbol": "UnifiedHistory.attachProjectionInProfileQueue",
+        "percent": 1.747
+      },
+      {
+        "symbol": "UnifiedHistory.attachProjectionInProfileQueue.<anonymous closure>",
+        "percent": 1.743
+      },
+      {
+        "symbol": "TaskStore._stageUnifiedProjectionIndexed",
+        "percent": 1.663
+      },
+      {
+        "symbol": "TaskStore._stageUnifiedProjection.<anonymous closure>",
+        "percent": 1.663
+      },
+      {
+        "symbol": "TaskStore._stageUnifiedProjection",
+        "percent": 1.663
+      },
+      {
+        "symbol": "TaskStore.openUnified.<anonymous closure>",
+        "percent": 1.663
+      },
+      {
+        "symbol": "NativeTextEngine.createDocument",
+        "percent": 1.528
+      },
+      {
+        "symbol": "NativeTextEngine._create",
+        "percent": 1.5
+      },
+      {
+        "symbol": "NativeTextDocument._call",
+        "percent": 1.486
+      },
+      {
+        "symbol": "UnifiedHistory.copyValidatedTaskProjection",
+        "percent": 1.154
+      }
+    ],
+    "topLeaf": [
+      {
+        "symbol": "[unknown]",
+        "percent": 27.719
+      },
+      {
+        "symbol": "_Sha32BitSink.updateHash",
+        "percent": 10.045
+      },
+      {
+        "symbol": "_Utf8Encoder._fillBuffer",
+        "percent": 6.032
+      },
+      {
+        "symbol": "_string",
+        "percent": 4.92
+      },
+      {
+        "symbol": "String.hashCode",
+        "percent": 1.827
+      },
+      {
+        "symbol": "String._concatAll",
+        "percent": 1.458
+      },
+      {
+        "symbol": "stub AllocateObjectParameterized",
+        "percent": 1.346
+      },
+      {
+        "symbol": "_StringBase._interpolate",
+        "percent": 0.953
+      },
+      {
+        "symbol": "StringBuffer._addPart",
+        "percent": 0.878
+      },
+      {
+        "symbol": "malloc",
+        "percent": 0.869
+      },
+      {
+        "symbol": "_Array.[]",
+        "percent": 0.846
+      },
+      {
+        "symbol": "_LinkedHashMapMixin._getValueOrData",
+        "percent": 0.832
+      },
+      {
+        "symbol": "sameData.<anonymous closure>",
+        "percent": 0.822
+      },
+      {
+        "symbol": "List._grow",
+        "percent": 0.818
+      },
+      {
+        "symbol": "sqlite3VdbeExec",
+        "percent": 0.804
+      },
+      {
+        "symbol": "HashSink._addData",
+        "percent": 0.752
+      },
+      {
+        "symbol": "cfree",
+        "percent": 0.724
+      },
+      {
+        "symbol": "_Uint8ArrayView.[]",
+        "percent": 0.687
+      },
+      {
+        "symbol": "assert type is String",
+        "percent": 0.677
+      },
+      {
+        "symbol": "sqlite3RunParser",
+        "percent": 0.649
+      },
+      {
+        "symbol": "List.[]=",
+        "percent": 0.645
+      },
+      {
+        "symbol": "stub AllocateArray",
+        "percent": 0.635
+      },
+      {
+        "symbol": "String.==",
+        "percent": 0.612
+      },
+      {
+        "symbol": "TaskStore._replaySemanticEvents.<anonymous closure>",
+        "percent": 0.551
+      },
+      {
+        "symbol": "_LinkedHashMapMixin._insert",
+        "percent": 0.523
+      }
+    ],
+    "qualification": "Predates UTF8 guard repair; overlapping CPU samples, not current exclusive wall attribution or evidence that validation is removable."
+  },
+  "recommendation": "Three fixed current-source reference observations per reference-034a57d.md, retain existing failures and budgets; establish median repeatability before product optimization. No gate substitution or UI acceptance.",
+  "newMeasurements": 0,
+  "newProductEdits": 0,
+  "newCIDispatches": 0
+}

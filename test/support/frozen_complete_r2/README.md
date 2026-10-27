@@ -1,0 +1,1 @@
+Frozen r1/r2 decoder from bdb0f05:lib/domain/current_operation.dart. Original SHA256 cc85fd7f0c9e3409b57caf8e2a7a7760571069d96a16cddfc07e5cacab8fd350. Only its two relative imports are mechanically redirected to unchanged pure helpers. Never teach this reader revision3. It is a wire reader, not old-app runtime evidence.

@@ -331,9 +331,7 @@ class TextCache {
         final document = engine.restoreDocument(
           actorClientId: 2,
           limits: limits,
-          checkpoint: NativeTextCheckpoint(
-            NativeTextState.parse(base64Encode(bytes)),
-          ),
+          checkpoint: NativeTextCheckpoint(NativeTextState.fromBytes(bytes)),
         );
         return _ResolvedCheckpoint(document, frontier.cast<String>().toSet());
       } on NativeTextException {
@@ -376,9 +374,7 @@ class TextCache {
           limits: NativeTextLimits(
             visibleUtf16: field == 'title' ? 500 : 10000,
           ),
-          checkpoint: NativeTextCheckpoint(
-            NativeTextState.parse(base64Encode(bytes)),
-          ),
+          checkpoint: NativeTextCheckpoint(NativeTextState.fromBytes(bytes)),
         );
         try {
           view[field] = candidate.read().text;
@@ -477,9 +473,7 @@ class TextCache {
           candidate = engine.restoreDocument(
             actorClientId: 2,
             limits: limits,
-            checkpoint: NativeTextCheckpoint(
-              NativeTextState.parse(base64Encode(bytes)),
-            ),
+            checkpoint: NativeTextCheckpoint(NativeTextState.fromBytes(bytes)),
           );
         } on NativeTextException {
           applied.clear();

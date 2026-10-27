@@ -97,7 +97,8 @@ int _compareScalars(String a, String b) {
 /// available and lowercase u00xx otherwise. All other scalar values are literal.
 /// Unpaired UTF-16 surrogates are rejected instead of being replaced by UTF-8.
 String _string(String value) {
-  final result = StringBuffer('"');
+  StringBuffer? result;
+  var start = 0;
   for (var i = 0; i < value.length; i++) {
     final unit = value.codeUnitAt(i);
     if (unit >= 0xd800 && unit <= 0xdbff) {
@@ -106,35 +107,36 @@ String _string(String value) {
           value.codeUnitAt(i + 1) > 0xdfff) {
         throw const FormatException('Unpaired Unicode surrogate in event.');
       }
-      result.write(value.substring(i, i + 2));
       i++;
-    } else if (unit >= 0xdc00 && unit <= 0xdfff) {
+      continue;
+    }
+    if (unit >= 0xdc00 && unit <= 0xdfff) {
       throw const FormatException('Unpaired Unicode surrogate in event.');
-    } else {
-      switch (unit) {
-        case 0x22:
-          result.write(r'\"');
-        case 0x5c:
-          result.write(r'\\');
-        case 0x08:
-          result.write(r'\b');
-        case 0x0c:
-          result.write(r'\f');
-        case 0x0a:
-          result.write(r'\n');
-        case 0x0d:
-          result.write(r'\r');
-        case 0x09:
-          result.write(r'\t');
-        default:
-          if (unit < 0x20) {
-            result.write('\\u${unit.toRadixString(16).padLeft(4, '0')}');
-          } else {
-            result.writeCharCode(unit);
-          }
-      }
+    }
+    final escaped = switch (unit) {
+      0x22 => r'\"',
+      0x5c => r'\\',
+      0x08 => r'\b',
+      0x0c => r'\f',
+      0x0a => r'\n',
+      0x0d => r'\r',
+      0x09 => r'\t',
+      < 0x20 => '\\u${unit.toRadixString(16).padLeft(4, '0')}',
+      _ => null,
+    };
+    if (escaped != null) {
+      // Copy normal runs once, rather than dispatching every literal code unit
+      // through StringBuffer. The validation/escaping contract is unchanged.
+      final buffer = result ??= StringBuffer('"');
+      buffer.write(value.substring(start, i));
+      buffer.write(escaped);
+      start = i + 1;
     }
   }
+  // Most protocol fields need no escaping. Still validate every code unit
+  // above, then avoid the buffer and substring allocations for that case.
+  if (result == null) return '"$value"';
+  result.write(value.substring(start));
   result.write('"');
   return result.toString();
 }

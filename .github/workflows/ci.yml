@@ -10,6 +10,11 @@ on:
       - "experiments/yrs-spike/evidence/**"
   pull_request:
   workflow_dispatch:
+    inputs:
+      calibrate_performance:
+        description: Collect synthetic timings only; does not satisfy a release performance gate
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -18,3 +23,5 @@ concurrency:
 jobs:
   checks:
     uses: ./.github/workflows/validate.yml
+    with:
+      performance_calibration: ${{ github.event_name == 'workflow_dispatch' && inputs.calibrate_performance }}

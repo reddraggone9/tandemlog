@@ -16,11 +16,12 @@ bool isFoodConflictName(String name) =>
 
 class LogFileInfo {
   final String name, stamp;
+  final String? identity;
 
   /// Current observed length, when the provider exposes it. This is an append
   /// hint, not proof that previously admitted bytes remain unchanged.
   final int? size;
-  LogFileInfo(this.name, this.stamp, {this.size});
+  LogFileInfo(this.name, this.stamp, {this.size, this.identity});
 }
 
 /// Human-readable transport failure. Retain the original platform cause for
@@ -56,6 +57,12 @@ abstract class TailTruncateLogFolder {
 /// read; implementations must not read/skip the old prefix to produce a suffix.
 abstract class RangeLogFolder {
   Future<Uint8List?> readFrom(String name, int offset);
+}
+
+/// Actual seek with a bound enforced during reading, including concurrent growth.
+/// Null requests a bounded full read; implementations never scan/skip a prefix.
+abstract class BoundedRangeLogFolder {
+  Future<Uint8List?> readFromBounded(String name, int offset, int maximumBytes);
 }
 
 /// Enforce the caller's byte bound while reading, including unknown lengths.
@@ -102,6 +109,7 @@ class LocalLogFolder
     implements
         LogFolder,
         RangeLogFolder,
+        BoundedRangeLogFolder,
         BoundedLogFolder,
         AtomicReplaceLogFolder,
         RecoverableReplaceLogFolder,
@@ -312,17 +320,56 @@ class LocalLogFolder
   @override
   Future<List<LogFileInfo>> list() async {
     final result = <LogFileInfo>[];
-    await for (final entry in Directory(location).list()) {
-      if (entry is File) {
+    final pending =
+        <Future<({LogFileInfo? info, Object? error, StackTrace? stack})>>[];
+
+    Future<({LogFileInfo? info, Object? error, StackTrace? stack})> inspect(
+      File entry,
+    ) async {
+      try {
         final s = await entry.stat();
-        result.add(
-          LogFileInfo(
+        return (
+          info: LogFileInfo(
             entry.uri.pathSegments.last,
             '${s.size}:${s.modified.microsecondsSinceEpoch}:${s.changed.microsecondsSinceEpoch}',
             size: s.size,
           ),
+          error: null,
+          stack: null,
         );
+      } catch (error, stack) {
+        // Handle each future immediately, even while the directory stream
+        // supplies later entries. No failed stat is left unobserved.
+        return (info: null, error: error, stack: stack);
       }
+    }
+
+    Future<void> drain() async {
+      if (pending.isEmpty) return;
+      final batch = await Future.wait(pending);
+      pending.clear();
+      for (final observation in batch) {
+        final error = observation.error;
+        if (error != null) {
+          Error.throwWithStackTrace(error, observation.stack!);
+        }
+        result.add(observation.info!);
+      }
+    }
+
+    try {
+      await for (final entry in Directory(location).list()) {
+        if (entry is File) {
+          pending.add(inspect(entry));
+          if (pending.length == 16) await drain();
+        }
+      }
+      await drain();
+    } catch (error, stack) {
+      // A stream error must not leave reads running. An earlier listed file's
+      // failed stat keeps the precedence it had in the sequential reader.
+      await drain();
+      Error.throwWithStackTrace(error, stack);
     }
     return result;
   }
@@ -353,20 +400,37 @@ class LocalLogFolder
   }
 
   @override
-  Future<Uint8List> readFrom(String name, int offset) async {
+  Future<Uint8List> readFrom(String name, int offset) async =>
+      (await readFromBounded(name, offset, maximumOwnedReplacementBytes))!;
+
+  @override
+  Future<Uint8List?> readFromBounded(
+    String name,
+    int offset,
+    int maximumBytes,
+  ) async {
+    if (offset < 0 || maximumBytes < 0) {
+      throw ArgumentError('Invalid read bound.');
+    }
     final handle = await file(name).open();
     try {
       final length = await handle.length();
-      if (offset < 0 || length < offset) {
+      if (length < offset) {
         throw FolderAccessFailure(
           'Previously imported log $name was truncated. Restore it before writing.',
         );
+      }
+      if (length - offset > maximumBytes) {
+        throw const FormatException('Input exceeds safe read limits.');
       }
       await handle.setPosition(offset);
       final builder = BytesBuilder(copy: false);
       while (true) {
         final chunk = await handle.read(64 * 1024);
         if (chunk.isEmpty) break;
+        if (builder.length + chunk.length > maximumBytes) {
+          throw const FormatException('Input exceeds safe read limits.');
+        }
         builder.add(chunk);
       }
       return builder.takeBytes();

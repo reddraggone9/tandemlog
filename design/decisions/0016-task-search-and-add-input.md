@@ -24,13 +24,14 @@ then becomes a magnifier that switches back to Search. Wide actions may include
 accessible description and a48px target. Entry retains its own submit control,
 Enter/Shift+Enter behavior and active mode after successful capture.
 
-Explicit mode changes clear the outgoing value. Leaving Search immediately
-removes its text query while keeping the chosen assignee/status/upcoming/tag
-filters. Switching away from unfinished capture discards that unsubmitted text
-without confirmation or hidden storage. Task-editor unsaved-change protection
-remains separate. Pending or uncertain submitted writes block the mode switch
-until their existing confirmation/retry path resolves; identity and error
-ownership stay with that path.
+Explicit mode changes carry the current typed value into the other input, including
+its selection, after the existing editor-close/readiness guards pass. Lee revised
+the original clearing choice on 2026-10-26 after repeatedly typing in the wrong
+mode. This is one carried input, not two independent hidden drafts. Search is
+active only in Search mode; Add restores the chosen filters without a hidden text
+query. Successful capture still clears its submitted text. Pending or uncertain
+submitted writes block switching until confirmation/retry resolves. The switch
+itself never submits a task. Task-editor dirty-draft protection stays separate.
 
 Default Search receives no automatic keyboard focus on startup or section
 navigation. Deliberate Add focuses the mounted entry; keyboard Search focuses
@@ -40,10 +41,9 @@ that same mode's buffer, focus exclusion and existing editor protection.
 ## Alternatives and consequences
 
 Keeping two inputs would use more vertical space and obscure the primary action.
-Retaining hidden inactive values would leave invisible filtering or capture
-drafts; Lee explicitly chose clearing instead. A confirmation on every mode
-change would obstruct the requested simple toggle. The accepted tradeoff is that
-an unsubmitted capture is discarded when the user deliberately leaves Add.
+Carrying the active value addresses wrong-mode typing without another row or
+confirmation. Inactive controller values never authorize invisible filtering;
+each real toggle replaces the destination value with the current outgoing text.
 
 ## Revisit
 

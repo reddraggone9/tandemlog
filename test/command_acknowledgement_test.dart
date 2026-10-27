@@ -235,8 +235,12 @@ void main() {
       'reopen must fail and retain unconfirmed completion targets ($keep prefix)',
       () async {
         final id = await task();
-        await store.command(id, 'task.completed', {});
-        await store.command(id, 'task.completed', {});
+        await store.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        });
+        await store.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        });
         final targets = store.activeCompletionIds(id);
         folder.keepNewRecords = keep;
         await expectLater(store.reopen(id, targets), throwsA(anything));

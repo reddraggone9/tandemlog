@@ -41,6 +41,19 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await _settle(tester);
 }
 
+Future<void> _enterCommittedText(
+  WidgetTester tester,
+  Finder target,
+  String text,
+) async {
+  await tester.enterText(target, text);
+  // Native Android IMEs may renew composing ranges after the injected text.
+  // Model the user's explicit Next/commit action before pressing Save; never
+  // bypass the product's intentional refusal to save unfinished composition.
+  await tester.testTextInput.receiveAction(TextInputAction.next);
+  await _settle(tester);
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   registerHistoricalChecklistRecompletionTests();
@@ -98,10 +111,13 @@ void registerHistoricalChecklistRecompletionTests() {
           'appearance': 'dark',
         });
         tester.view.devicePixelRatio = 1;
-        tester.view.physicalSize = const Size(1200, 850);
+        tester.view.physicalSize = Platform.isAndroid
+            ? const Size(390, 850)
+            : const Size(1200, 850);
         await tester.pumpWidget(
           TandemlogApp(
             profilePath: profile.path,
+            folderFactory: LocalLogFolder.new,
             timeSourceFactory: (changed) => ViewTimeSource(
               onChanged: changed,
               loadZone: () async => 'UTC',
@@ -148,7 +164,8 @@ void registerHistoricalChecklistRecompletionTests() {
           tester,
           () => find.byKey(const ValueKey('title')).evaluate().isNotEmpty,
         );
-        await tester.enterText(
+        await _enterCommittedText(
+          tester,
           find.byKey(const ValueKey('title')),
           'Pack for a walk ChildA',
         );
@@ -171,7 +188,8 @@ void registerHistoricalChecklistRecompletionTests() {
           tester,
           find.byKey(const ValueKey('checklist-edit-$copiedItem')),
         );
-        await tester.enterText(
+        await _enterCommittedText(
+          tester,
           find.byKey(const ValueKey('checklist-item-title')),
           'Native item Saved ChildItemA',
         );
@@ -194,7 +212,11 @@ void registerHistoricalChecklistRecompletionTests() {
         );
         final before = jsonEncode(peer.currentTextRow(child));
 
-        await offline.complete(parent, completionDay: DateTime(2026, 10, 8));
+        await offline.complete(
+          parent,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 8),
+        );
         await File(
           '${offlineFolder.path}/${offline.writer}.applog',
         ).copy('${folder.path}/${offline.writer}.applog');
@@ -210,7 +232,8 @@ void registerHistoricalChecklistRecompletionTests() {
               .isNotEmpty,
         );
         await _tap(tester, find.byKey(const ValueKey('checklist-edit-$item')));
-        await tester.enterText(
+        await _enterCommittedText(
+          tester,
           find.byKey(const ValueKey('checklist-item-title')),
           'Native item Saved ParentLater',
         );

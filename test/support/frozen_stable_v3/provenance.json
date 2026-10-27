@@ -1,0 +1,11 @@
+{
+  "source": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+  "sha256": {
+    "event.dart": "16de7d402144fe86d5a6ea5e258cd071d526bada650303008a7e7632f636b498",
+    "projection.dart": "17648c797d6b0d9c344f1738f72a506c9547efb6c78867399d77252e85182bf4",
+    "schedule.dart": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13",
+    "wall_time.dart": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0",
+    "event_clock.dart": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f",
+    "event_chain.dart": "5e4855d888354be7f35deb5f4dc27d602b878c6b15fe93b93671ec58cbdc51a5"
+  }
+}

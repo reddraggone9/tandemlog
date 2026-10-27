@@ -1,0 +1,371 @@
+{
+  "snapshotUTC": "2026-10-25T06:12:29.819164+00:00",
+  "headSHA": "034a57dbc7092e242889d23d12e22091fed08b0c",
+  "runId": 40167598688,
+  "linuxJobId": 121091718895,
+  "originalUninstrumentedStartupAndClose": {
+    "target": "Linux x86_64 native / Xvfb",
+    "binary": "build/linux/x64/release/bundle/tandemlog",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "close_mode": "normal",
+    "results": [
+      {
+        "run": 1,
+        "passed": true,
+        "cleanWitnessVerified": false,
+        "closeMode": "normal",
+        "external_ms": 6919,
+        "marker": "TANDEMLOG_READY_MS=1390 FILES_READ=2",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=89",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+          "TANDEMLOG_READY_MS=1390 FILES_READ=2"
+        ],
+        "external_main_ms": 5523,
+        "external_first_frame_ms": 5616,
+        "shutdown": {
+          "requestedMode": "normal",
+          "normalExitVerified": true,
+          "method": "owned-window-WM_DELETE_WINDOW",
+          "pid": 9558,
+          "window": "2097155",
+          "globalFocusOrInput": false,
+          "processExit": 0,
+          "elapsedMs": 1027.874
+        },
+        "process_exit": 0,
+        "witnessBeforeLaunch": {
+          "taskProofPresent": false,
+          "decodedProofPresent": false,
+          "taskProofShapeValid": false,
+          "decodedPayloadHashMatches": false,
+          "productionReuseVerified": false
+        },
+        "previousNormalExitVerified": false,
+        "canonical_payload_reads": 2,
+        "canonical_files": 1,
+        "startupCacheCounters": {
+          "warmTaskProjectionReuses": 0,
+          "decodedCacheReuses": 0,
+          "strictDecodedRecords": 3
+        },
+        "cleanTaskWitnessVerified": false,
+        "cleanDecodedWitnessVerified": false,
+        "witnessAfterClose": {
+          "taskProofPresent": true,
+          "decodedProofPresent": true,
+          "taskProofShapeValid": true,
+          "decodedPayloadHashMatches": true,
+          "productionReuseVerified": false,
+          "taskProofSHA256": "8d12b9c8139a8fa0b8566c6dbf95e0ae63e031f9d9a1bc53dfb70e415ad8fe80",
+          "decodedPayloadSHA256": "59bb160ac309953286222390770b9b1c9cd0fc9eab16117487d881a22297cb42"
+        },
+        "cache": "first-launch-no-cold-boot-claim"
+      },
+      {
+        "run": 2,
+        "passed": true,
+        "cleanWitnessVerified": true,
+        "closeMode": "normal",
+        "external_ms": 336,
+        "marker": "TANDEMLOG_READY_MS=192 FILES_READ=2",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=46",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":1,\"decodedCacheReuses\":3,\"strictDecodedRecords\":0}",
+          "TANDEMLOG_READY_MS=192 FILES_READ=2"
+        ],
+        "external_main_ms": 137,
+        "external_first_frame_ms": 187,
+        "shutdown": {
+          "requestedMode": "normal",
+          "normalExitVerified": true,
+          "method": "owned-window-WM_DELETE_WINDOW",
+          "pid": 9630,
+          "window": "2097155",
+          "globalFocusOrInput": false,
+          "processExit": 0,
+          "elapsedMs": 727.453
+        },
+        "process_exit": 0,
+        "witnessBeforeLaunch": {
+          "taskProofPresent": true,
+          "decodedProofPresent": true,
+          "taskProofShapeValid": true,
+          "decodedPayloadHashMatches": true,
+          "productionReuseVerified": false,
+          "taskProofSHA256": "8d12b9c8139a8fa0b8566c6dbf95e0ae63e031f9d9a1bc53dfb70e415ad8fe80",
+          "decodedPayloadSHA256": "59bb160ac309953286222390770b9b1c9cd0fc9eab16117487d881a22297cb42"
+        },
+        "previousNormalExitVerified": true,
+        "canonical_payload_reads": 2,
+        "canonical_files": 1,
+        "startupCacheCounters": {
+          "warmTaskProjectionReuses": 1,
+          "decodedCacheReuses": 3,
+          "strictDecodedRecords": 0
+        },
+        "cleanTaskWitnessVerified": true,
+        "cleanDecodedWitnessVerified": true,
+        "witnessAfterClose": {
+          "taskProofPresent": true,
+          "decodedProofPresent": true,
+          "taskProofShapeValid": true,
+          "decodedPayloadHashMatches": true,
+          "productionReuseVerified": false,
+          "taskProofSHA256": "8d12b9c8139a8fa0b8566c6dbf95e0ae63e031f9d9a1bc53dfb70e415ad8fe80",
+          "decodedPayloadSHA256": "59bb160ac309953286222390770b9b1c9cd0fc9eab16117487d881a22297cb42"
+        },
+        "cache": "verified-clean-repeat"
+      }
+    ],
+    "fixture": {
+      "synthetic": true,
+      "initialized": true,
+      "format": "app-action-v5",
+      "baseline": "b789d964-b8a1-41d9-bc79-d78c59fa613e:12",
+      "writer": "b789d964-b8a1-41d9-bc79-d78c59fa613e",
+      "user": "045e5c6f-b6df-40c8-9237-9dd6d9bcf499",
+      "rows": 11,
+      "settings_sha256": "241cef9f13343cfb84908efd94f6599a83d5730ad932af853584c774833f53c8",
+      "native_sha256": "d33124d01cbcc7be76e6bbf421362c44d3d2b8e7f5ce1a1fc5b9ddcd9dd1ad83"
+    },
+    "passed": true
+  },
+  "postmortem": {
+    "diagnosticOnly": true,
+    "acceptance": false,
+    "applicationRerunByCollector": false,
+    "rawCoresUploaded": false,
+    "collectorSHA256": "1e2cf7cab18be19696b0f9772b6d3cc78fecf96087b8b0f7171b5f36e3ff7fdb",
+    "sourceRevision": "034a57dbc7092e242889d23d12e22091fed08b0c",
+    "binarySHA256": "a1b4bfd6699ef184ac67f35f4cdb85ce51636813f7e268be95e8f36a551102c4",
+    "cores": [],
+    "certifiedApplicationPIDs": [
+      9558,
+      9630
+    ],
+    "coreCount": 0
+  },
+  "deterministicDisposalGate": {
+    "diagnosticOnly": true,
+    "performanceAcceptance": false,
+    "passed": true,
+    "applicationReruns": 0,
+    "results": [
+      {
+        "run": 1,
+        "passed": false,
+        "cleanWitnessVerified": false,
+        "closeMode": "normal",
+        "external_ms": 432,
+        "marker": "TANDEMLOG_READY_MS=243 FILES_READ=2",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=46",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":0,\"decodedCacheReuses\":0,\"strictDecodedRecords\":3}",
+          "TANDEMLOG_READY_MS=243 FILES_READ=2"
+        ],
+        "external_main_ms": 186,
+        "external_first_frame_ms": 236,
+        "shutdown": {
+          "requestedMode": "normal",
+          "normalExitVerified": true,
+          "method": "owned-window-WM_DELETE_WINDOW",
+          "pid": 9756,
+          "window": "2097155",
+          "globalFocusOrInput": false,
+          "processExit": 0,
+          "elapsedMs": 136.89
+        },
+        "process_exit": 0,
+        "witnessBeforeLaunch": {
+          "taskProofPresent": false,
+          "decodedProofPresent": false,
+          "taskProofShapeValid": false,
+          "decodedPayloadHashMatches": false,
+          "productionReuseVerified": false
+        },
+        "previousNormalExitVerified": false,
+        "canonical_payload_reads": 2,
+        "canonical_files": 1,
+        "startupCacheCounters": {
+          "warmTaskProjectionReuses": 0,
+          "decodedCacheReuses": 0,
+          "strictDecodedRecords": 3
+        },
+        "cleanTaskWitnessVerified": false,
+        "cleanDecodedWitnessVerified": false,
+        "disposal": {
+          "objectsFinalizedBeforeLoopReturn": [
+            "engine",
+            "view",
+            "window"
+          ],
+          "sameOwningThread": true,
+          "events": {
+            "window": [
+              "watch",
+              "detach",
+              "destroyed",
+              "finalized",
+              "run-return"
+            ],
+            "view": [
+              "watch",
+              "destroyed",
+              "finalized",
+              "run-return"
+            ],
+            "engine": [
+              "watch",
+              "finalized",
+              "run-return"
+            ]
+          }
+        }
+      },
+      {
+        "run": 2,
+        "passed": false,
+        "cleanWitnessVerified": true,
+        "closeMode": "normal",
+        "external_ms": 337,
+        "marker": "TANDEMLOG_READY_MS=197 FILES_READ=2",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=45",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":1,\"decodedCacheReuses\":3,\"strictDecodedRecords\":0}",
+          "TANDEMLOG_READY_MS=197 FILES_READ=2"
+        ],
+        "external_main_ms": 134,
+        "external_first_frame_ms": 183,
+        "shutdown": {
+          "requestedMode": "normal",
+          "normalExitVerified": true,
+          "method": "owned-window-WM_DELETE_WINDOW",
+          "pid": 9825,
+          "window": "2097155",
+          "globalFocusOrInput": false,
+          "processExit": 0,
+          "elapsedMs": 92.153
+        },
+        "process_exit": 0,
+        "witnessBeforeLaunch": {
+          "taskProofPresent": true,
+          "decodedProofPresent": true,
+          "taskProofShapeValid": true,
+          "decodedPayloadHashMatches": true,
+          "productionReuseVerified": false,
+          "taskProofSHA256": "84c8b01dc3cf40f2a66d9a9bbcfcc1b6a0e23b625a32daf309b3b3fe1fd919e6",
+          "decodedPayloadSHA256": "218a162638d404efe9953180d6d999063967d694b828db52b03ab4124db3f7c9"
+        },
+        "previousNormalExitVerified": true,
+        "canonical_payload_reads": 2,
+        "canonical_files": 1,
+        "startupCacheCounters": {
+          "warmTaskProjectionReuses": 1,
+          "decodedCacheReuses": 3,
+          "strictDecodedRecords": 0
+        },
+        "cleanTaskWitnessVerified": true,
+        "cleanDecodedWitnessVerified": true,
+        "disposal": {
+          "objectsFinalizedBeforeLoopReturn": [
+            "engine",
+            "view",
+            "window"
+          ],
+          "sameOwningThread": true,
+          "events": {
+            "window": [
+              "watch",
+              "detach",
+              "destroyed",
+              "finalized",
+              "run-return"
+            ],
+            "view": [
+              "watch",
+              "destroyed",
+              "finalized",
+              "run-return"
+            ],
+            "engine": [
+              "watch",
+              "finalized",
+              "run-return"
+            ]
+          }
+        }
+      }
+    ],
+    "bundlePins": {
+      "data/flutter_assets/AssetManifest.bin": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665",
+      "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+      "data/flutter_assets/NOTICES.Z": "2f5db52ea3ed04d9db3f1ca10e37b19778e83b96b5855f1bb15eb7a3165f2a2e",
+      "data/flutter_assets/NativeAssetsManifest.json": "cac6ed54604e88a281fdf937e13069ee88123bf111e9a4af1ad323b3a561b3f0",
+      "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "189d98623b97ac8b82eff01a24c7760d928fdc0420cd047e392c62c3a4a5ebda",
+      "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": "4a869fdca16eb36a8970867f4cde5faa7df7894440c49bc6716ba82adbd13d39",
+      "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+      "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+      "data/flutter_assets/version.json": "203ec4c0b09f2dfe3caa04f522217997c7b0dd3be845f2d311c029c6bcd5e5be",
+      "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+      "lib/libapp.so": "10f8117fc3a26e068ea4b3887f07c800d2ffa0eb6122178d12ffc716fe6ba09b",
+      "lib/libdartjni.so": "fe35d502b24fa2dfda9ae09b5f82d80330628b9dd9398ad2ba95754e06d2bded",
+      "lib/libfile_selector_linux_plugin.so": "653e6ed4ae9cd413e99986b4511090a37ad8961330ea6a2cb8d4e0653097bdd6",
+      "lib/libflutter_linux_gtk.so": "d57449a5c2ee39e77b9e3488f0703b165c67e0b3c554089f388db96484ae62f1",
+      "lib/libsqlite3.so": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace",
+      "lib/libtandemlog_text.so": "d33124d01cbcc7be76e6bbf421362c44d3d2b8e7f5ce1a1fc5b9ddcd9dd1ad83",
+      "lib/liburl_launcher_linux_plugin.so": "d25a49e323ee9bab9083b060dfd8bd03bdb878c943c524c0824cabe9292b0ef3",
+      "tandemlog": "a1b4bfd6699ef184ac67f35f4cdb85ce51636813f7e268be95e8f36a551102c4"
+    },
+    "sourcePins": {
+      "verify_linux_disposal.py": "bb10a6cbf743a8af0a5e10321b43daf8c51df7827ded9fd28b1efc32ca99a788",
+      "linux_lifecycle_probe.c": "851679ca8a7df035c23051e381062973342351a2cf3260e11c4bd260d3f1cfa5",
+      "measure_startup.py": "e623d12b63e331d1686aaa2ff5d2dfc459f050cadd0ef7f6669cf676ebdf104a",
+      "synthetic_text_fixture.py": "4fc233e688d18038c4e9f16c264cf8194daa9cf70b20a8c2a1218b8bf11efa79"
+    },
+    "probeSHA256": "ac0334999f4309d3d2429f3075edac7833acd4bbd98ef10f978a92df5242cee5",
+    "fixture": {
+      "synthetic": true,
+      "initialized": true,
+      "format": "app-action-v5",
+      "baseline": "d6658384-f367-4e32-935f-02ef6942d625:12",
+      "writer": "d6658384-f367-4e32-935f-02ef6942d625",
+      "user": "f504e098-7d64-4a3c-8a23-3b153f029239",
+      "rows": 11,
+      "settings_sha256": "51a82dafed56eb99ad4f9062dac4987351f27d03348a952c1b575f03159fca0b",
+      "native_sha256": "d33124d01cbcc7be76e6bbf421362c44d3d2b8e7f5ce1a1fc5b9ddcd9dd1ad83"
+    },
+    "bundleBytesUnchanged": true
+  },
+  "artifactBindings": [
+    {
+      "id": 12589500796,
+      "name": "RC4-required-ci-linux-close",
+      "archiveSHA256": "d014d6128a2c4c209108a2cfd8e7576f44a2e9e81734ea96f88938fc54926166",
+      "digestVerified": true
+    },
+    {
+      "id": 12589635646,
+      "name": "linux-disposal",
+      "archiveSHA256": "c5723a75abdc7bb3b557bf5a21aeeaf2dfc36fc98ace67c27afd9182779df89b",
+      "digestVerified": true
+    }
+  ],
+  "qaSourcePinsMatchAtInspection": true,
+  "bothChecksBundlePinsMatch": true,
+  "bundleFileCount": 18,
+  "nativeHardwareAccepted": false,
+  "universalIntermittentCrashEliminationClaimed": false,
+  "fullCIStillRunning": true,
+  "qualification": "Original hosted full-prefix immediate-normal-close and deterministic same-thread lifetime gates pass. Whole-process close intervals include teardown, not hardware/UI latency. Original SIGSEGV and prior failures remain; broader native workflow/performance results still pending."
+}

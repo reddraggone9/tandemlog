@@ -116,8 +116,11 @@ void main() {
       store.rows.firstWhere((r) => r['id'] == id);
   bool visible(TaskStore store, String id) =>
       store.rows.any((r) => r['id'] == id);
-  Future<LogEvent> complete(String id) =>
-      a.complete(id, completionDay: DateTime.utc(2030, 5, 1));
+  Future<LogEvent> complete(String id) => a.complete(
+    id,
+    localZoneId: 'UTC',
+    completionInstant: DateTime.utc(2030, 5, 1),
+  );
   setUp(() async {
     closed = false;
     root = await Directory.systemTemp.createTemp('recurring-undo-');
@@ -227,7 +230,11 @@ void main() {
       } else if (activity == 'move') {
         await a.moveBefore(next, null);
       } else if (activity == 'complete') {
-        await a.complete(next, completionDay: DateTime.utc(2030, 5, 2));
+        await a.complete(
+          next,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2030, 5, 2),
+        );
       } else if (activity == 'delete') {
         await a.deleteTask(next, expectedTaskSnapshot: a.taskSnapshot);
       } else {
@@ -268,7 +275,11 @@ void main() {
             'title': 'Late independent work',
           });
         } else if (late == 'completion') {
-          await b.complete(id, completionDay: DateTime.utc(2030, 5, 2));
+          await b.complete(
+            id,
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 2),
+          );
         } else {
           await b.moveBefore(anchorTask, next);
         }
@@ -305,7 +316,11 @@ void main() {
         'title': 'New proposal',
         'schedule': {'dueDate': '2030-05-10', 'recurrence': 'every day'},
       });
-      await a.complete(id, completionDay: DateTime.utc(2030, 5, 10));
+      await a.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 10),
+      );
       expect(row(a, next)['title'], 'New proposal');
       expect((row(a, next)['schedule'] as Map)['dueDate'], '2030-05-11');
       expect(a.rows.where((r) => r['kind'] == 'task').map((r) => r['id']), [
@@ -554,7 +569,8 @@ void main() {
       final id = await task(), first = await complete(id);
       final second = await a.complete(
         id,
-        completionDay: DateTime.utc(2030, 5, 2),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2030, 5, 2),
       );
       final cleanup = LogEvent(
         a.space,

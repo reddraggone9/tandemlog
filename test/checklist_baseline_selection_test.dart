@@ -83,7 +83,8 @@ void main() {
           );
           final earliest = await a.complete(
             parent,
-            completionDay: DateTime(2030, 5, 10),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 10),
           );
           expect(earliest.type, 'task.completedWithChecklist');
           expect(earliest.data.containsKey('inheritance'), false);
@@ -105,7 +106,8 @@ void main() {
           });
           final later = await b.complete(
             parent,
-            completionDay: DateTime(2030, 5, 11),
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2030, 5, 11),
           );
           expect(compareEvents(earliest, later), lessThan(0));
           expect(later.data.containsKey('inheritance'), false);

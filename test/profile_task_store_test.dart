@@ -332,6 +332,9 @@ void main() {
         profile.database.execute(
           "CREATE TRIGGER reject_ack BEFORE INSERT ON protected_app_heads WHEN NEW.space='${store.space}' AND NEW.sequence>${guard['sequence']} BEGIN SELECT RAISE(ABORT,'synthetic acknowledgement failure'); END",
         );
+        profile.database.execute(
+          "CREATE TRIGGER reject_ack_update BEFORE UPDATE ON protected_app_heads WHEN NEW.space='${store.space}' AND NEW.sequence>${guard['sequence']} BEGIN SELECT RAISE(ABORT,'synthetic acknowledgement failure'); END",
+        );
         OperationReceipt? receipt;
         await expectLater(
           store.command(entity, 'task.createdWithText', {
@@ -371,6 +374,7 @@ void main() {
         expect(profile.database.autocommit, isTrue);
         final canonical = await folder.read('$owner.applog');
         profile.database.execute('DROP TRIGGER reject_ack');
+        profile.database.execute('DROP TRIGGER reject_ack_update');
         await store.refresh();
         expect(store.pendingTextOperations, isEmpty);
         expect(await folder.read('$owner.applog'), canonical);

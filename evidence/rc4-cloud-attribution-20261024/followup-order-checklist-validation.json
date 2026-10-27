@@ -1,0 +1,1023 @@
+{
+  "scope": "existing two production checklist families across three sealed shapes; same repetitions and full replay, narrow candidate test, not full gate/UI acceptance",
+  "accepted": false,
+  "baseCommit": "6a0acddba036727b0b1c2519260dbb86295342f1",
+  "sourceChange": "projectOrder local membership set only",
+  "allInputPinsMatchedAtCompletion": true,
+  "sourcePins": "/workspace/scratch/rc4-order-checklist-validation-input-pins.json",
+  "sourcePinsSHA256": "ee5598b6669007f45a9dcd96f69e1868a28808147a8a11e3385087cb97d26c6a",
+  "entrySHA256": "dc61be7472bb97123f27ba6a5d7e332e49ad251d8089804c654a4da448fb04bf",
+  "binarySHA256": "9579665547cb0a8ddbc73f588d6b12d728d80c70bdfb35150d02619dcf35d63e",
+  "logSHA256": "7715f921a1f2ce22ebfcbd9c5fd44863ba03d5bb640871d4895f099ac228f99f",
+  "allSixCorrectnessReplayPass": true,
+  "actions": {
+    "dense-1": {
+      "converted-checklist": {
+        "converted.checklist.add": {
+          "samplesUs": [
+            34130,
+            42225,
+            41906,
+            45244,
+            48198
+          ],
+          "medianUs": 42225,
+          "maximumUs": 48198
+        },
+        "converted.checklist.complete": {
+          "samplesUs": [
+            18915,
+            30620,
+            28936,
+            32354,
+            33461
+          ],
+          "medianUs": 30620,
+          "maximumUs": 33461
+        },
+        "converted.checklist.delete": {
+          "samplesUs": [
+            20874,
+            23378,
+            26234,
+            30015,
+            38272
+          ],
+          "medianUs": 26234,
+          "maximumUs": 38272
+        },
+        "converted.checklist.recompleteViaUndo": {
+          "samplesUs": [
+            20907,
+            23468,
+            25174,
+            30547,
+            32494
+          ],
+          "medianUs": 25174,
+          "maximumUs": 32494
+        },
+        "converted.checklist.reorder": {
+          "samplesUs": [
+            20915,
+            25703,
+            34759,
+            34752,
+            49519
+          ],
+          "medianUs": 34752,
+          "maximumUs": 49519
+        },
+        "converted.checklist.reorder.undo": {
+          "samplesUs": [
+            18833,
+            23859,
+            26290,
+            29749,
+            34100
+          ],
+          "medianUs": 26290,
+          "maximumUs": 34100
+        },
+        "converted.checklist.restoreViaUndo": {
+          "samplesUs": [
+            18788,
+            23890,
+            26666,
+            32904,
+            35126
+          ],
+          "medianUs": 26666,
+          "maximumUs": 35126
+        },
+        "converted.checklist.titleAndNotes.editorOpen": {
+          "samplesUs": [
+            2861,
+            3216,
+            2511,
+            2973,
+            2896
+          ],
+          "medianUs": 2896,
+          "maximumUs": 3216
+        },
+        "converted.checklist.titleAndNotes.save": {
+          "samplesUs": [
+            21925,
+            32092,
+            28752,
+            35569,
+            42426
+          ],
+          "medianUs": 32092,
+          "maximumUs": 42426
+        },
+        "converted.checklist.titleAndNotes.undo": {
+          "samplesUs": [
+            23511,
+            30125,
+            28487,
+            32213,
+            37523
+          ],
+          "medianUs": 30125,
+          "maximumUs": 37523
+        },
+        "converted.checklist.uncomplete": {
+          "samplesUs": [
+            18819,
+            28408,
+            25062,
+            31614,
+            36190
+          ],
+          "medianUs": 28408,
+          "maximumUs": 36190
+        },
+        "converted.checklist.uncompleteViaUndo": {
+          "samplesUs": [
+            18254,
+            25248,
+            26041,
+            34656,
+            32166
+          ],
+          "medianUs": 26041,
+          "maximumUs": 34656
+        },
+        "converted.task.complete.checklistConfirm": {
+          "samplesUs": [
+            37871,
+            36904,
+            43751,
+            46782,
+            52902
+          ],
+          "medianUs": 43751,
+          "maximumUs": 52902
+        },
+        "converted.task.complete.checklistDecline": {
+          "samplesUs": [
+            961,
+            1188,
+            1291,
+            1108,
+            1360
+          ],
+          "medianUs": 1188,
+          "maximumUs": 1360
+        },
+        "converted.task.reopen.withChecklist": {
+          "samplesUs": [
+            22966,
+            22143,
+            28249,
+            28929,
+            36153
+          ],
+          "medianUs": 28249,
+          "maximumUs": 36153
+        }
+      },
+      "checklist": {
+        "checklist.add": {
+          "samplesUs": [
+            38840,
+            37551,
+            36389,
+            42741,
+            45817
+          ],
+          "medianUs": 38840,
+          "maximumUs": 45817
+        },
+        "checklist.complete": {
+          "samplesUs": [
+            19307,
+            20217,
+            24965,
+            30397,
+            27814
+          ],
+          "medianUs": 24965,
+          "maximumUs": 30397
+        },
+        "checklist.delete": {
+          "samplesUs": [
+            18265,
+            19642,
+            25998,
+            29652,
+            28002
+          ],
+          "medianUs": 25998,
+          "maximumUs": 29652
+        },
+        "checklist.recompleteViaUndo": {
+          "samplesUs": [
+            22128,
+            19533,
+            30051,
+            28802,
+            30166
+          ],
+          "medianUs": 28802,
+          "maximumUs": 30166
+        },
+        "checklist.reorder": {
+          "samplesUs": [
+            23670,
+            20650,
+            30539,
+            30725,
+            30620
+          ],
+          "medianUs": 30539,
+          "maximumUs": 30725
+        },
+        "checklist.reorder.undo": {
+          "samplesUs": [
+            20039,
+            22252,
+            26393,
+            31244,
+            32105
+          ],
+          "medianUs": 26393,
+          "maximumUs": 32105
+        },
+        "checklist.restoreViaUndo": {
+          "samplesUs": [
+            20198,
+            20029,
+            29137,
+            31503,
+            31617
+          ],
+          "medianUs": 29137,
+          "maximumUs": 31617
+        },
+        "checklist.titleAndNotes.editorOpen": {
+          "samplesUs": [
+            2892,
+            2677,
+            3227,
+            3035,
+            3101
+          ],
+          "medianUs": 3035,
+          "maximumUs": 3227
+        },
+        "checklist.titleAndNotes.save": {
+          "samplesUs": [
+            22771,
+            22632,
+            26120,
+            35483,
+            42921
+          ],
+          "medianUs": 26120,
+          "maximumUs": 42921
+        },
+        "checklist.titleAndNotes.undo": {
+          "samplesUs": [
+            23299,
+            22107,
+            31142,
+            32637,
+            32559
+          ],
+          "medianUs": 31142,
+          "maximumUs": 32637
+        },
+        "checklist.uncomplete": {
+          "samplesUs": [
+            18859,
+            20742,
+            27864,
+            28633,
+            30588
+          ],
+          "medianUs": 27864,
+          "maximumUs": 30588
+        },
+        "checklist.uncompleteViaUndo": {
+          "samplesUs": [
+            18429,
+            19115,
+            25875,
+            29204,
+            26310
+          ],
+          "medianUs": 25875,
+          "maximumUs": 29204
+        },
+        "task.complete.checklistConfirm": {
+          "samplesUs": [
+            28406,
+            32313,
+            45992,
+            47357,
+            52715
+          ],
+          "medianUs": 45992,
+          "maximumUs": 52715
+        },
+        "task.complete.checklistDecline": {
+          "samplesUs": [
+            993,
+            1131,
+            1121,
+            1368,
+            1005
+          ],
+          "medianUs": 1121,
+          "maximumUs": 1368
+        },
+        "task.reopen.withChecklist": {
+          "samplesUs": [
+            16877,
+            20044,
+            25238,
+            24359,
+            27829
+          ],
+          "medianUs": 24359,
+          "maximumUs": 27829
+        }
+      }
+    },
+    "dense-2": {
+      "converted-checklist": {
+        "converted.checklist.add": {
+          "samplesUs": [
+            38923,
+            37007,
+            39456,
+            43258,
+            47329
+          ],
+          "medianUs": 39456,
+          "maximumUs": 47329
+        },
+        "converted.checklist.complete": {
+          "samplesUs": [
+            22115,
+            22637,
+            27439,
+            27664,
+            31406
+          ],
+          "medianUs": 27439,
+          "maximumUs": 31406
+        },
+        "converted.checklist.delete": {
+          "samplesUs": [
+            22275,
+            29687,
+            24787,
+            32626,
+            33043
+          ],
+          "medianUs": 29687,
+          "maximumUs": 33043
+        },
+        "converted.checklist.recompleteViaUndo": {
+          "samplesUs": [
+            19585,
+            23143,
+            26150,
+            25752,
+            35191
+          ],
+          "medianUs": 25752,
+          "maximumUs": 35191
+        },
+        "converted.checklist.reorder": {
+          "samplesUs": [
+            24073,
+            23765,
+            28720,
+            32206,
+            36411
+          ],
+          "medianUs": 28720,
+          "maximumUs": 36411
+        },
+        "converted.checklist.reorder.undo": {
+          "samplesUs": [
+            20492,
+            28694,
+            25125,
+            26823,
+            33307
+          ],
+          "medianUs": 26823,
+          "maximumUs": 33307
+        },
+        "converted.checklist.restoreViaUndo": {
+          "samplesUs": [
+            21513,
+            28224,
+            25977,
+            28190,
+            33431
+          ],
+          "medianUs": 28190,
+          "maximumUs": 33431
+        },
+        "converted.checklist.titleAndNotes.editorOpen": {
+          "samplesUs": [
+            3189,
+            2716,
+            2599,
+            2574,
+            2908
+          ],
+          "medianUs": 2716,
+          "maximumUs": 3189
+        },
+        "converted.checklist.titleAndNotes.save": {
+          "samplesUs": [
+            24892,
+            30007,
+            32529,
+            31450,
+            43576
+          ],
+          "medianUs": 31450,
+          "maximumUs": 43576
+        },
+        "converted.checklist.titleAndNotes.undo": {
+          "samplesUs": [
+            21672,
+            26592,
+            30796,
+            29312,
+            32537
+          ],
+          "medianUs": 29312,
+          "maximumUs": 32537
+        },
+        "converted.checklist.uncomplete": {
+          "samplesUs": [
+            19966,
+            22748,
+            25706,
+            33846,
+            29045
+          ],
+          "medianUs": 25706,
+          "maximumUs": 33846
+        },
+        "converted.checklist.uncompleteViaUndo": {
+          "samplesUs": [
+            19245,
+            21340,
+            28757,
+            26878,
+            34548
+          ],
+          "medianUs": 26878,
+          "maximumUs": 34548
+        },
+        "converted.task.complete.checklistConfirm": {
+          "samplesUs": [
+            30471,
+            36726,
+            42201,
+            45019,
+            58359
+          ],
+          "medianUs": 42201,
+          "maximumUs": 58359
+        },
+        "converted.task.complete.checklistDecline": {
+          "samplesUs": [
+            958,
+            1361,
+            1004,
+            1032,
+            1354
+          ],
+          "medianUs": 1032,
+          "maximumUs": 1361
+        },
+        "converted.task.reopen.withChecklist": {
+          "samplesUs": [
+            19730,
+            21911,
+            26978,
+            27078,
+            34408
+          ],
+          "medianUs": 26978,
+          "maximumUs": 34408
+        }
+      },
+      "checklist": {
+        "checklist.add": {
+          "samplesUs": [
+            33250,
+            36924,
+            49782,
+            44531,
+            49776
+          ],
+          "medianUs": 44531,
+          "maximumUs": 49782
+        },
+        "checklist.complete": {
+          "samplesUs": [
+            18785,
+            26465,
+            25047,
+            28586,
+            38678
+          ],
+          "medianUs": 26465,
+          "maximumUs": 38678
+        },
+        "checklist.delete": {
+          "samplesUs": [
+            19649,
+            27061,
+            27642,
+            28899,
+            32039
+          ],
+          "medianUs": 27642,
+          "maximumUs": 32039
+        },
+        "checklist.recompleteViaUndo": {
+          "samplesUs": [
+            25147,
+            22401,
+            34028,
+            28235,
+            32076
+          ],
+          "medianUs": 28235,
+          "maximumUs": 34028
+        },
+        "checklist.reorder": {
+          "samplesUs": [
+            23204,
+            30064,
+            27179,
+            30904,
+            36994
+          ],
+          "medianUs": 30064,
+          "maximumUs": 36994
+        },
+        "checklist.reorder.undo": {
+          "samplesUs": [
+            19492,
+            26756,
+            26637,
+            30185,
+            41261
+          ],
+          "medianUs": 26756,
+          "maximumUs": 41261
+        },
+        "checklist.restoreViaUndo": {
+          "samplesUs": [
+            21692,
+            24447,
+            32921,
+            35693,
+            33570
+          ],
+          "medianUs": 32921,
+          "maximumUs": 35693
+        },
+        "checklist.titleAndNotes.editorOpen": {
+          "samplesUs": [
+            2669,
+            2445,
+            5432,
+            2824,
+            2984
+          ],
+          "medianUs": 2824,
+          "maximumUs": 5432
+        },
+        "checklist.titleAndNotes.save": {
+          "samplesUs": [
+            22361,
+            27279,
+            28285,
+            35500,
+            35027
+          ],
+          "medianUs": 28285,
+          "maximumUs": 35500
+        },
+        "checklist.titleAndNotes.undo": {
+          "samplesUs": [
+            24280,
+            24298,
+            29031,
+            38318,
+            34985
+          ],
+          "medianUs": 29031,
+          "maximumUs": 38318
+        },
+        "checklist.uncomplete": {
+          "samplesUs": [
+            18632,
+            23927,
+            27075,
+            30605,
+            34279
+          ],
+          "medianUs": 27075,
+          "maximumUs": 34279
+        },
+        "checklist.uncompleteViaUndo": {
+          "samplesUs": [
+            22360,
+            23773,
+            25565,
+            28392,
+            31945
+          ],
+          "medianUs": 25565,
+          "maximumUs": 31945
+        },
+        "task.complete.checklistConfirm": {
+          "samplesUs": [
+            34723,
+            34999,
+            41957,
+            46775,
+            52407
+          ],
+          "medianUs": 41957,
+          "maximumUs": 52407
+        },
+        "task.complete.checklistDecline": {
+          "samplesUs": [
+            1214,
+            883,
+            1165,
+            1160,
+            1277
+          ],
+          "medianUs": 1165,
+          "maximumUs": 1277
+        },
+        "task.reopen.withChecklist": {
+          "samplesUs": [
+            19957,
+            22656,
+            25176,
+            28976,
+            30513
+          ],
+          "medianUs": 25176,
+          "maximumUs": 30513
+        }
+      }
+    },
+    "dense-food": {
+      "converted-checklist": {
+        "converted.checklist.add": {
+          "samplesUs": [
+            38133,
+            37760,
+            42526,
+            45278,
+            50045
+          ],
+          "medianUs": 42526,
+          "maximumUs": 50045
+        },
+        "converted.checklist.complete": {
+          "samplesUs": [
+            22780,
+            23914,
+            27442,
+            30364,
+            29936
+          ],
+          "medianUs": 27442,
+          "maximumUs": 30364
+        },
+        "converted.checklist.delete": {
+          "samplesUs": [
+            23040,
+            25342,
+            32960,
+            27111,
+            30227
+          ],
+          "medianUs": 27111,
+          "maximumUs": 32960
+        },
+        "converted.checklist.recompleteViaUndo": {
+          "samplesUs": [
+            21104,
+            22509,
+            26334,
+            30365,
+            28269
+          ],
+          "medianUs": 26334,
+          "maximumUs": 30365
+        },
+        "converted.checklist.reorder": {
+          "samplesUs": [
+            23018,
+            25525,
+            29408,
+            29999,
+            38260
+          ],
+          "medianUs": 29408,
+          "maximumUs": 38260
+        },
+        "converted.checklist.reorder.undo": {
+          "samplesUs": [
+            21875,
+            23214,
+            30522,
+            31048,
+            29054
+          ],
+          "medianUs": 29054,
+          "maximumUs": 31048
+        },
+        "converted.checklist.restoreViaUndo": {
+          "samplesUs": [
+            26614,
+            24493,
+            28650,
+            29459,
+            29717
+          ],
+          "medianUs": 28650,
+          "maximumUs": 29717
+        },
+        "converted.checklist.titleAndNotes.editorOpen": {
+          "samplesUs": [
+            3072,
+            2865,
+            2924,
+            3332,
+            2853
+          ],
+          "medianUs": 2924,
+          "maximumUs": 3332
+        },
+        "converted.checklist.titleAndNotes.save": {
+          "samplesUs": [
+            24589,
+            36886,
+            31172,
+            36918,
+            33550
+          ],
+          "medianUs": 33550,
+          "maximumUs": 36918
+        },
+        "converted.checklist.titleAndNotes.undo": {
+          "samplesUs": [
+            23469,
+            25778,
+            29462,
+            34954,
+            37667
+          ],
+          "medianUs": 29462,
+          "maximumUs": 37667
+        },
+        "converted.checklist.uncomplete": {
+          "samplesUs": [
+            23804,
+            23367,
+            33795,
+            31757,
+            30281
+          ],
+          "medianUs": 30281,
+          "maximumUs": 33795
+        },
+        "converted.checklist.uncompleteViaUndo": {
+          "samplesUs": [
+            20472,
+            26709,
+            26583,
+            35660,
+            28897
+          ],
+          "medianUs": 26709,
+          "maximumUs": 35660
+        },
+        "converted.task.complete.checklistConfirm": {
+          "samplesUs": [
+            34136,
+            43332,
+            47264,
+            44173,
+            48601
+          ],
+          "medianUs": 44173,
+          "maximumUs": 48601
+        },
+        "converted.task.complete.checklistDecline": {
+          "samplesUs": [
+            1200,
+            1182,
+            1280,
+            1366,
+            1164
+          ],
+          "medianUs": 1200,
+          "maximumUs": 1366
+        },
+        "converted.task.reopen.withChecklist": {
+          "samplesUs": [
+            21904,
+            25578,
+            28412,
+            27422,
+            34535
+          ],
+          "medianUs": 27422,
+          "maximumUs": 34535
+        }
+      },
+      "checklist": {
+        "checklist.add": {
+          "samplesUs": [
+            31538,
+            38251,
+            43623,
+            43832,
+            45242
+          ],
+          "medianUs": 43623,
+          "maximumUs": 45242
+        },
+        "checklist.complete": {
+          "samplesUs": [
+            19174,
+            25714,
+            30010,
+            29255,
+            31393
+          ],
+          "medianUs": 29255,
+          "maximumUs": 31393
+        },
+        "checklist.delete": {
+          "samplesUs": [
+            23087,
+            25456,
+            33753,
+            29049,
+            35357
+          ],
+          "medianUs": 29049,
+          "maximumUs": 35357
+        },
+        "checklist.recompleteViaUndo": {
+          "samplesUs": [
+            20573,
+            23655,
+            26805,
+            27543,
+            31936
+          ],
+          "medianUs": 26805,
+          "maximumUs": 31936
+        },
+        "checklist.reorder": {
+          "samplesUs": [
+            22391,
+            24876,
+            26950,
+            31028,
+            33065
+          ],
+          "medianUs": 26950,
+          "maximumUs": 33065
+        },
+        "checklist.reorder.undo": {
+          "samplesUs": [
+            20505,
+            23973,
+            27905,
+            33926,
+            33732
+          ],
+          "medianUs": 27905,
+          "maximumUs": 33926
+        },
+        "checklist.restoreViaUndo": {
+          "samplesUs": [
+            21765,
+            24483,
+            28434,
+            29380,
+            31735
+          ],
+          "medianUs": 28434,
+          "maximumUs": 31735
+        },
+        "checklist.titleAndNotes.editorOpen": {
+          "samplesUs": [
+            2793,
+            3171,
+            2786,
+            3501,
+            2836
+          ],
+          "medianUs": 2836,
+          "maximumUs": 3501
+        },
+        "checklist.titleAndNotes.save": {
+          "samplesUs": [
+            22237,
+            27559,
+            30293,
+            33358,
+            35173
+          ],
+          "medianUs": 30293,
+          "maximumUs": 35173
+        },
+        "checklist.titleAndNotes.undo": {
+          "samplesUs": [
+            22467,
+            29758,
+            28996,
+            37529,
+            36178
+          ],
+          "medianUs": 29758,
+          "maximumUs": 37529
+        },
+        "checklist.uncomplete": {
+          "samplesUs": [
+            18740,
+            23062,
+            25984,
+            29922,
+            37225
+          ],
+          "medianUs": 25984,
+          "maximumUs": 37225
+        },
+        "checklist.uncompleteViaUndo": {
+          "samplesUs": [
+            20177,
+            23141,
+            26057,
+            28562,
+            32740
+          ],
+          "medianUs": 26057,
+          "maximumUs": 32740
+        },
+        "task.complete.checklistConfirm": {
+          "samplesUs": [
+            29812,
+            48461,
+            45495,
+            46678,
+            51028
+          ],
+          "medianUs": 46678,
+          "maximumUs": 51028
+        },
+        "task.complete.checklistDecline": {
+          "samplesUs": [
+            1194,
+            1822,
+            1269,
+            1222,
+            998
+          ],
+          "medianUs": 1222,
+          "maximumUs": 1822
+        },
+        "task.reopen.withChecklist": {
+          "samplesUs": [
+            19584,
+            23072,
+            25967,
+            33629,
+            31086
+          ],
+          "medianUs": 25967,
+          "maximumUs": 33629
+        }
+      }
+    }
+  }
+}

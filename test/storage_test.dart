@@ -136,6 +136,131 @@ void main() {
   }
 
   test(
+    'point editor guard equals visible rows across scratch and rollback',
+    () async {
+      final id = await task();
+      Map<String, dynamic>? expected(String entity) => a!.rows
+          .where((row) => row['id'] == entity && row['kind'] == 'task')
+          .firstOrNull;
+      expect(a!.visibleTaskRow(id), expected(id));
+      final user = a!.rows.singleWhere((row) => row['kind'] == 'user');
+      expect(a!.visibleTaskRow(user['id'] as String), isNull);
+      expect(a!.visibleTaskRow(const Uuid().v4()), isNull);
+      final original =
+          a!.db.select('SELECT raw FROM ${a!.tables.views} WHERE id=?', [
+                id,
+              ]).single['raw']
+              as String;
+      for (final change in [
+        {'title': 'Different candidate'},
+        {'deleted': true},
+        {'successorSuppressed': true},
+        {'kind': 'checklistItem'},
+        {'kind': 'user'},
+      ]) {
+        a!.db.execute('BEGIN');
+        try {
+          a!.db.execute('UPDATE ${a!.tables.views} SET raw=? WHERE id=?', [
+            jsonEncode({...jsonDecode(original) as Map, ...change}),
+            id,
+          ]);
+          expect(a!.visibleTaskRow(id), expected(id));
+        } finally {
+          a!.db.execute('ROLLBACK');
+        }
+        expect(a!.visibleTaskRow(id), expected(id));
+        expect(a!.visibleTaskRow(id)!['title'], 'Groceries');
+      }
+      a!.db.execute('BEGIN');
+      try {
+        a!.db.execute('DELETE FROM ${a!.tables.positions} WHERE id=?', [id]);
+        expect(a!.visibleTaskRow(id), isNull);
+        expect(expected(id), isNull);
+      } finally {
+        a!.db.execute('ROLLBACK');
+      }
+      expect(a!.visibleTaskRow(id), expected(id));
+    },
+  );
+
+  test(
+    'target-only deletion requires a guard and rejects stale targets',
+    () async {
+      final id = await task();
+      final name = '${a!.writer}.applog';
+      final before = await aFolder.read(name);
+      await expectLater(
+        a!.deleteTask(id, expectedTaskSnapshot: null),
+        throwsArgumentError,
+      );
+      await expectLater(
+        a!.deleteTask(id, expectedTaskSnapshot: null, canCommit: () => false),
+        throwsA(isA<StaleTaskSnapshot>()),
+      );
+      expect(await aFolder.read(name), before);
+      expect(a!.visibleTaskRow(id), isNotNull);
+      final originalTitle = a!.visibleTaskRow(id)!['title'];
+      await a!.deleteTask(
+        id,
+        expectedTaskSnapshot: null,
+        canCommit: () => a!.visibleTaskRow(id)?['title'] == originalTitle,
+      );
+      expect(a!.visibleTaskRow(id), isNull);
+    },
+  );
+
+  test(
+    'owned tag lookup matches complete reverse and successor union including undone removes',
+    () async {
+      final id = await task();
+      await editTags(a!, id, ['retained', 'first']);
+      final addition = a!.unified!.snapshot.tasks.last;
+      await editTags(a!, id, ['retained']);
+      final removal = a!.unified!.snapshot.tasks.last;
+      await a!.command(id, 'task.operationUndone', {'operation': removal.id});
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every day'},
+      });
+      await a!.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 2),
+      );
+      final child = const Uuid().v5(id, 'successor');
+      await editTags(a!, child, []);
+      final history = a!.unified!, snapshot = history.snapshot;
+      for (final pending in snapshot.tasks) {
+        final successor =
+            isTaskCompletion(pending.type) && pending.data['successor'] is Map
+            ? (pending.data['successor'] as Map)['id']
+            : null;
+        final expected = snapshot.tasks
+            .where((event) {
+              final changes = event.data['tagChanges'] as Map?;
+              final removals = (changes?['remove'] as List? ?? const [])
+                  .cast<String>();
+              return removals.any(
+                    (token) => token.startsWith('${pending.id}:'),
+                  ) ||
+                  successor != null && event.entity == successor;
+            })
+            .map((event) => event.canonicalRaw!)
+            .toSet();
+        final selected = history.selectTaskTagMutationRaws(snapshot, pending);
+        expect(selected, isNotNull);
+        expect(selected!.toSet(), expected);
+        expect(selected.length, expected.length);
+      }
+      expect(
+        history.selectTaskTagMutationRaws(snapshot, addition),
+        contains(removal.canonicalRaw),
+      );
+      await a!.command(child, 'task.edited', {'description': 'Later'});
+      expect(history.selectTaskTagMutationRaws(snapshot, removal), isNull);
+    },
+  );
+
+  test(
     'local task deletion targeting user rejects before canonical append',
     () async {
       final id = await task();
@@ -420,13 +545,21 @@ void main() {
       await a!.command(id, 'task.edited', {
         'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every day'},
       });
-      await a!.complete(id, completionDay: DateTime.utc(2026, 10, 1));
+      await a!.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 1),
+      );
       final successor = const Uuid().v5(id, 'successor');
       await copy(aFolder, bFolder);
       await b!.refresh();
       await a!.deleteTask(id, expectedTaskSnapshot: a!.taskSnapshot);
       await b!.command(id, 'task.edited', {'title': 'Remote later'});
-      await b!.complete(id, completionDay: DateTime.utc(2026, 10, 2));
+      await b!.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 2),
+      );
       await File(
         '${bFolder.location}/${b!.writer}.applog',
       ).copy('${aFolder.location}/${b!.writer}.applog');
@@ -506,7 +639,11 @@ void main() {
           await b!.moveBefore(id, null);
         },
         () async {
-          await b!.complete(id, completionDay: DateTime.utc(2026, 10, 2));
+          await b!.complete(
+            id,
+            localZoneId: 'UTC',
+            completionInstant: DateTime.utc(2026, 10, 2),
+          );
         },
       ]) {
         final snapshot = a!.taskSnapshot;
@@ -695,8 +832,12 @@ void main() {
       final id = await task();
       await copy(aFolder, bFolder);
       await b!.refresh();
-      await a!.command(id, 'task.completed', {});
-      await b!.command(id, 'task.completed', {});
+      await a!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
+      await b!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       await File(
         '${bFolder.location}/${b!.writer}.applog',
       ).copy('${aFolder.location}/${b!.writer}.applog');
@@ -714,7 +855,9 @@ void main() {
         bytes,
       );
       // A completion unseen by this reopen survives synchronization.
-      await b!.command(id, 'task.completed', {});
+      await b!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       await File(
         '${bFolder.location}/${b!.writer}.applog',
       ).copy('${aFolder.location}/${b!.writer}.applog');
@@ -737,9 +880,13 @@ void main() {
     final id = await task();
     await copy(aFolder, bFolder);
     await b!.refresh();
-    await a!.command(id, 'task.completed', {});
+    await a!.command(id, 'task.completed', {
+      'completedInstant': '2026-10-12T12:00:00.000000Z',
+    });
     final observed = a!.activeCompletionIds(id);
-    final unseen = await b!.command(id, 'task.completed', {});
+    final unseen = await b!.command(id, 'task.completed', {
+      'completedInstant': '2026-10-12T12:00:00.000000Z',
+    });
     await File(
       '${bFolder.location}/${b!.writer}.applog',
     ).copy('${aFolder.location}/${b!.writer}.applog');
@@ -752,8 +899,12 @@ void main() {
     'complete uncertain reopen reconciles without duplicating an Undo or retaining a stale pending flag',
     () async {
       final id = await task();
-      await a!.command(id, 'task.completed', {});
-      await a!.command(id, 'task.completed', {});
+      await a!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
+      await a!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       final observed = a!.activeCompletionIds(id);
       await a!.close();
       final failing = _FailAfterAppendFolder(aFolder);
@@ -829,8 +980,12 @@ void main() {
       final id = await task();
       await copy(aFolder, bFolder);
       await b!.refresh();
-      final completion = await a!.command(id, 'task.completed', {});
-      await b!.command(id, 'task.completed', {});
+      final completion = await a!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
+      await b!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
       await a!.command(id, 'task.completionUndone', {
         'completion': completion.id,
       });
@@ -869,7 +1024,9 @@ void main() {
       Uint8List.fromList(utf8.encode('not-json\n')),
     );
     await expectLater(
-      a!.command(id, 'task.completed', {}),
+      a!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      }),
       throwsA(isA<FormatFailure>()),
     );
     expect(utf8.decode(await aFolder.read('$remote.applog')), 'not-json\n');
@@ -1005,7 +1162,9 @@ void main() {
         a!.command(id, 'task.edited', {'title': 'First'}),
         a!.command(id, 'task.edited', {'description': 'Second'}),
         a!.refresh(),
-        a!.command(id, 'task.completed', {}),
+        a!.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        }),
       ]);
       expect(
         a!.db
@@ -1041,7 +1200,9 @@ void main() {
       throwsA(isA<FormatFailure>()),
     );
     await expectLater(
-      a!.command(const Uuid().v4(), 'task.completed', {}),
+      a!.command(const Uuid().v4(), 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      }),
       throwsA(isA<FormatFailure>()),
     );
     for (final invalid in [
@@ -1079,13 +1240,17 @@ void main() {
           await file.writeAsString(replacement);
         }
         await expectLater(
-          a!.command(id, 'task.completed', {}),
+          a!.command(id, 'task.completed', {
+            'completedInstant': '2026-10-12T12:00:00.000000Z',
+          }),
           throwsA(anything),
         );
         expect(await aFolder.read('${a!.writer}.applog'), before);
         await file.writeAsBytes(manifest);
       }
-      await a!.command(id, 'task.completed', {});
+      await a!.command(id, 'task.completed', {
+        'completedInstant': '2026-10-12T12:00:00.000000Z',
+      });
     },
   );
   test(
@@ -1250,8 +1415,20 @@ void main() {
           type: 'task.edited',
           data: <String, dynamic>{'title': 'Wrong type'},
         ),
-        (entity: otherTask, type: 'task.completed', data: <String, dynamic>{}),
-        (entity: id, type: 'task.completed', data: <String, dynamic>{}),
+        (
+          entity: otherTask,
+          type: 'task.completed',
+          data: <String, dynamic>{
+            'completedInstant': '2026-10-12T12:00:00.000000Z',
+          },
+        ),
+        (
+          entity: id,
+          type: 'task.completed',
+          data: <String, dynamic>{
+            'completedInstant': '2026-10-12T12:00:00.000000Z',
+          },
+        ),
       ]) {
         await expectLater(
           a!.command(candidate.entity, candidate.type, candidate.data),
@@ -1405,6 +1582,7 @@ void main() {
       expect(a!.rows.where((r) => r['kind'] == 'task').length, 1);
       await expectLater(
         a!.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
           'successor': {
             'id': const Uuid().v5(id, 'successor'),
             'title': 'Groceries',
@@ -1417,7 +1595,9 @@ void main() {
         throwsA(isA<FormatFailure>()),
       );
       await expectLater(
-        a!.command(id, 'task.completed', {}),
+        a!.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
+        }),
         throwsA(isA<FormatFailure>()),
       );
       expect(await aFolder.read('${a!.writer}.applog'), before);
@@ -1454,7 +1634,7 @@ void main() {
         id,
         'task.completed',
         {
-          'completedAt': '2026-10-01',
+          'completedInstant': '2026-10-01T00:00:00.000000Z',
           'successor': {
             'id': const Uuid().v5(id, 'successor'),
             'title': 'Groceries',
@@ -1494,9 +1674,14 @@ void main() {
       await b!.refresh();
       final one = await a!.complete(
         id,
-        completionDay: DateTime.utc(2026, 10, 20),
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 20),
       );
-      await b!.complete(id, completionDay: DateTime.utc(2026, 10, 21));
+      await b!.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 21),
+      );
       final next = const Uuid().v5(id, 'successor');
       await a!.command(next, 'task.edited', {'description': 'Successor work'});
       await File(
@@ -1516,7 +1701,11 @@ void main() {
       await a!.reopen(id, a!.activeCompletionIds(id));
       expect(state(a!, id)['completed'], false);
       expect(state(a!, next)['description'], 'Successor work');
-      await a!.complete(id, completionDay: DateTime.utc(2026, 10, 22));
+      await a!.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 22),
+      );
       expect(a!.rows.where((r) => r['kind'] == 'task').length, 2);
       expect(one.data['successor'], isNotNull);
       final expected = a!.rows;
@@ -1563,8 +1752,16 @@ void main() {
       await b!.refresh();
       final early = a!.writer.compareTo(b!.writer) < 0 ? a! : b!;
       final late = identical(early, a) ? b! : a!;
-      await early.complete(id, completionDay: DateTime.utc(2026, 10, 20));
-      await late.complete(id, completionDay: DateTime.utc(2026, 10, 20));
+      await early.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 20),
+      );
+      await late.complete(
+        id,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 20),
+      );
       final next = const Uuid().v5(id, 'successor');
       await editTags(late, next, []);
       expect(state(late, next)['tags'], isEmpty);
@@ -1595,7 +1792,11 @@ void main() {
       });
       final bytes = await aFolder.read('${a!.writer}.applog');
       await expectLater(
-        a!.complete(id, completionDay: DateTime.utc(2026, 10, 20)),
+        a!.complete(
+          id,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 20),
+        ),
         throwsA(isA<FormatFailure>()),
       );
       final ref = (state(a!, id)['tagRefs'] as Map).keys.single as String;
@@ -1663,6 +1864,7 @@ void main() {
       );
       await expectLater(
         a!.command(id, 'task.completed', {
+          'completedInstant': '2026-10-12T12:00:00.000000Z',
           'successor': {
             'id': const Uuid().v5(id, 'successor'),
             'title': 'Invalid interval',
@@ -1709,7 +1911,10 @@ void main() {
         id,
         completionInstant: DateTime.utc(2026, 10, 20, 2),
       );
-      expect(completion.data['completedAt'], '2026-10-19');
+      expect(
+        completion.data['completedInstant'],
+        '2026-10-20T02:00:00.000000Z',
+      );
       expect(
         ((completion.data['successor'] as Map)['schedule'] as Map)['dueDate'],
         '2026-10-20',
@@ -1729,7 +1934,11 @@ void main() {
       a = await TaskStore.open(failing, '${root.path}/private-a');
       failing.failNext = true;
       await expectLater(
-        a!.complete(id, completionDay: DateTime.utc(2026, 10, 20)),
+        a!.complete(
+          id,
+          localZoneId: 'UTC',
+          completionInstant: DateTime.utc(2026, 10, 20),
+        ),
         throwsStateError,
       );
       await a!.close();
@@ -1996,7 +2205,11 @@ void main() {
           .toList();
       await a!.moveBefore(monthly, null);
       expect(order(), [read, monthly]);
-      await a!.complete(monthly, completionDay: DateTime.utc(2026, 10, 20));
+      await a!.complete(
+        monthly,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 20),
+      );
       final next = const Uuid().v5(monthly, 'successor');
       expect(order(), [read, next, monthly]);
       await a!.moveBefore(monthly, read);
@@ -2010,15 +2223,22 @@ void main() {
       await a!.moveBefore(monthly, null);
       expect(order(), [next, read, monthly]);
       await a!.reopen(monthly, a!.activeCompletionIds(monthly));
-      await a!.complete(monthly, completionDay: DateTime.utc(2026, 10, 21));
+      await a!.complete(
+        monthly,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 21),
+      );
       expect(order(), [
         next,
         read,
         monthly,
       ], reason: 'Recompletion must not reposition the existing occurrence.');
-      expect(state(a!, monthly)['completedAt'], '2026-10-21');
+      expect(
+        state(a!, monthly)['completedInstant'],
+        '2026-10-21T00:00:00.000000Z',
+      );
       await a!.reopen(monthly, a!.activeCompletionIds(monthly));
-      expect(state(a!, monthly)['completedAt'], isNull);
+      expect(state(a!, monthly)['completedInstant'], isNull);
     },
   );
   test('later creation stays after an earlier move to end', () async {
@@ -2059,7 +2279,11 @@ void main() {
       await b!.refresh();
       await a!.moveBefore(monthly, null);
       testNow = testNow.add(const Duration(milliseconds: 1));
-      await b!.complete(monthly, completionDay: DateTime.utc(2026, 10, 20));
+      await b!.complete(
+        monthly,
+        localZoneId: 'UTC',
+        completionInstant: DateTime.utc(2026, 10, 20),
+      );
       final next = const Uuid().v5(monthly, 'successor');
       expect(b!.rows.where((r) => r['kind'] == 'task').map((r) => r['id']), [
         next,

@@ -142,7 +142,13 @@ class SharedTextHistoryGraph {
         'Shared history requires original canonical packets.',
       );
     }
-    final canonical = LogEvent.decode(raw);
+    final key = _packetKey(packet), prior = _packets[key];
+    // A retained packet owns this strict, deeply frozen canonical decode.
+    // Exact raw reuse saves repeated decoding; every caller-envelope and claim
+    // comparison below still runs before any duplicate-parent early return.
+    final canonical = prior?.event.canonicalRaw == raw
+        ? prior!.event
+        : LogEvent.decode(raw);
     final change = (canonical.data['changes'] as Map?)?[packet.field] as Map?;
     if (!const {
           'task.textEdited',
@@ -167,7 +173,6 @@ class SharedTextHistoryGraph {
         'Shared history packet differs from original authorship.',
       );
     }
-    final key = _packetKey(packet), prior = _packets[key];
     if (prior != null) {
       if (prior.event.canonicalRaw != raw ||
           !prior.claim.sameOwner(packet.claim) ||
