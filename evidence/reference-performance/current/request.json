@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "5bf8f8b3bf30ae7f8958f4406f45ff63",
-  "issuedAtUTC": "2026-10-27T00:14:24.142255+00:00",
-  "sourceRevision": "33abf7614722b518cdfb0f7cf13e11f4531eb2d9",
+  "requestId": "70ec329d480b868b5c0ccabb73842081",
+  "issuedAtUTC": "2026-10-27T03:56:07.968373+00:00",
+  "sourceRevision": "41b8f21ec1d487597233d79293dbd394f0f36591",
   "relevantSource": {
     "sha256": "83ef74ab4cf4fe5febeb73216e97d0a6e5e6a75c71ebc8979539aabed1f57cd5",
     "files": {
