@@ -441,8 +441,13 @@ TimedView<TaskView> projectTaskView(
           x.day == y.day) {
         // Within a civil day, exact times come first. Date-only intent is a
         // separate sort bucket, not a fabricated last millisecond of the day.
+        // Rows that entered rolling Today lead tomorrow's day: in a DST fold a
+        // pinned zone's later instant can have an earlier viewer civil time,
+        // which would otherwise split Today around it.
         final exactA = a.$2.hasEffectiveTime, exactB = b.$2.hasEffectiveTime;
-        order = exactA != exactB
+        order = a.$2.today != b.$2.today
+            ? (a.$2.today ? -1 : 1)
+            : exactA != exactB
             ? (exactA ? -1 : 1)
             : exactA
             ? x.compareTo(y)

@@ -276,6 +276,47 @@ void main() {
     expect(boundary.value.openGroups.single.today, isTrue);
   });
 
+  test('a cross-zone task in the repeated hour cannot split Today', () {
+    // B is 01:30 in the second (standard-time) Chicago 01:00 hour, A is 01:45
+    // in the first. Civil order puts B first, but only A has entered Today.
+    final rows = [
+      row('C', schedule: TaskSchedule(dueDate: '2026-10-31')),
+      row(
+        'A',
+        schedule: TaskSchedule(
+          dueDate: '2026-11-01',
+          dueTime: '01:45',
+          timeZone: 'America/Chicago',
+        ),
+      ),
+      row(
+        'B',
+        schedule: TaskSchedule(
+          dueDate: '2026-11-01',
+          dueTime: '07:30',
+          timeZone: 'UTC',
+        ),
+      ),
+    ];
+    final view = projectTaskView(
+      rows,
+      at('2026-10-31T07:00:00Z', 'America/Chicago'),
+    ).value;
+    expect(view.openGroups.map((g) => g.date), ['2026-10-31', '2026-11-01']);
+    expect(view.openGroups.map((g) => g.today), [true, false]);
+    expect(view.openGroups.map((g) => ids(g.entries)), [
+      ['C', 'A'],
+      ['B'],
+    ]);
+    // Once B also enters Today, its earlier civil time sorts first again.
+    final later = projectTaskView(
+      rows,
+      at('2026-10-31T07:30:00Z', 'America/Chicago'),
+    ).value;
+    expect(later.openGroups.single.today, isTrue);
+    expect(ids(later.open), ['C', 'B', 'A']);
+  });
+
   test('Today uses the viewer date for a pinned due instant', () {
     final view = projectTaskView([
       row(
