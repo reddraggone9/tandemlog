@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart' show CustomSemanticsAction;
+import 'package:flutter/services.dart';
 
 import '../presentation/tag_input.dart';
 import '../presentation/sticky_task_group.dart';
@@ -770,12 +772,22 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             _groupMenuIdentity(current) == _groupMenuIdentity(observed),
       );
 
+  bool _groupSelected(FoodGroup group) =>
+      selecting && group.containers.every((e) => bulkSelected.contains(e.id));
+
   List<PopupMenuEntry<String>> _groupMenuItems(FoodGroup group) => [
     PopupMenuItem<String>(
       enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
       value: 'add-another',
       child: const Text('Add another…'),
     ),
+    // Keyboard and assistive-technology route to the long-press selection.
+    if (!group.containers.first.deleted)
+      PopupMenuItem<String>(
+        enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
+        value: 'select',
+        child: Text(_groupSelected(group) ? 'Deselect' : 'Select'),
+      ),
     if (group.containers.first.deleted) ...[
       PopupMenuItem<String>(
         value: 'restore',
@@ -846,9 +858,17 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       });
     }
 
+    // Like Tasks: start selection with this group, or toggle it once selecting.
+    void selectGroup() =>
+        selecting ? toggleSelection() : toggleSelection(enter: true);
+
     void editGroup() {
       if (pending || !_canUseGroupMenu(group, workspace)) return;
-      if (selecting && !deleted) {
+      if (!deleted &&
+          (HardwareKeyboard.instance.isControlPressed ||
+              HardwareKeyboard.instance.isMetaPressed)) {
+        selectGroup();
+      } else if (selecting && !deleted) {
         toggleSelection();
       } else {
         _edit(group: group, detailsCommand: detailsCommand);
@@ -874,6 +894,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           !(widget.hasPendingSave?.call() ?? widget.savePending)) {
         _edit(template: group.details, addCommand: addCommand);
       }
+      if (action == 'select' && !deleted) selectGroup();
       if (action == 'remove') _confirmRemove(group, removeCommand);
       if (action == 'restore') restoreGroup();
     }
@@ -900,195 +921,226 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             : null,
         focused: _focusedGroup == (workspace, identity),
         interactive: editable,
-        child: InkWell(
-          overlayColor: listRowInkOverlay(Theme.of(context).colorScheme),
-          splashFactory: InkRipple.splashFactory,
-          onFocusChange: (focused) {
-            if (!mounted) return;
-            setState(() {
-              if (focused) {
-                _focusedGroup = (workspace, identity);
-              } else if (_focusedGroup == (workspace, identity)) {
-                _focusedGroup = null;
-              }
-            });
+        child: Focus(
+          canRequestFocus: false,
+          skipTraversal: true,
+          // Space on the focused row selects, as on Task rows; Enter still
+          // edits. Only the row's own InkWell focus node is a direct child;
+          // its checkbox and buttons keep their own Space activation.
+          onKeyEvent: (node, event) {
+            if (event.logicalKey != LogicalKeyboardKey.space ||
+                event is KeyUpEvent ||
+                deleted ||
+                FocusManager.instance.primaryFocus?.parent != node) {
+              return KeyEventResult.ignored;
+            }
+            if (event is KeyDownEvent && editable) selectGroup();
+            return KeyEventResult.handled;
           },
-          onTap: editable ? editGroup : null,
-          onLongPress: !editable || deleted
-              ? null
-              : () => toggleSelection(enter: true),
-          excludeFromSemantics: true,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (selecting && !deleted)
-                  Checkbox(
-                    key: ValueKey('food-group-selection:$key'),
-                    semanticLabel:
-                        'Select ${group.containers.length} ${details.name} containers',
-                    tristate: true,
-                    value:
-                        group.containers.every(
-                          (e) => bulkSelected.contains(e.id),
-                        )
-                        ? true
-                        : group.containers.any(
+          child: InkWell(
+            overlayColor: listRowInkOverlay(Theme.of(context).colorScheme),
+            splashFactory: InkRipple.splashFactory,
+            onFocusChange: (focused) {
+              if (!mounted) return;
+              setState(() {
+                if (focused) {
+                  _focusedGroup = (workspace, identity);
+                } else if (_focusedGroup == (workspace, identity)) {
+                  _focusedGroup = null;
+                }
+              });
+            },
+            onTap: editable ? editGroup : null,
+            onLongPress: !editable || deleted
+                ? null
+                : () => toggleSelection(enter: true),
+            excludeFromSemantics: true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (selecting && !deleted)
+                    Checkbox(
+                      key: ValueKey('food-group-selection:$key'),
+                      semanticLabel:
+                          'Select ${group.containers.length} ${details.name} containers',
+                      tristate: true,
+                      value:
+                          group.containers.every(
                             (e) => bulkSelected.contains(e.id),
                           )
-                        ? null
-                        : false,
-                    onChanged: widget.busy ? null : (_) => toggleSelection(),
-                  ),
-                Expanded(
-                  child: Semantics(
-                    button: true,
-                    enabled: editable,
-                    label: [
-                      selecting && !deleted ? 'Select' : 'Edit',
-                      details.name,
-                      countLabel,
-                      details.expiry ?? 'Needs expiration',
-                      if (details.brand.isNotEmpty) details.brand,
-                      if (details.retention.isNotEmpty) details.retention,
-                      ...metadata,
-                    ].join(', '),
-                    onTap: editable ? editGroup : null,
-                    excludeSemantics: true,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          spacing: 8,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Text(
-                              details.name,
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: deleted
-                                        ? Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant
-                                        : null,
-                                    decoration: deleted
-                                        ? TextDecoration.lineThrough
-                                        : null,
-                                  ),
-                            ),
-                            if (group.containers.length > 1)
+                          ? true
+                          : group.containers.any(
+                              (e) => bulkSelected.contains(e.id),
+                            )
+                          ? null
+                          : false,
+                      onChanged: widget.busy ? null : (_) => toggleSelection(),
+                    ),
+                  Expanded(
+                    child: Semantics(
+                      button: true,
+                      enabled: editable,
+                      label: [
+                        selecting && !deleted ? 'Select' : 'Edit',
+                        details.name,
+                        countLabel,
+                        details.expiry ?? 'Needs expiration',
+                        if (details.brand.isNotEmpty) details.brand,
+                        if (details.retention.isNotEmpty) details.retention,
+                        ...metadata,
+                      ].join(', '),
+                      selected: _groupSelected(group) && !deleted,
+                      onTap: editable ? editGroup : null,
+                      onLongPress: editable && !deleted
+                          ? () => toggleSelection(enter: true)
+                          : null,
+                      customSemanticsActions: editable && !deleted
+                          ? {
+                              CustomSemanticsAction(
+                                label: _groupSelected(group)
+                                    ? 'Deselect food'
+                                    : 'Select food',
+                              ): selectGroup,
+                            }
+                          : null,
+                      excludeSemantics: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            spacing: 8,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
                               Text(
-                                countLabel,
+                                details.name,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(
+                                      color: deleted
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant
+                                          : null,
+                                      decoration: deleted
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                    ),
+                              ),
+                              if (group.containers.length > 1)
+                                Text(
+                                  countLabel,
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                ),
+                            ],
+                          ),
+                          Wrap(
+                            spacing: 8,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Text(
+                                details.expiry ?? 'Needs expiration',
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
+                                      fontWeight: FontWeight.w600,
+                                      color: deleted
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant
+                                          : foodExpiryColor(
+                                              details.expiry,
+                                              _expirationClock.today,
+                                              Theme.of(context).colorScheme,
+                                            ),
                                     ),
                               ),
-                          ],
-                        ),
-                        Wrap(
-                          spacing: 8,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
+                              for (final value in [
+                                details.brand,
+                                details.retention,
+                              ].where((value) => value.isNotEmpty))
+                                Text(
+                                  value,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                ),
+                            ],
+                          ),
+                          if (metadata.isNotEmpty)
                             Text(
-                              details.expiry ?? 'Needs expiration',
-                              style: Theme.of(context).textTheme.bodyMedium
+                              metadata.join(' · '),
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: deleted
-                                        ? Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant
-                                        : foodExpiryColor(
-                                            details.expiry,
-                                            _expirationClock.today,
-                                            Theme.of(context).colorScheme,
-                                          ),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
                                   ),
                             ),
-                            for (final value in [
-                              details.brand,
-                              details.retention,
-                            ].where((value) => value.isNotEmpty))
-                              Text(
-                                value,
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                    ),
-                              ),
-                          ],
-                        ),
-                        if (metadata.isNotEmpty)
-                          Text(
-                            metadata.join(' · '),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                if (!deleted)
-                  IconButton(
-                    tooltip: 'Remove one ${details.name} container',
-                    visualDensity: VisualDensity.standard,
-                    constraints: const BoxConstraints(
-                      minWidth: 48,
-                      minHeight: 48,
+                  if (!deleted)
+                    IconButton(
+                      tooltip: 'Remove one ${details.name} container',
+                      visualDensity: VisualDensity.standard,
+                      constraints: const BoxConstraints(
+                        minWidth: 48,
+                        minHeight: 48,
+                      ),
+                      onPressed: widget.busy
+                          ? null
+                          : () {
+                              if (_canUseGroupMenu(group, workspace)) {
+                                _invoke(
+                                  () => removeCommand([
+                                    group.containers.first.id,
+                                  ]),
+                                );
+                              }
+                            },
+                      icon: const Icon(Icons.remove_circle_outline),
                     ),
-                    onPressed: widget.busy
-                        ? null
-                        : () {
-                            if (_canUseGroupMenu(group, workspace)) {
-                              _invoke(
-                                () =>
-                                    removeCommand([group.containers.first.id]),
-                              );
-                            }
-                          },
-                    icon: const Icon(Icons.remove_circle_outline),
-                  ),
-                if (deleted)
-                  IconButton(
-                    tooltip: 'Restore one ${details.name} container',
-                    visualDensity: VisualDensity.standard,
-                    constraints: const BoxConstraints(
-                      minWidth: 48,
-                      minHeight: 48,
+                  if (deleted)
+                    IconButton(
+                      tooltip: 'Restore one ${details.name} container',
+                      visualDensity: VisualDensity.standard,
+                      constraints: const BoxConstraints(
+                        minWidth: 48,
+                        minHeight: 48,
+                      ),
+                      onPressed: widget.busy
+                          ? null
+                          : () {
+                              if (_canUseGroupMenu(group, workspace)) {
+                                _invoke(
+                                  () => restoreCommand(group.containers.first),
+                                );
+                              }
+                            },
+                      icon: const Icon(Icons.restore),
                     ),
-                    onPressed: widget.busy
-                        ? null
-                        : () {
-                            if (_canUseGroupMenu(group, workspace)) {
-                              _invoke(
-                                () => restoreCommand(group.containers.first),
-                              );
-                            }
-                          },
-                    icon: const Icon(Icons.restore),
+                  SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: PopupMenuButton<String>(
+                      key: ValueKey('food-actions:$identity'),
+                      tooltip: 'Actions for ${details.name}',
+                      enabled: !widget.busy,
+                      onSelected: selectAction,
+                      itemBuilder: (_) => _groupMenuItems(group),
+                    ),
                   ),
-                SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: PopupMenuButton<String>(
-                    key: ValueKey('food-actions:$identity'),
-                    tooltip: 'Actions for ${details.name}',
-                    enabled: !widget.busy,
-                    onSelected: selectAction,
-                    itemBuilder: (_) => _groupMenuItems(group),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

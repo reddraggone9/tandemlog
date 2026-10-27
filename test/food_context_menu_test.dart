@@ -80,7 +80,11 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
 
   for (final name in ['Active beans', 'Retained beans']) {
     await open(name);
-    expect(actions(), [('add-another', true), ('remove', true)]);
+    expect(actions(), [
+      ('add-another', true),
+      ('select', true),
+      ('remove', true),
+    ]);
     expect(removals, isEmpty);
     expect(other, isEmpty);
     await dismiss();
@@ -114,7 +118,11 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
   update(() => pending = true);
   await tester.pumpAndSettle();
   await open('Active beans');
-  expect(actions(), [('add-another', false), ('remove', true)]);
+  expect(actions(), [
+    ('add-another', false),
+    ('select', false),
+    ('remove', true),
+  ]);
   await dismiss();
   update(() => pending = false);
   await tester.pumpAndSettle();
