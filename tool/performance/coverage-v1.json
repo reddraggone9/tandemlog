@@ -422,6 +422,12 @@
       "boundary": "No write. Synthetic food_selection_deleted_edit_test verifies gesture; native below-100ms visible-response timing pending."
     },
     {
+      "interaction": "Food Space, Ctrl/Cmd-click, Select food semantics action or row Actions Select/Deselect enters or toggles multiselect",
+      "productionAPI": "FoodInventoryPage::_group captured physical IDs",
+      "actualUIPath": "lib/food/food_page.dart::_group",
+      "boundary": "No write; same selection toggle as long press. food_keyboard_selection_test and native food_keyboard_selection_workflow_test verify keyboard, semantics and menu routes; native below-100ms visible-response timing pending."
+    },
+    {
       "interaction": "Deleted Food details Save and selective Undo keep tombstones",
       "productionAPI": "FoodStore.changeDetails; FoodStore.undoOperations",
       "actualUIPath": "lib/food/food_page.dart::_edit -> main.dart::_foodCommand",

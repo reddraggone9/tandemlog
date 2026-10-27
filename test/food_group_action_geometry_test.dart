@@ -108,7 +108,11 @@ Future<void> verifyFoodGroupActionGeometry(
   Future<void> secondaryMenu(String name) async {
     await tester.tap(groupName, buttons: kSecondaryMouseButton);
     await tester.pumpAndSettle();
-    expect(menuActions(), [('add-another', true), ('remove', true)]);
+    expect(menuActions(), [
+      ('add-another', true),
+      ('select', true),
+      ('remove', true),
+    ]);
     for (final item in find.byType(PopupMenuItem<String>).evaluate()) {
       final bounds = tester.getRect(find.byWidget(item.widget));
       expect(bounds.left, greaterThanOrEqualTo(0));
