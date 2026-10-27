@@ -51,7 +51,14 @@ New reference proofs and compact SQLite reference rows now avoid inherited BLOBs
 and operation-ID arrays per occurrence; exact editor/receipt state is reconstructed
 on demand. Adapter1 proof/checkpoint meanings remain supported. Full observed-prefix
 scans and warm command costs remain scaling work; this is not a constant-latency
-claim. Independent review and exact platform acceptance completed for that stable
+claim. Native keystroke `edit`, `composition`, `anchor` and remote `apply` calls
+mutate the live replica and then run the same per-owner and global admission; a
+rejection rebuilds the exact prior replica from its retained replay. They no longer
+replay the whole session per call (O(history), about 5 ms at keystroke 4000 on desktop
+release), so their cost tracks the field's state instead. Save/prepare, owned
+receipts and Undo still verify the full session replay once per call; per-call
+O(state) encodes/admission and a cold adapter1 `TextCache` rebuild that applies one
+packet per call remain scaling work. Independent review and exact platform acceptance completed for that stable
 release;[the stable receipt](../evidence/stable-2026.10.2/README.md) records them. See the
 [implementation evidence](../evidence/production-text/shared-history/README.md).
 `text/native_text_engine.dart` owns typed FFI handles and bounded exact packets;

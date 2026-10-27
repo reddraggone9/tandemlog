@@ -281,6 +281,15 @@ impl Replica {
         &self,
         capture: Option<Arc<Mutex<Vec<Vec<u8>>>>>,
     ) -> Result<Self, String> {
+        let clone = self.replayed(capture)?;
+        if clone.full() != self.full() {
+            return Err("session Undo replay differs from live state".into());
+        }
+        Ok(clone)
+    }
+    /// Rebuild from the seed and retained replay steps, carrying session
+    /// metadata but not any prepared Undo.
+    fn replayed(&self, capture: Option<Arc<Mutex<Vec<Vec<u8>>>>>) -> Result<Self, String> {
         let mut clone = Self::new_with_guid(
             self.doc.client_id().get(),
             self.initial_seed.as_deref(),
@@ -296,6 +305,8 @@ impl Replica {
                 .map_err(|e| e.to_string())?;
         }
         for step in &self.replay {
+            #[cfg(test)]
+            replay_counter::REPLAYED_STEPS.with(|steps| steps.set(steps.get() + 1));
             match step {
                 ReplayStep::Apply(update, origin) => {
                     if origin == "local" {
@@ -320,9 +331,6 @@ impl Replica {
                     clone.undo.redo_blocking();
                 }
             }
-        }
-        if clone.full() != self.full() {
-            return Err("session Undo replay differs from live state".into());
         }
         clone.replay = self.replay.clone();
         clone.source = self.source.clone();
@@ -689,6 +697,9 @@ impl Engine {
         }
         let reserve_undo_marker = !["undo", "redo", "commit_undo"].contains(&op);
         let name = string(&v, "name")?.to_owned();
+        if ["edit", "apply", "composition", "anchor"].contains(&op) {
+            return self.command_in_place(v, &name);
+        }
         let mut names = vec![name];
         if op == "save" {
             let target = string(&v, "target")?.to_owned();
@@ -717,21 +728,7 @@ impl Engine {
             return Err("response frame budget exceeded".into());
         }
         for (name, r) in &candidate.docs {
-            r.check_budget(candidate.owner_receipts(name), name.len())?;
-            // Keep one compact replay marker available for the prior session
-            // Undo; rejecting a new edit must not consume or prune that history.
-            if reserve_undo_marker
-                && r.undo.can_undo()
-                && r.usage(0, name.len()).session.saturating_add(
-                    1 + r
-                        .undo
-                        .undo_stack()
-                        .last()
-                        .map_or(0, |item| item.meta().len()),
-                ) > r.limits.session
-            {
-                return Err("session replay budget needs Undo marker headroom".into());
-            }
+            Self::check_owner(r, candidate.owner_receipts(name), name, reserve_undo_marker)?;
         }
         let untouched = self
             .docs
@@ -762,6 +759,75 @@ impl Engine {
         self.undo_receipts.extend(candidate.undo_receipts);
         self.next_preparation = candidate.next_preparation;
         Ok(response)
+    }
+    fn check_owner(
+        r: &Replica,
+        receipts: usize,
+        name: &str,
+        reserve_undo_marker: bool,
+    ) -> Result<(), String> {
+        r.check_budget(receipts, name.len())?;
+        // Keep one compact replay marker available for the prior session
+        // Undo; rejecting a new edit must not consume or prune that history.
+        if reserve_undo_marker
+            && r.undo.can_undo()
+            && r.usage(0, name.len()).session.saturating_add(
+                1 + r
+                    .undo
+                    .undo_stack()
+                    .last()
+                    .map_or(0, |item| item.meta().len()),
+            ) > r.limits.session
+        {
+            return Err("session replay budget needs Undo marker headroom".into());
+        }
+        Ok(())
+    }
+    /// Keystrokes, composition, anchors and remote packets are single-owner,
+    /// single-transaction commands. Building their transactional candidate by
+    /// replaying the whole session made every call O(session history), so they
+    /// mutate the live replica and apply the same admission afterwards. Any
+    /// rejection rebuilds the exact prior replica from its retained replay.
+    /// Durable outputs (prepare/save/Undo) still verify the full replay.
+    fn command_in_place(&mut self, v: Value, name: &str) -> Result<Value, String> {
+        let r = self.get(name)?;
+        let steps = r.replay.len();
+        let queued = r.prepared_undo.as_ref().map(|p| p.remote.len());
+        let (composing, anchor, before) = (r.composing, r.anchor.clone(), r.full());
+        let result = self.command_inner(v).and_then(|response| {
+            if response.to_string().len() > RESPONSE_CAP {
+                return Err("response frame budget exceeded".into());
+            }
+            let receipts = self.owner_receipts(name);
+            Self::check_owner(self.get(name)?, receipts, name, true)?;
+            if self.retained_weight() > RETAINED_CAP {
+                return Err("global serialized payload budget exceeded".into());
+            }
+            Ok(response)
+        });
+        if result.is_err() {
+            let r = self.get(name)?;
+            r.replay.truncate(steps);
+            r.composing = composing;
+            r.anchor = anchor;
+            let mut prepared = r.prepared_undo.take();
+            if let (Some(p), Some(queued)) = (prepared.as_mut(), queued) {
+                p.remote.truncate(queued);
+            }
+            match r.replayed(None) {
+                Ok(mut restored) if restored.full() == before => {
+                    restored.prepared_undo = prepared;
+                    *r = restored;
+                }
+                _ => {
+                    // Never retain a replica whose live state and replay disagree.
+                    self.docs.remove(name);
+                    self.undo_receipts.retain(|_, receipt| receipt.name != name);
+                    return Err("native rollback failed; replica released".into());
+                }
+            }
+        }
+        result
     }
     fn get(&mut self, name: &str) -> Result<&mut Replica, String> {
         self.docs
@@ -1367,6 +1433,146 @@ pub unsafe extern "C" fn spike_alloc(size: usize) -> *mut u8 {
 #[no_mangle]
 pub unsafe extern "C" fn spike_release_input(value: *mut u8, size: usize) {
     release_input(value, size)
+}
+
+#[cfg(test)]
+mod replay_counter {
+    thread_local! {
+        pub static REPLAYED_STEPS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    }
+    pub fn take() -> usize {
+        REPLAYED_STEPS.with(|steps| steps.replace(0))
+    }
+}
+
+#[cfg(test)]
+mod hot_path_replay_tests {
+    use super::*;
+
+    fn engine_with_owner(text: &str, limits: Value) -> Engine {
+        let mut engine = Engine::default();
+        let seed = engine
+            .command(json!({"op":"seed", "text":text, "limits":limits}))
+            .unwrap();
+        engine
+            .command(json!({"op":"new", "name":"owner", "client":10,
+            "seed":seed["update"], "limits":limits}))
+            .unwrap();
+        engine
+    }
+
+    fn read(engine: &mut Engine, name: &str) -> String {
+        engine.command(json!({"op":"read", "name":name})).unwrap()["text"]
+            .as_str()
+            .unwrap()
+            .to_owned()
+    }
+
+    fn state(engine: &mut Engine, name: &str) -> String {
+        engine.command(json!({"op":"state", "name":name})).unwrap()["update"]
+            .as_str()
+            .unwrap()
+            .to_owned()
+    }
+
+    fn append(engine: &mut Engine, name: &str, insert: &str) -> Result<Value, String> {
+        let at = read(engine, name).encode_utf16().count();
+        engine.command(json!({"op":"edit", "name":name, "index":at,
+            "delete":0, "insert":insert}))
+    }
+
+    #[test]
+    fn draft_keystrokes_and_composition_do_not_replay_the_session() {
+        let mut engine = engine_with_owner("Plan", Value::Null);
+        engine
+            .command(json!({"op":"draft", "name":"draft", "source":"owner", "client":20}))
+            .unwrap();
+        for _ in 0..300 {
+            append(&mut engine, "draft", "x").unwrap();
+        }
+        replay_counter::take();
+        append(&mut engine, "draft", "y").unwrap();
+        engine
+            .command(json!({"op":"composition", "name":"draft", "active":true}))
+            .unwrap();
+        engine
+            .command(json!({"op":"composition", "name":"draft", "active":false}))
+            .unwrap();
+        engine
+            .command(json!({"op":"anchor", "name":"draft", "index":2}))
+            .unwrap();
+        assert_eq!(
+            replay_counter::take(),
+            0,
+            "a keystroke must cost O(edit + state), not O(session history)"
+        );
+        // Durable outputs still verify the full private replay.
+        let expected = format!("Plan{}y", "x".repeat(300));
+        let packet = engine
+            .command(json!({"op":"prepare", "name":"draft", "target":"owner"}))
+            .unwrap();
+        assert_eq!(replay_counter::take(), 301);
+        engine
+            .command(
+                json!({"op":"apply_owned", "name":"owner", "operation":"save",
+            "update":packet["update"]}),
+            )
+            .unwrap();
+        assert_eq!(read(&mut engine, "owner"), expected);
+        assert_eq!(read(&mut engine, "draft"), expected);
+    }
+
+    #[test]
+    fn remote_applies_do_not_replay_the_session() {
+        let mut engine = engine_with_owner("Plan", Value::Null);
+        let seed = state(&mut engine, "owner");
+        engine
+            .command(json!({"op":"new", "name":"peer", "client":30, "seed":seed}))
+            .unwrap();
+        for _ in 0..200 {
+            let packet = append(&mut engine, "peer", "p").unwrap();
+            replay_counter::take();
+            engine
+                .command(json!({"op":"apply", "name":"owner", "update":packet["update"]}))
+                .unwrap();
+            assert_eq!(replay_counter::take(), 0);
+        }
+        assert_eq!(
+            read(&mut engine, "owner"),
+            format!("Plan{}", "p".repeat(200))
+        );
+    }
+
+    #[test]
+    fn rejected_hot_mutation_restores_exact_state_replay_and_undo() {
+        let limits = json!({"updateBytes":256});
+        let mut engine = engine_with_owner("Plan", limits);
+        engine
+            .command(json!({"op":"draft", "name":"draft", "source":"owner", "client":20}))
+            .unwrap();
+        for _ in 0..20 {
+            append(&mut engine, "draft", "x").unwrap();
+        }
+        let before = state(&mut engine, "draft");
+        // Applied to the document before its encoded update exceeds the budget.
+        let rejected = append(&mut engine, "draft", &"z".repeat(2000));
+        assert!(rejected.unwrap_err().contains("budget"));
+        assert_eq!(state(&mut engine, "draft"), before);
+        let undo = engine
+            .command(json!({"op":"undo", "name":"draft"}))
+            .unwrap();
+        assert_eq!(undo["changed"], true);
+        assert_eq!(
+            read(&mut engine, "draft"),
+            format!("Plan{}", "x".repeat(19))
+        );
+        append(&mut engine, "draft", "!").unwrap();
+        let expected = format!("Plan{}!", "x".repeat(19));
+        engine
+            .command(json!({"op":"save", "name":"draft", "target":"owner"}))
+            .unwrap();
+        assert_eq!(read(&mut engine, "owner"), expected);
+    }
 }
 
 #[cfg(test)]
