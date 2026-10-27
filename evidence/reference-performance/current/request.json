@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "0c18559fc53e4ff9d2d5ce38aa3a742f",
-  "issuedAtUTC": "2026-10-26T23:36:32.451859+00:00",
-  "sourceRevision": "63574e812a11326a2f8180a08b3316c1656c54c4",
+  "requestId": "5bf8f8b3bf30ae7f8958f4406f45ff63",
+  "issuedAtUTC": "2026-10-27T00:14:24.142255+00:00",
+  "sourceRevision": "33abf7614722b518cdfb0f7cf13e11f4531eb2d9",
   "relevantSource": {
-    "sha256": "d9c501456bf9ac31196e881594373df994ce2c51a5725cae58c4eb69e3c84f0f",
+    "sha256": "83ef74ab4cf4fe5febeb73216e97d0a6e5e6a75c71ebc8979539aabed1f57cd5",
     "files": {
       ".gitattributes": {
-        "sha256": "b7b9b9684a9e7d84e98b7cf606ecb8dbe47b027eaa83f930c3066bb5e6cd76b1",
+        "sha256": "6bc5159379c082d339b2120def94a13a59fc9cb58245669fe79da1c763891daa",
         "mode": "100644"
       },
       ".github/actions/setup-flutter/action.yml": {
