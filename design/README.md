@@ -27,6 +27,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Food as products](food-products.md): proposed (not accepted) design for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums and receipt import; open decisions for Lee. No implementation.
+
 - [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 
 - [Controlled reference performance](decisions/0033-controlled-reference-performance.md): Lee-approved prospective Farnsworth absolute/growth qualification with unchanged budgets,mandatory hosted correctness and advisory hosted timing;[operating protocol](performance-reference-qualification.md),fresh enforcing receipt and exact-source CI required. No persistent runner or multiplier.
