@@ -1,5 +1,13 @@
 # Development status
 
+## Stable 2026.10.7 preparation — 2026-10-27
+
+Lee explicitly accepted RC.5 for stable and authorized the coordinated unified cutover at09:31CDT, including the minor UX regressions he observed. Stable build101 changes only display/build metadata from accepted RC.5/mainbe93df2; new fixes are out of scope. [Candidate receipt](../evidence/stable-2026.10.7/README.md) records the verbatim acceptance and gate status. Fresh reference qualification, the full signed-candidate matrix, exact native acceptance and independent stable editorial review are pending.
+
+**Latest is held for the offline cutover window.** The unified-only client cannot read the old live workspace and does not convert it. Obtainium follows Latest; promoting beforehand could auto-update the live phone into an unusable workspace. Private snapshot/copy inventory, mapping and conversion/replay are preparation only. No real canonical/profile/Syncthing changes or stable publication have occurred.
+
+The dated entries below retain their original source-specific outcomes, not current publication authority.
+
 ## Reference-host performance transition — 2026-10-25
 
 Lee approved [ADR0033](decisions/0033-controlled-reference-performance.md):unchanged

@@ -18,4 +18,6 @@ Sync between devices using tools like Syncthing or Dropbox. Each device records 
 
 Download the [latest stable release](https://github.com/reddraggone9/tandemlog/releases/latest) and see the [installation instructions](packaging/README.md) for platform requirements. Experimental previews are available separately on [Releases](https://github.com/reddraggone9/tandemlog/releases).
 
+**Upgrading to 2026.10.7:** existing workspaces need an offline, coordinated conversion before this version is opened. Keep the previous version until the workspace and all writing devices are ready. This release cannot convert an older workspace in the app.
+
 [Development documentation](design/README.md).
