@@ -2162,6 +2162,11 @@ class TaskStore {
     }
   }
 
+  /// Diagnostics: process-local native Undo operations and owner fields still
+  /// retained (each owner field is re-synchronized on every ingesting refresh).
+  int get retainedNativeTextOperationCount => _nativeOperations.length;
+  int get retainedNativeUndoFieldCount => _nativeUndoFields.length;
+
   /// Release process-local Undo owners without pruning canonical events or
   /// unresolved immutable intents.
   void releaseTextOperations(Iterable<String> operations) {
