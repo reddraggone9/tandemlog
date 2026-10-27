@@ -1759,7 +1759,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           : null;
       final rebaseBulk = beforeUndo != null && bulkSnapshot == beforeUndo;
       final result = await origin.undoOperations(entry.operations.toList());
+      final retainedBefore = undoHistory.retainedOperationIds;
       undoHistory.acknowledge(entry, result.undone);
+      // Undone operations leave session history; release their native Undo
+      // owners now rather than at store close.
+      origin.releaseTextOperations(
+        retainedBefore.difference(undoHistory.retainedOperationIds),
+      );
       if (!mounted || !identical(store, origin)) return;
       setState(() {
         if (!preserveEditor) _clearSelection();
