@@ -1,0 +1,30 @@
+{
+  "coveredBase": "137313d23386cfd73aff5c6128bee3122da829aa",
+  "coveredHead": "41b8f21ec1d487597233d79293dbd394f0f36591",
+  "primaryNativePlatform": "Linux x86_64 GTK / Xvfb / Flutter debug native integration fixture",
+  "taskFoodReceipt": "task-food-media-provenance.json",
+  "buildReceipt": "task-food-build-identity.json",
+  "calendarReceipt": "calendar/media-provenance.json",
+  "calendarPixelReceipt": "calendar/crop-receipt.json",
+  "media": {
+    "01-today.png": "c3e18c8dd6e009047953553e466d579be7adca43c597aa9a1f5b7af50630e6a2",
+    "02-completed.png": "06d734ec05b07f9b88e8db6408a849484535a6baaf494fd00db2cb591f0cf1f2",
+    "03-completed-search.png": "7e27dc3d0c6e1b2e49100ea7a068871b873d1f0bb09a9e0474c57788a415fcf3",
+    "04-search-add.png": "13ec2c9f43ea134ee091007b91393c463c341589edf506cb2069e8a131b3710f",
+    "05-food-longpress.png": "e271acf52c128afab0b05db0de5bb91050b73c208f5e98d8d44f15e9bacf4607",
+    "06-food-deleted-edit.png": "241070926b59ebf16478650944f54036d7f17bdcbe0df31c65f414b6e60f6c1b",
+    "07-calendar-month.png": "e197e8c8a40dbb10ecf9cc6c4e166d330acbade30ba5836ebe8f5de4578a44f3",
+    "08-calendar-year.png": "350497fbd97928340fb6e7ecfa7467331b7b7501e2ce87662d73f661bd10322e",
+    "09-narrow-hint.png": "af5a21d2afb8d3445fb336b7487912005248ac4e7a554b6d7e9c796a9dbfc848"
+  },
+  "notClaimed": [
+    "Android or Windows native evidence",
+    "exact signed-candidate artifact acceptance",
+    "native shutdown fix",
+    "timing/performance qualification",
+    "GitHub publishing or immutable public hosting",
+    "reproduced main-app search-reset baseline defect",
+    "reproduced Undo-after-Cancel baseline defect"
+  ],
+  "minorRegressionReceipt": "minor-regressions/README.md"
+}

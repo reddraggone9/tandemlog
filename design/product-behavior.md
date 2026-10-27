@@ -167,7 +167,7 @@ Completed tasks in both Completed and search's bottom section sort globally by
 exact completion instant newest first. Headings and search metadata use the
 viewer's local date, not Due or the completing device's calendar. Equal instants
 use canonical selected completion-operation order, then immutable task ID.
-Completed rows omit repeated date metadata; search retains it. No time badge or
+Completed rows omit repeated date metadata in both Completed and Search. No time badge or
 approximation marker is added. Reopen/Undo selects one surviving contribution
 atomically; chronological rows cannot be manually reordered. See [ADR0035](decisions/0035-exact-completion-instants.md).
 
