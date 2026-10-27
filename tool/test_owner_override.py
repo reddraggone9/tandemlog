@@ -16,6 +16,8 @@ import run_gate
 import reference_receipt as receipt
 import owner_override as override
 
+POSIX_MODES = os.name != 'nt'
+
 
 class OwnerOverrideFixture(ReceiptFixture):
     def setUp(self):
@@ -196,10 +198,12 @@ class OwnerOverrideTests(OwnerOverrideFixture):
     def test_product_bytes_mode_removal_or_dirty_source_refuse(self):
         for change, pattern in [
                 (lambda: (self.repo / 'lib/a.dart').write_text('const a = 2;\n'), 'outside the reviewed.*lib/a.dart'),
-                (lambda: (self.repo / 'lib/a.dart').chmod(0o755), 'outside the reviewed.*lib/a.dart'),
                 (lambda: (self.repo / 'lib/b.dart').write_text('const b = 1;\n'), 'outside the reviewed.*lib/b.dart'),
                 (lambda: (self.tools / 'limits-v1.json').write_text('{}\n'), 'limits differ'),
-                (lambda: (self.tools / 'benchmark.dart').unlink(), 'file removed')]:
+                (lambda: (self.tools / 'benchmark.dart').unlink(), 'file removed'),
+                # Windows checkouts have no executable bit, so mode pins are exercised on POSIX only.
+                *([(lambda: (self.repo / 'lib/a.dart').chmod(0o755), 'outside the reviewed.*lib/a.dart')]
+                  if POSIX_MODES else [])]:
             with self.subTest(pattern=pattern):
                 head = self.head()
                 change(); subprocess.run(['git', '-C', str(self.repo), 'add', '-A'], check=True); self.commit()
@@ -214,8 +218,9 @@ class OwnerOverrideTests(OwnerOverrideFixture):
         self.marker.write_text('# changed after review\n'); self.commit()
         self.refused('Reviewed policy-file bytes/modes differ')
         self.publish(); self.verify()
-        self.marker.chmod(0o755); self.commit()
-        self.refused('Reviewed policy-file bytes/modes differ')
+        if POSIX_MODES:
+            self.marker.chmod(0o755); self.commit()
+            self.refused('Reviewed policy-file bytes/modes differ')
         self.publish({'permittedDelta': {}})
         self.refused('Reviewed policy-file')
 
