@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -59,12 +61,12 @@ Future<void> _focusRow(WidgetTester tester, String name) async {
   await tester.pumpAndSettle();
 }
 
-SemanticsData _rowSemantics(WidgetTester tester, String name) {
+SemanticsNode _rowSemantics(WidgetTester tester, String name) {
   var node = tester.getSemantics(find.text(name).first);
-  while (!node.hasFlag(SemanticsFlag.isButton)) {
+  while (!node.getSemanticsData().flagsCollection.isButton) {
     node = node.parent!;
   }
-  return node.getSemanticsData();
+  return node;
 }
 
 void main() {
@@ -116,21 +118,22 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     await _pump(tester);
-    var row = _rowSemantics(tester, 'Beans');
+    final node = _rowSemantics(tester, 'Beans');
+    var row = node.getSemanticsData();
     expect(row.hasAction(SemanticsAction.longPress), isTrue);
     final select = row.customSemanticsActionIds!
         .map(CustomSemanticsAction.getAction)
         .singleWhere((action) => action!.label == 'Select food')!;
-    expect(row.hasFlag(SemanticsFlag.isSelected), isFalse);
-    tester.binding.pipelineOwner.semanticsOwner!.performAction(
-      tester.getSemantics(find.text('Beans').first).id,
+    expect(row.flagsCollection.isSelected, isNot(Tristate.isTrue));
+    node.owner!.performAction(
+      node.id,
       SemanticsAction.customAction,
       CustomSemanticsAction.getIdentifier(select),
     );
     await tester.pumpAndSettle();
     expect(find.text('1 selected'), findsOneWidget);
-    row = _rowSemantics(tester, 'Beans');
-    expect(row.hasFlag(SemanticsFlag.isSelected), isTrue);
+    row = _rowSemantics(tester, 'Beans').getSemanticsData();
+    expect(row.flagsCollection.isSelected, Tristate.isTrue);
     expect(
       row.customSemanticsActionIds!.map(
         (id) => CustomSemanticsAction.getAction(id)!.label,
