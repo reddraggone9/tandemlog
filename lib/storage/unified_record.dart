@@ -463,3 +463,21 @@ String unifiedLogName(String writer) {
   if (!isCanonicalId(writer)) throw FormatFailure('Invalid app writer.');
   return '$writer.applog';
 }
+
+/// Syncthing receives an incoming file as `.syncthing.<name>.tmp`
+/// (`~syncthing~<name>.tmp` on Windows) and renames it over `<name>` once
+/// complete. Such a staging copy of a valid app history is not yet delivered
+/// history; admission waits for the rename. Every other unexpected `.applog`
+/// name remains a fail-closed conflict.
+bool isSyncthingAppLogStagingName(String name) {
+  const suffix = '.tmp';
+  if (!name.endsWith(suffix)) return false;
+  for (final prefix in const ['.syncthing.', '~syncthing~']) {
+    if (!name.startsWith(prefix)) continue;
+    final staged = name.substring(prefix.length, name.length - suffix.length);
+    if (!staged.endsWith('.applog')) return false;
+    final writer = staged.substring(0, staged.length - 7);
+    return isCanonicalId(writer) && staged == '$writer.applog';
+  }
+  return false;
+}

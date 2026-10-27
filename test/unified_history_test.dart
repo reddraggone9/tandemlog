@@ -900,6 +900,55 @@ void main() {
   );
 
   test(
+    'Syncthing staging copies of app histories do not stop shared admission',
+    () async {
+      // Syncthing receives a peer's growing history into one of these names
+      // and renames it over the destination once complete.
+      const peer = '77777777-7777-4777-8777-777777777777';
+      final staging = [
+        '.syncthing.$peer.applog.tmp',
+        '~syncthing~$peer.applog.tmp',
+        '.syncthing.${unifiedLogName(owner)}.tmp',
+      ];
+      for (final name in staging) {
+        await File('${folder.location}/$name').writeAsString('{"partial');
+      }
+      final before = history!.snapshot.tasks.length;
+      await history!.refresh();
+      await profile!.serialize(
+        () => history!.refreshInProfileQueue(forceFullAudit: true),
+      );
+      expect(history!.snapshot.tasks, hasLength(before));
+      for (final name in staging) {
+        expect(
+          await File('${folder.location}/$name').readAsString(),
+          '{"partial',
+        );
+      }
+    },
+  );
+
+  for (final name in [
+    '77777777-7777-4777-8777-777777777777.applog.tmp',
+    '.syncthing.77777777-7777-4777-8777-777777777777.applog.part',
+    '.syncthing.not-a-writer.applog.tmp',
+    'syncthing.77777777-7777-4777-8777-777777777777.applog.tmp',
+    '.syncthing.77777777-7777-4777-8777-777777777777.applog.sync-conflict.tmp',
+  ]) {
+    test(
+      'other unexpected app history names still fail closed: $name',
+      () async {
+        await File('${folder.location}/$name').writeAsString('preserve me');
+        await expectLater(history!.refresh(), throwsA(isA<FormatFailure>()));
+        expect(
+          await File('${folder.location}/$name').readAsString(),
+          'preserve me',
+        );
+      },
+    );
+  }
+
+  test(
     'protected chain head must occur at the exact protected byte boundary',
     () async {
       profile!.transaction(

@@ -870,6 +870,7 @@ final class UnifiedHistory {
           'A sync conflict is present. Preserve both copies before recovery.',
         );
       }
+      if (isSyncthingAppLogStagingName(name)) continue;
       if (name.contains('.applog')) {
         if (!name.endsWith('.applog')) {
           throw FormatFailure('Conflicting app history filename.');
