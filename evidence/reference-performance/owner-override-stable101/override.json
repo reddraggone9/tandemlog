@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "reference-performance-owner-override-v1",
+  "state": "OWNER_OVERRIDE_ACCEPTED_NOT_QUALIFIED",
+  "referencePerformanceQualified": false,
+  "release": "2026.10.7+101",
+  "sourceRevision": "dfb2260c83c443e867dd1e809c947c1617a30515",
+  "relevantSourceSHA256": "4608c4f657317f4960645a77e699f82b972ec4ae4cf779a99b1882339adf3da2",
+  "requestId": "6662eaf60ee673b27feb93d624a26f94",
+  "requestSHA256": "1bb08f3ca5510e71f7c0bdc9731c96dfdce44faf54e9ab9e80207b1f3717a741",
+  "resultSHA256": "22e8f96a60629365e0e49c98c8a1e181a2c739467d2e6ed7350e51b46f6bd976",
+  "priorRequestId": "5b95fb32ceac4a20f43414a27b2c3524",
+  "priorResultSHA256": "7ee6f7a0134d18fa93ce210e0f1e8a05863fde4cf2741a853806370fd2721f14",
+  "limitsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+  "budgetsChanged": false,
+  "acceptedFailures": [
+    "task-own-history:scaling:sync.peerTask.whileFood.storageAdmission"
+  ],
+  "acceptedMeasurements": {
+    "task-own-history:scaling:sync.peerTask.whileFood.storageAdmission": {
+      "smallMedianMs": 19.654,
+      "largeMedianMs": 27.997,
+      "medianBoundMs": 27.5675,
+      "smallMaximumMs": 28.359,
+      "largeMaximumMs": 28.528,
+      "maximumBoundMs": 44.7026
+    }
+  },
+  "owner": {
+    "name": "Lee",
+    "role": "release owner",
+    "acceptedAtUTC": "2026-10-27T19:56:00+00:00",
+    "acceptedAtLocal": "2026-10-27T14:56:00-05:00"
+  },
+  "scope": "Stable 2026.10.7+101 at dfb2260 only. The q11 official rerun (ordinal 2 of q10) failed the task-own-history growth median for sync.peerTask.whileFood.storageAdmission (27.997ms > 27.5675ms); that failure stands and this is not a reference-performance qualification. Budgets, limits, coverage, correctness, source, fixture, toolchain and cleanup contracts are unchanged and re-verified. Native-visible, signing, candidate, release and live gates are not accepted by this record.",
+  "permittedDelta": {
+    "tool/performance/owner_override.py": {
+      "sha256": "c9a1db8d8f961b7547fa80ba30a2b4203ad0da7c16ccc9de944c1d9c2976b0ce",
+      "mode": "100644"
+    },
+    "tool/performance/reference_receipt.py": {
+      "sha256": "9ef4b23b8fb36024542511cc0612d79720d35b0589623162608abdf22fa34e67",
+      "mode": "100644"
+    },
+    "tool/test_owner_override.py": {
+      "sha256": "625b0640cc211401034bac3b560afb6d1286685323b8c365d457fd8a9b20f919",
+      "mode": "100644"
+    }
+  },
+  "files": {
+    "cleanup.json": "b14547330e7a90488ffaecee2575f1ab73daf13667bc9bb4241e7fa3a171c78a",
+    "compile.log": "2bf4e28e0f5c153870afad7b77354eb05a2d032b35e79f90d3f99dbb0e8ba802",
+    "dense-1-attempt-0.log": "7e0a2c7e54dc99da46f0425e9e849b775a46bccc22a1254d56cb24d70e4fde4a",
+    "dense-1-generate.log": "616d99ec14f3e55b6a681e27d7a7ff1d74c22640885f668d6ec17198979cff17",
+    "dense-2-attempt-0.log": "2d095c6f279f22a3c940dd8103995de8d10a230f5bff158682b853f8bbc649f8",
+    "dense-2-generate.log": "c490efca7802925996e2cb6b83d7f13ddee4db5dac06022ed080101c7605717e",
+    "dense-food-attempt-0.log": "c5363ead865b577ac9057b08ae1bf2c2e1eb3572f338439c2e3c970921e4b3bf",
+    "dense-food-generate.log": "6c5b05a27311098d67fb582f6723604262aca225fdf5ffdc9ac6be5ca6691160",
+    "fixture-dense-1/fixture.json": "93a43c7af2cd1f6166188d1d29aa5b6f0635ed7d367d1fa9b2dce0a0aacbd63e",
+    "fixture-dense-2/fixture.json": "5a3c8ca499a52e7c6722b568bf0cbf874658a4a21e8b234445e09e0685479bda",
+    "fixture-dense-food/fixture.json": "c82a04507bf4c1b11002f7f972a30c637742026f5a20b50f67a212d6cacee462",
+    "gate-result.json": "22e8f96a60629365e0e49c98c8a1e181a2c739467d2e6ed7350e51b46f6bd976",
+    "official-rerun.json": "2897f1e596fd50cdd841565eb1307eb8a7c3aeee0e96eda7d8decf50b25e6dc5",
+    "prior-gate-result.json": "7ee6f7a0134d18fa93ce210e0f1e8a05863fde4cf2741a853806370fd2721f14",
+    "request.json": "2dc4cd6c55f8645482e0e4382ffad364d238f60d088ab323982ed0965adb08e7"
+  }
+}

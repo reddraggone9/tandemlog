@@ -17,6 +17,8 @@ from gate_policy import (evaluate, evaluate_scaling, validate_registered_coverag
 
 PROFILE = 'tool/performance/reference-host-v1.json'
 QUALIFICATION = 'evidence/reference-performance/current'
+# Release-owner acceptance of a retained failure for one exact release; see owner_override.py.
+OWNER_OVERRIDE = 'evidence/reference-performance/owner-override-stable101'
 EXCLUDED = ('evidence/', 'design/')
 PRIOR_RESULT = 'prior-gate-result.json'
 AUTHORIZATION = 'official-rerun.json'
@@ -512,6 +514,14 @@ def main():
         with output.open('x') as stream:
             json.dump(value, stream, indent=2); stream.write('\n')
     elif args.mode == 'verify':
+        if args.output is None and (args.repo / OWNER_OVERRIDE).exists():
+            # Not a qualification: the failure stays retained and the result says so.
+            from owner_override import verify_override
+            result = verify_override(args.repo, args.repo / OWNER_OVERRIDE)
+            print('::warning title=Reference performance NOT qualified::' + result['state'] + ' for ' +
+                  result['release'] + '; owner accepted ' + ', '.join(result['ownerAcceptedFailures']), file=sys.stderr)
+            print(json.dumps(result, indent=2))
+            return
         print(json.dumps(verify_bundle(args.repo, args.output or args.repo / QUALIFICATION), indent=2))
     else:
         need(all(v is not None for v in (args.output, args.request, args.run, args.cleanup)), 'Seal requires request/run/cleanup/output')

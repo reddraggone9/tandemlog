@@ -205,6 +205,41 @@ qualification bundle cannot carry a prior result. The local executor remains the
 trust boundary for presenting the failure:the original failed run,its logs and
 the diagnostic outputs stay retained.
 
+## Release-owner override — stable 2026.10.7+101 only
+
+The q10 qualification of `dfb2260` failed one task-own-history growth timing;its
+single official rerun q11 failed a different one
+(`sync.peerTask.whileFood.storageAdmission` large median 27.997ms > bound
+27.5675ms). Under the rule above that is a repeatable failure. Lee, as release
+owner, accepted `dfb2260` for stable 2026.10.7+101 on 2026-10-27 14:56 CDT
+despite it. **The qualification remains failed**;budgets,limits,coverage and
+the rerun limit are unchanged,and nothing is relabelled passed.
+
+`evidence/reference-performance/owner-override-stable101/` retains the q11
+request,official-rerun authorization,q10 prior result,raw q11 result,logs,
+fixture manifests and failed-workload cleanup,plus `override.json`. When that
+directory exists,`reference_receipt.py verify` runs `owner_override.py`
+instead of the qualification verifier and reports
+`OWNER_OVERRIDE_ACCEPTED_NOT_QUALIFIED` with `referencePerformanceQualified:false`
+and a CI warning. It refuses unless:
+
+- `pubspec.yaml` is exactly `2026.10.7+101`,`dfb2260` is an ancestor and the
+  q11 request's relevant source equals `dfb2260`'s committed identity;
+- current relevant source equals that identity except the three reviewed policy
+  files,whose exact bytes/modes `override.json` pins (no removals);
+- the retained result is bound to the request,in its original failure state
+  (`correctnessAccepted:false`,no success flags,timing-limit error) and every
+  pin,seal,import,toolchain,fixture contract,absolute evaluation,growth
+  evaluation,binding and log is recomputed from retained bytes;all executions
+  exited0 with groups absent;retry was ineligible;
+- the recomputed failure set and measurements equal exactly the owner-accepted
+  label,the q11 rerun authorization recomputes from the retained q10 failure,
+  and cleanup differs from success only by the failed-workload capture refusal.
+
+Any other version,product/tool byte,mode,failure,fixture or correctness change
+refuses. Future releases need a fresh passing qualification;the override is not
+a precedent. It accepts no native-visible,signing,candidate,release or live gate.
+
 ## Existing manager payload — no wrapper ownership change
 
 Launch **only inside** the existing manager's bounded unprivileged workload unit,
