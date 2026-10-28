@@ -5,6 +5,9 @@ import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'support/ux_capture.dart';
 import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
 
+const _monthButton = ValueKey('civil-month-button');
+const _yearButton = ValueKey('civil-year-button');
+
 void main() {
   setUpAll(() async {
     await loadSdkRoboto();
@@ -48,16 +51,17 @@ void main() {
         await tester.tap(find.byTooltip('Choose Expiration'));
         await tester.pumpAndSettle();
         await captureUx(tester, 'calendar-320-${brightness.name}-scale$scale');
-        await tester.tap(find.text('Month / year').first);
+        await tester.tap(find.byKey(_monthButton));
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
         expect(find.byType(Dialog), findsOneWidget);
-        expect(find.byType(CalendarDatePicker), findsNothing);
+        expect(find.byType(CivilMonthGrid), findsOneWidget);
+        expect(find.text('29'), findsNothing);
         await captureUx(
           tester,
           'month-grid-320-${brightness.name}-scale$scale',
         );
-        await tester.tap(find.text('2028'));
+        await tester.tap(find.byKey(_yearButton));
         await tester.pumpAndSettle();
         expect(
           find
@@ -96,11 +100,16 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('2029'));
         await tester.pumpAndSettle();
+        // A picked year opens that year's months; the draft day waits.
+        expect(find.byType(CivilYearGrid), findsNothing);
+        expect(find.byType(CivilMonthGrid), findsOneWidget);
         await tester.tap(find.text('Feb'));
         await tester.pumpAndSettle();
         expect(
           tester
-              .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
+              .widget<CivilCalendarDatePicker>(
+                find.byType(CivilCalendarDatePicker),
+              )
               .initialDate,
           DateTime(2029, 2, 28),
         );
@@ -110,7 +119,7 @@ void main() {
         expect(controller.text, '2028-02-29');
         await tester.tap(find.byTooltip('Choose Expiration'));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Month / year').first);
+        await tester.tap(find.byKey(_monthButton));
         await tester.pumpAndSettle();
         await tester.ensureVisible(find.text('Dec'));
         await tester.pumpAndSettle();
@@ -139,16 +148,20 @@ void main() {
     );
     await tester.tap(find.byTooltip('Choose Expiration'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Month / year'));
+    await tester.tap(find.byKey(_monthButton));
     await tester.pumpAndSettle();
+    expect(find.byType(CivilMonthGrid), findsOneWidget);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
-    expect(find.byType(CalendarDatePicker), findsOneWidget);
-    await tester.tap(find.text('Month / year'));
+    expect(find.byType(CivilMonthGrid), findsNothing);
+    expect(find.text('29'), findsOneWidget);
+    await tester.tap(find.byKey(_yearButton));
     await tester.pumpAndSettle();
+    expect(find.byType(CivilYearGrid), findsOneWidget);
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
-    expect(find.byType(CalendarDatePicker), findsOneWidget);
+    expect(find.byType(CivilYearGrid), findsNothing);
+    expect(find.text('29'), findsOneWidget);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
     expect(find.byType(CivilDatePickerDialog), findsNothing);
@@ -170,7 +183,7 @@ void main() {
       );
       await tester.tap(find.byTooltip('Choose Expiration'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Month / year').first);
+      await tester.tap(find.byKey(_monthButton));
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Dec'));
       await tester.pumpAndSettle();
@@ -200,13 +213,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('15'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Month / year').first);
+    await tester.tap(find.byKey(_monthButton));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Jun'));
     await tester.pumpAndSettle();
     expect(
       tester
-          .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
+          .widget<CivilCalendarDatePicker>(find.byType(CivilCalendarDatePicker))
           .initialDate,
       DateTime(2028, 6, 15),
     );
@@ -217,38 +230,4 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     controller.dispose();
   });
-
-  testWidgets(
-    'calendar input mode validates and commits only on confirmation',
-    (tester) async {
-      final controller = TextEditingController(text: '2028-02-29');
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: CivilDateInput(controller: controller, label: 'Expiration'),
-          ),
-        ),
-      );
-      await tester.tap(find.byTooltip('Choose Expiration'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(Icons.edit_outlined));
-      await tester.pumpAndSettle();
-      final input = find.descendant(
-        of: find.byType(InputDatePickerFormField),
-        matching: find.byType(EditableText),
-      );
-      await tester.enterText(input, 'invalid');
-      await tester.tap(find.text('OK'));
-      await tester.pumpAndSettle();
-      expect(find.byType(CivilDatePickerDialog), findsOneWidget);
-      expect(controller.text, '2028-02-29');
-      await tester.enterText(input, '06/15/2028');
-      await tester.tap(find.text('OK'));
-      await tester.pumpAndSettle();
-      expect(controller.text, '2028-06-15');
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-      controller.dispose();
-    },
-  );
 }

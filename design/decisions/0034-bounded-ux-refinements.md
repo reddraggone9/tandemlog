@@ -16,10 +16,20 @@ The confirmed next24h Today rule includes timed tomorrow values, not untimed one
 - Reuse physical Food IDs, details field masks, receipts and selective Undo.
   Long-press is selection-only; deleted editing never emits Restore/Delete.
   A Restore arriving while a draft is open invalidates its observed deletion context.
-- Use a small app-owned dialog composing public Material CalendarDatePicker,
+- Use a small app-owned dialog. Amended2026-10-27 (Lee approved a fork): the
+  dialog now hosts `CivilCalendarDatePicker`, a fork of Flutter3.47.5's
+  CalendarDatePicker whose only changes are the "October ▾ 2026 ▾ ‹ ›" header
+  and day/month/year flow; the redundant input-mode toggle and the separate
+  "Month / year" row are removed and the dialog sizes to its content. Upstream
+  baseline, licence and the port procedure are recorded in the fork header and
+  [dependencies](../dependencies.md#forked-flutter-calendardatepicker--2026-10-27).
+  The original composition below is retained as history: public Material CalendarDatePicker,
   InputDatePickerFormField and a small app-owned year grid. Native200% review found the SDK YearPicker initial offset assumed three columns while rendering two, opening decades before the selected year; owned public GridView/ScrollController geometry fixes that without private SDK traversal. DatePickerDialog's pending selection is
   private, so an outer month jump cannot reliably preserve the selected day.
-  Reject SDK forks, private-state traversal, shadow selection and dependencies.
+  Originally rejected SDK forks, private-state traversal, shadow selection and
+  dependencies; the 2026-10-27 amendment accepts one narrowly changed fork
+  because the header flow Lee asked for lives in CalendarDatePicker's private
+  state. Revisit if a future Flutter exposes the header or mode flow publicly.
 - Completion-date presentation was the initial bounded implementation. Lee's
   subsequent exact-instant/viewer-local decision is implemented in [ADR0035](0035-exact-completion-instants.md).
 - Today changes derived grouping only. Preserve original pinned instants through
@@ -32,7 +42,7 @@ The shared picker benefits Task and Food inputs while leaving draft-owner lifeti
 manual entry, cancellation and confirmation intact. Compact month labels follow
 the current English app; full localized month/year semantics remain available.
 Existing day-cell measurements, both themes and enlarged text remain covered.
-The dialog swaps its calendar body for the month/year grid in place; it never stacks a second dialog. Back or Escape returns to the day calendar before closing. The dialog adds app-owned layout, not a duplicate calendar/date-validation engine.
+The dialog swaps its calendar body for the month/year grid in place; it never stacks a second dialog. Back or Escape returns to the day calendar before closing. The fork keeps upstream's day grid, paging, keyboard and semantics code verbatim; date validation stays in the date field. The cost is a manual port of upstream fixes when the Flutter pin changes.
 
 [Implementation evidence](../ux-improvements-20261026.md) records independent
 review corrections, replay/cache/Undo checks, visual observations and platform

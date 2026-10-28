@@ -3,6 +3,31 @@
 Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `2026.10.2-rc.1+43`; app dependency graph remains unchanged at `29827eb`. Inventory itself required no package update/build. Subsequent maintenance implements the bounded updater and enforced lockfile below; no dependency PR is merged.
 
 
+## Forked Flutter CalendarDatePicker — 2026-10-27
+
+Lee approved forking one Flutter framework file for the date-picker redesign
+(2026-10-27). `lib/presentation/calendar_date_picker_fork.dart` carries
+`packages/flutter/lib/src/material/calendar_date_picker.dart` from **Flutter
+3.47.5**, framework revision `6a19cca56475dbfba1478ee68d7bd0c2ef891da1`, git blob
+`bce7bedec61a98a840e1aa7638db3e4219230b3c`. It is BSD-3 (Copyright 2014 The
+Flutter Authors); the file header reproduces the full notice, and the app's
+licence page already includes Flutter's framework licence. No package, native
+payload or build hook is added.
+
+- Local changes, listed in the file header: public `material.dart` imports;
+  `CalendarDatePicker` renamed `CivilCalendarDatePicker`; the header becomes
+  separate month and year menus with a day/month/year flow; the month and year
+  bodies use the app's `CivilMonthGrid`/`CivilYearGrid`; the unused `YearPicker`
+  is removed. Everything else, including the day grid, paging, keyboard focus and
+  semantics, is upstream text at upstream's 100-column format
+  (`// dart format width=100`).
+- Upgrade procedure: whenever the Flutter pin changes, diff the new upstream file
+  against the baseline blob above
+  (`git -C <flutter> diff bce7bede <new-rev>:packages/flutter/lib/src/material/calendar_date_picker.dart`),
+  port relevant fixes into the fork, then update the baseline revision/blob in the
+  file header and here. `date_picker_header_test`, `fast_month_picker_test` and
+  `civil_date_picker_layout_test` cover the forked behavior.
+
 ## sqlite3 3.8.0 replaces held PR13 — 2026-10-26
 
 `sqlite3` 3.7.0 → **3.8.0** supersedes PR13 (3.7.1, held below): 3.8.0 bundles SQLite **3.54.1**, which fixes the 3.54.0 VDBE opcode-buffer overflow on 32-bit builds (shipped Android ARM32). Do not take 3.7.1; close PR13 unmerged once this change integrates. Only the `sqlite3` lock entry changes; no transitive, SDK-floor or runtime-dependency change (dev-only `ffigen` ^23).
@@ -179,6 +204,7 @@ Dependabot documents `pub`, `github-actions`, and `gradle` support. It understan
 4. Use an isolated branch/worktree, the pinned toolchain, synthetic copied data and no publication credentials for update evaluation. Review source/hook changes first; retain only required read permissions. Don't run untrusted dependency PR code in a privileged promotion job or expose owner signing credentials. Existing release policies still control signing/publication.
 5. Resolve deliberately, review lock diffs, then verify with `flutter pub get --enforce-lockfile` on a clean cache/worktree; fail rather than silently refreshing a content hash during candidate validation. Validation and signed-candidate workflows now enforce the committed lockfile; a local enforced-lockfile resolution passes with unchanged package graph. Run relevant domain/cache/widget tests, and native target/build/installer checks when changed native/tooling code warrants them. Reuse existing release gates for an actual candidate; no suite reruns were needed merely to inventory.
 6. Record accepted version, provenance, relevant evidence, remaining target gaps, reviewer and revisit trigger. Update automation may open PRs; humans decide acceptance and stable release.
+7. When the Flutter pin changes, diff upstream `calendar_date_picker.dart` against the [fork baseline](#forked-flutter-calendardatepicker--2026-10-27) recorded in `lib/presentation/calendar_date_picker_fork.dart`, port relevant fixes and update the recorded baseline.
 
 Primary reference checks (2026-10-04): [Dependabot ecosystem support](https://docs.github.com/en/code-security/reference/supply-chain-security/supported-ecosystems-and-repositories), [Dependabot configuration](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference), [Dart lockfiles and enforced content hashes](https://dart.dev/tools/pub/packages), [Dart hooks](https://dart.dev/tools/hooks). Source inspection establishes current project versions; docs establish automation and execution semantics.
 

@@ -339,9 +339,16 @@ its observed physical IDs and deletion context, refusing a peer status change
 rather than retargeting the draft. Add another copies corrected values but still
 clears/focuses expiry and creates new containers. Bulk selection remains active-only.
 
-The shared civil-date picker retains typed dates and Material day/input selection.
-Its Month / year action swaps the calendar body for a month grid and on-demand year grid in the SAME dialog; Back/Escape returns to the day calendar before closing. The selected year is initially visible at100/200% text;
-a jump seeds that month with the currently selected day clamped to its valid length. Only
+The shared civil-date picker opens from the date field, which remains the place
+to type a date; the dialog itself has no text-input mode. Its header reads
+"October ▾ 2026 ▾ ‹ ›": ‹ › page months; the month opens a 12-month grid and the
+year opens the year list, where a picked year shows that year's month grid. Both
+grids replace the day grid in the SAME dialog, and picking a month returns to the
+day grid. Back/Escape returns to the day grid before closing. Narrow dialogs show a
+three-letter month, shrinking only those header labels (never below 100%) if the
+month, year and paging would otherwise not fit. The dialog is sized to its
+content. The selected year is initially visible at100/200% text;
+a month jump seeds that month with the currently selected day clamped to its valid length. Only
 calendar OK commits the draft date; Cancel dismisses the picker without changing the draft.
 The jump is shared by Food and Tasks, with the same owner-lifetime/picker guards.
 

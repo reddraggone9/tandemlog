@@ -172,8 +172,8 @@ void main() {
               expect(find.text('Monday · 2026-10-26'), findsOneWidget);
               expect(find.textContaining('Completed 2026-'), findsNothing);
               await capture('search');
-              // Shared picker is the exact production Tasks/Food component, not
-              // a second product implementation or Flutter SDK fork.
+              // Shared picker is the exact production Tasks/Food component
+              // (including its forked calendar), not a test-only copy.
               await tester.pumpWidget(const SizedBox());
               final controller = TextEditingController(text: '2028-02-29');
               await tester.pumpWidget(
@@ -201,12 +201,12 @@ void main() {
               );
               await touch(find.byTooltip('Choose Expiration'));
               await tester.pumpAndSettle();
-              await touch(find.text('Month / year'));
+              await touch(find.byKey(const ValueKey('civil-month-button')));
               await tester.pumpAndSettle();
               expect(find.byType(Dialog), findsOneWidget);
-              expect(find.byType(CalendarDatePicker), findsNothing);
+              expect(find.byType(CivilMonthGrid), findsOneWidget);
               await capture('month-grid');
-              await touch(find.text('2028'));
+              await touch(find.byKey(const ValueKey('civil-year-button')));
               await tester.pumpAndSettle();
               expect(find.byType(CivilYearGrid), findsOneWidget);
               await capture('year-grid');
@@ -217,11 +217,14 @@ void main() {
                 ),
               );
               await tester.pumpAndSettle();
+              expect(find.byType(CivilMonthGrid), findsOneWidget);
               await touch(find.text('Feb'));
               await tester.pumpAndSettle();
               expect(
                 tester
-                    .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
+                    .widget<CivilCalendarDatePicker>(
+                      find.byType(CivilCalendarDatePicker),
+                    )
                     .initialDate,
                 DateTime(2029, 2, 28),
               );
@@ -230,13 +233,13 @@ void main() {
               expect(controller.text, '2029-02-28');
               await touch(find.byTooltip('Choose Expiration'));
               await tester.pumpAndSettle();
-              await touch(find.text('Month / year'));
+              await touch(find.byKey(const ValueKey('civil-year-button')));
               await tester.pumpAndSettle();
-              await touch(find.text('2029'));
-              await tester.pumpAndSettle();
+              expect(find.byType(CivilYearGrid), findsOneWidget);
               await tester.sendKeyEvent(LogicalKeyboardKey.escape);
               await tester.pumpAndSettle();
-              expect(find.byType(CalendarDatePicker), findsOneWidget);
+              expect(find.byType(CivilYearGrid), findsNothing);
+              expect(find.byType(CivilCalendarDatePicker), findsOneWidget);
               await tester.sendKeyEvent(LogicalKeyboardKey.escape);
               await tester.pumpAndSettle();
               expect(find.byType(CivilDatePickerDialog), findsNothing);

@@ -3,6 +3,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import '../domain/schedule.dart' show formatCivilDate;
+import 'calendar_date_picker_fork.dart';
+
+export 'calendar_date_picker_fork.dart' show CivilCalendarDatePicker;
+export 'civil_month_year_grids.dart' show CivilMonthGrid, CivilYearGrid;
 
 /// A manually editable civil date with the app's calendar picker.
 /// Requiredness and validation belong to the containing form.
@@ -126,141 +130,6 @@ class CivilDatePickerDialog extends StatefulWidget {
 
 class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
   late DateTime date = widget.initialDate;
-  late DateTime calendarSeed = date;
-  late DateTime displayedMonth = date;
-  bool inputMode = false;
-  final inputForm = GlobalKey<FormState>();
-  static const _months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  bool monthMode = false;
-  bool choosingYear = false;
-  late int jumpYear = displayedMonth.year;
-  LocalHistoryEntry? jumpHistory;
-
-  void jump() {
-    if (monthMode) {
-      jumpHistory?.remove();
-      return;
-    }
-    setState(() {
-      jumpYear = displayedMonth.year;
-      choosingYear = false;
-      monthMode = true;
-    });
-    jumpHistory = LocalHistoryEntry(
-      onRemove: () {
-        jumpHistory = null;
-        if (mounted) setState(() => monthMode = false);
-      },
-    );
-    ModalRoute.of(context)!.addLocalHistoryEntry(jumpHistory!);
-  }
-
-  void chooseMonth(int month) {
-    final day = math.min(date.day, DateTime(jumpYear, month + 1, 0).day);
-    final chosen = DateTime(jumpYear, month, day);
-    setState(() {
-      date = chosen.isBefore(widget.firstDate)
-          ? widget.firstDate
-          : chosen.isAfter(widget.lastDate)
-          ? widget.lastDate
-          : chosen;
-      calendarSeed = date;
-      displayedMonth = date;
-    });
-    jumpHistory!.remove();
-  }
-
-  Widget monthGrid(BuildContext context) => Column(
-    children: [
-      TextButton.icon(
-        onPressed: () => setState(() => choosingYear = !choosingYear),
-        icon: const Icon(Icons.arrow_drop_down),
-        label: Text(
-          MaterialLocalizations.of(context).formatYear(DateTime(jumpYear)),
-        ),
-      ),
-      Expanded(
-        child: choosingYear
-            ? CivilYearGrid(
-                firstDate: widget.firstDate,
-                lastDate: widget.lastDate,
-                selectedDate: DateTime(jumpYear),
-                onChanged: (value) => setState(() {
-                  jumpYear = value.year;
-                  choosingYear = false;
-                }),
-              )
-            : LayoutBuilder(
-                builder: (context, constraints) => GridView.count(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  crossAxisCount: 3,
-                  childAspectRatio:
-                      (constraints.maxWidth - 24) /
-                      3 /
-                      math.max(48, constraints.maxHeight / 4),
-                  children: [
-                    for (var month = 1; month <= 12; month++)
-                      TextButton(
-                        onPressed:
-                            DateTime(
-                                  jumpYear,
-                                  month + 1,
-                                  0,
-                                ).isBefore(widget.firstDate) ||
-                                DateTime(
-                                  jumpYear,
-                                  month,
-                                ).isAfter(widget.lastDate)
-                            ? null
-                            : () => chooseMonth(month),
-                        child: Semantics(
-                          label: MaterialLocalizations.of(
-                            context,
-                          ).formatMonthYear(DateTime(jumpYear, month)),
-                          excludeSemantics: true,
-                          child: Text(_months[month - 1]),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-      ),
-    ],
-  );
-
-  void confirm() {
-    if (inputMode) {
-      if (!(inputForm.currentState?.validate() ?? false)) return;
-      inputForm.currentState!.save();
-    }
-    Navigator.pop(context, date);
-  }
-
-  void toggleInput() {
-    if (inputMode) {
-      if (!(inputForm.currentState?.validate() ?? false)) return;
-      inputForm.currentState!.save();
-    }
-    setState(() {
-      inputMode = !inputMode;
-      calendarSeed = date;
-      displayedMonth = date;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,73 +143,17 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
         insetPadding: const EdgeInsets.all(16),
         child: SizedBox(
           width: 360 * scale,
-          height: 568 * scale,
+          // Size to the calendar and actions; short screens shrink the grid.
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 8, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: inputMode
-                            ? Text(localizations.datePickerHelpText)
-                            : TextButton.icon(
-                                onPressed: jump,
-                                icon: Icon(
-                                  monthMode
-                                      ? Icons.arrow_back
-                                      : Icons.calendar_month,
-                                ),
-                                label: Text(
-                                  monthMode ? 'Calendar' : 'Month / year',
-                                ),
-                              ),
-                      ),
-                    ),
-                    if (!monthMode)
-                      IconButton(
-                        tooltip: inputMode
-                            ? localizations.calendarModeButtonLabel
-                            : localizations.inputDateModeButtonLabel,
-                        onPressed: toggleInput,
-                        icon: Icon(
-                          inputMode
-                              ? Icons.calendar_today
-                              : Icons.edit_outlined,
-                        ),
-                      ),
-                  ],
+              Flexible(
+                child: CivilCalendarDatePicker(
+                  initialDate: date,
+                  firstDate: widget.firstDate,
+                  lastDate: widget.lastDate,
+                  onDateChanged: (value) => setState(() => date = value),
                 ),
-              ),
-              Expanded(
-                child: monthMode
-                    ? monthGrid(context)
-                    : inputMode
-                    ? SingleChildScrollView(
-                        padding: const EdgeInsets.all(24),
-                        child: Form(
-                          key: inputForm,
-                          child: InputDatePickerFormField(
-                            initialDate: date,
-                            firstDate: widget.firstDate,
-                            lastDate: widget.lastDate,
-                            autofocus: true,
-                            onDateSaved: (value) => date = value,
-                            onDateSubmitted: (_) => confirm(),
-                          ),
-                        ),
-                      )
-                    : CalendarDatePicker(
-                        key: ValueKey(calendarSeed),
-                        initialDate: date,
-                        firstDate: widget.firstDate,
-                        lastDate: widget.lastDate,
-                        onDateChanged: (value) => setState(() => date = value),
-                        onDisplayedMonthChanged: (value) =>
-                            displayedMonth = value,
-                      ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -348,17 +161,13 @@ class _CivilDatePickerDialogState extends State<CivilDatePickerDialog> {
                   alignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {
-                        jumpHistory?.remove();
-                        Navigator.pop(context);
-                      },
+                      onPressed: () => Navigator.pop(context),
                       child: Text(localizations.cancelButtonLabel),
                     ),
-                    if (!monthMode)
-                      TextButton(
-                        onPressed: confirm,
-                        child: Text(localizations.okButtonLabel),
-                      ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, date),
+                      child: Text(localizations.okButtonLabel),
+                    ),
                   ],
                 ),
               ),
@@ -384,7 +193,7 @@ Widget _readableCalendarDays(
     if (child == null) return const SizedBox.shrink();
     final pickerTheme = DatePickerTheme.of(context);
     // Keep this wrapper when fitting switches off, so a resize cannot replace
-    // the dialog's state and discard the user's pending date or input mode.
+    // the dialog's state and discard the user's pending date or open menu.
     Widget unchanged() => DatePickerTheme(data: pickerTheme, child: child);
     if (!Theme.of(context).useMaterial3 ||
         MediaQuery.orientationOf(context) != Orientation.portrait) {
@@ -394,21 +203,22 @@ Widget _readableCalendarDays(
     final dialogScale =
         media.textScaler.clamp(maxScaleFactor: 3).scale(14) / 14;
     final dialogWidth = math.min(constraints.maxWidth - 32, 360 * dialogScale);
-    final dialogHeight = math.min(
-      constraints.maxHeight -
-          media.padding.vertical -
-          media.viewInsets.vertical -
-          verticalInsets,
-      568 * dialogScale,
-    );
-    final headerScale = dialogScale.clamp(1.0, 1.4);
-    final headerHeight = 120 * (headerScale > 1.3 ? headerScale - .2 : 1);
-    final gridScale = media.textScaler.clamp(maxScaleFactor: 2).scale(14) / 14;
-    // Conservatively reserve the SDK header plus 52px actions/navigation and
-    // seven grid rows; the app header is no taller.
+    // Mirror the forked picker's portrait geometry: a 52px month/year header
+    // over seven grid rows that grow past 1.3x text, inside a dialog that
+    // shrinks the grid when the actions would not otherwise fit. Reserve the
+    // actions' 48px tap targets or their scaled label, plus 16px padding.
+    final enlarged = dialogScale > 1.3 ? dialogScale - 1 : 0.0;
+    final available =
+        constraints.maxHeight -
+        media.padding.vertical -
+        media.viewInsets.vertical -
+        verticalInsets -
+        16 -
+        math.max(48, 20 * dialogScale + 16) -
+        52;
     final rowHeight = math.min(
-      48 + (gridScale > 1.3 ? (gridScale - 1) * 30 : 0),
-      (dialogHeight - headerHeight - 104) / 7,
+      48 + enlarged * 30,
+      math.min(336 + 7 * enlarged * 8, available) / 7,
     );
     final dayWidth = (dialogWidth - 24) / 7 - 8 - 2;
     final dayHeight = rowHeight - 8 - 2;
@@ -467,102 +277,3 @@ Widget _readableCalendarDays(
     );
   },
 );
-
-/// App-owned year geometry keeps the selected year visible at enlarged text.
-/// Material YearPicker's initial offset assumes three columns even when its
-/// own large-text layout switches to two. Keep public scrolling/focus APIs.
-class CivilYearGrid extends StatefulWidget {
-  const CivilYearGrid({
-    super.key,
-    required this.firstDate,
-    required this.lastDate,
-    required this.selectedDate,
-    required this.onChanged,
-  });
-  final DateTime firstDate, lastDate, selectedDate;
-  final ValueChanged<DateTime> onChanged;
-  @override
-  State<CivilYearGrid> createState() => _CivilYearGridState();
-}
-
-class _CivilYearGridState extends State<CivilYearGrid> {
-  ScrollController? controller;
-  (int, double, double)? geometry;
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final scaler = MediaQuery.textScalerOf(context);
-      final columns =
-          (constraints.maxWidth / math.max(104, scaler.scale(18) * 4))
-              .floor()
-              .clamp(1, 3);
-      final minimumRowHeight = math.max(48.0, scaler.scale(20) + 24);
-      final visibleRows = math.max(
-        1,
-        (constraints.maxHeight / minimumRowHeight).floor(),
-      );
-      final rowHeight = constraints.maxHeight / visibleRows;
-      final nextGeometry = (columns, rowHeight, constraints.maxHeight);
-      final count = widget.lastDate.year - widget.firstDate.year + 1;
-      final selectedRow =
-          (widget.selectedDate.year - widget.firstDate.year) ~/ columns;
-      final offset = math.max(
-        0.0,
-        (selectedRow - visibleRows ~/ 2) * rowHeight,
-      );
-      controller ??= ScrollController(initialScrollOffset: offset);
-      if (geometry != null && geometry != nextGeometry) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted && controller!.hasClients) {
-            controller!.jumpTo(
-              offset.clamp(0.0, controller!.position.maxScrollExtent),
-            );
-          }
-        });
-      }
-      geometry = nextGeometry;
-      return GridView.builder(
-        key: const ValueKey('civil-year-grid'),
-        controller: controller,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: columns,
-          mainAxisExtent: rowHeight,
-        ),
-        itemCount: count,
-        itemBuilder: (context, index) {
-          final year = widget.firstDate.year + index;
-          final selected = year == widget.selectedDate.year;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Semantics(
-              selected: selected,
-              child: TextButton(
-                autofocus: selected,
-                style: selected
-                    ? TextButton.styleFrom(
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.secondaryContainer,
-                        foregroundColor: Theme.of(
-                          context,
-                        ).colorScheme.onSecondaryContainer,
-                      )
-                    : null,
-                onPressed: () => widget.onChanged(DateTime(year)),
-                child: Text(
-                  MaterialLocalizations.of(context).formatYear(DateTime(year)),
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
