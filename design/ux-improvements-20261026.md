@@ -89,8 +89,7 @@ Focused coverage includes:
 - Existing Task view, Food bulk/search/context, Task cache, recurrence Undo,
   projection atomicity and calendar geometry tests.
 
-Faithful action coverage and the unchanged below100ms ordinary-action objective
-are recorded in `tool/performance/coverage-v1.json`. No reference benchmark or
+Faithful action coverage is recorded in `tool/performance/coverage-v1.json`. No reference benchmark or
 budget change was made for this batch.
 
 Widget raster captures cover dark320dp calendar/month grid at1x/2x, Food

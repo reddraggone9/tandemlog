@@ -25,7 +25,7 @@ The three versioned shapes share the SAME first 1,320 historical physical record
 
 Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 232 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food and6 first-point cases). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
 
-`limits-v1.json` contains the initial calibrated AOT storage/application/readmodel regression bounds, pinned by literal SHA in the workflow. The initial calibration combines current-source local and hosted Ubuntu observations, two warmups and five measured samples on each of the three shapes. Ordinary per-action median/maximum ceilings retain roughly 50% observed headroom, rounded to 5 ms with small-operation floors, while every ordinary maximum stays at or below the 100 ms target. Both history-growth pairs enforce 1.25× + 3 ms median and 1.40× + 5 ms maximum for all 224 ordinary labels. The eight startup labels have separately calibrated size-specific absolute ceilings. Their existing paired guards remain unchanged at 2.25× + 100 ms median and 2.50× + 200 ms maximum: loose historical proof-growth bounds, without a history-independence claim. Startup remains history-scaled; these limits do not excuse avoidable work. Finite calibration is not a percentile guarantee. Actual native UI paint/interaction acceptance is separate and remains unresolved after the current diagnostic exceeded 100 ms. Loosening an activated limit requires Lee's explicit approval; tooling has no automatic baseline-update switch.
+`limits-v1.json` contains the initial calibrated AOT storage/application/readmodel regression bounds, pinned by literal SHA in the workflow. The initial calibration combines current-source local and hosted Ubuntu observations, two warmups and five measured samples on each of the three shapes. Ordinary per-action median/maximum ceilings retain roughly 50% observed headroom, rounded to 5 ms with small-operation floors, and every ordinary maximum was additionally capped at 100 ms during calibration (a historical calibration cap, not a responsiveness target; see [What sets acceptable latency](#what-sets-acceptable-latency-lee-2026-10-27)). Both history-growth pairs enforce 1.25× + 3 ms median and 1.40× + 5 ms maximum for all 224 ordinary labels. The eight startup labels have separately calibrated size-specific absolute ceilings. Their existing paired guards remain unchanged at 2.25× + 100 ms median and 2.50× + 200 ms maximum: loose historical proof-growth bounds, without a history-independence claim. Startup remains history-scaled; these limits do not excuse avoidable work. Finite calibration is not a percentile guarantee. Actual native UI paint/interaction acceptance is separate and remains unresolved. Loosening an activated limit requires Lee's explicit approval; tooling has no automatic baseline-update switch.
 
 A correctness, coverage, source, tool or fixture failure is terminal. A timing-only failure can receive at most one additional fresh-process run across the entire gate, with unchanged source, fixture, binary and limit seals, when separately observed CPU pressure and unrelated CPU work (sibling services excluding this service, or host busy CPU minus measured own/child CPU) overlap EVERY absolute-failing history-size process. Every failed pair requires qualifying evidence from that pair's larger-size process; if both pairs fail, both larger processes must qualify independently. Own quota throttling or slowness alone is insufficient. Aggregate pressure indicates suspected external noise, not proof about every individual sample. Preserve both attempts. A failed second attempt fails the gate; never retry until green.
 
@@ -48,9 +48,22 @@ Manual development CI can explicitly request performance calibration while initi
 
 Choose each action's timing boundary and budget from its intended responsiveness
 before accepting the implementation. Do not measure a slow first implementation
-and add headroom to turn it into an approved baseline. Ordinary local actions
-retain the below-100 ms objective for input to visible acknowledgment; a passing
-storage-only measurement does not establish that outcome.
+and add headroom to turn it into an approved baseline. A passing storage-only
+measurement does not establish visible responsiveness.
+
+### What sets acceptable latency (Lee, 2026-10-27)
+
+Responsiveness sets what is acceptable, judged in human time first: an ordinary
+action should feel immediate to the person using it. The "100 ms" figure in
+earlier documents was Lee's rough guess at an upper limit for a local save, not
+a target, objective or ceiling, and is no longer used as one. The calibrated
+regression bounds in `limits-v1.json` (measured cost plus headroom) are the
+enforced contract; they keep fast actions from drifting toward any such
+ceiling. Spend optimization and energy attention where cost actually adds up:
+idle and background work (wakeups, polling, rescans, startup replay) and
+per-action cost that grows with history. Do not spend effort shaving interactive
+actions that are already fast and flat. This framing does not loosen any
+existing calibrated limit.
 
 Initial acceptance must use realistic public synthetic fixtures, representative
 existing/converted entities, first-use and steady-state samples, and relevant

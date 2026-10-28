@@ -300,9 +300,9 @@ and 2,645 physical records (1,688,850 and 3,180,181 canonical bytes).
 This is calibration, not accepted release evidence. The observed maximum of
 five samples is not a p95 or p99 estimate. Fresh-profile startup does not imply
 a flushed OS page cache. Actual native input-to-paint timings remain pending.
-The larger synthetic budgets are separate from the roughly 100 ms ordinary
-action target on representative realistic data; passing them cannot establish
-that target. These retained numbers predate the incremental admission and layout2 cache
+The larger synthetic budgets are separate from intended responsiveness on
+representative realistic data; passing them cannot establish it (the old
+"roughly 100 ms" figure is not a target; see performance-gate.md). These retained numbers predate the incremental admission and layout2 cache
 repairs; they are not current-source acceptance. Current candidate results need
 their own exact-source receipts, including residual recurring costs, startup
 proof work and the separate native UI boundary.
@@ -325,7 +325,7 @@ immutable strings; profile transactions, canonical reads/admission and native
 text ownership stay on the owning queue. The one-shot proof is consumed durably
 before awaiting the worker. Unavailable or failed optional verification falls
 back to strict canonical reconstruction. This improves UI responsiveness rather
-than promising that verification or disk durability takes less than100ms.
+than promising a particular duration for verification or disk durability.
 A full owned canonical candidate may reuse its already-computed Task root after
 an exact cached ID/raw bijection; a cached prefix retains its own root check
 before any arriving delta is admitted.
@@ -402,8 +402,8 @@ boundary, preserving its animation and geometry while isolating animation paint
 from static page ancestors. Render-counter tests demonstrate that isolation;
 they do not establish native input-to-paint performance.
 
-The earlier release-mode Linux UI probe still exceeded the 100 ms target for
-Task and Food Save/Undo. Its artifact predates these focus and paint changes.
+The earlier release-mode Linux UI probe still showed slow framework intervals
+for Task and Food Save/Undo. Its artifact predates these focus and paint changes.
 Fresh native measurements, the full interaction inventory and exact-candidate
 release checks remain required; passing storage benchmarks alone cannot satisfy
 them. No timing limit has been relaxed.
@@ -474,7 +474,7 @@ preserves the unsuccessful timings and their source bindings. The Linux release
 framework probe exercises Task open/Save/Undo/completion and Food section/open/
 Save/Undo on all three synthetic history shapes. State restoration, fresh full
 replay, canonical-prefix preservation and normal window/process exit pass;
-several framework post-frame intervals still exceed100ms. Provider-await and
+several framework post-frame intervals remained slow. Provider-await and
 refresh residuals dominate these instrumented cloud intervals, while API work
 alone does not explain them. Scheduler/event-loop, allocation and rendering
 attribution remains unresolved. These are diagnostic measurements, not native

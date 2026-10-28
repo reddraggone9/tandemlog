@@ -407,7 +407,7 @@
       "interaction": "Task input mode carries current text without submitting; query pauses in Add",
       "productionAPI": "_switchTaskInput; existing text controllers",
       "actualUIPath": "lib/main.dart::_switchTaskInput",
-      "boundary": "UI-only buffer/focus update. Below-100ms visible-response objective unchanged; faithful native timing pending. Integration task_input_mode_workflow_test covers input and saved filters."
+      "boundary": "UI-only buffer/focus update. Faithful native visible-response timing pending. Integration task_input_mode_workflow_test covers input and saved filters."
     },
     {
       "interaction": "Rolling next24h Today grouping and exact completion-instant chronology",
@@ -419,13 +419,13 @@
       "interaction": "Food long press active group enters multiselect",
       "productionAPI": "FoodInventoryPage::_group captured physical IDs",
       "actualUIPath": "lib/food/food_page.dart::_group",
-      "boundary": "No write. Synthetic food_selection_deleted_edit_test verifies gesture; native below-100ms visible-response timing pending."
+      "boundary": "No write. Synthetic food_selection_deleted_edit_test verifies gesture; native visible-response timing pending."
     },
     {
       "interaction": "Food Space, Ctrl/Cmd-click, Select food semantics action or row Actions Select/Deselect enters or toggles multiselect",
       "productionAPI": "FoodInventoryPage::_group captured physical IDs",
       "actualUIPath": "lib/food/food_page.dart::_group",
-      "boundary": "No write; same selection toggle as long press. food_keyboard_selection_test and native food_keyboard_selection_workflow_test verify keyboard, semantics and menu routes; native below-100ms visible-response timing pending."
+      "boundary": "No write; same selection toggle as long press. food_keyboard_selection_test and native food_keyboard_selection_workflow_test verify keyboard, semantics and menu routes; native visible-response timing pending."
     },
     {
       "interaction": "Deleted Food details Save and selective Undo keep tombstones",
@@ -437,7 +437,7 @@
       "interaction": "Shared civil-date month/year jump",
       "productionAPI": "CivilDateInput; Material CalendarDatePicker/InputDatePickerFormField; YearPicker",
       "actualUIPath": "lib/presentation/civil_date_input.dart",
-      "boundary": "No storage action before editor Save. Fast-month tests cover leap/clamp/cancel/pending-day/manual-input; native popup and selected-month visible response below100ms pending."
+      "boundary": "No storage action before editor Save. Fast-month tests cover leap/clamp/cancel/pending-day/manual-input; native popup and selected-month visible-response timing pending."
     }
   ],
   "actualUITimingAccepted": false,

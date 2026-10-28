@@ -16,7 +16,7 @@ RC4 exposed seconds of delay in ordinary local editing. Correctness tests did no
 
 Use a separate required release-mode AOT performance job alongside correctness tests. The versioned public synthetic inventory includes explicit and inherited Task text, capture, metadata, completion, recurrence, checklist operations, bulk actions, Food changes and Undo, readmodels, navigation preferences, peer admission and cold/warm startup. Matched history sizes must keep entity IDs and current state identical. Record dimensions, canonical bytes, warmups, every measured observation, median/maximum and paired scaling. Preserve timing boundaries and coverage gaps.
 
-Initial limits must be calibrated and reviewed for the stated runner class before activation. The roughly 100 ms ordinary-action goal on representative realistic data is separate from bulk, startup and larger synthetic regression budgets with justified headroom. Passing a generous bound does not establish that goal or prove history-independent complexity. Once activated, loosening any limit requires Lee's explicit approval. Do not discard cases, redefine metrics or regenerate baselines to obtain a pass.
+Initial limits must be calibrated and reviewed for the stated runner class before activation. Intended responsiveness on representative realistic data is separate from bulk, startup and larger synthetic regression budgets with justified headroom. Passing a generous bound does not establish responsiveness or prove history-independent complexity. (2026-10-27: the earlier "roughly 100 ms" figure was Lee's rough upper guess for a local save, not a target; see [What sets acceptable latency](../performance-gate.md#what-sets-acceptable-latency-lee-2026-10-27).) Once activated, loosening any limit requires Lee's explicit approval. Do not discard cases, redefine metrics or regenerate baselines to obtain a pass.
 
 One timing rerun is permitted only with independently recorded external CPU pressure and unrelated work for every implicated failing size, unchanged bindings and fresh workload processes. Repeat the entire three-shape suite and both comparisons once; retain both attempts. Correctness, coverage, integrity or binding failures are terminal and do not qualify as noise.
 
@@ -26,7 +26,7 @@ Storage/application timings do not substitute for native input-to-visible-respon
 
 ## Alternatives
 
-Debug/test-runner wall-clock assertions mix compilation and scheduling noise with product cost. Private histories are unsuitable for public CI. A universal 100 ms cap ignores startup and scalable bulk semantics. Automatic limit updates and retry-until-green would conceal regressions. Manual-only testing lacks repeatable coverage; a standalone storage suite alone cannot accept UI responsiveness.
+Debug/test-runner wall-clock assertions mix compilation and scheduling noise with product cost. Private histories are unsuitable for public CI. A universal fixed millisecond cap ignores startup and scalable bulk semantics. Automatic limit updates and retry-until-green would conceal regressions. Manual-only testing lacks repeatable coverage; a standalone storage suite alone cannot accept UI responsiveness.
 
 ## Consequences and revisit triggers
 

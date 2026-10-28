@@ -27,7 +27,7 @@ immutable strings; profile transactions, canonical reads/admission and native
 text ownership stay on the owning queue. The one-shot proof is consumed durably
 before awaiting the worker. Unavailable or failed optional verification falls
 back to strict canonical reconstruction. This improves UI responsiveness rather
-than promising that verification or disk durability takes less than100ms.
+than promising a particular duration for verification or disk durability.
 A full owned canonical candidate may reuse its already-computed Task root after
 an exact cached ID/raw bijection; a cached prefix retains its own root check
 before any arriving delta is admitted.
