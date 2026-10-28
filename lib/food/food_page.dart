@@ -147,6 +147,7 @@ class _FoodGrouping {
 class FoodInventoryPageState extends State<FoodInventoryPage> {
   FoodView view = FoodView.inventory;
   final search = TextEditingController();
+  String _lastSearchText = '';
   Set<String> reasons = {}, brands = {}, locations = {};
   final bulkSelected = <String>{};
   bool selecting = false;
@@ -166,7 +167,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   /// Wide windows edit a selection in the side pane, as Tasks does.
   bool _wide = false;
-  bool _paneBulk = false;
   final _scroll = ScrollController();
   final _rowFocus = <String, FocusNode>{};
 
@@ -217,9 +217,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               )
               .firstOrNull
         : null;
-    if ((result.selecting || _paneBulk) &&
-        _editorBuilder != null &&
-        !_editorModal) {
+    if (_editorBuilder != null) {
       if (!await requestCloseEditor()) return;
       await editorDone;
       if (!mounted || !usable()) return;
@@ -240,21 +238,79 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       selecting = bulkSelected.isNotEmpty;
       _selectionAnchor = selecting ? result.anchor : null;
     });
-    if (selecting && _wide) unawaited(_editSelection(pane: true));
+    if (selecting && _wide) unawaited(_editSelection());
   }
 
-  /// Opens the bulk editor for the selected shown containers.
-  Future<void> _editSelection({required bool pane}) => _edit(
-    bulkTargets: [
+  /// One whole row uses its own editor; multiple rows use the bulk editor,
+  /// just as Tasks opens its single editor for one selected task.
+  Future<void> _editSelection() {
+    final selected = [
       for (final item in _shown())
         if (bulkSelected.contains(item.id)) item,
-    ],
-    pane: pane,
-  );
+    ];
+    final single = _grouping.rows
+        .where(
+          (row) =>
+              row.containers.length == selected.length &&
+              row.containers.every((item) => bulkSelected.contains(item.id)),
+        )
+        .firstOrNull;
+    return single != null
+        ? _edit(group: single, detailsCommand: widget.onDetails)
+        : _edit(bulkTargets: selected);
+  }
+
+  Future<void> _selectMatching(Set<String> observed, Object? workspace) async {
+    bool usable() =>
+        mounted &&
+        !widget.busy &&
+        widget.workspaceIdentity == workspace &&
+        !(widget.hasPendingSave?.call() ?? widget.savePending);
+    if (!usable() || !await requestCloseEditor()) return;
+    await editorDone;
+    if (!usable()) return;
+    final selected = observed.intersection(_grouping.visibleIds);
+    if (selected.isEmpty) return;
+    setState(() {
+      selecting = true;
+      _selectionAnchor = null;
+      bulkSelected
+        ..clear()
+        ..addAll(selected);
+    });
+    if (_wide) unawaited(_editSelection());
+  }
+
+  /// Keep Tasks' search-input behavior: resolve the draft, then clear selection.
+  /// View recomputation still uses the shared visible-ID retention policy.
+  Future<void> _changeSearch(String value) async {
+    if (!await requestCloseEditor()) {
+      if (!mounted) return;
+      search.text = _lastSearchText;
+      return;
+    }
+    await editorDone;
+    if (!mounted) return;
+    setState(() {
+      _lastSearchText = value;
+      _clearBulkSelection();
+    });
+  }
+
+  Future<void> _clearSearch() async {
+    if (!await requestCloseEditor()) return;
+    await editorDone;
+    if (!mounted) return;
+    setState(() {
+      search.clear();
+      _lastSearchText = '';
+      _clearBulkSelection();
+    });
+  }
 
   /// Clear Selection also closes a wide selection's bulk pane.
   Future<void> _clearSelection() async {
-    if (_paneBulk && _editorBuilder != null) {
+    if (_editorBuilder != null) {
       if (!await requestCloseEditor()) return;
       await editorDone;
       if (!mounted) return;
@@ -345,7 +401,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   List<FoodGroup> _inbox() => _grouping.inbox;
   List<FoodContainer> _shown() => _grouping.shown;
   Widget Function(bool panel)? _editorBuilder;
-  bool _editorModal = false;
   int _editorRequest = 0;
   final _inventoryKey = GlobalKey();
   bool Function()? _editorCloseBusy;
@@ -486,7 +541,23 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     _wide = constraints.maxWidth >= EditorSurface.breakpoint;
-                    final panel = _wide && !_editorModal;
+                    final panel = _wide;
+                    // Narrow selection waits for Edit. Widening the same list
+                    // reveals its editor automatically, as on Tasks.
+                    if (_wide &&
+                        selecting &&
+                        bulkSelected.isNotEmpty &&
+                        _editorBuilder == null) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted &&
+                            _wide &&
+                            selecting &&
+                            bulkSelected.isNotEmpty &&
+                            _editorBuilder == null) {
+                          unawaited(_editSelection());
+                        }
+                      });
+                    }
                     final editor = _editorBuilder?.call(panel);
                     final body = Column(
                       children: [
@@ -525,6 +596,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                         children: [
                                           TaskEntryArea(
                                             selecting: selecting,
+                                            wideLayout: _wide,
+                                            editorOpen: _editorBuilder != null,
                                             captureVisible: true,
                                             selectionCount: bulkSelected.length,
                                             maximumSelectionCount:
@@ -536,15 +609,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                                     pending ||
                                                     bulkSelected.isEmpty
                                                 ? null
-                                                : () => _editSelection(
-                                                    pane: _wide,
-                                                  ),
+                                                : _editSelection,
                                             capture: TextField(
                                               key: const ValueKey(
                                                 'food-search',
                                               ),
                                               controller: search,
-                                              onChanged: (_) => setState(() {}),
+                                              onChanged: _changeSearch,
                                               decoration: InputDecoration(
                                                 labelText: 'Search food',
                                                 prefixIcon: const Icon(
@@ -555,10 +626,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                                     : IconButton(
                                                         tooltip:
                                                             'Clear food search',
-                                                        onPressed: () =>
-                                                            setState(() {
-                                                              search.clear();
-                                                            }),
+                                                        onPressed: _clearSearch,
                                                         icon: const Icon(
                                                           Icons.close,
                                                         ),
@@ -851,6 +919,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       }),
       itemBuilder: (_) {
         final observed = _shown().map((e) => e.id).toSet();
+        final workspace = widget.workspaceIdentity;
         return [
           for (final mode in [
             FoodView.inventory,
@@ -888,15 +957,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             enabled:
                 observed.isNotEmpty &&
                 !(widget.hasPendingSave?.call() ?? widget.savePending),
-            onTap: () => setState(() {
-              selecting = true;
-              _selectionAnchor = null;
-              bulkSelected
-                ..clear()
-                ..addAll(
-                  observed.intersection(_shown().map((e) => e.id).toSet()),
-                );
-            }),
+            onTap: () => unawaited(_selectMatching(observed, workspace)),
             child: const Text('Select matching containers'),
           ),
         ];
@@ -1047,6 +1108,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   bool _groupSelected(FoodGroup group) =>
       selecting && group.containers.every((e) => bulkSelected.contains(e.id));
 
+  bool _groupHighlighted(FoodGroup group) =>
+      _groupSelected(group) ||
+      (_editingGroup != null && _rowKey(_editingGroup!) == _rowKey(group));
+
   List<PopupMenuEntry<String>> _groupMenuItems(FoodGroup group) => [
     PopupMenuItem<String>(
       enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
@@ -1161,7 +1226,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 _showGroupMenu(group, details.globalPosition, selectAction),
       child: ListRowSurface(
         key: ValueKey('food-group:$key'),
-        color: _groupSelected(group)
+        color: _groupHighlighted(group)
             ? Theme.of(context).colorScheme.primaryContainer
             : deleted
             ? Theme.of(context).colorScheme.surfaceContainerLow
@@ -1257,7 +1322,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         if (details.retention.isNotEmpty) details.retention,
                         ...metadata,
                       ].join(', '),
-                      selected: _groupSelected(group),
+                      selected: _groupHighlighted(group),
                       onTap: editable ? editGroup : null,
                       onLongPress: editable
                           ? () => select(SelectionGesture.longPress)
@@ -1452,7 +1517,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     FoodGroup? group,
     FoodDetails? template,
     List<FoodContainer>? bulkTargets,
-    bool pane = false,
     FutureOr<void> Function(FoodDetails, int)? addCommand,
     FutureOr<void> Function(
       List<FoodContainer>,
@@ -1496,7 +1560,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     setState(
       () => _editorBuilder = (panel) => FoodEditor(
         key: key,
-        panel: panel && (targets == null || pane),
+        panel: panel,
         group: group,
         template: template,
         targets: targets,
@@ -1544,6 +1608,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           setState(() {
             _editorBuilder = null;
             _editingGroup = null;
+            _clearBulkSelection();
           });
         },
         onDisposed: () {
@@ -1554,12 +1619,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         },
       ),
     );
-    _editorModal = targets != null && !pane;
-    _paneBulk = targets != null && pane;
     // Completion follows actual input disposal, including whole-page disposal.
     await done.future;
     if (identical(_editorDone, done)) {
-      _paneBulk = false;
       _editingGroup = null;
       _requestEditorClose = null;
       _editorCloseBusy = null;

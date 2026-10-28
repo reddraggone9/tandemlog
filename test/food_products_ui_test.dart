@@ -136,10 +136,13 @@ void main() {
     (tester) async {
       await _pump(tester, size: const Size(1400, 900));
       await _longPress(tester, 'Beans');
-      expect(find.text('Edit 1 container'), findsOneWidget);
+      expect(find.byKey(const ValueKey('nameApply')), findsNothing);
       expect(find.byType(AlertDialog), findsNothing);
       await _ctrlTap(tester, find.text('Rice'));
-      expect(find.text('2 selected'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('food-search')).hitTestable(),
+        findsOneWidget,
+      );
       expect(find.text('Edit 2 containers'), findsOneWidget);
       expect(find.byType(AlertDialog), findsNothing);
       // The pane bulk editor is the Tasks-style editor, with Apply boxes.
@@ -173,17 +176,22 @@ void main() {
     await tester.pumpAndSettle();
     await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
     await tester.pumpAndSettle();
-    expect(find.text('3 selected'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('food-search')).hitTestable(),
+      findsOneWidget,
+    );
     expect(find.text('Edit 3 containers'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Clear Selection closes the wide bulk pane', (tester) async {
+  testWidgets('Cancel clears selection and closes the wide bulk pane', (
+    tester,
+  ) async {
     await _pump(tester, size: const Size(1400, 900));
     await _longPress(tester, 'Beans');
     await _ctrlTap(tester, find.text('Rice'));
     expect(find.text('Edit 2 containers'), findsOneWidget);
-    await tester.tap(find.byTooltip('Clear Selection'));
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
     await tester.pumpAndSettle();
     expect(find.text('Edit 2 containers'), findsNothing);
     expect(find.textContaining('selected'), findsNothing);

@@ -36,11 +36,13 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.space);
     await tester.pumpAndSettle();
     await pixels.capture(tester, 'food-keyboard-dark-900-after-space');
-    expect(find.text('1 selected'), findsOneWidget);
-    // At pane width the selection opens the bulk editor in the pane (Apply
-    // boxes), not the row's single editor.
-    expect(find.byKey(const ValueKey('nameApply')), findsOneWidget);
-    expect(find.text('Edit 1 container'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('food-search')).hitTestable(),
+      findsOneWidget,
+    );
+    // One whole selected row opens its single editor, just as Tasks does.
+    expect(find.byKey(const ValueKey('nameApply')), findsNothing);
+    expect(find.widgetWithText(TextField, 'Food name'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -55,7 +57,10 @@ void main() {
     await pixels.tap(tester, find.text('Select'));
     await tester.pumpAndSettle();
     await pixels.capture(tester, 'food-keyboard-dark-900-menu-selected');
-    expect(find.text('1 selected'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('food-search')).hitTestable(),
+      findsOneWidget,
+    );
     expect(find.byType(FoodInventoryPage), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
