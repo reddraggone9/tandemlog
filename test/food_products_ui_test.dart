@@ -159,6 +159,25 @@ void main() {
     },
   );
 
+  testWidgets('wide Shift+Down keeps extending from the list', (tester) async {
+    await _pump(tester, size: const Size(1400, 900));
+    _rowFocus(tester, 'Beans').requestFocus();
+    await tester.pumpAndSettle();
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pumpAndSettle();
+    expect(find.text('Edit 2 containers'), findsOneWidget);
+    // The pane opening does not take focus from the list.
+    expect(_rowFocus(tester, 'Rice').hasPrimaryFocus, isTrue);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pumpAndSettle();
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.pumpAndSettle();
+    expect(find.text('3 selected'), findsOneWidget);
+    expect(find.text('Edit 3 containers'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Clear Selection closes the wide bulk pane', (tester) async {
     await _pump(tester, size: const Size(1400, 900));
     await _longPress(tester, 'Beans');
