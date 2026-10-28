@@ -15,7 +15,7 @@ from gate_policy import evaluate, evaluate_scaling, validate_registered_coverage
 from reference_receipt import (need, digest, canonical_digest, read, instant, request_shape, profile,
                                source_identity, committed_identity, check_reference_toolchain,
                                failed_qualification_failures, check_authorization_shape, PROFILE,
-                               TIMING_FAILURE, AUTHORIZATION, PRIOR_RESULT, IDENTITY_V1)
+                               TIMING_FAILURE, AUTHORIZATION, PRIOR_RESULT, IDENTITY_V1, IDENTITY_V2)
 
 RECORD = 'override.json'
 STATE = 'OWNER_OVERRIDE_ACCEPTED_NOT_QUALIFIED'
@@ -35,6 +35,23 @@ POLICY = {
     'allowedDelta': ['tool/performance/owner_override.py', 'tool/performance/reference_receipt.py',
                      'tool/test_owner_override.py'],
 }
+# Lee accepted 634cd9c at 2026-10-28 16:14 CDT for prerelease 2026.10.9-rc.1+104 only. The q5 official
+# rerun of q4 failed one food-own-history growth maximum; profiling attributed it to host NVMe flush stalls.
+FOOD_RC1_POLICY = {
+    'release': '2026.10.9-rc.1+104',
+    'sourceRevision': '634cd9c2d9409e96d31094052d7e3115e4d8a7d2',
+    'relevantSourceSHA256': 'eebbe7e10373c1f1c30e9db592ce0d898c75547eb42918ee431fdff66a8f3fcc',
+    'requestId': '1f0dd03d23e5cca41d04d732d5d3e463',
+    'priorRequestId': 'ed8ff0a62c67b6b5259ba725082f9cfb',
+    'limitsSHA256': '894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409',
+    'acceptedFailures': ['food-own-history:scaling:food.details.1'],
+    'allowedDelta': ['tool/performance/owner_override.py', 'tool/performance/reference_receipt.py',
+                     'tool/test_owner_override.py'],
+    'identity': IDENTITY_V2,
+}
+# Evidence directory -> policy attribute name; each routes only while pubspec is exactly its release.
+OVERRIDES = {'evidence/reference-performance/owner-override-stable101': 'POLICY',
+             'evidence/reference-performance/owner-override-food-rc1': 'FOOD_RC1_POLICY'}
 RECORD_FIELDS = {'schemaVersion', 'kind', 'state', 'referencePerformanceQualified', 'release', 'sourceRevision',
                  'relevantSourceSHA256', 'requestId', 'requestSHA256', 'resultSHA256', 'priorRequestId',
                  'priorResultSHA256', 'limitsSHA256', 'budgetsChanged', 'acceptedFailures', 'acceptedMeasurements',
@@ -47,9 +64,9 @@ def release_version(repo):
     return found[0]
 
 
-def permitted_delta(repo, base, allowed):
+def permitted_delta(repo, base, allowed, scheme=IDENTITY_V1):
     """Current relevant source must equal the accepted source plus only the reviewed policy files."""
-    current = source_identity(repo, IDENTITY_V1)
+    current = source_identity(repo, scheme)
     need(set(base['files']) <= set(current['files']), 'Accepted relevant source file removed')
     delta = {p: v for p, v in current['files'].items() if base['files'].get(p) != v}
     need(set(delta) <= set(allowed), 'Relevant source differs outside the reviewed override policy files: ' +
@@ -236,12 +253,13 @@ def verify_override(repo, directory, policy=None):
     need(subprocess.run(['git', '-C', str(repo), 'merge-base', '--is-ancestor', policy['sourceRevision'], 'HEAD'],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0,
          'Accepted source is not in current history')
-    # The q11 request predates identity v2; its recorded v1 meaning is kept.
-    base = committed_identity(repo, policy['sourceRevision'], IDENTITY_V1)
+    # The q11 request predates identity v2; its recorded v1 meaning is kept. Later policies name theirs.
+    scheme = policy.get('identity', IDENTITY_V1)
+    base = committed_identity(repo, policy['sourceRevision'], scheme)
     need(base == request['relevantSource'] and base['sha256'] == policy['relevantSourceSHA256'],
          'Accepted source identity differs from the failed request')
     need(request['hostProfileSHA256'] == digest(repo / PROFILE), 'Stale host profile request')
-    current, delta = permitted_delta(repo, base, policy['allowedDelta'])
+    current, delta = permitted_delta(repo, base, policy['allowedDelta'], scheme)
     need(record['permittedDelta'] == delta, 'Reviewed policy-file bytes/modes differ from the owner override')
     need(record['resultSHA256'] == digest(root / 'gate-result.json'), 'Failed result differs')
     report = read(root / 'gate-result.json')

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "reference-performance-owner-override-v1",
+  "state": "OWNER_OVERRIDE_ACCEPTED_NOT_QUALIFIED",
+  "referencePerformanceQualified": false,
+  "release": "2026.10.9-rc.1+104",
+  "sourceRevision": "634cd9c2d9409e96d31094052d7e3115e4d8a7d2",
+  "relevantSourceSHA256": "eebbe7e10373c1f1c30e9db592ce0d898c75547eb42918ee431fdff66a8f3fcc",
+  "requestId": "1f0dd03d23e5cca41d04d732d5d3e463",
+  "requestSHA256": "29e0857de0652682eb9adcb15e92186ccf40dfb9b2c994efeb48eb66dcf4be10",
+  "resultSHA256": "75e03b8cffa427fbb863af290e4bd2e99892e83b21632b5568aa9b11dcd8a173",
+  "priorRequestId": "ed8ff0a62c67b6b5259ba725082f9cfb",
+  "priorResultSHA256": "5f95bbf2e79e9d0ee2469661a1bcd38b2ee46b5e0ca61503ddd1623f327da78e",
+  "limitsSHA256": "894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409",
+  "budgetsChanged": false,
+  "acceptedFailures": [
+    "food-own-history:scaling:food.details.1"
+  ],
+  "acceptedMeasurements": {
+    "food-own-history:scaling:food.details.1": {
+      "smallMedianMs": 4.664,
+      "largeMedianMs": 5.459,
+      "medianBoundMs": 8.83,
+      "smallMaximumMs": 4.691,
+      "largeMaximumMs": 15.363,
+      "maximumBoundMs": 11.5674
+    }
+  },
+  "owner": {
+    "name": "Lee",
+    "role": "release owner",
+    "acceptedAtUTC": "2026-10-28T21:14:00+00:00",
+    "acceptedAtLocal": "2026-10-28T16:14:00-05:00"
+  },
+  "scope": "Prerelease 2026.10.9-rc.1+104 at 634cd9c only. q4 (request ed8ff0a6) failed dense-food food.product.edit.undo maximum 21.763ms > 20ms plus food-own-history growth maxima for food.product.edit.undo and task.complete.checklistConfirm (54.2ms > 48.0ms); two measure-only diagnostics did not reproduce them, and its single official rerun q5 (request 1f0dd03d) failed food-own-history growth maximum for food.details.1 (15.363ms > 11.5674ms; median within bound). Both failures stand and this is not a reference-performance qualification. Profiling attributed each failing sample to one durable append coinciding with a ~10ms NVMe preflush+FUA journal commit outlier with normal CPU; a source-free fsync probe on the same filesystem reproduced ~10ms outliers at the same rate. Budgets, limits, coverage, correctness, source, fixture, toolchain and cleanup contracts are unchanged and re-verified. Native-visible, signing, candidate, release and live gates are not accepted by this record.",
+  "permittedDelta": {
+    "tool/performance/owner_override.py": {
+      "sha256": "f0e3d7991c8df15d13c20c4630952909b68db50cc2bf578aa13b8472242ab5bd",
+      "mode": "100644"
+    },
+    "tool/performance/reference_receipt.py": {
+      "sha256": "27c01e7576ccd4ab8edf801df63a76e6592a2a4721fd3f740cdbcc9499221176",
+      "mode": "100644"
+    },
+    "tool/test_owner_override.py": {
+      "sha256": "b874d3a6e88de6f062a04ef393cd8f29ff64959d8436d21faee31e06a9c3e45c",
+      "mode": "100644"
+    }
+  },
+  "files": {
+    "cleanup.json": "93a0a0402ef98be70f3cb843e6f0c048974ca0e476d6eb0fe39cf4d2b0123190",
+    "compile.log": "04bb7bc0ae3e21f7e790fb3d3e9db050ed619b75395efc2ffc90fa1cfa53f508",
+    "dense-1-attempt-0.log": "b3964044b43ac0a1915dcb3e30280d80c96728568431af40eb9ce66561d47165",
+    "dense-1-generate.log": "226a6075e9df7e93da7003650f1dd9526731ed32e58bec9b66665498fb584953",
+    "dense-2-attempt-0.log": "8d3c58695c52b0f4b9026aec7cbd34a1e34889e4e2f00ab0999487f49d9e1eec",
+    "dense-2-generate.log": "45c9bef07464fafab9aa49c446b246b80d08b7d27353eeec74953d2482612e53",
+    "dense-food-attempt-0.log": "b6d85aeb61c8a5d4ef3c903f53e90b3b8d3050c1a27232d808182c5590a3d3ef",
+    "dense-food-generate.log": "a90612d3c4f16431fa08aaf4f20b9aed70402fd61bd84702b762637eecea988a",
+    "fixture-dense-1/fixture.json": "83ad704dd69671b90914c8c2ee9d014942ac01514942b73eac273bd52516c351",
+    "fixture-dense-2/fixture.json": "acd88e81af174782919dfc1d2b25b61e1e487eea7a605e0516dc4aef96f48206",
+    "fixture-dense-food/fixture.json": "bc7374b32609741413e62b5110698bcd9b196c17f8e7c6b74a898548abba00e6",
+    "gate-result.json": "75e03b8cffa427fbb863af290e4bd2e99892e83b21632b5568aa9b11dcd8a173",
+    "official-rerun.json": "31a22f6a6fe4f849698defa194fe23a9b8e721f13b6800fd7d40ef128a171370",
+    "prior-gate-result.json": "5f95bbf2e79e9d0ee2469661a1bcd38b2ee46b5e0ca61503ddd1623f327da78e",
+    "request.json": "20d35c1f46f81be15858359571a2e75a4fd73b064724357152cfe58ba7f38011"
+  }
+}

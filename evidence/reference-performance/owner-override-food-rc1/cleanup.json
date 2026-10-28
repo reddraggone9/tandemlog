@@ -1,0 +1,20 @@
+{
+  "requestId": "1f0dd03d23e5cca41d04d732d5d3e463",
+  "controllerSHA256": "0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3",
+  "ownedUnitsInactive": true,
+  "ownedProcessesAbsent": true,
+  "inputPinsUnchanged": true,
+  "withinDeadline": true,
+  "activeProcesses": 0,
+  "workloadSwapBytes": 0,
+  "oomKills": 0,
+  "resourceCaptureBoundary": "work-complete/pre-exit",
+  "verifiedCompletionCapture": false,
+  "completionCaptureSHA256": "dddc378773146677906638ea7d7d0c3da6d28e454f70083d7e0d4bec9455d48b",
+  "completedAtUTC": "2026-10-28T19:45:14.618583+00:00",
+  "deadlineUTC": "2026-10-28T20:01:08.869973+00:00",
+  "errors": [
+    "RuntimeError: Workload failed; original terminal status and raw result retained",
+    "COUNTERS RuntimeError: Original terminal workload not successful"
+  ]
+}

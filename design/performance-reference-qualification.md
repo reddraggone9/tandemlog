@@ -352,6 +352,33 @@ at any other version the directory is retained history and the ordinary verifier
 borderline rule now covers this kind of case without an owner exception:under
 identity v2,q9's pass covers `dfb2260`,and q11 recomputes as borderline.
 
+## Release-owner override — prerelease 2026.10.9-rc.1+104 only
+
+The q4 qualification of `634cd9c` (request `ed8ff0a6`) failed three timing
+maxima: dense-food `food.product.edit.undo` (21.763ms > 20ms) and the
+food-own-history growth maxima for `food.product.edit.undo` and
+`task.complete.checklistConfirm` (54.2ms > 48.0ms). Two measure-only diagnostics
+did not reproduce them, so its single official rerun q5 (request `1f0dd03d`) ran
+and failed a different label: food-own-history growth maximum for
+`food.details.1` (15.363ms > 11.5674ms; median within bound). Under the rerun rule
+that is a repeatable failure. Separate profiling attributed every failing sample
+to one durable append whose fsync coincided with a ~10ms NVMe preflush+FUA
+journal-commit outlier, with normal CPU time; a source-free fsync probe on the
+same filesystem showed the same outliers at the same rate. Lee, as release owner,
+accepted `634cd9c` for this prerelease only on 2026-10-28 16:14 CDT. **Both
+qualifications remain failed**;budgets,limits,coverage and the rerun limit are
+unchanged.
+
+`evidence/reference-performance/owner-override-food-rc1/` retains the q5 request,
+official-rerun authorization,q4 prior result,raw q5 result,logs,fixture
+manifests and failed-workload cleanup,plus `override.json`. It uses the same
+verifier as stable101 (`FOOD_RC1_POLICY` in `owner_override.py`),bound to the
+request's recorded `relevant-source-v2` identity;the permitted delta is the same
+three reviewed policy files. `verify` routes to it only while `pubspec.yaml` is
+exactly `2026.10.9-rc.1+104`. It is not a precedent and accepts no native-visible,
+signing,candidate,release or live gate. The I/O-attribution gate rule proposed by
+the profiling report is a separate change needing Lee's approval.
+
 ## Existing manager payload — no wrapper ownership change
 
 Launch **only inside** the existing manager's bounded unprivileged workload unit,

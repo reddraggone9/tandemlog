@@ -20,9 +20,13 @@ POSIX_MODES = os.name != 'nt'
 
 
 class OwnerOverrideFixture(ReceiptFixture):
+    RELEASE = '2026.10.7+101'
+    SCHEME = receipt.IDENTITY_V1
+    DIRECTORY = 'evidence/reference-performance/owner-override-stable101'
+
     def setUp(self):
         super().setUp()
-        (self.repo / 'pubspec.yaml').write_text('name: tandemlog\nversion: 2026.10.7+101\n')
+        (self.repo / 'pubspec.yaml').write_text('name: tandemlog\nversion: ' + self.RELEASE + '\n')
         self.commit()
         self.rebind()
         self.fail_growth()
@@ -31,18 +35,20 @@ class OwnerOverrideFixture(ReceiptFixture):
         self.marker = self.tools / 'policy_marker.py'
         self.marker.write_text('# reviewed policy-only marker\n')
         self.commit()
-        self.policy = {'release': '2026.10.7+101', 'sourceRevision': self.base_revision,
+        self.policy = {'release': self.RELEASE, 'sourceRevision': self.base_revision,
                        'relevantSourceSHA256': self.identity['sha256'], 'requestId': self.request['requestId'],
                        'priorRequestId': self.prior_request['requestId'], 'limitsSHA256': self.host['limitsSHA256'],
                        'acceptedFailures': self.labels, 'allowedDelta': ['tool/performance/policy_marker.py']}
+        if self.SCHEME != receipt.IDENTITY_V1:
+            self.policy['identity'] = self.SCHEME
         self.cleanup.update(verifiedCompletionCapture=False, errors=list(override.FAILED_WORKLOAD_CLEANUP_ERRORS))
-        self.root = self.repo / 'evidence/reference-performance/owner-override-stable101'
+        self.root = self.repo / self.DIRECTORY
         self.record = None
         self.publish()
 
     def rebind(self):
         """The stable101 override is pinned to the original (v1) relevant-source identity."""
-        super().rebind(receipt.IDENTITY_V1)
+        super().rebind(self.SCHEME)
 
     def recompute(self, report):
         limits = {**self.limits, 'sha256': self.host['limitsSHA256']}
@@ -114,10 +120,10 @@ class OwnerOverrideFixture(ReceiptFixture):
         for item in self.report['pairedScalingAttempts']:
             measured.update({item['comparison'] + ':' + f: item['comparisons'][f.removeprefix('scaling:')]
                              for f in item['failures'] if item['status'] == 'timing-failed'})
-        base = receipt.committed_identity(self.repo, self.base_revision, receipt.IDENTITY_V1)
-        current = receipt.source_identity(self.repo, receipt.IDENTITY_V1)
+        base = receipt.committed_identity(self.repo, self.base_revision, self.SCHEME)
+        current = receipt.source_identity(self.repo, self.SCHEME)
         value = {'schemaVersion': 1, 'kind': 'reference-performance-owner-override-v1', 'state': override.STATE,
-                 'referencePerformanceQualified': False, 'release': '2026.10.7+101',
+                 'referencePerformanceQualified': False, 'release': self.RELEASE,
                  'sourceRevision': self.base_revision, 'relevantSourceSHA256': self.identity['sha256'],
                  'requestId': self.request['requestId'], 'requestSHA256': receipt.canonical_digest(self.request),
                  'resultSHA256': files['gate-result.json'], 'priorRequestId': self.prior_request['requestId'],
@@ -304,6 +310,38 @@ class OwnerOverrideTests(OwnerOverrideFixture):
         self.publish()
         (self.root / 'compile.log').write_bytes(b'changed')
         self.refused('member changed')
+
+
+class FoodRcOverrideTests(OwnerOverrideFixture):
+    """A later one-release override keeps its request's v2 identity and routes beside stable101."""
+    RELEASE = '2026.10.9-rc.1+104'
+    SCHEME = receipt.IDENTITY_V2
+    DIRECTORY = 'evidence/reference-performance/owner-override-food-rc1'
+
+    def test_v2_failure_is_accepted_for_its_release_but_never_qualified(self):
+        self.assertIn(self.DIRECTORY, receipt.OWNER_OVERRIDES)
+        self.assertEqual(override.OVERRIDES[self.DIRECTORY], 'FOOD_RC1_POLICY')
+        result = self.verify()
+        self.assertEqual(result['state'], override.STATE)
+        self.assertIs(result['referencePerformanceQualified'], False)
+        self.assertEqual(result['ownerAcceptedFailures'], self.labels)
+        self.assertEqual(result['permittedDeltaPaths'], ['tool/performance/policy_marker.py'])
+        with self.assertRaisesRegex(ValueError, 'identity differs'):
+            self.verify({**self.policy, 'identity': receipt.IDENTITY_V1})
+
+    def test_verify_cli_routes_by_release_and_leaves_stable101_history_alone(self):
+        shutil.copytree(self.root, self.repo / receipt.OWNER_OVERRIDE)
+        out, err = io.StringIO(), io.StringIO()
+        with patch.object(override, 'FOOD_RC1_POLICY', self.policy), \
+                patch.object(sys, 'argv', ['reference_receipt.py', 'verify', '--repo', str(self.repo)]), \
+                contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            receipt.main()
+        result = json.loads(out.getvalue())
+        self.assertEqual((result['state'], result['release']), (override.STATE, self.RELEASE))
+        self.assertIn('NOT qualified', err.getvalue())
+        with patch.object(sys, 'argv', ['reference_receipt.py', 'verify', '--repo', str(self.repo)]), \
+                contextlib.redirect_stdout(io.StringIO()), self.assertRaisesRegex(ValueError, 'exact release policy'):
+            receipt.main()
 
 
 if __name__ == '__main__':
