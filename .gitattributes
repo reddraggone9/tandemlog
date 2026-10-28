@@ -10,6 +10,9 @@ test/fixtures/completion-instant-v3/** -text
 # Released Food reader sources and packets are frozen compatibility bytes.
 test/fixtures/food-undo/** -text
 
+# The frozen concurrent-receipt operations are pinned by SHA-256 in food_products_test.dart.
+test/fixtures/food-products/** -text
+
 # Reviewed dependency sources, provenance and patches are pinned by exact bytes.
 # Windows autocrlf must not rewrite the inventory or any approved crate file.
 native/text_engine/vendor/** -text

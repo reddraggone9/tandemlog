@@ -45,7 +45,8 @@ FOOD_RC1_POLICY = {
     'priorRequestId': 'ed8ff0a62c67b6b5259ba725082f9cfb',
     'limitsSHA256': '894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409',
     'acceptedFailures': ['food-own-history:scaling:food.details.1'],
-    'allowedDelta': ['tool/performance/owner_override.py', 'tool/performance/reference_receipt.py',
+    # .gitattributes only keeps a frozen test fixture literal in Windows checkouts; no benchmark input.
+    'allowedDelta': ['.gitattributes', 'tool/performance/owner_override.py', 'tool/performance/reference_receipt.py',
                      'tool/test_owner_override.py'],
     'identity': IDENTITY_V2,
 }

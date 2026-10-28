@@ -374,7 +374,9 @@ official-rerun authorization,q4 prior result,raw q5 result,logs,fixture
 manifests and failed-workload cleanup,plus `override.json`. It uses the same
 verifier as stable101 (`FOOD_RC1_POLICY` in `owner_override.py`),bound to the
 request's recorded `relevant-source-v2` identity;the permitted delta is the same
-three reviewed policy files. `verify` routes to it only while `pubspec.yaml` is
+three reviewed policy files plus `.gitattributes`,which only keeps the frozen
+`test/fixtures/food-products/` operations literal in Windows checkouts (their
+SHA-256 pin failed under autocrlf in CI 40771007898). `verify` routes to it only while `pubspec.yaml` is
 exactly `2026.10.9-rc.1+104`. It is not a precedent and accepts no native-visible,
 signing,candidate,release or live gate. The I/O-attribution gate rule proposed by
 the profiling report is a separate change needing Lee's approval.

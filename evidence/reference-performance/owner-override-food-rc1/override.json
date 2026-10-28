@@ -34,8 +34,12 @@
   },
   "scope": "Prerelease 2026.10.9-rc.1+104 at 634cd9c only. q4 (request ed8ff0a6) failed dense-food food.product.edit.undo maximum 21.763ms > 20ms plus food-own-history growth maxima for food.product.edit.undo and task.complete.checklistConfirm (54.2ms > 48.0ms); two measure-only diagnostics did not reproduce them, and its single official rerun q5 (request 1f0dd03d) failed food-own-history growth maximum for food.details.1 (15.363ms > 11.5674ms; median within bound). Both failures stand and this is not a reference-performance qualification. Profiling attributed each failing sample to one durable append coinciding with a ~10ms NVMe preflush+FUA journal commit outlier with normal CPU; a source-free fsync probe on the same filesystem reproduced ~10ms outliers at the same rate. Budgets, limits, coverage, correctness, source, fixture, toolchain and cleanup contracts are unchanged and re-verified. Native-visible, signing, candidate, release and live gates are not accepted by this record.",
   "permittedDelta": {
+    ".gitattributes": {
+      "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
+      "mode": "100644"
+    },
     "tool/performance/owner_override.py": {
-      "sha256": "f0e3d7991c8df15d13c20c4630952909b68db50cc2bf578aa13b8472242ab5bd",
+      "sha256": "25a86dd76bfc2db5b10c87b5b4717c6a878ad0654c1b447fa8edee313cad08ac",
       "mode": "100644"
     },
     "tool/performance/reference_receipt.py": {
