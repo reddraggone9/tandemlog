@@ -576,6 +576,21 @@ class FoodContainer {
           .length >
       1;
 
+  /// Derived receipt reconciliation never rewrites the original link record.
+  FoodContainer withoutPurchase() => FoodContainer(
+    id: id,
+    details: details,
+    ownDetails: ownDetails,
+    contents: contents,
+    createdAt: createdAt,
+    deletions: deletions,
+    deletedOrder: deletedOrder,
+    lastDeletionId: lastDeletionId,
+    contentsEdits: contentsEdits,
+    productLink: productLink,
+    product: _product,
+  );
+
   /// Re-resolves the product and displayed details against [catalog].
   FoodContainer withCatalog(FoodCatalog catalog) {
     final root = catalog.isEmpty ? null : catalog.resolve(productRef);
@@ -984,14 +999,53 @@ FoodState projectFood(
       ),
     );
   }
-  result.sort((a, b) => a.id.compareTo(b.id));
+  // Offline claimants can know different hand entries. Allocate the receipt
+  // quantity to their canonical oldest-first hand-entry union, then to generated
+  // ordinals. Suppress only untouched redundant generated units; independent
+  // mutations protect their original physical identity, without an extra receipt
+  // price link. All original seeds remain in admission for future Undo/replay.
+  final concurrent = concurrentFoodReceipts(events);
+  final suppressed = <String>{}, detached = <String>{};
+  for (final entry in concurrent.entries) {
+    final purchase = entry.key, quantity = entry.value;
+    final generated = {
+      for (var i = 0; i < quantity; i++)
+        importedFoodContainerId(purchase, i): i,
+    };
+    bool isGenerated(FoodContainer c) =>
+        generated.containsKey(c.id) && claims.containsKey(creations[c.id]?.id);
+    final members = result.where((c) => c.purchase == purchase).toList();
+    final hand = members.where((c) => !isGenerated(c)).toList()
+      ..sort((a, b) {
+        final time = DateTime.parse(
+          a.createdAt,
+        ).compareTo(DateTime.parse(b.createdAt));
+        return time != 0 ? time : a.id.compareTo(b.id);
+      });
+    final remaining = (quantity - hand.length).clamp(0, quantity);
+    detached.addAll(hand.skip(quantity).map((c) => c.id));
+    for (final c in members.where(isGenerated)) {
+      if (generated[c.id]! < remaining) continue;
+      if (histories[c.id]?.isNotEmpty ?? false) {
+        detached.add(c.id);
+      } else {
+        suppressed.add(c.id);
+      }
+    }
+  }
+  final reconciled = [
+    for (final c in result)
+      if (!suppressed.contains(c.id))
+        detached.contains(c.id) ? c.withoutPurchase() : c,
+  ];
+  reconciled.sort((a, b) => a.id.compareTo(b.id));
   final products =
       catalog ??
       FoodCatalog.build(
         events.where((e) => e.action.productLevel && !retracted.contains(e.id)),
       );
   return FoodState([
-    for (final item in result) item.withCatalog(products),
+    for (final item in reconciled) item.withCatalog(products),
   ], catalog: products);
 }
 

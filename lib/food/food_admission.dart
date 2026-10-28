@@ -148,6 +148,9 @@ class _FoodAdmissionIndex {
           if (record.operation.action == FoodAction.undo)
             record.operation.retracts!,
       }),
+      concurrentReceipts = Set.unmodifiable(
+        concurrentFoodReceipts(records.map((r) => r.operation)).keys,
+      ),
       receiptClaims = Map.unmodifiable(
         foodReceiptBirthClaims(records.map((r) => r.operation)),
       ),
@@ -166,7 +169,8 @@ class _FoodAdmissionIndex {
     this.retracted,
     this.productRecords,
     this.receiptClaims,
-  ) : legacyOwners = context.legacyOwners,
+  ) : concurrentReceipts = context.concurrentReceipts,
+      legacyOwners = context.legacyOwners,
       maximumContainers = context.maximumContainers,
       byId = Map.unmodifiable(records),
       targets = Map.unmodifiable(targetSets),
@@ -178,6 +182,7 @@ class _FoodAdmissionIndex {
   final Map<String, List<FoodRecord>> byTarget;
   final Set<String> retracted;
   final Map<String, String> receiptClaims;
+  final Set<String> concurrentReceipts;
 
   /// Product-level records, for refolding the catalog after product changes.
   final List<FoodRecord> productRecords;
@@ -221,6 +226,36 @@ FoodAdmission? appendReadyFoodRecords(
   if (index.maximumClock != null &&
       delta.any((r) => r.clock <= index.maximumClock!)) {
     return null;
+  }
+  // A newly arriving second receipt claim, or a mutation of an already
+  // concurrent receipt's containers, can change its derived unit allocation.
+  // Refold that rare case in full; ordinary histories retain incremental saves.
+  final seenPurchases = <String>{};
+  for (final record in delta) {
+    final operation = record.operation;
+    if (operation.action == FoodAction.purchase &&
+        (!seenPurchases.add(operation.targets.single) ||
+            (index.byTarget[operation.targets.single] ?? const <FoodRecord>[])
+                .any((r) => r.operation.action == FoodAction.purchase))) {
+      return null;
+    }
+    if (index.concurrentReceipts.isEmpty) continue;
+    final basis = operation.action == FoodAction.undo
+        ? index.byId[operation.retracts]?.operation
+        : operation;
+    if (basis != null &&
+        (index.concurrentReceipts.contains(basis.link?['purchase']) ||
+            (basis.action.productLevel &&
+                basis.targets.any(index.concurrentReceipts.contains)))) {
+      return null;
+    }
+    for (final target in operation.targets) {
+      if ((index.byTarget[target] ?? const <FoodRecord>[]).any(
+        (r) => index.concurrentReceipts.contains(r.operation.link?['purchase']),
+      )) {
+        return null;
+      }
+    }
   }
   final byId = Map<String, FoodRecord>.of(index.byId);
   final targets = Map<String, Set<String>>.of(index.targets);

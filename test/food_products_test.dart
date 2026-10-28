@@ -421,6 +421,90 @@ void main() {
       },
     );
 
+    test(
+      'concurrent receipt matching reconciles hand entries against new units',
+      () async {
+        final receipt = plan([milk(quantity: 2)]);
+        await withPeer((peer, peerData) async {
+          await food.add(const FoodDetails(name: 'milk'), 1);
+          final hand = food.state.containers.single.id;
+          await food.commitPurchaseImport(receipt);
+          await peer.commitPurchaseImport(receipt);
+          await File(
+            '${peerData.path}/${peer.writer}.applog',
+          ).copy('${root.path}/data/${peer.writer}.applog');
+          await food.refresh();
+          expect(food.state.active, hasLength(2));
+          expect(food.state.containers.map((c) => c.id), contains(hand));
+          expectReplayEquivalent();
+        }, offline: true);
+      },
+    );
+
+    test('concurrent hand-only claims allocate source links once', () async {
+      final receipt = plan([milk(quantity: 1)]);
+      await withPeer((peer, peerData) async {
+        await food.add(const FoodDetails(name: 'milk'), 1);
+        await peer.add(const FoodDetails(name: 'milk'), 1);
+        await food.commitPurchaseImport(receipt);
+        await peer.commitPurchaseImport(receipt);
+        await File(
+          '${peerData.path}/${peer.writer}.applog',
+        ).copy('${root.path}/data/${peer.writer}.applog');
+        await food.refresh();
+        expect(food.state.active, hasLength(2));
+        expect(
+          food.state.containers.where((c) => c.purchase != null),
+          hasLength(1),
+        );
+        expectReplayEquivalent();
+      }, offline: true);
+    });
+
+    test(
+      'independent edit protects surplus receipt identity; Undo hides only surplus',
+      () async {
+        final receipt = plan([milk(quantity: 2)]);
+        await withPeer((peer, peerData) async {
+          await food.add(const FoodDetails(name: 'milk'), 1);
+          await food.commitPurchaseImport(receipt);
+          await peer.commitPurchaseImport(receipt);
+          final surplus = importedFoodContainerId(milk().purchaseId, 1);
+          await peer.changeDetails(
+            [surplus],
+            const FoodDetails(name: 'milk', location: 'Desk'),
+            ['location'],
+          );
+          final edit = peer.lastPreparedRecords;
+          Future<void> sync() async {
+            await File(
+              '${peerData.path}/${peer.writer}.applog',
+            ).copy('${root.path}/data/${peer.writer}.applog');
+            await food.refresh();
+            expectReplayEquivalent();
+          }
+
+          await sync();
+          final protected = food.state.containers.firstWhere(
+            (c) => c.id == surplus,
+          );
+          expect(protected.details.location, 'Desk');
+          expect(protected.purchase, isNull);
+          expect(
+            food.state.containers.where((c) => c.purchase != null),
+            hasLength(2),
+          );
+          await peer.undoOperations(edit);
+          await sync();
+          expect(food.state.active, hasLength(2));
+          expect(
+            food.state.containers.map((c) => c.id),
+            isNot(contains(surplus)),
+          );
+        }, offline: true);
+      },
+    );
+
     test('Undo of an import removes containers and the purchase', () async {
       await food.commitPurchaseImport(plan([milk(quantity: 2)]));
       expect(food.state.active, hasLength(2));

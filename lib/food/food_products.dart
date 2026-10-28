@@ -118,6 +118,42 @@ Map<String, String> foodReceiptBirthClaims(Iterable<FoodOperation> operations) {
   return result;
 }
 
+/// Only identical source purchases recorded by distinct installations require
+/// cross-claim allocation. Return their original quantities, never edited ones.
+Map<String, int> concurrentFoodReceipts(Iterable<FoodOperation> operations) {
+  final writers = <String, Set<String>>{};
+  final quantities = <String, int>{};
+  final signatures = <String, String>{};
+  final conflicts = <String>{};
+  for (final op in operations) {
+    if (op.action != FoodAction.purchase || op.purchase?['source'] == null) {
+      continue;
+    }
+    final source = op.purchase!['source'] as Map;
+    final id = op.targets.single;
+    if (id !=
+        importedFoodPurchaseId(
+          source['kind'] as String,
+          source['key'] as String,
+        )) {
+      continue;
+    }
+    final values = Map<String, Object?>.of(op.purchase!)..remove('product');
+    final signature = canonicalDataJson(values);
+    if (signatures.containsKey(id) && signatures[id] != signature) {
+      conflicts.add(id);
+    }
+    signatures[id] = signature;
+    (writers[id] ??= {}).add(op.id.split(':').first);
+    quantities[id] = op.purchase!['quantity'] as int;
+  }
+  return {
+    for (final entry in writers.entries)
+      if (entry.value.length > 1 && !conflicts.contains(entry.key))
+        entry.key: quantities[entry.key]!,
+  };
+}
+
 bool sameFoodReceiptClaim(String a, String b, Map<String, String> claims) =>
     claims[a] != null && claims[a] == claims[b];
 

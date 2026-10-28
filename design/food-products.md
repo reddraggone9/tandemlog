@@ -222,7 +222,17 @@ dry-run, then committed as one action with
   Canonical operation order picks one original creation as the stable seed;
   every verified original birth remains valid as a later mutation's basis.
   Undo retracts only its own claim; another claim or independent mutation keeps
-  the container. Ordinary/different-value/arbitrary-ID births still fail closed.
+  the container. When offline claimants knew different hand entries, the derived
+  view allocates the original receipt quantity to the union's oldest UTC hand
+  entries first, then to generated unit ordinals. Extra hand entries remain
+  physical containers without the duplicate purchase link. Untouched redundant
+  generated units are hidden (their original births stay canonical); independent
+  edits/removals protect those identities, detached from this receipt's price.
+  Undoing that independent contribution can hide the surplus again. Incoming
+  second receipt records and later changes to a concurrent receipt's targets use
+  full admission so hidden seeds/links can be re-derived; unrelated ordinary
+  saves retain incremental admission. Ordinary/different-value/arbitrary-ID
+  births still fail closed.
   No canonical bytes are rewritten. Frozen concurrent-claim replay and rejection
   cases live in `test/fixtures/food-products/` and `food_products_test.dart`.
 
