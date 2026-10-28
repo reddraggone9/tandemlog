@@ -32,8 +32,8 @@ Uses the same unified workspace format as 2026.10.7; no conversion is needed.
 
 - Batch Food edit can remove or restore the selected containers.
 - Select Food rows from the keyboard with Space.
-- Today stays continuous when clocks fall back.
+- Today no longer splits into two groups during the repeated hour when clocks fall back.
 - Faster incoming Task changes from other devices on long histories.
-- Faster typing in long task notes.
-- Changes from another device appear even while sync is still writing its file.
+- Typing stays fast in titles and notes that have been edited many times.
+- Sync no longer stops and asks for Retry while another device's changes are still arriving.
 - Updates SQLite to 3.54.1, which fixes a memory-safety bug on 32-bit Android phones.
