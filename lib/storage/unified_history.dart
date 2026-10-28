@@ -312,6 +312,9 @@ final class UnifiedHistory {
   int get taskSelectedReadCount =>
       _semanticValidator?.selectedTextReadCount ?? 0;
 
+  /// Validator dependency reads that scanned every canonical Task row.
+  int get taskHistoryScanReads => _semanticValidator?.historyScanReadCount ?? 0;
+
   bool ownsTaskValidator(TaskSemanticValidator validator) =>
       identical(_semanticValidator, validator);
 
@@ -1634,6 +1637,7 @@ final class UnifiedHistory {
 
   int fullEffectValidationRuns = 0;
   int semanticTaskSortRuns = 0;
+  int monotonicTaskValidationRuns = 0;
 
   FoodAdmission _validateEffects(
     Iterable<UnifiedEffect> effects,
@@ -1688,6 +1692,7 @@ final class UnifiedHistory {
     final priorTasks = priorKey == null
         ? const <String, String>{}
         : {for (final event in prior!.tasks) event.id: event.canonicalRaw!};
+    final priorCount = priorTasks.length;
     final sameTasks =
         priorKey != null &&
         priorTasks.length == semanticTasks.length &&
@@ -1697,16 +1702,59 @@ final class UnifiedHistory {
               priorTasks.remove(event.id) == event.canonicalRaw,
         );
     // Exact unchanged-set proof is order-independent. Do not regroup and sort
-    // all Task history for an unrelated peer Food/header change. Changed Task
-    // evidence retains the same canonical sort before hashing or validation.
-    if (!sameTasks) {
+    // all Task history for an unrelated peer Food/header change.
+    String? key = sameTasks ? priorKey : null;
+    Set<String>? ready = sameTasks ? prior!.readyTaskIds : null;
+    // A delivered peer action usually only extends the exact ready set. Like an
+    // owned append, its process key chains the prior key with the new events,
+    // and the owning validator admits only that delta with the generic checks.
+    // Whole-history sort and digest remain for every other changed input.
+    if (!sameTasks && priorKey != null && semanticTasks.length > priorCount) {
+      final added = <LogEvent>[];
+      var retained = 0;
+      for (final event in semanticTasks) {
+        final raw = priorTasks[event.id];
+        if (raw == null) {
+          added.add(event);
+        } else if (raw == event.canonicalRaw) {
+          retained++;
+        } else {
+          retained = -1;
+          break;
+        }
+      }
+      if (retained == priorCount) {
+        added.sort(compareEvents);
+        final extensionKey =
+            'task-append1:${bytesDigest(utf8.encode(canonicalDataJson([
+              priorKey,
+              for (final e in added) [e.id, e.hash, e.integrityHash],
+            ])))}';
+        ready = _taskValidation.remove(extensionKey);
+        if (ready == null) {
+          ready = _semanticValidator?.validateMonotonicDelta(
+            added,
+            expectedBaseKey: priorKey,
+            inputKey: extensionKey,
+            orderedEvents: () {
+              semanticTaskSortRuns++;
+              return semanticTasks..sort(compareEvents);
+            },
+          );
+          if (ready != null) {
+            semanticValidationRuns++;
+            monotonicTaskValidationRuns++;
+          }
+        }
+        if (ready != null) key = extensionKey;
+      }
+    }
+    if (key == null) {
       semanticTaskSortRuns++;
       semanticTasks.sort(compareEvents);
+      key = TaskStore.canonicalTaskRevision(semanticTasks);
+      ready = _taskValidation.remove(key);
     }
-    final key = sameTasks
-        ? priorKey
-        : TaskStore.canonicalTaskRevision(semanticTasks);
-    var ready = sameTasks ? prior!.readyTaskIds : _taskValidation.remove(key);
     if (ready == null) {
       semanticValidationRuns++;
       final validator = _semanticValidator ??= TaskSemanticValidator(

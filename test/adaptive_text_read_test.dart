@@ -1163,17 +1163,28 @@ void main() {
             );
             await producer.refresh();
             final scratchBefore = history.taskSelectedReadCount;
+            final monotonicBefore = history.monotonicTaskValidationRuns;
             await save(peer, child, 'Peer admitted title');
             await producer.refresh();
-            expect(
-              history.taskSelectedReadCount,
-              scratchBefore,
-              reason:
-                  'Generic above-cap peer validation must use the full oracle.',
-            );
+            // An exact peer extension of the ready committed input is validated
+            // like an owned append: its committed key plus the inserted,
+            // byte-checked candidate scope may select from the owned relation
+            // index. Generic (replacing/unready) peer input keeps the full oracle.
+            expect(history.monotonicTaskValidationRuns, monotonicBefore + 1);
+            expect(history.taskSelectedReadCount, greaterThan(scratchBefore));
             expect(
               producer.rows.singleWhere((row) => row['id'] == child)['title'],
               'Peer admitted title',
+            );
+            expect(
+              producer.rows,
+              TaskStore.validateSemanticHistory(
+                history.snapshot.tasks,
+                space: producer.space,
+                writer: producer.writer,
+                textEngine: engine,
+              ),
+              reason: 'Selected peer admission must equal the full oracle.',
             );
             final oldSnapshot = history.snapshot;
             final oldRows = producer.taskSnapshot;

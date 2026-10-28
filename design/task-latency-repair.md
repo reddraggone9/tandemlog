@@ -548,6 +548,61 @@ epoch and a gap-free writer chain from sequence 1, so both now look records up
 by chain position; a positional mismatch falls back to the original scan. The
 checked conditions and failures are unchanged.
 
+## Peer Task delivery as a monotonic delta
+
+`sync.peerTask.whileFood.storageAdmission` (one delivered peer Task action,
+observed by a Food refresh) was borderline on the history-growth rule in
+qualifications q9–q11: dense-1 median 19.7 ms against dense-2 28.0 ms. The
+dense shapes have the same current state and only differ in history size, so
+that growth is work proportional to canonical history. Window-filtered CPU
+samples of the measured action (diagnostic AOT builds only) attributed it to:
+
+- Admission treated any changed Task set as a new whole input: regroup and
+  sort all Task history, hash a canonical revision over it, diff the whole
+  input in the validator and rebuild its bookkeeping and text relations.
+- Once the delivered action was validated as a delta, every dependency read in
+  that transaction still scanned all canonical rows, because validation of a
+  peer input suppressed the validator's owned selection scope. In particular
+  each new event's tag-reference check ran a `json_each` over every event
+  (O(history) per delivered event), and text closures fell back to reading the
+  whole canonical input.
+- Smaller passes built record-ID strings and per-writer scans over every
+  record (fixed by the positional lookups above).
+
+The owning history now proves that the candidate Task set is the exact prior
+ready set (same IDs, same canonical bytes) plus new events, and that every new
+event extends its writer's sequence. That delta is admitted like an owned
+append: its process key chains the prior key with the new events, and
+`TaskSemanticValidator.validateMonotonicDelta` runs the same replay,
+eligibility, settled readiness and fallback checks as the generic validator
+without the whole-input diff; a delta that is not settled still receives the
+global reference checks and a full readiness pass. Because the prior input is
+an exact subset, its dependency reads use the committed key's relation index
+plus the inserted, byte-checked candidate, exactly as `validateAppend` does.
+The generic `validate` keeps suppressing that scope because its candidate may
+replace prior input, and a not-fully-ready prior input disables selection.
+Any removed, replaced or sequence-regressing input, or a prior input that is
+not fully ready, still takes the whole-input sort, revision and validator.
+Canonical bytes, keys of unchanged inputs, readiness and publication are
+unchanged. The above-cap adaptive text test now requires such a peer Save to
+use this path and to equal the full replay oracle.
+
+A regression test delivers peer Task actions from a second installation and
+requires one monotonic validation per action, no whole-input sort, no full
+readiness pass and no whole-history dependency scan (`historyScanReads`),
+plus full replay and readiness oracles. It fails on the prior code (sort) and
+on the delta path without the selection scope (scans).
+
+Measure-only interleaved A/B on one Linux host under the reference caps (2 CPU
+quota, reference SQLite/native libraries; 6 alternating rounds of 15 samples
+per shape): this action's dense-1/dense-2 medians moved from 22.6/28.7 ms
+(91.8% of the 1.25x+3 ms median bound) to 18.9/20.7 ms (77.9%); maximum growth
+fell to 55.4% of its bound. `sync.peerFood.whileTasks.storageAdmission` fell
+from 83.3% to 60.0% of its median bound. These diagnostics are not a
+qualification; the remaining growth is small O(history) Dart passes in refresh
+(effect collection, prior-set comparison, publication readiness) that copy or
+look up references rather than scan SQL.
+
 ## Canonical quoting allocation
 
 Canonical string encoding validates every UTF-16 code unit before returning the

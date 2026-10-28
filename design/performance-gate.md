@@ -124,6 +124,15 @@ API wall time from storage service time. Preserve traces and explain residual
 gaps before presenting a reconciled cost breakdown. Storage accounting still
 does not measure input, widget construction, layout or paint.
 
+A history-growth failure or near-miss means some work scales with canonical
+history inside one ordinary action. Find it by comparing dense-1 and dense-2
+profiles of the measured window only (CPU samples filtered to the action's
+start/end, never in a qualifying run), then guard the fix with a work count
+rather than a wall-clock test. `sync.peerTask.whileFood.storageAdmission` is
+the worked example: a delivered peer Task re-sorted and re-validated the whole
+Task input and scanned every canonical row for each new event's tag
+references; see [peer Task delivery as a monotonic delta](task-latency-repair.md#peer-task-delivery-as-a-monotonic-delta).
+
 
 Converted-existing coverage has separate metric IDs and provenance assertions.
 The original inherited/new-native Task and historical Food targets retain their

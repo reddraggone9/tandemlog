@@ -1509,6 +1509,9 @@ class TaskStore {
   int selectedTextReads = 0, selectedTextRecords = 0, selectedTextLookups = 0;
   int selectedCopySeedReads = 0, selectedCopySeedRecords = 0;
   int selectedTextInitialDecodes = 0;
+  // Diagnostics: dependency reads that scan every canonical row because no
+  // owned relation selection applies (tag references, whole text input).
+  int historyScanReads = 0;
 
   EventClock? _stagedMaximumClock;
   void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
@@ -3414,6 +3417,7 @@ class TaskStore {
               (snapshot == null
                   ? null
                   : unified?.selectTaskTagMutationRaws(snapshot, pending));
+    if (indexed == null) historyScanReads++;
     final mutations = indexed == null
         ? db
               .select(
@@ -3771,6 +3775,7 @@ class TaskStore {
         return input;
       }
     }
+    if (_canonicalTextInput == null) historyScanReads++;
     final input =
         _canonicalTextInput ??
         RecurringTextInput.fromCanonical(
@@ -5087,6 +5092,7 @@ class TaskSemanticValidator {
   List<LogEvent>? _textCandidate;
   bool _textSelectionSuppressed = false;
   int get selectedTextReadCount => _store?.selectedTextReads ?? 0;
+  int get historyScanReadCount => _store?.historyScanReads ?? 0;
   int get selectedTextRecordCount => _store?.selectedTextRecords ?? 0;
   int get selectedTextLookupCount => _store?.selectedTextLookups ?? 0;
 
@@ -5350,7 +5356,7 @@ class TaskSemanticValidator {
         rethrow;
       }
     }
-    final store = _store!, db = store.db;
+    final store = _store!;
     return store._withCopySeedIndex(() {
       if (!_attemptedWarm) {
         _attemptedWarm = true;
@@ -5362,73 +5368,151 @@ class TaskSemanticValidator {
         _validatedInputKey = inputKey;
         return _ready!;
       }
-      final incremental = _raws.isNotEmpty;
-      db.execute('BEGIN IMMEDIATE');
-      try {
-        final recurringSeeds = _ready == null
-            ? null
-            : store._recurringActionSeeds(delta, _ready!);
-        final priorFullyReady =
-            _ready != null &&
-            _ready!.length == _raws.length &&
-            delta.every((e) => e.sequence > (_lastSequences[e.writer] ?? 0));
-        final baseSettled =
-            priorFullyReady &&
-            (recurringSeeds != null ||
-                store._settledActionTargets(delta, _ready!));
-        final firstActivitySeeds = priorFullyReady && !baseSettled
-            ? store._firstDerivedActionSeeds(delta, _ready!)
-            : null;
-        final settledCandidate = baseSettled || firstActivitySeeds != null;
-        store._replaySemanticEvents(
-          delta,
-          incremental: incremental,
-          settledDelta: settledCandidate,
-        );
-        final settled = _settledActionReadiness(
-          delta,
-          eligible: settledCandidate,
-          priorDerivedSeeds: recurringSeeds ?? const {},
-          firstActivitySeeds: firstActivitySeeds ?? const {},
-        );
-        // Native dependencies may still make a pure-text candidate pending.
-        // Before accepting fallback readiness, restore every skipped global check.
-        if (settledCandidate && settled == null) {
-          store._validateSemanticReferences();
-        }
-        final Set<String> ready;
-        if (settled != null) {
-          settledTextReadinessRuns++;
-          ready = settled;
-        } else {
-          fullReadinessRuns++;
-          ready = Set<String>.unmodifiable(store._semanticReadyIds(events));
-        }
-        db.execute('COMMIT');
-        if (!incremental) fullRebuilds++;
-        projectedEvents += delta.length;
-        _ready = ready;
-        _validatedInputKey = inputKey;
-        _lastSequences.clear();
-        for (final e in events) {
-          if (e.sequence > (_lastSequences[e.writer] ?? 0)) {
-            _lastSequences[e.writer] = e.sequence;
+      return _admitDelta(
+        delta,
+        orderedEvents: () => events,
+        inputKey: inputKey,
+        record: () {
+          _lastSequences.clear();
+          for (final e in events) {
+            if (e.sequence > (_lastSequences[e.writer] ?? 0)) {
+              _lastSequences[e.writer] = e.sequence;
+            }
           }
-        }
-        _raws
-          ..clear()
-          ..addAll(incoming);
-        _events
-          ..clear()
-          ..addAll({for (final event in events) event.id: event});
-        _rebuildTextRelations();
-        return ready;
-      } catch (_) {
-        if (!db.autocommit) db.execute('ROLLBACK');
-        close();
-        rethrow;
-      }
+          _raws
+            ..clear()
+            ..addAll(incoming);
+          _events
+            ..clear()
+            ..addAll({for (final event in events) event.id: event});
+          _rebuildTextRelations();
+        },
+      );
     });
+  }
+
+  /// Validate an exact monotonic extension of the current validated input,
+  /// for example one delivered peer Task action. Replay, eligibility,
+  /// readiness and fallback checks are exactly those of [validate]; only the
+  /// whole-input identity diff and bookkeeping rebuild are skipped because the
+  /// caller proved the prior input is an exact ID/raw subset of the candidate.
+  /// Null means the precondition does not hold: use [validate] instead.
+  Set<String>? validateMonotonicDelta(
+    List<LogEvent> delta, {
+    required String expectedBaseKey,
+    required String inputKey,
+    required List<LogEvent> Function() orderedEvents,
+  }) {
+    final store = _store;
+    if (store == null ||
+        !_attemptedWarm ||
+        _ready == null ||
+        _validatedInputKey != expectedBaseKey ||
+        delta.isEmpty) {
+      return null;
+    }
+    final ids = <String>{};
+    for (final e in delta) {
+      if (e.canonicalRaw == null ||
+          !ids.add(e.id) ||
+          _raws.containsKey(e.id) ||
+          e.sequence <= (_lastSequences[e.writer] ?? 0)) {
+        return null;
+      }
+    }
+    // Unlike [validate], the candidate cannot replace prior input: it is the
+    // exact committed input plus [delta]. Like [validateAppend], dependency
+    // reads (tag removals, copy seeds, text closures) select from the owned
+    // relation index plus this byte-checked candidate instead of scanning all
+    // canonical rows, so a delivered peer action costs O(delta), not O(history).
+    _textCandidate = List.unmodifiable(delta);
+    try {
+      return store._withCopySeedIndex(
+        () => _admitDelta(
+          delta,
+          orderedEvents: orderedEvents,
+          inputKey: inputKey,
+          record: () {
+            store._canonicalTextInput = null;
+            for (final event in delta) {
+              _raws[event.id] = event.canonicalRaw!;
+              _events[event.id] = event;
+              _textRelations.add(event);
+              if (event.sequence > (_lastSequences[event.writer] ?? 0)) {
+                _lastSequences[event.writer] = event.sequence;
+              }
+            }
+          },
+        ),
+      );
+    } finally {
+      _textCandidate = null;
+    }
+  }
+
+  Set<String> _admitDelta(
+    List<LogEvent> delta, {
+    required List<LogEvent> Function() orderedEvents,
+    required String? inputKey,
+    required void Function() record,
+  }) {
+    final store = _store!, db = store.db;
+    final incremental = _raws.isNotEmpty;
+    db.execute('BEGIN IMMEDIATE');
+    try {
+      final recurringSeeds = _ready == null
+          ? null
+          : store._recurringActionSeeds(delta, _ready!);
+      final priorFullyReady =
+          _ready != null &&
+          _ready!.length == _raws.length &&
+          delta.every((e) => e.sequence > (_lastSequences[e.writer] ?? 0));
+      final baseSettled =
+          priorFullyReady &&
+          (recurringSeeds != null ||
+              store._settledActionTargets(delta, _ready!));
+      final firstActivitySeeds = priorFullyReady && !baseSettled
+          ? store._firstDerivedActionSeeds(delta, _ready!)
+          : null;
+      final settledCandidate = baseSettled || firstActivitySeeds != null;
+      store._replaySemanticEvents(
+        delta,
+        incremental: incremental,
+        settledDelta: settledCandidate,
+      );
+      final settled = _settledActionReadiness(
+        delta,
+        eligible: settledCandidate,
+        priorDerivedSeeds: recurringSeeds ?? const {},
+        firstActivitySeeds: firstActivitySeeds ?? const {},
+      );
+      // Native dependencies may still make a pure-text candidate pending.
+      // Before accepting fallback readiness, restore every skipped global check.
+      if (settledCandidate && settled == null) {
+        store._validateSemanticReferences();
+      }
+      final Set<String> ready;
+      if (settled != null) {
+        settledTextReadinessRuns++;
+        ready = settled;
+      } else {
+        fullReadinessRuns++;
+        ready = Set<String>.unmodifiable(
+          store._semanticReadyIds(orderedEvents()),
+        );
+      }
+      db.execute('COMMIT');
+      if (!incremental) fullRebuilds++;
+      projectedEvents += delta.length;
+      _ready = ready;
+      _validatedInputKey = inputKey;
+      record();
+      return ready;
+    } catch (_) {
+      if (!db.autocommit) db.execute('ROLLBACK');
+      close();
+      rethrow;
+    }
   }
 
   /// Owning-history append fast path. The key identifies the EXACT actual
