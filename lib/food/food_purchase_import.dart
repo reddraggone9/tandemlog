@@ -391,17 +391,16 @@ planFoodPurchaseImport(
           final at = DateTime.tryParse(c.createdAt)?.toUtc();
           return at != null && !at.isBefore(from) && at.isBefore(to);
         }).toList()..sort((a, b) {
-          final time = a.createdAt.compareTo(b.createdAt);
+          final time = DateTime.parse(
+            a.createdAt,
+          ).compareTo(DateTime.parse(b.createdAt));
           return time != 0 ? time : a.id.compareTo(b.id);
         });
     final matched = [for (final c in candidates.take(line.quantity)) c.id];
     claimed.addAll(matched);
     final fresh = [
       for (var i = 0; i < line.quantity - matched.length; i++)
-        const Uuid().v5(
-          foodProductNamespace,
-          'tandemlog:food-container:purchase:v1\n$purchaseId\n$i',
-        ),
+        importedFoodContainerId(purchaseId, i),
     ];
     steps.add(FoodImportPurchase(purchaseId, values));
     for (var i = 0; i < matched.length; i += 100) {

@@ -219,43 +219,27 @@ class FoodStore {
     ];
   }
 
-  Future<List<FoodRecord>> _unifiedCommandLocked(
-    List<_FoodChange> changes,
-    Map<String, dynamic>? provenance,
-  ) async {
-    if (changes.isEmpty) {
-      await _refresh();
-      return [];
-    }
-    // Build against the preparation owner's one fresh observation, preserving
-    // peer-derived previous-edit references and the final commit recheck.
-    final reservation = await unified!.prepareFromFreshInputsInProfileQueue(
-      () => _unifiedBuilders(changes),
-      provenance: provenance,
-    );
-    final batch = List<FoodRecord>.unmodifiable(
-      reservation.records.expand((r) => r.effects).map((e) => e.food!),
-    );
-    lastPreparedRecords = batch;
-    await unified!.commitInProfileQueue();
-    return batch;
-  }
-
   // Empty semantic plans still require the fresh observation, but never reserve
   // an empty action. The sentinel is private to this synchronous callback.
   Future<List<FoodRecord>> _freshCommandLocked(
     List<_FoodChange> Function() plan, {
     Map<String, dynamic>? provenance,
+    bool validateOnly = false,
   }) async {
     try {
-      final reservation = await unified!.prepareFromFreshInputsInProfileQueue(
-        () {
-          final changes = plan();
-          if (changes.isEmpty) throw const _EmptyFoodPlan();
-          return _unifiedBuilders(changes);
-        },
-        provenance: provenance,
-      );
+      List<UnifiedEffectBuilder> build() {
+        final changes = plan();
+        if (changes.isEmpty) throw const _EmptyFoodPlan();
+        return _unifiedBuilders(changes);
+      }
+
+      final reservation = validateOnly
+          ? await unified!.validateFromFreshInputsInProfileQueue(build)
+          : await unified!.prepareFromFreshInputsInProfileQueue(
+              build,
+              provenance: provenance,
+            );
+      if (validateOnly) return const [];
       final batch = List<FoodRecord>.unmodifiable(
         reservation.records.expand((r) => r.effects).map((e) => e.food!),
       );
@@ -263,7 +247,7 @@ class FoodStore {
       await unified!.commitInProfileQueue();
       return batch;
     } on _EmptyFoodPlan {
-      lastPreparedRecords = const [];
+      if (!validateOnly) lastPreparedRecords = const [];
       return const [];
     }
   }
@@ -327,7 +311,7 @@ class FoodStore {
     List<_FoodChange> changes, {
     Map<String, dynamic>? provenance,
   }) async {
-    return _unifiedCommandLocked(changes, provenance);
+    return _freshCommandLocked(() => changes, provenance: provenance);
   }
 
   // Import identity is committed with the actual containers. No private
@@ -631,15 +615,11 @@ class FoodStore {
   Future<FoodPurchaseImportReport> dryRunPurchaseImport(
     FoodPurchaseImportPlan plan,
   ) => _queue(() async {
-    await _refresh();
-    final report = _inspectPurchaseImport(plan);
-    if (report.status == FoodPurchaseImportStatus.ready) {
-      await unified!.validateInProfileQueue(
-        _unifiedBuilders(
-          _purchaseImportChanges(_planPurchaseImport(plan).steps),
-        ),
-      );
-    }
+    late FoodPurchaseImportReport report;
+    await _freshCommandLocked(() {
+      report = _inspectPurchaseImport(plan);
+      return _purchaseImportChanges(_planPurchaseImport(plan).steps);
+    }, validateOnly: true);
     return report;
   });
 

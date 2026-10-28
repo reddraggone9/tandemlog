@@ -13,16 +13,22 @@ FoodAdmission admitFoodRecords(
   final targetSets = {
     for (final r in records) r.id: r.operation.targets.toSet(),
   };
+  final claims = foodReceiptBirthClaims(records.map((r) => r.operation));
   final births = <String, FoodRecord>{};
   for (final record in records) {
     if (record.operation.action != FoodAction.add) continue;
     for (final id in record.operation.targets) {
-      if (births.containsKey(id)) {
+      final previous = births[id];
+      if (previous != null &&
+          !sameFoodReceiptClaim(previous.id, record.id, claims)) {
         throw const FormatException(
           'A physical food container has different creation records.',
         );
       }
-      births[id] = record;
+      if (previous == null ||
+          compareFoodOperations(record.operation, previous.operation) < 0) {
+        births[id] = record;
+      }
     }
     if (births.length > maximumContainers) {
       throw const FormatException('Too many food containers.');
@@ -36,7 +42,7 @@ FoodAdmission admitFoodRecords(
       ...r.operation.observedEdits,
       if (r.operation.retracts != null) r.operation.retracts!,
     };
-    _validateReferences(r, byId, targetSets, births, legacyOwners);
+    _validateReferences(r, byId, targetSets, births, legacyOwners, claims);
     dependencies[r.id] = refs.toList();
   }
   final ordered = records.toList()
@@ -69,6 +75,7 @@ void _validateReferences(
   Map<String, Set<String>> targetSets,
   Map<String, FoodRecord> births,
   Map<String, String> legacyOwners,
+  Map<String, String> claims,
 ) {
   if (r.operation.action == FoodAction.undo) {
     final basis = byId[r.operation.retracts];
@@ -96,7 +103,12 @@ void _validateReferences(
         (basis.operation.action != FoodAction.add ||
             !targetSets[basis.id]!.contains(entry.key) ||
             basis.clock >= r.clock ||
-            births[entry.key]?.id != basis.id)) {
+            (births[entry.key]?.id != basis.id &&
+                !sameFoodReceiptClaim(
+                  births[entry.key]!.id,
+                  basis.id,
+                  claims,
+                )))) {
       throw const FormatException('Food target creation basis is invalid.');
     }
   }
@@ -136,6 +148,9 @@ class _FoodAdmissionIndex {
           if (record.operation.action == FoodAction.undo)
             record.operation.retracts!,
       }),
+      receiptClaims = Map.unmodifiable(
+        foodReceiptBirthClaims(records.map((r) => r.operation)),
+      ),
       productRecords = List.unmodifiable(
         records.where((r) => r.operation.action.productLevel),
       ),
@@ -150,6 +165,7 @@ class _FoodAdmissionIndex {
     _FoodAdmissionIndex context,
     this.retracted,
     this.productRecords,
+    this.receiptClaims,
   ) : legacyOwners = context.legacyOwners,
       maximumContainers = context.maximumContainers,
       byId = Map.unmodifiable(records),
@@ -161,6 +177,7 @@ class _FoodAdmissionIndex {
   final Map<String, Set<String>> targets;
   final Map<String, List<FoodRecord>> byTarget;
   final Set<String> retracted;
+  final Map<String, String> receiptClaims;
 
   /// Product-level records, for refolding the catalog after product changes.
   final List<FoodRecord> productRecords;
@@ -210,6 +227,10 @@ FoodAdmission? appendReadyFoodRecords(
   final births = Map<String, FoodRecord>.of(base.births);
   final byTarget = Map<String, List<FoodRecord>>.of(index.byTarget);
   final affected = <String>{};
+  final claims = {
+    ...index.receiptClaims,
+    ...foodReceiptBirthClaims(delta.map((r) => r.operation)),
+  };
   for (final record in delta) {
     record.operation.validate();
     if (byId.containsKey(record.id)) {
@@ -221,9 +242,12 @@ FoodAdmission? appendReadyFoodRecords(
     if (record.operation.action == FoodAction.add) {
       for (final target in record.operation.targets) {
         if (births.containsKey(target)) {
-          throw const FormatException(
-            'A physical food container has different creation records.',
-          );
+          if (!sameFoodReceiptClaim(births[target]!.id, record.id, claims)) {
+            throw const FormatException(
+              'A physical food container has different creation records.',
+            );
+          }
+          return null; // Full admission retains all receipt birth bases.
         }
         births[target] = record;
       }
@@ -239,7 +263,7 @@ FoodAdmission? appendReadyFoodRecords(
       return clock != 0 ? clock : a.id.compareTo(b.id);
     });
   for (final r in ordered) {
-    _validateReferences(r, byId, targets, births, legacyOwners);
+    _validateReferences(r, byId, targets, births, legacyOwners, claims);
     final refs = {
       ...r.createdWith.values,
       ...r.operation.observedDeletes,
@@ -281,8 +305,9 @@ FoodAdmission? appendReadyFoodRecords(
           ...index.productRecords,
           ...ordered.where((r) => r.operation.action.productLevel),
         ]);
-  // A product-level change refolds the (small) product catalog and re-resolves
-  // every container's product; container-only changes reuse both.
+  // A product-level change filters/sorts all retained product history, rebuilds
+  // the full catalog and re-resolves every container; container-only changes
+  // reuse the catalog. This is not per-product incremental refolding.
   final catalog = !productChange
       ? base.state.catalog
       : FoodCatalog.build(
@@ -296,6 +321,7 @@ FoodAdmission? appendReadyFoodRecords(
     history.values,
     legacyOwners: legacyOwners,
     catalog: catalog,
+    receiptClaims: claims,
   );
   final containers = productChange
       ? [
@@ -320,6 +346,7 @@ FoodAdmission? appendReadyFoodRecords(
       index,
       retracted,
       productRecords,
+      Map.unmodifiable(claims),
     ),
   );
 }

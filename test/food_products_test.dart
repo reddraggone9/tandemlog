@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:tandemlog/domain/event.dart';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -495,6 +498,212 @@ void main() {
     );
     expect(records().length, before);
   });
+
+  test('mixed-currency typical price uses only newest currency', () {
+    FoodPurchase purchase(int day, int amount, String currency) => FoodPurchase(
+      id: '$day',
+      product: 'milk',
+      date: '2026-10-${day.toString().padLeft(2, '0')}',
+      store: '',
+      amount: amount,
+      currency: currency,
+      quantity: 1,
+    );
+    FoodProductSummary summary(List<FoodPurchase> purchases) =>
+        FoodProductSummary(
+          id: 'milk',
+          name: 'Milk',
+          brand: '',
+          size: '',
+          links: [],
+          minimum: null,
+          onHand: 0,
+          containers: 0,
+          purchases: purchases,
+        );
+    final purchases = [
+      purchase(28, 10000, 'EUR'),
+      purchase(27, 100, 'USD'),
+      purchase(26, 200, 'USD'),
+    ];
+    expect(
+      summary(purchases).typicalUnitCost(DateTime.utc(2026, 10, 28)),
+      isNull,
+    );
+    expect(
+      summary([
+        ...purchases,
+        purchase(25, 30000, 'EUR'),
+      ]).typicalUnitCost(DateTime.utc(2026, 10, 28)),
+      20000,
+    );
+  });
+
+  test('receipt matching uses UTC civil-day inclusive boundaries', () {
+    final times = [
+      '2026-10-26T23:59:59Z',
+      '2026-10-27T00:00:00Z',
+      '2026-11-11T23:59:59Z',
+      '2026-11-12T00:00:00Z',
+    ];
+    final state = projectFood([
+      for (var i = 0; i < times.length; i++)
+        FoodOperation(
+          id: '$installation:${i + 1}',
+          order: i + 1,
+          action: FoodAction.add,
+          targets: [
+            '00000000-0000-4000-8000-${(i + 1).toString().padLeft(12, '0')}',
+          ],
+          details: const FoodDetails(name: 'Milk'),
+          createdAt: times[i],
+        ),
+    ]);
+    final receipt = FoodPurchaseImportPlan(
+      space: food.space,
+      importId: '11111111-1111-4111-8111-111111111111',
+      sourceSha256: 'a' * 64,
+      lines: [
+        FoodPurchaseLine(
+          sourceKind: 'ynab',
+          sourceKey: 'utc',
+          date: '2026-10-28',
+          store: '',
+          amount: 100,
+          quantity: 4,
+          name: 'Milk',
+        ),
+      ],
+    );
+    expect(planFoodPurchaseImport(state, receipt).report.lines.single.matched, [
+      state.containers[1].id,
+      state.containers[2].id,
+    ]);
+  });
+
+  test(
+    'frozen concurrent receipt replay preserves original birth references',
+    () async {
+      final file = File(
+        'test/fixtures/food-products/concurrent-receipt.operations',
+      );
+      final bytes = await file.readAsBytes();
+      expect(
+        sha256.convert(bytes).toString(),
+        '9e66d5611bfd905e7b6f8f9cbdfe8ea6718098ca127efa509ef7f9d0aa438cff',
+      );
+      final fixture = const LineSplitter()
+          .convert(utf8.decode(bytes))
+          .map(FoodRecord.decode)
+          .toList();
+      final full = admitFoodRecords(fixture);
+      expect(full.readyIds, hasLength(6));
+      expect(full.state.containers, hasLength(1));
+      expect(full.state.containers.single.details.location, 'Fridge');
+      expect(full.births.values.single.id, fixture[1].id);
+      for (final input in [
+        fixture,
+        fixture.reversed.toList(),
+        [
+          fixture[3],
+          fixture[1],
+          fixture[5],
+          fixture[0],
+          fixture[4],
+          fixture[2],
+        ],
+      ]) {
+        expect(
+          admitFoodRecords(
+            input,
+          ).state.containers.map((c) => c.toJson()).toList(),
+          full.state.containers.map((c) => c.toJson()).toList(),
+        );
+      }
+      final first = admitFoodRecords(fixture.take(3).toList());
+      expect(
+        appendReadyFoodRecords(first, fixture.skip(3).toList()),
+        isNull,
+        reason: 'A second receipt birth requires full claim validation.',
+      );
+      FoodRecord altered(FoodRecord original, FoodOperation operation) =>
+          FoodRecord(
+            space: original.space,
+            writer: original.writer,
+            sequence: original.sequence,
+            clock: original.clock,
+            previousHash: original.previousHash,
+            createdWith: original.createdWith,
+            operation: operation,
+          );
+      // A linked arbitrary UUID is not receipt duplicate-claim authority.
+      final arbitrary = '00000000-0000-4000-8000-000000000099';
+      final adds = [fixture[1], fixture[4]]
+          .map(
+            (r) => altered(
+              r,
+              FoodOperation.fromJson({
+                ...r.operation.toJson(),
+                'targets': [arbitrary],
+              }, unified: true),
+            ),
+          )
+          .toList();
+      expect(
+        () => admitFoodRecords([fixture[0], fixture[3], ...adds]),
+        throwsFormatException,
+      );
+      // Even valid deterministic IDs cannot claim different source values.
+      final changed = altered(
+        fixture[3],
+        FoodOperation.fromJson({
+          ...fixture[3].operation.toJson(),
+          'purchase': {...fixture[3].operation.purchase!, 'amount': 999},
+        }, unified: true),
+      );
+      expect(
+        () => admitFoodRecords([fixture[0], fixture[1], changed, fixture[4]]),
+        throwsFormatException,
+      );
+      // Ordinary original births still cannot be duplicated, even byte-equivalent.
+      final ordinary = [fixture[1], fixture[4]]
+          .map(
+            (r) => altered(
+              r,
+              FoodOperation.fromJson({...r.operation.toJson()}..remove('link')),
+            ),
+          )
+          .toList();
+      expect(() => admitFoodRecords(ordinary), throwsFormatException);
+      final unit = fixture[1].operation.targets.single;
+      final undo = FoodRecord(
+        space: fixture[0].space,
+        writer: fixture[0].writer,
+        sequence: 4,
+        clock: EventClock(BigInt.from(10)),
+        previousHash: fixture[2].hash,
+        createdWith: {unit: fixture[1].id},
+        operation: FoodOperation(
+          id: '${fixture[0].writer}:4',
+          order: 10,
+          action: FoodAction.undo,
+          targets: [unit],
+          retracts: fixture[1].id,
+        ),
+      );
+      // Undo of one claim must not retract the other writer's contribution.
+      expect(
+        admitFoodRecords([
+          fixture[0],
+          fixture[1],
+          fixture[3],
+          fixture[4],
+          undo,
+        ]).state.active,
+        hasLength(1),
+      );
+    },
+  );
 
   test('every new family round-trips through its exact bytes', () async {
     await food.add(const FoodDetails(name: 'Milk', expiry: '2026-11-01'), 1);

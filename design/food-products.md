@@ -130,8 +130,8 @@ New and revised families (module `food`):
 - `product.merge` r1: `targets` = [source], `into` = target product. An alias;
   it names no containers or purchases.
 - `purchase.record` r1: `targets` = [purchase], `purchase` = product, date (civil
-  YYYY-MM-DD), store, amount (integer minor units), currency (ISO 4217; the UI
-  shows USD), quantity (1–1000), optional source `{kind, key}`.
+  YYYY-MM-DD), store, amount (integer minor units), currency (three uppercase letters; not ISO-registry validated;
+  amounts use hundredths of the displayed unit, with USD shown as $), quantity (1–1000), optional source `{kind, key}`.
 - `purchase.edit` r1: per-field changes, including `voided` for a wrong line.
 - `container.add` r2: r1 plus an explicit `link` (product, optional purchase).
 - `container.link` r1: `targets` = containers, `fields` ⊆ product/purchase, `link`
@@ -173,7 +173,9 @@ before its first product record (only revision-1 Adds).
 Money lives only on Purchases. A product shows, from its non-voided purchases
 (merged products included):
 - **Last:** unit cost of the newest purchase, with its date and store.
-- **Typical:** decision 10.
+- **Typical:** decision 10, restricted to the currency of the newest purchase.
+  At least two purchases in that currency are required; no exchange conversion
+  or cross-currency median is performed.
 
 Unit cost = amount / quantity. A container's cost is its own Purchase's unit cost.
 
@@ -188,13 +190,41 @@ dry-run, then committed as one action with
 - For each line the import links up to `quantity` **recent hand entries** of the
   same product (after merges): containers with no purchase link (an imported
   container always has one), created from the day before the purchase date
-  through 14 days after it, oldest first, deleted ones included (an eaten hand
+  through 14 days after it, using **UTC civil-day boundaries**, oldest UTC
+  creation instant first (container UUID breaks equal-instant ties), deleted ones included (an eaten hand
   entry is still that receipt's container). The window is a method choice; Lee
   can change it. It creates the remaining units as new containers
   in the Inbox, linked to the product and the purchase.
 - The dry run reports per line: product, purchase present or new, containers
   matched and containers to create. A purchase already present with the same
-  values is skipped; different values for the same source fail the dry run.
+  original receipt values is skipped, even after a product rename/merge or
+  purchase edit/Undo; different immutable purchase values for the same source
+  fail the dry run. This is historical acceptance, not active-inventory presence.
+  Undo followed by retry is deliberately a no-op: it does not recreate withdrawn
+  containers or restore purchases. A corrected receipt requires a new source line
+  identity rather than silently undoing the user's Undo. An import namespace is
+  bound to its original canonical plan hash and source hash, so changing its
+  description or other plan bytes is refused before append.
+- Add, product Save, receipt commit and read-only receipt validation do their
+  semantic planning in the unified owner's fresh-input callback, after admitting
+  arriving peer bytes; the subsequent commit retains its final byte recheck. A
+  captured product root that has disappeared/merged refuses Save with a
+  recoverable error and retains the typed draft, rather than broadening the
+  original edit scope or acknowledging a no-op.
+- Concurrent offline receipt imports are supported, not gated by a designated
+  importer assumption. A receipt-created container uses a source-derived purchase
+  UUID and unit ordinal. Duplicate births are admitted **only** when each is a
+  validated receipt claim: its own earlier same-writer complete purchase record
+  has the same source-derived purchase ID and immutable receipt values, its
+  product link agrees with that original record, its unit IDs lie within the
+  receipt quantity, and it has unmodified Inbox creation defaults. Matching
+  product roots and creation instants may differ across offline catalogs.
+  Canonical operation order picks one original creation as the stable seed;
+  every verified original birth remains valid as a later mutation's basis.
+  Undo retracts only its own claim; another claim or independent mutation keeps
+  the container. Ordinary/different-value/arbitrary-ID births still fail closed.
+  No canonical bytes are rewritten. Frozen concurrent-claim replay and rejection
+  cases live in `test/fixtures/food-products/` and `food_products_test.dart`.
 
 ## 6. Method: Food UX
 
@@ -254,11 +284,16 @@ responsive editor pane.
 - No idle or background cost: no timers, notifications or jobs. Running low and
   derived prices are computed in the admission that already runs on startup,
   poll and save.
-- Incremental admission keeps per-product and per-purchase operation histories
-  (the existing per-target index), so a save re-folds only the products and
-  purchases it touches. Merges re-resolve the (small) alias set. Per-product
-  views (row overlay, on-hand counts, Running low) are one pass over the
-  projected containers, like the existing per-save container sort.
+- Incremental admission keeps per-target container histories. Container-only
+  saves refold affected container histories and reuse the catalog. A product or
+  purchase change (including Undo) filters/sorts **all retained product-level
+  history** and rebuilds the full catalog, then re-resolves every container's
+  product. This is O(total product history), not per-product refolding. Receipt
+  retry validation also reads original purchase records from admitted canonical
+  history, including retracted ones. Duplicate receipt births fall back to full
+  admission to validate all original claims. Derived summaries/Running low scan
+  projected containers. Qualification must measure these actual full-history
+  paths and growth; the existing budgets are unchanged.
 - While nothing product-level exists (every product implicit, as in all history
   before this release), Add matching is one pass over cached description keys
   and grouping uses descriptions, so no product IDs are derived; the existing

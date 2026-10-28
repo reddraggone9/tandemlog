@@ -48,6 +48,79 @@ String importedFoodPurchaseId(String kind, String key) => const Uuid().v5(
   'tandemlog:food-purchase:v1\n$kind\n$key',
 );
 
+/// Container identity for one unit supplied by a receipt line. The ordinal is
+/// independent of writer, batching, clock and delivery order.
+String importedFoodContainerId(String purchase, int ordinal) => const Uuid().v5(
+  foodProductNamespace,
+  'tandemlog:food-container:purchase:v1\n$purchase\n$ordinal',
+);
+
+/// Narrow duplicate-birth authority: each claim must have its own earlier,
+/// complete same-writer source purchase, deterministic unit IDs within quantity,
+/// and untouched Inbox defaults. Ordinary births never acquire this authority.
+/// The signature binds immutable purchase values, but not the locally matched
+/// product (which can differ legitimately across offline catalogs).
+Map<String, String> foodReceiptBirthClaims(Iterable<FoodOperation> operations) {
+  final ops = operations.toList();
+  final purchases = <String, List<FoodOperation>>{};
+  for (final op in ops) {
+    if (op.action != FoodAction.purchase || op.purchase?['source'] == null) {
+      continue;
+    }
+    final source = op.purchase!['source'] as Map;
+    if (op.targets.single !=
+        importedFoodPurchaseId(
+          source['kind'] as String,
+          source['key'] as String,
+        )) {
+      continue;
+    }
+    (purchases['${op.id.split(':').first}:${op.targets.single}'] ??= []).add(
+      op,
+    );
+  }
+  final result = <String, String>{};
+  final unitIds = <String, Set<String>>{};
+  for (final op in ops) {
+    if (op.action != FoodAction.add ||
+        op.link?['purchase'] == null ||
+        op.details!.expiry != null ||
+        op.details!.location.isNotEmpty ||
+        op.details!.retention.isNotEmpty ||
+        op.details!.estimated != false ||
+        canonicalDataJson(op.contents?.toJson()) !=
+            canonicalDataJson(const Contents.fraction(1, 1).toJson())) {
+      continue;
+    }
+    final purchase = op.link!['purchase'] as String;
+    final evidence = purchases['${op.id.split(':').first}:$purchase'];
+    for (final original in evidence ?? <FoodOperation>[]) {
+      if (original.order >= op.order ||
+          original.purchase!['product'] != op.link!['product']) {
+        continue;
+      }
+      final values = Map<String, Object?>.of(original.purchase!)
+        ..remove('product');
+      final signature = canonicalDataJson({
+        'purchase': purchase,
+        'values': values,
+      });
+      final ids = unitIds.putIfAbsent(
+        signature,
+        () => {
+          for (var i = 0; i < (original.purchase!['quantity'] as int); i++)
+            importedFoodContainerId(purchase, i),
+        },
+      );
+      if (op.targets.every(ids.contains)) result[op.id] = signature;
+    }
+  }
+  return result;
+}
+
+bool sameFoodReceiptClaim(String a, String b, Map<String, String> claims) =>
+    claims[a] != null && claims[a] == claims[b];
+
 Never _invalid(String what) => throw FormatException('Invalid food $what.');
 
 void _text(Object? value, int limit, {bool required = false}) {
@@ -368,8 +441,8 @@ class FoodProductSummary {
   bool get runningLow => minimum != null && onHand < minimum!;
   FoodPurchase? get last => purchases.firstOrNull;
 
-  /// Median unit cost of the newest 5 purchases within 12 months of the newest,
-  /// from 2 purchases (decision 10).
+  /// Median of up to 5 purchases in the newest purchase's currency, within
+  /// 12 months of today; at least 2 same-currency purchases (decision 10).
   double? typicalUnitCost(DateTime today) {
     final cutoff = DateTime.utc(today.year - 1, today.month, today.day);
     final recent = purchases

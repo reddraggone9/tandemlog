@@ -817,6 +817,7 @@ FoodState projectFood(
   Iterable<FoodOperation> delivery, {
   Map<String, String> legacyOwners = const {},
   FoodCatalog? catalog,
+  Map<String, String>? receiptClaims,
 }) {
   final indexed = <String, FoodOperation>{};
   for (final op in delivery) {
@@ -834,6 +835,7 @@ FoodState projectFood(
     indexed[op.id] = op;
   }
   final events = indexed.values.toList()..sort(compareFoodOperations);
+  final claims = receiptClaims ?? foodReceiptBirthClaims(events);
   final targetSets = {for (final op in events) op.id: op.targets.toSet()};
   // Admission must not depend on whether a target's creation has arrived.
   for (final op in events) {
@@ -866,10 +868,13 @@ FoodState projectFood(
   final result = <FoodContainer>[];
   final creations = <String, FoodOperation>{};
   final histories = <String, List<FoodOperation>>{};
+  final creationIds = <String, Set<String>>{};
   for (final op in events.where((e) => e.action == FoodAction.add)) {
     for (final id in op.targets) {
       final prior = creations[id];
+      (creationIds[id] ??= {}).add(op.id);
       if (prior != null &&
+          !sameFoodReceiptClaim(prior.id, op.id, claims) &&
           (prior.details!.groupKey != op.details!.groupKey ||
               canonicalDataJson(prior.link) != canonicalDataJson(op.link) ||
               prior.createdAt != op.createdAt ||
@@ -911,7 +916,10 @@ FoodState projectFood(
     // fabricated removal token. Keep its canonical seed in the dependency
     // index: any independent, non-retracted mutation protects this identity,
     // including work that arrives after the Undo.
-    if (retracted.contains(seed.id) && !histories.containsKey(id)) continue;
+    if (creationIds[id]!.every(retracted.contains) &&
+        !histories.containsKey(id)) {
+      continue;
+    }
     var details = seed.details!,
         contents = seed.contents ?? const Contents.fraction(1, 1),
         deletedOrder = 0;

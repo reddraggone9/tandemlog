@@ -317,7 +317,7 @@
       "interaction": "Food add one/three physical containers (joins a matching product)",
       "productionAPI": "FoodStore.add -> planFoodAdd",
       "actualUIPath": "main.dart:1078; food_editor.dart Save",
-      "boundary": "food.add.1/3 time the implicit-product path (cached description scan, no product records). Adds that create or link an explicit product are untimed until food.product.* cases exist."
+      "boundary": "food.add.1/3 time the implicit-product path (cached description scan, no product records). Explicit product matching/linking is covered by food.product.addWithProduct and .undo; see the food-products family and its stated native/UI gaps."
     },
     {
       "interaction": "Food editor open,cancel",
@@ -329,7 +329,7 @@
       "interaction": "Food descriptive edit single/bulk (Location and Retention reason per container; Food name, Brand and Container size edit the product, merging coincident descriptions)",
       "productionAPI": "changeDetails(ids,details,fields,products: FoodProductChange) -> planFoodProductChanges",
       "actualUIPath": "main.dart:1092; food_editor.dart bulk Save",
-      "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending. Product-level name/brand/size/link/minimum edits and merges (food_products_test, food_products_ui_test) have no dedicated timing label yet: set budgets and register food.product.* cases before the products RC."
+      "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending. Product-level name/brand/size/link/minimum edits and merges are measured by food.product.edit, bulkEdit, merge and their .undo labels with prospective unchanged 15ms median/20ms maximum limits; see food-products family for correctness and native/UI gaps."
     },
     {
       "interaction": "Food delete, restore,single/group/bulk selection",
@@ -455,7 +455,7 @@
       "interaction": "Food receipt purchase import (Vex YNAB workflow; links recent hand entries, creates Inbox containers)",
       "productionAPI": "FoodStore.dryRunPurchaseImport/commitPurchaseImport -> planFoodPurchaseImport",
       "actualUIPath": "No app UI caller; private tooling only",
-      "boundary": "Correctness in food_products_test; no timing label. Background-free, user-invoked through tooling."
+      "boundary": "food.product.import.dryRun/commit/retry/undo measure the two-line private-tooling path, with correctness/replay assertions and unchanged prospective 15ms median/20ms maximum limits. Background-free; no app UI caller. Maximum-line and native/UI gaps remain in the food-products family."
     },
     {
       "interaction": "Food Running low group (products below Keep at least)",

@@ -53,6 +53,7 @@ Future<List<_Edit>> _pump(
   List<(FoodDetails, int)>? adds,
   bool dark = true,
   double textScale = 1,
+  FoodState Function()? saveState,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
@@ -73,11 +74,20 @@ Future<List<_Edit>> _pump(
         onAdd: (details, count) => adds?.add((details, count)),
         onRemove: (_) {},
         onRestore: (_) {},
-        onDetails: (items, _, fields, products) => edits.add((
-          ids: items.map((e) => e.id).toList(),
-          fields: fields,
-          products: products,
-        )),
+        onDetails: (items, _, fields, products) {
+          if (saveState != null) {
+            planFoodProductChanges(
+              saveState(),
+              products.roots,
+              products.changes,
+            );
+          }
+          edits.add((
+            ids: items.map((e) => e.id).toList(),
+            fields: fields,
+            products: products,
+          ));
+        },
       ),
     ),
   );
@@ -251,6 +261,68 @@ void registerFoodProductsUiTests({
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('merged-open-editor refusal retains typed draft and controls', (
+    tester,
+  ) async {
+    final beans = implicitFoodProductId(const FoodDetails(name: 'Beans'));
+    final rice = implicitFoodProductId(const FoodDetails(name: 'Rice'));
+    final merged = projectFood([
+      ..._events,
+      FoodOperation(
+        id: '$_writer:5',
+        order: 5,
+        action: FoodAction.product,
+        targets: [rice],
+        product: const {'name': 'Rice', 'brand': '', 'size': ''},
+      ),
+      FoodOperation(
+        id: '$_writer:6',
+        order: 6,
+        action: FoodAction.merge,
+        targets: [beans],
+        into: rice,
+      ),
+    ]);
+    final edits = await _pump(
+      tester,
+      size: const Size(1400, 900),
+      saveState: () => merged,
+    );
+    await tester.tap(find.text('Beans'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Food name'),
+      'Typed beans',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('food-keep-at-least')),
+      '3',
+    );
+    await tester.tap(find.byKey(const ValueKey('food-save-action')));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('This product changed or merged while editing'),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<TextField>(find.widgetWithText(TextField, 'Food name'))
+          .controller!
+          .text,
+      'Typed beans',
+    );
+    expect(
+      tester
+          .widget<TextField>(find.byKey(const ValueKey('food-keep-at-least')))
+          .controller!
+          .text,
+      '3',
+    );
+    expect(find.byKey(const ValueKey('food-save-action')), findsOneWidget);
+    expect(edits, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('renaming to another product says it merges', (tester) async {
     await _pump(tester, size: const Size(1400, 900));

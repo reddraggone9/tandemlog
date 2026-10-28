@@ -1991,6 +1991,12 @@ final class UnifiedHistory {
     reserve: true,
   );
 
+  /// Read-only semantic validation using the same fresh observation boundary.
+  Future<UnifiedReservation> validateFromFreshInputsInProfileQueue(
+    List<UnifiedEffectBuilder> Function() build,
+  ) =>
+      _prepareInProfileQueue(const [], buildFreshInputs: build, reserve: false);
+
   Future<UnifiedReservation> validateInProfileQueue(
     List<UnifiedEffectBuilder> builders,
   ) => _prepareInProfileQueue(builders, reserve: false);
