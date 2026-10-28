@@ -4,6 +4,8 @@ CI uses standard GitHub-hosted Ubuntu 24.04 and Windows 2022 runners, pinned off
 
 Every executable-change main push and every pull request runs formatting, analysis, the complete domain/storage integrity/convergence/recovery suite and native Linux integration and release startup smoke checks (fresh/warm SQLite), plus Linux release, native Windows release and Android debug builds. Windows also runs domain/storage tests. Fast Linux checks start immediately; platform builds run independently. No integrity tests are removed for previews.
 
+The native Linux workflow suite (`integration_test/task_flow_test.dart -d linux`) runs as four parallel `linux-workflows` shards instead of at the end of the `linux` job, which had made Linux the ~55-minute long pole. Sharding only parallelizes: package:test gives each shard a contiguous, disjoint slice of the same declared case list, and the `linux-workflows-union` job ([`tool/verify_test_shards.py`](../tool/verify_test_shards.py)) fails unless every shard finished green, its size matches that slice, no case ran twice, the slices are in declaration order and every registration site in the suite's `main()` ran. Adding cases needs no change; changing the shard count means editing the matrix, `--total-shards` and the union file list together (a tooling test checks they agree). The cases share no `setUpAll` state and each opens its own synthetic profile, so a shard's cases do not depend on cases in earlier slices.
+
 The separate [release performance gate](performance-gate.md) measures the
 versioned synthetic Task/Food action inventory in AOT mode, including matched
 history sizes. Its initial calibrated limits are active and pinned by SHA;
