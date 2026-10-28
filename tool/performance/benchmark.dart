@@ -48,15 +48,20 @@ String logicalFood(FoodStore food) =>
     jsonEncode(food.state.containers.map((c) => c.toJson()).toList());
 
 // Include catalog-only changes and voided purchases, not just container rows.
-String productFoodState(FoodStore food) => canonicalDataJson({
-  'containers': food.state.containers.map((c) => c.toJson()).toList(),
-  'products': food.state.catalog.products,
-  'aliases': food.state.catalog.aliases,
-  'purchases': {
-    for (final p in food.state.catalog.purchases.values)
-      p.id: {...p.toJson(), 'voided': p.voided},
-  },
-});
+// Container rows keep plain JSON: ordering keys such as deletedOrder may exceed
+// the canonical encoder's exact-integer range.
+String productFoodState(FoodStore food) {
+  final catalog = food.state.catalog;
+  final products = canonicalDataJson({
+    'products': catalog.products,
+    'aliases': catalog.aliases,
+    'purchases': {
+      for (final p in catalog.purchases.values)
+        p.id: {...p.toJson(), 'voided': p.voided},
+    },
+  });
+  return '${logicalFood(food)}\n$products';
+}
 
 class Audit {
   Audit(this.config, this.family);
