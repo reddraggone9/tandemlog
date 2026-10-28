@@ -11,6 +11,7 @@ import '../presentation/sticky_task_group.dart';
 import '../presentation/task_toolbar.dart';
 import '../presentation/section_content.dart';
 import '../presentation/list_row_surface.dart';
+import '../presentation/list_selection.dart';
 import '../presentation/task_entry_area.dart';
 import '../presentation/toolbar_action.dart';
 import '../presentation/editor_surface.dart';
@@ -95,18 +96,15 @@ class _FoodGrouping {
           ? state.view(FoodView.inbox, brands: brands, locations: locations)
           : <FoodGroup>[],
     );
-    active = List.unmodifiable([
-      for (final group in [...inbox, ...matches])
-        for (final item in group.containers)
-          if (!item.deleted) item,
-    ]);
-    visibleIds = Set.unmodifiable(active.map((item) => item.id));
     groups = querying
         ? List.unmodifiable(matches.where((g) => !g.containers.first.deleted))
         : matches;
     deletedGroups = querying
         ? List.unmodifiable(matches.where((g) => g.containers.first.deleted))
         : const [];
+    rows = List.unmodifiable([...inbox, ...groups, ...deletedGroups]);
+    shown = List.unmodifiable([for (final g in rows) ...g.containers]);
+    visibleIds = Set.unmodifiable(shown.map((item) => item.id));
   }
 
   final FoodState state;
@@ -115,7 +113,11 @@ class _FoodGrouping {
   final String query;
   final Set<String> reasons, brands, locations;
   late final List<FoodGroup> matches, inbox, groups, deletedGroups;
-  late final List<FoodContainer> active;
+
+  /// Visible rows in display order, including Deleted rows; selection ranges
+  /// and selectable IDs follow exactly what is shown.
+  late final List<FoodGroup> rows;
+  late final List<FoodContainer> shown;
   late final Set<String> visibleIds;
 
   bool accepts(
@@ -142,11 +144,68 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Set<String> reasons = {}, brands = {}, locations = {};
   final bulkSelected = <String>{};
   bool selecting = false;
+  String? _selectionAnchor;
+  // The group open in a single-group editor; explicit selection starts with it.
+  FoodGroup? _editingGroup;
   Object? _focusedGroup;
 
   void _clearBulkSelection() {
     selecting = false;
     bulkSelected.clear();
+    _selectionAnchor = null;
+  }
+
+  static String _rowKey(FoodGroup group) =>
+      '${group.containers.first.deleted ? 'deleted' : 'active'}:'
+      '${group.details.displayGroupKey}';
+
+  /// Applies the shared Tasks/Food selection rules to the visible rows.
+  /// Starting explicit selection while the wide pane edits one group selects
+  /// that group too, as on Tasks, after the usual unsaved-draft decision.
+  Future<void> _select(
+    FoodGroup group,
+    SelectionGesture gesture,
+    Object? workspace,
+  ) async {
+    bool usable() =>
+        !(widget.hasPendingSave?.call() ?? widget.savePending) &&
+        _canUseGroupMenu(group, workspace);
+    if (!usable()) return;
+    final rows = {for (final row in _grouping.rows) _rowKey(row): row};
+    var selected = Set<String>.of(bulkSelected);
+    var anchor = _selectionAnchor;
+    final editing = _editingGroup == null
+        ? null
+        : rows[_rowKey(_editingGroup!)];
+    if (!selecting && editing != null) {
+      selected = editing.containers.map((e) => e.id).toSet();
+      anchor = _rowKey(editing);
+    }
+    final result = nextListSelection<String>(
+      selected: selected,
+      selecting: selecting,
+      anchor: anchor,
+      target: _rowKey(group),
+      order: rows.keys.toList(),
+      members: (key) => rows[key]?.containers.map((e) => e.id) ?? const [],
+      gesture: gesture,
+    );
+    if (result.selecting && _editorBuilder != null && !_editorModal) {
+      if (!await requestCloseEditor()) return;
+      await editorDone;
+      if (!mounted || !usable()) return;
+    }
+    setState(() {
+      bulkSelected
+        ..clear()
+        ..addAll(
+          result.selecting
+              ? result.selected.intersection(_grouping.visibleIds)
+              : const <String>{},
+        );
+      selecting = bulkSelected.isNotEmpty;
+      _selectionAnchor = selecting ? result.anchor : null;
+    });
   }
 
   @override
@@ -186,7 +245,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   List<FoodGroup> _matches() => _grouping.matches;
   List<FoodGroup> _inbox() => _grouping.inbox;
-  List<FoodContainer> _visibleActive() => _grouping.active;
+  List<FoodContainer> _shown() => _grouping.shown;
   Widget Function(bool panel)? _editorBuilder;
   bool _editorModal = false;
   int _editorRequest = 0;
@@ -348,7 +407,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                                 : () => _edit(
                                                     bulkTargets: [
                                                       for (final item
-                                                          in _visibleActive())
+                                                          in _shown())
                                                         if (bulkSelected
                                                             .contains(item.id))
                                                           item,
@@ -576,7 +635,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         _clearBulkSelection();
       }),
       itemBuilder: (_) {
-        final observed = _visibleActive().map((e) => e.id).toSet();
+        final observed = _shown().map((e) => e.id).toSet();
         return [
           for (final mode in [
             FoodView.inventory,
@@ -616,15 +675,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 !(widget.hasPendingSave?.call() ?? widget.savePending),
             onTap: () => setState(() {
               selecting = true;
+              _selectionAnchor = null;
               bulkSelected
                 ..clear()
                 ..addAll(
-                  observed.intersection(
-                    _visibleActive().map((e) => e.id).toSet(),
-                  ),
+                  observed.intersection(_shown().map((e) => e.id).toSet()),
                 );
             }),
-            child: const Text('Select matching active containers'),
+            child: const Text('Select matching containers'),
           ),
         ];
       },
@@ -782,12 +840,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       child: const Text('Add another…'),
     ),
     // Keyboard and assistive-technology route to the long-press selection.
-    if (!group.containers.first.deleted)
-      PopupMenuItem<String>(
-        enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
-        value: 'select',
-        child: Text(_groupSelected(group) ? 'Deselect' : 'Select'),
-      ),
+    PopupMenuItem<String>(
+      enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
+      value: 'select',
+      child: Text(_groupSelected(group) ? 'Deselect' : 'Select'),
+    ),
     if (group.containers.first.deleted) ...[
       PopupMenuItem<String>(
         value: 'restore',
@@ -841,35 +898,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final workspace = widget.workspaceIdentity;
     final addCommand = widget.onAdd;
     final pending = widget.hasPendingSave?.call() ?? widget.savePending;
-    void toggleSelection({bool enter = false}) {
-      if (deleted ||
-          (widget.hasPendingSave?.call() ?? widget.savePending) ||
-          !_canUseGroupMenu(group, workspace)) {
-        return;
-      }
-      setState(() {
-        if (enter) selecting = true;
-        final ids = group.containers.map((e) => e.id);
-        if (!enter && ids.every(bulkSelected.contains)) {
-          bulkSelected.removeAll(ids);
-        } else {
-          bulkSelected.addAll(ids);
-        }
-      });
-    }
-
-    // Like Tasks: start selection with this group, or toggle it once selecting.
-    void selectGroup() =>
-        selecting ? toggleSelection() : toggleSelection(enter: true);
+    void select(SelectionGesture gesture) =>
+        unawaited(_select(group, gesture, workspace));
 
     void editGroup() {
       if (pending || !_canUseGroupMenu(group, workspace)) return;
-      if (!deleted &&
-          (HardwareKeyboard.instance.isControlPressed ||
-              HardwareKeyboard.instance.isMetaPressed)) {
-        selectGroup();
-      } else if (selecting && !deleted) {
-        toggleSelection();
+      final gesture = pointerSelectionGesture();
+      if (gesture != SelectionGesture.plain || selecting) {
+        select(gesture);
       } else {
         _edit(group: group, detailsCommand: detailsCommand);
       }
@@ -894,7 +930,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           !(widget.hasPendingSave?.call() ?? widget.savePending)) {
         _edit(template: group.details, addCommand: addCommand);
       }
-      if (action == 'select' && !deleted) selectGroup();
+      if (action == 'select') select(SelectionGesture.longPress);
       if (action == 'remove') _confirmRemove(group, removeCommand);
       if (action == 'restore') restoreGroup();
     }
@@ -911,10 +947,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 _showGroupMenu(group, details.globalPosition, selectAction),
       child: ListRowSurface(
         key: ValueKey('food-group:$key'),
-        color:
-            selecting &&
-                !deleted &&
-                group.containers.every((e) => bulkSelected.contains(e.id))
+        color: _groupSelected(group)
             ? Theme.of(context).colorScheme.primaryContainer
             : deleted
             ? Theme.of(context).colorScheme.surfaceContainerLow
@@ -930,11 +963,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           onKeyEvent: (node, event) {
             if (event.logicalKey != LogicalKeyboardKey.space ||
                 event is KeyUpEvent ||
-                deleted ||
                 FocusManager.instance.primaryFocus?.parent != node) {
               return KeyEventResult.ignored;
             }
-            if (event is KeyDownEvent && editable) selectGroup();
+            if (event is KeyDownEvent && editable) {
+              select(SelectionGesture.longPress);
+            }
             return KeyEventResult.handled;
           },
           child: InkWell(
@@ -951,16 +985,16 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               });
             },
             onTap: editable ? editGroup : null,
-            onLongPress: !editable || deleted
-                ? null
-                : () => toggleSelection(enter: true),
+            onLongPress: editable
+                ? () => select(SelectionGesture.longPress)
+                : null,
             excludeFromSemantics: true,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (selecting && !deleted)
+                  if (selecting)
                     Checkbox(
                       key: ValueKey('food-group-selection:$key'),
                       semanticLabel:
@@ -976,14 +1010,16 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             )
                           ? null
                           : false,
-                      onChanged: widget.busy ? null : (_) => toggleSelection(),
+                      onChanged: widget.busy
+                          ? null
+                          : (_) => select(SelectionGesture.toggle),
                     ),
                   Expanded(
                     child: Semantics(
                       button: true,
                       enabled: editable,
                       label: [
-                        selecting && !deleted ? 'Select' : 'Edit',
+                        selecting ? 'Select' : 'Edit',
                         details.name,
                         countLabel,
                         details.expiry ?? 'Needs expiration',
@@ -991,18 +1027,19 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         if (details.retention.isNotEmpty) details.retention,
                         ...metadata,
                       ].join(', '),
-                      selected: _groupSelected(group) && !deleted,
+                      selected: _groupSelected(group),
                       onTap: editable ? editGroup : null,
-                      onLongPress: editable && !deleted
-                          ? () => toggleSelection(enter: true)
+                      onLongPress: editable
+                          ? () => select(SelectionGesture.longPress)
                           : null,
-                      customSemanticsActions: editable && !deleted
+                      customSemanticsActions: editable
                           ? {
                               CustomSemanticsAction(
                                 label: _groupSelected(group)
                                     ? 'Deselect food'
                                     : 'Select food',
-                              ): selectGroup,
+                              ): () =>
+                                  select(SelectionGesture.longPress),
                             }
                           : null,
                       excludeSemantics: true,
@@ -1206,11 +1243,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         (widget.hasPendingSave?.call() ?? widget.savePending) ||
         (group != null && !_canUseGroupMenu(group, workspace)) ||
         (targets != null &&
-            targets.any(
-              (e) => !_visibleActive().any((item) => item.id == e.id),
-            ))) {
+            targets.any((e) => !_shown().any((item) => item.id == e.id)))) {
       return;
     }
+    final removeCommand = widget.onRemove,
+        restoreCommand = widget.onRestore,
+        restoreBatchCommand = widget.onRestoreBatch;
     final key = GlobalKey<FoodEditorState>();
     final done = _editorDone = Completer<void>();
     final previousFocus = FocusManager.instance.primaryFocus;
@@ -1218,6 +1256,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     _editorCloseBusy = () => key.currentState?.closeBusy ?? true;
     _requestEditorClose = () async =>
         await key.currentState?.requestClose() ?? false;
+    _editingGroup = group;
     setState(
       () => _editorBuilder = (panel) => FoodEditor(
         key: key,
@@ -1245,16 +1284,31 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 )),
         areTargetsVisible: () =>
             targets == null ||
-            targets.every(
-              (e) => _visibleActive().any((item) => item.id == e.id),
-            ),
+            targets.every((e) => _shown().any((item) => item.id == e.id)),
         onBulkApplied: () {
           if (mounted) setState(_clearBulkSelection);
         },
+        onRemoveTargets: targets == null
+            ? null
+            : (items) => removeCommand(items.map((e) => e.id).toList()),
+        onRestoreTargets: targets == null
+            ? null
+            : (items) async {
+                if (restoreBatchCommand != null) {
+                  await restoreBatchCommand(items);
+                } else {
+                  for (final item in items) {
+                    await restoreCommand(item);
+                  }
+                }
+              },
         onClosed: (result) {
           if (!mounted || !identical(_editorDone, done)) return;
           accepted = result;
-          setState(() => _editorBuilder = null);
+          setState(() {
+            _editorBuilder = null;
+            _editingGroup = null;
+          });
         },
         onDisposed: () {
           if (!done.isCompleted) done.complete();
@@ -1268,6 +1322,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     // Completion follows actual input disposal, including whole-page disposal.
     await done.future;
     if (identical(_editorDone, done)) {
+      _editingGroup = null;
       _requestEditorClose = null;
       _editorCloseBusy = null;
       _editorDone = null;

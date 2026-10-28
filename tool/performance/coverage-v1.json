@@ -320,10 +320,10 @@
       "boundary": null
     },
     {
-      "interaction": "Food delete, restore,single/group",
+      "interaction": "Food delete, restore,single/group/bulk selection",
       "productionAPI": "remove/restore",
-      "actualUIPath": "main.dart:1086,1023",
-      "boundary": null
+      "actualUIPath": "main.dart:1086,1023; food_editor.dart bulk Remove/Restore",
+      "boundary": "Bulk Remove/Restore reuse remove(ids)/restore-batch as one command, covered by food.delete.3/food.restore.3 and .undo with unchanged limits; food_batch_selection_test drives the bulk editor actions. Native visible response pending."
     },
     {
       "interaction": "Food Undo add/edit/remove/restore",
@@ -416,16 +416,16 @@
       "boundary": "Strict r3/normalization/frozen-prefix correctness in completion_instant_test/completion_frozen_replay_test; late confirmation capture in checklist_completion_command_test; viewer-local projection in task_chronology_view_test; faithful UX path in ux_feedback_workflow_test. Existing task.complete.application and task.view.openCompleted/search boundaries/budgets remain. Exact UI presentation/history-growth acceptance pending; no budget baseline change."
     },
     {
-      "interaction": "Food long press active group enters multiselect",
-      "productionAPI": "FoodInventoryPage::_group captured physical IDs",
-      "actualUIPath": "lib/food/food_page.dart::_group",
-      "boundary": "No write. Synthetic food_selection_deleted_edit_test verifies gesture; native visible-response timing pending."
+      "interaction": "Food long press on any group, including Deleted, enters multiselect",
+      "productionAPI": "FoodInventoryPage::_select; presentation/list_selection.dart nextListSelection",
+      "actualUIPath": "lib/food/food_page.dart::_group -> _select",
+      "boundary": "No write. food_batch_selection_test drives real long-press gestures on Stock and Deleted rows (food_selection_deleted_edit_test long-presses only an active row); native visible-response timing pending."
     },
     {
-      "interaction": "Food Space, Ctrl/Cmd-click, Select food semantics action or row Actions Select/Deselect enters or toggles multiselect",
-      "productionAPI": "FoodInventoryPage::_group captured physical IDs",
-      "actualUIPath": "lib/food/food_page.dart::_group",
-      "boundary": "No write; same selection toggle as long press. food_keyboard_selection_test and native food_keyboard_selection_workflow_test verify keyboard, semantics and menu routes; native visible-response timing pending."
+      "interaction": "Food Space, Ctrl/Cmd-click, Shift-click range, Select food semantics action or row Actions Select/Deselect enters or toggles multiselect, including Deleted rows",
+      "productionAPI": "FoodInventoryPage::_select; presentation/list_selection.dart nextListSelection",
+      "actualUIPath": "lib/food/food_page.dart::_group -> _select",
+      "boundary": "No write; shared Tasks/Food selection rules. food_batch_selection_test drives real held Control/Meta/Shift keys plus mouse taps (fails on RC.5 source); food_keyboard_selection_test and native food_keyboard_selection_workflow_test cover keyboard, semantics and menu routes; native visible-response timing pending."
     },
     {
       "interaction": "Deleted Food details Save and selective Undo keep tombstones",

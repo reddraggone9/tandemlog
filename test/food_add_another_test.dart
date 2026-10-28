@@ -79,7 +79,7 @@ Future<void> verifyFoodAddAnother(
     await tester.pumpAndSettle();
     final action = find.widgetWithText(PopupMenuItem<String>, 'Add another…');
     expect(action, findsOneWidget);
-    if (deleted) expect(find.byType(PopupMenuItem<String>), findsNWidgets(2));
+    if (deleted) expect(find.byType(PopupMenuItem<String>), findsNWidgets(3));
     expect(added, isEmpty);
     await tester.tap(action);
     await tester.pumpAndSettle();

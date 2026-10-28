@@ -28,6 +28,8 @@ class FoodEditor extends StatefulWidget {
     required this.onClosed,
     required this.onDisposed,
     this.onReadinessChanged,
+    this.onRemoveTargets,
+    this.onRestoreTargets,
   });
   final bool panel;
   final FoodGroup? group;
@@ -41,6 +43,10 @@ class FoodEditor extends StatefulWidget {
   final VoidCallback onBulkApplied, onDisposed;
   final ValueChanged<(FoodDetails, int)?> onClosed;
   final VoidCallback? onReadinessChanged;
+
+  /// Bulk Remove/Restore of the captured targets; each is one Undo action.
+  final FutureOr<void> Function(List<FoodContainer>)? onRemoveTargets,
+      onRestoreTargets;
   @override
   State<FoodEditor> createState() => FoodEditorState();
 }
@@ -439,6 +445,77 @@ class FoodEditorState extends State<FoodEditor> {
     }
   }
 
+  /// Removes the selected active containers, or restores the selected
+  /// deleted ones, as one host command and therefore one Undo action.
+  Future<void> _bulkCommand(bool remove) async {
+    final command = remove ? widget.onRemoveTargets : widget.onRestoreTargets;
+    final items = widget.targets!.where((e) => e.deleted != remove).toList();
+    if (command == null ||
+        items.isEmpty ||
+        closeBusy ||
+        deciding ||
+        pending()) {
+      return;
+    }
+    if (remove) {
+      bool? confirmed;
+      deciding = true;
+      try {
+        final noun = items.length == 1 ? 'container' : 'containers';
+        confirmed = await showDialog<bool>(
+          context: context,
+          builder: (ctx) {
+            final decide = _answerOnce<bool>(ctx);
+            return AlertDialog(
+              title: Text('Remove ${items.length} $noun?'),
+              content: const Text(
+                'You can restore these containers from Deleted.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => decide(false),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  onPressed: () => decide(true),
+                  child: const Text('Remove'),
+                ),
+              ],
+            );
+          },
+        );
+      } finally {
+        deciding = false;
+      }
+      if (confirmed != true || !mounted || answered) return;
+    }
+    try {
+      if (!widget.isOriginCurrent() || !widget.areTargetsVisible()) {
+        throw const FormatException(
+          'The selected containers changed. Close this editor and select again.',
+        );
+      }
+      setState(() {
+        saving = true;
+        error = null;
+      });
+      await command(items);
+      if (!mounted) return;
+      widget.onBulkApplied();
+      saving = false;
+      answer(context, null);
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          saving = false;
+          error = e is FormatException ? e.message : e.toString();
+        });
+      }
+    } finally {
+      if (mounted) widget.onReadinessChanged?.call();
+    }
+  }
+
   Widget _failureNotice() => ConstrainedBox(
     constraints: BoxConstraints(
       maxHeight:
@@ -470,7 +547,7 @@ class FoodEditorState extends State<FoodEditor> {
     final cancel = requestClose;
     final title = Text(
       bulk
-          ? 'Edit ${targets!.length} containers'
+          ? 'Edit ${targets!.length} ${targets.length == 1 ? 'container' : 'containers'}'
           : group == null
           ? 'Add food'
           : 'Edit ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
@@ -690,22 +767,53 @@ class FoodEditorState extends State<FoodEditor> {
         ],
       ),
     );
-    final actions = [
-      TextButton(
-        onPressed: saving ? null : cancel,
-        child: const Text('Cancel'),
-      ),
-      ValidationActionButton(
-        buttonKey: const ValueKey('food-save-action'),
-        validation: _validation,
-        label: !bulk && group == null ? 'Add' : 'Save',
-        busy: saving,
-        enabled: !closeBusy && !deciding,
-        retry: pending(),
-        retryLabel: 'Retry save',
-        onSubmit: _save,
-      ),
+    final cancelAction = TextButton(
+      onPressed: saving ? null : cancel,
+      child: const Text('Cancel'),
+    );
+    final saveAction = ValidationActionButton(
+      buttonKey: const ValueKey('food-save-action'),
+      validation: _validation,
+      label: !bulk && group == null ? 'Add' : 'Save',
+      busy: saving,
+      enabled: !closeBusy && !deciding,
+      retry: pending(),
+      retryLabel: 'Retry save',
+      onSubmit: _save,
+    );
+    // Like Tasks' bulk Delete, whole-selection commands sit opposite Save.
+    final bulkActions = [
+      if (bulk &&
+          widget.onRestoreTargets != null &&
+          targets!.any((e) => e.deleted))
+        TextButton(
+          key: const ValueKey('food-bulk-restore'),
+          onPressed: saving || pending() ? null : () => _bulkCommand(false),
+          child: const Text('Restore'),
+        ),
+      if (bulk &&
+          widget.onRemoveTargets != null &&
+          targets!.any((e) => !e.deleted))
+        TextButton(
+          key: const ValueKey('food-bulk-remove'),
+          onPressed: saving || pending() ? null : () => _bulkCommand(true),
+          child: const Text('Remove'),
+        ),
     ];
+    final actions = bulkActions.isEmpty
+        ? [cancelAction, saveAction]
+        : [
+            // Narrow, enlarged-text dialogs wrap Cancel/Save onto a second row
+            // rather than squeezing them.
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              runSpacing: 4,
+              children: [
+                Wrap(spacing: 8, children: bulkActions),
+                Wrap(spacing: 8, children: [cancelAction, saveAction]),
+              ],
+            ),
+          ];
     final presentation = widget.panel
         ? Material(
             child: Padding(

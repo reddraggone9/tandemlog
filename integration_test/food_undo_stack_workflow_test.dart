@@ -55,7 +55,7 @@ void registerFoodUndoStackWorkflowTests() {
       );
       await tester.pumpAndSettle();
       await _tap(tester, find.byKey(const ValueKey('food-filter')));
-      await _tap(tester, find.text('Select matching active containers'));
+      await _tap(tester, find.text('Select matching containers'));
       expect(find.text('2 selected'), findsOneWidget);
       await _tap(tester, find.widgetWithText(TextButton, 'Edit'));
       await _tap(tester, find.text('Apply Brand'));
