@@ -1,7 +1,7 @@
 # Batch selection: Tasks and Food
 
-Status: local development implementation on `vex/next-foodbatch` for the next
-release; not native-accepted or released. Behavior is specified in
+Status: shared Tasks/Food rules, with selection-retention follow-ups in local
+development on `vex/food-products`; those follow-ups are not released. Behavior is specified in
 [product behavior](product-behavior.md#approved-rc3-food-editing-refinements);
 this document records the 2026-10-27 consistency audit and its outcomes.
 
