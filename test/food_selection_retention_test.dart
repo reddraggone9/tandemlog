@@ -61,8 +61,8 @@ Future<void> _toggle(WidgetTester tester, String name) async {
 }
 
 Future<void> _search(WidgetTester tester, String value) async {
-  // The existing compact selection actions cover the mounted search field.
-  // Exercise its real change callback without changing that presentation policy.
+  // Narrow selection hides search; exercise the mounted callback separately.
+  // The layout parity tests use pointer/keyboard input in the visible wide field.
   final field = tester.widget<TextField>(
     find.byKey(const ValueKey('food-search')),
   );
@@ -73,7 +73,9 @@ Future<void> _search(WidgetTester tester, String value) async {
 
 Future<void> _clearSearch(WidgetTester tester) async {
   final button = tester.widget<IconButton>(
-    find.widgetWithIcon(IconButton, Icons.close).first,
+    find.byWidgetPredicate(
+      (w) => w is IconButton && w.tooltip == 'Clear food search',
+    ),
   );
   button.onPressed!();
   await tester.pumpAndSettle();
@@ -93,46 +95,39 @@ Future<void> verifyFoodWideSelectionRetention(
   await chooseFoodView(tester, 'Retained');
   expect(find.text('Rice'), findsNothing);
   expect(page.bulkSelected, {_id(1), _id(2)});
-  expect(find.text('2 selected'), findsOneWidget);
   expect(find.text('Edit 2 containers'), findsOneWidget);
   await capture?.call('wide-selection-after-filter-editor-captured');
-  // Closing the pane permits pruning; no hidden selection or stale pane remains.
+  // Closing the pane clears selection, as Tasks does; no hidden stale targets remain.
   await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
   await tester.pumpAndSettle();
   expect(page.bulkSelected, isEmpty);
-  expect(page.selecting, isTrue);
-  expect(find.text('0 selected'), findsOneWidget);
+  expect(page.selecting, isFalse);
+  expect(find.text('0 selected'), findsNothing);
   expect(find.text('Edit 2 containers'), findsNothing);
   await capture?.call('wide-selection-after-editor-close-pruned');
   expect(tester.takeException(), isNull);
 }
 
 void main() {
-  testWidgets('search prunes hidden IDs; clear does not resurrect them', (
+  testWidgets('search input and Clear search clear selection as Tasks does', (
     tester,
   ) async {
     final page = await _pump(tester);
     await _toggle(tester, 'Beans');
     await _toggle(tester, 'Rice');
     await _search(tester, 'Beans');
-    expect(page.bulkSelected, {_id(1)});
-    expect(find.text('1 selected'), findsOneWidget);
-    await _clearSearch(tester);
-    expect(page.bulkSelected, {_id(1)});
-    await _search(tester, 'nothing matches');
     expect(page.bulkSelected, isEmpty);
-    expect(
-      page.selecting,
-      isTrue,
-    ); // Tasks preserves explicit selection intent.
+    expect(page.selecting, isFalse);
+    await _toggle(tester, 'Beans');
     await _clearSearch(tester);
+    expect(page.bulkSelected, isEmpty);
+    expect(page.selecting, isFalse);
     await tester.tap(find.text('Rice'));
     await tester.pumpAndSettle();
-    expect(page.bulkSelected, {_id(2)});
-    expect(find.widgetWithText(TextField, 'Food name'), findsNothing);
+    expect(find.widgetWithText(TextField, 'Food name'), findsOneWidget);
   });
 
-  testWidgets('a hidden anchor cannot extend a later visible range', (
+  testWidgets('a cleared search selection cannot extend a later range', (
     tester,
   ) async {
     final page = await _pump(tester);
@@ -157,7 +152,8 @@ void main() {
     await chooseFoodView(tester, 'Retained');
     expect(page.bulkSelected, {_id(1), _id(4)});
     await _clearSearch(tester);
-    expect(page.bulkSelected, {_id(4)});
+    expect(page.bulkSelected, isEmpty);
+    await _toggle(tester, 'Reserve');
     await chooseFoodView(tester, 'Stock');
     expect(page.bulkSelected, isEmpty);
     expect(page.selecting, isTrue);

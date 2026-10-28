@@ -37,6 +37,8 @@ import 'completion_focus_test.dart' show registerCompletionFocusTests;
 import 'completion_confirmation_progress_test.dart'
     show registerCompletionConfirmationProgressTests;
 import 'header_selection_test.dart' show registerHeaderSelectionTests;
+import 'selection_layout_parity_workflow_test.dart'
+    show registerSelectionLayoutParityWorkflowTests;
 import 'historical_checklist_recompletion_test.dart'
     show registerHistoricalChecklistRecompletionTests;
 import 'header_search_test.dart' show registerHeaderSearchTests;
@@ -335,6 +337,7 @@ void main() {
   registerCompletionFocusTests();
   registerCompletionConfirmationProgressTests();
   registerHeaderSelectionTests();
+  registerSelectionLayoutParityWorkflowTests();
   registerUnifiedHistoryWorkflowTests();
   registerHistoricalChecklistRecompletionTests();
   registerBulkFailureVisibilityTests();

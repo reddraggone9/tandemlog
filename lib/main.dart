@@ -5541,7 +5541,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Widget _entryArea() => TaskEntryArea(
     key: const ValueKey('task-entry-area'),
-    selecting: selecting && !wideLayout && !mobileEditorOpen,
+    selecting: selecting,
+    wideLayout: wideLayout,
+    editorOpen: mobileEditorOpen,
     captureVisible: true,
     selectionCount: selectedTasks.length,
     maximumSelectionCount: visibleEntries.length,

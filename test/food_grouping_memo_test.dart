@@ -280,7 +280,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(page.bulkSelected, {_stockA, _stockB, _inbox});
     expect(food.views, grouped);
-    await tester.tap(find.byTooltip('Clear Selection'));
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Memo stock A'));
     await tester.pumpAndSettle();

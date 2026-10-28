@@ -167,7 +167,11 @@ void main() {
         find.text('Rice'),
         LogicalKeyboardKey.controlLeft,
       );
-      expect(find.text('2 selected'), findsOneWidget);
+      expect(find.text('Edit 2 containers'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('food-search')).hitTestable(),
+        findsOneWidget,
+      );
       expect(find.text('Edit 1 container'), findsNothing);
     },
   );

@@ -49,7 +49,9 @@ Entry gestures:
   anchor (the focused row when there is none), using the shared rules.
 - Filter → Select matching containers: Food only. Deliberate: Food's unification
   workflow filters by Brand/Location and selects the result; Tasks has no
-  equivalent need. It now includes shown Deleted rows.
+  equivalent need. It includes shown Deleted rows and resolves an existing dirty
+  editor before changing targets (Keep editing leaves its draft/selection intact;
+  Discard opens the matching single/bulk editor at wide widths).
 
 Views that allow selection:
 - Tasks: open views, Completed and Search. Food: Stock with Inbox, Retained,
@@ -66,10 +68,15 @@ Selection affordances:
 - Wide layouts: Tasks opens the bulk editor in the side pane as soon as a
   selection exists; Food kept a modal bulk editor opened from Edit. Resolved
   (Lee, 2026-10-27, on `vex/food-products`): at pane widths a Food selection
-  opens the bulk editor in the side pane, changing the selection first resolves
-  an unsaved bulk draft, Clear Selection closes the pane, and narrowing a
-  selection of two or more rows to one whole row returns to that row's single
-  editor, as on Tasks. Narrow widths keep Edit → dialog.
+  opens the editor immediately in the side pane (one whole row uses its single
+  editor; multiple rows use the bulk editor). Changing selection first resolves
+  an unsaved draft. Search remains visible, with no redundant count/Clear/Edit
+  bar; the shared `TaskEntryArea` owns this window-width/editor condition for
+  both sections. Narrow widths keep the shared count/Clear/Edit bar in place of
+  Search and wait for Edit → dialog. Widening an existing selection reveals the
+  pane; an open dialog becomes a pane and an open pane becomes a dialog when
+  the window crosses 900 logical pixels. Narrowing a selection of two or more
+  rows to one whole row returns to that row's ordinary single editor.
 
 Bulk actions:
 - Delete/Remove: Tasks offers Delete in the bulk editor opposite Cancel/Save;
@@ -87,19 +94,29 @@ Bulk actions:
 - Reorder: Tasks only. Deliberate: Food is ordered by expiration, not by hand.
 
 Exit:
-- Both exit on Clear Selection, on deselecting the last row and after a bulk
-  command; neither uses Escape for selection. Consistent.
-- Resolved (Lee, 2026-10-28, item l): Food search, Clear search, view-menu
-  and More-filters changes retain visible selected containers and drop hidden
-  ones, through the same `retainVisibleListSelection` implementation as Tasks'
-  view recomputation. A hidden range anchor is always forgotten. An open single
-  or bulk editor preserves its captured selected IDs until it closes (including
-  the wide bulk pane), so filtering cannot silently retarget a draft.
-- Pruning to zero visible selected IDs **does not exit explicit selecting mode**,
-  matching Tasks' view recomputation today. Clear Selection, explicit last-row
-  deselection and completed commands still exit. Expanding the view does not
-  resurrect IDs already pruned. Tasks' separate search-input close/clear handler
-  is unchanged; this change shares its view-recomputation policy.
+- Both exit on Clear Selection, deselecting the last row, closing an editor
+  (after resolving any dirty draft), and after a bulk command; neither uses
+  Escape for selection. Escape dismisses an open editor, following its normal
+  draft guard.
+- Item (l) shares `retainVisibleListSelection` for **view recomputation**:
+  retain visible IDs, drop hidden IDs, always forget hidden range anchors, and
+  preserve captured IDs while an editor is open. Pruning to zero visible IDs
+  does not exit explicit selecting mode; expanding the view does not resurrect
+  IDs already pruned. This did not change Tasks' input/filter handlers.
+- Native audit of `5721659` (2026-10-28): Tasks' search-input and Clear search
+  handlers close the guarded editor and clear selection, even when all selected
+  rows still match. Food now follows that behavior; Cancel on the dirty-draft
+  prompt restores the previous query and keeps the selection/draft. Tasks'
+  behavior is unchanged; only its entry-area condition moved into the shared
+  component. At 5721659 Food already auto-opened the wide bulk pane, but still
+  covered Search with the compact bar and kept selection on editor Cancel.
+- **Question for Lee:** item (l)'s retention intent and Tasks' explicit search /
+  filter handlers disagree. Should both retain visible selected IDs through
+  those input changes? Recommendation: a separately approved follow-up making
+  both retain visible IDs after resolving any dirty draft. This change keeps
+  Tasks as the reference, including search clearing selection. Food view-menu /
+  More-filters retain the already-approved shared recomputation policy; Tasks'
+  own filter controls still explicitly clear. No silent Tasks behavior change.
 
 Undo:
 - Every bulk command is one Undo action in both sections: Task bulk edit/delete/
@@ -108,6 +125,14 @@ Undo:
   for a five-field edit, and that the edited and undone states replay identically
   in a reopened and a fresh profile. Undo history itself is session-local
   (ADR0018), so it does not survive a restart by design.
+
+## Responsive regression coverage
+
+`test/selection_layout_parity_test.dart` runs both sections at 390, 899, 900 and
+1400 logical pixels, including single/multi selection, last-row deselection,
+Search/Clear draft guards, narrow Edit/Cancel, resizing and guarded Select
+matching. `integration_test/selection_layout_parity_workflow_test.dart` repeats
+these workflows on native Linux and is registered in the main native CI suite.
 
 ## Compatibility and performance
 

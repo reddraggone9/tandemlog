@@ -8,6 +8,8 @@ class TaskEntryArea extends StatelessWidget {
   const TaskEntryArea({
     super.key,
     required this.selecting,
+    this.wideLayout = false,
+    this.editorOpen = false,
     required this.captureVisible,
     required this.selectionCount,
     required this.maximumSelectionCount,
@@ -15,7 +17,10 @@ class TaskEntryArea extends StatelessWidget {
     required this.onClear,
     required this.onEdit,
   });
-  final bool selecting, captureVisible;
+  final bool selecting, captureVisible, wideLayout, editorOpen;
+
+  /// Selection actions replace Search only while a narrow list is active.
+  bool get showSelection => selecting && !wideLayout && !editorOpen;
   final int selectionCount, maximumSelectionCount;
   final Widget capture;
   final VoidCallback? onClear, onEdit;
@@ -54,18 +59,18 @@ class TaskEntryArea extends StatelessWidget {
             Offstage(
               offstage: !captureVisible,
               child: Visibility(
-                visible: !selecting,
+                visible: !showSelection,
                 maintainState: true,
                 maintainAnimation: true,
                 maintainSize: true,
                 child: ExcludeFocus(
-                  excluding: !captureVisible || selecting,
+                  excluding: !captureVisible || showSelection,
                   child: capture,
                 ),
               ),
             ),
             SizedBox(height: minimumHeight, width: double.infinity),
-            if (selecting)
+            if (showSelection)
               Positioned.fill(
                 child: CompactSelectionActions(
                   key: const ValueKey('compact-selection-actions'),

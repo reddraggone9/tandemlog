@@ -88,9 +88,11 @@ Future<List<_Write>> _pumpSelected(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(find.text('Select matching containers'));
   await tester.pumpAndSettle();
-  expect(find.text('3 selected'), findsOneWidget);
-  await tester.tap(find.widgetWithText(TextButton, 'Edit'));
-  await tester.pumpAndSettle();
+  expect(
+    find.byKey(const ValueKey('food-search')).hitTestable(),
+    findsOneWidget,
+  );
+  // Select matching opens the bulk pane immediately at this width.
   expect(find.text('Edit 3 containers'), findsOneWidget);
   return writes;
 }

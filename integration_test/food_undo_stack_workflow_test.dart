@@ -56,9 +56,19 @@ void registerFoodUndoStackWorkflowTests() {
       await tester.pumpAndSettle();
       await _tap(tester, find.byKey(const ValueKey('food-filter')));
       await _tap(tester, find.text('Select matching containers'));
-      expect(find.text('2 selected'), findsOneWidget);
-      await _tap(tester, find.widgetWithText(TextButton, 'Edit'));
-      await _tap(tester, find.byKey(const ValueKey('brandApply')));
+      // One whole selected row opens its single editor immediately at wide
+      // widths; editing the product still updates both containers as one Undo.
+      expect(
+        tester
+            .state<FoodInventoryPageState>(find.byType(FoodInventoryPage))
+            .bulkSelected,
+        hasLength(2),
+      );
+      expect(
+        find.byKey(const ValueKey('food-search')).hitTestable(),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey('brandApply')), findsNothing);
       await tester.enterText(
         find.widgetWithText(TextField, 'Brand'),
         'Synthetic bulk brand',

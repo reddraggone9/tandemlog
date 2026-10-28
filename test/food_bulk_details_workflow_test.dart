@@ -58,6 +58,11 @@ Future<void> verifyFoodBulkDetails(
     await tap(find.text('Select matching containers'));
   }
 
+  Future<void> openSelection() async {
+    final edit = find.byKey(const ValueKey('edit-selected-tasks'));
+    if (edit.evaluate().isNotEmpty) await tap(edit);
+  }
+
   await tester.pumpWidget(
     MaterialApp(
       key: ValueKey('bulk-${brightness.name}-$textScale'),
@@ -89,15 +94,20 @@ Future<void> verifyFoodBulkDetails(
   );
   await tester.pumpAndSettle();
   await selectAll();
-  expect(find.text('3 selected'), findsOneWidget);
-  await tap(find.widgetWithText(TextButton, 'Edit'));
+  expect(
+    tester
+        .state<FoodInventoryPageState>(find.byType(FoodInventoryPage))
+        .bulkSelected,
+    hasLength(3),
+  );
+  await openSelection();
   expect(find.text('Edit 3 containers'), findsOneWidget);
   expect(find.text('Expiration'), findsNothing);
   await capture?.call('mixed-untouched');
   await tap(find.widgetWithText(FilledButton, 'Save'));
   expect(writes, isEmpty, reason: 'Untouched mixed fields are a no-op');
   await selectAll();
-  await tap(find.widgetWithText(TextButton, 'Edit'));
+  await openSelection();
   await tap(find.byKey(const ValueKey('brandApply')));
   final brand = find.widgetWithText(TextField, 'Brand');
   await tester.enterText(brand, 'Unified');
@@ -132,8 +142,13 @@ Future<void> verifyFoodBulkDetails(
   await tester.enterText(search, 'Synthetic food 2');
   await tester.pumpAndSettle();
   await selectAll();
-  expect(find.text('1 selected'), findsOneWidget);
-  await tap(find.widgetWithText(TextButton, 'Edit'));
+  expect(
+    tester
+        .state<FoodInventoryPageState>(find.byType(FoodInventoryPage))
+        .bulkSelected,
+    hasLength(1),
+  );
+  await openSelection();
   // An applied blank field clears that value, as in the Tasks bulk editor.
   await tester.enterText(find.widgetWithText(TextField, 'Location'), '');
   await tester.pumpAndSettle();
@@ -174,11 +189,15 @@ Future<void> verifyFoodBulkDetails(
   await tester.enterText(search, 'Synthetic food');
   await tester.pumpAndSettle();
   await selectAll();
-  await tap(find.widgetWithText(TextButton, 'Edit'));
+  await openSelection();
   await tap(find.widgetWithText(TextButton, 'Cancel'));
   expect(writes, hasLength(2));
-  expect(find.text('4 selected'), findsOneWidget);
-  await tap(find.byTooltip('Clear Selection'));
+  expect(
+    tester
+        .state<FoodInventoryPageState>(find.byType(FoodInventoryPage))
+        .bulkSelected,
+    isEmpty,
+  );
   expect(
     find.byKey(const ValueKey('food-search')).hitTestable(),
     findsOneWidget,
@@ -203,7 +222,7 @@ Future<void> verifyFoodBulkDetails(
   );
   tester.state<ScrollableState>(scrolling).position.jumpTo(0);
   await tester.pumpAndSettle();
-  await tap(find.widgetWithText(TextButton, 'Edit'));
+  await openSelection();
   expect(find.text('Edit 3 containers'), findsOneWidget);
   await tap(find.byKey(const ValueKey('locationApply')));
   await tester.enterText(
@@ -214,7 +233,8 @@ Future<void> verifyFoodBulkDetails(
   await tap(find.widgetWithText(TextButton, 'Cancel'));
   await tap(find.widgetWithText(FilledButton, 'Discard'));
   expect(writes, hasLength(2));
-  await tap(find.widgetWithText(TextButton, 'Edit'));
+  await selectAll();
+  await openSelection();
   await tap(find.byKey(const ValueKey('brandApply')));
   await tester.enterText(
     find.widgetWithText(TextField, 'Brand'),

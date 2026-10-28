@@ -69,12 +69,16 @@ Also in scope (Lee, 2026-10-27; see [batch selection](batch-selection.md)):
   like Tasks.
 - (k) On wide windows a Food selection opens the bulk editor in the side pane,
   like Tasks. Narrow widths keep the dialog.
-- (l) Food search, Clear search, view-menu and More-filters changes use the shared
-  Tasks view-recomputation selection policy: retain visible IDs, drop hidden IDs
-  and the hidden anchor. Preserve captured selected IDs while an editor is open.
-  Pruning to zero IDs keeps explicit selecting mode, matching Tasks; widening a
-  view does not resurrect pruned IDs. Workspace switches and completed commands
-  still clear selection. See [batch selection](batch-selection.md).
+- (l) Shared Tasks/Food view-recomputation policy: retain visible IDs, drop hidden
+  IDs and the hidden anchor, and preserve captured IDs while editing. Pruning to
+  zero keeps explicit selecting mode; widening the view does not resurrect IDs.
+  The 2026-10-28 native parity audit found that Tasks' search / filter handlers
+  explicitly clear selection before recomputation. Per Lee's newer direction to
+  keep Tasks as the reference, Food search / Clear search now close the guarded
+  draft and clear selection too. Food view-menu / More-filters retain the shared
+  recomputation policy. The broader search / filter retention intent remains an
+  explicit question, not a silent Tasks behavior change. See
+  [batch selection](batch-selection.md#exit).
 
 ## 3. Method: data model
 
@@ -282,3 +286,13 @@ Method changes from the proposal, made while implementing (no goal changes):
   fallback when a product is unknown. Plain Adds keep writing r1.
 - No silent purchase auto-link on Add (decision 7).
 - No Products help paragraph (see section 6).
+
+### Selection presentation parity (Lee, 2026-10-28)
+
+Food uses Tasks' shared entry area: Search stays available alongside the wide
+selection editor; narrow selection replaces Search with count/Clear/Edit. One
+whole selected row uses its single editor; multiple rows open the bulk editor.
+Opening, closing and resizing follow the Tasks reference. Search closes guarded
+drafts and clears selection, matching Tasks today. The conflict with item (l)'s
+retention intent is recorded as an explicit question in
+[batch selection](batch-selection.md#exit); Tasks' behavior was not changed.
