@@ -1,3 +1,12 @@
+# Review capture theme
+
+All review screenshots use the production theme from
+`lib/presentation/tandemlog_theme.dart` (`tandemlogTheme(Brightness)`).
+Component-only capture harnesses must use it too; a bare `ThemeData` uses
+Flutter's default purple palette, not Tandemlog. `captureUx` checks theme parity
+even when PNG output is disabled. Widget captures remain labelled as widget
+captures, not native-platform evidence.
+
 # RC4 repair continuation — 2026-10-25
 
 Exact source `5dc4e3e398e63e7956312ddff258ac88b6465649` was exercised in a native

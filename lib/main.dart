@@ -20,6 +20,7 @@ import 'text/native_text_licenses.dart';
 import 'domain/visible_task_move.dart';
 import 'domain/event.dart' show LogEvent;
 import 'presentation/editor_surface.dart';
+import 'presentation/tandemlog_theme.dart';
 import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
 import 'presentation/task_entry_area.dart';
@@ -100,39 +101,14 @@ class _TandemlogAppState extends State<TandemlogApp> {
     super.dispose();
   }
 
-  ThemeData _theme(Brightness brightness) {
-    final colors = ColorScheme.fromSeed(
-      seedColor: const Color(0xff267461),
-      brightness: brightness,
-    );
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: colors,
-      scaffoldBackgroundColor: brightness == Brightness.light
-          ? const Color(0xfff6f7f2)
-          : colors.surface,
-      cardTheme: CardThemeData(color: colors.surfaceContainerLow),
-      snackBarTheme: SnackBarThemeData(
-        backgroundColor: colors.surfaceContainerHigh,
-        contentTextStyle: TextStyle(color: colors.onSurface),
-        actionTextColor: colors.primary,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        border: const OutlineInputBorder(),
-        filled: true,
-        fillColor: colors.surfaceContainerLowest,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<Appearance>(
     valueListenable: appearance,
     builder: (_, value, _) => MaterialApp(
       title: 'Tandemlog',
       debugShowCheckedModeBanner: false,
-      theme: _theme(Brightness.light),
-      darkTheme: _theme(Brightness.dark),
+      theme: tandemlogTheme(Brightness.light),
+      darkTheme: tandemlogTheme(Brightness.dark),
       themeMode: switch (value) {
         Appearance.system => ThemeMode.system,
         Appearance.light => ThemeMode.light,
