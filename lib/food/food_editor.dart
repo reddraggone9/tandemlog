@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../presentation/civil_date_input.dart';
 import '../presentation/free_text_autocomplete.dart';
 import '../presentation/form_validation.dart';
+import '../presentation/settled_center_alignment.dart';
 import '../presentation/tag_input.dart';
 import 'inventory.dart';
 
@@ -75,6 +76,8 @@ class FoodEditorState extends State<FoodEditor> {
   int? _attemptAmount;
   List<String>? _attemptFields;
   double? editorViewportHeight;
+  // Centered on open; actions stay put while validation text changes.
+  final _placement = SettledDialogPlacement();
   bool _routeCurrent = true;
   bool get bulk => widget.targets != null;
   bool pending() => widget.pending();
@@ -742,7 +745,7 @@ class FoodEditorState extends State<FoodEditor> {
             ),
           )
         : AlertDialog(
-            alignment: Alignment.bottomCenter,
+            alignment: _placement.alignmentFor(context),
             scrollable: true,
             insetPadding: const EdgeInsets.all(16),
             titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

@@ -93,6 +93,43 @@ Future<void> _checklist(
 }
 
 void main() {
+  testWidgets(
+    'Food modal opens vertically centered and keeps its actions through review',
+    (tester) async {
+      // Tall enough that the narrow modal is shorter than the window: RC.5
+      // anchored it to the bottom edge instead (Lee, 10-27).
+      await pane.mountFoodPane(tester, width: 420, height: 1600);
+      await pane.openPaneAdd(tester);
+      final dialog = find
+          .descendant(
+            of: find.byType(AlertDialog),
+            matching: find.byType(Material),
+          )
+          .first;
+      final opened = tester.getRect(dialog);
+      expect(opened.height, lessThan(1600 - 64));
+      expect(
+        (opened.top - (1600 - opened.bottom)).abs(),
+        lessThanOrEqualTo(1),
+        reason: 'The editor must open centered vertically',
+      );
+      final initialAction = tester.getRect(_action);
+      await _activate(tester);
+      expect(
+        find.descendant(of: _action, matching: find.text('Review errors')),
+        findsOneWidget,
+      );
+      expect(tester.getRect(dialog).height, greaterThan(opened.height));
+      expect(tester.getRect(dialog).bottom, opened.bottom);
+      expect(
+        tester.getRect(_action),
+        initialAction,
+        reason: 'Validation text grows upward without moving the actions',
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   for (final food in [true, false]) {
     for (final scale in [1.0, 2.0]) {
       testWidgets(

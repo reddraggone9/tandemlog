@@ -16,6 +16,7 @@ import '../application/task_text_session.dart';
 import 'title_line_formatter.dart';
 import 'unsaved_draft_dialog.dart';
 import 'form_validation.dart';
+import 'settled_center_alignment.dart';
 import 'task_field_help.dart';
 
 class TaskEditor extends StatefulWidget {
@@ -166,6 +167,8 @@ class _EditorBodyState extends State<_EditorBody> {
   final tagSelections = <String, Set<String>>{};
   final touched = <String>{}, applied = <String>{}, mixed = <String>{};
   final scroll = ScrollController();
+  // Centered on open; actions stay put while validation text changes.
+  final _placement = SettledDialogPlacement();
   bool busy = false, attempted = false, showOverride = false, allowPop = false;
   String? failure, assignee;
   bool applyAssignee = false, modalActionsInContent = false;
@@ -1591,7 +1594,7 @@ class _EditorBodyState extends State<_EditorBody> {
             ),
           )
         : AlertDialog(
-            alignment: Alignment.bottomCenter,
+            alignment: _placement.alignmentFor(context),
             // Title and form share the bounded scroll area, keeping fields
             // reachable above the keyboard even with enlarged phone text.
             scrollable: true,
