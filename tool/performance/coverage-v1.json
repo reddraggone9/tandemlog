@@ -314,10 +314,10 @@
       "boundary": "Not measured by standalone AOT suite: Flutter Food editor/controller construction, cancel, and paint require native UI acceptance."
     },
     {
-      "interaction": "Food descriptive edit single/bulk",
+      "interaction": "Food descriptive edit single/bulk (bulk: Food name, Brand, Container size, Location, Retention reason; never Expiration)",
       "productionAPI": "changeDetails(ids,details,fields)",
-      "actualUIPath": "main.dart:1092",
-      "boundary": null
+      "actualUIPath": "main.dart:1092; food_editor.dart bulk Save",
+      "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending."
     },
     {
       "interaction": "Food delete, restore,single/group/bulk selection",

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../presentation/bulk_apply.dart';
 import '../presentation/civil_date_input.dart';
 import '../presentation/free_text_autocomplete.dart';
 import '../presentation/form_validation.dart';
@@ -69,10 +70,10 @@ class FoodEditorState extends State<FoodEditor> {
   late final bool? estimated;
   late String retention;
   late final String initial;
-  var applyBrand = false,
-      applyLocation = false,
-      clearBrand = false,
-      clearLocation = false;
+
+  /// Bulk editing writes only applied fields; mixed fields start blank.
+  static const bulkFields = ['name', 'brand', 'size', 'location', 'retention'];
+  final applied = <String>{}, mixed = <String>{};
   var answered = false, saving = false, deciding = false, auxiliaryOpen = false;
   Future<bool>? closeRequest;
   (FoodDetails, int)? _completedSave;
@@ -92,10 +93,17 @@ class FoodEditorState extends State<FoodEditor> {
       answered ||
       auxiliaryOpen ||
       (!deciding && !(ModalRoute.of(context)?.isCurrent ?? true));
-  String common(String Function(FoodDetails) field) =>
-      widget.targets!.map((e) => field(e.details)).toSet().length == 1
-      ? field(widget.targets!.first.details)
-      : '';
+
+  /// The targets' shared value, or blank and mixed when they disagree.
+  String _common(String field) {
+    final values = widget.targets!
+        .map((e) => e.details.toJson()[field] as String)
+        .toSet();
+    if (values.length == 1) return values.single;
+    mixed.add(field);
+    return '';
+  }
+
   List<TextEditingController> get _controllers => [
     name,
     brand,
@@ -109,10 +117,7 @@ class FoodEditorState extends State<FoodEditor> {
     for (final controller in _controllers) controller.text,
     retention,
     estimated,
-    applyBrand,
-    applyLocation,
-    clearBrand,
-    clearLocation,
+    [...applied]..sort(),
   ]);
   @override
   void initState() {
@@ -120,20 +125,22 @@ class FoodEditorState extends State<FoodEditor> {
     original = bulk
         ? widget.targets!.first.details
         : widget.group?.details ?? widget.template;
-    name = TextEditingController(text: original?.name ?? '');
-    brand = TextEditingController(
-      text: bulk ? common((e) => e.brand) : original?.brand ?? '',
-    );
+    String start(String field, String single) => bulk ? _common(field) : single;
+    name = TextEditingController(text: start('name', original?.name ?? ''));
+    brand = TextEditingController(text: start('brand', original?.brand ?? ''));
     expiry = TextEditingController(
       text: widget.template == null ? original?.expiry ?? '' : '',
     );
-    size = TextEditingController(text: original?.size ?? '');
+    size = TextEditingController(text: start('size', original?.size ?? ''));
     location = TextEditingController(
-      text: bulk ? common((e) => e.location) : original?.location ?? '',
+      text: start('location', original?.location ?? ''),
     );
     count = TextEditingController(text: '1');
     retentionQuery = TextEditingController();
-    retention = widget.template == null ? original?.retention ?? '' : '';
+    retention = start(
+      'retention',
+      widget.template == null ? original?.retention ?? '' : '',
+    );
     estimated = widget.template == null ? original?.estimated : null;
     initial = snapshot();
     _validation = FormValidation(
@@ -143,6 +150,23 @@ class FoodEditorState extends State<FoodEditor> {
     for (final entry in _fields.entries) {
       entry.value.addListener(() => _validation.changed(entry.key));
     }
+    if (bulk) {
+      // As in the Tasks bulk editor, editing a field applies it. Focus and
+      // caret notifications leave the text unchanged and apply nothing.
+      for (final field in bulkFields) {
+        final controller = _fields[field]!;
+        var previous = controller.text;
+        controller.addListener(() {
+          if (controller.text == previous) return;
+          previous = controller.text;
+          _apply(field);
+        });
+      }
+    }
+  }
+
+  void _apply(String field) {
+    if (bulk && mounted && applied.add(field)) setState(() {});
   }
 
   Map<String, TextEditingController> get _fields => {
@@ -162,7 +186,7 @@ class FoodEditorState extends State<FoodEditor> {
   List<FieldIssue> _issues() {
     final issues = <FieldIssue>[];
     final active = bulk
-        ? [if (applyBrand) 'brand', if (applyLocation) 'location']
+        ? bulkFields.where(applied.contains).toList()
         : [
             'name',
             'brand',
@@ -190,19 +214,6 @@ class FoodEditorState extends State<FoodEditor> {
       }
       if (field == 'expiry' && value.isEmpty) {
         issues.add(const FieldIssue('expiry', 'Expiration is required.'));
-        continue;
-      }
-      if (bulk &&
-          value.isEmpty &&
-          !(field == 'brand' ? clearBrand : clearLocation)) {
-        issues.add(
-          FieldIssue(
-            field,
-            field == 'brand'
-                ? 'Use Clear Brand to remove a value.'
-                : 'Use Clear Location to remove a value.',
-          ),
-        );
         continue;
       }
       final text = field == 'retention' && value.isEmpty ? retention : value;
@@ -235,21 +246,29 @@ class FoodEditorState extends State<FoodEditor> {
     return issues;
   }
 
-  FoodDetails _details() => FoodDetails(
-    name: name.text.trim(),
-    brand: bulk && !applyBrand ? original!.brand : brand.text.trim(),
-    expiry: bulk ? original!.expiry : expiry.text.trim(),
-    estimated: estimated,
-    retention: widget.group == null && !bulk
-        ? ''
-        : retentionQuery.text.trim().isEmpty
-        ? retention
-        : retentionQuery.text.trim(),
-    size: size.text.trim(),
-    location: bulk && !applyLocation
-        ? original!.location
-        : location.text.trim(),
-  );
+  // In bulk edits, unapplied fields carry the first target's value; Save
+  // names only applied fields, so other targets keep their own values.
+  FoodDetails _details() {
+    String value(String field, String draft) => bulk && !applied.contains(field)
+        ? original!.toJson()[field] as String
+        : draft;
+    return FoodDetails(
+      name: value('name', name.text.trim()),
+      brand: value('brand', brand.text.trim()),
+      expiry: bulk ? original!.expiry : expiry.text.trim(),
+      estimated: estimated,
+      retention: widget.group == null && !bulk
+          ? ''
+          : value(
+              'retention',
+              retentionQuery.text.trim().isEmpty
+                  ? retention
+                  : retentionQuery.text.trim(),
+            ),
+      size: value('size', size.text.trim()),
+      location: value('location', location.text.trim()),
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -396,15 +415,16 @@ class FoodEditorState extends State<FoodEditor> {
             'The selected containers changed. Close this editor and select again.',
           );
         }
+        final after = details.toJson();
         final fields = retry
             ? _attemptFields!
             : [
-                if (applyBrand &&
-                    targets!.any((e) => e.details.brand != details.brand))
-                  'brand',
-                if (applyLocation &&
-                    targets!.any((e) => e.details.location != details.location))
-                  'location',
+                for (final field in bulkFields)
+                  if (applied.contains(field) &&
+                      targets!.any(
+                        (e) => e.details.toJson()[field] != after[field],
+                      ))
+                    field,
               ];
         if (!retry) _attemptFields = List.unmodifiable(fields);
         if (fields.isNotEmpty) {
@@ -535,15 +555,164 @@ class FoodEditorState extends State<FoodEditor> {
     ),
   );
 
+  static const _labels = {
+    'name': 'Food name',
+    'brand': 'Brand',
+    'size': 'Container size',
+    'location': 'Location',
+    'retention': 'Retention reason',
+  };
+
+  /// Bulk fields get the shared Apply control beside their input.
+  Widget _bulkApply(String field, Widget input) => !bulk
+      ? input
+      : Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BulkApplyCheckbox(
+              checkboxKey: ValueKey('${field}Apply'),
+              label: _labels[field]!,
+              value: applied.contains(field),
+              onChanged: saving || pending()
+                  ? null
+                  : (value) => setState(() {
+                      if (value) {
+                        applied.add(field);
+                      } else {
+                        applied.remove(field);
+                      }
+                      _validation.blur(field);
+                    }),
+            ),
+            Expanded(child: input),
+          ],
+        );
+
+  String? _hint(String field, [String? hint]) =>
+      mixed.contains(field) ? bulkMixedHint : hint;
+
+  // Mixed is state, not a placeholder: keep it visible without focus.
+  FloatingLabelBehavior? _floatMixed(String field) =>
+      mixed.contains(field) ? FloatingLabelBehavior.always : null;
+
+  Widget _input(String field) {
+    final enabled = !saving && !pending();
+    return switch (field) {
+      'name' => TextField(
+        enabled: enabled,
+        controller: name,
+        autofocus: widget.template == null && !bulk,
+        decoration: InputDecoration(
+          labelText: 'Food name',
+          hintText: _hint('name'),
+          floatingLabelBehavior: _floatMixed('name'),
+          errorText: _validation.errorFor('name'),
+          errorMaxLines: 3,
+        ),
+      ),
+      'brand' => FreeTextAutocomplete(
+        errorText: _validation.errorFor('brand'),
+        enabled: enabled,
+        controller: brand,
+        label: 'Brand',
+        hint: _hint('brand'),
+        values: widget.state.brands,
+      ),
+      'expiry' => CivilDateInput(
+        errorText: _validation.errorFor('expiry'),
+        enabled: enabled,
+        controller: expiry,
+        isOwnerMounted: () => mounted && !answered,
+        onPickerChanged: (open) {
+          auxiliaryOpen = open;
+          if (!open) _finishAcceptedSave();
+          widget.onReadinessChanged?.call();
+        },
+        fieldKey: const ValueKey('food-expiration'),
+        focusNode: expiryFocus,
+        autofocus: widget.template != null,
+        label: 'Expiration',
+      ),
+      'size' => TextField(
+        enabled: enabled,
+        controller: size,
+        decoration: InputDecoration(
+          errorText: _validation.errorFor('size'),
+          errorMaxLines: 3,
+          labelText: 'Container size',
+          hintText: _hint('size', 'e.g. 1 lb'),
+          floatingLabelBehavior: _floatMixed('size'),
+        ),
+      ),
+      'location' => FreeTextAutocomplete(
+        errorText: _validation.errorFor('location'),
+        enabled: enabled,
+        controller: location,
+        label: 'Location',
+        hint: _hint('location'),
+        values: widget.state.locations,
+      ),
+      'count' => TextField(
+        enabled: enabled,
+        controller: count,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          errorText: _validation.errorFor('count'),
+          errorMaxLines: 3,
+          labelText: 'Containers to add',
+          helperText: 'Creates a separate container for each one',
+          helperMaxLines: 2,
+        ),
+      ),
+      _ => TagInput(
+        queryErrorText: _validation.errorFor('retention'),
+        enabled: enabled,
+        tags: widget.state.reasons,
+        selected: retention.isEmpty ? {} : {retention},
+        queryController: retentionQuery,
+        onDropdownChanged: (_) {},
+        allowCreate: true,
+        canSubmitQuery: () => retentionQuery.text.trim().length <= 200,
+        clearQueryOnSelection: true,
+        queryLabel: 'Retention reason',
+        // The hint is this field's only visible label, so keep its name.
+        hint: mixed.contains('retention')
+            ? 'Retention reason — Mixed'
+            : 'Retention reason',
+        clearLabel: 'Clear retention reason',
+        chipContext: 'retention reason',
+        expandLabel: 'Show retention reasons',
+        collapseLabel: 'Hide retention reasons',
+        onSubmitQuery: () {
+          final text = retentionQuery.text.trim();
+          if (text.isEmpty || _composing(retentionQuery)) {
+            return false;
+          }
+          if (text.length > 200) {
+            _validation.blur('retention');
+            return false;
+          }
+          setState(() => retention = text);
+          _apply('retention');
+          retentionQuery.clear();
+          return true;
+        },
+        onChanged: (next) {
+          setState(
+            () => retention = next.difference({retention}).firstOrNull ?? '',
+          );
+          _apply('retention');
+        },
+      ),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     _focusScope.traversalEdgeBehavior = widget.panel
         ? TraversalEdgeBehavior.parentScope
         : TraversalEdgeBehavior.closedLoop;
-    final group = widget.group,
-        template = widget.template,
-        targets = widget.targets;
-    final setDialog = setState;
+    final group = widget.group, targets = widget.targets;
     final cancel = requestClose;
     final title = Text(
       bulk
@@ -558,211 +727,17 @@ class FoodEditorState extends State<FoodEditor> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (bulk) ...[
-            for (final field in ['Brand', 'Location']) ...[
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text('Apply $field'),
-                controlAffinity: ListTileControlAffinity.leading,
-                value: field == 'Brand' ? applyBrand : applyLocation,
-                onChanged: saving || pending()
-                    ? null
-                    : (value) => setDialog(() {
-                        if (field == 'Brand') {
-                          applyBrand = value ?? false;
-                        } else {
-                          applyLocation = value ?? false;
-                        }
-                        _validation.changed(field.toLowerCase());
-                      }),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: _validation.field(
-                      field.toLowerCase(),
-                      FreeTextAutocomplete(
-                        errorText: _validation.errorFor(field.toLowerCase()),
-                        enabled:
-                            !saving &&
-                            !pending() &&
-                            (field == 'Brand' ? applyBrand : applyLocation),
-                        controller: field == 'Brand' ? brand : location,
-                        label: field,
-                        hint:
-                            common(
-                              (e) => field == 'Brand' ? e.brand : e.location,
-                            ).isEmpty
-                            ? 'Mixed or empty — unchanged unless applied'
-                            : null,
-                        values: field == 'Brand'
-                            ? widget.state.brands
-                            : widget.state.locations,
-                        onChanged: (_) => setDialog(() {
-                          if (field == 'Brand') {
-                            clearBrand = false;
-                          } else {
-                            clearLocation = false;
-                          }
-                          _validation.changed(field.toLowerCase());
-                        }),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'Clear $field',
-                    constraints: const BoxConstraints(
-                      minWidth: 48,
-                      minHeight: 48,
-                    ),
-                    onPressed: saving || pending()
-                        ? null
-                        : () => setDialog(() {
-                            if (field == 'Brand') {
-                              applyBrand = true;
-                              clearBrand = true;
-                              brand.clear();
-                            } else {
-                              applyLocation = true;
-                              clearLocation = true;
-                              location.clear();
-                            }
-                            _validation.changed(field.toLowerCase());
-                          }),
-                    icon: const Icon(Icons.clear),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-            ],
-          ] else ...[
-            _validation.field(
-              'name',
-              TextField(
-                enabled: !saving && !pending(),
-                controller: name,
-                autofocus: template == null,
-                decoration: InputDecoration(
-                  labelText: 'Food name',
-                  errorText: _validation.errorFor('name'),
-                  errorMaxLines: 3,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _validation.field(
-              'brand',
-              FreeTextAutocomplete(
-                errorText: _validation.errorFor('brand'),
-                enabled: !saving && !pending(),
-                controller: brand,
-                label: 'Brand',
-                values: widget.state.brands,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _validation.field(
-              'expiry',
-              CivilDateInput(
-                errorText: _validation.errorFor('expiry'),
-                enabled: !saving && !pending(),
-                controller: expiry,
-                isOwnerMounted: () => mounted && !answered,
-                onPickerChanged: (open) {
-                  auxiliaryOpen = open;
-                  if (!open) _finishAcceptedSave();
-                  widget.onReadinessChanged?.call();
-                },
-                fieldKey: const ValueKey('food-expiration'),
-                focusNode: expiryFocus,
-                autofocus: template != null,
-                label: 'Expiration',
-              ),
-            ),
-            const SizedBox(height: 12),
-            _validation.field(
-              'size',
-              TextField(
-                enabled: !saving && !pending(),
-                controller: size,
-                decoration: InputDecoration(
-                  errorText: _validation.errorFor('size'),
-                  errorMaxLines: 3,
-                  labelText: 'Container size',
-                  hintText: 'e.g. 1 lb',
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _validation.field(
-              'location',
-              FreeTextAutocomplete(
-                errorText: _validation.errorFor('location'),
-                enabled: !saving && !pending(),
-                controller: location,
-                label: 'Location',
-                values: widget.state.locations,
-              ),
-            ),
-            if (group == null) ...[
-              const SizedBox(height: 12),
-              _validation.field(
-                'count',
-                TextField(
-                  enabled: !saving && !pending(),
-                  controller: count,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    errorText: _validation.errorFor('count'),
-                    errorMaxLines: 3,
-                    labelText: 'Containers to add',
-                    helperText: 'Creates a separate container for each one',
-                    helperMaxLines: 2,
-                  ),
-                ),
-              ),
-            ],
-            if (group != null) ...[
-              const SizedBox(height: 12),
-              _validation.field(
-                'retention',
-                TagInput(
-                  queryErrorText: _validation.errorFor('retention'),
-                  enabled: !saving && !pending(),
-                  tags: widget.state.reasons,
-                  selected: retention.isEmpty ? {} : {retention},
-                  queryController: retentionQuery,
-                  onDropdownChanged: (_) {},
-                  allowCreate: true,
-                  canSubmitQuery: () =>
-                      retentionQuery.text.trim().length <= 200,
-                  clearQueryOnSelection: true,
-                  queryLabel: 'Retention reason',
-                  hint: 'Retention reason',
-                  clearLabel: 'Clear retention reason',
-                  chipContext: 'retention reason',
-                  expandLabel: 'Show retention reasons',
-                  collapseLabel: 'Hide retention reasons',
-                  onSubmitQuery: () {
-                    final text = retentionQuery.text.trim();
-                    if (text.isEmpty || _composing(retentionQuery)) {
-                      return false;
-                    }
-                    if (text.length > 200) {
-                      _validation.blur('retention');
-                      return false;
-                    }
-                    setDialog(() => retention = text);
-                    retentionQuery.clear();
-                    return true;
-                  },
-                  onChanged: (next) => setDialog(
-                    () => retention =
-                        next.difference({retention}).firstOrNull ?? '',
-                  ),
-                ),
-              ),
-            ],
+          for (final (index, field) in [
+            'name',
+            'brand',
+            if (!bulk) 'expiry',
+            'size',
+            'location',
+            if (!bulk && group == null) 'count',
+            if (bulk || group != null) 'retention',
+          ].indexed) ...[
+            if (index > 0) const SizedBox(height: 12),
+            _validation.field(field, _bulkApply(field, _input(field))),
           ],
         ],
       ),
@@ -805,13 +780,16 @@ class FoodEditorState extends State<FoodEditor> {
         : [
             // Narrow, enlarged-text dialogs wrap Cancel/Save onto a second row
             // rather than squeezing them.
-            Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              runSpacing: 4,
-              children: [
-                Wrap(spacing: 8, children: bulkActions),
-                Wrap(spacing: 8, children: [cancelAction, saveAction]),
-              ],
+            SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                runSpacing: 4,
+                children: [
+                  Wrap(spacing: 8, children: bulkActions),
+                  Wrap(spacing: 8, children: [cancelAction, saveAction]),
+                ],
+              ),
             ),
           ];
     final presentation = widget.panel

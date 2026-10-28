@@ -49,6 +49,11 @@ class _FreeTextAutocompleteState extends State<FreeTextAutocomplete> {
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
+        // A hint is a caller's state message (such as Mixed), not a
+        // placeholder, so it stays visible without focus.
+        floatingLabelBehavior: widget.hint == null
+            ? null
+            : FloatingLabelBehavior.always,
         errorText: widget.errorText,
         errorMaxLines: 3,
       ),

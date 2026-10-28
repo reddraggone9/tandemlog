@@ -296,7 +296,7 @@ void main() {
   );
 
   testWidgets(
-    'Food bulk validates only applied fields and preserves explicit Clear mask',
+    'Food bulk validates only applied fields and an applied blank clears',
     (tester) async {
       final state = pane.paneFoods();
       final calls =
@@ -313,21 +313,29 @@ void main() {
         },
       );
       expect(_actionWidget(tester).validation.reviewRequired, isFalse);
-      key.currentState!.brand.clear();
-      await tester.tap(find.text('Apply Brand'));
+      // An applied blank Food name is the one rejected clear.
+      await tester.tap(find.byKey(const ValueKey('nameApply')));
+      key.currentState!.name.clear();
       await tester.pumpAndSettle();
       await _activate(tester);
       expect(calls, isEmpty);
       expect(
-        tester.widget<TextField>(_field('Brand')).decoration!.errorText,
-        'Use Clear Brand to remove a value.',
+        tester.widget<TextField>(_field('Food name')).decoration!.errorText,
+        'Enter a food name.',
       );
-      await tester.tap(find.byTooltip('Clear Brand'));
+      await tester.tap(find.byKey(const ValueKey('nameApply')));
+      key.currentState!.brand.clear();
+      if (!key.currentState!.applied.contains('brand')) {
+        await tester.tap(find.byKey(const ValueKey('brandApply')));
+      }
       await tester.pumpAndSettle();
-      // Blurring settles the button's intent after correcting the revealed issue.
       FocusManager.instance.primaryFocus?.unfocus();
       await tester.pumpAndSettle();
       expect(_actionWidget(tester).validation.reviewRequired, isFalse);
+      expect(
+        tester.widget<TextField>(_field('Brand')).decoration!.errorText,
+        isNull,
+      );
       await _activate(tester);
       expect(calls, hasLength(1));
       expect(
@@ -678,12 +686,11 @@ void main() {
           calls.add((details, List.of(fields)));
         },
       );
-      await tester.tap(find.text('Apply Brand'));
-      await tester.pumpAndSettle();
+      // Editing applies a field; unchecking Apply keeps the draft unapplied.
       await tester.enterText(_field('Brand'), List.filled(201, 'x').join());
-      await tester.tap(find.text('Apply Brand'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Apply Location'));
+      expect(key.currentState!.applied, contains('brand'));
+      await tester.tap(find.byKey(const ValueKey('brandApply')));
       await tester.pumpAndSettle();
       await tester.enterText(_field('Location'), 'Synthetic shelf');
       FocusManager.instance.primaryFocus?.unfocus();
