@@ -248,7 +248,8 @@ the diagnostic outputs stay retained.
 
 ## Borderline result on already qualified source
 
-Lee approved this rule on2026-10-27 14:56 CDT. When IDENTICAL relevant source
+Lee approved this rule on2026-10-27 14:56 CDT and extended it to absolute misses
+on2026-10-28. When IDENTICAL relevant source
 (same relevant-source identity,under the scheme its requests recorded) already
 passed a qualifying check,a timing failure within normal run-to-run variation is
 a borderline limit,not a regression:it does not block the release and is queued
@@ -269,10 +270,11 @@ is the verdict. `borderline-accepted` requires ALL of:
   contract,absolute/growth evaluation,binding,log and failed-workload cleanup
   recomputes from retained bytes (the same checks as the owner override). Any
   correctness,coverage,replay/integrity or execution failure refuses;
-- every absolute limit passed,and every miss is a history-growth bound whose
-  large-size median and/or maximum is at most `BORDERLINE_VARIATION_BAND` (5%)
-  over that bound. One miss beyond the band makes the whole result an ordinary
-  failure.
+- every timing miss,absolute or history-growth,has its median and/or maximum
+  at most `BORDERLINE_VARIATION_BAND` (5%) over its unchanged bound. Absolute
+  misses use the size-specific action budget;growth misses use the paired
+  large-size bound. This includes mixed absolute/growth misses:one miss beyond
+  the band makes the whole result an ordinary failure. No timing budget changes.
 
 The band is a declared constant,not a computed tolerance. The q9/q10/q11 runs
 measured the same `sync.peerTask.whileFood.storageAdmission` growth at

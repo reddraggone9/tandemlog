@@ -140,12 +140,14 @@ def diagnostic_did_not_reproduce(diagnostic, prior_request_id, source_sha256, pr
 BORDERLINE_VARIATION_BAND = 0.05
 BORDERLINE_ACCEPTED = 'borderline-accepted'
 
-def classify_borderline(prior_passed_identity, identity, absolute, paired, band=BORDERLINE_VARIATION_BAND):
+def classify_borderline(prior_passed_identity, identity, absolute, paired, band=BORDERLINE_VARIATION_BAND, *, limits=None):
     """Verdict for a recomputed enforcing result: passed, borderline-accepted or failed.
 
     prior_passed_identity is the relevant-source SHA-256 of an already verified passing
-    qualification (None when there is none). Only history-growth misses can be borderline;
-    any correctness, coverage or absolute-limit failure, or any miss beyond the band, fails.
+    qualification (None when there is none). Absolute and history-growth misses can be
+    borderline; correctness/coverage failures or any miss beyond the band fail. Absolute
+    misses require the same verified limits used to recompute their evaluations; keep the
+    retained summary schema unchanged so earlier qualification receipts still recompute.
     """
     def failed(reason):
         return {'verdict': 'failed', 'reason': reason, 'borderlineMetrics': []}
@@ -159,35 +161,42 @@ def classify_borderline(prior_passed_identity, identity, absolute, paired, band=
         if decision.status not in ('passed', 'timing-failed') or \
                 (decision.status == 'timing-failed') != bool(decision.failures):
             return failed('correctness/coverage failure: ' + name + ' ' + ','.join(decision.failures))
-    missed = sorted(name + ':' + f for name, d in absolute.items() for f in d.failures)
-    if missed:
-        return failed('absolute limit failed: ' + ', '.join(missed))
     metrics = []
-    for name, decision in sorted(paired.items()):
-        for failure in decision.failures:
-            action = failure.removeprefix('scaling:')
-            summary = decision.summaries.get(action)
-            if not failure.startswith('scaling:') or not isinstance(summary, dict):
-                return failed('correctness/coverage failure: ' + name + ':' + failure)
-            label = name + ':' + failure
-            exceeded = False
-            for statistic, measured, bound in (('median', 'largeMedianMs', 'medianBoundMs'),
-                                               ('maximum', 'largeMaximumMs', 'maximumBoundMs')):
-                measured, bound = summary[measured], summary[bound]
-                if measured <= bound:
-                    continue
-                exceeded = True
-                if measured > bound * (1 + band):
-                    return failed('%s %s %.4gms is outside the %g%% variation band of its %.4gms bound'
-                                  % (label, statistic, measured, band * 100, bound))
-                metrics.append({'label': label, 'statistic': statistic, 'measuredMs': measured,
-                                'boundMs': bound, 'ratioOfBound': round(measured / bound, 6)})
-            if not exceeded:
-                return failed('correctness/coverage failure: ' + label + ' reported without a miss')
+    for decisions, is_growth in ((absolute, False), (paired, True)):
+        for name, decision in sorted(decisions.items()):
+            for failure in decision.failures:
+                action = failure.removeprefix('scaling:') if is_growth else failure
+                summary = decision.summaries.get(action)
+                label = name + ':' + failure
+                if not isinstance(summary, dict) or (is_growth and not failure.startswith('scaling:')):
+                    return failed('correctness/coverage failure: ' + label)
+                if is_growth:
+                    metric_keys = (('median', 'largeMedianMs', 'medianBoundMs'),
+                                  ('maximum', 'largeMaximumMs', 'maximumBoundMs'))
+                    bounds = summary
+                else:
+                    metric_keys = (('median', 'medianMs', 'medianMs'), ('maximum', 'maxMs', 'maxMs'))
+                    bounds = (limits or {}).get('actionsBySize', {}).get(name, {}).get(action, {})
+                exceeded = False
+                for statistic, measured_key, bound_key in metric_keys:
+                    measured, bound = summary.get(measured_key), bounds.get(bound_key)
+                    if (type(measured) not in (int, float) or not math.isfinite(measured) or measured < 0 or
+                            type(bound) not in (int, float) or not math.isfinite(bound) or bound <= 0):
+                        return failed('invalid timing summary or bound: ' + label)
+                    if measured <= bound:
+                        continue
+                    exceeded = True
+                    if measured > bound * (1 + band):
+                        return failed('%s %s %.4gms is outside the %g%% variation band of its %.4gms bound'
+                                      % (label, statistic, measured, band * 100, bound))
+                    metrics.append({'label': label, 'statistic': statistic, 'measuredMs': measured,
+                                    'boundMs': bound, 'ratioOfBound': round(measured / bound, 6)})
+                if not exceeded:
+                    return failed('correctness/coverage failure: ' + label + ' reported without a miss')
     if not metrics:
         return {'verdict': 'passed', 'reason': 'all limits passed', 'borderlineMetrics': []}
     return {'verdict': BORDERLINE_ACCEPTED, 'borderlineMetrics': metrics,
-            'reason': 'growth misses within the %g%% variation band on identical, already passed source'
+            'reason': 'timing misses within the %g%% variation band on identical, already passed source'
                       % (band * 100)}
 
 
