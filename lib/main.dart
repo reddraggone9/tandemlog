@@ -28,6 +28,7 @@ import 'presentation/toolbar_action.dart';
 import 'presentation/section_menu.dart';
 import 'presentation/section_content.dart';
 import 'presentation/list_row_surface.dart';
+import 'presentation/list_selection.dart';
 import 'presentation/task_drop_indicator.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
@@ -2573,47 +2574,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<bool> _selectTask(
     Map<String, dynamic> task, {
-    bool explicit = false,
-    bool range = false,
-    bool longPress = false,
+    SelectionGesture gesture = SelectionGesture.plain,
   }) async {
     final id = task['id'] as String;
     final before = Set<String>.of(selectedTasks);
-    final next = Set<String>.of(before);
-    var nextIntent = selecting;
-    var anchor = selectionAnchor;
-    if (range) {
-      final ordered = visibleEntries
-          .map((entry) => entry.task['id'] as String)
-          .toList();
-      final from = ordered.indexOf(anchor ?? id), to = ordered.indexOf(id);
-      next.clear();
-      if (from >= 0 && to >= 0) {
-        next.addAll(
-          ordered.sublist(from < to ? from : to, (from > to ? from : to) + 1),
-        );
-      } else {
-        next.add(id);
-        anchor = id;
-      }
-      nextIntent = true;
-    } else if (longPress && !selecting) {
-      next
-        ..clear()
-        ..add(id);
-      nextIntent = true;
-      anchor = id;
-    } else if (explicit || selecting) {
-      if (!next.add(id)) next.remove(id);
-      nextIntent = true;
-      anchor = id;
-    } else {
-      next
-        ..clear()
-        ..add(id);
-      nextIntent = false;
-      anchor = id;
-    }
+    final range = gesture == SelectionGesture.range;
+    final result = nextListSelection<String>(
+      selected: before,
+      selecting: selecting,
+      anchor: selectionAnchor,
+      target: id,
+      order: [for (final entry in visibleEntries) entry.task['id'] as String],
+      members: (row) => [row],
+      gesture: gesture,
+    );
+    final next = result.selected;
+    var nextIntent = result.selecting;
+    var anchor = result.anchor;
     if (wideLayout && before.length >= 2 && next.length == 1) {
       nextIntent = false;
     }
@@ -2694,7 +2671,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final nextIndex = index + direction;
     if (index < 0 || nextIndex < 0 || nextIndex >= entries.length) return;
     final target = entries[nextIndex].task;
-    if (range && !await _selectTask(target, range: true)) return;
+    if (range && !await _selectTask(target, gesture: SelectionGesture.range)) {
+      return;
+    }
     final id = target['id'] as String;
     var targetContext = dropKeys[id]?.currentContext;
     if (targetContext == null && taskScroll.hasClients) {
@@ -5759,8 +5738,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   label: 'Select task',
                                 ): () => _selectTask(
                                   task,
-                                  explicit: true,
-                                  longPress: true,
+                                  gesture: SelectionGesture.longPress,
                                 ),
                               },
                               child: Focus(
@@ -5792,8 +5770,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                       LogicalKeyboardKey.space) {
                                     _selectTask(
                                       task,
-                                      explicit: true,
-                                      longPress: true,
+                                      gesture: SelectionGesture.longPress,
                                     );
                                     return KeyEventResult.handled;
                                   }
@@ -5905,23 +5882,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                               ? null
                                               : () => _selectTask(
                                                   task,
-                                                  explicit:
-                                                      HardwareKeyboard
-                                                          .instance
-                                                          .isControlPressed ||
-                                                      HardwareKeyboard
-                                                          .instance
-                                                          .isMetaPressed,
-                                                  range: HardwareKeyboard
-                                                      .instance
-                                                      .isShiftPressed,
+                                                  gesture:
+                                                      pointerSelectionGesture(),
                                                 ),
                                           onLongPress: busy
                                               ? null
                                               : () => _selectTask(
                                                   task,
-                                                  explicit: true,
-                                                  longPress: true,
+                                                  gesture: SelectionGesture
+                                                      .longPress,
                                                 ),
                                           child: ConstrainedBox(
                                             constraints: const BoxConstraints(
