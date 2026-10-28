@@ -227,7 +227,8 @@ Changes:
 - **Wide selection (k):** at pane widths a selection opens the bulk editor in the
   side pane, as on Tasks; narrowing back to one whole row returns to the single
   editor. Narrow widths keep Edit → dialog.
-- **Help:** the Food editor's on-demand help gains a short Products paragraph.
+- **Help:** none added. The Food editor has no on-demand help surface, and the
+  scope and merge lines already say what a product edit affects, in context.
 
 Deliberately not added: a Products screen or list; product rows outside Running
 low; a split or "move container" command; Unmerge; a purchase list or price
@@ -247,6 +248,10 @@ responsive editor pane.
   purchases it touches. Merges re-resolve the (small) alias set. Per-product
   views (row overlay, on-hand counts, Running low) are one pass over the
   projected containers, like the existing per-save container sort.
+- While nothing product-level exists (every product implicit, as in all history
+  before this release), Add matching is one pass over cached description keys
+  and grouping uses descriptions, so no product IDs are derived; the existing
+  Add/edit timings measure this path.
 - A merge writes one alias regardless of container count.
 - New actions (product edit, merge, purchase import) get budgets and
   correctness assertions under the
@@ -269,3 +274,4 @@ Method changes from the proposal, made while implementing (no goal changes):
 - `container.add` r2 keeps name/brand/size on the container as written, as a
   fallback when a product is unknown. Plain Adds keep writing r1.
 - No silent purchase auto-link on Add (decision 7).
+- No Products help paragraph (see section 6).

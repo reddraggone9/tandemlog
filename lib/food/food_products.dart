@@ -519,6 +519,26 @@ FoodAddPlan planFoodAdd(
   String Function()? newId,
 }) {
   final key = foodDescriptionKey(details.name, details.brand, details.size);
+  if (!state.usesProducts && preferred == null) {
+    // Every product is implicit: one pass over cached description keys, with
+    // no product summaries or derived IDs unless the case differs.
+    final counts = <String, (FoodDetails, int)>{};
+    for (final c in state.containers) {
+      if (c.descriptionKey != key) continue;
+      final own = c.ownDetails;
+      if (own.name == details.name &&
+          own.brand == details.brand &&
+          own.size == details.size) {
+        return const FoodAddPlan();
+      }
+      final exact = canonicalDataJson([own.name, own.brand, own.size]);
+      final seen = counts[exact];
+      counts[exact] = (own, (seen?.$2 ?? 0) + 1);
+    }
+    if (counts.isEmpty) return const FoodAddPlan();
+    final best = counts.values.reduce((a, b) => b.$2 > a.$2 ? b : a);
+    return FoodAddPlan(product: implicitFoodProductId(best.$1));
+  }
   final implicit = implicitFoodProductId(details);
   FoodProductSummary? match;
   if (preferred != null) {
