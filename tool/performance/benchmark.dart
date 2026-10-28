@@ -20,6 +20,7 @@ import 'package:tandemlog/domain/task_view.dart';
 import 'package:tandemlog/domain/event_chain.dart' show canonicalDataJson;
 import 'package:tandemlog/domain/timed_view.dart';
 import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/food/food_purchase_import.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/platform/foreground_importer.dart';
@@ -45,6 +46,17 @@ void require(bool value, String reason) {
 
 String logicalFood(FoodStore food) =>
     jsonEncode(food.state.containers.map((c) => c.toJson()).toList());
+
+// Include catalog-only changes and voided purchases, not just container rows.
+String productFoodState(FoodStore food) => canonicalDataJson({
+  'containers': food.state.containers.map((c) => c.toJson()).toList(),
+  'products': food.state.catalog.products,
+  'aliases': food.state.catalog.aliases,
+  'purchases': {
+    for (final p in food.state.catalog.purchases.values)
+      p.id: {...p.toJson(), 'voided': p.voided},
+  },
+});
 
 class Audit {
   Audit(this.config, this.family);
@@ -349,12 +361,12 @@ class Audit {
   Future<void> replayCheck() async {
     await assertOriginals();
     final beforeTasks = jsonEncode(tasks.rows),
-        beforeFood = logicalFood(food),
+        beforeFood = productFoodState(food),
         before = await inventory();
     await closeHandles();
     await open(fresh: false);
     require(jsonEncode(tasks.rows) == beforeTasks, 'Reopen Task state differs');
-    require(logicalFood(food) == beforeFood, 'Reopen Food state differs');
+    require(productFoodState(food) == beforeFood, 'Reopen Food state differs');
     require(
       jsonEncode(await inventory()) == jsonEncode(before),
       'Read-only reopen changed canonical inventory',
@@ -1806,6 +1818,7 @@ Future<void> main(List<String> args) async {
     'derived-recurring': derivedRecurring,
     'food-cardinality500': foodCardinality500,
     'converted-food-confirmed': convertedConfirmedFood,
+    'food-products': foodProducts,
     'first-derived-tags': (a) =>
         firstDerivedPointAction(a, sampleStart, 'tags'),
     'first-copied-checkbox': (a) =>
@@ -1814,7 +1827,8 @@ Future<void> main(List<String> args) async {
         firstDerivedPointAction(a, sampleStart, 'mixed'),
   };
   for (final entry in all.entries) {
-    if (entry.key == 'derived-recurring' ||
+    if (entry.key == 'food-products' ||
+        entry.key == 'derived-recurring' ||
         entry.key.startsWith('first-derived-') ||
         entry.key == 'first-copied-checkbox') {
       for (var rep = 0; rep < benchmarkWarmups + benchmarkSamples; rep++) {
@@ -2530,4 +2544,277 @@ Future<void> firstDerivedPointAction(Audit a, int rep, String kind) async {
     session?.cancel();
     if (capture != null) a.tasks.releaseTextCapture(capture);
   }
+}
+
+/// Production editor/store paths, with actual session confirmation and Undo.
+/// Each repetition has a fresh sealed workspace: implicit first edit, bulk
+/// product edit, rename/merge, explicit-link Add and reviewed receipt import.
+Future<void> foodProducts(Audit a) async {
+  final rep = sampleStart;
+  final tasksBefore = jsonEncode(a.tasks.rows);
+  final base = a.config['fixtureBaseIdentity'] as int;
+  final imported = benchmarkId('food:$base:${base == 60 ? 4 : 1000}');
+  requireImportedFoodTargets(a, [imported]);
+  final source = a.food.state.containers.singleWhere((c) => c.id == imported);
+  final sourceRoot = source.product;
+  final undo = FoodUndoHistory()..setWorkspace(a.shared.path);
+
+  Future<void> confirmed(Future<void> Function() command) async {
+    await command();
+    final records = List<FoodRecord>.of(a.food.lastPreparedRecords);
+    require(
+      records.isNotEmpty && records.every(a.food.isAdmitted),
+      'Product action not exactly confirmed',
+    );
+    undo.record('Updated', records, confirmed: a.food.isAdmitted);
+  }
+
+  Future<void> inverse(String label, String before) async {
+    // Reopen while the operation is still active, not only after its inverse.
+    await a.replayCheck();
+    final entry = undo.latest!;
+    await a.measure('food.product.$label.undo', rep, () async {
+      await a.food.undoOperations(entry.records);
+      require(
+        a.food.lastPreparedRecords.every(a.food.isAdmitted),
+        'Product inverse not exactly confirmed',
+      );
+      undo.complete(entry);
+    }, expectedDelta: 1);
+    require(
+      undo.length == 0 && productFoodState(a.food) == before,
+      'Full product/catalog/container Undo differs: $label',
+    );
+    require(
+      jsonEncode(a.tasks.rows) == tasksBefore,
+      'Product action changed Tasks',
+    );
+  }
+
+  var before = productFoodState(a.food);
+  await a.measure(
+    'food.product.edit',
+    rep,
+    () => confirmed(
+      () => a.food.changeDetails(
+        [source.id],
+        source.details,
+        [],
+        products: FoodProductChange(
+          roots: [sourceRoot],
+          changes: {
+            'name': 'Benchmark renamed product',
+            'brand': 'Benchmark SKU brand',
+            'size': '500 g',
+            'links': ['https://example.com/benchmark-product'],
+            'minimum': 100,
+          },
+        ),
+      ),
+    ),
+    expectedDelta: 1,
+  );
+  final edited = a.food.state.products[sourceRoot]!;
+  require(
+    edited.name == 'Benchmark renamed product' &&
+        edited.brand == 'Benchmark SKU brand' &&
+        edited.size == '500 g' &&
+        edited.links.single == 'https://example.com/benchmark-product' &&
+        edited.minimum == 100 &&
+        edited.runningLow,
+    'Product editor fields/running-low differ',
+  );
+  await inverse('edit', before);
+
+  // Seed a second product, then persistently rename it: Add by its new
+  // description must use the production revision-2 product-link path.
+  await a.food.add(const FoodDetails(name: 'Benchmark other SKU'), 2);
+  final other = a.food.state.containers.firstWhere(
+    (c) => c.details.name == 'Benchmark other SKU',
+  );
+  final targetRoot = other.product;
+  const target = FoodDetails(
+    name: 'Benchmark explicit target',
+    brand: 'Target',
+  );
+  await a.food.changeDetails(
+    [other.id],
+    target,
+    [],
+    products: FoodProductChange(
+      roots: [targetRoot],
+      changes: {'name': target.name, 'brand': target.brand},
+    ),
+  );
+
+  before = productFoodState(a.food);
+  await a.measure(
+    'food.product.bulkEdit',
+    rep,
+    () => confirmed(
+      () => a.food.changeDetails(
+        [source.id, other.id],
+        const FoodDetails(name: 'unused', location: 'Benchmark shelf'),
+        ['location'],
+        products: FoodProductChange(
+          roots: [sourceRoot, targetRoot],
+          changes: {'size': '750 g'},
+        ),
+      ),
+    ),
+    expectedDelta: 1,
+  );
+  require(
+    [
+          sourceRoot,
+          targetRoot,
+        ].every((id) => a.food.state.products[id]!.size == '750 g') &&
+        a.food.state.containers
+            .where((c) => c.id == source.id || c.id == other.id)
+            .every((c) => c.details.location == 'Benchmark shelf'),
+    'Bulk product/container mixed Save differs',
+  );
+  await inverse('bulkEdit', before);
+
+  before = productFoodState(a.food);
+  await a.measure(
+    'food.product.merge',
+    rep,
+    () => confirmed(
+      () => a.food.changeDetails(
+        [source.id],
+        target,
+        [],
+        products: FoodProductChange(
+          roots: [sourceRoot],
+          changes: {
+            'name': target.name,
+            'brand': target.brand,
+            'size': target.size,
+          },
+        ),
+      ),
+    ),
+    expectedDelta: 1,
+  );
+  require(
+    a.food.state.catalog.resolve(sourceRoot) == targetRoot &&
+        a.food.state.containers.singleWhere((c) => c.id == source.id).product ==
+            targetRoot,
+    'Rename did not merge whole product',
+  );
+  await inverse('merge', before);
+
+  before = productFoodState(a.food);
+  final oldIDs = a.food.state.containers.map((c) => c.id).toSet();
+  await a.measure(
+    'food.product.addWithProduct',
+    rep,
+    () => confirmed(() => a.food.add(target, 3)),
+    expectedDelta: 1,
+  );
+  final added = a.food.state.containers
+      .where((c) => !oldIDs.contains(c.id))
+      .toList();
+  require(
+    added.length == 3 &&
+        added.every(
+          (c) => c.product == targetRoot && c.productLink == targetRoot,
+        ),
+    'Add did not link three containers to renamed product',
+  );
+  await inverse('addWithProduct', before);
+
+  // One existing-product line matches a historical hand entry; one new SKU
+  // creates three Inbox containers. Stable public receipt keys, no private data.
+  final plan = FoodPurchaseImportPlan(
+    space: a.food.space,
+    importId: benchmarkId('product-benchmark-import:$rep'),
+    sourceSha256: bytesDigest(utf8.encode('synthetic product receipt $rep')),
+    lines: [
+      FoodPurchaseLine(
+        sourceKind: 'benchmark',
+        sourceKey: 'existing-$rep',
+        date: source.createdAt.substring(0, 10),
+        store: 'Synthetic store',
+        amount: 250,
+        quantity: 1,
+        product: sourceRoot,
+      ),
+      FoodPurchaseLine(
+        sourceKind: 'benchmark',
+        sourceKey: 'new-$rep',
+        date: '2026-10-28',
+        store: 'Synthetic store',
+        amount: 900,
+        quantity: 3,
+        name: 'Benchmark receipt SKU',
+        brand: 'Receipt',
+        link: 'https://example.com/receipt-sku',
+      ),
+    ],
+  );
+  before = productFoodState(a.food);
+  final dry = await a.measure(
+    'food.product.import.dryRun',
+    rep,
+    () => a.food.dryRunPurchaseImport(plan),
+    readOnly: true,
+  );
+  require(
+    dry.status == FoodPurchaseImportStatus.ready &&
+        dry.lines.first.matched.length == 1 &&
+        dry.lines.last.created.length == 3 &&
+        productFoodState(a.food) == before,
+    'Receipt dry run differs',
+  );
+  await a.measure(
+    'food.product.import.commit',
+    rep,
+    () => confirmed(() async {
+      await a.food.commitPurchaseImport(plan);
+    }),
+    expectedDelta: 1,
+  );
+  for (final line in plan.lines) {
+    final purchase = a.food.state.catalog.purchases[line.purchaseId]!;
+    require(
+      purchase.amount == line.amount &&
+          purchase.quantity == line.quantity &&
+          purchase.store == line.store &&
+          purchase.date == line.date &&
+          purchase.currency == line.currency &&
+          !purchase.voided &&
+          canonicalDataJson(purchase.source) == canonicalDataJson(line.source),
+      'Imported purchase values differ',
+    );
+    require(
+      a.food.state.containers.where((c) => c.purchase == purchase.id).length ==
+          line.quantity,
+      'Imported purchase container links/count differ',
+    );
+  }
+  final committed = productFoodState(a.food);
+  final retry = await a.measure(
+    'food.product.import.retry',
+    rep,
+    () => a.food.commitPurchaseImport(plan),
+    readOnly: true,
+  );
+  require(
+    retry.status == FoodPurchaseImportStatus.committed &&
+        productFoodState(a.food) == committed,
+    'Receipt retry duplicated or changed state',
+  );
+  await inverse('import', before);
+
+  // Force a new profile to replay the still-active explicit product seed.
+  await a.closeHandles();
+  a.profileOverride = '${a.root.path}/product-fresh-replay';
+  await a.open(fresh: true);
+  require(
+    productFoodState(a.food) == before &&
+        jsonEncode(a.tasks.rows) == tasksBefore,
+    'Fresh canonical product/catalog replay differs',
+  );
 }

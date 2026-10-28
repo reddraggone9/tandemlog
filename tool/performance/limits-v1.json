@@ -941,6 +941,54 @@
       "firstDerived.mixed.undo": {
         "medianMs": 30,
         "maxMs": 35
+      },
+      "food.product.edit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.edit.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.bulkEdit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.bulkEdit.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.merge": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.merge.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.addWithProduct": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.addWithProduct.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.dryRun": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.commit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.retry": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.undo": {
+        "medianMs": 15,
+        "maxMs": 20
       }
     },
     "dense-2": {
@@ -1871,6 +1919,54 @@
       "firstDerived.mixed.undo": {
         "medianMs": 30,
         "maxMs": 35
+      },
+      "food.product.edit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.edit.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.bulkEdit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.bulkEdit.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.merge": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.merge.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.addWithProduct": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.addWithProduct.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.dryRun": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.commit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.retry": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.undo": {
+        "medianMs": 15,
+        "maxMs": 20
       }
     },
     "dense-food": {
@@ -2801,6 +2897,54 @@
       "firstDerived.mixed.undo": {
         "medianMs": 30,
         "maxMs": 35
+      },
+      "food.product.edit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.edit.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.bulkEdit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.bulkEdit.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.merge": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.merge.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.addWithProduct": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.addWithProduct.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.dryRun": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.commit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.retry": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.import.undo": {
+        "medianMs": 15,
+        "maxMs": 20
       }
     }
   },
@@ -4199,6 +4343,78 @@
         "maximumAdditiveMs": 5
       },
       "firstDerived.mixed.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.edit": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.edit.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.bulkEdit": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.bulkEdit.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.merge": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.merge.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.addWithProduct": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.addWithProduct.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.import.dryRun": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.import.commit": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.import.retry": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.import.undo": {
         "maxMedianRatio": 1.25,
         "medianAdditiveMs": 3,
         "maxMaximumRatio": 1.4,
@@ -5603,6 +5819,78 @@
           "medianAdditiveMs": 3,
           "maxMaximumRatio": 1.4,
           "maximumAdditiveMs": 5
+        },
+        "food.product.edit": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.edit.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.bulkEdit": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.bulkEdit.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.merge": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.merge.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.addWithProduct": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.addWithProduct.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.import.dryRun": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.import.commit": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.import.retry": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.import.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
         }
       },
       "growthKind": "food"
@@ -5619,5 +5907,11 @@
     "actualUIAccepted": false,
     "scope": "AOT storage/application/readmodel only; actual native UI gate remains separate and currently failed160",
     "policyOnlyReevaluationIsFreshEnforcingRun": false
+  },
+  "prospectiveFoodProductBudgets": {
+    "declaredBeforeMeasurement": true,
+    "actions": 12,
+    "basis": "15ms median /20ms maximum per shape: existing Food details/add/Undo application bounds. Includes confirmation and session Undo; import is bounded to two purchase lines/four containers, not maximum-size import. No new-action measurements used; previous calibrated bounds unchanged.",
+    "qualificationPending": true
   }
 }

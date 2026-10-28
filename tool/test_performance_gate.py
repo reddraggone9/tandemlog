@@ -287,7 +287,16 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
         frozen=json.loads((PATH.parent/'original-action-ids-v1.json').read_text())['actions']
         self.assertEqual(len(frozen),146)
         self.assertTrue(set(frozen).issubset(coverage))
-        self.assertEqual(len(coverage),232)
+        self.assertEqual(len(coverage),244)
+        products = {'food.product.' + name for name in (
+            'edit','edit.undo','bulkEdit','bulkEdit.undo','merge','merge.undo',
+            'addWithProduct','addWithProduct.undo','import.dryRun','import.commit',
+            'import.retry','import.undo')}
+        self.assertEqual({a for a in coverage if a.startswith('food.product.')},products)
+        for values in limits['actionsBySize'].values():
+            for action in products:
+                self.assertEqual(values[action],{'medianMs':15,'maxMs':20})
+        self.assertTrue(limits['prospectiveFoodProductBudgets']['declaredBeforeMeasurement'])
         for action in ('firstDerived.metadata.tags', 'firstDerived.metadata.tags.undo', 'firstCopied.metadata.complete', 'firstCopied.metadata.complete.undo', 'firstDerived.mixed.save', 'firstDerived.mixed.undo'):
             self.assertIn(action,coverage)
         for action in ("converted.food.paired.details.confirmedSave", "converted.food.paired.details.confirmedUndo"):
@@ -485,7 +494,7 @@ class CalibratedInitialLimitTests(unittest.TestCase):
         limits=json.loads((PATH.parent/'limits-v1.json').read_text())
         for values in limits['actionsBySize'].values():
             ordinary={k:v for k,v in values.items() if not k.startswith('startup.')}
-            self.assertEqual(len(ordinary),224)
+            self.assertEqual(len(ordinary),236)
             self.assertEqual(len(values)-len(ordinary),8)
             for bound in ordinary.values():
                 self.assertLessEqual(bound['medianMs'],bound['maxMs'])

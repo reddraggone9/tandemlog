@@ -144,6 +144,18 @@
     "food.matched.location",
     "food.matched.retention",
     "food.matched.search",
+    "food.product.addWithProduct",
+    "food.product.addWithProduct.undo",
+    "food.product.bulkEdit",
+    "food.product.bulkEdit.undo",
+    "food.product.edit",
+    "food.product.edit.undo",
+    "food.product.import.commit",
+    "food.product.import.dryRun",
+    "food.product.import.retry",
+    "food.product.import.undo",
+    "food.product.merge",
+    "food.product.merge.undo",
     "food.restore.1",
     "food.restore.1.undo",
     "food.restore.3",
@@ -554,6 +566,32 @@
       "One fresh process per shape is diagnostic only; no median/tail acceptance",
       "Cloud Xvfb software rendering is not hardware presentation latency",
       "Other UI actions still require faithful native timing coverage"
+    ]
+  },
+  "foodProductContract": {
+    "family": "food-products",
+    "additiveMetrics": [
+      "food.product.edit",
+      "food.product.edit.undo",
+      "food.product.bulkEdit",
+      "food.product.bulkEdit.undo",
+      "food.product.merge",
+      "food.product.merge.undo",
+      "food.product.addWithProduct",
+      "food.product.addWithProduct.undo",
+      "food.product.import.dryRun",
+      "food.product.import.commit",
+      "food.product.import.retry",
+      "food.product.import.undo"
+    ],
+    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
+    "boundary": "Production changeDetails with FoodProductChange (implicit first edit; mixed bulk two roots; rename-to-existing merge), add matching renamed product (three revision2 linked containers), dryRunPurchaseImport and commitPurchaseImport (two lines: existing product matched hand entry plus new product/three Inbox containers); exact confirmation and FoodUndoHistory in timed writes/Undo.",
+    "correctness": "Full containers/catalog/products/aliases/purchases including voided state; exact purchase values/links and counts; read-only dry-run and idempotent retry; Undo to full prior state; active-state reopen before each inverse; fresh-profile canonical replay of still-active explicit product seed; Tasks unchanged, original prefixes and peers retained.",
+    "budgets": "Prospective15ms median/20ms maximum, all3shapes, comparable existing Food details/add/Undo; both ordinary growth pairs unchanged1.25x+3ms /1.4x+5ms. No measurements used to choose budgets.",
+    "gaps": [
+      "No actual widget/input/paint timing acceptance.",
+      "Two-line receipt distribution only; maximum500-line import not timed.",
+      "No separate timing distributions for large bulk selections or deep/concurrent merge chains."
     ]
   }
 }

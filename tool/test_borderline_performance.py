@@ -3,6 +3,7 @@ Bundle reports are synthetic; one test reads retained q9-q11 evidence.
 """
 import contextlib
 import copy
+import hashlib
 import io
 import json
 from pathlib import Path
@@ -39,6 +40,25 @@ def absolute_timing(median=10.0, maximum=31.2):
     return {**ABSOLUTE, 'dense-2': Evaluation(
         'timing-failed' if failed else 'passed', ('task.title.save',) if failed else (),
         {'task.title.save': {'medianMs': median, 'maxMs': maximum}})}
+
+
+HISTORICAL_LIMITS_SHA256 = '50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e'
+
+
+def historical_limits():
+    """Limits bound by retained q9-q11: current limits minus the additive food.product.* labels.
+    The byte-exact SHA match proves every earlier bound is unchanged."""
+    def strip(value):
+        if isinstance(value, dict):
+            return {k: strip(v) for k, v in value.items() if not k.startswith('food.product.')}
+        return value
+    current = json.loads((TOOLS / 'limits-v1.json').read_text())
+    current.pop('prospectiveFoodProductBudgets')
+    limits = strip(current)
+    text = json.dumps(limits, indent=2) + '\n'
+    limits['sha256'] = hashlib.sha256(text.encode()).hexdigest()
+    assert limits['sha256'] == HISTORICAL_LIMITS_SHA256, limits['sha256']
+    return limits
 
 
 class BorderlinePolicyTests(unittest.TestCase):
@@ -142,8 +162,7 @@ class BorderlinePolicyTests(unittest.TestCase):
 
     def test_retained_q9_q10_q11_evidence(self):
         """q9 passed; q10 missed by 45% (ordinary failure); q11 missed by 1.6% (borderline)."""
-        limits = json.loads((TOOLS / 'limits-v1.json').read_text())
-        limits['sha256'] = receipt.digest(TOOLS / 'limits-v1.json')
+        limits = historical_limits()
         specs = run_gate.scaling_specs(limits)
 
         def decisions(path):
