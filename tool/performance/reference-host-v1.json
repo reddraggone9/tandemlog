@@ -33,10 +33,10 @@
     "pids.max": "128"
   },
   "limitsSHA256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
-  "pubspecLockSHA256": "bf48c053004fe81731810022c4ee0123b65da451f0f81989cff26bced836672a",
+  "pubspecLockSHA256": "f78669e0f9f033c5404ea390826dff5a734736199db0d82e73e7e29cdd41a0ac",
   "compiledDependencies": {
     "count": 5281,
-    "sha256": "99f0d60adb283d315c8578ea5b2b8d91a2b91ec08f0c3984d605f7c5366e2fae"
+    "sha256": "cb71a5afcda3f921e06f7d0233b57ab3a14abb76e0f6565bd55fe765bfa23116"
   },
   "packageContractSHA256": "2ad5c3f221757cf14cce0843766eb7b000d8ff5cc5e8b8dd431e6514e525126f",
   "packageNames": [
@@ -129,8 +129,15 @@
   "toolHashes": {
     "/bin/dart": "327991241585ee23f10d8b239a3f8484cb55e5060c665700d19d7e01e62ec94a",
     "/bin/utils/gen_snapshot": "85d0beecbf834cc6e617dd5adb1b28008292ddd1198d7c476bf751c1460fcb7c",
-    "/libtandemlog_text.so": "d33124d01cbcc7be76e6bbf421362c44d3d2b8e7f5ce1a1fc5b9ddcd9dd1ad83",
-    "/libsqlite3.so": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace",
+    "/libtandemlog_text.so": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2",
+    "/libsqlite3.so": "d3d1eac2a4e0eb84f4e8d94d820e5963fddfd11aa95179ea215ddc3bc7bd1078",
     "/tool/performance/limits-v1.json": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e"
+  },
+  "libraryReregistration": {
+    "reason": "sqlite3 3.8.0 (SQLite 3.54.1) and text-engine source changes on the 2026.10.8 line",
+    "collectedUTC": "2026-10-28T01:47:00Z",
+    "libtandemlog_text.so": "tool/build_text_engine.py --platform linux with rustup 1.99.0, cargo --locked offline, clean detached checkout b6c54c7; two independent builds byte-identical",
+    "libsqlite3.so": "sqlite3 3.8.0 build-hook download verified against the package asset table; SQLite 3.54.1 (design/dependencies.md)",
+    "inventory": "compiledDependencies from a non-qualifying measure-only run of b6c54c7 with these libraries under the reference caps; packageContractSHA256 and packageNames unchanged"
   }
 }

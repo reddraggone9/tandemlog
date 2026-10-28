@@ -43,6 +43,14 @@ The source and original host fault evidence were reviewed privately;registration
 publishes only the required hash,not the private controller source or bundle.
 Unknown/pending registration or material drift fails. Do not merely rename a host.
 
+2026-10-27 library re-registration (2026.10.8 line): `libtandemlog_text.so`
+`c9b95cae…` (pinned Rust 1.99.0, locked offline build from a clean checkout of
+`b6c54c7`, reproduced byte-identically) and `libsqlite3.so` `d3d1eac2…` (sqlite3
+3.8.0 hook asset, SQLite 3.54.1, hash-verified), with the lockfile and compiled
+dependency inventory taken from a non-qualifying measure-only run of that source
+under the reference caps. Host, controller, caps, package contract and limits are
+unchanged. Earlier receipts keep their original pins.
+
 Keep the reviewed controller bytes stable across candidates:read the exact
 source/nonce from the reviewed per-run request and verify them,with fixed bounds
 in code. Do not embed the forthcoming Git commit inside controller source:the
