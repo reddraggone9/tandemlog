@@ -196,7 +196,9 @@ changed source with a fresh request. An isolated failure that diagnostics cannot
 reproduce may instead receive **exactly one** official rerun of the unchanged
 relevant source. Budgets,limits,coverage and the in-invocation noise retry are
 unchanged. A failed rerun counts as repeatable;there is no third qualification
-of that identity. Never rerun unchanged source merely to obtain a green result.
+of that identity,except that a [borderline result](#borderline-result-on-already-qualified-source)
+of an identity that already passed is not a regression. Never rerun unchanged
+source merely to obtain a green result.
 
 Eligibility is enforced by `reference_receipt.py`,not by an ad-hoc exception:
 
@@ -236,6 +238,61 @@ qualification bundle cannot carry a prior result. The local executor remains the
 trust boundary for presenting the failure:the original failed run,its logs and
 the diagnostic outputs stay retained.
 
+## Borderline result on already qualified source
+
+Lee approved this rule on2026-10-27 14:56 CDT. When IDENTICAL relevant source
+(same relevant-source identity,under the scheme its requests recorded) already
+passed a qualifying check,a timing failure within normal run-to-run variation is
+a borderline limit,not a regression:it does not block the release and is queued
+for a look at the limit or the scaling behind it. For exactly this case it
+replaces the "failed rerun is repeatable" conclusion;the official-rerun rule
+above stays for every other failure. Budgets,limits and coverage are unchanged.
+
+`tool/performance/borderline.py` encodes it;`gate_policy.classify_borderline`
+is the verdict. `borderline-accepted` requires ALL of:
+
+- `evidence/reference-performance/current/` verifies as an ordinary passing
+  qualification of the current relevant source (missing/stale fails);
+- the failed request is a different request with the identical recorded
+  `relevantSource`,current host profile,an ancestor revision,and was issued
+  after that passing result finished;
+- the failed result is the original enforcing timing-limit refusal with no
+  in-invocation retry,and every pin,seal,import closure,toolchain,fixture
+  contract,absolute/growth evaluation,binding,log and failed-workload cleanup
+  recomputes from retained bytes (the same checks as the owner override). Any
+  correctness,coverage,replay/integrity or execution failure refuses;
+- every absolute limit passed,and every miss is a history-growth bound whose
+  large-size median and/or maximum is at most `BORDERLINE_VARIATION_BAND` (5%)
+  over that bound. One miss beyond the band makes the whole result an ordinary
+  failure.
+
+The band is a declared constant,not a computed tolerance. The q9/q10/q11 runs
+measured the same `sync.peerTask.whileFood.storageAdmission` growth at
+99.8%/96.3%/101.6% of its bound on identical product code,a5.3-point spread.
+Recomputed under this rule,q11 is borderline (101.6%) and q10 is an ordinary
+failure (`explicitTask.title.undo` maximum at145.5% of bound). Changing the band
+requires Lee's approval,like any limit change.
+
+Seal the failed run with the passing qualification already committed:
+
+```bash
+python3 tool/performance/borderline.py seal --repo "$checkout" \
+  --request "$failed_request" --run "$failed_run" --cleanup "$failed_cleanup" \
+  --output "$checkout/evidence/reference-performance/borderline"
+```
+
+An official rerun adds `--rerun-authorization`/`--prior-result`,which are verified
+as above. Seal refuses (and leaves no bundle) unless the verdict is
+`borderline-accepted`. `borderline.json` records the verdict,both request/result
+hashes,unchanged limits,the band,each borderline metric (label,statistic,
+measured,bound,ratio) and `followUp:{status:queued,...}`. When the directory
+exists,`reference_receipt.py verify` checks it together with the passing
+qualification,reports `QUALIFIED_WITH_BORDERLINE_FOLLOW_UP_QUEUED` and emits a CI
+warning naming each metric;a borderline bundle that does not verify fails the
+check. Queue the follow-up in the release work list. When `current/` is replaced
+by a qualification of other source,remove the old borderline bundle in the same
+commit.
+
 ## Release-owner override — stable 2026.10.7+101 only
 
 The q10 qualification of `dfb2260` failed one task-own-history growth timing;its
@@ -270,6 +327,12 @@ and a CI warning. It refuses unless:
 Any other version,product/tool byte,mode,failure,fixture or correctness change
 refuses. Future releases need a fresh passing qualification;the override is not
 a precedent. It accepts no native-visible,signing,candidate,release or live gate.
+
+`verify` routes to the override only while `pubspec.yaml` is exactly that release;
+at any other version the directory is retained history and the ordinary verifier
+(plus any borderline bundle) runs. The override stays v1-identity bound. The
+borderline rule now covers this kind of case without an owner exception:under
+identity v2,q9's pass covers `dfb2260`,and q11 recomputes as borderline.
 
 ## Existing manager payload — no wrapper ownership change
 

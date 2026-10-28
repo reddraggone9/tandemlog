@@ -132,6 +132,65 @@ def diagnostic_did_not_reproduce(diagnostic, prior_request_id, source_sha256, pr
         return False
 
 
+# Lee 2026-10-27: on identical relevant source that already passed, a timing miss within normal
+# run-to-run variation is a borderline limit, not a regression. The band is a fraction of the
+# exceeded bound: q9/q10/q11 measured the same storageAdmission growth at 99.8%/96.3%/101.6%
+# of its bound on identical product code, a 5.3-point spread; 5% covers that and nothing like
+# q10's 145.5% explicitTask.title.undo maximum. Budgets themselves are never changed here.
+BORDERLINE_VARIATION_BAND = 0.05
+BORDERLINE_ACCEPTED = 'borderline-accepted'
+
+def classify_borderline(prior_passed_identity, identity, absolute, paired, band=BORDERLINE_VARIATION_BAND):
+    """Verdict for a recomputed enforcing result: passed, borderline-accepted or failed.
+
+    prior_passed_identity is the relevant-source SHA-256 of an already verified passing
+    qualification (None when there is none). Only history-growth misses can be borderline;
+    any correctness, coverage or absolute-limit failure, or any miss beyond the band, fails.
+    """
+    def failed(reason):
+        return {'verdict': 'failed', 'reason': reason, 'borderlineMetrics': []}
+    if not prior_passed_identity:
+        return failed('no prior passing qualification of this relevant source')
+    if prior_passed_identity != identity:
+        return failed('prior pass is for a different relevant-source identity')
+    if not absolute or not paired:
+        return failed('incomplete absolute or growth evaluation')
+    for name, decision in [*absolute.items(), *paired.items()]:
+        if decision.status not in ('passed', 'timing-failed') or \
+                (decision.status == 'timing-failed') != bool(decision.failures):
+            return failed('correctness/coverage failure: ' + name + ' ' + ','.join(decision.failures))
+    missed = sorted(name + ':' + f for name, d in absolute.items() for f in d.failures)
+    if missed:
+        return failed('absolute limit failed: ' + ', '.join(missed))
+    metrics = []
+    for name, decision in sorted(paired.items()):
+        for failure in decision.failures:
+            action = failure.removeprefix('scaling:')
+            summary = decision.summaries.get(action)
+            if not failure.startswith('scaling:') or not isinstance(summary, dict):
+                return failed('correctness/coverage failure: ' + name + ':' + failure)
+            label = name + ':' + failure
+            exceeded = False
+            for statistic, measured, bound in (('median', 'largeMedianMs', 'medianBoundMs'),
+                                               ('maximum', 'largeMaximumMs', 'maximumBoundMs')):
+                measured, bound = summary[measured], summary[bound]
+                if measured <= bound:
+                    continue
+                exceeded = True
+                if measured > bound * (1 + band):
+                    return failed('%s %s %.4gms is outside the %g%% variation band of its %.4gms bound'
+                                  % (label, statistic, measured, band * 100, bound))
+                metrics.append({'label': label, 'statistic': statistic, 'measuredMs': measured,
+                                'boundMs': bound, 'ratioOfBound': round(measured / bound, 6)})
+            if not exceeded:
+                return failed('correctness/coverage failure: ' + label + ' reported without a miss')
+    if not metrics:
+        return {'verdict': 'passed', 'reason': 'all limits passed', 'borderlineMetrics': []}
+    return {'verdict': BORDERLINE_ACCEPTED, 'borderlineMetrics': metrics,
+            'reason': 'growth misses within the %g%% variation band on identical, already passed source'
+                      % (band * 100)}
+
+
 def evaluate_scaling(summaries_by_size, scaling, contracts):
     """Check paired history growth after proving the live state is identical."""
     try:

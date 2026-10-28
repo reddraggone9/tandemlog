@@ -19,6 +19,8 @@ PROFILE = 'tool/performance/reference-host-v1.json'
 QUALIFICATION = 'evidence/reference-performance/current'
 # Release-owner acceptance of a retained failure for one exact release; see owner_override.py.
 OWNER_OVERRIDE = 'evidence/reference-performance/owner-override-stable101'
+# A verified borderline failure of the qualified identity, with its queued follow-up; see borderline.py.
+BORDERLINE = 'evidence/reference-performance/borderline'
 EXCLUDED = ('evidence/', 'design/')
 PRIOR_RESULT = 'prior-gate-result.json'
 AUTHORIZATION = 'official-rerun.json'
@@ -581,11 +583,23 @@ def main():
             json.dump(value, stream, indent=2); stream.write('\n')
     elif args.mode == 'verify':
         if args.output is None and (args.repo / OWNER_OVERRIDE).exists():
-            # Not a qualification: the failure stays retained and the result says so.
-            from owner_override import verify_override
-            result = verify_override(args.repo, args.repo / OWNER_OVERRIDE)
-            print('::warning title=Reference performance NOT qualified::' + result['state'] + ' for ' +
-                  result['release'] + '; owner accepted ' + ', '.join(result['ownerAcceptedFailures']), file=sys.stderr)
+            import owner_override
+            # The override is scoped to one release; at any other version it is retained history only.
+            if owner_override.release_version(args.repo) == owner_override.POLICY['release']:
+                # Not a qualification: the failure stays retained and the result says so.
+                result = owner_override.verify_override(args.repo, args.repo / OWNER_OVERRIDE)
+                print('::warning title=Reference performance NOT qualified::' + result['state'] + ' for ' +
+                      result['release'] + '; owner accepted ' + ', '.join(result['ownerAcceptedFailures']),
+                      file=sys.stderr)
+                print(json.dumps(result, indent=2))
+                return
+        if args.output is None and (args.repo / BORDERLINE).exists():
+            # Requires the passing qualification too; a rejected borderline bundle fails the check.
+            from borderline import verify_borderline
+            result = verify_borderline(args.repo, args.repo / BORDERLINE)
+            print('::warning title=Reference performance borderline, follow-up queued::' +
+                  ', '.join(m['label'] + ' ' + m['statistic'] + ' ' + format(m['ratioOfBound'], '.2%') + ' of bound'
+                            for m in result['borderlineMetrics']), file=sys.stderr)
             print(json.dumps(result, indent=2))
             return
         print(json.dumps(verify_bundle(args.repo, args.output or args.repo / QUALIFICATION), indent=2))
