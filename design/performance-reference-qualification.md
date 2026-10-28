@@ -157,6 +157,37 @@ identity is unchanged and the request commit is an ancestor. Changing runtime,
 tests,assets,workflow,gate tooling,host registration or limits requires a fresh
 request/run. No generic branch-name or age-only freshness shortcut exists.
 
+### Relevant-source identity schemes
+
+The request records its identity scheme inside `relevantSource`,so the nine
+controller fields are unchanged. A receipt is always verified under the scheme it
+recorded;old receipts are never reinterpreted.
+
+- `relevant-source-v1` (no `scheme` field):every relevant file's literal bytes.
+  All receipts issued before this change,including the stable101 owner override,
+  are v1 and keep exactly that meaning.
+- `relevant-source-v2` (`scheme: relevant-source-v2`,issued by `request` from
+  now on):the same files,except that two release-version carriers are pinned
+  version-free and marked `normalized`:
+  - `pubspec.yaml`:only a single top-level `version: <value>` line
+    (`[0-9A-Za-z.+~-]`,no comment) is replaced. Any other byte,dependency,flag,
+    comment or a second/malformed version line changes the identity;
+  - `packaging/linux/com.reddraggone9.tandemlog.metainfo.xml`:only one
+    `<releases>` list made solely of `<release version date type/>` entries
+    (stable/development) is dropped. Anything else in the file,or any other
+    release markup,changes the identity.
+
+  Neither value reaches the benchmark:`lib/` does not read the version and the
+  metainfo is not compiled. A stable rename of an already qualified RC (`version:`
+  change plus the matching AppStream release list that
+  `test_linux_flatpak_metadata.py` requires) therefore keeps its qualification.
+  The verifier still requires the result's pubspec pin/seal to equal the literal
+  bytes at the request's own revision. Actual history:RC.5 `be93df2`,stable
+  `d494d9b` and `dfb2260` have three v1 identities and one v2 identity.
+
+An official rerun must use the failed request's scheme,because the identities must
+be equal.
+
 ## Official rerun after non-reproduction
 
 Lee approved this rule on2026-10-26. A repeatable failure is a real performance

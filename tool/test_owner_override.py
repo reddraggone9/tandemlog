@@ -41,25 +41,8 @@ class OwnerOverrideFixture(ReceiptFixture):
         self.publish()
 
     def rebind(self):
-        """Rebind the synthetic report to the current committed source, as a real run would."""
-        self.identity = receipt.source_identity(self.repo)
-        self.request.update(sourceRevision=self.head(), relevantSource=self.identity)
-        pins = {'/repo/' + os.path.relpath(p, self.repo).replace(os.sep, '/'): v
-                for p, v in run_gate.source_pins(self.repo, self.tools).items()}
-        originals = {p.relative_to(self.repo).as_posix(): receipt.digest(p) for p in (self.repo / 'lib').rglob('*') if p.is_file()}
-        originals.update({p: receipt.digest(self.repo / p) for p in ('pubspec.yaml', 'pubspec.lock')})
-        compiled = self.report['compiledSourceAndDependencyPins']
-        for key in [k for k in compiled if k.startswith('/stage/') and '.dart_tool' not in k]:
-            del compiled[key]
-        compiled.update({'/stage/' + n: v for n, v in originals.items()})
-        self.report['sourcePins'] = pins
-        self.report['compiledFileSeals'] = {n: {'originalSHA256': v, 'compiledSHA256': v, 'change': 'none'}
-                                            for n, v in originals.items()}
-        source = receipt.hashlib.sha256(json.dumps(pins, sort_keys=True).encode()).hexdigest()
-        for attempt in self.report['attempts']:
-            attempt['binding']['source'] = source
-        self.report['referenceBinding'].update(requestSHA256=receipt.canonical_digest(self.request),
-                                              relevantSourceSHA256=self.identity['sha256'])
+        """The stable101 override is pinned to the original (v1) relevant-source identity."""
+        super().rebind(receipt.IDENTITY_V1)
 
     def recompute(self, report):
         limits = {**self.limits, 'sha256': self.host['limitsSHA256']}
@@ -131,8 +114,8 @@ class OwnerOverrideFixture(ReceiptFixture):
         for item in self.report['pairedScalingAttempts']:
             measured.update({item['comparison'] + ':' + f: item['comparisons'][f.removeprefix('scaling:')]
                              for f in item['failures'] if item['status'] == 'timing-failed'})
-        base = receipt.committed_identity(self.repo, self.base_revision)
-        current = receipt.source_identity(self.repo)
+        base = receipt.committed_identity(self.repo, self.base_revision, receipt.IDENTITY_V1)
+        current = receipt.source_identity(self.repo, receipt.IDENTITY_V1)
         value = {'schemaVersion': 1, 'kind': 'reference-performance-owner-override-v1', 'state': override.STATE,
                  'referencePerformanceQualified': False, 'release': '2026.10.7+101',
                  'sourceRevision': self.base_revision, 'relevantSourceSHA256': self.identity['sha256'],

@@ -61,6 +61,13 @@ Keep every platform/correctness job and original raw attempt retention. Missing
 host registration or qualification blocks the reference check. See the
 [operating protocol](../performance-reference-qualification.md).
 
+Identity scheme v2 (2026-10-27,next-release gate item):a release rename that
+changes only pubspec's `version:` line and the plain AppStream release list keeps
+the relevant identity;every other byte still counts. The scheme is recorded in
+each request,so v1 receipts keep their literal-byte meaning. Rejected:excluding
+pubspec.yaml or packaging/ entirely (would hide dependency/flag/package changes).
+See [identity schemes](../performance-reference-qualification.md#relevant-source-identity-schemes).
+
 Revisit on material host/toolchain/dependency/source change,repeated qualified
 misses,coverage change or measured cost demonstrating a genuine product tradeoff.
 Only Lee may approve looser existing limits. Native full-action acceptance and

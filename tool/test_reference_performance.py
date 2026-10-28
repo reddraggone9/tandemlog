@@ -203,6 +203,27 @@ class ReceiptFixture(unittest.TestCase):
     def verify(self):
         return receipt.verify_bundle(self.repo, self.bundle)
 
+    def rebind(self, scheme=None):
+        """Rebind the synthetic report to the current committed source, as a real run would."""
+        self.identity = receipt.source_identity(self.repo, scheme or receipt.IDENTITY_SCHEME)
+        self.request.update(sourceRevision=self.head(), relevantSource=self.identity)
+        pins = {'/repo/' + Path(p).relative_to(self.repo).as_posix(): v
+                for p, v in run_gate.source_pins(self.repo, self.tools).items()}
+        originals = {p.relative_to(self.repo).as_posix(): receipt.digest(p) for p in (self.repo / 'lib').rglob('*') if p.is_file()}
+        originals.update({p: receipt.digest(self.repo / p) for p in ('pubspec.yaml', 'pubspec.lock')})
+        compiled = self.report['compiledSourceAndDependencyPins']
+        for key in [k for k in compiled if k.startswith('/stage/') and '.dart_tool' not in k]:
+            del compiled[key]
+        compiled.update({'/stage/' + n: v for n, v in originals.items()})
+        self.report['sourcePins'] = pins
+        self.report['compiledFileSeals'] = {n: {'originalSHA256': v, 'compiledSHA256': v, 'change': 'none'}
+                                            for n, v in originals.items()}
+        source = hashlib.sha256(json.dumps(pins, sort_keys=True).encode()).hexdigest()
+        for attempt in self.report['attempts']:
+            attempt['binding']['source'] = source
+        self.report['referenceBinding'].update(requestSHA256=receipt.canonical_digest(self.request),
+                                              relevantSourceSHA256=self.identity['sha256'])
+
 
 class ReferenceReceiptTests(ReceiptFixture):
     def test_fresh_complete_source_bound_receipt_passes(self):
@@ -393,6 +414,115 @@ class ReferenceReceiptTests(ReceiptFixture):
             receipt.main()
         self.assertTrue(receipt.verify_bundle(self.repo, output)['referencePerformanceQualified'])
         self.assertFalse((output / 'benchmark').exists())
+
+
+PUBSPEC = ('name: tandemlog\npublish_to: none\nversion: 2026.10.7-rc.5+100\nenvironment:\n'
+           "  sdk: '>=3.9.0 <4.0.0'\ndependencies:\n  sqlite3: 3.8.0\n")
+METAINFO = ('<?xml version="1.0" encoding="UTF-8"?>\n<component type="desktop-application">\n'
+            '  <summary>Synthetic</summary>\n  <releases>\n{}  </releases>\n</component>\n')
+RC_RELEASES = ('    <release version="2026.10.7-rc.5" date="2026-10-23" type="development"/>\n'
+               '    <release version="2026.10.7-rc.3" date="2026-10-18" type="development"/>\n')
+STABLE_RELEASES = '    <release version="2026.10.7" date="2026-10-27" type="stable"/>\n'
+
+
+class RelevantSourceIdentityTests(ReceiptFixture):
+    """Identity v2 ignores only the release version, so a stable rename keeps its qualification."""
+    def setUp(self):
+        super().setUp()
+        self.write_release(PUBSPEC, RC_RELEASES)
+        self.base = self.head()
+        self.rebind()
+        self.refresh()
+
+    def write_release(self, pubspec, releases, metainfo=METAINFO):
+        (self.repo / 'pubspec.yaml').write_text(pubspec)
+        (self.repo / receipt.METAINFO).parent.mkdir(parents=True, exist_ok=True)
+        (self.repo / receipt.METAINFO).write_text(metainfo.format(releases))
+        self.commit()
+        return receipt.source_identity(self.repo)['sha256']
+
+    def stable(self, pubspec=PUBSPEC):
+        return pubspec.replace('version: 2026.10.7-rc.5+100', 'version: 2026.10.7+101')
+
+    def test_version_only_stable_rename_keeps_identity_and_receipt(self):
+        self.assertEqual(self.identity['scheme'], 'relevant-source-v2')
+        before = self.identity['sha256']
+        self.assertEqual(self.write_release(self.stable(), RC_RELEASES), before)
+        self.assertTrue(self.verify()['referencePerformanceQualified'])
+        # The Flatpak release list follows the version (test_linux_flatpak_metadata).
+        self.assertEqual(self.write_release(self.stable(), STABLE_RELEASES), before)
+        result = self.verify()
+        self.assertTrue(result['referencePerformanceQualified'])
+        self.assertEqual(result['relevantSourceSHA256'], before)
+        self.assertEqual(receipt.committed_identity(self.repo, self.base), self.identity)
+
+    def test_version_with_any_other_pubspec_change_is_a_new_identity(self):
+        before = self.identity['sha256']
+        stable = self.stable()
+        for changed in [stable.replace('sqlite3: 3.8.0', 'sqlite3: 3.8.1'),
+                        stable + '  path: 1.9.0\n',
+                        stable + 'flutter:\n  uses-material-design: true\n',
+                        stable.replace('publish_to: none\n', ''),
+                        stable.replace("<4.0.0", "<5.0.0"),
+                        stable + '# comment\n',
+                        stable.replace('+101', '+101 # build'),
+                        stable + 'version: 2026.10.7+102\n']:
+            with self.subTest(changed=changed):
+                self.assertNotEqual(self.write_release(changed, STABLE_RELEASES), before)
+                with self.assertRaisesRegex(ValueError, 'stale/mismatched'):
+                    self.verify()
+
+    def test_metainfo_normalizes_only_a_plain_release_list(self):
+        before = self.identity['sha256']
+        for releases, metainfo in [
+                (STABLE_RELEASES, METAINFO.replace('Synthetic', 'Changed summary')),
+                ('    <release version="2026.10.7" date="2026-10-27" type="stable"><description/></release>\n', METAINFO),
+                (STABLE_RELEASES + '    <artifact/>\n', METAINFO),
+                (STABLE_RELEASES, METAINFO + '<releases/>\n')]:
+            with self.subTest(releases=releases, metainfo=metainfo):
+                self.assertNotEqual(self.write_release(self.stable(), releases, metainfo), before)
+
+    def test_scheme_is_versioned_and_old_receipts_keep_their_recorded_meaning(self):
+        v1 = receipt.source_identity(self.repo, receipt.IDENTITY_V1)
+        self.assertNotIn('scheme', v1)
+        self.assertNotEqual(v1['sha256'], self.identity['sha256'])
+        self.assertEqual(v1['files']['pubspec.yaml']['sha256'], receipt.digest(self.repo / 'pubspec.yaml'))
+        self.rebind(receipt.IDENTITY_V1)
+        self.refresh()
+        self.assertTrue(self.verify()['referencePerformanceQualified'])
+        self.write_release(self.stable(), STABLE_RELEASES)
+        with self.assertRaisesRegex(ValueError, 'stale/mismatched'):
+            self.verify()
+
+    def test_unknown_or_forged_scheme_refuses(self):
+        for identity in [{**self.identity, 'scheme': 'relevant-source-v3'},
+                         {**receipt.source_identity(self.repo, receipt.IDENTITY_V1), 'scheme': 'relevant-source-v1'}]:
+            self.request['relevantSource'] = identity
+            self.report['referenceBinding'].update(requestSHA256=receipt.canonical_digest(self.request),
+                                                  relevantSourceSHA256=identity['sha256'])
+            self.refresh()
+            with self.assertRaisesRegex(ValueError, 'identity scheme'):
+                self.verify()
+
+    def test_result_must_still_pin_the_requested_pubspec_bytes(self):
+        self.write_release(self.stable(), STABLE_RELEASES)
+        current = receipt.digest(self.repo / 'pubspec.yaml')
+        self.report['compiledFileSeals']['pubspec.yaml'] = {'originalSHA256': current, 'compiledSHA256': current,
+                                                            'change': 'none'}
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'Compiled project bytes differ'):
+            self.verify()
+
+    def test_new_requests_record_the_current_scheme(self):
+        output = self.repo.parent / (self.repo.name + '-request.json')
+        self.addCleanup(output.unlink, missing_ok=True)
+        command = ['reference_receipt.py', 'request', '--repo', str(self.repo),
+                   '--controller', str(self.controller), '--output', str(output)]
+        with patch.object(sys, 'argv', command):
+            receipt.main()
+        value = receipt.read(output)
+        self.assertEqual(set(value), receipt.REQUEST_FIELDS)
+        self.assertEqual(value['relevantSource'], self.identity)
 
 
 class OfficialRerunTests(ReceiptFixture):

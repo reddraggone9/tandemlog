@@ -15,7 +15,7 @@ from gate_policy import evaluate, evaluate_scaling, validate_registered_coverage
 from reference_receipt import (need, digest, canonical_digest, read, instant, request_shape, profile,
                                source_identity, committed_identity, check_reference_toolchain,
                                failed_qualification_failures, check_authorization_shape, PROFILE,
-                               TIMING_FAILURE, AUTHORIZATION, PRIOR_RESULT)
+                               TIMING_FAILURE, AUTHORIZATION, PRIOR_RESULT, IDENTITY_V1)
 
 RECORD = 'override.json'
 STATE = 'OWNER_OVERRIDE_ACCEPTED_NOT_QUALIFIED'
@@ -49,7 +49,7 @@ def release_version(repo):
 
 def permitted_delta(repo, base, allowed):
     """Current relevant source must equal the accepted source plus only the reviewed policy files."""
-    current = source_identity(repo)
+    current = source_identity(repo, IDENTITY_V1)
     need(set(base['files']) <= set(current['files']), 'Accepted relevant source file removed')
     delta = {p: v for p, v in current['files'].items() if base['files'].get(p) != v}
     need(set(delta) <= set(allowed), 'Relevant source differs outside the reviewed override policy files: ' +
@@ -235,7 +235,8 @@ def verify_override(repo, directory, policy=None):
     need(subprocess.run(['git', '-C', str(repo), 'merge-base', '--is-ancestor', policy['sourceRevision'], 'HEAD'],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0,
          'Accepted source is not in current history')
-    base = committed_identity(repo, policy['sourceRevision'])
+    # The q11 request predates identity v2; its recorded v1 meaning is kept.
+    base = committed_identity(repo, policy['sourceRevision'], IDENTITY_V1)
     need(base == request['relevantSource'] and base['sha256'] == policy['relevantSourceSHA256'],
          'Accepted source identity differs from the failed request')
     need(request['hostProfileSHA256'] == digest(repo / PROFILE), 'Stale host profile request')

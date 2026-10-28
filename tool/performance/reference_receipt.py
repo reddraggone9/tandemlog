@@ -60,8 +60,53 @@ def relevant(path):
     return not path.startswith(EXCLUDED) and path not in ('README.md', 'AGENTS.md')
 
 
-def source_identity(repo):
+# v1 identities carry no scheme field and pin every relevant file's literal bytes; receipts recorded
+# under v1 keep exactly that meaning. v2 additionally ignores the release version: only pubspec.yaml's
+# top-level `version:` line and a plain Flatpak release list, which must follow that version.
+IDENTITY_V1 = 'relevant-source-v1'
+IDENTITY_V2 = 'relevant-source-v2'
+IDENTITY_SCHEME = IDENTITY_V2
+METAINFO = 'packaging/linux/com.reddraggone9.tandemlog.metainfo.xml'
+VERSION_LINE = re.compile(rb'^version:[ \t]*[0-9A-Za-z.+~-]+[ \t]*(\r?\n|$)', re.M)
+RELEASE_LIST = re.compile(rb'<releases>(?:\s*<release version="[0-9A-Za-z.+~-]+" date="[0-9]{4}-[0-9]{2}-[0-9]{2}"'
+                          rb' type="(?:stable|development)"/>)*\s*</releases>')
+
+
+def identity_scheme(identity):
+    need(isinstance(identity, dict), 'Relevant-source identity required')
+    if 'scheme' not in identity:
+        return IDENTITY_V1
+    need(identity['scheme'] == IDENTITY_V2, 'Unknown relevant-source identity scheme')
+    return IDENTITY_V2
+
+
+def release_normalized(name, content):
+    """Version-free bytes for v2, or None when the file must be pinned literally."""
+    if name == 'pubspec.yaml':
+        if len(re.findall(rb'^version:', content, re.M)) == 1 and len(VERSION_LINE.findall(content)) == 1:
+            return 'pubspec-version-v1', VERSION_LINE.sub(lambda m: b'version: *' + m.group(1), content)
+    elif name == METAINFO:
+        if content.count(b'<releases') == 1 and len(RELEASE_LIST.findall(content)) == 1:
+            return 'appstream-release-list-v1', RELEASE_LIST.sub(b'<releases/>', content)
+    return None
+
+
+def pin(name, content, mode, scheme):
+    normalized = release_normalized(name, content) if scheme == IDENTITY_V2 else None
+    if normalized is None:
+        return {'sha256': hashlib.sha256(content).hexdigest(), 'mode': mode}
+    return {'sha256': hashlib.sha256(normalized[1]).hexdigest(), 'mode': mode, 'normalized': normalized[0]}
+
+
+def identity(pins, scheme):
+    if scheme == IDENTITY_V1:
+        return {'sha256': canonical_digest(pins), 'files': pins}
+    return {'scheme': scheme, 'sha256': canonical_digest({'scheme': scheme, 'files': pins}), 'files': pins}
+
+
+def source_identity(repo, scheme=IDENTITY_SCHEME):
     """All tracked non-documentation inputs, including tests, workflows and native source."""
+    identity_scheme({'scheme': scheme} if scheme != IDENTITY_V1 else {})
     repo = Path(repo).resolve()
     changed = subprocess.check_output(['git', '-C', str(repo), 'diff', 'HEAD', '--name-only', '-z']).decode().split('\0')
     untracked = subprocess.check_output(['git', '-C', str(repo), 'ls-files', '--others', '--exclude-standard', '-z']).decode().split('\0')
@@ -80,12 +125,13 @@ def source_identity(repo):
         original = subprocess.check_output(['git', '-C', str(repo), 'cat-file', 'blob', blob])
         value = digest(path)
         need(hashlib.sha256(original).hexdigest() == value, 'Reference/hosted Linux source differs from literal Git bytes: ' + name)
-        pins[name] = {'sha256': value, 'mode': mode}
+        pins[name] = pin(name, original, mode, scheme)
     need(bool(pins), 'Empty relevant source inventory')
-    return {'sha256': canonical_digest(pins), 'files': pins}
+    return identity(pins, scheme)
 
 
-def committed_identity(repo, revision):
+def committed_identity(repo, revision, scheme=IDENTITY_SCHEME):
+    identity_scheme({'scheme': scheme} if scheme != IDENTITY_V1 else {})
     need(re.fullmatch('[0-9a-f]{40}', revision) is not None, 'Exact source commit required')
     pins = {}
     for row in subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-r', '-z', revision]).decode().split('\0'):
@@ -97,8 +143,25 @@ def committed_identity(repo, revision):
         mode, kind, blob = info.split()
         need(kind == 'blob' and mode in ('100644', '100755'), 'Linked/unexpected committed source')
         content = subprocess.check_output(['git', '-C', str(repo), 'cat-file', 'blob', blob])
-        pins[name] = {'sha256': hashlib.sha256(content).hexdigest(), 'mode': mode}
-    return {'sha256': canonical_digest(pins), 'files': pins}
+        pins[name] = pin(name, content, mode, scheme)
+    return identity(pins, scheme)
+
+
+def recorded_identity(repo, recorded, revision=None):
+    """(current, committed-at-revision) identities under the scheme the request recorded.
+
+    An old receipt is never reinterpreted under a newer scheme.
+    """
+    scheme = identity_scheme(recorded)
+    need(recorded == identity(recorded.get('files'), scheme), 'Relevant-source identity scheme/digest differs')
+    return (source_identity(repo, scheme),
+            None if revision is None else committed_identity(repo, revision, scheme))
+
+
+def requested_bytes_sha256(repo, request, name):
+    """Literal bytes the request's own revision supplied; v2 may differ from HEAD only by version."""
+    return hashlib.sha256(subprocess.check_output(
+        ['git', '-C', str(repo), 'show', request['sourceRevision'] + ':' + name])).hexdigest()
 
 
 def fingerprint(output):
@@ -208,7 +271,8 @@ def check_authorization_shape(value, request):
 def official_rerun(repo, request, prior_request, prior_report, prior_report_sha256, diagnostic):
     """The single approved rerun of unchanged source; budgets and limits are untouched."""
     request_shape(request)
-    need(prior_request['relevantSource'] == request['relevantSource'] == source_identity(repo),
+    need(prior_request['relevantSource'] == request['relevantSource'] ==
+         recorded_identity(repo, request['relevantSource'])[0],
          'Changed source needs a fresh request, not a rerun')
     value = {'schemaVersion': 1, 'kind': 'official-rerun-authorization-v1', 'ordinal': 1 + OFFICIAL_RERUN_LIMIT,
              'requestId': request['requestId'], 'requestSHA256': canonical_digest(request),
@@ -234,9 +298,8 @@ def request_context(repo, request_path, output, bounds):
     value = read(request_path)
     request_shape(value)
     host = profile(repo)
-    identity = source_identity(repo)
-    need(value['relevantSource'] == identity == committed_identity(repo, value['sourceRevision']),
-         'Stale/mismatched relevant source request')
+    identity, committed = recorded_identity(repo, value['relevantSource'], value['sourceRevision'])
+    need(value['relevantSource'] == identity == committed, 'Stale/mismatched relevant source request')
     need(value['hostProfileSHA256'] == digest(Path(repo) / PROFILE), 'Host registration/request differs')
     need(value['controllerSHA256'] == host['controllerSHA256'], 'External controller request differs')
     controller = Path(value['controllerPath'])
@@ -314,8 +377,8 @@ def validate_report(repo, report, request, host):
     binding = report.get('referenceBinding', {})
     need(binding.get('requestId') == request['requestId'] and
          binding.get('requestSHA256') == canonical_digest(request), 'Reference request binding differs')
-    need(binding.get('relevantSourceSHA256') == source_identity(repo)['sha256'] == request['relevantSource']['sha256'],
-         'Stale reference source')
+    need(binding.get('relevantSourceSHA256') == recorded_identity(repo, request['relevantSource'])[0]['sha256'] ==
+         request['relevantSource']['sha256'], 'Stale reference source')
     need(binding.get('hostProfileSHA256') == digest(repo / PROFILE) == request['hostProfileSHA256'] and
          binding.get('environment') == host['environment'], 'Reference environment/profile differs')
     need(binding.get('controllerSHA256') == host['controllerSHA256'], 'Reference controller differs')
@@ -325,12 +388,15 @@ def validate_report(repo, report, request, host):
     need(report.get('sourceRewrites') == [] and report.get('shimAllowlist') == [], 'Source rewrite/shim refused')
     pins = source_pins(repo, repo / 'tool/performance')
     expected = {Path(p).relative_to(repo).as_posix(): v for p, v in pins.items()}
+    # Identity equality leaves only pubspec.yaml's version line able to differ from what ran.
+    requested_pubspec = requested_bytes_sha256(repo, request, 'pubspec.yaml')
+    expected['pubspec.yaml'] = requested_pubspec
     normalized, rename = check_reference_toolchain(report, host)
     actual = {rename(p).removeprefix('project/'): v for p, v in report['sourcePins'].items()}
     need(actual == expected, 'Reference source pin inventory differs')
     seals = report['compiledFileSeals']
     originals = {p.relative_to(repo).as_posix(): digest(p) for p in (repo / 'lib').rglob('*') if p.is_file()}
-    originals.update({p: digest(repo / p) for p in ('pubspec.yaml', 'pubspec.lock')})
+    originals.update({'pubspec.yaml': requested_pubspec, 'pubspec.lock': digest(repo / 'pubspec.lock')})
     need(set(seals) == set(originals), 'Compiled project file inventory differs')
     for name, value in seals.items():
         need(value == {'originalSHA256': originals[name], 'compiledSHA256': originals[name], 'change': 'none'},
@@ -421,8 +487,8 @@ def verify_bundle(repo, directory):
     request_shape(request)
     host = profile(repo)
     need(request['hostProfileSHA256'] == digest(Path(repo) / PROFILE), 'Stale host profile request')
-    need(request['relevantSource'] == source_identity(repo) == committed_identity(repo, request['sourceRevision']),
-         'Missing/stale/mismatched reference source')
+    current, committed = recorded_identity(repo, request['relevantSource'], request['sourceRevision'])
+    need(request['relevantSource'] == current == committed, 'Missing/stale/mismatched reference source')
     need(subprocess.run(['git', '-C', str(repo), 'merge-base', '--is-ancestor', request['sourceRevision'], 'HEAD'],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0,
          'Reference request source is not in current history')
