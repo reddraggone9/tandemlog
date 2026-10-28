@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show setEquals;
 
+import 'bulk_apply.dart';
 import 'tag_input.dart';
 import 'civil_date_input.dart';
 import '../domain/schedule.dart';
@@ -1027,9 +1028,7 @@ class _EditorBodyState extends State<_EditorBody> {
             enabled: !editingFrozen && !occurrenceLocked,
             compactDecoration: dateTimeField,
             errorText: formValidation.errorFor(key),
-            hint: mixed.contains(key)
-                ? 'Mixed — unchanged unless applied'
-                : hint,
+            hint: mixed.contains(key) ? bulkMixedHint : hint,
           )
         : TextField(
             key: ValueKey(key),
@@ -1095,9 +1094,7 @@ class _EditorBodyState extends State<_EditorBody> {
                       ],
                     )
                   : null,
-              hintText: mixed.contains(key)
-                  ? 'Mixed — unchanged unless applied'
-                  : hint,
+              hintText: mixed.contains(key) ? bulkMixedHint : hint,
             ),
           );
     return formValidation.field(
@@ -1127,18 +1124,17 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Widget scheduleApply(String key, String label, {bool fullTarget = false}) =>
-      Checkbox(
-        semanticLabel: 'Apply $label',
-        visualDensity: fullTarget ? VisualDensity.standard : null,
-        materialTapTargetSize: fullTarget ? MaterialTapTargetSize.padded : null,
-        key: ValueKey('${key}Apply'),
+      BulkApplyCheckbox(
+        checkboxKey: ValueKey('${key}Apply'),
+        label: label,
+        fullTarget: fullTarget,
         value: applied.contains(key),
         onChanged:
             editingFrozen ||
                 (key.startsWith('scheduled') && occurrenceBeforeRemoval != null)
             ? null
             : (value) => setState(() {
-                if (value!) {
+                if (value) {
                   applied.add(key);
                 } else {
                   applied.remove(key);
