@@ -302,10 +302,10 @@
       "boundary": null
     },
     {
-      "interaction": "Food add one/three physical containers",
-      "productionAPI": "FoodStore.add",
+      "interaction": "Food add one/three physical containers (joins a matching product)",
+      "productionAPI": "FoodStore.add -> planFoodAdd",
       "actualUIPath": "main.dart:1078; food_editor.dart Save",
-      "boundary": null
+      "boundary": "food.add.1/3 time the implicit-product path (cached description scan, no product records). Adds that create or link an explicit product are untimed until food.product.* cases exist."
     },
     {
       "interaction": "Food editor open,cancel",
@@ -314,10 +314,10 @@
       "boundary": "Not measured by standalone AOT suite: Flutter Food editor/controller construction, cancel, and paint require native UI acceptance."
     },
     {
-      "interaction": "Food descriptive edit single/bulk (bulk: Food name, Brand, Container size, Location, Retention reason; never Expiration)",
-      "productionAPI": "changeDetails(ids,details,fields)",
+      "interaction": "Food descriptive edit single/bulk (Location and Retention reason per container; Food name, Brand and Container size edit the product, merging coincident descriptions)",
+      "productionAPI": "changeDetails(ids,details,fields,products: FoodProductChange) -> planFoodProductChanges",
       "actualUIPath": "main.dart:1092; food_editor.dart bulk Save",
-      "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending."
+      "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending. Product-level name/brand/size/link/minimum edits and merges (food_products_test, food_products_ui_test) have no dedicated timing label yet: set budgets and register food.product.* cases before the products RC."
     },
     {
       "interaction": "Food delete, restore,single/group/bulk selection",
@@ -438,6 +438,24 @@
       "productionAPI": "CivilDateInput; CivilCalendarDatePicker (fork of Flutter 3.47.5 CalendarDatePicker) month/year header menus; CivilMonthGrid; CivilYearGrid",
       "actualUIPath": "lib/presentation/civil_date_input.dart -> lib/presentation/calendar_date_picker_fork.dart",
       "boundary": "No storage action before editor Save. Header/fast-month tests cover month menu, year menu to month grid, paging, leap/clamp/cancel/pending-day and content-sized dialog; native popup and selected-month visible-response timing pending."
+    },
+    {
+      "interaction": "Food receipt purchase import (Vex YNAB workflow; links recent hand entries, creates Inbox containers)",
+      "productionAPI": "FoodStore.dryRunPurchaseImport/commitPurchaseImport -> planFoodPurchaseImport",
+      "actualUIPath": "No app UI caller; private tooling only",
+      "boundary": "Correctness in food_products_test; no timing label. Background-free, user-invoked through tooling."
+    },
+    {
+      "interaction": "Food Running low group (products below Keep at least)",
+      "productionAPI": "FoodState.runningLow (short-circuits when no minimum exists)",
+      "actualUIPath": "lib/food/food_page.dart::_lowRow",
+      "boundary": "No write and no background work; food_products_ui_test covers rendering and Add another. Readmodel timing with minimums set pending."
+    },
+    {
+      "interaction": "Food Up/Down row focus and Shift+Up/Down range selection; wide selection opens the bulk editor in the side pane",
+      "productionAPI": "FoodInventoryPage::_focusRelative/_select; presentation/list_selection.dart nextListSelection",
+      "actualUIPath": "lib/food/food_page.dart::_group onKeyEvent -> _focusRelative; _select -> _editSelection(pane)",
+      "boundary": "No write; food_products_ui_test drives real key events and wide/narrow layouts; native visible-response timing pending."
     }
   ],
   "actualUITimingAccepted": false,

@@ -561,6 +561,13 @@ class FoodContainer {
 
   /// The product after merges.
   String get product => _product ?? productRef;
+
+  /// Trimmed, case-insensitive description, for product matching.
+  late final String descriptionKey = foodDescriptionKey(
+    details.name,
+    details.brand,
+    details.size,
+  );
   bool get deleted => deletions.isNotEmpty;
   bool get contentsConflict =>
       contentsEdits.values
@@ -606,14 +613,18 @@ class FoodContainer {
 }
 
 class FoodGroup {
-  FoodGroup(List<FoodContainer> values)
+  FoodGroup(List<FoodContainer> values, {this.productKey = ''})
     : containers = List.unmodifiable(values);
   final List<FoodContainer> containers;
   FoodDetails get details => containers.first.details;
   String get product => containers.first.product;
 
+  /// The product part of this row's identity; empty while every product is
+  /// implicit, where the description already identifies it.
+  final String productKey;
+
   /// Distinguishes rows of different products with equal descriptions.
-  String get key => '$product\n${details.displayGroupKey}';
+  String get key => '$productKey\n${details.displayGroupKey}';
   bool get contentsConflict => containers.any((e) => e.contentsConflict);
   String? get quickRemoveTarget =>
       !contentsConflict && containers.every((e) => e.contents.full)
@@ -639,6 +650,12 @@ class FoodState {
       catalog = catalog ?? FoodCatalog.empty;
   final List<FoodContainer> containers;
   final FoodCatalog catalog;
+
+  /// False while every container belongs to its implicit product and nothing
+  /// product-level exists: descriptions then identify products, so grouping
+  /// and Add matching need no derived IDs.
+  late final bool usesProducts =
+      !catalog.isEmpty || containers.any((c) => c.productLink != null);
 
   /// Every product that has containers or recorded fields, by root ID.
   late final Map<String, FoodProductSummary> products = () {
@@ -712,7 +729,7 @@ class FoodState {
       containers.where((e) => !e.deleted).toList();
   List<FoodContainer> get deleted =>
       containers.where((e) => e.deleted).toList();
-  List<FoodGroup> get groups => _group(active);
+  List<FoodGroup> get groups => _group(active, usesProducts);
   List<String> get brands => _fieldValues((details) => details.brand);
   List<String> get locations => _fieldValues((details) => details.location);
   List<String> _fieldValues(String Function(FoodDetails) field) =>
@@ -776,8 +793,8 @@ class FoodState {
             });
     // Group each status separately: equal descriptions never let a deleted
     // container inherit an active group's commands (or vice versa).
-    final result = _group(values.where((e) => !e.deleted));
-    final removed = _group(values.where((e) => e.deleted));
+    final result = _group(values.where((e) => !e.deleted), usesProducts);
+    final removed = _group(values.where((e) => e.deleted), usesProducts);
     if (removed.isNotEmpty) {
       removed.sort((a, b) {
         FoodContainer latest(FoodGroup group) => group.containers.reduce(
@@ -970,12 +987,12 @@ FoodState projectFood(
   ], catalog: products);
 }
 
-List<FoodGroup> _group(Iterable<FoodContainer> values) {
+List<FoodGroup> _group(Iterable<FoodContainer> values, bool products) {
   final grouped = <String, List<FoodContainer>>{};
   for (final item in values) {
     grouped
         .putIfAbsent(
-          '${item.details.displayGroupKey}\n${item.product}',
+          '${item.details.displayGroupKey}\n${products ? item.product : ''}',
           () => [],
         )
         .add(item);
@@ -984,7 +1001,10 @@ List<FoodGroup> _group(Iterable<FoodContainer> values) {
       .map(
         (entry) => MapEntry(
           entry.key,
-          FoodGroup(entry.value..sort((a, b) => a.id.compareTo(b.id))),
+          FoodGroup(
+            entry.value..sort((a, b) => a.id.compareTo(b.id)),
+            productKey: products ? entry.value.first.product : '',
+          ),
         ),
       )
       .toList();
