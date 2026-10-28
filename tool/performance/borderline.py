@@ -1,11 +1,12 @@
-"""Borderline growth timing on identical, already qualified relevant source. Never a waiver.
+"""Borderline timing on identical, already qualified relevant source. Never a waiver.
 
-Lee approved on 2026-10-27: when the same relevant-source identity already holds a verified
-passing reference qualification, a later enforcing failure whose only misses are history-growth
-bounds exceeded by at most the declared run-to-run variation band is a borderline limit, not a
-regression. It does not block the release and queues a follow-up on the limit or the scaling
+Lee approved on 2026-10-27, extended to absolute misses on 2026-10-28: when the same
+relevant-source identity already holds a verified passing reference qualification, a later
+enforcing failure whose only misses are absolute or history-growth bounds exceeded by at most
+the declared run-to-run variation band is a borderline limit, not a regression. It does not
+block the release and queues a follow-up on the limit or the scaling
 behind it. Budgets are unchanged. Missing/stale prior pass, other identity, correctness,
-coverage, execution, absolute-limit failure or any miss beyond the band fails closed.
+coverage, replay/integrity, execution or any miss beyond the band fails closed.
 """
 import argparse
 import json
@@ -22,7 +23,7 @@ DIRECTORY = 'evidence/reference-performance/borderline'
 RECORD = 'borderline.json'
 KIND = 'reference-performance-borderline-v1'
 STATE = 'QUALIFIED_WITH_BORDERLINE_FOLLOW_UP_QUEUED'
-FOLLOW_UP = 'Review the growth limit or the scaling behind it; budgets stay unchanged unless Lee approves'
+FOLLOW_UP = 'Review the timing limit or the scaling behind it; budgets stay unchanged unless Lee approves'
 RECORD_FIELDS = {'schemaVersion', 'kind', 'verdict', 'relevantSourceSHA256', 'requestId', 'requestSHA256',
                  'resultSHA256', 'qualificationRequestId', 'qualificationResultSHA256', 'limitsSHA256',
                  'budgetsChanged', 'variationBand', 'borderlineMetrics', 'followUp', 'files'}
@@ -71,7 +72,8 @@ def classify_failed_run(repo, root, qualification):
     contracts = {size: item['contract'] for size, item in report['fixtures'].items()}
     summaries = {size: decision.summaries for size, decision in absolute.items()}
     paired = {name: evaluate_scaling(summaries, spec, contracts) for name, spec in scaling_specs(limits).items()}
-    result = classify_borderline(prior['relevantSourceSHA256'], request['relevantSource']['sha256'], absolute, paired)
+    result = classify_borderline(prior['relevantSourceSHA256'], request['relevantSource']['sha256'],
+                                 absolute, paired, limits=limits)
     need(result['verdict'] == BORDERLINE_ACCEPTED, 'Not borderline; ordinary failure: ' + result['reason'])
     labels = sorted({m['label'] for m in result['borderlineMetrics']})
     fields = {'schemaVersion': 1, 'kind': KIND, 'verdict': BORDERLINE_ACCEPTED,

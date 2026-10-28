@@ -1,4 +1,6 @@
-"""Lee's 2026-10-27 borderline rule. Bundle reports are synthetic; one test reads retained q9-q11 evidence."""
+"""Lee's borderline rule, including the 2026-10-28 absolute-limit extension.
+Bundle reports are synthetic; one test reads retained q9-q11 evidence.
+"""
 import contextlib
 import copy
 import io
@@ -29,11 +31,21 @@ def growth(large_median, median_bound=20.0, large_max=10.0, max_bound=30.0, acti
 
 
 ABSOLUTE = {'dense-1': Evaluation('passed', (), {}), 'dense-2': Evaluation('passed', (), {})}
+ABSOLUTE_LIMITS = {'actionsBySize': {'dense-2': {'task.title.save': {'medianMs': 20.0, 'maxMs': 30.0}}}}
+
+
+def absolute_timing(median=10.0, maximum=31.2):
+    failed = median > 20.0 or maximum > 30.0
+    return {**ABSOLUTE, 'dense-2': Evaluation(
+        'timing-failed' if failed else 'passed', ('task.title.save',) if failed else (),
+        {'task.title.save': {'medianMs': median, 'maxMs': maximum}})}
 
 
 class BorderlinePolicyTests(unittest.TestCase):
     def classify(self, prior=SOURCE, identity=SOURCE, absolute=None, paired=None):
-        return classify_borderline(prior, identity, absolute or ABSOLUTE, paired or {'task-own-history': growth(20.3)})
+        return classify_borderline(prior, identity, absolute if absolute is not None else ABSOLUTE,
+                                   paired if paired is not None else {'task-own-history': growth(20.3)},
+                                   limits=ABSOLUTE_LIMITS)
 
     def test_pass_is_an_ordinary_pass(self):
         result = self.classify(paired={'task-own-history': growth(19.9)})
@@ -79,11 +91,54 @@ class BorderlinePolicyTests(unittest.TestCase):
                                              paired or {'task-own-history': growth(20.3)})
                 self.assertEqual(result['verdict'], 'failed')
 
-    def test_fail_on_absolute_limit(self):
-        absolute = {**ABSOLUTE, 'dense-2': Evaluation('timing-failed', ('task.title.save',), {})}
-        result = self.classify(absolute=absolute)
+    def test_absolute_miss_four_percent_over_is_borderline(self):
+        for median, maximum, statistic in [(20.8, 25.0, 'median'), (10.0, 31.2, 'maximum')]:
+            with self.subTest(statistic=statistic):
+                result = self.classify(absolute=absolute_timing(median, maximum),
+                                       paired={'task-own-history': growth(19.9)})
+                self.assertEqual(result['verdict'], 'borderline-accepted')
+                self.assertEqual(result['borderlineMetrics'], [{
+                    'label': 'dense-2:task.title.save', 'statistic': statistic,
+                    'measuredMs': median if statistic == 'median' else maximum,
+                    'boundMs': 20.0 if statistic == 'median' else 30.0, 'ratioOfBound': 1.04}])
+
+    def test_absolute_miss_six_percent_over_is_failure(self):
+        for median, maximum in [(21.2, 25.0), (10.0, 31.8)]:
+            with self.subTest(median=median, maximum=maximum):
+                result = self.classify(absolute=absolute_timing(median, maximum))
+                self.assertEqual(result['verdict'], 'failed')
+                self.assertIn('outside', result['reason'])
+                self.assertIn('dense-2:task.title.save', result['reason'])
+
+    def test_absolute_miss_requires_identical_prior_pass(self):
+        for prior in (None, 'b' * 64):
+            with self.subTest(prior=prior):
+                result = self.classify(prior=prior, absolute=absolute_timing(),
+                                       paired={'task-own-history': growth(19.9)})
+                self.assertEqual(result['verdict'], 'failed')
+
+    def test_mixed_absolute_and_growth_misses_require_every_metric_within_band(self):
+        result = self.classify(absolute=absolute_timing(20.8, 31.2))
+        self.assertEqual(result['verdict'], 'borderline-accepted')
+        self.assertEqual([(m['label'], m['statistic']) for m in result['borderlineMetrics']], [
+            ('dense-2:task.title.save', 'median'), ('dense-2:task.title.save', 'maximum'),
+            ('task-own-history:scaling:sync.peerTask.storageAdmission', 'median')])
+        result = self.classify(absolute=absolute_timing(), paired={'task-own-history': growth(21.2)})
         self.assertEqual(result['verdict'], 'failed')
-        self.assertIn('absolute', result['reason'])
+
+    def test_absolute_band_edge_is_inclusive(self):
+        result = self.classify(absolute=absolute_timing(21.0, 31.5))
+        self.assertEqual(result['verdict'], 'borderline-accepted')
+
+    def test_absolute_miss_requires_valid_summary_and_unchanged_bound(self):
+        for summaries in ({}, {'task.title.save': {'medianMs': float('nan'), 'maxMs': 31.2}},
+                          {'task.title.save': {'medianMs': 10.0, 'maxMs': 20.0}}):
+            with self.subTest(summaries=summaries):
+                result = self.classify(absolute={**ABSOLUTE, 'dense-2': Evaluation(
+                    'timing-failed', ('task.title.save',), summaries)})
+                self.assertEqual(result['verdict'], 'failed')
+        result = classify_borderline(SOURCE, SOURCE, absolute_timing(), {'task-own-history': growth(19.9)})
+        self.assertEqual(result['verdict'], 'failed')
 
     def test_retained_q9_q10_q11_evidence(self):
         """q9 passed; q10 missed by 45% (ordinary failure); q11 missed by 1.6% (borderline)."""
@@ -145,6 +200,16 @@ class BorderlineBundleFixture(ReceiptFixture):
             if row['action'] == action:
                 row['microseconds'] = int(bound * ratio * 1000)
         self.recompute()
+
+    def slow_absolute(self, ratio):
+        """One small-size maximum misses its absolute budget; the median stays fast."""
+        size = self.spec['smallSize']
+        budget = self.limits['actionsBySize'][size][self.action]['maxMs']
+        attempt = next(a for a in self.failed['attempts'] if a['size'] == size)
+        row = next(r for r in attempt['result']['observations'] if r['action'] == self.action and not r['warmup'])
+        row['microseconds'] = round(budget * ratio * 1000)
+        self.recompute()
+        return size + ':' + self.action
 
     def recompute(self):
         limits = {**self.limits, 'sha256': self.host['limitsSHA256']}
@@ -255,17 +320,45 @@ class BorderlineBundleTests(BorderlineBundleFixture):
         with self.assertRaisesRegex(ValueError, 'correctness'):
             self.seal()
 
-    def test_fail_on_absolute_limit(self):
-        size = self.spec['smallSize']
-        budget = self.limits['actionsBySize'][size][self.action]['maxMs']
-        attempt = next(a for a in self.failed['attempts'] if a['size'] == size)
-        for row in attempt['result']['observations']:
-            if row['action'] == self.action and not row['warmup']:
-                row['microseconds'] = int(budget * 1000) + 1000
-        self.recompute()
-        self.assertEqual(attempt['status'], 'timing-failed')
-        with self.assertRaisesRegex(ValueError, 'absolute'):
+    def test_absolute_four_percent_over_is_accepted_and_queues_the_limit(self):
+        self.slow_growth(0.1)
+        label = self.slow_absolute(1.04)
+        record = self.seal()
+        result = self.verify()
+        self.assertEqual(result['state'], borderline.STATE)
+        self.assertEqual(result['borderlineMetrics'], [{
+            'label': label, 'statistic': 'maximum',
+            'measuredMs': self.limits['actionsBySize'][self.spec['smallSize']][self.action]['maxMs'] * 1.04,
+            'boundMs': self.limits['actionsBySize'][self.spec['smallSize']][self.action]['maxMs'],
+            'ratioOfBound': 1.04}])
+        self.assertEqual(record['followUp'], {'status': 'queued', 'action': borderline.FOLLOW_UP, 'metrics': [label]})
+        self.assertIs(record['budgetsChanged'], False)
+        self.assertEqual(receipt.digest(self.tools / 'limits-v1.json'), self.host['limitsSHA256'])
+
+    def test_absolute_six_percent_over_is_ordinary_failure(self):
+        self.slow_growth(0.1)
+        self.slow_absolute(1.06)
+        with self.assertRaisesRegex(ValueError, 'outside'):
             self.seal()
+        self.assertFalse(self.root.exists())
+
+    def test_absolute_miss_cannot_borrow_other_source_qualification(self):
+        self.slow_growth(0.1)
+        self.slow_absolute(1.04)
+        self.failed_request['relevantSource'] = {**self.identity, 'sha256': 'b' * 64}
+        self.failed['referenceBinding'].update(requestSHA256=receipt.canonical_digest(self.failed_request),
+                                              relevantSourceSHA256='b' * 64)
+        with self.assertRaisesRegex(ValueError, 'different relevant-source identity'):
+            self.seal()
+
+    def test_mixed_absolute_and_growth_within_band_is_accepted(self):
+        absolute_label = self.slow_absolute(1.04)
+        self.seal()
+        result = self.verify()
+        self.assertEqual(result['state'], borderline.STATE)
+        self.assertEqual([m['label'] for m in result['borderlineMetrics']],
+                         [absolute_label, 'task-own-history:scaling:' + self.action])
+        self.assertEqual(result['followUp']['metrics'], sorted([absolute_label, 'task-own-history:scaling:' + self.action]))
 
     def test_record_cannot_be_edited_after_sealing(self):
         self.seal()
