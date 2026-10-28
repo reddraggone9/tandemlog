@@ -540,6 +540,14 @@ exact-source enforcement and native/hardware acceptance remain separate. The
 proposed availability memo/projection did not show a consistent advantage and
 was not retained.
 
+Refresh admission formerly formatted and hashed an `app:epoch:writer:seq`
+string for every complete record to check observed frontiers and the trusted
+publication frontier, and scanned all records once per writer to find its
+protected head. Decoding already proves every complete record has the current
+epoch and a gap-free writer chain from sequence 1, so both now look records up
+by chain position; a positional mismatch falls back to the original scan. The
+checked conditions and failures are unchanged.
+
 ## Canonical quoting allocation
 
 Canonical string encoding validates every UTF-16 code unit before returning the
