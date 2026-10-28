@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'food_expiry_guidance_test.dart'
-    show loadSdkRoboto, expectUntruncatedGuidance;
+    show loadSdkRoboto, expectSingleLineDateGuidance;
 
 void main() {
   setUpAll(loadSdkRoboto);
@@ -60,7 +60,7 @@ void main() {
     });
   }
 
-  testWidgets('narrow large-text blank date keeps its entire format visible', (
+  testWidgets('narrow large-text blank date hint stays one line', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(320, 640));
@@ -87,7 +87,15 @@ void main() {
     await tester.tap(find.byType(TextField));
     await tester.pumpAndSettle();
     expect(focus.hasFocus, isTrue);
-    expectUntruncatedGuidance(tester);
+    expectSingleLineDateGuidance(tester);
+    final blankHeight = tester.getSize(find.byType(TextField)).height;
+    await tester.enterText(find.byType(TextField), '2027-02-28');
+    await tester.pumpAndSettle();
+    expect(
+      tester.getSize(find.byType(TextField)).height,
+      blankHeight,
+      reason: 'The hint must not make the blank field taller than a date',
+    );
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
     focus.dispose();

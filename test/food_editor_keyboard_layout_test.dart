@@ -9,7 +9,7 @@ import 'package:tandemlog/food/inventory.dart';
 
 import '../tool/food_preview.dart';
 import 'food_expiry_guidance_test.dart'
-    show loadSdkRoboto, expectUntruncatedGuidance;
+    show loadSdkRoboto, expectSingleLineDateGuidance;
 
 Future<void> verifyFoodEditorKeyboardLayout(
   WidgetTester tester, {
@@ -206,7 +206,7 @@ Future<void> verifyFoodEditorKeyboardLayout(
   await focus('Expiration');
   await tester.enterText(field('Expiration'), '');
   await tester.pumpAndSettle();
-  expectUntruncatedGuidance(tester);
+  expectSingleLineDateGuidance(tester);
   final calendar = find.byTooltip('Choose Expiration');
   await Scrollable.ensureVisible(tester.element(calendar), alignment: 0.5);
   await tester.pumpAndSettle();
@@ -218,7 +218,7 @@ Future<void> verifyFoodEditorKeyboardLayout(
   await tester.pumpAndSettle();
   final draft = tester.widget<TextField>(field('Expiration')).controller!;
   await capture?.call('$prefix-expiration-ime');
-  expectUntruncatedGuidance(tester);
+  expectSingleLineDateGuidance(tester);
   expectActions();
   await keyboard(false);
   expect(draft.text, '2027-02-30');

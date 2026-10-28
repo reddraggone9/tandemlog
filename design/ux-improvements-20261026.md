@@ -52,10 +52,10 @@ ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
   fork. A month jump clamps the current day, and only OK changes the caller's draft.
   The supported range includes all of1900–9999, not just January1 of9999.
   Existing measured day-cell geometry remains readable at320dp/enlarged text.
-  At narrow widths and enlarged text, the editable date format hint may wrap
-  over two lines instead of hiding its final day digits behind an ellipsis. The
-  calendar target, editable value and controller/focus ownership stay unchanged.
-  Native GTK exposed the clipping; the real-font regression fails before this fix.
+  At narrow widths and enlarged text, the editable date format hint stays on one
+  line and ellipsizes (e.g. `YYYY-M…`), matching the one-line entered date. RC.5
+  briefly wrapped it to two lines; Lee (10-27) preferred the truncated hint
+  because the wrap grew the blank field taller than a filled one.
   Compact English month labels match the current English app; full localized
   month/year labels are supplied to semantics. No new package or SDK fork.
 

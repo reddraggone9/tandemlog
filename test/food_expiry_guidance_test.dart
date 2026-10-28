@@ -51,7 +51,7 @@ Widget foodFixtureIdentityMenu(Widget? child) => PopupMenuButton<String>(
   child: child,
 );
 
-void expectUntruncatedGuidance(WidgetTester tester) {
+void expectSingleLineDateGuidance(WidgetTester tester) {
   final field = find.widgetWithText(TextField, 'Expiration');
   final input = tester.widget<TextField>(field);
   expect(input.decoration!.hintText, 'YYYY-MM-DD');
@@ -67,10 +67,13 @@ void expectUntruncatedGuidance(WidgetTester tester) {
     expect(hint, findsOneWidget);
     final rich = find.descendant(of: hint, matching: find.byType(RichText));
     final paragraph = tester.renderObject<RenderParagraph>(rich);
-    expect(paragraph.didExceedMaxLines, isFalse);
+    // One line like the entered date: a narrow enlarged hint ellipsizes
+    // instead of growing the field to two lines (Lee, 10-27).
+    expect(paragraph.maxLines, 1);
+    expect(paragraph.overflow, TextOverflow.ellipsis);
     expect(
       paragraph.getBoxesForSelection(
-        const TextSelection(baseOffset: 0, extentOffset: 10),
+        const TextSelection(baseOffset: 0, extentOffset: 1),
       ),
       isNotEmpty,
       reason: 'The focused blank date must render its format hint',
@@ -148,11 +151,11 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tester.pumpAndSettle();
   await tap(find.byTooltip('Add food'));
   await tester.pumpAndSettle();
-  expectUntruncatedGuidance(tester);
+  expectSingleLineDateGuidance(tester);
   final expiry = find.widgetWithText(TextField, 'Expiration');
   await Scrollable.ensureVisible(tester.element(expiry), alignment: 0.15);
   await tester.pumpAndSettle();
-  expectUntruncatedGuidance(tester);
+  expectSingleLineDateGuidance(tester);
   await capture?.call('$name-add-blank');
   await type(find.widgetWithText(TextField, 'Food name'), 'Test beans');
   await tester.sendKeyEvent(LogicalKeyboardKey.tab);
@@ -168,7 +171,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
         .hasFocus,
     isTrue,
   );
-  expectUntruncatedGuidance(tester);
+  expectSingleLineDateGuidance(tester);
   await tap(action);
   await tester.pumpAndSettle();
   expect(find.text('Expiration is required.'), findsOneWidget);
@@ -184,7 +187,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await type(expiry, '2027-02-30');
   await Scrollable.ensureVisible(tester.element(expiry), alignment: 0.15);
   await tester.pumpAndSettle();
-  expectUntruncatedGuidance(tester);
+  expectSingleLineDateGuidance(tester);
   await capture?.call('$name-add-focused');
   await tap(action);
   await tester.pumpAndSettle();
@@ -232,7 +235,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tester.pumpAndSettle();
   await Scrollable.ensureVisible(tester.element(expiry), alignment: 0.15);
   await tester.pumpAndSettle();
-  expectUntruncatedGuidance(tester);
+  expectSingleLineDateGuidance(tester);
   await capture?.call('$name-edit-date');
   await type(expiry, '');
   await tester.binding.handlePopRoute();
