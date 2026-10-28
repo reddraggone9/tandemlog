@@ -168,6 +168,13 @@ request/run. No generic branch-name or age-only freshness shortcut exists.
 
 ### Relevant-source identity schemes
 
+Source inventories read literal Git blobs through one `cat-file --batch` process
+per identity check,requesting each distinct object ID once even when paths share
+content. The verifier checks ordered object IDs,blob type,size,content hash and
+exact framing/completeness;duplicate inventory paths or protocol responses fail.
+Worktree dirty/untracked,regular-file and literal-byte checks remain unchanged.
+This transport does not change either identity scheme or receipt bytes.
+
 The request records its identity scheme inside `relevantSource`,so the nine
 controller fields are unchanged. A receipt is always verified under the scheme it
 recorded;old receipts are never reinterpreted.

@@ -106,6 +106,42 @@ def identity(pins, scheme):
     return {'scheme': scheme, 'sha256': canonical_digest({'scheme': scheme, 'files': pins}), 'files': pins}
 
 
+def git_blobs(repo, objects):
+    """Read unique literal blobs in one Git process; validate every byte of its protocol."""
+    # Multiple inventory paths may legitimately name the same object. Only request it once,
+    # so a duplicate response can never be confused with legitimate duplicate content.
+    objects = list(dict.fromkeys(objects))
+    need(all(re.fullmatch('[0-9a-f]{40}', obj) is not None for obj in objects),
+         'Invalid Git blob object ID')
+    if not objects:
+        return {}
+    output = subprocess.check_output(['git', '-C', str(repo), 'cat-file', '--batch'],
+                                     input=('\n'.join(objects) + '\n').encode('ascii'))
+    blobs = {}
+    offset = 0
+    for expected in objects:
+        end = output.find(b'\n', offset)
+        need(end != -1, 'Missing/truncated Git blob batch header')
+        header = output[offset:end]
+        match = re.fullmatch(rb'([0-9a-f]{40}) blob (0|[1-9][0-9]*)', header)
+        need(match is not None, 'Malformed/missing or non-blob Git batch response')
+        obj = match[1].decode('ascii')
+        need(obj not in blobs, 'Duplicate Git blob batch response')
+        need(obj == expected, 'Unexpected Git blob batch object ID')
+        size = int(match[2])
+        start = end + 1
+        end = start + size
+        need(end < len(output), 'Truncated Git blob batch content')
+        need(output[end:end + 1] == b'\n', 'Invalid Git blob batch content terminator')
+        content = output[start:end]
+        need(hashlib.sha1(b'blob ' + str(size).encode('ascii') + b'\0' + content).hexdigest() == obj,
+             'Git blob batch content/object ID differs')
+        blobs[obj] = content
+        offset = end + 1
+    need(offset == len(output), 'Trailing/duplicate Git blob batch output')
+    return blobs
+
+
 def source_identity(repo, scheme=IDENTITY_SCHEME):
     """All tracked non-documentation inputs, including tests, workflows and native source."""
     identity_scheme({'scheme': scheme} if scheme != IDENTITY_V1 else {})
@@ -114,17 +150,24 @@ def source_identity(repo, scheme=IDENTITY_SCHEME):
     untracked = subprocess.check_output(['git', '-C', str(repo), 'ls-files', '--others', '--exclude-standard', '-z']).decode().split('\0')
     need(not any(p and relevant(p) for p in changed + untracked), 'Relevant source is dirty or untracked')
     pins = {}
+    inventory = []
+    names = set()
     for row in subprocess.check_output(['git', '-C', str(repo), 'ls-files', '--stage', '-z']).decode().split('\0'):
         if not row:
             continue
         info, name = row.split('\t', 1)
+        need(name not in names, 'Duplicate Git source inventory path')
+        names.add(name)
         if not relevant(name):
             continue
         mode, blob, stage = info.split()
         need(stage == '0' and mode in ('100644', '100755'), 'Unmerged or linked relevant source')
+        inventory.append((name, mode, blob))
+    blobs = git_blobs(repo, (blob for _, _, blob in inventory))
+    for name, mode, blob in inventory:
         path = repo / name
         need(path.is_file() and not path.is_symlink(), 'Relevant source missing or linked')
-        original = subprocess.check_output(['git', '-C', str(repo), 'cat-file', 'blob', blob])
+        original = blobs[blob]
         value = digest(path)
         need(hashlib.sha256(original).hexdigest() == value, 'Reference/hosted Linux source differs from literal Git bytes: ' + name)
         pins[name] = pin(name, original, mode, scheme)
@@ -136,15 +179,22 @@ def committed_identity(repo, revision, scheme=IDENTITY_SCHEME):
     identity_scheme({'scheme': scheme} if scheme != IDENTITY_V1 else {})
     need(re.fullmatch('[0-9a-f]{40}', revision) is not None, 'Exact source commit required')
     pins = {}
+    inventory = []
+    names = set()
     for row in subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-r', '-z', revision]).decode().split('\0'):
         if not row:
             continue
         info, name = row.split('\t', 1)
+        need(name not in names, 'Duplicate Git source inventory path')
+        names.add(name)
         if not relevant(name):
             continue
         mode, kind, blob = info.split()
         need(kind == 'blob' and mode in ('100644', '100755'), 'Linked/unexpected committed source')
-        content = subprocess.check_output(['git', '-C', str(repo), 'cat-file', 'blob', blob])
+        inventory.append((name, mode, blob))
+    blobs = git_blobs(repo, (blob for _, _, blob in inventory))
+    for name, mode, blob in inventory:
+        content = blobs[blob]
         pins[name] = pin(name, content, mode, scheme)
     return identity(pins, scheme)
 
