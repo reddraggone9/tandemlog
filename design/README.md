@@ -27,7 +27,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Food as products](food-products.md): proposed (not accepted) design for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums and receipt import; open decisions for Lee. No implementation.
+- [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Implementation in progress on `vex/food-products`; not released.
 
 - [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 
