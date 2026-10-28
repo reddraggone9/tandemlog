@@ -37,7 +37,10 @@ void main() {
     await tester.pumpAndSettle();
     await pixels.capture(tester, 'food-keyboard-dark-900-after-space');
     expect(find.text('1 selected'), findsOneWidget);
-    expect(find.widgetWithText(TextField, 'Food name'), findsNothing);
+    // At pane width the selection opens the bulk editor in the pane (Apply
+    // boxes), not the row's single editor.
+    expect(find.byKey(const ValueKey('nameApply')), findsOneWidget);
+    expect(find.text('Edit 1 container'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
