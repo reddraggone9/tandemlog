@@ -45,7 +45,7 @@ void main() {
             onRemove: (_) {},
             onRestore: singles.add,
             onRestoreBatch: (items) => batches.add(items),
-            onDetails: (_, _, _) {},
+            onDetails: (_, _, _, _) {},
           ),
         ),
       );
@@ -99,7 +99,7 @@ void main() {
                 onAdd: (_, _) {},
                 onRemove: (_) {},
                 onRestore: singles.add,
-                onDetails: (_, _, _) {},
+                onDetails: (_, _, _, _) {},
               );
             },
           ),

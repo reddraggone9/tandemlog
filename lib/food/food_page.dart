@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart' show CustomSemanticsAction;
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../presentation/tag_input.dart';
 import '../presentation/sticky_task_group.dart';
@@ -55,7 +56,12 @@ class FoodInventoryPage extends StatefulWidget {
   final FutureOr<void> Function(List<String>) onRemove;
   final FutureOr<void> Function(FoodContainer) onRestore;
   final FutureOr<void> Function(List<FoodContainer>)? onRestoreBatch;
-  final FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)
+  final FutureOr<void> Function(
+    List<FoodContainer>,
+    FoodDetails,
+    List<String>,
+    FoodProductChange,
+  )
   onDetails;
   final FutureOr<void> Function()? onUndo;
   final String undoLabel;
@@ -156,8 +162,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   }
 
   static String _rowKey(FoodGroup group) =>
-      '${group.containers.first.deleted ? 'deleted' : 'active'}:'
-      '${group.details.displayGroupKey}';
+      '${group.containers.first.deleted ? 'deleted' : 'active'}:${group.key}';
+
+  /// Wide windows edit a selection in the side pane, as Tasks does.
+  bool _wide = false;
+  bool _paneBulk = false;
+  final _scroll = ScrollController();
+  final _rowFocus = <String, FocusNode>{};
 
   /// Applies the shared Tasks/Food selection rules to the visible rows.
   /// Starting explicit selection while the wide pane edits one group selects
@@ -190,10 +201,33 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       members: (key) => rows[key]?.containers.map((e) => e.id) ?? const [],
       gesture: gesture,
     );
-    if (result.selecting && _editorBuilder != null && !_editorModal) {
+    // Two-to-one: narrowing a wide selection to one whole row returns to
+    // that row's single editor, as on Tasks.
+    final rowsBefore = rows.values
+        .where((row) => row.containers.any((e) => selected.contains(e.id)))
+        .length;
+    final single = result.selecting && _wide && rowsBefore >= 2
+        ? rows.values
+              .where(
+                (row) =>
+                    row.containers.every(
+                      (e) => result.selected.contains(e.id),
+                    ) &&
+                    row.containers.length == result.selected.length,
+              )
+              .firstOrNull
+        : null;
+    if ((result.selecting || _paneBulk) &&
+        _editorBuilder != null &&
+        !_editorModal) {
       if (!await requestCloseEditor()) return;
       await editorDone;
       if (!mounted || !usable()) return;
+    }
+    if (single != null) {
+      setState(_clearBulkSelection);
+      unawaited(_edit(group: single, detailsCommand: widget.onDetails));
+      return;
     }
     setState(() {
       bulkSelected
@@ -206,6 +240,70 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       selecting = bulkSelected.isNotEmpty;
       _selectionAnchor = selecting ? result.anchor : null;
     });
+    if (selecting && _wide) unawaited(_editSelection(pane: true));
+  }
+
+  /// Opens the bulk editor for the selected shown containers.
+  Future<void> _editSelection({required bool pane}) => _edit(
+    bulkTargets: [
+      for (final item in _shown())
+        if (bulkSelected.contains(item.id)) item,
+    ],
+    pane: pane,
+  );
+
+  /// Clear Selection also closes a wide selection's bulk pane.
+  Future<void> _clearSelection() async {
+    if (_paneBulk && _editorBuilder != null) {
+      if (!await requestCloseEditor()) return;
+      await editorDone;
+      if (!mounted) return;
+    }
+    setState(_clearBulkSelection);
+  }
+
+  /// Up/Down move between rows; with Shift they extend the selection from
+  /// its anchor, as on Tasks.
+  Future<void> _focusRelative(FoodGroup group, int direction) async {
+    final workspace = widget.workspaceIdentity;
+    final rows = _grouping.rows;
+    final index = rows.indexWhere((row) => _rowKey(row) == _rowKey(group));
+    final next = index + direction;
+    if (index < 0 || next < 0 || next >= rows.length) return;
+    final target = rows[next];
+    if (HardwareKeyboard.instance.isShiftPressed) {
+      _selectionAnchor ??= _rowKey(group);
+      await _select(target, SelectionGesture.range, workspace);
+      if (!mounted) return;
+    }
+    final key = _rowKey(target);
+    var node = _rowFocus[key];
+    if (node?.context == null && _scroll.hasClients) {
+      final box = _rowFocus[_rowKey(group)]?.context?.findRenderObject();
+      final step = box is RenderBox && box.hasSize ? box.size.height : 72.0;
+      await _scroll.animateTo(
+        (_scroll.offset + direction * step).clamp(
+          0.0,
+          _scroll.position.maxScrollExtent,
+        ),
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+      );
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted) return;
+      node = _rowFocus[key];
+    }
+    final context = node?.context;
+    if (context != null && context.mounted) {
+      await Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 120),
+        alignmentPolicy: direction > 0
+            ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
+            : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+      );
+    }
+    if (mounted) _rowFocus[key]?.requestFocus();
   }
 
   @override
@@ -303,6 +401,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     _expirationClock.removeListener(_expirationChanged);
     _expirationClock.dispose();
     search.dispose();
+    _scroll.dispose();
+    for (final node in _rowFocus.values) {
+      node.dispose();
+    }
     // An editor requested just before page disposal may never mount, so no
     // child dispose callback exists to release the host's readiness wait.
     final done = _editorDone;
@@ -320,6 +422,24 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     // Inbox remains a domain partition. Stock alone composes its unsearched
     // undated partition; search includes both active and deleted food.
     final grouping = _grouping;
+    final live = {for (final row in grouping.rows) _rowKey(row)};
+    final stale = _rowFocus.keys.where((k) => !live.contains(k)).toList();
+    if (stale.isNotEmpty) {
+      final nodes = [for (final k in stale) _rowFocus.remove(k)!];
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        for (final node in nodes) {
+          node.dispose();
+        }
+      });
+    }
+    // Running low sits above Inbox in plain Stock (decisions 5 and 6).
+    final runningLow =
+        view == FoodView.inventory &&
+            !querying &&
+            brands.isEmpty &&
+            locations.isEmpty
+        ? widget.state.runningLow
+        : const <FoodProductSummary>[];
     final inboxGroups = grouping.inbox;
     final visibleIds = grouping.visibleIds;
     bulkSelected.retainAll(visibleIds);
@@ -353,9 +473,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 constraints: sectionContentConstraints,
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final panel =
-                        constraints.maxWidth >= EditorSurface.breakpoint &&
-                        !_editorModal;
+                    _wide = constraints.maxWidth >= EditorSurface.breakpoint;
+                    final panel = _wide && !_editorModal;
                     final editor = _editorBuilder?.call(panel);
                     final body = Column(
                       children: [
@@ -387,6 +506,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                     : 16.0;
                                 return CustomScrollView(
                                   key: _inventoryKey,
+                                  controller: _scroll,
                                   slivers: [
                                     SliverToBoxAdapter(
                                       child: Column(
@@ -398,20 +518,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                             maximumSelectionCount:
                                                 visibleIds.length,
                                             onClear: () =>
-                                                setState(_clearBulkSelection),
+                                                unawaited(_clearSelection()),
                                             onEdit:
                                                 widget.busy ||
                                                     pending ||
                                                     bulkSelected.isEmpty
                                                 ? null
-                                                : () => _edit(
-                                                    bulkTargets: [
-                                                      for (final item
-                                                          in _shown())
-                                                        if (bulkSelected
-                                                            .contains(item.id))
-                                                          item,
-                                                    ],
+                                                : () => _editSelection(
+                                                    pane: _wide,
                                                   ),
                                             capture: TextField(
                                               key: const ValueKey(
@@ -458,6 +572,31 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                         ],
                                       ),
                                     ),
+                                    if (runningLow.isNotEmpty) ...[
+                                      SliverPadding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: rowInset == 0 ? 16 : 0,
+                                        ),
+                                        sliver: const StickyTaskGroupHeading(
+                                          title: 'Running low',
+                                          headingKey: ValueKey(
+                                            'food-running-low-heading',
+                                          ),
+                                        ),
+                                      ),
+                                      SliverPadding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: rowInset,
+                                        ),
+                                        sliver: SliverList.builder(
+                                          itemCount: runningLow.length,
+                                          itemBuilder: (_, index) => _lowRow(
+                                            runningLow[index],
+                                            pending,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                     if (inboxGroups.isNotEmpty) ...[
                                       const SliverToBoxAdapter(
                                         child: Padding(
@@ -495,24 +634,26 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                               _group(inboxGroups[index]),
                                         ),
                                       ),
-                                      if (groups.isNotEmpty)
-                                        const SliverToBoxAdapter(
-                                          child: Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                              16,
-                                              12,
-                                              16,
-                                              8,
-                                            ),
-                                            child: Text(
-                                              'Stock',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                              ),
+                                    ],
+                                    if ((inboxGroups.isNotEmpty ||
+                                            runningLow.isNotEmpty) &&
+                                        groups.isNotEmpty)
+                                      const SliverToBoxAdapter(
+                                        child: Padding(
+                                          padding: EdgeInsets.fromLTRB(
+                                            16,
+                                            12,
+                                            16,
+                                            8,
+                                          ),
+                                          child: Text(
+                                            'Stock',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
                                             ),
                                           ),
                                         ),
-                                    ],
+                                      ),
                                     if (groups.isEmpty &&
                                         inboxGroups.isEmpty &&
                                         deletedGroups.isEmpty)
@@ -601,6 +742,71 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  /// One product below its minimum: what it is, how many of how many, its
+  /// store link and Add another.
+  Widget _lowRow(FoodProductSummary product, bool pending) {
+    final colors = Theme.of(context).colorScheme;
+    final link = product.links.firstOrNull;
+    final description = [
+      product.name,
+      product.brand,
+      product.size,
+    ].where((value) => value.isNotEmpty).join(' · ');
+    return ListRowSurface(
+      key: ValueKey('food-running-low:${product.id}'),
+      interactive: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        child: Row(
+          children: [
+            Expanded(
+              child: Semantics(
+                label:
+                    '$description, ${product.onHand} of ${product.minimum} on hand',
+                excludeSemantics: true,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      description,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      '${product.onHand} of ${product.minimum}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colors.error,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (link != null)
+              IconButton(
+                tooltip: 'Open store link for ${product.name}',
+                onPressed: () => launchUrl(
+                  Uri.parse(link),
+                  mode: LaunchMode.externalApplication,
+                ),
+                icon: const Icon(Icons.open_in_new),
+              ),
+            IconButton(
+              tooltip: 'Add another ${product.name}',
+              onPressed: widget.busy || pending
+                  ? null
+                  : () => _edit(
+                      template: product.description,
+                      addCommand: widget.onAdd,
+                    ),
+              icon: const Icon(Icons.add),
+            ),
+          ],
         ),
       ),
     );
@@ -816,7 +1022,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   String _groupMenuIdentity(FoodGroup group) => jsonEncode([
     group.containers.first.deleted,
-    group.details.displayGroupKey,
+    group.key,
     for (final item in group.containers)
       [item.id, item.deletions.toList()..sort()],
   ]);
@@ -887,7 +1093,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         restoreBatchCommand = widget.onRestoreBatch,
         detailsCommand = widget.onDetails;
     final details = group.details, deleted = group.containers.first.deleted;
-    final key = '${deleted ? 'deleted' : 'active'}:${details.displayGroupKey}';
+    final key = _rowKey(group);
     final identity = _groupMenuIdentity(group);
     final countLabel =
         '${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}';
@@ -961,6 +1167,18 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           // edits. Only the row's own InkWell focus node is a direct child;
           // its checkbox and buttons keep their own Space activation.
           onKeyEvent: (node, event) {
+            if (FocusManager.instance.primaryFocus?.parent == node &&
+                event is! KeyUpEvent &&
+                (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+                    event.logicalKey == LogicalKeyboardKey.arrowDown)) {
+              unawaited(
+                _focusRelative(
+                  group,
+                  event.logicalKey == LogicalKeyboardKey.arrowUp ? -1 : 1,
+                ),
+              );
+              return KeyEventResult.handled;
+            }
             if (event.logicalKey != LogicalKeyboardKey.space ||
                 event is KeyUpEvent ||
                 FocusManager.instance.primaryFocus?.parent != node) {
@@ -972,6 +1190,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             return KeyEventResult.handled;
           },
           child: InkWell(
+            focusNode: _rowFocus.putIfAbsent(
+              key,
+              () => FocusNode(debugLabel: 'Food row ${details.name}'),
+            ),
             overlayColor: listRowInkOverlay(Theme.of(context).colorScheme),
             splashFactory: InkRipple.splashFactory,
             onFocusChange: (focused) {
@@ -1222,8 +1444,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     FoodGroup? group,
     FoodDetails? template,
     List<FoodContainer>? bulkTargets,
+    bool pane = false,
     FutureOr<void> Function(FoodDetails, int)? addCommand,
-    FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)?
+    FutureOr<void> Function(
+      List<FoodContainer>,
+      FoodDetails,
+      List<String>,
+      FoodProductChange,
+    )?
     detailsCommand,
   }) async {
     final request = ++_editorRequest;
@@ -1260,7 +1488,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     setState(
       () => _editorBuilder = (panel) => FoodEditor(
         key: key,
-        panel: panel && targets == null,
+        panel: panel && (targets == null || pane),
         group: group,
         template: template,
         targets: targets,
@@ -1318,10 +1546,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         },
       ),
     );
-    _editorModal = targets != null;
+    _editorModal = targets != null && !pane;
+    _paneBulk = targets != null && pane;
     // Completion follows actual input disposal, including whole-page disposal.
     await done.future;
     if (identical(_editorDone, done)) {
+      _paneBulk = false;
       _editingGroup = null;
       _requestEditorClose = null;
       _editorCloseBusy = null;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/food_product_fields.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'support/ux_capture.dart';
@@ -43,7 +45,7 @@ void main() {
                 onAdd: (_, _) {},
                 onRemove: (_) {},
                 onRestore: (_) => restores++,
-                onDetails: (items, details, fields) {
+                onDetails: (items, details, fields, products) {
                   edits.add(details.name);
                   update(
                     () => events.add(
@@ -53,7 +55,7 @@ void main() {
                         action: FoodAction.edit,
                         targets: items.map((e) => e.id).toList(),
                         details: details,
-                        fields: fields,
+                        fields: foodTouchedFields(fields, products),
                       ),
                     ),
                   );
@@ -92,7 +94,7 @@ void main() {
                 onAdd: (_, _) {},
                 onRemove: (_) {},
                 onRestore: (_) => restores++,
-                onDetails: (items, details, fields) {
+                onDetails: (items, details, fields, products) {
                   edits.add(details.name);
                   update(
                     () => events.add(
@@ -102,7 +104,7 @@ void main() {
                         action: FoodAction.edit,
                         targets: [id],
                         details: details,
-                        fields: fields,
+                        fields: foodTouchedFields(fields, products),
                       ),
                     ),
                   );
@@ -172,7 +174,7 @@ void main() {
                 onAdd: (_, _) => writes++,
                 onRemove: (_) => writes++,
                 onRestore: (_) => writes++,
-                onDetails: (_, _, _) => writes++,
+                onDetails: (_, _, _, _) => writes++,
               );
             },
           ),
@@ -251,7 +253,7 @@ void main() {
                 onAdd: (_, _) {},
                 onRemove: (_) {},
                 onRestore: (_) {},
-                onDetails: (_, _, _) => saves++,
+                onDetails: (_, _, _, _) => saves++,
               );
             },
           ),

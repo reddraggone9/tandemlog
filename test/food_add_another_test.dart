@@ -54,7 +54,7 @@ Future<void> verifyFoodAddAnother(
         onAdd: (details, count) => added.add((details, count)),
         onRemove: (_) => other.add('remove'),
         onRestore: (_) => other.add('restore'),
-        onDetails: (_, _, _) => other.add('details'),
+        onDetails: (_, _, _, _) => other.add('details'),
       ),
     ),
   );
@@ -197,7 +197,7 @@ void main() {
           onAdd: (_, _) {},
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       ),
     );

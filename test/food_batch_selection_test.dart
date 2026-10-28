@@ -55,7 +55,7 @@ Future<_Calls> _pump(
         onRestore: (item) => calls.restored.add([item.id]),
         onRestoreBatch: (items) =>
             calls.restored.add(items.map((e) => e.id).toList()),
-        onDetails: (items, _, _) =>
+        onDetails: (items, _, _, _) =>
             calls.edits.add(items.map((e) => e.id).toList()),
       ),
     ),

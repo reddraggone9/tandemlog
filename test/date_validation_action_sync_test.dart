@@ -69,7 +69,7 @@ void main() {
         tester,
         height: 1000,
         onAdd: (_, _) => writes++,
-        onDetails: (_, _, _) => writes++,
+        onDetails: (_, _, _, _) => writes++,
       );
       if (mode == 'Add') {
         await food.openPaneAdd(tester);

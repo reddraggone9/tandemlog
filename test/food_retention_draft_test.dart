@@ -15,7 +15,7 @@ void main() {
           onAdd: (details, _) => added = details,
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       ),
     );
@@ -64,7 +64,7 @@ void main() {
           onAdd: (_, _) {},
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, details, changed) {
+          onDetails: (_, details, changed, _) {
             saved = details;
             fields = changed;
           },

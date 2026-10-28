@@ -438,6 +438,7 @@ void registerFoodBulkDetailsUndoReviewTests({
                   expiry: '2099-12-31',
                 ),
                 ['brand', 'location'],
+                const FoodProductChange(),
               );
             });
             await tester.pumpAndSettle();

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/application/food_undo_history.dart';
 import 'package:tandemlog/domain/current_operation.dart';
 import 'package:tandemlog/food/food_admission.dart';
 import 'package:tandemlog/food/food_purchase_import.dart';
@@ -100,6 +101,7 @@ void main() {
       );
       final edit = food.lastPreparedRecords;
       expect(edit.single.currentOperation.family, 'product.edit');
+      expect(FoodUndoEntry('editing', edit).label, 'editing 1 product');
       // The first edit of an implicit product records its whole description.
       expect(edit.single.operation.product, {
         'name': 'Milk 2%',

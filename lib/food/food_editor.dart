@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../presentation/bulk_apply.dart';
 import '../presentation/civil_date_input.dart';
@@ -38,7 +39,14 @@ class FoodEditor extends StatefulWidget {
   final List<FoodContainer>? targets;
   final FoodState state;
   final FutureOr<void> Function(FoodDetails, int) onAdd;
-  final FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)
+
+  /// Container fields plus product changes of one Save (one Undo action).
+  final FutureOr<void> Function(
+    List<FoodContainer>,
+    FoodDetails,
+    List<String>,
+    FoodProductChange,
+  )
   onDetails;
   final bool Function() pending, isOriginCurrent, areTargetsVisible;
   final VoidCallback onBulkApplied, onDisposed;
@@ -65,14 +73,22 @@ class FoodEditorState extends State<FoodEditor> {
       size,
       location,
       count,
-      retentionQuery;
+      retentionQuery,
+      link,
+      minimum;
   late final FoodDetails? original;
+
+  /// The edited row's product (single-row Edit only).
+  late final FoodProductSummary? product;
   late final bool? estimated;
   late String retention;
   late final String initial;
 
   /// Bulk editing writes only applied fields; mixed fields start blank.
   static const bulkFields = ['name', 'brand', 'size', 'location', 'retention'];
+
+  /// Name, Brand and Container size describe the product (decision 2).
+  static const productFields = {'name', 'brand', 'size'};
   final applied = <String>{}, mixed = <String>{};
   var answered = false, saving = false, deciding = false, auxiliaryOpen = false;
   Future<bool>? closeRequest;
@@ -82,6 +98,7 @@ class FoodEditorState extends State<FoodEditor> {
   FoodDetails? _attemptDetails;
   int? _attemptAmount;
   List<String>? _attemptFields;
+  FoodProductChange? _attemptProducts;
   double? editorViewportHeight;
   // Centered on open; actions stay put while validation text changes.
   final _placement = SettledDialogPlacement();
@@ -112,6 +129,8 @@ class FoodEditorState extends State<FoodEditor> {
     location,
     count,
     retentionQuery,
+    link,
+    minimum,
   ];
   String snapshot() => jsonEncode([
     for (final controller in _controllers) controller.text,
@@ -137,6 +156,11 @@ class FoodEditorState extends State<FoodEditor> {
     );
     count = TextEditingController(text: '1');
     retentionQuery = TextEditingController();
+    product = !bulk && widget.group != null
+        ? widget.state.products[widget.group!.product]
+        : null;
+    link = TextEditingController(text: product?.links.firstOrNull ?? '');
+    minimum = TextEditingController(text: product?.minimum?.toString() ?? '');
     retention = start(
       'retention',
       widget.template == null ? original?.retention ?? '' : '',
@@ -177,6 +201,8 @@ class FoodEditorState extends State<FoodEditor> {
     'location': location,
     'count': count,
     'retention': retentionQuery,
+    'link': link,
+    'minimum': minimum,
   };
 
   void _validationChanged() {
@@ -195,6 +221,7 @@ class FoodEditorState extends State<FoodEditor> {
             'location',
             if (widget.group == null) 'count',
             if (widget.group != null) 'retention',
+            if (product != null) ...['link', 'minimum'],
           ];
     for (final field in active) {
       final controller = _fields[field]!;
@@ -203,6 +230,24 @@ class FoodEditorState extends State<FoodEditor> {
         continue;
       }
       final value = controller.text.trim();
+      if (field == 'link') {
+        if (value.isNotEmpty && !isFoodStoreLink(value)) {
+          issues.add(
+            const FieldIssue('link', 'Enter a web address starting https://'),
+          );
+        }
+        continue;
+      }
+      if (field == 'minimum') {
+        final amount = int.tryParse(value);
+        if (value.isNotEmpty &&
+            (amount == null || amount < 0 || amount > maximumProductMinimum)) {
+          issues.add(
+            const FieldIssue('minimum', 'Enter 0 to 999, or leave blank.'),
+          );
+        }
+        continue;
+      }
       if (field == 'count') {
         final amount = int.tryParse(controller.text);
         if (amount == null || amount < 1 || amount > 100) {
@@ -416,19 +461,24 @@ class FoodEditorState extends State<FoodEditor> {
           );
         }
         final after = details.toJson();
+        final changed = [
+          for (final field in bulkFields)
+            if (applied.contains(field) &&
+                targets!.any((e) => e.details.toJson()[field] != after[field]))
+              field,
+        ];
         final fields = retry
             ? _attemptFields!
-            : [
-                for (final field in bulkFields)
-                  if (applied.contains(field) &&
-                      targets!.any(
-                        (e) => e.details.toJson()[field] != after[field],
-                      ))
-                    field,
-              ];
-        if (!retry) _attemptFields = List.unmodifiable(fields);
-        if (fields.isNotEmpty) {
-          await changeDetails(targets!, details, fields);
+            : changed.where((f) => !productFields.contains(f)).toList();
+        final products = retry
+            ? _attemptProducts!
+            : _bulkProductChange(details);
+        if (!retry) {
+          _attemptFields = List.unmodifiable(fields);
+          _attemptProducts = products;
+        }
+        if (fields.isNotEmpty || !products.isEmpty) {
+          await changeDetails(targets!, details, fields, products);
         }
         if (mounted) widget.onBulkApplied();
       } else if (group == null) {
@@ -439,12 +489,19 @@ class FoodEditorState extends State<FoodEditor> {
             ? _attemptFields!
             : after.keys
                   .where(
-                    (key) => key != 'estimated' && before[key] != after[key],
+                    (key) =>
+                        key != 'estimated' &&
+                        !productFields.contains(key) &&
+                        before[key] != after[key],
                   )
                   .toList();
-        if (!retry) _attemptFields = List.unmodifiable(fields);
-        if (fields.isNotEmpty) {
-          await changeDetails(group.containers, details, fields);
+        final products = retry ? _attemptProducts! : _productChange(details);
+        if (!retry) {
+          _attemptFields = List.unmodifiable(fields);
+          _attemptProducts = products;
+        }
+        if (fields.isNotEmpty || !products.isEmpty) {
+          await changeDetails(group.containers, details, fields, products);
         }
       }
       if (dialogContext.mounted) {
@@ -464,6 +521,137 @@ class FoodEditorState extends State<FoodEditor> {
       }
     }
   }
+
+  /// Existing products as "Name · Brand · Size" suggestions for Add.
+  late final Map<String, FoodProductSummary> _productOptions = {
+    for (final p
+        in widget.state.products.values.toList()
+          ..sort((a, b) => b.containers.compareTo(a.containers)))
+      [p.name, p.brand, p.size].where((v) => v.isNotEmpty).join(' · '): p,
+  };
+
+  /// Changed product fields of the single-row editor.
+  FoodProductChange _productChange(FoodDetails details) {
+    final current = product;
+    if (current == null) return const FoodProductChange();
+    final before = original!.toJson(), after = details.toJson();
+    final changes = <String, Object?>{
+      for (final field in productFields)
+        if (before[field] != after[field]) field: after[field],
+    };
+    final typed = link.text.trim();
+    final links = [
+      if (typed.isNotEmpty) typed,
+      ...current.links.skip(1).where((l) => l != typed),
+    ];
+    if (jsonEncode(links) != jsonEncode(current.links)) {
+      changes['links'] = links;
+    }
+    final keep = int.tryParse(minimum.text.trim());
+    if (keep != current.minimum) changes['minimum'] = keep;
+    return FoodProductChange(roots: [current.id], changes: changes);
+  }
+
+  /// Applied Name/Brand/Container size change the selected products.
+  FoodProductChange _bulkProductChange(FoodDetails details) {
+    final after = details.toJson();
+    final changes = <String, Object?>{
+      for (final field in productFields)
+        if (applied.contains(field) &&
+            widget.targets!.any(
+              (e) => e.details.toJson()[field] != after[field],
+            ))
+          field: after[field],
+    };
+    return FoodProductChange(
+      roots: {for (final e in widget.targets!) e.product}.toList(),
+      changes: changes,
+    );
+  }
+
+  /// "Also changes N other containers" or the merge this Save makes.
+  String? _scope() {
+    final state = widget.state;
+    if (bulk) {
+      final change = _bulkProductChange(_details());
+      if (change.isEmpty) return null;
+      final steps = planFoodProductChanges(state, change.roots, change.changes);
+      final merged = <String>{
+        for (final step in steps)
+          if (step is FoodProductMerge) ...[step.source, step.into],
+      };
+      final selected = widget.targets!.map((e) => e.id).toSet();
+      final affected = {...change.roots, ...merged};
+      final containers = [
+        for (final c in state.containers)
+          if (affected.contains(c.product)) c,
+      ];
+      if (merged.isNotEmpty) {
+        return 'Merges ${merged.length} products, ${containers.length} '
+            '${containers.length == 1 ? 'container' : 'containers'}';
+      }
+      final others = containers.where((c) => !selected.contains(c.id)).length;
+      return others == 0
+          ? null
+          : 'Also changes $others other ${others == 1 ? 'container' : 'containers'}';
+    }
+    final current = product;
+    if (current == null) return null;
+    final key = foodDescriptionKey(name.text, brand.text, size.text);
+    final into = state.productsByDescription[key]
+        ?.where((p) => p.id != current.id)
+        .firstOrNull;
+    if (into != null) {
+      return 'Merges with ${into.containers} '
+          '${into.containers == 1 ? 'container' : 'containers'} of ${into.name}';
+    }
+    final mine = widget.group!.containers.map((e) => e.id).toSet();
+    final others = state.containers
+        .where((c) => c.product == current.id && !mine.contains(c.id))
+        .length;
+    return others == 0
+        ? null
+        : 'Also changes $others other ${others == 1 ? 'container' : 'containers'}';
+  }
+
+  /// "Last \$3.48 · Walmart · Oct 20 · typical \$3.30" (decision 10).
+  String? _priceLine() {
+    final last = product?.last;
+    if (last == null) return null;
+    final typical = product!.typicalUnitCost(DateTime.now());
+    final date = DateTime.parse(last.date);
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return [
+      'Last ${foodMoney(last.unitCost, last.currency)}',
+      if (last.store.isNotEmpty) last.store,
+      '${months[date.month - 1]} ${date.day}',
+      if (typical != null) 'typical ${foodMoney(typical, last.currency)}',
+    ].join(' · ');
+  }
+
+  Widget _secondary(String text, {Key? key}) => Padding(
+    key: key,
+    padding: const EdgeInsets.only(top: 4),
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    ),
+  );
 
   /// Removes the selected active containers, or restores the selected
   /// deleted ones, as one host command and therefore one Undo action.
@@ -598,6 +786,30 @@ class FoodEditorState extends State<FoodEditor> {
   Widget _input(String field) {
     final enabled = !saving && !pending();
     return switch (field) {
+      // Add suggests existing products; picking one fills Brand and size.
+      'name' when !bulk && widget.group == null => FreeTextAutocomplete(
+        errorText: _validation.errorFor('name'),
+        enabled: enabled,
+        controller: name,
+        autofocus: widget.template == null,
+        label: 'Food name',
+        values: _productOptions.keys.toList(),
+        // Once the typed name is a product's exact name there is nothing
+        // left to suggest; the overlay would only cover the next fields.
+        matches: (option, text) {
+          final typed = text.trim().toLowerCase();
+          return typed.isNotEmpty &&
+              option.toLowerCase().contains(typed) &&
+              _productOptions[option]!.name.toLowerCase() != typed;
+        },
+        onSelected: (option) {
+          final picked = _productOptions[option];
+          if (picked == null) return;
+          name.text = picked.name;
+          brand.text = picked.brand;
+          size.text = picked.size;
+        },
+      ),
       'name' => TextField(
         enabled: enabled,
         controller: name,
@@ -607,6 +819,41 @@ class FoodEditorState extends State<FoodEditor> {
           hintText: _hint('name'),
           floatingLabelBehavior: _floatMixed('name'),
           errorText: _validation.errorFor('name'),
+          errorMaxLines: 3,
+        ),
+      ),
+      'link' => TextField(
+        key: const ValueKey('food-store-link'),
+        enabled: enabled,
+        controller: link,
+        keyboardType: TextInputType.url,
+        decoration: InputDecoration(
+          labelText: 'Store link',
+          errorText: _validation.errorFor('link'),
+          errorMaxLines: 3,
+          suffixIcon: ListenableBuilder(
+            listenable: link,
+            builder: (context, _) => IconButton(
+              tooltip: 'Open store link',
+              onPressed: isFoodStoreLink(link.text.trim())
+                  ? () => launchUrl(
+                      Uri.parse(link.text.trim()),
+                      mode: LaunchMode.externalApplication,
+                    )
+                  : null,
+              icon: const Icon(Icons.open_in_new),
+            ),
+          ),
+        ),
+      ),
+      'minimum' => TextField(
+        key: const ValueKey('food-keep-at-least'),
+        enabled: enabled,
+        controller: minimum,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: 'Keep at least',
+          errorText: _validation.errorFor('minimum'),
           errorMaxLines: 3,
         ),
       ),
@@ -714,6 +961,7 @@ class FoodEditorState extends State<FoodEditor> {
         : TraversalEdgeBehavior.closedLoop;
     final group = widget.group, targets = widget.targets;
     final cancel = requestClose;
+    final prices = _priceLine();
     final title = Text(
       bulk
           ? 'Edit ${targets!.length} ${targets.length == 1 ? 'container' : 'containers'}'
@@ -732,12 +980,29 @@ class FoodEditorState extends State<FoodEditor> {
             'brand',
             if (!bulk) 'expiry',
             'size',
+            if (product != null) ...['link', 'minimum'],
             'location',
             if (!bulk && group == null) 'count',
             if (bulk || group != null) 'retention',
           ].indexed) ...[
             if (index > 0) const SizedBox(height: 12),
             _validation.field(field, _bulkApply(field, _input(field))),
+            if (field == 'size' && (bulk || product != null))
+              // Follows the draft: typing another product's name says merge.
+              ListenableBuilder(
+                listenable: Listenable.merge([name, brand, size]),
+                builder: (context, _) {
+                  final scope = _scope();
+                  return scope == null
+                      ? const SizedBox.shrink()
+                      : _secondary(
+                          scope,
+                          key: const ValueKey('food-product-scope'),
+                        );
+                },
+              ),
+            if (field == 'minimum' && prices != null)
+              _secondary(prices, key: const ValueKey('food-product-prices')),
           ],
         ],
       ),
@@ -852,12 +1117,13 @@ class FoodEditorState extends State<FoodEditor> {
             onInvoke: (_) {
               // Autocomplete delegates Escape here when there are no suggestions.
               // It still belongs to that field, as it did in the modal editor.
+              // Food name keeps closing the editor as before it suggested
+              // products; open suggestions consume Escape themselves.
               final focused = FocusManager.instance.primaryFocus?.context;
-              if (focused
-                          ?.findAncestorWidgetOfExactType<
-                            FreeTextAutocomplete
-                          >() !=
-                      null ||
+              final autocomplete = focused
+                  ?.findAncestorWidgetOfExactType<FreeTextAutocomplete>();
+              if ((autocomplete != null &&
+                      !identical(autocomplete.controller, name)) ||
                   focused?.findAncestorWidgetOfExactType<TagInput>() != null) {
                 return null;
               }

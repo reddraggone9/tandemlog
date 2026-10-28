@@ -25,7 +25,7 @@ void main() {
                         onAdd: (_, _) => writes++,
                         onRemove: (_) => writes++,
                         onRestore: (_) => writes++,
-                        onDetails: (_, _, _) => writes++,
+                        onDetails: (_, _, _, _) => writes++,
                       ),
                     ),
                   ),
@@ -73,7 +73,7 @@ void main() {
           onAdd: (_, _) {},
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       ),
     );

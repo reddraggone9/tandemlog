@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/food_product_fields.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/civil_date_input.dart';
@@ -39,7 +41,13 @@ Future<void> _mount(
   WidgetTester tester, {
   List<FoodOperation> operations = const [],
   required void Function(FoodDetails) onAdd,
-  required void Function(List<FoodContainer>, FoodDetails, List<String>) onEdit,
+  required void Function(
+    List<FoodContainer>,
+    FoodDetails,
+    List<String>,
+    FoodProductChange,
+  )
+  onEdit,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -89,7 +97,7 @@ void registerFoodRequiredExpirationTests() {
     'manual Food Add requires a valid expiration before any command',
     (tester) async {
       final additions = <FoodDetails>[];
-      await _mount(tester, onAdd: additions.add, onEdit: (_, _, _) {});
+      await _mount(tester, onAdd: additions.add, onEdit: (_, _, _, _) {});
       await _tap(tester, find.byTooltip('Add food'));
       expect(find.byType(CivilDateInput), findsOneWidget);
       expect(
@@ -147,10 +155,10 @@ void registerFoodRequiredExpirationTests() {
       tester,
       operations: operations,
       onAdd: (_) {},
-      onEdit: (_, details, changed) {
+      onEdit: (_, details, changed, products) {
         writes++;
         edited = details;
-        fields = changed;
+        fields = foodTouchedFields(changed, products);
       },
     );
     await openFoodGroupEditor(tester, 'Synthetic beans');
@@ -190,7 +198,7 @@ void registerFoodRequiredExpirationTests() {
         tester,
         operations: operations,
         onAdd: (_) {},
-        onEdit: (_, details, _) {
+        onEdit: (_, details, _, _) {
           writes++;
           edited = details;
         },
@@ -248,8 +256,8 @@ void registerFoodRequiredExpirationTests() {
         tester,
         operations: births,
         onAdd: (_) {},
-        onEdit: (items, details, changed) {
-          fields = changed;
+        onEdit: (items, details, changed, products) {
+          fields = foodTouchedFields(changed, products);
           applied = [
             ...births,
             peerDate,
@@ -259,7 +267,7 @@ void registerFoodRequiredExpirationTests() {
               action: FoodAction.edit,
               targets: items.map((e) => e.id).toList(),
               details: details,
-              fields: changed,
+              fields: foodTouchedFields(changed, products),
             ),
           ];
         },
