@@ -1,36 +1,39 @@
-# 2026.10.7
+# 2026.10.8
 
-**Migration required before updating:** this version cannot open older workspaces and does not convert them. Keep using the previous version until a separate, coordinated conversion is complete. Stop Tandemlog on every device, let sync finish, and convert the workspace with every writing installation included before updating or opening this version. Keep older versions stopped after cutover.
+Uses the same unified workspace format as 2026.10.7; no conversion is needed.
 
-- Task editors have simpler headers and field help for scheduling.
-- Forms explain errors beside their fields and offer Review errors; correcting an error restores Add/Save immediately. Empty task capture and user-name inputs stay quiet.
-- This occurrence now pairs date and time and requires Due and Repeat; removing either clears its draft value. Existing valid occurrence values without Due move to Due, which can change future repeats.
-- Removed the global checklist expand/collapse control.
-- Name this device in Settings. Task scheduling also supports CST6CDT, EST5EDT, MST7MDT and PST8PDT.
-- Fix stale Tasks after incoming changes while Food is open. Deleted Food dates use softer text.
-- Faster repeated startup, incoming sync updates, editing, Save and Undo in Tasks and Food, including recurring-task completion.
-- Today includes tomorrow’s timed tasks when they fall within the next 24 hours.
+- Date pickers have a simpler header: tap the month or the year to jump, and the dialog is only as tall as its content. Type dates in the date field itself.
 
-![The next-morning appointment moves into Today, with its actual due date still visible.](https://raw.githubusercontent.com/reddraggone9/tandemlog/ad068998405ffaefe8c9da700aa263028b391e1c/evidence/prerelease-2026.10.7-rc.5/editorial/media/01-today.png)
+![The date picker before, with a Month / year row, a pencil button and empty space above Cancel/OK, beside the new compact picker with month and year menus in its header.](https://raw.githubusercontent.com/reddraggone9/tandemlog/0cc0fe957434531493e688b63360851c6aa39419/evidence/prerelease-2026.10.8-rc.1/editorial/media/03-date-picker.png)
 
-- Completed tasks—including completed search matches—show newest completion first, with local-date headings instead of repeated dates on each row.
+- Picking a year in a date picker opens that year's months.
 
-![Completed tasks change from scheduled due-date grouping and manual order to local completion dates and newest-first order.](https://raw.githubusercontent.com/reddraggone9/tandemlog/ad068998405ffaefe8c9da700aa263028b391e1c/evidence/prerelease-2026.10.7-rc.5/editorial/media/02-completed.png)
+![At 320 pixels wide and 200 percent text, the old picker's month list beside the new month grid with the header still fully visible.](https://raw.githubusercontent.com/reddraggone9/tandemlog/0cc0fe957434531493e688b63360851c6aa39419/evidence/prerelease-2026.10.8-rc.1/editorial/media/04-date-picker-month-grid-narrow.png)
 
-- Switching between Search and Add carries your text and text selection.
+- The blank Expiration hint stays on one line again.
 
-![Switching from Search to Add clears the entry before; after, Buy envelopes and its selected word remain.](https://raw.githubusercontent.com/reddraggone9/tandemlog/ad068998405ffaefe8c9da700aa263028b391e1c/evidence/prerelease-2026.10.7-rc.5/editorial/media/04-search-add.png)
+![At a narrow width with large text, the blank Expiration field changes from a two-line hint to a one-line truncated hint.](https://raw.githubusercontent.com/reddraggone9/tandemlog/0cc0fe957434531493e688b63360851c6aa39419/evidence/prerelease-2026.10.8-rc.1/editorial/media/01-date-hint.png)
 
-- Long-press an active Food row to start selecting containers.
+- Add and edit dialogs open centered in the window again.
 
-![The same long-press opens the Beans editor before and selects its container after.](https://raw.githubusercontent.com/reddraggone9/tandemlog/ad068998405ffaefe8c9da700aa263028b391e1c/evidence/prerelease-2026.10.7-rc.5/editorial/media/05-food-longpress.png)
+![The Add food dialog moves from the bottom of the window to the middle.](https://raw.githubusercontent.com/reddraggone9/tandemlog/0cc0fe957434531493e688b63360851c6aa39419/evidence/prerelease-2026.10.8-rc.1/editorial/media/02-food-dialog-centered.png)
 
-- Edit deleted Food without restoring it.
+- Ctrl+click or Shift+click selects Food rows.
 
-![Tapping the same deleted Beans search result does nothing before and opens its editor after.](https://raw.githubusercontent.com/reddraggone9/tandemlog/ad068998405ffaefe8c9da700aa263028b391e1c/evidence/prerelease-2026.10.7-rc.5/editorial/media/06-food-deleted-edit.png)
+![Ctrl+clicking two Food rows opens an editor before and selects both rows after.](https://raw.githubusercontent.com/reddraggone9/tandemlog/0cc0fe957434531493e688b63360851c6aa39419/evidence/prerelease-2026.10.8-rc.1/editorial/media/05-food-ctrl-click.png)
 
-- Jump directly to a month or year in date pickers; date-format guidance no longer truncates at narrow widths with larger text.
+- Deleted Food rows can be selected for batch editing too.
 
-![The old February calendar navigation beside the new inline twelve-month jump grid, using the same date and viewport.](https://raw.githubusercontent.com/reddraggone9/tandemlog/ad068998405ffaefe8c9da700aa263028b391e1c/evidence/prerelease-2026.10.7-rc.5/editorial/media/07-calendar-month.png)
+![Long-pressing a deleted Food row opens its editor before and selects it after.](https://raw.githubusercontent.com/reddraggone9/tandemlog/0cc0fe957434531493e688b63360851c6aa39419/evidence/prerelease-2026.10.8-rc.1/editorial/media/06-food-deleted-longpress.png)
 
-![At the same narrow width and 200 percent text, the date-format hint changes from truncated text to complete YYYY-MM-DD on two lines.](https://raw.githubusercontent.com/reddraggone9/tandemlog/ad068998405ffaefe8c9da700aa263028b391e1c/evidence/prerelease-2026.10.7-rc.5/editorial/media/09-narrow-hint.png)
+- Batch Food edit changes the name, brand, container size, location or retention reason of every selected container at once.
+
+![Editing three protein-bar containers offers only Brand and Location before; after, it offers Food name, Brand, Container size, Location and Retention reason, each marked Mixed.](https://raw.githubusercontent.com/reddraggone9/tandemlog/0cc0fe957434531493e688b63360851c6aa39419/evidence/prerelease-2026.10.8-rc.1/editorial/media/07-food-bulk-edit.png)
+
+- Batch Food edit can remove or restore the selected containers.
+- Select Food rows from the keyboard with Space.
+- Today no longer splits into two groups during the repeated hour when clocks fall back.
+- Faster incoming Task changes from other devices on long histories.
+- Typing stays fast in titles and notes that have been edited many times.
+- Sync no longer stops and asks for Retry while another device's changes are still arriving.
+- Updates SQLite to 3.54.1, which fixes a memory-safety bug on 32-bit Android phones.
