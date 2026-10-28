@@ -435,9 +435,9 @@
     },
     {
       "interaction": "Shared civil-date month/year jump",
-      "productionAPI": "CivilDateInput; Material CalendarDatePicker/InputDatePickerFormField; YearPicker",
-      "actualUIPath": "lib/presentation/civil_date_input.dart",
-      "boundary": "No storage action before editor Save. Fast-month tests cover leap/clamp/cancel/pending-day/manual-input; native popup and selected-month visible-response timing pending."
+      "productionAPI": "CivilDateInput; CivilCalendarDatePicker (fork of Flutter 3.47.5 CalendarDatePicker) month/year header menus; CivilMonthGrid; CivilYearGrid",
+      "actualUIPath": "lib/presentation/civil_date_input.dart -> lib/presentation/calendar_date_picker_fork.dart",
+      "boundary": "No storage action before editor Save. Header/fast-month tests cover month menu, year menu to month grid, paging, leap/clamp/cancel/pending-day and content-sized dialog; native popup and selected-month visible-response timing pending."
     }
   ],
   "actualUITimingAccepted": false,

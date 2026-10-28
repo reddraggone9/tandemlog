@@ -96,7 +96,7 @@ void registerCivilDatePickerLayoutTests({
                 for (var day = 1; day <= 9; day++) day,
               ]) {
                 final label = find.descendant(
-                  of: find.byType(CalendarDatePicker),
+                  of: find.byType(CivilCalendarDatePicker),
                   matching: find.text('$day'),
                 );
                 expect(label, findsOneWidget);
@@ -277,7 +277,9 @@ void registerCivilDatePickerLayoutTests({
             await tester.pumpAndSettle();
             expect(
               tester
-                  .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
+                  .widget<CivilCalendarDatePicker>(
+                    find.byType(CivilCalendarDatePicker),
+                  )
                   .initialDate,
               DateTime(2026, 10, 17),
             );

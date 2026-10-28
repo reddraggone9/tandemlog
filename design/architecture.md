@@ -82,7 +82,7 @@ sole input/focus/semantic owner of their decorated trigger. The host supplies
 progress state, placed after either section header; section labels are measured
 as actually rendered. Module callbacks, filters, counts and identity eligibility
 retain their own inputs. `presentation/civil_date_input.dart` owns date typing/picker presentation
-and focus; Task/Food editors retain their distinct validation and draft ownership.
+and focus (its calendar is the recorded Flutter fork in `presentation/calendar_date_picker_fork.dart`); Task/Food editors retain their distinct validation and draft ownership.
 
 The isolated checklist component keeps membership/order, item kind and durable
 descendant protection in `domain/checklist.dart`. `storage/checklist_store.dart`

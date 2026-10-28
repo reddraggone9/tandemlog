@@ -45,11 +45,22 @@ ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
 - Food selection starts with exact observed physical IDs and existing group/
   workspace guard. Deleted editing uses ordinary details actions, retaining exact
   observed deletion references in the editor freshness guard. Restore stays separate.
-- Shared date entry composes public Material CalendarDatePicker, YearPicker and
-  InputDatePickerFormField. DatePickerDialog does not expose its pending date;
-  keeping it would reset a user's newly selected day on month jump. The app-owned
-  dialog preserves that tentative date and manual-input validation, without an SDK
-  fork. A month jump clamps the current day, and only OK changes the caller's draft.
+- Shared date entry originally composed public Material CalendarDatePicker,
+  YearPicker and InputDatePickerFormField. DatePickerDialog does not expose its
+  pending date; keeping it would reset a user's newly selected day on month jump.
+  Redesign (Lee 2026-10-27, approved fork): the dialog hosts
+  `CivilCalendarDatePicker` (`lib/presentation/calendar_date_picker_fork.dart`),
+  a fork of Flutter3.47.5's CalendarDatePicker changed only in its header and
+  mode flow. The header reads "October ▾ 2026 ▾ ‹ ›"; month opens the 12-month
+  grid, year opens the year list and a picked year lands on that year's month
+  grid; picking a month returns to the day grid. The pencil/text-input toggle
+  (every use already is the typed date field) and the separate "Month / year"
+  row are gone, and the dialog sizes to its content instead of a fixed
+  568dp-per-text-scale height, removing the gap above Cancel/OK. At 320dp the
+  month shortens to three letters; at large text only the header labels shrink,
+  never below 100%, so month, year and paging stay visible (base 39421b3 showed
+  "Februar…" with no year at 320dp/200%). A month jump clamps the current day,
+  and only OK changes the caller's draft.
   The supported range includes all of1900–9999, not just January1 of9999.
   Existing measured day-cell geometry remains readable at320dp/enlarged text.
   At narrow widths and enlarged text, the editable date format hint stays on one
@@ -57,7 +68,9 @@ ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
   briefly wrapped it to two lines; Lee (10-27) preferred the truncated hint
   because the wrap grew the blank field taller than a filled one.
   Compact English month labels match the current English app; full localized
-  month/year labels are supplied to semantics. No new package or SDK fork.
+  month/year labels are supplied to semantics (header menus: "Select month,
+  October 2026" and "Select year, 2026"). No new package; the one fork is
+  recorded in [dependencies](dependencies.md#forked-flutter-calendardatepicker--2026-10-27).
 
 ## Development evidence
 
@@ -84,8 +97,12 @@ Focused coverage includes:
 - `food_selection_deleted_edit_test`: grouped/one-row long-press, busy/pending and
   pointer-down/recognition races, deleted Save and incoming-Restore refusal.
 - `food_store_undo_test`: deleted details Save/Undo/reopen retains exact tombstones.
-- `fast_month_picker_test`: month/year jump, pending-day preservation, manual input,
-  upper range, leap-day clamp and cancel at320dp1x/2x in dark/light.
+- `fast_month_picker_test`: month/year jump, pending-day preservation, upper range,
+  leap-day clamp and cancel at320dp1x/2x in dark/light. (Manual input moved to the
+  date field with the 2026-10-27 redesign.)
+- `date_picker_header_test` (2026-10-27): header menus and semantics, no input
+  toggle, month→grid→day, year→list→month grid→day, ‹ › paging, keyboard
+  activation, header fit at1280/320dp 1–3x and content-sized dialog height.
 - Existing Task view, Food bulk/search/context, Task cache, recurrence Undo,
   projection atomicity and calendar geometry tests.
 
