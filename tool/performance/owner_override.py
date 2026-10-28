@@ -67,9 +67,10 @@ def failing_labels(report):
 def validate_failed_report(repo, report, request, host, base):
     """Recompute every absolute/growth/fixture contract of the retained failed report.
 
-    Source pins come from the accepted base identity, not the current tree, because the
-    permitted delta lives in tool/performance. The failure state itself must be exact:
-    no success flag may be present or set.
+    Source pins come from the literal bytes of the request's revision, not the current
+    tree, because the permitted delta lives in tool/performance; `base` is that request's
+    recorded identity. The failure state itself must be exact: no success flag may be
+    present or set. Also used for borderline results (borderline.py).
     """
     from run_gate import scaling_specs, validate_project_imports, may_rerun_all
     repo = Path(repo).resolve()
@@ -94,7 +95,7 @@ def validate_failed_report(repo, report, request, host, base):
          'Result predates request or has invalid timestamps')
     need(report['resourceBounds'] == host['resourceBounds'], 'Reference resource bounds differ')
     need(report.get('sourceRewrites') == [] and report.get('shimAllowlist') == [], 'Source rewrite/shim refused')
-    files = base['files']
+    files = committed_identity(repo, request['sourceRevision'], IDENTITY_V1)['files']
     expected = {p: v['sha256'] for p, v in files.items()
                 if p.startswith(('lib/', 'tool/performance/')) or p in ('pubspec.yaml', 'pubspec.lock')}
     normalized, rename = check_reference_toolchain(report, host)

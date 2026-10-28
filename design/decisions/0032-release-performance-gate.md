@@ -42,3 +42,25 @@ and must be investigated and fixed. Limits, coverage and the in-run noise retry
 above are unchanged; retry-until-green remains prohibited. Tooling enforces the
 limit and the recorded-diagnostic precondition; see
 [ADR0033](0033-controlled-reference-performance.md#amendment-2026-10-26--official-rerun-after-non-reproduction).
+
+## Amendment 2026-10-27 — borderline result on already qualified source
+
+Lee approved on 2026-10-27 14:56 CDT: when identical relevant source (same
+relevant-source identity) has already passed a qualifying check, a timing
+failure within normal run-to-run variation is a borderline limit, not a
+regression. It does not block the release and is queued for a look at the limit
+or the scaling behind it. For exactly this case it replaces "a failed rerun is
+repeatable"; the official-rerun rule stays for other cases. Budgets unchanged.
+
+Tooling outcome `borderline-accepted` (`tool/performance/borderline.py`) fails
+closed: it needs a verified earlier passing qualification of the same identity,
+an otherwise complete enforcing result with correctness, coverage, replay,
+execution and all absolute limits passing, and only history-growth misses each
+at most 5% over its bound. The declared band comes from q9–q11 storageAdmission
+growth at 99.8%/96.3%/101.6% of bound on identical code. It writes a queued
+follow-up record naming each borderline metric. Rejected alternatives: a band
+computed from the passing receipts' spread (one or two receipts give no usable
+spread; a wide one would loosen limits silently) and accepting any miss of
+passed source (retry-until-green). Revisit if borderline results recur on the
+same metric: that is a limit or scaling problem to fix, not noise. Details:
+[borderline result](../performance-reference-qualification.md#borderline-result-on-already-qualified-source).

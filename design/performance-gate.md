@@ -18,6 +18,20 @@ failing label without reproducing any (Lee,2026-10-26). A second failure is
 repeatable and must be profiled and fixed. Budgets are unchanged. See
 [official rerun](performance-reference-qualification.md#official-rerun-after-non-reproduction).
 
+Borderline rule (Lee,2026-10-27):when IDENTICAL relevant source (same
+relevant-source identity) already holds a verified passing qualification,a
+later timing failure within normal run-to-run variation is a borderline limit,
+not a regression. It does not block the release and queues a look at the limit
+or the scaling behind it. For exactly this case it replaces "a failed rerun is
+repeatable";the official-rerun rule stays for every other failure. Tooling
+verdict `borderline-accepted` needs ALL of:a verified passing qualification of
+the same identity issued before the failed request;an enforcing,complete
+result whose correctness,coverage,replay/integrity,execution and every absolute
+limit passed;only history-growth misses,each at most 5% over its bound
+(`BORDERLINE_VARIATION_BAND`,from q9–q11 identical-code storageAdmission at
+99.8%/96.3%/101.6%). Anything else is an ordinary failure. Budgets are unchanged.
+See [borderline result](performance-reference-qualification.md#borderline-result-on-already-qualified-source).
+
 
 The standalone Dart executable measures production storage, application commands and readmodel queries in AOT release mode. It uses only generated public synthetic workspaces. There is no argument for a user workspace, mapping, profile, title or fixture import. Native text and SQLite libraries, compiler, package configuration, source and fixture bytes are sealed in the result.
 
