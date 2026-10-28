@@ -1068,6 +1068,8 @@ final class UnifiedHistory {
         throw FormatFailure('App history exceeds safe limits.');
       }
       observed[owner] = bytes;
+      // This owner's records are appended contiguously from here, in chain order.
+      final ownerStart = all.length;
 
       var start = 0,
           sequence = 0,
@@ -1270,9 +1272,16 @@ final class UnifiedHistory {
         final old = protected.single,
             oldSeq = old['sequence'] as int,
             oldBytes = old['bytes'] as int;
-        final matches = all.where(
-          (r) => r.writer == owner && r.sequence == oldSeq,
-        );
+        // Positional lookup in this owner's gap-free chain; the generic scan
+        // remains only if that invariant is ever violated.
+        final at = ownerStart + oldSeq - 1;
+        final matches =
+            oldSeq >= 1 &&
+                at < all.length &&
+                all[at].writer == owner &&
+                all[at].sequence == oldSeq
+            ? [all[at]]
+            : all.where((r) => r.writer == owner && r.sequence == oldSeq);
         if (oldBytes < 0 ||
             oldSeq < 0 ||
             (old['published'] as int) < 0 ||
@@ -1437,7 +1446,25 @@ final class UnifiedHistory {
     Set<String> taskReady,
     String taskRevision,
   ) {
-    final physical = {for (final r in actions) r.recordId: r};
+    // Every complete record has this manifest's epoch and a gap-free writer
+    // chain from sequence 1 (checked while decoding), so `app:epoch:w:s`
+    // identity is a positional lookup. Do not format and hash an ID string for
+    // every historical record on each peer delivery.
+    final physical = <String, List<UnifiedRecord>>{};
+    for (final r in actions) {
+      (physical[r.writer] ??= []).add(r);
+    }
+    UnifiedRecord? physicalAt(String writer, int sequence) {
+      final chain = physical[writer];
+      if (chain == null || sequence < 1 || sequence > chain.length) return null;
+      final r = chain[sequence - 1];
+      return r.sequence == sequence && r.epoch == m.epoch
+          ? r
+          : chain
+                .where((r) => r.sequence == sequence && r.epoch == m.epoch)
+                .firstOrNull;
+    }
+
     for (final action in actions) {
       for (final entry in action.observed.entries) {
         final f = entry.value;
@@ -1446,7 +1473,7 @@ final class UnifiedHistory {
             throw FormatFailure('App action observes a different genesis.');
           }
         } else {
-          final target = physical['app:${m.epoch}:${entry.key}:${f.sequence}'];
+          final target = physicalAt(entry.key, f.sequence);
           if (target != null &&
               (target.hash != f.hash || target.clock >= action.firstClock)) {
             throw FormatFailure('App action observes an invalid frontier.');
@@ -1465,8 +1492,7 @@ final class UnifiedHistory {
           : prior.single['published'] as int;
       if (trusted < (m.owners[owner]?['count'] as int? ?? 0) ||
           trusted > (complete[owner] ?? 0) ||
-          trusted > 0 &&
-              !physical.containsKey('app:${m.epoch}:$owner:$trusted')) {
+          trusted > 0 && physicalAt(owner, trusted) == null) {
         throw FormatFailure(
           'Trusted app publication frontier differs from physical history.',
         );
