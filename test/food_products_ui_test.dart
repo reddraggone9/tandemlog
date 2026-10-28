@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/presentation/tandemlog_theme.dart';
 
 const _writer = '00000000-0000-4000-8000-000000000095';
 
@@ -50,6 +51,8 @@ Future<List<_Edit>> _pump(
   Size size = const Size(800, 600),
   List<FoodOperation>? events,
   List<(FoodDetails, int)>? adds,
+  bool dark = true,
+  double textScale = 1,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
@@ -58,6 +61,13 @@ Future<List<_Edit>> _pump(
   final edits = <_Edit>[];
   await tester.pumpWidget(
     MaterialApp(
+      theme: tandemlogTheme(dark ? Brightness.dark : Brightness.light),
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(
+          context,
+        ).copyWith(textScaler: TextScaler.linear(textScale)),
+        child: child!,
+      ),
       home: FoodInventoryPage(
         state: projectFood(events ?? _events),
         onAdd: (details, count) => adds?.add((details, count)),
@@ -101,7 +111,11 @@ Future<void> _ctrlTap(WidgetTester tester, Finder target) async {
   await tester.pumpAndSettle();
 }
 
-void main() {
+void main() => registerFoodProductsUiTests();
+
+void registerFoodProductsUiTests({
+  Future<void> Function(WidgetTester, String)? capture,
+}) {
   testWidgets('Up/Down move between Food rows; Shift extends the selection', (
     tester,
   ) async {
@@ -205,6 +219,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('food-product-scope')), findsOneWidget);
       expect(find.text('Also changes 1 other container'), findsOneWidget);
+      await capture?.call(tester, 'products-wide-editor');
       await tester.enterText(
         find.widgetWithText(TextField, 'Food name'),
         'Milk 2%',
@@ -218,6 +233,7 @@ void main() {
         '2',
       );
       await tester.pumpAndSettle();
+      await capture?.call(tester, 'products-wide-edited-draft');
       await tester.tap(find.byKey(const ValueKey('food-save-action')));
       await tester.pumpAndSettle();
       expect(edits, hasLength(1));
@@ -244,6 +260,7 @@ void main() {
     await tester.enterText(find.widgetWithText(TextField, 'Food name'), 'rice');
     await tester.pumpAndSettle();
     expect(find.text('Merges with 1 container of Rice'), findsOneWidget);
+    await capture?.call(tester, 'products-wide-merge');
   });
 
   testWidgets('invalid store links and minimums are field errors', (
@@ -294,6 +311,7 @@ void main() {
     expect(find.text('1 of 3'), findsOneWidget);
     expect(find.byTooltip('Open store link for Beans'), findsOneWidget);
     expect(find.text('Stock'), findsOneWidget);
+    await capture?.call(tester, 'products-running-low');
     await tester.tap(find.byTooltip('Add another Beans'));
     await tester.pumpAndSettle();
     expect(
@@ -310,6 +328,44 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Running low'), findsNothing);
   });
+
+  for (final dark in [true, false]) {
+    for (final scale in [1.0, 2.0]) {
+      testWidgets(
+        'product narrow editor ${dark ? 'dark' : 'light'} $scale text',
+        (tester) async {
+          final edits = await _pump(
+            tester,
+            size: const Size(390, 850),
+            dark: dark,
+            textScale: scale,
+          );
+          await tester.tap(find.text('Milk').first);
+          await tester.pumpAndSettle();
+          expect(find.byType(AlertDialog), findsOneWidget);
+          await tester.ensureVisible(
+            find.byKey(const ValueKey('food-keep-at-least')),
+          );
+          await tester.enterText(
+            find.byKey(const ValueKey('food-keep-at-least')),
+            '3',
+          );
+          await tester.pumpAndSettle();
+          await capture?.call(
+            tester,
+            'products-narrow-${dark ? 'dark' : 'light'}-${scale.toInt()}x',
+          );
+          final save = find.byKey(const ValueKey('food-save-action'));
+          await tester.ensureVisible(save);
+          await tester.tap(save);
+          await tester.pumpAndSettle();
+          expect(edits, hasLength(1));
+          expect(edits.single.products.changes['minimum'], 3);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
 
   testWidgets('Add suggests products and fills Brand and size', (tester) async {
     final adds = <(FoodDetails, int)>[];
@@ -334,6 +390,7 @@ void main() {
           .text,
       '1 gal',
     );
+    await capture?.call(tester, 'products-add-suggestion');
     expect(tester.takeException(), isNull);
   });
 }

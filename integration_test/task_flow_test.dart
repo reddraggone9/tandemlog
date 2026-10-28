@@ -1,3 +1,5 @@
+import 'food_products_workflow_test.dart'
+    show registerFoodProductsWorkflowTests;
 import 'profile_fixture.dart';
 import 'unified_history_workflow_test.dart'
     show registerUnifiedHistoryWorkflowTests;
@@ -328,6 +330,7 @@ void main() {
   // Native flutter test initializes this binding before invoking the target.
   // Reuse it; constructing another binding fails before any case can run.
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  registerFoodProductsWorkflowTests();
   // Integration bindings otherwise default to no timeout, overriding CLI bounds.
   binding.defaultTestTimeout = const Timeout(Duration(minutes: 3));
   registerStickyTaskGroupTests();
