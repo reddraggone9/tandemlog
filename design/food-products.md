@@ -176,10 +176,11 @@ dry-run, then committed as one action with
   an existing product ID (explicit or implicit), or name/brand/size/link for a
   product matched or created by description.
 - For each line the import links up to `quantity` **recent hand entries** of the
-  same product (after merges): containers with no purchase link, not created by
-  an import, created from the day before the purchase date through 14 days
-  after it, oldest first, deleted ones included (an eaten hand entry is still
-  that receipt's container). It creates the remaining units as new containers
+  same product (after merges): containers with no purchase link (an imported
+  container always has one), created from the day before the purchase date
+  through 14 days after it, oldest first, deleted ones included (an eaten hand
+  entry is still that receipt's container). The window is a method choice; Lee
+  can change it. It creates the remaining units as new containers
   in the Inbox, linked to the product and the purchase.
 - The dry run reports per line: product, purchase present or new, containers
   matched and containers to create. A purchase already present with the same
