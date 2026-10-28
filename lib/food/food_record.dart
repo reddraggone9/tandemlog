@@ -61,12 +61,18 @@ class FoodRecord {
       );
     }
     operation.validate();
-    if (operation.action == FoodAction.add) {
+    if (operation.action == FoodAction.add || operation.action.productLevel) {
       if (this.createdWith.isNotEmpty) {
         throw const FormatException(
-          'Creation cannot inherit a container basis.',
+          'Creation or product change cannot inherit a container basis.',
         );
       }
+    } else if (operation.action == FoodAction.undo &&
+        this.createdWith.isEmpty &&
+        unified &&
+        operation.targets.length == 1) {
+      // Undo of a product-level operation names a product or purchase, which
+      // has no container creation basis; admission checks the retracted kind.
     } else if (this.createdWith.length != operation.targets.length ||
         this.createdWith.keys.any((id) => !operation.targets.contains(id))) {
       throw const FormatException(
@@ -178,8 +184,10 @@ class FoodRecord {
       sequence: sequence,
       clock: clock.toJson(),
       subject: space,
-      family: 'container.${operation.action.name}',
-      revision: 1,
+      family: foodOperationFamily(operation.action),
+      revision: operation.action == FoodAction.add && operation.link != null
+          ? 2
+          : 1,
       value: {'values': values, 'creationBasis': createdWith},
       predecessor: previousHash,
       referenceHash: retainedReferenceHash,
@@ -195,10 +203,14 @@ class FoodRecord {
     try {
       final current = CurrentOperation.decode(raw, module: 'food');
       final actions = FoodAction.values
-          .where((action) => current.family == 'container.${action.name}')
+          .where((action) => current.family == foodOperationFamily(action))
           .toList();
       if (actions.length != 1 ||
-          current.revision != 1 ||
+          current.revision !=
+              (actions.single == FoodAction.add &&
+                      (current.value['values'] as Map).containsKey('link')
+                  ? 2
+                  : 1) ||
           current.subject != current.space ||
           current.value.length != 2 ||
           !current.value.containsKey('values') ||
@@ -239,6 +251,17 @@ class FoodRecord {
     }
   }
 }
+
+/// Wire family of each Food action. Product-level and link families are
+/// required families an older app rejects with the update message.
+String foodOperationFamily(FoodAction action) => switch (action) {
+  FoodAction.link => 'container.link',
+  FoodAction.product => 'product.edit',
+  FoodAction.merge => 'product.merge',
+  FoodAction.purchase => 'purchase.record',
+  FoodAction.purchaseEdit => 'purchase.edit',
+  _ => 'container.${action.name}',
+};
 
 void validateFoodReference(String ref) {
   final parts = ref.split(':');

@@ -9,6 +9,7 @@ import '../storage/workspace_view.dart';
 import 'food_record.dart';
 import 'food_admission.dart';
 import 'food_import.dart';
+import 'food_purchase_import.dart';
 import 'inventory.dart';
 
 /// Isolated canonical Food history/provider admission failure. Shared profile,
@@ -159,7 +160,9 @@ class FoodStore {
       for (final change in changes)
         (seq, clock, head) {
           final basis = <String, String>{};
-          if (change.action != FoodAction.add) {
+          if (change.action != FoodAction.add &&
+              !change.action.productLevel &&
+              !change.productUndo) {
             for (final id in change.targets) {
               final birth = _births[id];
               if (birth == null || !_readyIds.contains(birth.id)) {
@@ -199,6 +202,10 @@ class FoodStore {
                       )),
               ],
               retracts: change.retracts,
+              product: change.product,
+              purchase: change.purchase,
+              link: change.link,
+              into: change.into,
               undoOwner:
                   change.action == FoodAction.undo &&
                       change.retracts!.split(':').first != writer
@@ -307,7 +314,7 @@ class FoodStore {
     ];
     return [
       for (final action in records)
-        if (action.provenance != null)
+        if (action.provenance?['kind'] == 'food.import')
           {
             'importId': action.provenance!['namespace'],
             'sourceSha256': action.provenance!['sourceSha256'],
@@ -478,21 +485,128 @@ class FoodStore {
         return _inspectImport(plan, _importAttempts());
       });
 
+  /// Adds containers to the product matching the description, or to a new
+  /// one, in one action (design/food-products.md, section 3).
   Future<void> add(FoodDetails details, int count) {
     if (count < 1 || count > 100) {
       return Future.error(
         const FormatException('Choose between 1 and 100 physical containers.'),
       );
     }
-    return _command([
-      _FoodChange(
-        FoodAction.add,
-        List.generate(count, (_) => const Uuid().v4()),
-        details: details,
-        contents: const Contents.fraction(1, 1),
-      ),
-    ]);
+    return _queue(() {
+      final plan = planFoodAdd(state, details);
+      return _commandLocked([
+        if (plan.create != null)
+          _FoodChange(FoodAction.product, [
+            plan.product!,
+          ], product: plan.create),
+        _FoodChange(
+          FoodAction.add,
+          List.generate(count, (_) => const Uuid().v4()),
+          details: details,
+          contents: const Contents.fraction(1, 1),
+          link: plan.product == null ? null : {'product': plan.product},
+        ),
+      ]);
+    });
   }
+
+  static List<_FoodChange> _productChanges(List<FoodProductStep> steps) => [
+    for (final step in steps)
+      switch (step) {
+        FoodProductEdit(:final product, :final values) => _FoodChange(
+          FoodAction.product,
+          [product],
+          product: values,
+        ),
+        FoodProductMerge(:final source, :final into) => _FoodChange(
+          FoodAction.merge,
+          [source],
+          into: into,
+        ),
+      },
+  ];
+
+  List<_FoodChange> _purchaseImportChanges(List<FoodImportStep> steps) => [
+    for (final step in steps)
+      switch (step) {
+        FoodImportProduct(:final product, :final values) => _FoodChange(
+          FoodAction.product,
+          [product],
+          product: values,
+        ),
+        FoodImportPurchase(:final purchase, :final values) => _FoodChange(
+          FoodAction.purchase,
+          [purchase],
+          purchase: values,
+        ),
+        FoodImportLink(:final containers, :final purchase) => _FoodChange(
+          FoodAction.link,
+          containers,
+          link: {'purchase': purchase},
+        ),
+        FoodImportCreate(
+          :final containers,
+          :final details,
+          :final product,
+          :final purchase,
+        ) =>
+          _FoodChange(
+            FoodAction.add,
+            containers,
+            details: details,
+            contents: const Contents.fraction(1, 1),
+            link: {'product': product, 'purchase': purchase},
+          ),
+      },
+  ];
+
+  FoodPurchaseImportReport _inspectPurchaseImport(FoodPurchaseImportPlan plan) {
+    _checkImportWriter();
+    if (plan.space != space) {
+      throw const FormatException('Import workspace differs.');
+    }
+    if (hasPreparedAppend || pendingReferences > 0) {
+      throw const FormatException('Recover or sync Food before importing.');
+    }
+    return planFoodPurchaseImport(state, plan).report;
+  }
+
+  /// Validates a reviewed receipt plan against current Food without writing.
+  Future<FoodPurchaseImportReport> dryRunPurchaseImport(
+    FoodPurchaseImportPlan plan,
+  ) => _queue(() async {
+    await _refresh();
+    final report = _inspectPurchaseImport(plan);
+    if (report.status == FoodPurchaseImportStatus.ready) {
+      await unified!.validateInProfileQueue(
+        _unifiedBuilders(
+          _purchaseImportChanges(planFoodPurchaseImport(state, plan).steps),
+        ),
+      );
+    }
+    return report;
+  });
+
+  /// Records every new purchase line as one action. A retry finds its
+  /// purchases present and writes nothing.
+  Future<FoodPurchaseImportReport> commitPurchaseImport(
+    FoodPurchaseImportPlan plan,
+  ) => _queue(() async {
+    await _refresh();
+    final report = _inspectPurchaseImport(plan);
+    if (report.status == FoodPurchaseImportStatus.committed) return report;
+    await _commandLocked(
+      _purchaseImportChanges(planFoodPurchaseImport(state, plan).steps),
+      provenance: {
+        'kind': 'food.purchase-import',
+        'namespace': plan.importId,
+        'sourceSha256': plan.sourceSha256,
+        'planHash': plan.planHash,
+      },
+    );
+    return report;
+  });
 
   Future<List<FoodRecord>> remove(List<String> ids) => _command(
     _batches(
@@ -515,22 +629,30 @@ class FoodStore {
     await _command(changes);
   }
 
+  /// Container fields of [ids] and product changes of [products], planned
+  /// against current Food, as one action and one Undo.
   Future<void> changeDetails(
     List<String> ids,
     FoodDetails details,
-    List<String> fields,
-  ) async {
-    await _command(
-      _batches(ids)
-          .map(
-            (batch) => _FoodChange(
+    List<String> fields, {
+    FoodProductChange products = const FoodProductChange(),
+  }) {
+    _batches(ids);
+    return _queue(
+      () => _commandLocked([
+        if (fields.isNotEmpty)
+          for (final batch in _batches(ids))
+            _FoodChange(
               FoodAction.edit,
               batch,
               details: details,
               fields: fields,
             ),
-          )
-          .toList(),
+        if (!products.isEmpty)
+          ..._productChanges(
+            planFoodProductChanges(state, products.roots, products.changes),
+          ),
+      ]),
     );
   }
 
@@ -615,6 +737,7 @@ class FoodStore {
                 FoodAction.undo,
                 original.operation.targets,
                 retracts: original.id,
+                productUndo: original.operation.action.productLevel,
               ),
         ];
         // An exact retry after acknowledgement failure is already complete;
@@ -645,6 +768,11 @@ class _FoodChange {
     this.edits = const [],
     this.observePreviousEdit = false,
     this.retracts,
+    this.product,
+    this.purchase,
+    this.link,
+    this.into,
+    this.productUndo = false,
   });
   final FoodAction action;
   final List<String> targets;
@@ -655,4 +783,9 @@ class _FoodChange {
   final List<String> deletes, edits;
   final bool observePreviousEdit;
   final String? retracts;
+  final Map<String, Object?>? product, purchase, link;
+  final String? into;
+
+  /// Undo of a product-level operation carries no container basis.
+  final bool productUndo;
 }

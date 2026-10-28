@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 
 import '../domain/event.dart';
 import '../food/food_record.dart';
+import '../food/inventory.dart' show FoodAction;
 import '../domain/validated_action_cache.dart';
 import '../domain/utf8_byte_limit.dart';
 
@@ -181,11 +182,24 @@ class UnifiedRecord {
     if (provenance != null) {
       _keys(provenance, {'kind', 'namespace', 'planHash', 'sourceSha256'});
       if (historical ||
-          provenance['kind'] != 'food.import' ||
+          !const {
+            'food.import',
+            'food.purchase-import',
+          }.contains(provenance['kind']) ||
           !isCanonicalId(provenance['namespace']) ||
           !isEventHash(provenance['planHash']) ||
           !isEventHash(provenance['sourceSha256']) ||
-          this.effects.any((e) => e.food?.operation.action.name != 'add')) {
+          this.effects.any(
+            (e) => provenance['kind'] == 'food.import'
+                ? e.food?.operation.action.name != 'add'
+                : e.food == null ||
+                      e.food!.operation.action == FoodAction.edit ||
+                      e.food!.operation.action == FoodAction.remove ||
+                      e.food!.operation.action == FoodAction.restore ||
+                      e.food!.operation.action == FoodAction.undo ||
+                      e.food!.operation.action == FoodAction.merge ||
+                      e.food!.operation.action == FoodAction.purchaseEdit,
+          )) {
         throw FormatFailure('Invalid canonical import provenance.');
       }
     }

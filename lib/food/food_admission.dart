@@ -81,7 +81,10 @@ void _validateReferences(
             basis.sequence >= r.sequence ||
             basis.clock >= r.clock ||
             basis.operation.targets.length != r.operation.targets.length ||
-            !r.operation.targets.every(targetSets[basis.id]!.contains))) {
+            !r.operation.targets.every(targetSets[basis.id]!.contains) ||
+            (basis.operation.action.productLevel
+                ? r.createdWith.isNotEmpty
+                : r.createdWith.length != r.operation.targets.length))) {
       throw const FormatException(
         'Food Undo reference has wrong kind, writer, targets or clock.',
       );
@@ -133,6 +136,9 @@ class _FoodAdmissionIndex {
           if (record.operation.action == FoodAction.undo)
             record.operation.retracts!,
       }),
+      productRecords = List.unmodifiable(
+        records.where((r) => r.operation.action.productLevel),
+      ),
       maximumClock = records.isEmpty
           ? null
           : records.map((r) => r.clock).reduce((a, b) => a > b ? a : b);
@@ -143,6 +149,7 @@ class _FoodAdmissionIndex {
     this.maximumClock,
     _FoodAdmissionIndex context,
     this.retracted,
+    this.productRecords,
   ) : legacyOwners = context.legacyOwners,
       maximumContainers = context.maximumContainers,
       byId = Map.unmodifiable(records),
@@ -154,6 +161,9 @@ class _FoodAdmissionIndex {
   final Map<String, Set<String>> targets;
   final Map<String, List<FoodRecord>> byTarget;
   final Set<String> retracted;
+
+  /// Product-level records, for refolding the catalog after product changes.
+  final List<FoodRecord> productRecords;
   final EventClock? maximumClock;
   static Map<String, List<FoodRecord>> _indexTargets(List<FoodRecord> records) {
     final result = <String, List<FoodRecord>>{};
@@ -251,18 +261,50 @@ FoodAdmission? appendReadyFoodRecords(
       history[record.id] = record.operation;
     }
   }
-  final changed = projectFood(history.values, legacyOwners: legacyOwners);
   final newRetractions = {
     for (final record in ordered)
       if (record.operation.action == FoodAction.undo)
         record.operation.retracts!,
   };
+  final retracted = newRetractions.isEmpty
+      ? index.retracted
+      : Set<String>.unmodifiable({...index.retracted, ...newRetractions});
+  final productDelta = ordered.where(
+    (r) =>
+        r.operation.action.productLevel ||
+        (r.operation.action == FoodAction.undo &&
+            byId[r.operation.retracts]!.operation.action.productLevel),
+  );
+  final productRecords = productDelta.isEmpty
+      ? index.productRecords
+      : List<FoodRecord>.unmodifiable([
+          ...index.productRecords,
+          ...ordered.where((r) => r.operation.action.productLevel),
+        ]);
+  // A product-level change refolds the (small) product catalog and re-resolves
+  // every container's product; container-only changes reuse both.
+  final catalog = productDelta.isEmpty
+      ? base.state.catalog
+      : FoodCatalog.build(
+          productRecords
+              .where((r) => !retracted.contains(r.id))
+              .map((r) => r.operation)
+              .toList()
+            ..sort(compareFoodOperations),
+        );
+  final changed = projectFood(
+    history.values,
+    legacyOwners: legacyOwners,
+    catalog: catalog,
+  );
   final containers = [
-    ...base.state.containers.where((c) => !affected.contains(c.id)),
+    for (final c in base.state.containers)
+      if (!affected.contains(c.id))
+        productDelta.isEmpty ? c : c.withCatalog(catalog),
     ...changed.containers.where((c) => affected.contains(c.id)),
   ]..sort((a, b) => a.id.compareTo(b.id));
   return FoodAdmission._(
-    FoodState(containers),
+    FoodState(containers, catalog: catalog),
     births,
     ready,
     _FoodAdmissionIndex._updated(
@@ -271,9 +313,8 @@ FoodAdmission? appendReadyFoodRecords(
       byTarget,
       ordered.last.clock,
       index,
-      newRetractions.isEmpty
-          ? index.retracted
-          : Set.unmodifiable({...index.retracted, ...newRetractions}),
+      retracted,
+      productRecords,
     ),
   );
 }
