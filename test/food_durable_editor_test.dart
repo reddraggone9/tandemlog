@@ -14,7 +14,7 @@ void main() {
           onAdd: (_, _) => throw StateError('synthetic save failure'),
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       ),
     );
@@ -45,7 +45,7 @@ void main() {
           onAdd: (_, _) {},
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       ),
     );
@@ -74,7 +74,7 @@ void main() {
           },
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       ),
     );
@@ -113,7 +113,7 @@ void main() {
           onAdd: (_, _) {},
           onRemove: (_) {},
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       ),
     );
@@ -171,7 +171,7 @@ void main() {
             }
           },
           onRestore: (_) {},
-          onDetails: (_, _, _) {},
+          onDetails: (_, _, _, _) {},
         ),
       );
       await tester.pumpWidget(page(false));

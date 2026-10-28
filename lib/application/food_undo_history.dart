@@ -8,8 +8,17 @@ class FoodUndoEntry {
   final String verb;
   final List<FoodRecord> records;
   String get label {
-    final count = records.expand((r) => r.operation.targets).toSet().length;
-    return '$verb $count container${count == 1 ? '' : 's'}';
+    final containers = records
+        .where((r) => !r.operation.action.productLevel)
+        .expand((r) => r.operation.targets)
+        .toSet()
+        .length;
+    if (containers > 0) {
+      return '$verb $containers container${containers == 1 ? '' : 's'}';
+    }
+    // Product-only actions (a product edit or merge from one row).
+    final products = records.expand((r) => r.operation.targets).toSet().length;
+    return '$verb $products product${products == 1 ? '' : 's'}';
   }
 }
 

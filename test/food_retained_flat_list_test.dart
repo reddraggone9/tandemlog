@@ -97,7 +97,7 @@ Future<void> verifyFlatRetained(
             onAdd: (_, _) => commands.add('add'),
             onRemove: (_) => commands.add('remove'),
             onRestore: (_) => commands.add('restore'),
-            onDetails: (_, _, _) => commands.add('details'),
+            onDetails: (_, _, _, _) => commands.add('details'),
           );
         },
       ),

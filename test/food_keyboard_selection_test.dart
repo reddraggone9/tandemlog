@@ -33,7 +33,7 @@ Future<List<List<String>>> _pump(WidgetTester tester) async {
         onAdd: (_, _) {},
         onRemove: removed.add,
         onRestore: (_) {},
-        onDetails: (_, _, _) {},
+        onDetails: (_, _, _, _) {},
       ),
     ),
   );

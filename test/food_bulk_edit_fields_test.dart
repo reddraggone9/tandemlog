@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/food_product_fields.dart';
 import 'package:tandemlog/application/food_undo_history.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/food_store.dart';
@@ -68,10 +70,10 @@ Future<List<_Write>> _pumpSelected(WidgetTester tester) async {
         onAdd: (_, _) {},
         onRemove: (_) {},
         onRestore: (_) {},
-        onDetails: (items, details, fields) => writes.add((
+        onDetails: (items, details, fields, products) => writes.add((
           ids: items.map((e) => e.id).toList(),
           details: details,
-          fields: List.of(fields),
+          fields: foodTouchedFields(fields, products),
         )),
       ),
     ),

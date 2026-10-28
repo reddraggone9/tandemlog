@@ -389,6 +389,12 @@ class FoodProductSummary {
       FoodDetails(name: name, brand: brand, size: size);
 }
 
+/// Money in minor units, e.g. \$3.48 (USD) or 3.48 EUR.
+String foodMoney(double minorUnits, String currency) {
+  final value = (minorUnits / 100).toStringAsFixed(2);
+  return currency == 'USD' ? '\$$value' : '$value $currency';
+}
+
 String _normal(String value) => value.trim().toLowerCase();
 String foodDescriptionKey(String name, String brand, String size) =>
     canonicalDataJson([_normal(name), _normal(brand), _normal(size)]);

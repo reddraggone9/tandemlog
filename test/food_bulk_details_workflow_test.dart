@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/food_product_fields.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 
@@ -75,10 +77,10 @@ Future<void> verifyFoodBulkDetails(
             onAdd: (_, _) {},
             onRemove: (_) {},
             onRestore: (_) {},
-            onDetails: (items, details, fields) => writes.add((
+            onDetails: (items, details, fields, products) => writes.add((
               ids: items.map((e) => e.id).toList(),
               details: details,
-              fields: List.of(fields),
+              fields: foodTouchedFields(fields, products),
             )),
           );
         },

@@ -107,7 +107,7 @@ void main() {
                     now: () => today,
                     onAdd: (_, _) => fail('Unexpected Add'),
                     onRemove: (_) => fail('Unexpected Remove'),
-                    onDetails: (_, _, _) => fail('Unexpected Edit'),
+                    onDetails: (_, _, _, _) => fail('Unexpected Edit'),
                     onRestore: (c) => update(() {
                       restores++;
                       events.add(

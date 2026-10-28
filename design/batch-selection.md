@@ -43,8 +43,10 @@ Entry gestures:
   and the clicked one; Food left the single-group editor open and selected only
   the clicked group. Fixed; Food now starts with the edited group after the usual
   unsaved-draft decision.
-- Shift+Arrow range: Tasks only, because Food rows have no arrow-key row
-  navigation at all. Open question: add arrow-key row navigation to Food?
+- Shift+Arrow range: Tasks only, because Food rows had no arrow-key row
+  navigation at all. Resolved (Lee, 2026-10-27, on `vex/food-products`): Up/Down
+  move focus between Food rows and Shift+Up/Down extend the selection from its
+  anchor (the focused row when there is none), using the shared rules.
 - Filter → Select matching containers: Food only. Deliberate: Food's unification
   workflow filters by Brand/Location and selects the result; Tasks has no
   equivalent need. It now includes shown Deleted rows.
@@ -62,10 +64,12 @@ Selection affordances:
   containers, and a matching arrival makes it partially selected, which the
   tristate box shows.
 - Wide layouts: Tasks opens the bulk editor in the side pane as soon as a
-  selection exists; Food keeps a modal bulk editor opened from Edit. Deliberate
-  under ADR0025 for now. Open question: with the bulk editor now covering every
-  field, should wide Food selection open it in the pane as Tasks does? Tasks'
-  "two-to-one returns to single editing" rule depends on the same choice.
+  selection exists; Food kept a modal bulk editor opened from Edit. Resolved
+  (Lee, 2026-10-27, on `vex/food-products`): at pane widths a Food selection
+  opens the bulk editor in the side pane, changing the selection first resolves
+  an unsaved bulk draft, Clear Selection closes the pane, and narrowing a
+  selection of two or more rows to one whole row returns to that row's single
+  editor, as on Tasks. Narrow widths keep Edit → dialog.
 
 Bulk actions:
 - Delete/Remove: Tasks offers Delete in the bulk editor opposite Cancel/Save;

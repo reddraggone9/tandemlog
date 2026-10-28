@@ -25,7 +25,12 @@ Future<void> _mount(
   WidgetTester tester,
   ValueNotifier<List<FoodOperation>> operations, {
   required Future<void> Function(List<String>) remove,
-  required Future<void> Function(List<FoodContainer>, FoodDetails, List<String>)
+  required Future<void> Function(
+    List<FoodContainer>,
+    FoodDetails,
+    List<String>,
+    FoodProductChange,
+  )
   edit,
 }) async {
   await tester.pumpWidget(
@@ -80,7 +85,7 @@ void main() {
             ),
           ];
         },
-        edit: (_, _, _) async {},
+        edit: (_, _, _, _) async {},
       );
       await _tap(tester, find.byTooltip('Remove one Legacy lentils container'));
       expect(removed, [_container(1)]);
@@ -118,7 +123,7 @@ void main() {
         tester,
         operations,
         remove: (_) async {},
-        edit: (items, details, fields) async {
+        edit: (items, details, fields, _) async {
           editedIds = items.map((e) => e.id).toList();
           editedFields = fields;
           operations.value = [

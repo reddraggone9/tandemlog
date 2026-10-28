@@ -53,7 +53,7 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
             onAdd: (_, _) => other.add('add'),
             onRemove: removals.add,
             onRestore: (_) => other.add('restore'),
-            onDetails: (_, _, _) => other.add('details'),
+            onDetails: (_, _, _, _) => other.add('details'),
           );
         },
       ),

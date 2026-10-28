@@ -126,7 +126,7 @@ Future<void> verifyFoodViewReachability(
                     commandCount++;
                     restoredId = item.id;
                   },
-                  onDetails: (_, _, _) => commandCount++,
+                  onDetails: (_, _, _, _) => commandCount++,
                 ),
               ),
             ],

@@ -80,7 +80,7 @@ Future<void> verifyFoodValueAutocomplete(
         onAdd: (details, _) => saved = details,
         onRemove: (_) {},
         onRestore: (_) {},
-        onDetails: (_, _, _) {},
+        onDetails: (_, _, _, _) {},
       ),
     ),
   );

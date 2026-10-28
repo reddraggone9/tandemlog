@@ -279,7 +279,7 @@ void main() {
       await pane.mountFoodPane(
         tester,
         onAdd: (_, _) => writes++,
-        onDetails: (_, _, _) => writes++,
+        onDetails: (_, _, _, _) => writes++,
         onRemove: (_) => writes++,
       );
       final add = _controlFocus(tester, find.byTooltip('Add food'));
@@ -369,7 +369,7 @@ void main() {
                 onAdd: (_, _) => writes++,
                 onRemove: (_) => writes++,
                 onRestore: (_) => writes++,
-                onDetails: (_, _, _) => writes++,
+                onDetails: (_, _, _, _) => writes++,
               );
             },
           ),

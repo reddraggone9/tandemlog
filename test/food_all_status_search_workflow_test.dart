@@ -128,7 +128,7 @@ Future<void> verifyFoodAllStatusSearch(
             userName: 'Synthetic household',
             now: () => DateTime(2026, 10, 11),
             onAdd: (_, _) {},
-            onDetails: (_, _, _) {},
+            onDetails: (_, _, _, _) {},
             onRemove: (ids) => command(operation(FoodAction.remove, ids)),
             onRestore: (container) => command(
               operation(FoodAction.restore, [

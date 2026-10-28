@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/food_product_fields.dart';
 import 'package:tandemlog/food/food_editor.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/checklist_item_editor.dart';
@@ -29,7 +31,12 @@ Future<GlobalKey<FoodEditorState>> _food(
   List<FoodContainer>? targets,
   bool Function()? pending,
   FutureOr<void> Function(FoodDetails, int)? add,
-  FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)?
+  FutureOr<void> Function(
+    List<FoodContainer>,
+    FoodDetails,
+    List<String>,
+    FoodProductChange,
+  )?
   details,
   VoidCallback? closed,
   double scale = 1,
@@ -50,7 +57,7 @@ Future<GlobalKey<FoodEditorState>> _food(
           state: pane.paneFoods(),
           targets: targets,
           onAdd: add ?? (_, _) {},
-          onDetails: details ?? (_, _, _) {},
+          onDetails: details ?? (_, _, _, _) {},
           pending: pending ?? () => false,
           isOriginCurrent: () => true,
           areTargetsVisible: () => true,
@@ -304,11 +311,11 @@ void main() {
       final key = await _food(
         tester,
         targets: state.containers,
-        details: (items, details, fields) {
+        details: (items, details, fields, products) {
           calls.add((
             ids: items.map((item) => item.id).toList(),
             details: details,
-            fields: List.of(fields),
+            fields: foodTouchedFields(fields, products),
           ));
         },
       );
@@ -682,8 +689,8 @@ void main() {
       final key = await _food(
         tester,
         targets: state.containers,
-        details: (_, details, fields) {
-          calls.add((details, List.of(fields)));
+        details: (_, details, fields, products) {
+          calls.add((details, foodTouchedFields(fields, products)));
         },
       );
       // Editing applies a field; unchecking Apply keeps the draft unapplied.

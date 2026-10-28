@@ -203,7 +203,7 @@ Future<void> verifyExpirationDeprecationWorkflow(
             onAdd: (details, count) => added = details,
             onRemove: (_) {},
             onRestore: (_) {},
-            onDetails: (items, details, fields) {
+            onDetails: (items, details, fields, _) {
               changedFields = fields;
               setState(
                 () => operations = [

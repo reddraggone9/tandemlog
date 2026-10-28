@@ -106,7 +106,7 @@ Future<void> verifyFoodFieldFilters(
         onAdd: (_, _) => writes++,
         onRemove: (_) => writes++,
         onRestore: (_) => writes++,
-        onDetails: (_, _, _) => writes++,
+        onDetails: (_, _, _, _) => writes++,
       ),
     ),
   );

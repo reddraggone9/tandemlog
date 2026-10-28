@@ -49,7 +49,12 @@ Future<GlobalKey<FoodInventoryPageState>> mountFoodPane(
   Brightness brightness = Brightness.light,
   FoodState? state,
   FutureOr<void> Function(FoodDetails, int)? onAdd,
-  FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)?
+  FutureOr<void> Function(
+    List<FoodContainer>,
+    FoodDetails,
+    List<String>,
+    FoodProductChange,
+  )?
   onDetails,
   FutureOr<void> Function(List<String>)? onRemove,
 }) async {
@@ -75,7 +80,7 @@ Future<GlobalKey<FoodInventoryPageState>> mountFoodPane(
         onAdd: onAdd ?? (_, _) {},
         onRemove: onRemove ?? (_) {},
         onRestore: (_) {},
-        onDetails: onDetails ?? (_, _, _) {},
+        onDetails: onDetails ?? (_, _, _, _) {},
       ),
     ),
   );
@@ -299,7 +304,7 @@ void registerFoodEditorPaneTests() {
         tester,
         state: state,
         onAdd: (_, _) => writes++,
-        onDetails: (_, _, _) => writes++,
+        onDetails: (_, _, _, _) => writes++,
       );
       await tester.tap(find.text('Pane beans 1'));
       await tester.pumpAndSettle();
@@ -542,7 +547,7 @@ void registerFoodEditorPaneTests() {
     await mountFoodPane(
       tester,
       onRemove: removes.add,
-      onDetails: (_, _, _) => edits++,
+      onDetails: (_, _, _, _) => edits++,
     );
     await tester.tap(find.text('Pane beans 1'));
     await tester.pumpAndSettle();
