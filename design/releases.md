@@ -310,3 +310,78 @@ Source `03ecab3` (main fast-forwarded from stable `ca76e2d`): review fixes plus 
 ## Published stable 2026.10.8/build103 — 2026-10-28
 
 [Stable 2026.10.8](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.8) published 2026-10-28T07:34:03Z as Latest after Lee accepted RC.1. Source `6b8bb74` changes only release metadata from RC.1 (`03ecab3`): pubspec 2026.10.8+103, the Flatpak metainfo release entry, stable notes (RC.1 notes body unchanged) and README. Relevant-source identity v2 kept the existing qualification (request `9b29fa84`) valid, so no new reference run was needed; push CI 40643574069 and signed candidate 40643585573 each ran once and passed. Native acceptance upgraded a synthetic RC.1 Android install in place (API30 emulator) and a synthetic 2026.10.7 Flatpak install in an isolated GTK lab. Publication used the private-draft path: the three gated installers plus the original portable ZIP were attached and verified before the draft was finalized as Latest. Anonymous bytes, owner APK signer, tag, notes and note images verified; all 40 prior releases unchanged. [Record](../evidence/stable-2026.10.8/README.md).
+
+## Waiting for an already-dispatched signed candidate
+
+Use the shared read-only `tool/wait_signed_candidate.py` instead of copying a
+release-specific dispatch/wait script. Dispatch authorization/one-attempt claims
+remain separate: this tool accepts an **existing run ID**, never dispatches a
+workflow, never reruns a job, and never publishes. Pin the full candidate source
+SHA (not today's main). It fails closed on wrong repository, workflow, event,
+branch, source, unsuccessful conclusion, CLI error, timeout or incomplete download.
+No automatic retries hide a failure; fix authentication/network issues and resume
+**the same run ID**, not a new build.
+
+For long waits on the Linux engineering host, launch through the user systemd
+manager so the worker's lifecycle is independent of the requesting shell/tool:
+
+```sh
+python3 tool/start_candidate_wait.py \
+  --run-id EXISTING_RUN_ID --source FULL_CANDIDATE_SHA \
+  --output /absolute/private/evidence/candidate-RUN_ID
+```
+
+The command prints its deterministic unit name and inspection command. It returns
+after manager activation, **not** after download success. Do not append `&`,
+`nohup` or `setsid`; those do not escape an executor's descendant cleanup/deadline.
+Use an absolute output directory outside the checkout. Requires a running Linux
+user manager, `gh` in its PATH and an authenticated `gh` credential store. On
+Farnsworth, the existing private credential can instead be read by the worker:
+append `--token-file /home/lee/.config/vex-github/token --direct-network`. This
+passes only a file path, not a token value, to systemd. `--direct-network` removes
+inherited proxy variables; use it only where direct GitHub access is intended.
+Never put credential values in command arguments, logs or unit properties. The
+foreground waiter uses the same flags and can use inherited `GH_TOKEN`/`GH_HOST`
+where appropriate, but manager launches do not inherit the caller's shell env.
+
+Inspect **both** the receipt and service result (substitute the printed unit):
+
+```sh
+systemctl --user show UNIT -p ActiveState -p SubState -p Result -p ExecMainStatus
+cat /absolute/private/evidence/candidate-RUN_ID/wait-status.json
+tail /absolute/private/evidence/candidate-RUN_ID/wait.log
+```
+
+Success requires `phase=success`, the requested run/source/repository, a complete
+`candidate-download/download-receipt.json`, and service `SubState=exited`,
+`Result=success`, `ExecMainStatus=0`. While running, systemd's `Result=success` and
+`ExecMainStatus=0` **are not completion evidence**. Each poll rewrites the status
+heartbeat even with no GitHub status change. A stale nonterminal heartbeat or a
+failed/missing unit is a failure/unknown, never silent success. Unit results are
+retained (no `--collect`, no restart); consult the journal for an OOM, SIGKILL,
+manager deadline or host shutdown that prevented Python's terminal receipt.
+Defaults: 7,200-second total wait/download deadline, 600-second individual CLI
+bound, 60-second polls; the service has a further 30-second outer margin and
+10-second whole-cgroup termination bound. SIGTERM/INT writes a failed receipt;
+SIGKILL/power loss cannot. User-manager shutdown/reboot is not a survival promise.
+
+On a diagnosed local failure or completed-download verification, stop the exact
+printed unit (`systemctl --user stop UNIT`; `reset-failed UNIT` if failed), then
+rerun the launcher with the same identity/output. Never stop an active worker just
+to start a duplicate. An OS-released advisory lock excludes concurrent writers;
+there is no stale lockfile to delete. An interrupted partial staging directory is
+not success and may be preserved for diagnosis. A resumed successful download
+checks its source and all saved file hashes without another GitHub request. If
+those bytes changed, preserve them and use a new output directory for the same
+existing run. Do not overwrite or relabel old evidence.
+
+Each of `linux`, `windows`, `android-release` is downloaded separately. Empty sets,
+symlinks and duplicate flattened filenames fail; only after all succeed does an
+atomic rename expose `candidate-download/{artifacts,dist,download-receipt.json}`.
+SHA-256 values bind the local bytes for recovery, **not publication acceptance**.
+Run all existing inventory/checksum/source/signer/native/publication gates against
+that `dist` exactly as before. This waiter does not install or qualify a candidate.
+
+Regression checks: `python3 -m unittest discover -s tool -p test_wait_signed_candidate.py`.
+Historical cause and local/live read-only evidence:
+[wait/download lifecycle repair](../evidence/release-wait-repair-20261028/README.md).
