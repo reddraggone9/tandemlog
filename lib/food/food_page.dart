@@ -442,7 +442,19 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         : const <FoodProductSummary>[];
     final inboxGroups = grouping.inbox;
     final visibleIds = grouping.visibleIds;
-    bulkSelected.retainAll(visibleIds);
+    final selection = retainVisibleListSelection<String>(
+      selected: bulkSelected,
+      selecting: selecting,
+      anchor: _selectionAnchor,
+      visibleRows: live,
+      visibleIds: visibleIds,
+      editorOpen: _editorBuilder != null,
+    );
+    bulkSelected
+      ..clear()
+      ..addAll(selection.selected);
+    selecting = selection.selecting;
+    _selectionAnchor = selection.anchor;
     final groups = grouping.groups;
     final deletedGroups = grouping.deletedGroups;
     return Theme(
@@ -532,8 +544,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                                 'food-search',
                                               ),
                                               controller: search,
-                                              onChanged: (_) =>
-                                                  setState(_clearBulkSelection),
+                                              onChanged: (_) => setState(() {}),
                                               decoration: InputDecoration(
                                                 labelText: 'Search food',
                                                 prefixIcon: const Icon(
@@ -547,7 +558,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                                         onPressed: () =>
                                                             setState(() {
                                                               search.clear();
-                                                              _clearBulkSelection();
                                                             }),
                                                         icon: const Icon(
                                                           Icons.close,
@@ -838,7 +848,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       enabled: !widget.busy,
       onSelected: (next) => setState(() {
         view = next;
-        _clearBulkSelection();
       }),
       itemBuilder: (_) {
         final observed = _shown().map((e) => e.id).toSet();
@@ -999,7 +1008,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                     if (retained && view == FoodView.retained) {
                       reasons = selectedReasons;
                     }
-                    _clearBulkSelection();
                   });
                   answer(null);
                 },

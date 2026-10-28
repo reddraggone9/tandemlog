@@ -500,16 +500,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (mounted) {
           setState(() {
             taskView = view.value;
-            final visibleOrder = visibleEntries
-                .map((entry) => entry.task['id'])
-                .toList();
-            if (selectionAnchor != null &&
-                !visibleOrder.contains(selectionAnchor)) {
-              selectionAnchor = null;
-            }
-            if (editingTask == null && editingBulk == null) {
-              selectedTasks.retainAll(visibleOrder);
-            }
+            final visible = visibleEntries
+                .map((entry) => entry.task['id'] as String)
+                .toSet();
+            final selection = retainVisibleListSelection<String>(
+              selected: selectedTasks,
+              selecting: selecting,
+              anchor: selectionAnchor,
+              visibleRows: visible,
+              visibleIds: visible,
+              editorOpen: editingTask != null || editingBulk != null,
+            );
+            selectedTasks
+              ..clear()
+              ..addAll(selection.selected);
+            selecting = selection.selecting;
+            selectionAnchor = selection.anchor;
             viewRevision++;
           });
           if (taskMenuOpen) taskMenuRevision.value++;

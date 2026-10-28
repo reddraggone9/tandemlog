@@ -89,10 +89,17 @@ Bulk actions:
 Exit:
 - Both exit on Clear Selection, on deselecting the last row and after a bulk
   command; neither uses Escape for selection. Consistent.
-- Food clears selection when the view, filter or search changes; Tasks keeps the
-  selection while Search and Filter are used and drops rows that become hidden.
-  Open question: should Food keep a selection across search/filter changes like
-  Tasks? It predates this audit and nothing reported depends on it.
+- Resolved (Lee, 2026-10-28, item l): Food search, Clear search, view-menu
+  and More-filters changes retain visible selected containers and drop hidden
+  ones, through the same `retainVisibleListSelection` implementation as Tasks'
+  view recomputation. A hidden range anchor is always forgotten. An open single
+  or bulk editor preserves its captured selected IDs until it closes (including
+  the wide bulk pane), so filtering cannot silently retarget a draft.
+- Pruning to zero visible selected IDs **does not exit explicit selecting mode**,
+  matching Tasks' view recomputation today. Clear Selection, explicit last-row
+  deselection and completed commands still exit. Expanding the view does not
+  resurrect IDs already pruned. Tasks' separate search-input close/clear handler
+  is unchanged; this change shares its view-recomputation policy.
 
 Undo:
 - Every bulk command is one Undo action in both sections: Task bulk edit/delete/

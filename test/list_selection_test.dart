@@ -22,6 +22,50 @@ ListSelection<String> _next(
 );
 
 void main() {
+  test(
+    'view retention matches Tasks for hidden IDs, anchor and empty intent',
+    () {
+      final result = retainVisibleListSelection<String>(
+        selected: {'a', 'b1', 'b2'},
+        selecting: true,
+        anchor: 'a',
+        visibleRows: ['b'],
+        visibleIds: {'b1', 'b2'},
+        editorOpen: false,
+      );
+      expect(result.selected, {'b1', 'b2'});
+      expect(result.anchor, isNull);
+      expect(result.selecting, isTrue);
+      final empty = retainVisibleListSelection<String>(
+        selected: result.selected,
+        selecting: result.selecting,
+        anchor: 'b',
+        visibleRows: [],
+        visibleIds: {},
+        editorOpen: false,
+      );
+      expect(empty.selected, isEmpty);
+      expect(empty.anchor, isNull);
+      expect(empty.selecting, isTrue);
+    },
+  );
+
+  test('an editor keeps captured IDs but forgets the hidden range anchor', () {
+    final selected = {'a', 'b1'};
+    final result = retainVisibleListSelection<String>(
+      selected: selected,
+      selecting: false,
+      anchor: 'a',
+      visibleRows: ['b'],
+      visibleIds: {'b1', 'b2'},
+      editorOpen: true,
+    );
+    expect(result.selected, selected);
+    expect(result.selecting, isFalse);
+    expect(result.anchor, isNull);
+    expect(selected, {'a', 'b1'});
+  });
+
   test('plain without selection is the single-row action', () {
     final result = _next('b', SelectionGesture.plain);
     expect(result.selected, {'b1', 'b2'});

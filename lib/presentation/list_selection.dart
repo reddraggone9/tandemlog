@@ -38,6 +38,25 @@ class ListSelection<K> {
   final K? anchor;
 }
 
+/// Retains selection against a recomputed view, as Tasks does. Editors keep
+/// their captured selection, but a hidden range anchor is always forgotten.
+/// An empty visible selection preserves explicit selection intent; only an
+/// explicit deselection, Clear Selection or completed command exits it.
+ListSelection<K> retainVisibleListSelection<K>({
+  required Set<String> selected,
+  required bool selecting,
+  required K? anchor,
+  required Iterable<K> visibleRows,
+  required Set<String> visibleIds,
+  required bool editorOpen,
+}) {
+  return ListSelection(
+    editorOpen ? Set<String>.of(selected) : selected.intersection(visibleIds),
+    selecting: selecting,
+    anchor: visibleRows.contains(anchor) ? anchor : null,
+  );
+}
+
 /// Shared Tasks/Food selection rules. A row ([K]) owns one or more selectable
 /// IDs: one task, or every observed container of a Food group. Callers own
 /// visibility checks, editors and any layout-specific intent changes.
