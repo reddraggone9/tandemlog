@@ -69,6 +69,12 @@ Also in scope (Lee, 2026-10-27; see [batch selection](batch-selection.md)):
   like Tasks.
 - (k) On wide windows a Food selection opens the bulk editor in the side pane,
   like Tasks. Narrow widths keep the dialog.
+- (l) Food search, Clear search, view-menu and More-filters changes use the shared
+  Tasks view-recomputation selection policy: retain visible IDs, drop hidden IDs
+  and the hidden anchor. Preserve captured selected IDs while an editor is open.
+  Pruning to zero IDs keeps explicit selecting mode, matching Tasks; widening a
+  view does not resurrect pruned IDs. Workspace switches and completed commands
+  still clear selection. See [batch selection](batch-selection.md).
 
 ## 3. Method: data model
 
