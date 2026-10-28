@@ -1520,4 +1520,132 @@ void main() {
       }
     },
   );
+
+  test(
+    'delivered peer Task action validates only its delta, without a whole-history sort or scan',
+    () async {
+      final root = await Directory.systemTemp.createTemp('task-latency-peer-');
+      final engine = NativeTextEngine(
+        libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
+      );
+      final shared = await Directory('${root.path}/shared').create();
+      final remote = await Directory('${root.path}/remote').create();
+      TaskStore? store, peer;
+      try {
+        store = await TaskStore.open(
+          LocalLogFolder(shared.path),
+          '${root.path}/profile',
+          textEngine: engine,
+        );
+        final user = const Uuid().v4();
+        await store.command(user, 'user.created', {
+          'name': 'Synthetic household',
+        });
+        final titles = {
+          for (var i = 0; i < 120; i++)
+            const Uuid().v4(): 'Synthetic household task $i',
+        };
+        expect((await store.createTasks(titles, user)).succeeded, isTrue);
+        for (final id in titles.keys.take(3)) {
+          await store.edit(
+            id,
+            {
+              'schedule': {'dueDate': '2030-05-13'},
+            },
+            tags: ['Synthetic tag'],
+            observedTagRefs: {},
+          );
+        }
+        // A second installation shares the same history and publishes only
+        // appended complete actions, like a Syncthing peer.
+        for (final file in shared.listSync().whereType<File>()) {
+          file.copySync('${remote.path}/${file.uri.pathSegments.last}');
+        }
+        peer = await TaskStore.open(
+          LocalLogFolder(remote.path),
+          '${root.path}/peer-profile',
+          textEngine: engine,
+        );
+        final name = unifiedLogName(peer.writer);
+        Future<void> deliver() async {
+          final bytes = await File('${remote.path}/$name').readAsBytes();
+          final target = File('${shared.path}/$name');
+          final old = target.existsSync()
+              ? target.readAsBytesSync()
+              : Uint8List(0);
+          expect(bytes.sublist(0, old.length), old);
+          await target.writeAsBytes(
+            bytes.sublist(old.length),
+            mode: FileMode.append,
+            flush: true,
+          );
+        }
+
+        Future<String> peerTask(String title) async {
+          final id = const Uuid().v4();
+          expect(
+            (await peer!.createTasks({id: title}, user)).succeeded,
+            isTrue,
+          );
+          return id;
+        }
+
+        await peerTask('Synthetic peer task 0');
+        await deliver();
+        await store.refresh();
+        final history = store.unified!;
+        expect(history.snapshot.allVisibleTasksReady, isTrue);
+        for (var round = 1; round <= 2; round++) {
+          final sorts = history.semanticTaskSortRuns;
+          final monotonic = history.monotonicTaskValidationRuns;
+          final readiness = history.fullTaskReadinessRuns;
+          final scans = history.taskHistoryScanReads;
+          final id = await peerTask('Synthetic peer task $round');
+          await deliver();
+          await store.refresh();
+          expect(
+            store.rows.singleWhere((r) => r['id'] == id)['title'],
+            'Synthetic peer task $round',
+          );
+          // O(delta): no whole-input regroup/sort, no full readiness pass and
+          // no dependency read that scans every canonical row.
+          expect(history.monotonicTaskValidationRuns, monotonic + 1);
+          expect(history.semanticTaskSortRuns, sorts);
+          expect(history.fullTaskReadinessRuns, readiness);
+          expect(history.taskHistoryScanReads, scans);
+        }
+        expect(
+          {for (final r in store.rows) r['id']: r},
+          {
+            for (final r in TaskStore.validateSemanticHistory(
+              history.snapshot.tasks,
+              space: store.space,
+              writer: store.writer,
+              textEngine: engine,
+            ))
+              r['id']: r,
+          },
+        );
+        final readyOracle = TaskSemanticValidator(
+          space: store.space,
+          writer: store.writer,
+          textEngine: engine,
+        );
+        try {
+          expect(
+            readyOracle.validate(history.snapshot.tasks.toList()),
+            history.snapshot.readyTaskIds,
+          );
+        } finally {
+          readyOracle.close();
+        }
+      } finally {
+        await peer?.close();
+        await store?.close();
+        engine.dispose();
+        await root.delete(recursive: true);
+      }
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 }
