@@ -115,7 +115,7 @@ def main():
                         help='package:test JSON reports in shard-index order')
     args = parser.parse_args()
     try:
-        summary = verify([path.read_text() for path in args.reports], args.suite.read_text())
+        summary = verify([path.read_text(encoding='utf-8') for path in args.reports], args.suite.read_text(encoding='utf-8'))
     except (OSError, ValueError, KeyError, json.JSONDecodeError) as error:
         print(f'Shard verification failed: {error}', file=sys.stderr)
         return 1

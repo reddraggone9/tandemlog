@@ -82,11 +82,11 @@ class ShardPartitionGate(unittest.TestCase):
             verify([report(FULL)], SUITE)
 
     def test_native_suite_has_parseable_registration_sites(self):
-        source = (ROOT / 'integration_test/task_flow_test.dart').read_text()
+        source = (ROOT / 'integration_test/task_flow_test.dart').read_text(encoding='utf-8')
         self.assertGreater(len(registration_lines(source)), 40)
 
     def test_workflow_runs_every_shard_and_gates_their_union(self):
-        workflow = (ROOT / '.github/workflows/validate.yml').read_text()
+        workflow = (ROOT / '.github/workflows/validate.yml').read_text(encoding='utf-8')
         job = workflow.split('\n  linux-workflows:', 1)[1].split('\n  windows:', 1)[0]
         shards = job.split('shard: [', 1)[1].split(']', 1)[0].split(',')
         total = len(shards)

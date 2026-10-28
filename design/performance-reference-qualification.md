@@ -36,7 +36,8 @@ x86_64,kernel7.2.11-arch1-1,16logical CPUs,Python3.14.8 and ext4 measurement pat
 plus exact SDK/native/SQLite/dependency/lock/limits pins. The registration came
 from the parent's read-only collection,not a cloud host probe. The reviewed
 controller with the reviewed held-worker completion protocol and admission-ordering corrections is registered by SHA256
-`bd18287ab26734190d38f85f3ba332c1b0dd9457c51190ccf7e3ee12c802c389`.
+`0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3`.
+For the Food-products244-label inventory,the controller differs from R7 only in its hard-coded limits digest (now the registered894f3af1…);existing232-label action budgets and all lifetime/resource controls remain unchanged. The old controller/request remain retained and were never launched.
 Its adjacent pressure module remains SHA256
 `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`.
 The source and original host fault evidence were reviewed privately;registration
