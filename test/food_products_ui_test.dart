@@ -383,6 +383,11 @@ void registerFoodProductsUiTests({
     expect(find.text('1 of 3'), findsOneWidget);
     expect(find.byTooltip('Open store link for Beans'), findsOneWidget);
     expect(find.text('Stock'), findsOneWidget);
+    // Both section headings share one inset at wide widths.
+    expect(
+      tester.getTopLeft(find.text('Running low')).dx,
+      tester.getTopLeft(find.text('Stock')).dx,
+    );
     await capture?.call(tester, 'products-running-low');
     await tester.tap(find.byTooltip('Add another Beans'));
     await tester.pumpAndSettle();

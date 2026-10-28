@@ -651,11 +651,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                       ),
                                     ),
                                     if (runningLow.isNotEmpty) ...[
-                                      SliverPadding(
+                                      const SliverPadding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: rowInset == 0 ? 16 : 0,
+                                          horizontal: 16,
                                         ),
-                                        sliver: const StickyTaskGroupHeading(
+                                        sliver: StickyTaskGroupHeading(
                                           title: 'Running low',
                                           headingKey: ValueKey(
                                             'food-running-low-heading',
