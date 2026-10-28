@@ -52,7 +52,7 @@ Future<void> verifyFoodBulkDetails(
 
   Future<void> selectAll() async {
     await tap(find.byKey(const ValueKey('food-filter')));
-    await tap(find.text('Select matching active containers'));
+    await tap(find.text('Select matching containers'));
   }
 
   await tester.pumpWidget(
@@ -123,7 +123,7 @@ Future<void> verifyFoodBulkDetails(
   expect(writes.single.ids.toSet(), {id(1), id(2), id(3)});
   expect(writes.single.fields, ['brand']);
   expect(writes.single.details.brand, 'Unified');
-  // Search selection excludes deleted matches and restores capture on clear.
+  // Search selection follows the shown rows and restores capture on clear.
   final search = find.byKey(const ValueKey('food-search'));
   await tap(search);
   await tester.enterText(search, 'Synthetic food 2');
@@ -147,18 +147,18 @@ Future<void> verifyFoodBulkDetails(
         .text,
     'Synthetic food 4',
   );
-  await capture?.call('deleted-only-no-selection');
+  await capture?.call('deleted-only-selectable');
   await tap(find.byKey(const ValueKey('food-filter')));
   expect(
     tester
         .widget<PopupMenuItem>(
           find.widgetWithText(
             PopupMenuItem<FoodView>,
-            'Select matching active containers',
+            'Select matching containers',
           ),
         )
         .enabled,
-    isFalse,
+    isTrue,
   );
   await tester.tapAt(const Offset(2, 2));
   await tester.pumpAndSettle();
@@ -169,7 +169,7 @@ Future<void> verifyFoodBulkDetails(
   await tap(find.widgetWithText(TextButton, 'Edit'));
   await tap(find.widgetWithText(TextButton, 'Cancel'));
   expect(writes, hasLength(2));
-  expect(find.text('3 selected'), findsOneWidget);
+  expect(find.text('4 selected'), findsOneWidget);
   await tap(find.byTooltip('Clear Selection'));
   expect(
     find.byKey(const ValueKey('food-search')).hitTestable(),
@@ -185,7 +185,7 @@ Future<void> verifyFoodBulkDetails(
         w.semanticLabel == 'Select 1 Synthetic food 2 containers',
   );
   await tap(groupTwo);
-  expect(page.bulkSelected, {id(1), id(3)});
+  expect(page.bulkSelected, {id(1), id(3), id(4)});
   await capture?.call('partial-selection');
   final scrolling = find.descendant(
     of: find.byType(CustomScrollView),
@@ -196,7 +196,7 @@ Future<void> verifyFoodBulkDetails(
   tester.state<ScrollableState>(scrolling).position.jumpTo(0);
   await tester.pumpAndSettle();
   await tap(find.widgetWithText(TextButton, 'Edit'));
-  expect(find.text('Edit 2 containers'), findsOneWidget);
+  expect(find.text('Edit 3 containers'), findsOneWidget);
   await tap(find.text('Apply Location'));
   await tester.enterText(
     find.widgetWithText(TextField, 'Location'),

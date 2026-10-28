@@ -90,7 +90,11 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
     await dismiss();
   }
   await open('Deleted beans');
-  expect(actions(), [('add-another', true), ('restore', true)]);
+  expect(actions(), [
+    ('add-another', true),
+    ('select', true),
+    ('restore', true),
+  ]);
   await dismiss();
   // PopupMenuButton awaits its route then reads its current widget callback.
   // A workspace change must dispose that state even if canonical rows match.

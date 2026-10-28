@@ -267,7 +267,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('food-filter')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Select matching active containers'));
+    await tester.tap(find.text('Select matching containers'));
     await tester.pumpAndSettle();
     final page = tester.state<FoodInventoryPageState>(
       find.byType(FoodInventoryPage),
