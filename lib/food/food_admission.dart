@@ -269,13 +269,13 @@ FoodAdmission? appendReadyFoodRecords(
   final retracted = newRetractions.isEmpty
       ? index.retracted
       : Set<String>.unmodifiable({...index.retracted, ...newRetractions});
-  final productDelta = ordered.where(
+  final productChange = ordered.any(
     (r) =>
         r.operation.action.productLevel ||
         (r.operation.action == FoodAction.undo &&
             byId[r.operation.retracts]!.operation.action.productLevel),
   );
-  final productRecords = productDelta.isEmpty
+  final productRecords = !productChange
       ? index.productRecords
       : List<FoodRecord>.unmodifiable([
           ...index.productRecords,
@@ -283,7 +283,7 @@ FoodAdmission? appendReadyFoodRecords(
         ]);
   // A product-level change refolds the (small) product catalog and re-resolves
   // every container's product; container-only changes reuse both.
-  final catalog = productDelta.isEmpty
+  final catalog = !productChange
       ? base.state.catalog
       : FoodCatalog.build(
           productRecords
@@ -297,12 +297,17 @@ FoodAdmission? appendReadyFoodRecords(
     legacyOwners: legacyOwners,
     catalog: catalog,
   );
-  final containers = [
-    for (final c in base.state.containers)
-      if (!affected.contains(c.id))
-        productDelta.isEmpty ? c : c.withCatalog(catalog),
-    ...changed.containers.where((c) => affected.contains(c.id)),
-  ]..sort((a, b) => a.id.compareTo(b.id));
+  final containers = productChange
+      ? [
+          for (final c in base.state.containers)
+            if (!affected.contains(c.id)) c.withCatalog(catalog),
+          ...changed.containers.where((c) => affected.contains(c.id)),
+        ]
+      : [
+          ...base.state.containers.where((c) => !affected.contains(c.id)),
+          ...changed.containers.where((c) => affected.contains(c.id)),
+        ];
+  containers.sort((a, b) => a.id.compareTo(b.id));
   return FoodAdmission._(
     FoodState(containers, catalog: catalog),
     births,
