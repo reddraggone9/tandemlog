@@ -373,7 +373,11 @@ class FoodProductSummary {
   double? typicalUnitCost(DateTime today) {
     final cutoff = DateTime.utc(today.year - 1, today.month, today.day);
     final recent = purchases
-        .where((p) => !DateTime.parse(p.date).isBefore(cutoff))
+        .where(
+          (p) =>
+              p.currency == last?.currency &&
+              !DateTime.parse(p.date).isBefore(cutoff),
+        )
         .take(5)
         .map((p) => p.unitCost)
         .toList();
@@ -440,7 +444,11 @@ List<FoodProductStep> planFoodProductChanges(
   final groups = <String, List<FoodProductSummary>>{};
   for (final root in roots) {
     final product = products[root];
-    if (product == null) continue;
+    if (product == null || state.catalog.resolve(root) != root) {
+      throw const FormatException(
+        'This product changed or merged while editing. Keep your draft and reopen the current product.',
+      );
+    }
     final name = changes['name'] as String? ?? product.name,
         brand = changes['brand'] as String? ?? product.brand,
         size = changes['size'] as String? ?? product.size;

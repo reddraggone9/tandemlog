@@ -241,6 +241,33 @@ class FoodStore {
     return batch;
   }
 
+  // Empty semantic plans still require the fresh observation, but never reserve
+  // an empty action. The sentinel is private to this synchronous callback.
+  Future<List<FoodRecord>> _freshCommandLocked(
+    List<_FoodChange> Function() plan, {
+    Map<String, dynamic>? provenance,
+  }) async {
+    try {
+      final reservation = await unified!.prepareFromFreshInputsInProfileQueue(
+        () {
+          final changes = plan();
+          if (changes.isEmpty) throw const _EmptyFoodPlan();
+          return _unifiedBuilders(changes);
+        },
+        provenance: provenance,
+      );
+      final batch = List<FoodRecord>.unmodifiable(
+        reservation.records.expand((r) => r.effects).map((e) => e.food!),
+      );
+      lastPreparedRecords = batch;
+      await unified!.commitInProfileQueue();
+      return batch;
+    } on _EmptyFoodPlan {
+      lastPreparedRecords = const [];
+      return const [];
+    }
+  }
+
   Future<T> _queue<T>(Future<T> Function() work) {
     if (_closed || _closing != null) {
       return Future.error(StateError('Food workspace is closed.'));
@@ -494,20 +521,22 @@ class FoodStore {
       );
     }
     return _queue(() {
-      final plan = planFoodAdd(state, details);
-      return _commandLocked([
-        if (plan.create != null)
-          _FoodChange(FoodAction.product, [
-            plan.product!,
-          ], product: plan.create),
-        _FoodChange(
-          FoodAction.add,
-          List.generate(count, (_) => const Uuid().v4()),
-          details: details,
-          contents: const Contents.fraction(1, 1),
-          link: plan.product == null ? null : {'product': plan.product},
-        ),
-      ]);
+      return _freshCommandLocked(() {
+        final plan = planFoodAdd(state, details);
+        return [
+          if (plan.create != null)
+            _FoodChange(FoodAction.product, [
+              plan.product!,
+            ], product: plan.create),
+          _FoodChange(
+            FoodAction.add,
+            List.generate(count, (_) => const Uuid().v4()),
+            details: details,
+            contents: const Contents.fraction(1, 1),
+            link: plan.product == null ? null : {'product': plan.product},
+          ),
+        ];
+      });
     });
   }
 
@@ -569,8 +598,34 @@ class FoodStore {
     if (hasPreparedAppend || pendingReferences > 0) {
       throw const FormatException('Recover or sync Food before importing.');
     }
-    return planFoodPurchaseImport(state, plan).report;
+    for (final action in unified!.snapshot.records) {
+      final proof = action.provenance;
+      if (proof?['kind'] == 'food.purchase-import' &&
+          proof?['namespace'] == plan.importId &&
+          (proof?['planHash'] != plan.planHash ||
+              proof?['sourceSha256'] != plan.sourceSha256)) {
+        throw const FormatException(
+          'Receipt import plan differs from its immutable original.',
+        );
+      }
+    }
+    return _planPurchaseImport(plan).report;
   }
+
+  // Original purchase records are durable source evidence even after Undo or
+  // purchase edits. Never infer attempt identity from mutable product labels.
+  ({FoodPurchaseImportReport report, List<FoodImportStep> steps})
+  _planPurchaseImport(FoodPurchaseImportPlan plan) => planFoodPurchaseImport(
+    state,
+    plan,
+    recordedPurchases: FoodCatalog.build(
+      _records
+          .where((r) => r.operation.action == FoodAction.purchase)
+          .map((r) => r.operation)
+          .toList()
+        ..sort(compareFoodOperations),
+    ).purchases,
+  );
 
   /// Validates a reviewed receipt plan against current Food without writing.
   Future<FoodPurchaseImportReport> dryRunPurchaseImport(
@@ -581,7 +636,7 @@ class FoodStore {
     if (report.status == FoodPurchaseImportStatus.ready) {
       await unified!.validateInProfileQueue(
         _unifiedBuilders(
-          _purchaseImportChanges(planFoodPurchaseImport(state, plan).steps),
+          _purchaseImportChanges(_planPurchaseImport(plan).steps),
         ),
       );
     }
@@ -593,11 +648,12 @@ class FoodStore {
   Future<FoodPurchaseImportReport> commitPurchaseImport(
     FoodPurchaseImportPlan plan,
   ) => _queue(() async {
-    await _refresh();
-    final report = _inspectPurchaseImport(plan);
-    if (report.status == FoodPurchaseImportStatus.committed) return report;
-    await _commandLocked(
-      _purchaseImportChanges(planFoodPurchaseImport(state, plan).steps),
+    late FoodPurchaseImportReport report;
+    await _freshCommandLocked(
+      () {
+        report = _inspectPurchaseImport(plan);
+        return _purchaseImportChanges(_planPurchaseImport(plan).steps);
+      },
       provenance: {
         'kind': 'food.purchase-import',
         'namespace': plan.importId,
@@ -639,20 +695,22 @@ class FoodStore {
   }) {
     _batches(ids);
     return _queue(
-      () => _commandLocked([
-        if (fields.isNotEmpty)
-          for (final batch in _batches(ids))
-            _FoodChange(
-              FoodAction.edit,
-              batch,
-              details: details,
-              fields: fields,
+      () => _freshCommandLocked(
+        () => [
+          if (fields.isNotEmpty)
+            for (final batch in _batches(ids))
+              _FoodChange(
+                FoodAction.edit,
+                batch,
+                details: details,
+                fields: fields,
+              ),
+          if (!products.isEmpty)
+            ..._productChanges(
+              planFoodProductChanges(state, products.roots, products.changes),
             ),
-        if (!products.isEmpty)
-          ..._productChanges(
-            planFoodProductChanges(state, products.roots, products.changes),
-          ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -788,4 +846,8 @@ class _FoodChange {
 
   /// Undo of a product-level operation carries no container basis.
   final bool productUndo;
+}
+
+class _EmptyFoodPlan implements Exception {
+  const _EmptyFoodPlan();
 }

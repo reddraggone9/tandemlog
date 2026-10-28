@@ -10,6 +10,7 @@ import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 
@@ -48,6 +49,38 @@ void main() {
       for (final effect in action.effects)
         if (effect.food != null) effect.food!,
   ];
+
+  Future<void> withPeer(
+    Future<void> Function(FoodStore peer, Directory data) run, {
+    bool offline = false,
+  }) async {
+    final peerProfile = await LocalProfileDatabase.open('${root.path}/peer');
+    await LocalSettings.initialize(peerProfile);
+    final data = Directory('${root.path}/data');
+    final peerData = offline
+        ? await Directory('${root.path}/offline').create()
+        : data;
+    if (offline) {
+      for (final file in data.listSync().whereType<File>()) {
+        await file.copy('${peerData.path}/${file.uri.pathSegments.last}');
+      }
+    }
+    final peerTasks = await TaskStore.open(
+      LocalLogFolder(peerData.path),
+      peerProfile.root,
+      profileDatabase: peerProfile,
+      writerIdentity:
+          LocalSettings.protectedValues(peerProfile)['writer'] as String,
+    );
+    final peer = await FoodStore.openUnified(peerTasks.unified!);
+    try {
+      await run(peer, peerData);
+    } finally {
+      await peer.close();
+      await peerTasks.close();
+      await peerProfile.close();
+    }
+  }
 
   /// Full admission of every record must equal the incremental store state.
   void expectReplayEquivalent() {
@@ -297,6 +330,94 @@ void main() {
       },
     );
 
+    test('immutable receipt retry survives rename and merge', () async {
+      final receipt = plan([milk(quantity: 2)]);
+      await food.commitPurchaseImport(receipt);
+      final original = food.state.products.keys.single;
+      await food.changeDetails(
+        [food.state.containers.first.id],
+        const FoodDetails(name: 'milk'),
+        [],
+        products: FoodProductChange(
+          roots: [original],
+          changes: const {'name': 'Milk 2%'},
+        ),
+      );
+      final before = records().length;
+      expect(
+        (await food.commitPurchaseImport(receipt)).status,
+        FoodPurchaseImportStatus.committed,
+      );
+      expect(records().length, before);
+      await food.add(const FoodDetails(name: 'Other milk'), 1);
+      await food.changeDetails(
+        [food.state.containers.first.id],
+        const FoodDetails(name: 'milk'),
+        [],
+        products: FoodProductChange(
+          roots: [original],
+          changes: const {'name': 'Other milk'},
+        ),
+      );
+      expect(
+        (await food.commitPurchaseImport(receipt)).status,
+        FoodPurchaseImportStatus.committed,
+      );
+      expectReplayEquivalent();
+    });
+
+    test('Undo then retry preserves immutable import as a no-op', () async {
+      final receipt = plan([milk(quantity: 2)]);
+      await food.commitPurchaseImport(receipt);
+      await food.undoOperations(food.lastPreparedRecords);
+      final before = records().length;
+      expect(
+        (await food.commitPurchaseImport(receipt)).status,
+        FoodPurchaseImportStatus.committed,
+      );
+      expect(records().length, before);
+      expect(food.state.active, isEmpty);
+      expectReplayEquivalent();
+    });
+
+    test(
+      'offline same-receipt imports converge and retain both birth bases',
+      () async {
+        final receipt = plan([milk(quantity: 2)]);
+        await withPeer((peer, peerData) async {
+          await food.commitPurchaseImport(receipt);
+          await peer.commitPurchaseImport(receipt);
+          // Each installation edits its own original birth before sync.
+          await food.changeDetails(
+            [food.state.containers.first.id],
+            const FoodDetails(name: 'milk', location: 'Pantry'),
+            ['location'],
+          );
+          await peer.changeDetails(
+            [peer.state.containers.last.id],
+            const FoodDetails(name: 'milk', location: 'Fridge'),
+            ['location'],
+          );
+          final log = File('${peerData.path}/${peer.writer}.applog');
+          await log.copy('${root.path}/data/${peer.writer}.applog');
+          await food.refresh();
+          expect(food.state.active, hasLength(2));
+          expect(food.state.catalog.purchases, hasLength(1));
+          expect(food.state.containers.map((c) => c.details.location).toSet(), {
+            'Pantry',
+            'Fridge',
+          });
+          expectReplayEquivalent();
+          final combined = records();
+          final reverse = admitFoodRecords(combined.reversed.toList()).state;
+          expect(
+            reverse.containers.map((c) => c.toJson()).toList(),
+            food.state.containers.map((c) => c.toJson()).toList(),
+          );
+        }, offline: true);
+      },
+    );
+
     test('Undo of an import removes containers and the purchase', () async {
       await food.commitPurchaseImport(plan([milk(quantity: 2)]));
       expect(food.state.active, hasLength(2));
@@ -305,6 +426,74 @@ void main() {
       expect(food.state.catalog.purchases, isEmpty);
       expectReplayEquivalent();
     });
+  });
+
+  test('Add plans after newly arrived peer rename is admitted', () async {
+    await food.add(const FoodDetails(name: 'Milk'), 1);
+    final original = food.state.products.keys.single;
+    await withPeer((peer, _) async {
+      await peer.changeDetails(
+        [food.state.containers.first.id],
+        const FoodDetails(name: 'Milk'),
+        [],
+        products: FoodProductChange(
+          roots: [original],
+          changes: const {'name': 'Milk 2%'},
+        ),
+      );
+      expect(food.state.products[original]!.name, 'Milk');
+      await food.add(const FoodDetails(name: 'Milk'), 1);
+      expect(food.state.products.values.map((p) => p.name).toSet(), {
+        'Milk',
+        'Milk 2%',
+      });
+      expectReplayEquivalent();
+    });
+  });
+
+  test('edit plans merge against newly arrived peer product', () async {
+    await food.add(const FoodDetails(name: 'A'), 1);
+    final original = food.state.products.keys.single;
+    await withPeer((peer, _) async {
+      await peer.add(const FoodDetails(name: 'B'), 1);
+      await food.changeDetails(
+        [food.state.containers.first.id],
+        const FoodDetails(name: 'A'),
+        [],
+        products: FoodProductChange(
+          roots: [original],
+          changes: const {'name': 'B'},
+        ),
+      );
+      expect(food.state.products, hasLength(1));
+      expectReplayEquivalent();
+    });
+  });
+
+  test('captured merged root refuses Save without losing draft', () async {
+    await food.add(const FoodDetails(name: 'A'), 1);
+    await food.add(const FoodDetails(name: 'B'), 1);
+    final a = food.state.products.values.firstWhere((p) => p.name == 'A');
+    await food.changeDetails(
+      [food.state.containers.first.id],
+      const FoodDetails(name: 'A'),
+      [],
+      products: FoodProductChange(roots: [a.id], changes: const {'name': 'B'}),
+    );
+    final before = records().length;
+    await expectLater(
+      food.changeDetails(
+        [food.state.containers.first.id],
+        const FoodDetails(name: 'A'),
+        [],
+        products: FoodProductChange(
+          roots: [a.id],
+          changes: const {'minimum': 3},
+        ),
+      ),
+      throwsFormatException,
+    );
+    expect(records().length, before);
   });
 
   test('every new family round-trips through its exact bytes', () async {

@@ -276,7 +276,11 @@ const purchaseMatchDaysBefore = 1, purchaseMatchDaysAfter = 14;
 /// the remaining units as Inbox containers. Lines already recorded with the
 /// same values are skipped; different values for the same source fail.
 ({FoodPurchaseImportReport report, List<FoodImportStep> steps})
-planFoodPurchaseImport(FoodState state, FoodPurchaseImportPlan plan) {
+planFoodPurchaseImport(
+  FoodState state,
+  FoodPurchaseImportPlan plan, {
+  Map<String, FoodPurchase>? recordedPurchases,
+}) {
   final steps = <FoodImportStep>[];
   final reports = <FoodPurchaseLineReport>[];
   final claimed = <String>{};
@@ -284,7 +288,36 @@ planFoodPurchaseImport(FoodState state, FoodPurchaseImportPlan plan) {
   final edited = <String, List<String>>{};
   for (final line in plan.lines) {
     final purchaseId = line.purchaseId;
-    final existing = state.catalog.purchases[purchaseId];
+    final existing = (recordedPurchases ?? state.catalog.purchases)[purchaseId];
+    if (existing != null) {
+      final recorded = existing.toJson()..remove('product');
+      final requested = {
+        'date': line.date,
+        'store': line.store,
+        'amount': line.amount,
+        'currency': line.currency,
+        'quantity': line.quantity,
+        'source': line.source,
+      };
+      if (canonicalDataJson(recorded) != canonicalDataJson(requested) ||
+          (line.product != null &&
+              state.catalog.resolve(existing.product) !=
+                  state.catalog.resolve(line.product!))) {
+        throw FormatException(
+          'Purchase ${line.sourceKind} ${line.sourceKey} was recorded with different values.',
+        );
+      }
+      reports.add(
+        FoodPurchaseLineReport(
+          purchase: purchaseId,
+          product: state.catalog.resolve(existing.product),
+          status: FoodPurchaseLineStatus.present,
+          matched: const [],
+          created: const [],
+        ),
+      );
+      continue;
+    }
     String root;
     var created = false;
     if (line.product != null) {
@@ -334,27 +367,6 @@ planFoodPurchaseImport(FoodState state, FoodPurchaseImportPlan plan) {
       'quantity': line.quantity,
       'source': line.source,
     };
-    if (existing != null) {
-      final recorded = existing.toJson();
-      if (state.catalog.resolve(existing.product) != root ||
-          canonicalDataJson(recorded..remove('product')) !=
-              canonicalDataJson(Map.of(values)..remove('product'))) {
-        throw FormatException(
-          'Purchase ${line.sourceKind} ${line.sourceKey} was recorded with '
-          'different values.',
-        );
-      }
-      reports.add(
-        FoodPurchaseLineReport(
-          purchase: purchaseId,
-          product: root,
-          status: FoodPurchaseLineStatus.present,
-          matched: const [],
-          created: const [],
-        ),
-      );
-      continue;
-    }
     if (line.link != null) {
       final links =
           edited[root] ??
@@ -364,7 +376,7 @@ planFoodPurchaseImport(FoodState state, FoodPurchaseImportPlan plan) {
         edited[root] = links;
       }
     }
-    final purchased = DateTime.parse(line.date);
+    final purchased = DateTime.parse('${line.date}T00:00:00Z');
     final from = purchased.subtract(
       const Duration(days: purchaseMatchDaysBefore),
     );
