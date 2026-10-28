@@ -12,13 +12,15 @@ Each effect is {kind,raw}. Live Task/Food effects in one atomic action share aut
 
 The observed frontier binds writer positions/hashes, including the action's predecessor. Missing dependencies hold the whole action and dependent actions. Wrong hashes, unknown complete effect kinds/revisions, malformed records, changed acknowledged prefixes and sync conflicts stop common admission. Both module projections stage in one SQLite transaction before publication.
 
-Optional provenance is exactly kind,namespace,planHash,sourceSha256 for an add-only Food import action. It makes repeated accepted imports identifiable without a private ledger. Limits16MiB/action,32MiB/file,256MiB/workspace and10000effects apply before append; incremental effect-byte accounting bounds preparation. The current1000-item import fits one action.
+Optional provenance is exactly kind,namespace,planHash,sourceSha256: `food.import` for an add-only Food import action, or `food.purchase-import` for a receipt import containing only container adds/links, product edits and purchase records ([Food products](food-products.md#5-method-prices-and-receipt-import)). It makes repeated accepted imports identifiable without a private ledger. Limits16MiB/action,32MiB/file,256MiB/workspace and10000effects apply before append; incremental effect-byte accounting bounds preparation. The current1000-item import fits one action.
 
 ## Operation registry
 
 domain/current_operation.dart defines the closed current codec: format tandemlog.operation, version1, module, space, author, identity, clock, subject, operation family/revision, value, predecessor, referenceHash and contentHash. Content hashing covers the normalized body. Converted prefixes may retain verified historical reference anchors; live operations derive their anchor from their own exact content hash. The common action seals attribution and all normalized data.
 
 Envelope format version, operation revision and new event families are distinct. Newly supported timezones use required revision2 for create/update; every new task.complete uses required revision3 with only a canonical UTC microsecond completedInstant (all four completion modes), cumulative with revision2 timezone meaning. Historical r1/r2 retain their date semantics and are not emitted by live commands; startup, draft choice, Cancel and no-op Save do not update compatibility metadata. A complete unknown family/revision fails both modules before continuing writes. There is no separate mutable reader floor or timezone toggle.
+
+Food products (on `vex/food-products`, unreleased) add the required families product.edit, product.merge, purchase.record, purchase.edit and container.link (revision1), and container.add revision2 with an explicit product/purchase link; plain Adds still write container.add revision1. container.undo revision1 retracts every Food family; Undo of a product-level operation carries no container creation basis. A pre-products app stops at the first such record with "Update the app; history was preserved". Values, bounds and merge rules: [Food products](food-products.md#4-method-sync-log-protocol).
 
 Old wire decoders are absent from the app. Current semantic reducers retain task/native text/recurrence/Undo/Food meaning. A domain action is not a legacy wire decoder.
 

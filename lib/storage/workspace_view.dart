@@ -92,10 +92,11 @@ class FoodViewSnapshot {
   factory FoodViewSnapshot.empty() => FoodViewSnapshot._(0, FoodState([]));
   static FoodViewSnapshot next(FoodState state, FoodViewSnapshot previous) {
     if (identical(state, previous.state) ||
-        workspaceValuesEqual(
-          state.containers.map((item) => item.toJson()).toList(),
-          previous.state.containers.map((item) => item.toJson()).toList(),
-        )) {
+        (state.catalog.equivalent(previous.state.catalog) &&
+            workspaceValuesEqual(
+              state.containers.map((item) => item.toJson()).toList(),
+              previous.state.containers.map((item) => item.toJson()).toList(),
+            ))) {
       return previous;
     }
     return FoodViewSnapshot._(previous.revision + 1, state);

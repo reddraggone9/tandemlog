@@ -117,6 +117,7 @@ class CurrentOperation {
     final value = j['value'] as Map<String, dynamic>;
     if (revision != 1 &&
         !(revision == 3 && module == 'tasks' && family == 'task.complete') &&
+        !(revision == 2 && module == 'food' && family == 'container.add') &&
         !(revision == 2 &&
             module == 'tasks' &&
             _zoneFamilies.contains(family))) {

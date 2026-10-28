@@ -1,7 +1,31 @@
 import '../domain/event.dart' show isCanonicalId;
 import '../domain/event_chain.dart' show canonicalDataJson;
+import 'food_products.dart';
 
-enum FoodAction { add, edit, remove, restore, undo }
+export 'food_products.dart';
+
+/// Container actions plus the product-level families (ADR pending,
+/// design/food-products.md). Product-level actions target product or purchase
+/// IDs, never containers.
+enum FoodAction {
+  add,
+  edit,
+  remove,
+  restore,
+  undo,
+  link,
+  product,
+  merge,
+  purchase,
+  purchaseEdit;
+
+  /// Targets products or purchases instead of physical containers.
+  bool get productLevel =>
+      this == product ||
+      this == merge ||
+      this == purchase ||
+      this == purchaseEdit;
+}
 
 enum FoodView { inventory, inbox, retained, deleted }
 
@@ -157,10 +181,17 @@ class FoodOperation {
     this.createdAt,
     this.retracts,
     this.undoOwner,
+    Map<String, Object?>? product,
+    Map<String, Object?>? purchase,
+    Map<String, Object?>? link,
+    this.into,
     List<String> observedDeletes = const [],
     List<String> observedEdits = const [],
     List<String>? fields,
   }) : targets = List.unmodifiable(targets),
+       product = product == null ? null : Map.unmodifiable(product),
+       purchase = purchase == null ? null : Map.unmodifiable(purchase),
+       link = link == null ? null : Map.unmodifiable(link),
        observedDeletes = List.unmodifiable(observedDeletes),
        observedEdits = List.unmodifiable(observedEdits),
        fields = List.unmodifiable(
@@ -179,8 +210,31 @@ class FoodOperation {
   final String? createdAt;
   final String? retracts;
   final String? undoOwner;
+
+  /// product.edit values (a subset of [productFieldNames]).
+  final Map<String, Object?>? product;
+
+  /// purchase.record (complete) or purchase.edit (subset) values.
+  final Map<String, Object?>? purchase;
+
+  /// container.add revision 2 / container.link values.
+  final Map<String, Object?>? link;
+
+  /// product.merge target.
+  final String? into;
   void validate() {
     _reference(id);
+    if (action.productLevel || action == FoodAction.link) {
+      _validateProductLevel();
+      return;
+    }
+    if (product != null || purchase != null || into != null) {
+      _invalid('product fields');
+    }
+    if (link != null) {
+      if (action != FoodAction.add) _invalid('link');
+      validateFoodLink(link!, creation: true);
+    }
     if (order < 0 ||
         targets.isEmpty ||
         targets.length > 100 ||
@@ -268,7 +322,60 @@ class FoodOperation {
     }
   }
 
-  Map<String, dynamic> toJson() => action == FoodAction.undo
+  void _validateProductLevel() {
+    if (order < 0 ||
+        targets.isEmpty ||
+        targets.length > (action == FoodAction.link ? 100 : 1) ||
+        targets.toSet().length != targets.length ||
+        targets.any((id) => !isCanonicalId(id)) ||
+        details != null ||
+        contents != null ||
+        createdAt != null ||
+        retracts != null ||
+        undoOwner != null ||
+        observedDeletes.isNotEmpty ||
+        observedEdits.isNotEmpty ||
+        fields.isNotEmpty) {
+      _invalid('${action.name} payload');
+    }
+    final expected = switch (action) {
+      FoodAction.product => (product != null, false, false, false),
+      FoodAction.merge => (false, false, false, true),
+      FoodAction.purchase ||
+      FoodAction.purchaseEdit => (false, true, false, false),
+      _ => (false, false, true, false),
+    };
+    if ((product != null, purchase != null, link != null, into != null) !=
+        expected) {
+      _invalid('${action.name} payload');
+    }
+    switch (action) {
+      case FoodAction.product:
+        validateFoodProductValues(product!);
+      case FoodAction.merge:
+        if (!isCanonicalId(into) || into == targets.single) _invalid('merge');
+      case FoodAction.purchase:
+        validateFoodPurchaseValues(purchase!, complete: true);
+      case FoodAction.purchaseEdit:
+        validateFoodPurchaseValues(purchase!, complete: false);
+      default:
+        validateFoodLink(link!, creation: false);
+    }
+  }
+
+  Map<String, dynamic> toJson() =>
+      action.productLevel || action == FoodAction.link
+      ? {
+          'id': id,
+          'order': order.toString(),
+          'action': action.name,
+          'targets': targets,
+          if (product != null) 'product': product,
+          if (purchase != null) 'purchase': purchase,
+          if (link != null) 'link': link,
+          if (into != null) 'into': into,
+        }
+      : action == FoodAction.undo
       ? {
           'id': id,
           'order': order.toString(),
@@ -288,11 +395,49 @@ class FoodOperation {
           'observedDeletes': observedDeletes,
           'observedEdits': observedEdits,
           'fields': fields,
+          if (link != null) 'link': link,
         };
   factory FoodOperation.fromJson(
     Map<String, dynamic> j, {
     bool unified = false,
   }) {
+    final kind = FoodAction.values
+        .where((action) => action.name == j['action'])
+        .firstOrNull;
+    if (kind != null && (kind.productLevel || kind == FoodAction.link)) {
+      if (!unified) _invalid('legacy product operation');
+      final key = switch (kind) {
+        FoodAction.product => 'product',
+        FoodAction.merge => 'into',
+        FoodAction.link => 'link',
+        _ => 'purchase',
+      };
+      _keys(j, {'id', 'order', 'action', 'targets', key});
+      try {
+        if (j['order'] is! String ||
+            !RegExp(r'^(0|[1-9][0-9]{0,18})$').hasMatch(j['order'])) {
+          _invalid('clock');
+        }
+        Map<String, Object?>? values(String name) =>
+            key == name ? Map<String, Object?>.from(_map(j[name])) : null;
+        final value = FoodOperation(
+          id: _string(j['id']),
+          order: int.parse(j['order'] as String),
+          action: kind,
+          targets: _strings(j['targets']),
+          product: values('product'),
+          purchase: values('purchase'),
+          link: values('link'),
+          into: key == 'into' ? _string(j['into']) : null,
+        );
+        value.validate();
+        return value;
+      } on FormatException {
+        rethrow;
+      } catch (_) {
+        _invalid('operation');
+      }
+    }
     if (j['action'] == FoodAction.undo.name) {
       _keys(j, {
         'id',
@@ -336,6 +481,10 @@ class FoodOperation {
       'observedDeletes',
       'observedEdits',
       'fields',
+      if (unified &&
+          j['action'] == FoodAction.add.name &&
+          j.containsKey('link'))
+        'link',
     });
     try {
       if (j['order'] is! String ||
@@ -357,6 +506,9 @@ class FoodOperation {
         observedDeletes: _strings(j['observedDeletes']),
         observedEdits: _strings(j['observedEdits']),
         fields: _strings(j['fields']),
+        link: j.containsKey('link')
+            ? Map<String, Object?>.from(_map(j['link']))
+            : null,
       );
       v.validate();
       return v;
@@ -378,15 +530,37 @@ class FoodContainer {
     required this.deletedOrder,
     this.lastDeletionId,
     required Map<String, Contents> contentsEdits,
+    FoodDetails? ownDetails,
+    this.productLink,
+    this.purchase,
+    String? product,
   }) : deletions = Set.unmodifiable(deletions),
-       contentsEdits = Map.unmodifiable(contentsEdits);
+       contentsEdits = Map.unmodifiable(contentsEdits),
+       ownDetails = ownDetails ?? details,
+       _product = product;
   final String id, createdAt;
+
+  /// Displayed details: the product's name/brand/size over [ownDetails].
   final FoodDetails details;
+
+  /// This container's own recorded details.
+  final FoodDetails ownDetails;
   final Contents contents;
   final Set<String> deletions;
   final int deletedOrder;
   final String? lastDeletionId;
   final Map<String, Contents> contentsEdits;
+
+  /// Explicit product and purchase links (container.add r2/container.link).
+  final String? productLink, purchase;
+  final String? _product;
+
+  /// The product this container names: explicit, else implicit.
+  late final String productRef =
+      productLink ?? implicitFoodProductId(ownDetails);
+
+  /// The product after merges.
+  String get product => _product ?? productRef;
   bool get deleted => deletions.isNotEmpty;
   bool get contentsConflict =>
       contentsEdits.values
@@ -394,6 +568,28 @@ class FoodContainer {
           .toSet()
           .length >
       1;
+
+  /// Re-resolves the product and displayed details against [catalog].
+  FoodContainer withCatalog(FoodCatalog catalog) {
+    final root = catalog.isEmpty ? null : catalog.resolve(productRef);
+    final shown = root == null ? ownDetails : catalog.overlay(ownDetails, root);
+    if (identical(shown, details) && root == _product) return this;
+    return FoodContainer(
+      id: id,
+      details: shown,
+      contents: contents,
+      createdAt: createdAt,
+      deletions: deletions,
+      deletedOrder: deletedOrder,
+      lastDeletionId: lastDeletionId,
+      contentsEdits: contentsEdits,
+      ownDetails: ownDetails,
+      productLink: productLink,
+      purchase: purchase,
+      product: root,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'details': details.toJson(),
@@ -403,6 +599,9 @@ class FoodContainer {
     'deletedOrder': deletedOrder,
     'lastDeletionId': lastDeletionId,
     'contentsEdits': contentsEdits.map((k, v) => MapEntry(k, v.toJson())),
+    if (productLink != null) 'productLink': productLink,
+    if (purchase != null) 'purchase': purchase,
+    if (!identical(ownDetails, details)) 'ownDetails': ownDetails.toJson(),
   };
 }
 
@@ -411,6 +610,10 @@ class FoodGroup {
     : containers = List.unmodifiable(values);
   final List<FoodContainer> containers;
   FoodDetails get details => containers.first.details;
+  String get product => containers.first.product;
+
+  /// Distinguishes rows of different products with equal descriptions.
+  String get key => '$product\n${details.displayGroupKey}';
   bool get contentsConflict => containers.any((e) => e.contentsConflict);
   String? get quickRemoveTarget =>
       !contentsConflict && containers.every((e) => e.contents.full)
@@ -431,9 +634,80 @@ class FoodGroup {
 }
 
 class FoodState {
-  FoodState(List<FoodContainer> containers)
-    : containers = List.unmodifiable(containers);
+  FoodState(List<FoodContainer> containers, {FoodCatalog? catalog})
+    : containers = List.unmodifiable(containers),
+      catalog = catalog ?? FoodCatalog.empty;
   final List<FoodContainer> containers;
+  final FoodCatalog catalog;
+
+  /// Every product that has containers or recorded fields, by root ID.
+  late final Map<String, FoodProductSummary> products = () {
+    final members = <String, List<FoodContainer>>{};
+    for (final item in containers) {
+      (members[item.product] ??= []).add(item);
+    }
+    final ids = {
+      ...members.keys,
+      for (final id in catalog.products.keys)
+        if (catalog.resolve(id) == id) id,
+    };
+    final result = <String, FoodProductSummary>{};
+    for (final id in ids) {
+      final fields = catalog.products[id] ?? const {};
+      final items = members[id] ?? const [];
+      final own = items.isEmpty ? null : items.first.details;
+      final name = fields['name'] as String? ?? own?.name;
+      if (name == null) continue;
+      result[id] = FoodProductSummary(
+        id: id,
+        name: name,
+        brand: fields['brand'] as String? ?? own?.brand ?? '',
+        size: fields['size'] as String? ?? own?.size ?? '',
+        links: List.unmodifiable(
+          (fields['links'] as List?)?.cast<String>() ?? const <String>[],
+        ),
+        minimum: fields['minimum'] as int?,
+        onHand: items.where((e) => !e.deleted).length,
+        containers: items.length,
+        purchases: List.unmodifiable(
+          (catalog.purchasesByProduct[id] ?? const <FoodPurchase>[]).where(
+            (p) => !p.voided,
+          ),
+        ),
+      );
+    }
+    return Map<String, FoodProductSummary>.unmodifiable(result);
+  }();
+
+  /// Products by normalized description; most containers first.
+  late final Map<String, List<FoodProductSummary>> productsByDescription = () {
+    final result = <String, List<FoodProductSummary>>{};
+    for (final product in products.values) {
+      (result[foodDescriptionKey(product.name, product.brand, product.size)] ??=
+              [])
+          .add(product);
+    }
+    for (final list in result.values) {
+      list.sort((a, b) {
+        final count = b.containers.compareTo(a.containers);
+        return count != 0 ? count : a.id.compareTo(b.id);
+      });
+    }
+    return result;
+  }();
+
+  /// Products below their keep-at-least minimum, by name (decision 5/6).
+  late final List<FoodProductSummary> runningLow = () {
+    if (!catalog.products.values.any((fields) => fields['minimum'] != null)) {
+      return const <FoodProductSummary>[];
+    }
+    final low = products.values.where((p) => p.runningLow).toList()
+      ..sort((a, b) {
+        final name = a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        return name != 0 ? name : a.id.compareTo(b.id);
+      });
+    return List<FoodProductSummary>.unmodifiable(low);
+  }();
   List<FoodContainer> get active =>
       containers.where((e) => !e.deleted).toList();
   List<FoodContainer> get deleted =>
@@ -519,9 +793,13 @@ class FoodState {
   }
 }
 
+/// [catalog] replaces the product-level state folded from [delivery]; the
+/// incremental admission projects affected containers against the complete
+/// catalog.
 FoodState projectFood(
   Iterable<FoodOperation> delivery, {
   Map<String, String> legacyOwners = const {},
+  FoodCatalog? catalog,
 }) {
   final indexed = <String, FoodOperation>{};
   for (final op in delivery) {
@@ -538,7 +816,7 @@ FoodState projectFood(
     }
     indexed[op.id] = op;
   }
-  final events = indexed.values.toList()..sort(_compareFoodOperations);
+  final events = indexed.values.toList()..sort(compareFoodOperations);
   final targetSets = {for (final op in events) op.id: op.targets.toSet()};
   // Admission must not depend on whether a target's creation has arrived.
   for (final op in events) {
@@ -576,6 +854,7 @@ FoodState projectFood(
       final prior = creations[id];
       if (prior != null &&
           (prior.details!.groupKey != op.details!.groupKey ||
+              canonicalDataJson(prior.link) != canonicalDataJson(op.link) ||
               prior.createdAt != op.createdAt ||
               canonicalDataJson(prior.contents?.toJson()) !=
                   canonicalDataJson(op.contents?.toJson()))) {
@@ -602,6 +881,7 @@ FoodState projectFood(
     (e) =>
         e.action != FoodAction.add &&
         e.action != FoodAction.undo &&
+        !e.action.productLevel &&
         !retracted.contains(e.id),
   )) {
     for (final id in op.targets) {
@@ -618,6 +898,8 @@ FoodState projectFood(
     var details = seed.details!,
         contents = seed.contents ?? const Contents.fraction(1, 1),
         deletedOrder = 0;
+    var productLink = seed.link?['product'] as String?,
+        purchase = seed.link?['purchase'] as String?;
     final deletions = <String>{},
         restored = <String>{},
         edits = <String, Contents>{},
@@ -648,6 +930,13 @@ FoodState projectFood(
         for (final ref in op.observedDeletes) {
           restored.add(ref);
         }
+      } else if (op.action == FoodAction.link) {
+        if (op.link!.containsKey('product')) {
+          productLink = op.link!['product'] as String;
+        }
+        if (op.link!.containsKey('purchase')) {
+          purchase = op.link!['purchase'] as String?;
+        }
       }
     }
     deletions.removeAll(restored);
@@ -665,17 +954,31 @@ FoodState projectFood(
         deletedOrder: deletedOrder,
         lastDeletionId: deletions.isEmpty ? null : deletions.last,
         contentsEdits: edits,
+        productLink: productLink,
+        purchase: purchase,
       ),
     );
   }
   result.sort((a, b) => a.id.compareTo(b.id));
-  return FoodState(result);
+  final products =
+      catalog ??
+      FoodCatalog.build(
+        events.where((e) => e.action.productLevel && !retracted.contains(e.id)),
+      );
+  return FoodState([
+    for (final item in result) item.withCatalog(products),
+  ], catalog: products);
 }
 
 List<FoodGroup> _group(Iterable<FoodContainer> values) {
   final grouped = <String, List<FoodContainer>>{};
   for (final item in values) {
-    grouped.putIfAbsent(item.details.displayGroupKey, () => []).add(item);
+    grouped
+        .putIfAbsent(
+          '${item.details.displayGroupKey}\n${item.product}',
+          () => [],
+        )
+        .add(item);
   }
   final result = grouped.entries
       .map(
@@ -750,7 +1053,7 @@ int _compareOperationIds(String a, String b) {
       : int.parse(left.last).compareTo(int.parse(right.last));
 }
 
-int _compareFoodOperations(FoodOperation a, FoodOperation b) {
+int compareFoodOperations(FoodOperation a, FoodOperation b) {
   final order = a.order.compareTo(b.order);
   if (order != 0) return order;
   return _compareOperationIds(a.id, b.id);

@@ -83,7 +83,9 @@ explicit or implicit. Container → Purchase: optional. Purchase → Product: on
 
 **Implicit products.** A container with no explicit product link belongs to the
 product whose ID is
-`UUIDv5(space, "tandemlog:food-product:implicit:v1\n" + canonical JSON [name, brand, size])`
+`UUIDv5(N, "tandemlog:food-product:implicit:v1\n" + canonical JSON [name, brand, size])`
+with the fixed namespace N = `5b0e8a52-3c4d-4f71-9a2e-6d1c7b9f0e34`
+(`foodProductNamespace`; the projection doesn't need the space to derive it)
 of its own current descriptive fields. Containers with identical
 name/brand/size therefore share one product, exactly as they share rows today,
 and the migration writes nothing. An implicit product's base fields are the
@@ -135,8 +137,11 @@ links, each `http`/`https`, at most 2,048 bytes; minimum 0–999 or none; amount
 reaches a pre-products app as an unknown family or required revision. Its
 decoder raises "Update the app; history was preserved", and the unified
 admission stops Tasks and Food at the last good state without writing. This
-is the existing path (ADR0035 used it for completion revision 3); the tests pin it
-with a frozen fixture checked against the decoder at `main` `865f945`.
+is the existing path (ADR0035 used it for completion revision 3). Reproduced
+2026-10-28: the published `865f945` refused to open a workspace written by this
+branch ("record 3 … Unknown Food operation. Update the app; history was
+preserved."), wrote nothing, and still opened and wrote to the same workspace
+before its first product record (only revision-1 Adds).
 
 **Conflicts.** Canonical order (clock, writer, sequence) decides.
 - Product, purchase and link fields: per-field last writer wins, the rule Food
@@ -150,7 +155,7 @@ with a frozen fixture checked against the decoder at `main` `865f945`.
 - Merge with field choice: if the user keeps the source's fields, the same action
   also carries a `product.edit` on the target. One action, one Undo.
 - Import retries: imported purchase IDs are
-  `UUIDv5(space, "tandemlog:food-purchase:v1\n" + source.kind + "\n" + source.key)`;
+  `UUIDv5(N, "tandemlog:food-purchase:v1\n" + source.kind + "\n" + source.key)`;
   a retried import finds its purchases already present and writes nothing new.
 
 ## 5. Method: prices and receipt import
