@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
@@ -89,13 +90,13 @@ Future<void> verifyFoodBulkDetails(
   expect(find.text('3 selected'), findsOneWidget);
   await tap(find.widgetWithText(TextButton, 'Edit'));
   expect(find.text('Edit 3 containers'), findsOneWidget);
-  expect(find.widgetWithText(TextField, 'Food name'), findsNothing);
+  expect(find.text('Expiration'), findsNothing);
   await capture?.call('mixed-untouched');
   await tap(find.widgetWithText(FilledButton, 'Save'));
   expect(writes, isEmpty, reason: 'Untouched mixed fields are a no-op');
   await selectAll();
   await tap(find.widgetWithText(TextButton, 'Edit'));
-  await tap(find.text('Apply Brand'));
+  await tap(find.byKey(const ValueKey('brandApply')));
   final brand = find.widgetWithText(TextField, 'Brand');
   await tester.enterText(brand, 'Unified');
   await tester.pumpAndSettle();
@@ -131,7 +132,12 @@ Future<void> verifyFoodBulkDetails(
   await selectAll();
   expect(find.text('1 selected'), findsOneWidget);
   await tap(find.widgetWithText(TextButton, 'Edit'));
-  await tap(find.byTooltip('Clear Location'));
+  // An applied blank field clears that value, as in the Tasks bulk editor.
+  await tester.enterText(find.widgetWithText(TextField, 'Location'), '');
+  await tester.pumpAndSettle();
+  // Escape first dismisses the field's suggestions.
+  await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+  await tester.pumpAndSettle();
   await tap(find.widgetWithText(FilledButton, 'Save'));
   expect(writes.last.ids, [id(2)]);
   expect(writes.last.fields, ['location']);
@@ -197,7 +203,7 @@ Future<void> verifyFoodBulkDetails(
   await tester.pumpAndSettle();
   await tap(find.widgetWithText(TextButton, 'Edit'));
   expect(find.text('Edit 3 containers'), findsOneWidget);
-  await tap(find.text('Apply Location'));
+  await tap(find.byKey(const ValueKey('locationApply')));
   await tester.enterText(
     find.widgetWithText(TextField, 'Location'),
     'Temporary',
@@ -207,7 +213,7 @@ Future<void> verifyFoodBulkDetails(
   await tap(find.widgetWithText(FilledButton, 'Discard'));
   expect(writes, hasLength(2));
   await tap(find.widgetWithText(TextButton, 'Edit'));
-  await tap(find.text('Apply Brand'));
+  await tap(find.byKey(const ValueKey('brandApply')));
   await tester.enterText(
     find.widgetWithText(TextField, 'Brand'),
     'Unsafe after switch',

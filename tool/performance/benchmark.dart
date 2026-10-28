@@ -1258,29 +1258,32 @@ Future<void> foodCommands(
       await a.measure(
         'food.details.$count',
         rep,
+        // Every field the bulk Food editor can apply (all except expiration).
         () => a.food.changeDetails(
           synthetic.take(count).toList(),
           FoodDetails(
             name: 'Benchmark renamed food $rep',
             brand: 'Benchmark new brand',
+            size: 'Benchmark new size',
             location: 'Benchmark new location',
+            retention: 'Benchmark retention',
           ),
-          ['name', 'brand', 'location'],
+          ['name', 'brand', 'size', 'location', 'retention'],
         ),
         expectedDelta: 1,
       );
       final edits = List<FoodRecord>.from(a.food.lastPreparedRecords);
       require(
-        synthetic
-            .take(count)
-            .every(
-              (id) =>
-                  a.food.state.containers
-                      .singleWhere((c) => c.id == id)
-                      .details
-                      .name ==
-                  'Benchmark renamed food $rep',
-            ),
+        synthetic.take(count).every((id) {
+          final details = a.food.state.containers
+              .singleWhere((c) => c.id == id)
+              .details;
+          return details.name == 'Benchmark renamed food $rep' &&
+              details.brand == 'Benchmark new brand' &&
+              details.size == 'Benchmark new size' &&
+              details.location == 'Benchmark new location' &&
+              details.retention == 'Benchmark retention';
+        }),
         'Food details differ',
       );
       await a.measure(

@@ -74,8 +74,12 @@ Bulk actions:
   host command.
 - Field pattern: Tasks uses an inline Apply checkbox per field, applies a field
   when edited, clears it when applied blank and marks disagreeing fields Mixed;
-  Food uses separate Apply rows plus Clear buttons. Being converged with the
-  all-field Food bulk editor (next commit).
+  Food used separate Apply rows plus Clear buttons. Fixed with the shared
+  `presentation/bulk_apply.dart` control and Mixed hint.
+- Fields offered: Tasks excludes title and notes (per-item collaborative text);
+  Food now offers every descriptive field except Expiration. Deliberate: each
+  follows its own goal (Food unifies one product's entries; expiration stays per
+  container, as Lee specified).
 - Reorder: Tasks only. Deliberate: Food is ordered by expiration, not by hand.
 
 Exit:
@@ -89,11 +93,16 @@ Exit:
 Undo:
 - Every bulk command is one Undo action in both sections: Task bulk edit/delete/
   reorder, and Food bulk Save, Remove and Restore. Consistent.
-  Undo history itself is session-local (ADR0018), so it does not survive a
-  restart by design.
+  `food_bulk_edit_fields_test` proves one Undo restores every selected container
+  for a five-field edit, and that the edited and undone states replay identically
+  in a reopened and a fresh profile. Undo history itself is session-local
+  (ADR0018), so it does not survive a restart by design.
 
 ## Compatibility and performance
 
-No record, schema or Undo meaning changes. Selection is page-local. Bulk
-Remove/Restore reuse the existing remove and restore-batch commands, covered by
-the existing `food.delete.3`/`food.restore.3` cases with unchanged limits.
+No record, schema or Undo meaning changes: a bulk edit is the existing Food edit
+operation with an explicit field list, already able to carry name, brand, size,
+location and retention per container. Bulk Remove/Restore reuse the existing
+remove and restore-batch commands. The `food.details.3` benchmark now measures
+and asserts the full five-field edit the editor can send; its limits are
+unchanged, and no new benchmark label is needed.
