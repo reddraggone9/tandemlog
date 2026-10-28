@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/presentation/tandemlog_theme.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
@@ -179,10 +180,8 @@ void main() {
               await tester.pumpWidget(
                 MaterialApp(
                   debugShowCheckedModeBanner: false,
-                  theme: ThemeData(
-                    brightness: theme == 'dark'
-                        ? Brightness.dark
-                        : Brightness.light,
+                  theme: tandemlogTheme(
+                    theme == 'dark' ? Brightness.dark : Brightness.light,
                   ),
                   home: Scaffold(
                     body: Padding(

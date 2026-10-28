@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/presentation/tandemlog_theme.dart';
 import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'support/ux_capture.dart';
 import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
@@ -32,7 +33,7 @@ void main() {
             key: const ValueKey('ux-root'),
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
-              theme: ThemeData(brightness: brightness),
+              theme: tandemlogTheme(brightness),
               builder: (context, child) => MediaQuery(
                 data: MediaQuery.of(
                   context,

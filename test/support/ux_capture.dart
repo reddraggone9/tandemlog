@@ -1,11 +1,22 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/presentation/tandemlog_theme.dart';
 
 Future<void> captureUx(WidgetTester tester, String name) async {
+  // Check even without PNG output, so ordinary test runs catch theme drift.
+  final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+  expect(
+    app.theme,
+    tandemlogTheme(app.theme?.brightness ?? Brightness.light),
+    reason: 'UX captures must use the production Tandemlog theme.',
+  );
+  if (app.darkTheme != null) {
+    expect(app.darkTheme, tandemlogTheme(Brightness.dark));
+  }
   final directory = Platform.environment['TANDEMLOG_UX_CAPTURES'];
   if (directory == null) return;
   final boundary = tester.renderObject<RenderRepaintBoundary>(

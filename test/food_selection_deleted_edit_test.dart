@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/presentation/tandemlog_theme.dart';
 
 import 'support/food_product_fields.dart';
 import 'package:tandemlog/food/food_page.dart';
@@ -34,7 +35,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(brightness: Brightness.dark),
+          theme: tandemlogTheme(Brightness.dark),
           builder: (context, child) =>
               RepaintBoundary(key: const ValueKey('ux-root'), child: child!),
           home: StatefulBuilder(
@@ -83,7 +84,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(brightness: Brightness.dark),
+          theme: tandemlogTheme(Brightness.dark),
           builder: (context, child) =>
               RepaintBoundary(key: const ValueKey('ux-root'), child: child!),
           home: StatefulBuilder(
