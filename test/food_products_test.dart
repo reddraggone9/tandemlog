@@ -789,6 +789,99 @@ void main() {
     },
   );
 
+  test(
+    'offline product matches keep receipt units and prices on one canonical root',
+    () async {
+      final fixture = (await File(
+        'test/fixtures/food-products/concurrent-receipt.operations',
+      ).readAsLines()).map(FoodRecord.decode).map((r) => r.operation).toList();
+      final other = implicitFoodProductId(
+        const FoodDetails(name: 'Other milk'),
+      );
+      final original = fixture[0].purchase!['product'];
+      final ops = [
+        for (var i = 0; i < fixture.length; i++)
+          if (i == 3)
+            FoodOperation.fromJson({
+              ...fixture[i].toJson(),
+              'purchase': {...fixture[i].purchase!, 'product': other},
+            }, unified: true)
+          else if (i == 4)
+            FoodOperation.fromJson({
+              ...fixture[i].toJson(),
+              'link': {...fixture[i].link!, 'product': other},
+            }, unified: true)
+          else
+            fixture[i],
+        FoodOperation(
+          id: '00000000-0000-4000-8000-000000000030:1',
+          order: 1,
+          action: FoodAction.product,
+          targets: [other],
+          product: const {'name': 'Other milk', 'brand': '', 'size': ''},
+        ),
+      ];
+      final state = projectFood(ops);
+      expect(state.containers.single.product, other);
+      expect(state.containers.single.details.name, 'Other milk');
+      expect(
+        state.catalog.resolve(state.catalog.purchases.values.single.product),
+        other,
+      );
+      expect(state.products[other]!.purchases, hasLength(1));
+      final undo = FoodOperation(
+        id: '${fixture[3].id.split(':').first}:4',
+        order: 10,
+        action: FoodAction.undo,
+        targets: fixture[3].targets,
+        retracts: fixture[3].id,
+      );
+      final after = projectFood([...ops, undo]);
+      expect(after.containers.single.product, original);
+      expect(after.catalog.purchases.values.single.product, original);
+      final reverse = projectFood(ops.reversed);
+      expect(
+        reverse.containers.single.toJson(),
+        state.containers.single.toJson(),
+      );
+    },
+  );
+
+  test('hand-only conflicting source originals fail even after Undo', () async {
+    final fixture = (await File(
+      'test/fixtures/food-products/concurrent-receipt.operations',
+    ).readAsLines()).map(FoodRecord.decode).toList();
+    final a = fixture[0], b = fixture[3];
+    final changed = FoodRecord(
+      space: b.space,
+      writer: b.writer,
+      sequence: b.sequence,
+      clock: b.clock,
+      previousHash: b.previousHash,
+      operation: FoodOperation.fromJson({
+        ...b.operation.toJson(),
+        'purchase': {...b.operation.purchase!, 'amount': 999},
+      }, unified: true),
+    );
+    // No container births collide: original source evidence alone must reject.
+    expect(() => admitFoodRecords([a, changed]), throwsFormatException);
+    expect(
+      () => projectFood([a.operation, changed.operation]),
+      throwsFormatException,
+    );
+    final undo = FoodOperation(
+      id: '${b.writer}:4',
+      order: 10,
+      action: FoodAction.undo,
+      targets: b.operation.targets,
+      retracts: changed.id,
+    );
+    expect(
+      () => projectFood([a.operation, changed.operation, undo]),
+      throwsFormatException,
+    );
+  });
+
   test('every new family round-trips through its exact bytes', () async {
     await food.add(const FoodDetails(name: 'Milk', expiry: '2026-11-01'), 1);
     final row = await rowOf('Milk', '2026-11-01');

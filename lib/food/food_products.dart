@@ -118,6 +118,36 @@ Map<String, String> foodReceiptBirthClaims(Iterable<FoodOperation> operations) {
   return result;
 }
 
+/// Original source purchase values are immutable even when no new containers
+/// were needed. Product matching may differ offline; all receipt facts may not.
+void validateFoodReceiptOriginals(Iterable<FoodOperation> operations) {
+  final originals = <String, String>{};
+  for (final op in operations) {
+    if (op.action != FoodAction.purchase || op.purchase?['source'] == null) {
+      continue;
+    }
+    final source = op.purchase!['source'] as Map;
+    final id = op.targets.single;
+    if (id !=
+        importedFoodPurchaseId(
+          source['kind'] as String,
+          source['key'] as String,
+        )) {
+      continue;
+    }
+    final signature = canonicalDataJson(
+      Map<String, Object?>.of(op.purchase!)..remove('product'),
+    );
+    final previous = originals[id];
+    if (previous != null && previous != signature) {
+      throw const FormatException(
+        'A source purchase has conflicting immutable original values.',
+      );
+    }
+    originals[id] = signature;
+  }
+}
+
 /// Only identical source purchases recorded by distinct installations require
 /// cross-claim allocation. Return their original quantities, never edited ones.
 Map<String, int> concurrentFoodReceipts(Iterable<FoodOperation> operations) {
@@ -367,12 +397,14 @@ class FoodCatalog {
   /// [ordered] holds non-retracted product-level operations in canonical
   /// order. Later operations win each field.
   factory FoodCatalog.build(Iterable<FoodOperation> ordered) {
+    final operations = ordered.toList();
+    validateFoodReceiptOriginals(operations);
     final products = <String, Map<String, Object?>>{};
     final aliases = <String, String>{};
     final purchases = <String, FoodPurchase>{};
     final pendingEdits = <String, Map<String, Object?>>{};
     String resolve(String id) => aliases[id] ?? id;
-    for (final op in ordered) {
+    for (final op in operations) {
       final target = op.targets.single;
       switch (op.action) {
         case FoodAction.product:
@@ -485,7 +517,7 @@ class FoodProductSummary {
         .where(
           (p) =>
               p.currency == last?.currency &&
-              !DateTime.parse(p.date).isBefore(cutoff),
+              !DateTime.parse('${p.date}T00:00:00Z').isBefore(cutoff),
         )
         .take(5)
         .map((p) => p.unitCost)

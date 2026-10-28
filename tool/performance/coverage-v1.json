@@ -591,7 +591,8 @@
     "gaps": [
       "No actual widget/input/paint timing acceptance.",
       "Two-line receipt distribution only; maximum500-line import not timed.",
-      "No separate timing distributions for large bulk selections or deep/concurrent merge chains."
+      "No separate timing distributions for large bulk selections or deep/concurrent merge chains.",
+      "Concurrent offline receipt allocation and its rare targeted full-admission fallback are correctness-covered, not a separate timing distribution."
     ]
   }
 }

@@ -9,6 +9,7 @@ FoodAdmission admitFoodRecords(
   int maximumContainers = 100000,
   Map<String, String> legacyOwners = const {},
 }) {
+  validateFoodReceiptOriginals(records.map((r) => r.operation));
   final byId = {for (final r in records) r.id: r};
   final targetSets = {
     for (final r in records) r.id: r.operation.targets.toSet(),

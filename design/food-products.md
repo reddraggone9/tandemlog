@@ -218,7 +218,13 @@ dry-run, then committed as one action with
   has the same source-derived purchase ID and immutable receipt values, its
   product link agrees with that original record, its unit IDs lie within the
   receipt quantity, and it has unmodified Inbox creation defaults. Matching
-  product roots and creation instants may differ across offline catalogs.
+  product roots and creation instants may differ across offline catalogs. The
+  canonical purchase's resolved product is used consistently for all linked
+  containers and their price history; original product-link bytes are retained.
+  All original source purchase facts are compared before Undo, even for hand-only
+  imports that create no containers; conflicting immutable originals fail closed
+  rather than becoming last-writer-wins corrections (`purchase.edit` remains the
+  explicit correction family).
   Canonical operation order picks one original creation as the stable seed;
   every verified original birth remains valid as a later mutation's basis.
   Undo retracts only its own claim; another claim or independent mutation keeps

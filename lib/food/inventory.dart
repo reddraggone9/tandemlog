@@ -593,7 +593,15 @@ class FoodContainer {
 
   /// Re-resolves the product and displayed details against [catalog].
   FoodContainer withCatalog(FoodCatalog catalog) {
-    final root = catalog.isEmpty ? null : catalog.resolve(productRef);
+    // A receipt identifies the purchased product. Offline importers can match
+    // distinct local roots; use the same canonical purchase product for price
+    // history and all linked physical units, while retaining original link bytes.
+    final receiptProduct = catalog.purchases[purchase]?.source != null
+        ? catalog.purchases[purchase]!.product
+        : null;
+    final root = catalog.isEmpty
+        ? null
+        : catalog.resolve(receiptProduct ?? productRef);
     final shown = root == null ? ownDetails : catalog.overlay(ownDetails, root);
     if (identical(shown, details) && root == _product) return this;
     return FoodContainer(
@@ -850,6 +858,7 @@ FoodState projectFood(
     indexed[op.id] = op;
   }
   final events = indexed.values.toList()..sort(compareFoodOperations);
+  validateFoodReceiptOriginals(events);
   final claims = receiptClaims ?? foodReceiptBirthClaims(events);
   final targetSets = {for (final op in events) op.id: op.targets.toSet()};
   // Admission must not depend on whether a target's creation has arrived.
