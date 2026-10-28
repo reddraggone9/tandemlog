@@ -81,16 +81,21 @@ Future<void> _clearSearch(WidgetTester tester) async {
 
 /// Shared with the native Linux workflow: filtering a wide editor must not
 /// silently change the captured targets behind its count or draft.
-Future<void> verifyFoodWideSelectionRetention(WidgetTester tester) async {
+Future<void> verifyFoodWideSelectionRetention(
+  WidgetTester tester, {
+  Future<void> Function(String)? capture,
+}) async {
   final page = await _pump(tester, wide: true);
   await _toggle(tester, 'Beans');
   await _toggle(tester, 'Rice');
   expect(find.text('Edit 2 containers'), findsOneWidget);
+  await capture?.call('wide-selection-before-filter');
   await chooseFoodView(tester, 'Retained');
   expect(find.text('Rice'), findsNothing);
   expect(page.bulkSelected, {_id(1), _id(2)});
   expect(find.text('2 selected'), findsOneWidget);
   expect(find.text('Edit 2 containers'), findsOneWidget);
+  await capture?.call('wide-selection-after-filter-editor-captured');
   // Closing the pane permits pruning; no hidden selection or stale pane remains.
   await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
   await tester.pumpAndSettle();
@@ -98,6 +103,7 @@ Future<void> verifyFoodWideSelectionRetention(WidgetTester tester) async {
   expect(page.selecting, isTrue);
   expect(find.text('0 selected'), findsOneWidget);
   expect(find.text('Edit 2 containers'), findsNothing);
+  await capture?.call('wide-selection-after-editor-close-pruned');
   expect(tester.takeException(), isNull);
 }
 
