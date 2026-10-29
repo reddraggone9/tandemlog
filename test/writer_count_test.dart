@@ -91,6 +91,19 @@ void main() {
       await joined.close();
       await p.close();
     }
+    // The frozen-stable106 refusal probe opens a copy of this workspace and
+    // the creator's profile (test/support/stable106_writer_cap_probe.dart).
+    final out = Platform.environment['TANDEMLOG_WRITER_FIXTURE_OUT'];
+    if (out != null) {
+      for (final name in ['shared', 'p0']) {
+        final target = Directory('$out/$name')..createSync(recursive: true);
+        for (final f in Directory('${root.path}/$name').listSync()) {
+          if (f is File) {
+            f.copySync('${target.path}/${f.uri.pathSegments.last}');
+          }
+        }
+      }
+    }
     final again = await LocalProfileDatabase.open('${root.path}/p0');
     final reopened = await UnifiedHistory.open(
       folder,
