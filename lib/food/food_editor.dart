@@ -343,13 +343,13 @@ class FoodEditorState extends State<FoodEditor> {
     if (result != null && mounted && !auxiliaryOpen) answer(context, result);
   }
 
-  Future<bool> requestClose() =>
-      closeRequest ??= _decideClose().whenComplete(() {
+  Future<bool> requestClose({bool close = true}) =>
+      closeRequest ??= _decideClose(close: close).whenComplete(() {
         closeRequest = null;
         widget.onReadinessChanged?.call();
       });
 
-  Future<bool> _decideClose() async {
+  Future<bool> _decideClose({required bool close}) async {
     if (closeBusy || deciding) return false;
     if (snapshot() != initial) {
       deciding = true;
@@ -400,6 +400,7 @@ class FoodEditorState extends State<FoodEditor> {
         return false;
       }
     }
+    if (!close) return true;
     answer(context, null);
     return answered;
   }

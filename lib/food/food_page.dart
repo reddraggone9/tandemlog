@@ -201,6 +201,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       members: (key) => rows[key]?.containers.map((e) => e.id) ?? const [],
       gesture: gesture,
     );
+    if (gesture == SelectionGesture.plain &&
+        setEquals(selected, result.selected)) {
+      return;
+    }
     // Two-to-one: narrowing a wide selection to one whole row returns to
     // that row's single editor, as on Tasks.
     final rowsBefore = rows.values
@@ -218,13 +222,23 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               .firstOrNull
         : null;
     if (_editorBuilder != null) {
-      if (!await requestCloseEditor()) return;
-      await editorDone;
+      if (result.selected.isEmpty) {
+        if (!await requestCloseEditor()) return;
+        await editorDone;
+      } else if (!await (_canReplaceEditor?.call() ?? Future.value(false))) {
+        return;
+      }
       if (!mounted || !usable()) return;
     }
     if (single != null) {
       setState(_clearBulkSelection);
-      unawaited(_edit(group: single, detailsCommand: widget.onDetails));
+      unawaited(
+        _edit(
+          group: single,
+          detailsCommand: widget.onDetails,
+          replacingApproved: true,
+        ),
+      );
       return;
     }
     setState(() {
@@ -238,12 +252,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       selecting = bulkSelected.isNotEmpty;
       _selectionAnchor = selecting ? result.anchor : null;
     });
-    if (selecting && _wide) unawaited(_editSelection());
+    if (selecting && _wide) unawaited(_editSelection(replacingApproved: true));
   }
 
   /// One whole row uses its own editor; multiple rows use the bulk editor,
   /// just as Tasks opens its single editor for one selected task.
-  Future<void> _editSelection() {
+  Future<void> _editSelection({bool replacingApproved = false}) {
     final selected = [
       for (final item in _shown())
         if (bulkSelected.contains(item.id)) item,
@@ -256,8 +270,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         )
         .firstOrNull;
     return single != null
-        ? _edit(group: single, detailsCommand: widget.onDetails)
-        : _edit(bulkTargets: selected);
+        ? _edit(
+            group: single,
+            detailsCommand: widget.onDetails,
+            replacingApproved: replacingApproved,
+          )
+        : _edit(bulkTargets: selected, replacingApproved: replacingApproved);
   }
 
   Future<void> _selectMatching(Set<String> observed, Object? workspace) async {
@@ -400,6 +418,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   List<FoodGroup> _matches() => _grouping.matches;
   List<FoodGroup> _inbox() => _grouping.inbox;
   List<FoodContainer> _shown() => _grouping.shown;
+  Future<bool> Function()? _canReplaceEditor;
   Widget Function(bool panel)? _editorBuilder;
   int _editorRequest = 0;
   final _inventoryKey = GlobalKey();
@@ -476,6 +495,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final querying = search.text.trim().isNotEmpty;
     // Inbox remains a domain partition. Stock alone composes its unsearched
     // undated partition; search includes both active and deleted food.
+    if (view == FoodView.runningLow && widget.state.runningLow.isEmpty) {
+      view = FoodView.inventory;
+    }
     final grouping = _grouping;
     final live = {for (final row in grouping.rows) _rowKey(row)};
     final stale = _rowFocus.keys.where((k) => !live.contains(k)).toList();
@@ -487,13 +509,19 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         }
       });
     }
-    // Running low sits above Inbox in plain Stock (decisions 5 and 6).
-    final runningLow =
-        view == FoodView.inventory &&
-            !querying &&
-            brands.isEmpty &&
-            locations.isEmpty
+    final runningLow = view == FoodView.runningLow && !querying
         ? widget.state.runningLow
+              .where(
+                (product) =>
+                    (brands.isEmpty || brands.contains(product.brand)) &&
+                    (locations.isEmpty ||
+                        widget.state.active.any(
+                          (item) =>
+                              item.product == product.id &&
+                              locations.contains(item.details.location),
+                        )),
+              )
+              .toList()
         : const <FoodProductSummary>[];
     final inboxGroups = grouping.inbox;
     final visibleIds = grouping.visibleIds;
@@ -651,17 +679,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                       ),
                                     ),
                                     if (runningLow.isNotEmpty) ...[
-                                      const SliverPadding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                        ),
-                                        sliver: StickyTaskGroupHeading(
-                                          title: 'Running low',
-                                          headingKey: ValueKey(
-                                            'food-running-low-heading',
-                                          ),
-                                        ),
-                                      ),
                                       SliverPadding(
                                         padding: EdgeInsets.symmetric(
                                           horizontal: rowInset,
@@ -733,6 +750,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                         ),
                                       ),
                                     if (groups.isEmpty &&
+                                        runningLow.isEmpty &&
                                         inboxGroups.isEmpty &&
                                         deletedGroups.isEmpty)
                                       SliverFillRemaining(
@@ -748,6 +766,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                                       'Everything has an expiration date',
                                                     FoodView.retained =>
                                                       'No retained food',
+                                                    FoodView.runningLow =>
+                                                      'No matching food',
                                                     FoodView.deleted =>
                                                       'No deleted containers',
                                                   },
@@ -850,17 +870,34 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      description,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    Wrap(
+                      spacing: 8,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text(
+                          product.name,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          '${product.onHand} of ${product.minimum}',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: colors.error,
+                              ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '${product.onHand} of ${product.minimum}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: colors.error,
+                    if (product.brand.isNotEmpty || product.size.isNotEmpty)
+                      Text(
+                        [
+                          product.brand,
+                          product.size,
+                        ].where((v) => v.isNotEmpty).join(' · '),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colors.onSurfaceVariant,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -894,16 +931,25 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final querying = search.text.trim().isNotEmpty;
     final active =
         !querying &&
-        (view == FoodView.deleted ||
+        (view == FoodView.runningLow ||
+            view == FoodView.deleted ||
             view == FoodView.retained ||
             brands.isNotEmpty ||
             locations.isNotEmpty);
     final label = switch (view) {
       FoodView.deleted => 'Deleted',
       FoodView.retained => 'Retained',
+      FoodView.runningLow => 'Running low',
       _ => 'Stock',
     };
-    final icon = toolbarFilterIcon(active: active);
+    final low = widget.state.runningLow.isNotEmpty;
+    final icon = low
+        ? Badge(
+            key: const ValueKey('food-low-warning'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            child: const Icon(Icons.filter_list),
+          )
+        : toolbarFilterIcon(active: active);
     return toolbarMenuAction<FoodView>(
       context: context,
       compact: compact,
@@ -912,7 +958,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       key: const ValueKey('food-filter'),
       tooltip: querying
           ? 'Filter food: all food; saved $label filters paused'
-          : 'Filter food: $label${active ? ' · active filters' : ''}',
+          : 'Filter food: $label${active ? ' · active filters' : ''}${low ? ' · running low' : ''}',
       enabled: !widget.busy,
       onSelected: (next) => setState(() {
         view = next;
@@ -925,6 +971,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             FoodView.inventory,
             FoodView.retained,
             FoodView.deleted,
+            if (low) FoodView.runningLow,
           ])
             PopupMenuItem(
               value: mode,
@@ -942,6 +989,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         FoodView.retained => 'Retained',
                         FoodView.deleted => 'Deleted',
                         FoodView.inbox => 'Inbox',
+                        FoodView.runningLow => 'Running low',
                       }),
                     ),
                   ],
@@ -1113,6 +1161,16 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       (_editingGroup != null && _rowKey(_editingGroup!) == _rowKey(group));
 
   List<PopupMenuEntry<String>> _groupMenuItems(FoodGroup group) => [
+    if (widget
+            .state
+            .products[group.containers.first.product]
+            ?.links
+            .isNotEmpty ??
+        false)
+      const PopupMenuItem<String>(
+        value: 'open-store-link',
+        child: Text('Open store link'),
+      ),
     PopupMenuItem<String>(
       enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
       value: 'add-another',
@@ -1171,8 +1229,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final countLabel =
         '${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}';
     final metadata = [
+      if (details.brand.isNotEmpty) details.brand,
       if (details.size.isNotEmpty) details.size,
-      if (details.location.isNotEmpty) details.location,
     ];
     final workspace = widget.workspaceIdentity;
     final addCommand = widget.onAdd;
@@ -1208,6 +1266,18 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       if (action == 'add-another' &&
           !(widget.hasPendingSave?.call() ?? widget.savePending)) {
         _edit(template: group.details, addCommand: addCommand);
+      }
+      if (action == 'open-store-link') {
+        final link = widget
+            .state
+            .products[group.containers.first.product]
+            ?.links
+            .firstOrNull;
+        if (link != null) {
+          unawaited(
+            launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication),
+          );
+        }
       }
       if (action == 'select') select(SelectionGesture.longPress);
       if (action == 'remove') _confirmRemove(group, removeCommand);
@@ -1318,7 +1388,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         details.name,
                         countLabel,
                         details.expiry ?? 'Needs expiration',
-                        if (details.brand.isNotEmpty) details.brand,
+                        if (details.location.isNotEmpty) details.location,
                         if (details.retention.isNotEmpty) details.retention,
                         ...metadata,
                       ].join(', '),
@@ -1392,9 +1462,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                     ),
                               ),
                               for (final value in [
-                                details.brand,
+                                details.location,
                                 details.retention,
-                              ].where((value) => value.isNotEmpty))
+                              ].where((value) => value.isNotEmpty)) ...[
+                                const Text('·'),
                                 Text(
                                   value,
                                   style: Theme.of(context).textTheme.bodySmall
@@ -1404,6 +1475,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                         ).colorScheme.onSurfaceVariant,
                                       ),
                                 ),
+                              ],
                             ],
                           ),
                           if (metadata.isNotEmpty)
@@ -1515,6 +1587,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   Future<void> _edit({
     FoodGroup? group,
+    bool replacingApproved = false,
     FoodDetails? template,
     List<FoodContainer>? bulkTargets,
     FutureOr<void> Function(FoodDetails, int)? addCommand,
@@ -1526,6 +1599,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     )?
     detailsCommand,
   }) async {
+    if (group != null &&
+        _editingGroup != null &&
+        _rowKey(group) == _rowKey(_editingGroup!) &&
+        !selecting) {
+      return;
+    }
     final request = ++_editorRequest;
     final workspace = widget.workspaceIdentity;
     final add = addCommand ?? widget.onAdd;
@@ -1533,9 +1612,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final targets = bulkTargets == null
         ? null
         : List<FoodContainer>.unmodifiable(bulkTargets);
-    if (_editorDone != null) {
-      if (!await requestCloseEditor()) return;
-      await editorDone;
+    if (_editorDone != null && !replacingApproved) {
+      if (!await (_canReplaceEditor?.call() ?? Future.value(false))) return;
     }
     if (!mounted ||
         request != _editorRequest ||
@@ -1553,6 +1631,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final done = _editorDone = Completer<void>();
     final previousFocus = FocusManager.instance.primaryFocus;
     (FoodDetails, int)? accepted;
+    _canReplaceEditor = () async =>
+        await key.currentState?.requestClose(close: false) ?? false;
     _editorCloseBusy = () => key.currentState?.closeBusy ?? true;
     _requestEditorClose = () async =>
         await key.currentState?.requestClose() ?? false;
@@ -1621,8 +1701,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     );
     // Completion follows actual input disposal, including whole-page disposal.
     await done.future;
+    // A replaced editor only releases its own inputs. It must not clear the
+    // replacement's close guard or restore focus over the new editor.
+    if (!identical(_editorDone, done)) return;
     if (identical(_editorDone, done)) {
       _editingGroup = null;
+      _canReplaceEditor = null;
       _requestEditorClose = null;
       _editorCloseBusy = null;
       _editorDone = null;

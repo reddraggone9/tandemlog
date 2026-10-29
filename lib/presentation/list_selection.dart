@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 /// How one row activation asks to change a Tasks or Food multi-selection.
 enum SelectionGesture {
-  /// Plain click/tap: toggles while selecting, otherwise the row's own action.
+  /// Plain click/tap: toggles while selecting, except a sole selected row.
   plain,
 
   /// Ctrl/Cmd-click: toggles the row and keeps explicit selection intent.
@@ -69,6 +69,16 @@ ListSelection<K> nextListSelection<K>({
   required Iterable<String> Function(K row) members,
   required SelectionGesture gesture,
 }) {
+  final targetIds = members(target).toSet();
+  if (gesture == SelectionGesture.plain &&
+      selected.length == targetIds.length &&
+      targetIds.every(selected.contains)) {
+    return ListSelection(
+      Set.of(selected),
+      selecting: selecting,
+      anchor: anchor,
+    );
+  }
   final next = Set<String>.of(selected);
   final ids = members(target).toSet();
   var intent = selecting;

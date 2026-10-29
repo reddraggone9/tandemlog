@@ -30,6 +30,7 @@ Future<void> selectFoodView(
     FoodView.inventory || FoodView.inbox => 'Stock',
     FoodView.retained => 'Retained',
     FoodView.deleted => 'Deleted',
+    FoodView.runningLow => 'Running low',
   };
   await tap(find.widgetWithText(PopupMenuItem<FoodView>, label));
 }

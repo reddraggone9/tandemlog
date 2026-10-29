@@ -1,10 +1,10 @@
 # Design map
 
-Current stable2026.10.6/build85 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.6) after exact native acceptance and independently reviewed [public-byte verification](../evidence/stable-2026.10.6/publication/README.md).
+Current stable2026.10.8/build103 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.8). Food products [2026.10.9-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9-rc.1) is a prerelease; RC.2 is in development. See [release receipts](releases.md).
 
 ## Current source of truth
 
-Previous stable 2026.10.5/build81 remains [available](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5) with the accepted RC1-RC4 scope. [Publication receipts](../evidence/stable-2026.10.5/publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, candidate 38782112182, promotion 38792894635 and anonymous public bytes. Existing native coverage qualifications remain explicit.
+Historical stable 2026.10.5/build81 remains [available](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.5) with the accepted RC1-RC4 scope. [Publication receipts](../evidence/stable-2026.10.5/publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, candidate 38782112182, promotion 38792894635 and anonymous public bytes. Existing native coverage qualifications remain explicit.
 
 Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is released as a separate module in stable2026.10.4/build71; [publication receipts](../evidence/stable-2026.10.4/publication/README.md) record exact native acceptance and public verification.
 
@@ -27,7 +27,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Implementation in progress on `vex/food-products`; not released.
+- [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Published in 2026.10.9-rc.1; approved RC.2 UI follow-up is in development.
 
 - [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 

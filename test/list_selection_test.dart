@@ -106,13 +106,31 @@ void main() {
     expect(result.selected, {'b1', 'b2'});
     result = _next(
       'b',
-      SelectionGesture.plain,
+      SelectionGesture.toggle,
       selected: result.selected,
       selecting: true,
     );
     expect(result.selected, isEmpty);
     expect(result.selecting, isFalse);
   });
+
+  test(
+    'plain sole selected row is unchanged, including a multi-container row',
+    () {
+      for (final selecting in [false, true]) {
+        final result = _next(
+          'b',
+          SelectionGesture.plain,
+          selected: {'b1', 'b2'},
+          selecting: selecting,
+          anchor: 'b',
+        );
+        expect(result.selected, {'b1', 'b2'});
+        expect(result.selecting, selecting);
+        expect(result.anchor, 'b');
+      }
+    },
+  );
 
   test('range replaces the selection from the anchor and keeps it', () {
     final result = _next(

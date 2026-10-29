@@ -70,6 +70,9 @@ Future<void> verifyFoodViewReachability(
     FoodView.inbox => 'Synthetic undated lentils',
     FoodView.retained => 'Synthetic retained oats',
     FoodView.deleted => 'Synthetic deleted peas',
+    FoodView.runningLow => throw ArgumentError(
+      'Product view has a dedicated workflow',
+    ),
   };
   final prefix =
       '${brightness.name}-${textScale.toInt()}x-${mode.name}${withError ? '-error' : ''}${empty ? '-empty' : ''}';
@@ -248,6 +251,9 @@ Future<void> verifyFoodViewReachability(
       FoodView.inbox => 'No food in stock',
       FoodView.retained => 'No retained food',
       FoodView.deleted => 'No deleted containers',
+      FoodView.runningLow => throw ArgumentError(
+        'Product view has a dedicated workflow',
+      ),
     });
     await swipeTo(message);
     await capture?.call('$prefix-message-reached');
@@ -393,7 +399,7 @@ void main() {
   setUpAll(loadSdkRoboto);
   for (final brightness in Brightness.values) {
     for (final scale in [1.0, 2.0]) {
-      for (final view in FoodView.values) {
+      for (final view in FoodView.containerViews) {
         for (final withError in [false, true]) {
           testWidgets(
             'Food ${view.name} reachable at320/${brightness.name}/${scale}x/error=$withError',

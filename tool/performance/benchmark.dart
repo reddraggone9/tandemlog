@@ -1580,7 +1580,7 @@ Future<void> foodReadModels(
   int rep, {
   Map<FoodView, Set<String>>? expectedByView,
 }) async {
-  for (final mode in FoodView.values) {
+  for (final mode in FoodView.containerViews) {
     final groups = await a.measure(
       'food.view.${mode.name}',
       rep,

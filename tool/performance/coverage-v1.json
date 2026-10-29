@@ -458,16 +458,16 @@
       "boundary": "food.product.import.dryRun/commit/retry/undo measure the two-line private-tooling path, with correctness/replay assertions and unchanged prospective 15ms median/20ms maximum limits. Background-free; no app UI caller. Maximum-line and native/UI gaps remain in the food-products family."
     },
     {
-      "interaction": "Food Running low group (products below Keep at least)",
+      "interaction": "Food Running low dropdown view (products below Keep at least)",
       "productionAPI": "FoodState.runningLow (short-circuits when no minimum exists)",
       "actualUIPath": "lib/food/food_page.dart::_lowRow",
-      "boundary": "No write and no background work; food_products_ui_test covers rendering and Add another. Readmodel timing with minimums set pending."
+      "boundary": "No write and no background work; food_products_ui_test covers conditional menu/warning dot, normal vs low rows, linked menus, Add another and empty fallback. Existing no-write aggregate is rendered instead of a container projection. Readmodel timing with minimums set and native input-to-visible timing remain pending; unchanged budgets."
     },
     {
       "interaction": "Food Up/Down row focus and Shift+Up/Down range selection; wide selection opens the bulk editor in the side pane",
       "productionAPI": "FoodInventoryPage::_focusRelative/_select; presentation/list_selection.dart nextListSelection",
       "actualUIPath": "lib/food/food_page.dart::_group onKeyEvent -> _focusRelative; _select -> _editSelection(pane)",
-      "boundary": "No write; food_products_ui_test drives real key events and wide/narrow layouts; native visible-response timing pending."
+      "boundary": "No write; food_products_ui_test drives real key events and wide/narrow layouts; selection_layout_parity_test asserts every-frame pane geometry for Tasks/Food and sole-row no-op with explicit Ctrl/Space deselection. Native visible-response timing pending; unchanged budgets."
     }
   ],
   "actualUITimingAccepted": false,

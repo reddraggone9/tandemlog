@@ -379,15 +379,22 @@ void registerFoodProductsUiTests({
         ),
       ],
     );
-    expect(find.text('Running low'), findsOneWidget);
-    expect(find.text('1 of 3'), findsOneWidget);
-    expect(find.byTooltip('Open store link for Beans'), findsOneWidget);
-    expect(find.text('Stock'), findsOneWidget);
-    // Both section headings share one inset at wide widths.
     expect(
-      tester.getTopLeft(find.text('Running low')).dx,
-      tester.getTopLeft(find.text('Stock')).dx,
+      find.text('1 of 3'),
+      findsNothing,
+      reason: 'Stock has no low-stock section.',
     );
+    expect(find.byKey(const ValueKey('food-low-warning')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('food-filter')));
+    await tester.pumpAndSettle();
+    expect(find.text('Running low'), findsOneWidget);
+    await tester.tap(
+      find.widgetWithText(PopupMenuItem<FoodView>, 'Running low'),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('1 of 3'), findsOneWidget);
+    expect(find.text('Milk'), findsNothing);
+    expect(find.byTooltip('Open store link for Beans'), findsOneWidget);
     await capture?.call(tester, 'products-running-low');
     await tester.tap(find.byTooltip('Add another Beans'));
     await tester.pumpAndSettle();
@@ -405,6 +412,103 @@ void registerFoodProductsUiTests({
     await tester.pumpAndSettle();
     expect(find.text('Running low'), findsNothing);
   });
+
+  for (final width in [390.0, 1400.0]) {
+    testWidgets(
+      'Running low conditional menu, rows and empty fallback at $width',
+      (tester) async {
+        final product = implicitFoodProductId(
+          const FoodDetails(name: 'Milk', brand: 'Great Value', size: '1 gal'),
+        );
+        final linked = FoodOperation(
+          id: '$_writer:5',
+          order: 5,
+          action: FoodAction.product,
+          targets: [product],
+          product: const {
+            'name': 'Milk',
+            'brand': 'Great Value',
+            'size': '1 gal',
+            'minimum': 3,
+            'links': ['https://example.com/milk'],
+          },
+        );
+        await _pump(tester, size: Size(width, 900));
+        expect(find.byKey(const ValueKey('food-low-warning')), findsNothing);
+        await tester.tap(find.byKey(const ValueKey('food-filter')));
+        await tester.pumpAndSettle();
+        expect(find.text('Running low'), findsNothing);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        await _pump(
+          tester,
+          size: Size(width, 900),
+          events: [..._events, linked],
+        );
+        expect(find.text('2 of 3'), findsNothing);
+        expect(
+          find.byTooltip('Open store link for Milk'),
+          findsNothing,
+          reason: 'Regular rows have no extra button.',
+        );
+        await tester.tap(find.byTooltip('Actions for Milk').first);
+        await tester.pumpAndSettle();
+        expect(find.text('Open store link'), findsOneWidget);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Actions for Beans'));
+        await tester.pumpAndSettle();
+        expect(find.text('Open store link'), findsNothing);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('food-filter')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.widgetWithText(PopupMenuItem<FoodView>, 'Running low'),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('2 of 3'), findsOneWidget);
+        expect(find.text('Great Value · 1 gal'), findsOneWidget);
+        expect(find.text('2026-11-01'), findsNothing);
+        expect(find.text('Beans'), findsNothing);
+        expect(find.byTooltip('Open store link for Milk'), findsOneWidget);
+        expect(
+          tester.getCenter(find.text('Milk')).dy,
+          tester.getCenter(find.text('2 of 3')).dy,
+        );
+        expect(
+          tester.getTopLeft(find.text('Great Value · 1 gal')).dy,
+          greaterThan(tester.getTopLeft(find.text('Milk')).dy),
+        );
+        await capture?.call(tester, 'low-view-${width.toInt()}');
+        // Incoming inventory/product update empties the selected view.
+        await _pump(
+          tester,
+          size: Size(width, 900),
+          events: [
+            ..._events,
+            linked,
+            FoodOperation(
+              id: '$_writer:6',
+              order: 6,
+              action: FoodAction.product,
+              targets: [product],
+              product: const {'minimum': 2},
+            ),
+          ],
+        );
+        expect(
+          tester
+              .state<FoodInventoryPageState>(find.byType(FoodInventoryPage))
+              .view,
+          FoodView.inventory,
+        );
+        expect(find.byKey(const ValueKey('food-low-warning')), findsNothing);
+        expect(find.text('Beans'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   for (final dark in [true, false]) {
     for (final scale in [1.0, 2.0]) {

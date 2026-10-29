@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_editor.dart';
 import 'package:tandemlog/food/food_page.dart';
@@ -144,7 +145,20 @@ void registerSelectionLayoutParityTests({
           }
           await snap('selected-one');
           if (wide) {
+            final editor = tester.element(
+              food ? find.byType(FoodEditor) : find.byType(TaskEditor),
+            );
             await tester.tap(first);
+            await tester.pumpAndSettle();
+            expect(
+              tester.element(
+                food ? find.byType(FoodEditor) : find.byType(TaskEditor),
+              ),
+              same(editor),
+            );
+            await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+            await tester.tap(first);
+            await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
             if (!food) {
               await host.ready(
                 tester,
@@ -168,6 +182,14 @@ void registerSelectionLayoutParityTests({
             await tester.pumpAndSettle();
           }
 
+          final paneWidths = <double>[];
+          var observing = wide;
+          final paneWidth = tester.getSize(search).width;
+          WidgetsBinding.instance.addPersistentFrameCallback((_) {
+            if (observing && search.evaluate().isNotEmpty) {
+              paneWidths.add(tester.getSize(search).width);
+            }
+          });
           await tester.tap(second);
           if (!food) {
             await host.ready(
@@ -181,6 +203,14 @@ void registerSelectionLayoutParityTests({
             );
           }
           await tester.pumpAndSettle();
+          observing = false;
+          if (wide) {
+            expect(
+              paneWidths,
+              everyElement(paneWidth),
+              reason: 'Selection must not close the pane between frames.',
+            );
+          }
           expect(compact(), !wide);
           expect(
             find.text(food ? 'Edit 2 containers' : 'Edit 2 tasks'),

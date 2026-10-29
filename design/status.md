@@ -1,5 +1,10 @@
 # Development status
 
+## Food RC.2 development — 2026-10-28
+
+Sole writer branch `vex/food-rc2-20261028`, linear from published RC.1 plus docs16fd019. Approved pane stability in Tasks/Food, conditional Running low view and row layout/store-link menus, bounded Windows owned-copy test timeout. No persistence change. RC.1's one-release reference override is inapplicable; existing qualification/budgets apply. No RC.2 qualification, CI or publication yet.
+
+
 ## Stable 2026.10.8 — 2026-10-28
 
 Published and Latest: version-only promotion of accepted RC.1 (same unified workspace format as 2026.10.7, no conversion). See [releases](releases.md#published-stable-2026108build103--2026-10-28).

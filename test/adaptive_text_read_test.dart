@@ -931,7 +931,9 @@ void main() {
         await root.delete(recursive: true);
       }
     },
-    timeout: const Timeout(Duration(seconds: 120)),
+    // Hosted Windows normally takes 93–99 s; allow a bounded 2x slow
+    // runner margin without changing the descriptor-budget workload.
+    timeout: const Timeout(Duration(minutes: 4)),
     skip: Platform.environment['TANDEMLOG_TEXT_LIBRARY'] == null,
   );
 

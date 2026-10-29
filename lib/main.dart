@@ -2429,7 +2429,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     });
   }
 
-  Future<bool> _closeEditor() async {
+  Future<bool> _closeEditor({bool retainSurface = false}) async {
     if (!await _closeChecklistEditor()) return false;
     if (editingTask == null && editingBulk == null) return true;
     if (!mounted || closingEditor) return false;
@@ -2440,7 +2440,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   ? editorKey.currentState?.canClose()
                   : bulkEditorKey.currentState?.canClose()) ??
               Future.value(true));
-      if (okay && mounted) {
+      if (okay && mounted && !retainSurface) {
         editingText?.cancel();
         if (editingText != null) {
           editorStore?.releaseTextCapture(editingText!.capture);
@@ -2529,6 +2529,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (session != null) origin.releaseTextCapture(session.capture);
         return;
       }
+      editingText?.cancel();
+      if (editingText != null) {
+        editorStore?.releaseTextCapture(editingText!.capture);
+      }
       setState(() {
         editorStore = origin;
         editorKey = GlobalKey<TaskEditorState>();
@@ -2541,8 +2545,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         editingBulk = null;
       });
     } else if (tasks.isNotEmpty) {
+      editingText?.cancel();
+      if (editingText != null) {
+        editorStore?.releaseTextCapture(editingText!.capture);
+      }
       setState(() {
         editorStore = origin;
+        editingText = null;
+        textSaveCommand = null;
+        editingTextStatus = null;
         bulkSnapshot = origin.taskSnapshot;
         bulkConflict = false;
         bulkEditorKey = GlobalKey<BulkTaskEditorState>();
@@ -2572,6 +2583,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       gesture: gesture,
     );
     final next = result.selected;
+    if (setEquals(before, next) && result.selecting == selecting) return true;
     var nextIntent = result.selecting;
     var anchor = result.anchor;
     if (wideLayout && before.length >= 2 && next.length == 1) {
@@ -2593,7 +2605,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final plannedOrder = visibleEntries
         .map((entry) => entry.task['id'])
         .toList();
-    if (!await _closeEditor() || !mounted) return false;
+    if (!await _closeEditor(retainSurface: next.isNotEmpty && wideLayout) ||
+        !mounted) {
+      return false;
+    }
     if (busy || !identical(origin, store) || !timeSource.ready) return false;
     final current = projectTaskView(
       store!.rows,

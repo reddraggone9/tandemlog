@@ -27,7 +27,16 @@ enum FoodAction {
       this == purchaseEdit;
 }
 
-enum FoodView { inventory, inbox, retained, deleted }
+enum FoodView {
+  inventory,
+  inbox,
+  retained,
+  deleted,
+  runningLow;
+
+  /// Container projections. Running low renders product summaries instead.
+  static const containerViews = [inventory, inbox, retained, deleted];
+}
 
 /// Descriptive grouping never replaces physical container identity.
 class FoodDetails {
@@ -812,6 +821,9 @@ class FoodState {
                       (reasons.isEmpty ||
                           reasons.contains(e.details.retention)),
                 FoodView.deleted => true,
+                // Product summaries, not selectable container groups. The UI
+                // renders FoodState.runningLow for this view.
+                FoodView.runningLow => false,
               };
             });
     // Group each status separately: equal descriptions never let a deleted

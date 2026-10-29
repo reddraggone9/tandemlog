@@ -46,7 +46,7 @@ Settled decisions (numbers match the proposal Lee answered):
    Unmerge command; Undo covers mistakes.
 5. **On hand** = every non-deleted container of the product (Stock, Inbox and
    Retained, expired or not).
-6. **The low-stock alert is in the app only:** a Running low group. No
+6. **The low-stock alert is in the app only:** a conditional Running low view (Lee, 2026-10-28). No
    notifications and no background work. Vex can read the synced folder if Lee
    later wants alerts outside the app.
 7. **Receipt imports create containers.** An import creates each purchased
@@ -275,10 +275,8 @@ Changes:
   outside the selection, because "same SKU" is a fact about the product; the scope
   line states it ("Merges 3 products, 12 containers"). Location and Retention
   reason stay per container.
-- **Running low:** products below their minimum appear in a Running low group at
-  the top of Stock, above Inbox: name · brand · size, "0 of 2", the store-link
-  button when set, and Add another. A product with no containers left still
-  shows there. Hidden while searching or filtering; absent when empty.
+- **Running low (Lee, 2026-10-28):** a view in the Stock/Retained/Deleted menu, offered only while a product is below its minimum; a warning dot on the closed filter button signals this. If the active view empties, return to Stock. No low-stock section in Stock. Product rows use the normal Food row name line with warning-colored “1 of 3”, omit container expiry/location/retention, then show brand · size. Linked low rows keep the open-link button; linked container rows offer “Open store link” only in their menu.
+
 - **Keyboard (j):** Up/Down move focus between Food rows; Shift+Up/Down extend
   the selection from the anchor, using the shared selection rules.
 - **Wide selection (k):** at pane widths a selection opens the bulk editor in the

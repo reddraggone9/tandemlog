@@ -118,6 +118,44 @@ Future<void> openPaneFilters(WidgetTester tester) async {
 void main() => registerFoodEditorPaneTests();
 
 void registerFoodEditorPaneTests() {
+  testWidgets('selection swaps keep the wide pane mounted in every frame', (
+    tester,
+  ) async {
+    await mountFoodPane(tester);
+    await tester.tap(find.text('Pane beans 1'));
+    await tester.pumpAndSettle();
+    final widths = <double>[];
+    var observing = true;
+    WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      if (observing &&
+          find.byKey(const ValueKey('food-search')).evaluate().isNotEmpty) {
+        widths.add(
+          tester.getSize(find.byKey(const ValueKey('food-search'))).width,
+        );
+      }
+    });
+    final width = tester
+        .getSize(find.byKey(const ValueKey('food-search')))
+        .width;
+    await tester.tap(find.text('Pane beans 2').first);
+    await tester.pumpAndSettle();
+    observing = false;
+    expect(controller(tester, 'Food name').text, 'Pane beans 2');
+    expect(
+      widths,
+      everyElement(width),
+      reason: 'No intervening frame may close the pane.',
+    );
+    final editor = tester.element(find.byType(FoodEditor));
+    await tester.tap(find.text('Pane beans 2').first);
+    await tester.pumpAndSettle();
+    expect(
+      tester.element(find.byType(FoodEditor)),
+      same(editor),
+      reason: 'Plain sole-row click is a no-op.',
+    );
+  });
+
   testWidgets(
     'narrow editor stays above keyboard after Review and after field focus ends',
     (tester) async {
@@ -309,7 +347,7 @@ void registerFoodEditorPaneTests() {
       await tester.tap(find.text('Pane beans 1'));
       await tester.pumpAndSettle();
       await tester.enterText(foodField('Food name'), 'Unsaved beans');
-      await tester.tap(find.text('Pane beans 2'));
+      await tester.tap(find.text('Pane beans 2').first);
       await tester.pumpAndSettle();
       expect(find.text('Discard food changes?'), findsOneWidget);
       await tester.tap(find.widgetWithText(TextButton, 'Keep editing'));
