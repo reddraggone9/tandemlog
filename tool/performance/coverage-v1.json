@@ -1,6 +1,14 @@
 {
   "schemaVersion": 1,
   "storageApplicationActionIds": [
+    "agent.dryRun.bulkEdit2",
+    "agent.dryRun.purchaseImport2",
+    "agent.read.coldOpenTasksList",
+    "agent.read.foodList",
+    "agent.write.purchaseImport2",
+    "agent.write.taskComplete",
+    "agent.write.textEdit",
+    "agent.write.textEditUndo",
     "cardinality500.food.add.1",
     "cardinality500.food.add.1.undo",
     "cardinality500.food.add.3",
@@ -384,8 +392,8 @@
     {
       "interaction": "First fresh profile and repeated clean-cache startup",
       "productionAPI": "LocalProfileDatabase\u2192UnifiedHistory\u2192TaskStore/FoodStore +LocalSettings.load",
-      "actualUIPath": "main.dart startup/open; unified_history.dart",
-      "boundary": "Audit.open stops after FoodStore/settings loading; main startup occurrence maintenance, bindWorkspace/publication, widget construction and first useful paint are outside this storage timer."
+      "actualUIPath": "main.dart WorkspaceSession.open; application/workspace_session.dart; unified_history.dart",
+      "boundary": "Audit.open stops after FoodStore/settings loading; main startup occurrence maintenance, bindWorkspace/publication, widget construction and first useful paint are outside this storage timer. The app (and agent CLI) open through WorkspaceSession.open; its history/Task/Food calls are the timed store calls in the same order, and the startup family asserts outside timers that the composed session reaches identical Task/Food state without writing. Folder listing and the open-time occurrence migration stay outside these labels; agent.* calls time them end to end."
     },
     {
       "interaction": "Explicit native Task title/Notes/both editor open, Save, Undo and cancel",
@@ -476,6 +484,19 @@
       "productionAPI": "FoodInventoryPage::_focusRelative/_select; presentation/list_selection.dart nextListSelection",
       "actualUIPath": "lib/food/food_page.dart::_group onKeyEvent -> _focusRelative; _select -> _editSelection(pane)",
       "boundary": "No write; food_products_ui_test drives real key events and wide/narrow layouts; selection_layout_parity_test asserts every-frame pane geometry for Tasks/Food and sole-row no-op with explicit Ctrl/Space deselection. Native visible-response timing pending; unchanged budgets."
+    },
+    {
+      "interaction": "Headless agent CLI tool call (tandemlog-cli / MCP): cold open + tasks list or food list; task complete with rev; title edit and whole-action Undo; two-task bulk-edit dry run; two-line purchase import dry run and commit",
+      "productionAPI": "lib/agent/cli.dart runCli -> execute -> AgentWorkspace.open (AgentProfile lock/readCopy, LocalProfileDatabase, WorkspaceSession.open) -> registry command -> close -> renderResult; dry runs via dryRunWrite (profile copy + OverlayLogFolder copy-on-write) or the import's own dryRunPurchaseImport",
+      "actualUIPath": "No app UI; bin/tandemlog_cli.dart and lib/agent/mcp_server.dart call the same execute()",
+      "boundary": "agent.* labels time one whole in-process runCli call per action (parse, lock/copy, open, command, close, JSON render) on a fresh per-repetition agent profile joined to a fresh fixture copy by init. Prospective budgets in limits-v1.json prospectiveAgentCliBudgets; startup class growth rule because every call contains a workspace open.",
+      "gaps": [
+        "Process start, Dart AOT runtime boot, native text/SQLite library loading and stdout/stderr transfer of a real tandemlog-cli invocation; agent.* labels time in-process runCli calls.",
+        "Packaged-binary timing (Flatpak second command, Windows installer/ZIP) and Windows host time-zone lookup; agent.* calls pass --tz and run on Linux only.",
+        "MCP stdio server framing and session reuse across tool calls (each MCP tool call opens and closes like one CLI call; not separately timed).",
+        "Concurrent agent and GUI installations on one workspace, lock waits and profile_in_use retries; correctness-covered by process tests, not timed.",
+        "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges); they share the timed open/close boundary and existing store-path labels."
+      ]
     }
   ],
   "actualUITimingAccepted": false,
@@ -601,6 +622,31 @@
       "Two-line receipt distribution only; maximum500-line import not timed.",
       "No separate timing distributions for large bulk selections or deep/concurrent merge chains.",
       "Concurrent offline receipt allocation and its rare targeted full-admission fallback are correctness-covered, not a separate timing distribution."
+    ]
+  },
+  "agentCliContract": {
+    "family": "agent-cli",
+    "additiveMetrics": [
+      "agent.read.coldOpenTasksList",
+      "agent.read.foodList",
+      "agent.write.taskComplete",
+      "agent.write.textEdit",
+      "agent.write.textEditUndo",
+      "agent.dryRun.bulkEdit2",
+      "agent.dryRun.purchaseImport2",
+      "agent.write.purchaseImport2"
+    ],
+    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, joined outside timers by `init` with a fresh agent profile (new writer, distinct from the fixture writers); the audit installation stays closed during agent calls.",
+    "targets": "Imported scalar Tasks3/6/9/18 (Task3 complete, Task6 title edit/Undo, Task9+18 bulk-edit dry run); imported Food1000 product for the matched receipt line (small60 functional-only Food4).",
+    "boundary": "In-process runCli with --profile <path> --tz America/Chicago --format json: argument parsing, AgentProfile lock (reads: disposable profile copy), LocalProfileDatabase open, WorkspaceSession.open (read-only folder for reads; write mode with occurrence migration otherwise), the registry command, close and JSON rendering. Bulk dry run uses dryRunWrite (profile copy, rebind, OverlayLogFolder copy-on-write); purchase import dry run is the command's own store dry run in write mode; commit passes --expect-plan.",
+    "correctness": "Reads: listed Task IDs belong to the fixture, rows/totals present, workspace and agent profile byte-identical. Complete: one action, returned rev equals shown rev; whole-action undo restores the shown task. Text edit applied; timed undo appends one inverse and restores the shown task. Bulk dry run: two changed schedule effects on the two targets, planHash, workspace and agent profile byte-identical. Import dry run: ready, plan hash equals the plan file, one matched hand entry and three new Inbox containers, canonical bytes unchanged; commit: one action, both lines recorded. Afterwards the audit installation replays the agent history with Tasks unchanged and exactly three new purchase-linked containers; family replay/original-prefix checks unchanged.",
+    "budgets": "Prospective, all3shapes: reads400/600ms, single writes and Undo500/750ms, dry runs and two-line import700/1000ms (median/maximum). Growth: startup class2.25x+100ms /2.5x+200ms on both pairs because each call includes a history-scaled open; per-action store cost remains under existing ordinary-rule labels.",
+    "gaps": [
+      "Process start, Dart AOT runtime boot, native text/SQLite library loading and stdout/stderr transfer of a real tandemlog-cli invocation; agent.* labels time in-process runCli calls.",
+      "Packaged-binary timing (Flatpak second command, Windows installer/ZIP) and Windows host time-zone lookup; agent.* calls pass --tz and run on Linux only.",
+      "MCP stdio server framing and session reuse across tool calls (each MCP tool call opens and closes like one CLI call; not separately timed).",
+      "Concurrent agent and GUI installations on one workspace, lock waits and profile_in_use retries; correctness-covered by process tests, not timed.",
+      "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges); they share the timed open/close boundary and existing store-path labels."
     ]
   },
   "foodMoveSomeContract": {

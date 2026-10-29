@@ -11,7 +11,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:uuid/uuid.dart';
+import 'package:tandemlog/agent/agent_workspace.dart' show agentTextEngine;
+import 'package:tandemlog/agent/cli.dart' show runCli;
 import 'package:tandemlog/application/food_undo_history.dart';
+import 'package:tandemlog/application/workspace_session.dart';
 import 'package:tandemlog/application/task_text_session.dart';
 import 'package:tandemlog/application/text_save_command.dart';
 import 'package:tandemlog/application/checklist_completion_command.dart';
@@ -1730,6 +1733,55 @@ Future<void> startup(Audit a) async {
       'Startup wrote canonical bytes',
     );
   }
+  await sessionEquivalence(a);
+}
+
+/// The app and the agent CLI open through [WorkspaceSession]. The timed
+/// startup labels keep their per-phase store calls (history, Task attach,
+/// Food attach), which are the session's own calls in the same order; outside
+/// the timers, the composed session must reach the same state without
+/// writing. Its remaining steps (folder listing, open-time occurrence
+/// migration) stay the documented startup gap.
+Future<void> sessionEquivalence(Audit a) async {
+  final tasks = jsonEncode(a.tasks.rows), food = productFoodState(a.food);
+  final before = await a.inventory();
+  await a.closeHandles();
+  final profile = await LocalProfileDatabase.open(
+    a.profileOverride ?? '${a.root.path}/profile',
+  );
+  WorkspaceSession? session;
+  try {
+    session = await WorkspaceSession.open(
+      LocalLogFolder(a.shared.path, durability: durabilityDiagnostics),
+      profile: profile,
+      writer: a.writer,
+      textEngine: a.engine,
+    );
+    require(
+      session != null && session.occurrenceMigrationError == null,
+      'WorkspaceSession open failed',
+    );
+    require(
+      jsonEncode(session!.tasks.rows) == tasks &&
+          productFoodState(session.food) == food,
+      'WorkspaceSession state differs from the timed store sequence',
+    );
+    require(
+      sameData(await a.inventory(), before),
+      'WorkspaceSession open wrote canonical bytes',
+    );
+  } finally {
+    await session?.close();
+    await profile.close();
+  }
+  await a.open(fresh: false);
+  print(
+    jsonEncode({
+      'measurement': 'workspace-session-equivalence',
+      'family': a.family,
+      'sameTasksFoodAndBytes': true,
+    }),
+  );
 }
 
 Future<void> coldStartup(Audit a) async {
@@ -1834,6 +1886,7 @@ Future<void> main(List<String> args) async {
         firstDerivedPointAction(a, sampleStart, 'copy'),
     'first-derived-mixed': (a) =>
         firstDerivedPointAction(a, sampleStart, 'mixed'),
+    'agent-cli': agentCli,
   };
   // Disk-stall resample: one family, all warmups and samples, fresh process.
   final only = args[0] == 'resample' ? args[4] : null;
@@ -1842,6 +1895,7 @@ Future<void> main(List<String> args) async {
     if (only != null && entry.key != only) continue;
     if (entry.key == 'food-products' ||
         entry.key == 'food-move-some' ||
+        entry.key == 'agent-cli' ||
         entry.key == 'derived-recurring' ||
         entry.key.startsWith('first-derived-') ||
         entry.key == 'first-copied-checkbox') {
@@ -2832,6 +2886,323 @@ Future<void> foodProducts(Audit a) async {
     productFoodState(a.food) == before &&
         jsonEncode(a.tasks.rows) == tasksBefore,
     'Fresh canonical product/catalog replay differs',
+  );
+}
+
+/// Headless agent CLI tool calls (design/agent-interface.md section 8). Each
+/// repetition copies the sealed fixture, joins it with a fresh agent profile
+/// through `init`, then times whole in-process [runCli] calls: argument
+/// parsing, profile lock/read copy, [WorkspaceSession] open, the command,
+/// close and JSON rendering. Process start, AOT/VM boot, native library
+/// loading and stdout are outside this boundary.
+Future<void> agentCli(Audit a) async {
+  final rep = sampleStart;
+  agentTextEngine = () => NativeTextEngine(
+    libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
+  );
+  final targets = convertedTaskTargets(a);
+  final base = a.config['fixtureBaseIdentity'] as int;
+  final imported = benchmarkId('food:$base:${base == 60 ? 4 : 1000}');
+  requireImportedFoodTargets(a, [imported]);
+  final source = a.food.state.containers.singleWhere((c) => c.id == imported);
+  final taskIDs = {
+    for (final r in a.tasks.rows)
+      if (r['kind'] == 'task') r['id'] as String,
+  };
+  final containerIDs = {for (final c in a.food.state.containers) c.id};
+  final tasksBefore = jsonEncode(a.tasks.rows);
+  // The agent is a separate installation; the audit writer stays closed so
+  // only agent calls touch the folder until the family's replay check.
+  await a.closeHandles();
+  final profile = '${a.root.path}/agent-profile';
+  final env = {'HOME': a.root.path};
+
+  Future<Map<String, dynamic>> cli(List<String> argv) async {
+    final (code, out) = await runCli([
+      ...argv,
+      '--profile',
+      profile,
+      '--tz',
+      'America/Chicago',
+      '--format',
+      'json',
+    ], environment: env);
+    final value = jsonDecode(out) as Map<String, dynamic>;
+    require(code == 0, 'Agent CLI ${argv.take(2).join(' ')} failed: $out');
+    return value;
+  }
+
+  Future<String> bytes({bool canonicalOnly = false}) async {
+    final files = <File>[
+      for (final dir in [a.shared, if (!canonicalOnly) Directory(profile)])
+        ...await dir
+            .list(recursive: true)
+            .where((f) => f is File && !f.path.endsWith('/agent.lock'))
+            .cast<File>()
+            .toList(),
+    ]..sort((x, y) => x.path.compareTo(y.path));
+    return [
+      for (final f in files) '${f.path} ${bytesDigest(await f.readAsBytes())}',
+    ].join('\n');
+  }
+
+  Future<T> measure<T>(String action, Future<T> Function() body) async {
+    final watch = Stopwatch()..start();
+    final value = await body();
+    final us = watch.elapsedMicroseconds;
+    print(
+      jsonEncode({
+        'index': rep,
+        'warmup': rep < benchmarkWarmups,
+        'measurement': 'broad-action',
+        'family': a.family,
+        'action': action,
+        'rep': rep,
+        'microseconds': us,
+        'diagnostics': {
+          'agentProfileBytes': await Directory(profile)
+              .list()
+              .where((f) => f is File)
+              .cast<File>()
+              .fold<int>(0, (n, f) => n + f.lengthSync()),
+          'rssBytesAfter': ProcessInfo.currentRss,
+        },
+        'scope':
+            'in-process agent CLI call (parse, lock/copy, open, command, close, render); no process start or packaged binary',
+      }),
+    );
+    return value;
+  }
+
+  Map<String, dynamic> shown(Map<String, dynamic> task) =>
+      Map.of(task)..remove('rev');
+
+  // Setup outside timers: join the copied fixture as a new agent writer.
+  final joined = await cli([
+    'init',
+    '--workspace',
+    a.shared.path,
+    '--name',
+    'Benchmark agent',
+  ]);
+  require(joined['writer'] != a.writer, 'Agent must be its own installation');
+
+  var before = await bytes();
+  final listed = await measure(
+    'agent.read.coldOpenTasksList',
+    () => cli(['tasks', 'list']),
+  );
+  final listedTasks = (listed['tasks'] as List).cast<Map>();
+  require(
+    listedTasks.isNotEmpty &&
+        (listed['total'] as int) >= listedTasks.length &&
+        listedTasks.every((t) => taskIDs.contains(t['id'])),
+    'Agent tasks list differs from the fixture',
+  );
+  require(await bytes() == before, 'Agent read changed workspace or profile');
+
+  final food = await measure(
+    'agent.read.foodList',
+    () => cli(['food', 'list']),
+  );
+  final rows = (food['rows'] as List).cast<Map>();
+  require(
+    rows.isNotEmpty && (food['total'] as int) >= rows.length,
+    'Agent food list is empty',
+  );
+  require(await bytes() == before, 'Agent read changed workspace or profile');
+
+  // Complete an imported scalar Task with its rev; whole-action Undo restores.
+  final completeID = targets[0];
+  final open = await cli(['tasks', 'show', completeID]);
+  require(open['completed'] == false, 'Complete target already completed');
+  final completed = await measure(
+    'agent.write.taskComplete',
+    () => cli([
+      'tasks',
+      'complete',
+      completeID,
+      '--if-rev',
+      open['rev'] as String,
+    ]),
+  );
+  final completeAction = (completed['actions'] as List).single as String;
+  final afterComplete = await cli(['tasks', 'show', completeID]);
+  require(
+    afterComplete['rev'] != open['rev'] &&
+        ((completed['affected'] as List).single as Map)['rev'] ==
+            afterComplete['rev'],
+    'Agent complete result differs',
+  );
+  await cli([
+    'undo',
+    completeAction,
+    '--rev',
+    '$completeID=${afterComplete['rev']}',
+  ]);
+  require(
+    sameData(shown(await cli(['tasks', 'show', completeID])), shown(open)),
+    'Agent complete Undo did not restore the task',
+  );
+
+  // Text edit, then whole-action Undo in its own (fresh-open) call.
+  final textID = targets[1];
+  final unedited = await cli(['tasks', 'show', textID]);
+  final title = 'Benchmark agent title $rep';
+  final edited = await measure(
+    'agent.write.textEdit',
+    () => cli([
+      'tasks',
+      'edit',
+      textID,
+      '--if-rev',
+      unedited['rev'] as String,
+      '--title',
+      title,
+    ]),
+  );
+  final editAction = (edited['actions'] as List).single as String;
+  final afterEdit = await cli(['tasks', 'show', textID]);
+  require(afterEdit['title'] == title, 'Agent text edit not applied');
+  final undone = await measure(
+    'agent.write.textEditUndo',
+    () => cli(['undo', editAction, '--rev', '$textID=${afterEdit['rev']}']),
+  );
+  require(
+    undone['alreadyUndone'] != true && (undone['actions'] as List).length == 1,
+    'Agent text Undo appended no inverse',
+  );
+  require(
+    sameData(shown(await cli(['tasks', 'show', textID])), shown(unedited)),
+    'Agent text Undo did not restore the task',
+  );
+
+  // Two-task bulk edit dry run on the copy-on-write overlay.
+  final bulk = [
+    for (final id in targets.sublist(2)) await cli(['tasks', 'show', id]),
+  ];
+  before = await bytes();
+  final plan = await measure(
+    'agent.dryRun.bulkEdit2',
+    () => cli([
+      'tasks',
+      'bulk-edit',
+      for (final t in bulk) t['id'] as String,
+      for (final t in bulk) ...['--rev', '${t['id']}=${t['rev']}'],
+      '--due',
+      '2026-11-05',
+      '--dry-run',
+    ]),
+  );
+  final effects = (plan['effects'] as List).cast<Map>();
+  require(
+    plan['dryRun'] == true &&
+        (plan['planHash'] as String).isNotEmpty &&
+        effects.length == 2 &&
+        effects.every(
+          (e) =>
+              e['change'] == 'changed' &&
+              targets.sublist(2).contains(e['id']) &&
+              (e['fields'] as Map).containsKey('schedule'),
+        ),
+    'Agent bulk dry-run plan differs',
+  );
+  require(
+    await bytes() == before,
+    'Agent dry run changed workspace or profile',
+  );
+
+  // Two-line receipt: one existing product matching the imported hand entry,
+  // one new SKU creating three Inbox containers (as food.product.import).
+  final lines = File('${a.root.path}/agent-receipt-$rep.json');
+  await lines.writeAsString(
+    jsonEncode([
+      {
+        'source': {'kind': 'benchmark', 'key': 'existing-$rep'},
+        'date': source.createdAt.substring(0, 10),
+        'store': 'Synthetic store',
+        'amount': 250,
+        'quantity': 1,
+        'product': source.product,
+      },
+      {
+        'source': {'kind': 'benchmark', 'key': 'new-$rep'},
+        'date': '2026-10-28',
+        'store': 'Synthetic store',
+        'amount': 900,
+        'quantity': 3,
+        'name': 'Benchmark receipt SKU',
+        'brand': 'Receipt',
+        'link': 'https://example.com/receipt-sku',
+      },
+    ]),
+  );
+  final planned = await cli(['purchases', 'plan', lines.path]);
+  final planFile = planned['plan'] as String;
+  require(planned['lines'] == 2, 'Agent purchase plan line count differs');
+  before = await bytes(canonicalOnly: true);
+  final dry = await measure(
+    'agent.dryRun.purchaseImport2',
+    () => cli(['purchases', 'import', planFile, '--dry-run']),
+  );
+  void requireLines(Map<String, dynamic> report) {
+    final out = (report['lines'] as List).cast<Map>();
+    require(
+      out.length == 2 &&
+          (out.first['matched'] as List).length == 1 &&
+          (out.first['created'] as List).isEmpty &&
+          (out.last['created'] as List).length == 3 &&
+          out.last['newProduct'] == true,
+      'Agent purchase import lines differ',
+    );
+  }
+
+  require(
+    dry['dryRun'] == true &&
+        dry['status'] == 'ready' &&
+        dry['planHash'] == planned['planHash'],
+    'Agent purchase dry run differs',
+  );
+  requireLines(dry);
+  // The import's own dry run opens the agent profile for writing, so only
+  // the canonical workspace must stay byte-identical.
+  require(
+    await bytes(canonicalOnly: true) == before,
+    'Agent dry run changed canonical bytes',
+  );
+  final committed = await measure(
+    'agent.write.purchaseImport2',
+    () => cli([
+      'purchases',
+      'import',
+      planFile,
+      '--expect-plan',
+      dry['planHash'] as String,
+    ]),
+  );
+  require(
+    committed['dryRun'] == false &&
+        committed['status'] == 'ready' &&
+        (committed['lines'] as List).every((l) => l['status'] == 'recorded') &&
+        (committed['actions'] as List).length == 1,
+    'Agent purchase import did not record one action',
+  );
+  requireLines(committed);
+
+  // Back on the audit installation: the agent's actions replay; the Tasks
+  // it changed and restored are unchanged, and Food gained exactly the
+  // receipt's three Inbox containers.
+  await a.open(fresh: false);
+  require(
+    jsonEncode(a.tasks.rows) == tasksBefore,
+    'Agent Undo left Task drift',
+  );
+  final added = a.food.state.containers
+      .where((c) => !containerIDs.contains(c.id))
+      .toList();
+  require(
+    added.length == 3 && added.every((c) => c.purchase != null),
+    'Agent import containers differ on the audit installation',
   );
 }
 

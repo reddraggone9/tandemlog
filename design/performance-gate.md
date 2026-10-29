@@ -61,7 +61,7 @@ The standalone Dart executable measures production storage, application commands
 
 The three versioned shapes share the SAME first 1,320 historical physical records, three writers, entity IDs and current Task/Food values. The dense-1 baseline and dense-2 Task-growth shape retain their integer specifications and three physical owners. Prospective fixture schema v2 (exact completion instants) gives Task-growth edits a separate normalized logical namespace, attributed to those same owners, so the continuing writer retains identical next logical IDs and completion order across shapes. Previously sealed v1 canonical bytes and evidence remain immutable; v2 is freshly generated and sealed, not a rewrite of accepted fixtures. An additive dense-food shape uses {baseRecords: 2640, growthKind: food}, normalized to the closed CLI food:2640. Dense-2 adds 1,320 bounded Task Notes edits alternating with exact restores; dense-food instead adds 1,320 Food brand edits alternating with exact restores on existing containers, each carrying its actual observed creation reference. Neither Food contents nor deletion state changes. All three then receive production native-text initialization and the same native checklist/recurring operations. Enforce equal initial-prefix hashes, full current-state digest, Task rows and Food container counts before treating this as history-only scaling. Actual record, effect and row counts are recorded. Both pairs must prove their growth module: Task effects grow only in dense-2, Food effects grow only in dense-food, and the other module's effect count stays equal to the baseline. Missing, unknown or mismatched growth claims fail correctness. The additional pair closes Food-own-history coverage; it does not test a growing number of recurring descriptors. Scalar synthetic IDs and strings are deterministic; production native actor allocation may vary between fixture generations. Generate each fixture once, seal its actual bytes, and reuse exactly those bytes for a timing retry. Profiles and workload copies are always fresh; existing output is refused.
 
-Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 246 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food,6 first-point cases,12 Food-product cases and2 Food Move some cases). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
+Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 254 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food,6 first-point cases,12 Food-product cases,2 Food Move some cases and8 agent CLI calls). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
 
 `limits-v1.json` contains the initial calibrated AOT storage/application/readmodel regression bounds, pinned by literal SHA in the workflow. The initial calibration combines current-source local and hosted Ubuntu observations, two warmups and five measured samples on each of the three shapes. Ordinary per-action median/maximum ceilings retain roughly 50% observed headroom, rounded to 5 ms with small-operation floors, and every ordinary maximum was additionally capped at 100 ms during calibration (a historical calibration cap, not a responsiveness target; see [What sets acceptable latency](#what-sets-acceptable-latency-lee-2026-10-27)). Both history-growth pairs enforce 1.25× + 3 ms median and 1.40× + 5 ms maximum for all 238 ordinary labels. The eight startup labels have separately calibrated size-specific absolute ceilings. Their existing paired guards remain unchanged at 2.25× + 100 ms median and 2.50× + 200 ms maximum: loose historical proof-growth bounds, without a history-independence claim. Startup remains history-scaled; these limits do not excuse avoidable work. Finite calibration is not a percentile guarantee. Actual native UI paint/interaction acceptance is separate and remains unresolved. Loosening an activated limit requires Lee's explicit approval; tooling has no automatic baseline-update switch.
 
@@ -307,3 +307,90 @@ ordinary rules remain1.25x+3ms median/1.40x+5ms maximum. These are intended
 responsiveness bounds, not a measured baseline or qualification. The dialog's
 open, typing and paint, and moves of hundreds of containers, remain separate
 gaps. Fresh enforcing qualification is pending.
+
+## Agent CLI prospective coverage (2026-10-29)
+
+Eight additive `agent.*` labels cover the headless agent CLI
+([agent interface](agent-interface.md) section 8): `agent.read.coldOpenTasksList`,
+`agent.read.foodList`, `agent.write.taskComplete`, `agent.write.textEdit`,
+`agent.write.textEditUndo`, `agent.dryRun.bulkEdit2`,
+`agent.dryRun.purchaseImport2` and `agent.write.purchaseImport2`. The
+`agent-cli` family gives every repetition a fresh sealed fixture copy, joined
+outside timers by `init` with a fresh agent profile (its own writer). Each label
+times one whole in-process `runCli` call, as an agent's tool call experiences it:
+argument parsing, the profile lock (reads: a disposable profile copy),
+`WorkspaceSession.open` (read-only folder for reads; write mode with open-time
+occurrence migration otherwise), the registry command, close and JSON rendering.
+Targets are imported scalar Tasks3/6/9/18 and the imported Food1000 product for
+the matched receipt line; the import is the same two lines/four containers as
+`food.product.import`. Outside timers: listed IDs and rows; workspace and agent
+profile byte-identical after reads and the copy-on-write bulk dry run; canonical
+bytes unchanged by the import's own dry run (it opens the profile for writing);
+returned revs match a later show; whole-action Undo of the completion and the
+timed text Undo restore the shown task; the audit installation then replays the
+agent's history with Tasks unchanged and exactly three new purchase-linked
+containers. Previous244 labels and bounds remain unchanged. (Merged with the
+Food Move some labels above: 254 labels in total, one combined limits digest.)
+
+Budgets were declared before any `agent.*` measurement from the intended
+human-time response of one agent tool call, identical on all3shapes: reads
+400ms median/600ms maximum, single writes and whole-action Undo 500/750, dry
+runs and the two-line import 700/1000. Every label contains a complete,
+history-scaled workspace open and close (the same proof/replay the app's
+`startup.*` labels bound), so both growth pairs use the existing startup-class
+rule, 2.25x+100ms median/2.5x+200ms maximum. Applying the ordinary 1.25x+3ms
+rule to a call that includes the open would fail by construction from the
+existing startup budgets alone (dense-1 versus dense-2 warm history open
+270 versus 450ms). The per-action store work stays guarded under the ordinary
+rule by the existing labels for the same store paths (`task.complete.*`,
+`converted.task.title.*`, `task.bulkEdit.*`, `food.product.import.*`).
+
+Not covered in-process, and recorded as gaps in coverage-v1.json: process
+start, Dart AOT runtime boot, native text/SQLite library loading and stdout of
+a real `tandemlog-cli` run; packaged-binary timing (Flatpak second command,
+Windows installer/ZIP) and Windows zone lookup (calls pass `--tz`); MCP framing;
+lock waits with a concurrent GUI; commands without their own label (they share
+the timed open/close boundary).
+
+The app's open sequence moved into `WorkspaceSession.open`. The timed startup
+labels keep their per-phase store calls (history open, Task attach, Food
+attach), which are the session's own calls in the same order, so
+`startup.*.history`/`taskAttach` keep their meaning. Outside the timers, the
+startup family now opens the same profile through `WorkspaceSession.open` and
+requires identical Task/Food state and no canonical writes. Folder listing and
+the open-time occurrence migration remain outside the startup labels (the
+existing startup gap); `agent.*` calls time them end to end.
+
+First local `run_gate.py --measure-only` observation (Farnsworth, the
+reference unit caps, ext4 output, all252labels, 2 warmups/5 samples; advisory,
+not qualification): correctness, pins and both growth pairs passed, every
+previous label met its limits, and only `agent.*` absolute budgets missed.
+Median/maximum ms:
+
+- dense-1: tasks list 571/573 (miss), food list 308/317, complete 324/341,
+  text edit 314/314, Undo 313/319, bulk dry run 717/727 (median miss),
+  import dry run 305/309, import 310/316.
+- dense-2: tasks list 786/791, food list 518/522, complete 546/566, text edit
+  524/565, Undo 525/570, bulk dry run 1042/1139 (all misses); import dry run
+  509/518 and import 513/518 pass.
+- dense-food: tasks list 833/842, food list 559/565, complete 564/566, text
+  edit 567/571, Undo 566/573, bulk dry run 1086/1151 (misses); import dry run
+  554/583 and import 565/587 pass.
+
+Phase probes attribute the misses to redundant work, not to the commands'
+store actions: (1) the warm history open is 165/275ms on dense-1/dense-2, the
+same as the app's warm startup; (2) every `TaskStore.close` re-seals the warm
+Task cache proof, 135/218ms, and on reads and the bulk dry run that seal goes
+into a disposable profile copy that is deleted immediately; (3) `tasks list`
+spends about290ms in the command because `people()` re-reads and JSON-decodes
+all visible Task rows (`TaskStore.rows`) once per listed task, for both the
+JSON and the eagerly rendered text form (`food list` takes 2ms); (4) the bulk
+dry run's shadow open is a cold full replay (530/770ms) because `_rebind`
+points the copied profile at the shadow folder, whose different location key
+misses the warm cache; the command and both state observations take about 45ms.
+Options, none applied here: skip the cache seal when closing read-only or
+disposable sessions; compute the people map once per call and render only the
+requested format; keep the real location for the copy-on-write overlay so the
+warm cache applies; reduce the history-scaled seal and proof for write calls.
+Budgets are unchanged. Fresh enforcing qualification is pending, and the
+private reference controller's hard-coded limits digest must be re-registered.
