@@ -76,3 +76,20 @@ report['sandbox_profile']['default_without_override'] = True
 report['permissions'] = {'static_host_filesystem_access': False, 'network_access': False}
 json.dump(report, open(sys.argv[1], 'w'), indent=2)
 PYREPORT
+
+# Headless agent CLI from the installed package: no display, sandbox-private
+# agent profile, synthetic workspace inside the app's own data directory.
+cli_ws="$HOME/.var/app/$app/data/agent-cli-smoke"
+mkdir -p "$cli_ws"
+cli() { env -u DISPLAY -u WAYLAND_DISPLAY flatpak run --command=tandemlog-cli "$app" "$@" --tz America/Chicago --format json; }
+cli init --workspace "$cli_ws" --name "CI agent" --create > "$RUNNER_TEMP/agent-cli-init.json"
+test -f "$HOME/.var/app/$app/data/com.reddraggone9.tandemlog-agents/default/tandemlog-agent-profile.json"
+cli people add "CI person" > /dev/null
+cli tasks add "Headless capture" --for "CI person" > /dev/null
+cli tasks list | python3 -c 'import json,sys; assert json.load(sys.stdin)["total"] == 1'
+python3 - "$report" <<'PYREPORT'
+import json, sys
+report = json.load(open(sys.argv[1]))
+report['agent_cli'] = {'headless': True, 'command': 'tandemlog-cli', 'capture_listed': True}
+json.dump(report, open(sys.argv[1], 'w'), indent=2)
+PYREPORT

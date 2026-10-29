@@ -11,9 +11,19 @@ import '../storage/task_store.dart' show StaleTaskSnapshot;
 import '../text/native_text_engine.dart';
 import 'agent_profile.dart';
 
-/// Creates the native text engine; tests and alternate packagings may point
-/// it at a specific library. The default resolves beside the executable.
-NativeTextEngine Function() agentTextEngine = NativeTextEngine.new;
+/// Creates the native text engine. The packaged CLI keeps the app's reviewed
+/// library in its own `lib/` beside `bin/` (tool/build_agent_cli.py); tests
+/// point it at a specific build.
+NativeTextEngine Function() agentTextEngine = () =>
+    NativeTextEngine(libraryPath: packagedTextLibrary());
+
+String packagedTextLibrary() {
+  final bin = File(Platform.resolvedExecutable).parent;
+  final name = Platform.isWindows
+      ? 'tandemlog_text.dll'
+      : 'libtandemlog_text.so';
+  return '${bin.parent.path}${Platform.pathSeparator}lib${Platform.pathSeparator}$name';
+}
 
 /// An open agent workspace for one command (or one MCP call). Reads run on a
 /// disposable profile copy and a write-refusing folder; writes use the real

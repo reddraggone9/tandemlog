@@ -22,7 +22,7 @@ jobs:
         with:
           platform: linux
       - run: flutter pub get --enforce-lockfile
-      - run: dart format --output=none --set-exit-if-changed lib test integration_test tool
+      - run: dart format --output=none --set-exit-if-changed lib test integration_test tool bin
       - run: flutter analyze
       - name: Build and require production native library for all unit tests
         shell: bash
@@ -42,6 +42,8 @@ jobs:
       - run: python3 -m unittest discover -s tool -p 'test_*.py'
       - run: flutter build linux --release
       - run: python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle
+      - name: Build and smoke the headless agent CLI with the app's text library
+        run: env -u DISPLAY -u WAYLAND_DISPLAY python3 tool/build_agent_cli.py --platform linux --text-library build/linux/x64/release/bundle/lib/libtandemlog_text.so --output build/agent-cli
       - name: Smoke-test native release startup with fresh and warm cache
         id: linux-startup
         timeout-minutes: 8
@@ -237,6 +239,14 @@ jobs:
           path: storage-harness-dist/*
           retention-days: 5
           if-no-files-found: error
+      # After the storage harness, which requires one SQLite DLL in the app
+      # payload; the CLI's own lib/ then joins the bundle that the portable
+      # ZIP and installer package unchanged.
+      - name: Build and smoke the agent CLI inside the Release bundle
+        shell: pwsh
+        run: |
+          python tool/build_agent_cli.py --platform windows --text-library build/windows/x64/runner/Release/tandemlog_text.dll --output build/windows/x64/runner/Release/cli
+          if ($LASTEXITCODE -ne 0) { throw 'Agent CLI build or smoke failed' }
       - name: Preserve exact portable Windows payload for isolated native acceptance
         shell: pwsh
         run: >-

@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+# Headless agent CLI: `flatpak run --command=tandemlog-cli com.reddraggone9.tandemlog`.
+# Agent profiles live under the sandbox XDG_DATA_HOME, separate from the app's
+# profile; TANDEMLOG_CLI_PROFILE selects one. No display is needed.
+exec /app/tandemlog-cli/bin/tandemlog-cli "$@"
