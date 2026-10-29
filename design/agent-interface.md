@@ -430,13 +430,13 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
    against a copy of the profile and a copy-on-write view of the workspace and
    reports the effects: changed fields, task moves (with the task each now
    precedes), product changes including merges (`mergedInto`), and purchases.
-   `planHash` binds command, arguments and effects without clock readings.
+   `planHash` binds command, arguments and effects without clock readings; purchase imports also bind exact plan-file bytes, read once for the preview and commit.
    Bulk edit/move/delete, multi-container Food edit/remove/restore,
    product-changing Food edits, merges and purchase imports re-run the dry run
    under the held identity lock and commit only on a matching `--expect-plan`.
    The commit then appends only while the workspace still has exactly the
    observed state the plan was computed from (tasks, order, containers,
-   products, purchases), checked again inside the append; any change in
+   products, purchases, manifest, writer and canonical history heads), checked again inside the append; any change in
    between gives `plan_changed` and a retry re-plans. Undo takes `--rev` for
    every task, checklist item, container, product and purchase the action
    changed (`none` for a target that no longer exists); each write result

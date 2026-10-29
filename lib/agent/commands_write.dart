@@ -942,6 +942,8 @@ Future<AgentResult> dryRunWrite(
     ]..sort((a, b) => (a['id'] as String).compareTo(b['id'] as String));
     final planHash = revOf({
       'command': command.name,
+      if (options.purchasePlanBytes != null)
+        'inputDigest': sha256.convert(options.purchasePlanBytes!).toString(),
       'args': {...args}
         ..remove('dry-run')
         ..remove('expect-plan'),
@@ -1000,11 +1002,20 @@ Object? _stable(Object? value) => switch (value) {
 /// What a plan can change: task and checklist rows, the visible task order,
 /// Food containers, products (including merges) and purchases.
 class _Observed {
-  _Observed(this.entities, this.order);
+  _Observed(this.entities, this.order, this.history);
   final Map<String, Object?> entities;
   final List<String> order;
+  final Object history;
   String get hash => sha256
-      .convert(utf8.encode(jsonEncode({'entities': entities, 'order': order})))
+      .convert(
+        utf8.encode(
+          jsonEncode({
+            'entities': entities,
+            'order': order,
+            'history': history,
+          }),
+        ),
+      )
       .toString();
 }
 
@@ -1012,6 +1023,8 @@ _Observed _observe(AgentCall call) {
   final rows = call.ws.session.tasks.rows;
   final state = call.ws.session.food.state;
   final catalog = state.catalog;
+  final history = call.ws.session.history;
+  final writers = history.snapshot.recordsByWriter.keys.toList()..sort();
   return _Observed(
     {
       for (final r in rows)
@@ -1038,6 +1051,12 @@ _Observed _observe(AgentCall call) {
     [
       for (final r in rows)
         if (r['kind'] == 'task') r['id'] as String,
+    ],
+    [
+      history.manifest.digest,
+      call.ws.writer,
+      for (final writer in writers)
+        [writer, history.snapshot.recordsByWriter[writer]!.last.hash],
     ],
   );
 }

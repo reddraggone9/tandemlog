@@ -164,7 +164,7 @@ List<String> _productContainers(AgentCall call, List<String> products) {
   return ids;
 }
 
-Future<List<int>> _readInput(String path, String field) async {
+Future<List<int>> readAgentInput(String path, String field) async {
   try {
     return await File(path).readAsBytes();
   } on FileSystemException catch (e) {
@@ -1055,7 +1055,7 @@ List<AgentCommand> moreCommands() => [
     ],
     (call) async {
       final path = call.require('lines');
-      final bytes = await _readInput(path, 'lines');
+      final bytes = await readAgentInput(path, 'lines');
       final Object? raw;
       try {
         raw = jsonDecode(utf8.decode(bytes));
@@ -1156,7 +1156,10 @@ List<AgentCommand> moreCommands() => [
       final FoodPurchaseImportPlan plan;
       try {
         plan = FoodPurchaseImportPlan.decode(
-          utf8.decode(await _readInput(call.require('plan'), 'plan')),
+          utf8.decode(
+            call.options.purchasePlanBytes ??
+                await readAgentInput(call.require('plan'), 'plan'),
+          ),
         );
       } on FormatException catch (e) {
         throw AgentFailure(
@@ -1167,7 +1170,10 @@ List<AgentCommand> moreCommands() => [
       }
       final store = call.ws.session.food;
       final before = ownHead(call);
-      final report = await store.commitPurchaseImport(plan);
+      final report = await store.commitPurchaseImport(
+        plan,
+        canCommit: call.commitGuard(() => true),
+      );
       final names = {
         for (final p in foodState(call).products.values) p.id: p.name,
       };

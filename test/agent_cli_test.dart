@@ -1203,6 +1203,110 @@ void main() {
     },
   );
 
+  test(
+    'purchase commit guards fresh admission and pins one exact file input',
+    () async {
+      await setUpAgent(profile: 'one');
+      await setUpAgent(profile: 'two', create: false);
+      final lines = File('${root.path}/receipt-lines.json')
+        ..writeAsStringSync(
+          jsonEncode([
+            {
+              'source': {'kind': 'test', 'key': 'guarded-receipt'},
+              'date': '2026-10-28',
+              'store': 'Synthetic',
+              'amount': 100,
+              'quantity': 1,
+              'name': 'Guarded beans',
+            },
+          ]),
+        );
+      final planned = await json([
+        'purchases',
+        'plan',
+        lines.path,
+      ], profile: 'one');
+      final file = File(planned['plan'] as String);
+      final original = await file.readAsString();
+      final args = ['purchases', 'import', file.path];
+      var dry = await json([...args, '--dry-run'], profile: 'one');
+      await file.writeAsString('$original ');
+      final changed = await json([
+        ...args,
+        '--expect-plan',
+        dry['planHash'] as String,
+      ], profile: 'one');
+      expect(changed['error']['kind'], 'plan_changed', reason: '$changed');
+      await file.writeAsString(original);
+      debugAfterPlanCheck = () async {
+        final peer = await json([
+          'food',
+          'add',
+          '--name',
+          'Peer tea',
+          '--inbox',
+        ], profile: 'two');
+        expect(peer['error'], isNull, reason: '$peer');
+      };
+      try {
+        final refused = await json([
+          ...args,
+          '--expect-plan',
+          dry['planHash'] as String,
+        ], profile: 'one');
+        expect(refused['error']['kind'], 'plan_changed', reason: '$refused');
+        expect((await json(['purchases', 'list'], profile: 'one'))['total'], 0);
+      } finally {
+        debugAfterPlanCheck = null;
+      }
+      dry = await json([...args, '--dry-run'], profile: 'one');
+      debugAfterPlanCheck = () async {
+        final p =
+            ((await json(['products', 'list'], profile: 'two'))['products']
+                        as List)
+                    .single
+                as Map;
+        final edited = await json([
+          'products',
+          'set',
+          p['id'] as String,
+          '--if-rev',
+          p['rev'] as String,
+          '--min',
+          '2',
+        ], profile: 'two');
+        final undone = await json(undoArgv(edited), profile: 'two');
+        expect(undone['error'], isNull, reason: '$undone');
+      };
+      try {
+        final hidden = await json([
+          ...args,
+          '--expect-plan',
+          dry['planHash'] as String,
+        ], profile: 'one');
+        expect(hidden['error']['kind'], 'plan_changed', reason: '$hidden');
+        expect((await json(['purchases', 'list'], profile: 'one'))['total'], 0);
+      } finally {
+        debugAfterPlanCheck = null;
+      }
+      dry = await json([...args, '--dry-run'], profile: 'one');
+      debugAfterPlanCheck = () async {
+        await file.writeAsString('{invalid input now}');
+      };
+      try {
+        final done = await json([
+          ...args,
+          '--expect-plan',
+          dry['planHash'] as String,
+        ], profile: 'one');
+        expect(done['actions'], hasLength(1), reason: '$done');
+        expect((await json(['purchases', 'list'], profile: 'one'))['total'], 1);
+      } finally {
+        debugAfterPlanCheck = null;
+      }
+    },
+  );
+
   test('purchase plans never overwrite and dry runs write nothing', () async {
     await setUpAgent();
     await json(['food', 'add', '--name', 'Tea', '--expiry', '2027-01-01']);

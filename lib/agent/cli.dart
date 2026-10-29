@@ -9,6 +9,7 @@ import '../storage/profile_lock.dart';
 import 'command.dart';
 import 'commands_write.dart' show dryRunWrite, observedStateHash;
 import 'registry.dart';
+import 'commands_more.dart' show readAgentInput;
 import 'render.dart';
 import 'windows_zone.dart';
 
@@ -172,6 +173,17 @@ Future<AgentResult> execute(
   );
   if (command.kind == CommandKind.setup) {
     return command.run(AgentCall(args, null, options, profile: profile));
+  }
+  if (command.name == 'purchases import') {
+    options = AgentOptions(
+      profile: options.profile,
+      wait: options.wait,
+      timeZone: options.timeZone,
+      environment: options.environment,
+      purchasePlanBytes: List.unmodifiable(
+        await readAgentInput(args['plan'] as String, 'plan'),
+      ),
+    );
   }
   final dryRun = args['dry-run'] == true;
   if (command.kind == CommandKind.write && dryRun) {

@@ -656,10 +656,12 @@ class FoodStore {
   /// Records every new purchase line as one action. A retry finds its
   /// purchases present and writes nothing.
   Future<FoodPurchaseImportReport> commitPurchaseImport(
-    FoodPurchaseImportPlan plan,
-  ) => _queue(() async {
+    FoodPurchaseImportPlan plan, {
+    bool Function()? canCommit,
+  }) => _queue(() async {
     late FoodPurchaseImportReport report;
     await _freshCommandLocked(
+      canCommit: canCommit,
       () {
         report = _inspectPurchaseImport(plan);
         return _purchaseImportChanges(_planPurchaseImport(plan).steps);

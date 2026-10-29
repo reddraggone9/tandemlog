@@ -100,11 +100,15 @@ class AgentOptions {
     this.wait = const Duration(seconds: 30),
     this.timeZone,
     this.environment,
+    this.purchasePlanBytes,
   });
   final String? profile;
   final Duration wait;
   final String? timeZone;
   final Map<String, String>? environment;
+
+  /// Exact plan-file input frozen once per execute, shared by preview and commit.
+  final List<int>? purchasePlanBytes;
 }
 
 class AgentCommand {
