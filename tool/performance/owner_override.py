@@ -15,7 +15,8 @@ from gate_policy import evaluate, evaluate_scaling, validate_registered_coverage
 from reference_receipt import (need, digest, canonical_digest, read, instant, request_shape, profile,
                                source_identity, committed_identity, check_reference_toolchain,
                                failed_qualification_failures, check_authorization_shape, PROFILE,
-                               TIMING_FAILURE, AUTHORIZATION, PRIOR_RESULT, IDENTITY_V1, IDENTITY_V2)
+                               TIMING_FAILURE, AUTHORIZATION, PRIOR_RESULT, IDENTITY_V1, IDENTITY_V2,
+                               resampled_decisions, check_resample_logs, resample_log_names)
 
 RECORD = 'override.json'
 STATE = 'OWNER_OVERRIDE_ACCEPTED_NOT_QUALIFIED'
@@ -165,8 +166,7 @@ def validate_failed_report(repo, report, request, host, base):
              'Absolute correctness/coverage/summary differs')
         summaries[item['size']], decisions[item['size']], executions[item['size']] = decision.summaries, decision, execution
     need({p['comparison'] for p in pairs} == set(specs), 'Missing/extra growth pair')
-    paired = []
-    measured = {size + ':' + f: summaries[size][f] for size, d in decisions.items() for f in d.failures}
+    named = {}
     for item in pairs:
         rule = specs[item['comparison']]
         need(item['smallSize'] == rule['smallSize'] and item['largeSize'] == rule['largeSize'], 'Growth size labels differ')
@@ -174,9 +174,14 @@ def validate_failed_report(repo, report, request, host, base):
         need(decision.status in ('passed', 'timing-failed') and decision.status == item['status'] and
              list(decision.failures) == item['failures'] and decision.summaries == item['comparisons'],
              'Growth correctness/rules/summary differs')
-        paired.append((rule, decision))
-        measured.update({item['comparison'] + ':' + f: decision.summaries[f.removeprefix('scaling:')]
-                         for f in decision.failures})
+        named[item['comparison']] = decision
+    # A disk-stall resample replaces its label's samples: judge what the gate actually decided.
+    resampled = resampled_decisions(report, 0, {a['size']: a['result'] for a in attempts}, limits, specs, contracts, [])
+    if resampled is not None:
+        decisions, named = resampled
+    paired = [(specs[name], decision) for name, decision in named.items()]
+    measured = {size + ':' + f: d.summaries[f] for size, d in decisions.items() for f in d.failures}
+    measured.update({name + ':' + f: d.summaries[f.removeprefix('scaling:')] for name, d in named.items() for f in d.failures})
     bindings = [a['binding'] for a in attempts]
     need(all(b == bindings[0] for b in bindings) and bindings[0]['binary'] == report['binarySHA256'] and
          bindings[0]['limits'] == limits['sha256'] and
@@ -185,7 +190,7 @@ def validate_failed_report(repo, report, request, host, base):
          'Binary/source/fixture/limits binding changed')
     need(not may_rerun_all(decisions, paired, 0, executions, bindings[0], bindings[0]),
          'Failure was eligible for the in-invocation retry; result is not the final refusal')
-    labels = failing_labels(report)
+    labels = sorted(measured)
     need(labels and labels == failed_qualification_failures(request, report), 'Failure labels differ')
     return labels, measured
 
@@ -272,6 +277,7 @@ def verify_override(repo, directory, policy=None):
                         *[(size + '-generate', value['generation']) for size, value in report['fixtures'].items()],
                         *[(a['size'] + '-attempt-' + str(a['attempt']), a['execution']) for a in report['attempts']]]:
         need(digest(root / (label + '.log')) == item['logSHA256'], 'Missing/changed execution log')
+    check_resample_logs(root, report)
     for size, item in report['fixtures'].items():
         file = root / ('fixture-' + size) / 'fixture.json'
         need(digest(file) == item['manifestSHA256'] and read(file) == item['contract'], 'Fixture receipt changed')

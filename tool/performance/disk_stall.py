@@ -42,6 +42,22 @@ def action_diagnostics(log):
     return found
 
 
+FIXTURE_KEYS = ('baseHistoricalRecords', 'actualPhysicalRecords')
+
+
+def completed_fixture(log):
+    """Fixture counts a benchmark log reports at completion; ties a resample to its shape."""
+    found = None
+    for line in pathlib.Path(log).read_text().splitlines():
+        try:
+            item = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(item, dict) and item.get('measurement') == 'broad-all-pass':
+            found = {key: item.get(key) for key in FIXTURE_KEYS}
+    return found
+
+
 def missed_statistics(absolute, paired, specs, limits):
     """(size, action) -> every missed statistic with its bound, absolute and growth."""
     missed = {}

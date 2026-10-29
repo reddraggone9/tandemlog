@@ -425,6 +425,68 @@ def check_reference_toolchain(report, host):
     return normalized, rename
 
 
+def check_resample_records(report):
+    records = report.get('diskStallResamples', [])
+    need(isinstance(records, list) and all(isinstance(r, dict) and type(r.get('attempt')) is int and
+                                           0 <= r['attempt'] <= report['rerunsUsed'] for r in records) and
+         len({r['attempt'] for r in records}) == len(records), 'Missing/extra disk-stall resample record')
+    return records
+
+
+def resampled_decisions(report, number, originals, limits, specs, contracts, used):
+    """Lee's disk-stall rule (disk_stall.py) for one attempt: None, or its post-resample decisions.
+
+    Attribution is recomputed from the original samples and the recorded append/CPU numbers
+    (bound to the attempt log by check_resample_logs); `used` carries labels already resampled.
+    """
+    record = next((r for r in check_resample_records(report) if r['attempt'] == number), None)
+    if record is None:
+        return None
+    planned, unattributed = disk_stall.plan(originals, disk_stall.recorded_diagnostics(record['resamples']),
+                                            limits, specs, contracts, used)
+    need(record.get('policy') == disk_stall.POLICY and planned and not unattributed and
+         planned == record['resamples'], 'Disk-stall resample is not attributed under the rule')
+    need(len(record['executions']) == len(planned) == len(record['replacements']) == len(record['fixtures']) and
+         all(type(e['exitCode']) is int and e['exitCode'] == 0 and e['childAbsent'] is True and
+             e.get('childGroupAbsent') is True for e in record['executions']), 'Incomplete disk-stall resample')
+    need(all(sha == report['fixtures'][item['size']]['manifestSHA256'] for item, sha in zip(planned, record['fixtures'])),
+         'Disk-stall resample ran on a different fixture')
+    used += [[item['size'], item['action']] for item in planned]
+    effective = disk_stall.apply(originals, planned, record['replacements'], limits)
+    absolute, pairs = disk_stall.evaluate_all(effective, limits, specs, contracts)
+    need(all(d.status != 'correctness-failed' for d in [*absolute.values(), *pairs.values()]) and
+         record['absolute'] == {s: {'status': d.status, 'failures': list(d.failures), 'summaries': d.summaries}
+                                for s, d in absolute.items()} and
+         record['paired'] == {n: {'status': d.status, 'failures': list(d.failures), 'comparisons': d.summaries}
+                              for n, d in pairs.items()}, 'Disk-stall resample decision differs')
+    return absolute, pairs
+
+
+def check_resample_logs(root, report):
+    """Bind each resample's attribution numbers, fixture and replacement samples to retained logs."""
+    from run_gate import measurements
+    for record in check_resample_records(report):
+        for ordinal, (item, execution) in enumerate(zip(record['resamples'], record['executions'])):
+            label = 'disk-stall-resample-' + str(record['attempt']) + '-' + str(ordinal)
+            log = root / (label + '.log')
+            need(digest(log) == execution['logSHA256'], 'Missing/changed disk-stall resample log')
+            logged = disk_stall.action_diagnostics(root / (item['size'] + '-attempt-' + str(record['attempt']) + '.log'))
+            need(all(logged.get((item['action'], s['index'])) ==
+                     disk_stall.recorded_diagnostics([item])[item['size']][item['action'], s['index']]
+                     for s in item['samples']), 'Disk-stall attribution differs from the attempt log')
+            rows, complete = measurements(log)
+            contract = report['fixtures'][item['size']]['contract']
+            need(complete and record['replacements'][ordinal] == [r for r in rows if r['action'] == item['action']] and
+                 {v['family'] for v in disk_stall.action_diagnostics(log).values()} == {item['family']} and
+                 disk_stall.completed_fixture(log) == {k: contract.get(k) for k in disk_stall.FIXTURE_KEYS},
+                 'Disk-stall resample differs from its log')
+
+
+def resample_log_names(report):
+    return ['disk-stall-resample-' + str(r['attempt']) + '-' + str(i) + '.log'
+            for r in report.get('diskStallResamples', []) for i in range(len(r['executions']))]
+
+
 def validate_report(repo, report, request, host):
     from run_gate import source_pins, scaling_specs, validate_project_imports
     repo = Path(repo).resolve()
@@ -489,9 +551,7 @@ def validate_report(repo, report, request, host):
          all(type(p['attempt']) is int and 0 <= p['attempt'] <= retries for p in report['pairedScalingAttempts']),
          'Missing/extra growth attempt')
     decisions, effective_paired, used = {}, {}, []
-    records = report.get('diskStallResamples', [])
-    need(isinstance(records, list) and all(type(r.get('attempt')) is int and 0 <= r['attempt'] <= retries for r in records) and
-         len({r['attempt'] for r in records}) == len(records), 'Missing/extra disk-stall resample record')
+    check_resample_records(report)
     for number in range(retries + 1):
         batch = [a for a in attempts if a['attempt'] == number]
         need(len(batch) == 3 and {a['size'] for a in batch} == set(contracts), 'Missing reference size')
@@ -517,28 +577,11 @@ def validate_report(repo, report, request, host):
                  list(decision.failures) == item['failures'] and decision.summaries == item['comparisons'],
                  'Growth correctness/rules/summary differs')
             effective_paired[number, item['comparison']] = decision
-        record = next((r for r in records if r['attempt'] == number), None)
-        if record is not None:
-            # Lee's disk-stall rule: recompute attribution from the original samples and recorded
-            # append/CPU numbers (bound to the attempt log by verify_bundle), then the label's resample.
-            originals = {item['size']: item['result'] for item in batch}
-            planned, unattributed = disk_stall.plan(originals, disk_stall.recorded_diagnostics(record['resamples']),
-                                                    limits, specs, contracts, used)
-            need(record.get('policy') == disk_stall.POLICY and planned and not unattributed and
-                 planned == record['resamples'], 'Disk-stall resample is not attributed under the rule')
-            need(len(record['executions']) == len(planned) and
-                 all(type(e['exitCode']) is int and e['exitCode'] == 0 and e['childAbsent'] is True and
-                     e.get('childGroupAbsent') is True for e in record['executions']), 'Incomplete disk-stall resample')
-            used += [[item['size'], item['action']] for item in planned]
-            effective = disk_stall.apply(originals, planned, record['replacements'], limits)
-            absolute, pairs = disk_stall.evaluate_all(effective, limits, specs, contracts)
-            need(all(d.status != 'correctness-failed' for d in [*absolute.values(), *pairs.values()]) and
-                 record['absolute'] == {s: {'status': d.status, 'failures': list(d.failures), 'summaries': d.summaries}
-                                        for s, d in absolute.items()} and
-                 record['paired'] == {n: {'status': d.status, 'failures': list(d.failures), 'comparisons': d.summaries}
-                                      for n, d in pairs.items()}, 'Disk-stall resample decision differs')
-            decisions.update({(number, size): d for size, d in absolute.items()})
-            effective_paired.update({(number, name): d for name, d in pairs.items()})
+        resampled = resampled_decisions(report, number, {item['size']: item['result'] for item in batch},
+                                        limits, specs, contracts, used)
+        if resampled is not None:
+            decisions.update({(number, size): d for size, d in resampled[0].items()})
+            effective_paired.update({(number, name): d for name, d in resampled[1].items()})
         if number == retries:
             need(all(effective_paired[number, name].status == 'passed' for name in specs), 'Reference history-growth limit failed')
             need(all(decisions[number, size].status == 'passed' for size in contracts), 'Reference absolute limit failed')
@@ -590,23 +633,11 @@ def verify_bundle(repo, directory):
         need(PRIOR_RESULT not in members, 'Unexpected prior result in a first qualification')
     report = read(root / 'gate-result.json')
     result = validate_report(repo, report, request, host)
-    from run_gate import measurements
     for label, item in [('compile', report['compile']),
                         *[(size + '-generate', value['generation']) for size, value in report['fixtures'].items()],
                         *[(a['size'] + '-attempt-' + str(a['attempt']), a['execution']) for a in report['attempts']]]:
         need(digest(root / (label + '.log')) == item['logSHA256'], 'Missing/changed execution log')
-    for record in report.get('diskStallResamples', []):
-        for ordinal, (item, execution) in enumerate(zip(record['resamples'], record['executions'])):
-            label = 'disk-stall-resample-' + str(record['attempt']) + '-' + str(ordinal)
-            need(digest(root / (label + '.log')) == execution['logSHA256'], 'Missing/changed disk-stall resample log')
-            logged = disk_stall.action_diagnostics(root / (item['size'] + '-attempt-' + str(record['attempt']) + '.log'))
-            need(all(logged.get((item['action'], s['index'])) ==
-                     disk_stall.recorded_diagnostics([item])[item['size']][item['action'], s['index']]
-                     for s in item['samples']), 'Disk-stall attribution differs from the attempt log')
-            rows, complete = measurements(root / (label + '.log'))
-            need(complete and record['replacements'][ordinal] == [r for r in rows if r['action'] == item['action']] and
-                 {v['family'] for (a, _), v in disk_stall.action_diagnostics(root / (label + '.log')).items()} ==
-                 {item['family']}, 'Disk-stall resample differs from its log')
+    check_resample_logs(root, report)
     for size, item in report['fixtures'].items():
         file = root / ('fixture-' + size) / 'fixture.json'
         need(digest(file) == item['manifestSHA256'] and read(file) == item['contract'], 'Fixture receipt changed')
@@ -726,8 +757,7 @@ def main():
         for name in ['gate-result.json', 'compile.log',
                      *[size + '-generate.log' for size in report['fixtures']],
                      *[a['size'] + '-attempt-' + str(a['attempt']) + '.log' for a in report['attempts']],
-                     *['disk-stall-resample-' + str(r['attempt']) + '-' + str(i) + '.log'
-                       for r in report.get('diskStallResamples', []) for i in range(len(r['executions']))],
+                     *resample_log_names(report),
                      *['fixture-' + size + '/fixture.json' for size in report['fixtures']]]:
             target = args.output / name
             target.parent.mkdir(exist_ok=True)

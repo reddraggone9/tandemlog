@@ -229,7 +229,15 @@ void registerHeaderSelectionTests() {
           expectStationarySelection(rowBeforeToggle, offsetBeforeToggle);
           final rowBeforeClear = tester.getRect(body(35));
           final offsetBeforeClear = position.pixels;
+          // A plain tap on the sole selected row is a no-op; Ctrl-click
+          // deselects it.
           await tester.tap(body(35));
+          await tester.pumpAndSettle();
+          expect(find.text('1 selected'), findsOneWidget);
+          expectStationarySelection(rowBeforeClear, offsetBeforeClear);
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+          await tester.tap(body(35));
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
           await tester.pumpAndSettle();
           expect(
             find.byKey(const ValueKey('compact-selection-actions')),

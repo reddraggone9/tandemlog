@@ -171,7 +171,8 @@ class BorderlinePolicyTests(unittest.TestCase):
             contracts = {s: v['contract'] for s, v in report['fixtures'].items()}
             summaries = {s: d.summaries for s, d in absolute.items()}
             return absolute, {name: gate_policy.evaluate_scaling(summaries, spec, contracts) for name, spec in specs.items()}
-        q9 = decisions(EVIDENCE / 'current/gate-result.json')
+        # The passing qualification retained when RC.2's replaced evidence/reference-performance/current.
+        q9 = decisions(EVIDENCE / 'retained-9b29fa84/gate-result.json')
         self.assertTrue(all(d.status == 'passed' for d in [*q9[0].values(), *q9[1].values()]))
         q10 = classify_borderline(SOURCE, SOURCE, *decisions(EVIDENCE / 'owner-override-stable101/prior-gate-result.json'))
         self.assertEqual(q10['verdict'], 'failed')

@@ -16,7 +16,8 @@ import subprocess
 
 from gate_policy import evaluate, evaluate_scaling, classify_borderline, BORDERLINE_VARIATION_BAND, BORDERLINE_ACCEPTED
 from reference_receipt import (need, digest, canonical_digest, read, instant, request_shape, profile, recorded_identity,
-                               verify_bundle, check_official_rerun, QUALIFICATION, AUTHORIZATION, PRIOR_RESULT, PROFILE)
+                               verify_bundle, check_official_rerun, QUALIFICATION, AUTHORIZATION, PRIOR_RESULT, PROFILE,
+                               resampled_decisions, check_resample_logs, resample_log_names)
 from owner_override import validate_failed_report, validate_failed_cleanup
 
 DIRECTORY = 'evidence/reference-performance/borderline'
@@ -57,6 +58,7 @@ def classify_failed_run(repo, root, qualification):
                         *[(size + '-generate', value['generation']) for size, value in report['fixtures'].items()],
                         *[(a['size'] + '-attempt-' + str(a['attempt']), a['execution']) for a in report['attempts']]]:
         need(digest(root / (label + '.log')) == item['logSHA256'], 'Missing/changed execution log')
+    check_resample_logs(root, report)
     for size, item in report['fixtures'].items():
         file = root / ('fixture-' + size) / 'fixture.json'
         need(digest(file) == item['manifestSHA256'] and read(file) == item['contract'], 'Fixture receipt changed')
@@ -72,6 +74,11 @@ def classify_failed_run(repo, root, qualification):
     contracts = {size: item['contract'] for size, item in report['fixtures'].items()}
     summaries = {size: decision.summaries for size, decision in absolute.items()}
     paired = {name: evaluate_scaling(summaries, spec, contracts) for name, spec in scaling_specs(limits).items()}
+    # A disk-stall resample replaces its label's samples: classify what the gate actually decided.
+    resampled = resampled_decisions(report, 0, {a['size']: a['result'] for a in report['attempts']},
+                                    limits, scaling_specs(limits), contracts, [])
+    if resampled is not None:
+        absolute, paired = resampled
     result = classify_borderline(prior['relevantSourceSHA256'], request['relevantSource']['sha256'],
                                  absolute, paired, limits=limits)
     need(result['verdict'] == BORDERLINE_ACCEPTED, 'Not borderline; ordinary failure: ' + result['reason'])
@@ -140,6 +147,7 @@ def main():
         for name in ['gate-result.json', 'compile.log',
                      *[size + '-generate.log' for size in report['fixtures']],
                      *[a['size'] + '-attempt-' + str(a['attempt']) + '.log' for a in report['attempts']],
+                     *resample_log_names(report),
                      *['fixture-' + size + '/fixture.json' for size in report['fixtures']]]:
             target = args.output / name
             target.parent.mkdir(exist_ok=True)

@@ -282,6 +282,11 @@ including in an in-invocation noise retry.
 `verify`/`seal` recompute attribution from the recorded numbers,check those
 numbers against the attempt log,check the replacement samples against the
 resample log,and recompute every decision from original plus replacement samples.
+Each resample records the hash of the fixture manifest it ran on,which must be
+its label's sealed fixture,and its log's completion counts must match that
+fixture's contract. Borderline classification,official-rerun labels and owner
+overrides all judge the post-resample decision,never the replaced samples,and
+borderline bundles carry the resample logs.
 
 ## Borderline result on already qualified source
 

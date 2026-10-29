@@ -4723,7 +4723,11 @@ void main() {
           )
           .position;
       final bar = find.byKey(const ValueKey('compact-selection-actions'));
-      Future<void> pick(String id, {bool longPress = false}) async {
+      Future<void> pick(
+        String id, {
+        bool longPress = false,
+        bool control = false,
+      }) async {
         position().jumpTo(0);
         await tester.pumpAndSettle();
         await tester.scrollUntilVisible(
@@ -4734,7 +4738,7 @@ void main() {
               .first,
           maxScrolls: 60,
         );
-        await selectTask(tester, id, control: false, longPress: longPress);
+        await selectTask(tester, id, control: control, longPress: longPress);
       }
 
       for (final scale in [1.0, 2.0]) {
@@ -4783,7 +4787,10 @@ void main() {
         await tester.pumpAndSettle();
         expect(bar, findsNothing);
         await pick(ids[45], longPress: true);
+        // A plain tap on the sole selected row is a no-op; Ctrl-click clears.
         await pick(ids[45]);
+        expect(find.text('1 selected'), findsOneWidget);
+        await pick(ids[45], control: true);
         expect(bar, findsNothing);
         expect(tester.takeException(), isNull);
       }

@@ -35,7 +35,8 @@ void registerFoodViewReachabilityTests() {
     );
     for (final brightness in Brightness.values) {
       for (final scale in [1.0, 2.0]) {
-        for (final mode in FoodView.values) {
+        // Running low lists products and has its own workflow.
+        for (final mode in FoodView.containerViews) {
           for (final withError in [false, true]) {
             if (brightness == Brightness.dark &&
                 scale == 2 &&

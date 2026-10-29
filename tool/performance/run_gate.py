@@ -482,14 +482,14 @@ def main():
         resampled_labels=[]
         def resample(attempt,originals,planned):
             """Lee's disk-stall rule: one fresh-process resample per attributed label; budgets unchanged."""
-            record={'attempt':attempt,'policy':disk_stall.POLICY,'resamples':planned,'executions':[],'replacements':[]}
+            record={'attempt':attempt,'policy':disk_stall.POLICY,'resamples':planned,'executions':[],'replacements':[],'fixtures':[]}
             report['diskStallResamples'].append(record)
             for ordinal,item in enumerate(planned):
                 label='disk-stall-resample-'+str(attempt)+'-'+str(ordinal);log=root/(label+'.log')
                 require_binding(original,binding())
                 execution=run_child([str(binary),'resample',str(root/label),str(args.native_library.resolve()),str(fixtures[item['size']]['manifest']),item['family']],log,env,600)
                 require_binding(original,binding())
-                rows,complete=measurements(log);record['executions'].append(execution)
+                rows,complete=measurements(log);record['executions'].append(execution);record['fixtures'].append(digest(fixtures[item['size']]['manifest']))
                 if execution['exitCode']!=0 or not complete or not execution['childAbsent'] or not execution['childGroupAbsent']:
                     raise RuntimeError('Disk-stall resample correctness/cleanup failed; retry prohibited')
                 record['replacements'].append([row for row in rows if row['action']==item['action']])

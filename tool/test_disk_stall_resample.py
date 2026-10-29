@@ -1,6 +1,7 @@
 """Disk-stall resample rule (Lee 2026-10-28). All reports and logs here are synthetic."""
 import copy
 import json
+import shutil
 from pathlib import Path
 import sys
 import unittest
@@ -13,6 +14,7 @@ import disk_stall
 import gate_policy
 import reference_receipt as receipt
 import run_gate
+import test_borderline_performance as borderline_tests
 import test_reference_performance as reference_tests
 from test_reference_performance import ReceiptFixture, write
 
@@ -28,13 +30,13 @@ def ordinary(action):
     return ORDINARY if action == LABEL else 1000
 
 
-def log_lines(rows, overrides=None, complete=True):
+def log_lines(rows, overrides=None, complete=True, label=LABEL, fixture=None):
     """Benchmark-shaped log: every row carries its family and append/CPU diagnostics."""
     overrides = overrides or {}
     lines = []
     for row in rows:
         numbers = overrides.get((row['action'], row['index']), {})
-        lines.append({'measurement': 'broad-action', 'family': FAMILY if row['action'] == LABEL else 'other',
+        lines.append({'measurement': 'broad-action', 'family': FAMILY if row['action'] == label else 'other',
                       'action': row['action'], 'index': row['index'], 'warmup': row['warmup'],
                       'microseconds': row['microseconds'],
                       'diagnostics': {'appendCalls': 1, 'appendMicroseconds': numbers.get('append', 400),
@@ -42,7 +44,7 @@ def log_lines(rows, overrides=None, complete=True):
                                       'resourceDeltas': {'cgroup.usage_usec': numbers.get('cpu', 600),
                                                          'cgroup.throttled_usec': 0}}})
     if complete:
-        lines.append({'measurement': 'broad-all-pass'})
+        lines.append({'measurement': 'broad-all-pass', **{k: (fixture or {}).get(k) for k in disk_stall.FIXTURE_KEYS}})
     return ''.join(json.dumps(line) + '\n' for line in lines).encode()
 
 
@@ -226,7 +228,8 @@ class ReferenceRunnerTests(unittest.TestCase):
                 self.assertEqual(args[1:2] + args[-1:], ['resample', FAMILY])
                 rows = [{'action': LABEL, 'index': i, 'warmup': i < 2,
                          'microseconds': ORDINARY if i != 5 else resample_wall} for i in range(7)]
-                log.write_bytes(log_lines(rows))
+                contract = json.loads(Path(args[4]).read_text())
+                log.write_bytes(log_lines(rows, fixture=contract))
             return {'exitCode': 0, 'childAbsent': True, 'childGroupAbsent': True,
                     'logSHA256': receipt.digest(log), 'noise': {}}
 
@@ -312,11 +315,13 @@ class DiskStallReceiptTests(ReceiptFixture):
             planned = [{'policy': disk_stall.POLICY, 'size': 'dense-food', 'action': LABEL, 'family': FAMILY,
                         'missed': [], 'samples': []}]
         rows = case.replacement(wall=resample_wall)
-        (self.bundle / 'disk-stall-resample-0-0.log').write_bytes(log_lines(rows))
+        (self.bundle / 'disk-stall-resample-0-0.log').write_bytes(
+            log_lines(rows, fixture=self.report['fixtures']['dense-food']['contract']))
         effective = disk_stall.apply(originals, planned, [rows], case.limits)
         absolute, pairs = disk_stall.evaluate_all(effective, case.limits, case.specs, contracts)
         self.report['diskStallResamples'] = [{
             'attempt': 0, 'policy': disk_stall.POLICY, 'resamples': planned, 'replacements': [rows],
+            'fixtures': [self.report['fixtures']['dense-food']['manifestSHA256']],
             'executions': [{'exitCode': 0, 'childAbsent': True, 'childGroupAbsent': True, 'noise': {},
                             'logSHA256': receipt.digest(self.bundle / 'disk-stall-resample-0-0.log')}],
             'absolute': {s: {'status': d.status, 'failures': list(d.failures), 'summaries': d.summaries}
@@ -353,7 +358,22 @@ class DiskStallReceiptTests(ReceiptFixture):
     def test_replacement_must_match_its_log(self):
         self.stall_receipt()
         (self.bundle / 'disk-stall-resample-0-0.log').write_bytes(
-            log_lines(Synthetic().replacement(wall=7000)))
+            log_lines(Synthetic().replacement(wall=7000), fixture=self.report['fixtures']['dense-food']['contract']))
+        self.report['diskStallResamples'][0]['executions'][0]['logSHA256'] = receipt.digest(
+            self.bundle / 'disk-stall-resample-0-0.log')
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'differs from its log'):
+            self.verify()
+
+    def test_resample_must_run_on_the_label_fixture(self):
+        self.stall_receipt()
+        self.report['diskStallResamples'][0]['fixtures'] = [self.report['fixtures']['dense-1']['manifestSHA256']]
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'different fixture'):
+            self.verify()
+        self.stall_receipt()
+        (self.bundle / 'disk-stall-resample-0-0.log').write_bytes(
+            log_lines(Synthetic().replacement(), fixture=self.report['fixtures']['dense-1']['contract']))
         self.report['diskStallResamples'][0]['executions'][0]['logSHA256'] = receipt.digest(
             self.bundle / 'disk-stall-resample-0-0.log')
         self.refresh()
@@ -371,3 +391,65 @@ class DiskStallReceiptTests(ReceiptFixture):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class DiskStallBorderlineTests(borderline_tests.BorderlineBundleFixture):
+    """Borderline judges the post-resample decision, never the replaced original samples."""
+
+    def run_directory(self):
+        run = super().run_directory()
+        for name, data in self.extra_logs.items():
+            (run / name).write_bytes(data)
+        return run
+
+    def stall_failed_run(self, original_ratio, resample_ratio):
+        self.slow_growth(0.1)
+        label = self.slow_absolute(original_ratio)
+        size = self.spec['smallSize']
+        bound = self.limits['actionsBySize'][size][self.action]['maxMs'] * 1000
+        attempt = next(a for a in self.failed['attempts'] if a['size'] == size)
+        slow = next(r for r in attempt['result']['observations'] if r['action'] == self.action and not r['warmup'])
+        overrides = {(self.action, slow['index']): {'append': slow['microseconds'] - int(bound / 2),
+                                                    'cpu': int(bound / 4)}}
+        staging = self.repo.parent / (self.repo.name + '-stall-logs')
+        staging.mkdir(exist_ok=True)
+        self.addCleanup(shutil.rmtree, staging, ignore_errors=True)
+        log = staging / (size + '-attempt-0.log')
+        log.write_bytes(log_lines(attempt['result']['observations'], overrides, label=self.action))
+        attempt['execution'] = dict(attempt['execution'], logSHA256=receipt.digest(log))
+        limits = {**self.limits, 'sha256': self.host['limitsSHA256']}
+        specs = run_gate.scaling_specs(self.limits)
+        contracts = {s: v['contract'] for s, v in self.failed['fixtures'].items()}
+        originals = {a['size']: a['result'] for a in self.failed['attempts']}
+        planned, unattributed = disk_stall.plan(
+            originals, {size: disk_stall.action_diagnostics(log)}, limits, specs, contracts)
+        self.assertEqual(unattributed, [])
+        rows = [dict(r, microseconds=round(bound * resample_ratio) if r['index'] == slow['index'] else r['microseconds'])
+                for r in attempt['result']['observations'] if r['action'] == self.action]
+        resample_log = staging / 'disk-stall-resample-0-0.log'
+        resample_log.write_bytes(log_lines(rows, label=self.action, fixture=contracts[size]))
+        self.extra_logs = {p.name: p.read_bytes() for p in (log, resample_log)}
+        effective = disk_stall.apply(originals, planned, [rows], limits)
+        absolute, pairs = disk_stall.evaluate_all(effective, limits, specs, contracts)
+        self.failed['diskStallResamples'] = [{
+            'attempt': 0, 'policy': disk_stall.POLICY, 'resamples': planned, 'replacements': [rows],
+            'fixtures': [self.failed['fixtures'][size]['manifestSHA256']],
+            'executions': [{'exitCode': 0, 'childAbsent': True, 'childGroupAbsent': True, 'noise': {},
+                            'logSHA256': receipt.digest(resample_log)}],
+            'absolute': {s: {'status': d.status, 'failures': list(d.failures), 'summaries': d.summaries}
+                         for s, d in absolute.items()},
+            'paired': {n: {'status': d.status, 'failures': list(d.failures), 'comparisons': d.summaries}
+                       for n, d in pairs.items()}}]
+        return label
+
+    def test_resample_far_over_its_bound_is_not_borderline_even_if_the_original_was(self):
+        self.stall_failed_run(1.04, 1.5)
+        with self.assertRaisesRegex(ValueError, 'outside'):
+            self.seal()
+
+    def test_borderline_judges_the_resample_and_keeps_its_log(self):
+        label = self.stall_failed_run(1.5, 1.04)
+        self.seal()
+        result = self.verify()
+        self.assertEqual([(m['label'], m['ratioOfBound']) for m in result['borderlineMetrics']], [(label, 1.04)])
+        self.assertTrue((self.root / 'disk-stall-resample-0-0.log').is_file())
