@@ -1029,6 +1029,14 @@
       "agent.write.purchaseImport2": {
         "medianMs": 700,
         "maxMs": 1000
+      },
+      "writer300.refresh.tasks.unchanged": {
+        "medianMs": 10,
+        "maxMs": 15
+      },
+      "writer300.refresh.food.unchanged": {
+        "medianMs": 10,
+        "maxMs": 15
       }
     },
     "dense-2": {
@@ -2047,6 +2055,14 @@
       "agent.write.purchaseImport2": {
         "medianMs": 700,
         "maxMs": 1000
+      },
+      "writer300.refresh.tasks.unchanged": {
+        "medianMs": 10,
+        "maxMs": 15
+      },
+      "writer300.refresh.food.unchanged": {
+        "medianMs": 10,
+        "maxMs": 15
       }
     },
     "dense-food": {
@@ -3065,6 +3081,14 @@
       "agent.write.purchaseImport2": {
         "medianMs": 700,
         "maxMs": 1000
+      },
+      "writer300.refresh.tasks.unchanged": {
+        "medianMs": 10,
+        "maxMs": 15
+      },
+      "writer300.refresh.food.unchanged": {
+        "medianMs": 10,
+        "maxMs": 15
       }
     }
   },
@@ -4599,6 +4623,18 @@
         "medianAdditiveMs": 100,
         "maxMaximumRatio": 2.5,
         "maximumAdditiveMs": 200
+      },
+      "writer300.refresh.tasks.unchanged": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "writer300.refresh.food.unchanged": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
       }
     }
   },
@@ -6131,6 +6167,18 @@
           "medianAdditiveMs": 100,
           "maxMaximumRatio": 2.5,
           "maximumAdditiveMs": 200
+        },
+        "writer300.refresh.tasks.unchanged": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "writer300.refresh.food.unchanged": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
         }
       },
       "growthKind": "food"

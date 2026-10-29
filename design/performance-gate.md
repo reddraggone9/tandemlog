@@ -61,7 +61,7 @@ The standalone Dart executable measures production storage, application commands
 
 The three versioned shapes share the SAME first 1,320 historical physical records, three writers, entity IDs and current Task/Food values. The dense-1 baseline and dense-2 Task-growth shape retain their integer specifications and three physical owners. Prospective fixture schema v2 (exact completion instants) gives Task-growth edits a separate normalized logical namespace, attributed to those same owners, so the continuing writer retains identical next logical IDs and completion order across shapes. Previously sealed v1 canonical bytes and evidence remain immutable; v2 is freshly generated and sealed, not a rewrite of accepted fixtures. An additive dense-food shape uses {baseRecords: 2640, growthKind: food}, normalized to the closed CLI food:2640. Dense-2 adds 1,320 bounded Task Notes edits alternating with exact restores; dense-food instead adds 1,320 Food brand edits alternating with exact restores on existing containers, each carrying its actual observed creation reference. Neither Food contents nor deletion state changes. All three then receive production native-text initialization and the same native checklist/recurring operations. Enforce equal initial-prefix hashes, full current-state digest, Task rows and Food container counts before treating this as history-only scaling. Actual record, effect and row counts are recorded. Both pairs must prove their growth module: Task effects grow only in dense-2, Food effects grow only in dense-food, and the other module's effect count stays equal to the baseline. Missing, unknown or mismatched growth claims fail correctness. The additional pair closes Food-own-history coverage; it does not test a growing number of recurring descriptors. Scalar synthetic IDs and strings are deterministic; production native actor allocation may vary between fixture generations. Generate each fixture once, seal its actual bytes, and reuse exactly those bytes for a timing retry. Profiles and workload copies are always fresh; existing output is refused.
 
-Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 254 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food,6 first-point cases,12 Food-product cases,2 Food Move some cases and8 agent CLI calls). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
+Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 256 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food,6 first-point cases,12 Food-product cases,2 Food Move some cases 8 agent CLI calls and2 writer300 refreshes). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
 
 `limits-v1.json` contains the initial calibrated AOT storage/application/readmodel regression bounds, pinned by literal SHA in the workflow. The initial calibration combines current-source local and hosted Ubuntu observations, two warmups and five measured samples on each of the three shapes. Ordinary per-action median/maximum ceilings retain roughly 50% observed headroom, rounded to 5 ms with small-operation floors, and every ordinary maximum was additionally capped at 100 ms during calibration (a historical calibration cap, not a responsiveness target; see [What sets acceptable latency](#what-sets-acceptable-latency-lee-2026-10-27)). Both history-growth pairs enforce 1.25× + 3 ms median and 1.40× + 5 ms maximum for all 238 ordinary labels. The eight startup labels have separately calibrated size-specific absolute ceilings. Their existing paired guards remain unchanged at 2.25× + 100 ms median and 2.50× + 200 ms maximum: loose historical proof-growth bounds, without a history-independence claim. Startup remains history-scaled; these limits do not excuse avoidable work. Finite calibration is not a percentile guarantee. Actual native UI paint/interaction acceptance is separate and remains unresolved. Loosening an activated limit requires Lee's explicit approval; tooling has no automatic baseline-update switch.
 
@@ -330,7 +330,7 @@ returned revs match a later show; whole-action Undo of the completion and the
 timed text Undo restore the shown task; the audit installation then replays the
 agent's history with Tasks unchanged and exactly three new purchase-linked
 containers. Previous244 labels and bounds remain unchanged. (Merged with the
-Food Move some labels above: 254 labels in total, one combined limits digest.)
+Food Move some labels above: 256 labels in total (including2 writer300 refreshes), one combined limits digest.)
 
 Budgets were declared before any `agent.*` measurement from the intended
 human-time response of one agent tool call, identical on all3shapes: reads
@@ -457,3 +457,24 @@ and `food.product.edit.undo` maximum 23.6ms (one sample; the other four
 growth pair's maximum. That in-session Undo does not open, close or seal, so
 the spike is not attributed to these changes; it is unexplained. The
 dense-food write misses are open.
+
+
+### Bounded cache proof overlap and installation-cardinality refresh
+
+Clean close now prepares the bounded decoded-cache payload/checksum on a pure
+worker while sealing the independently compared Task projection. Each proof is
+still invalidated/consumed before exposure; publishing either or both independent
+proofs after a crash cannot authorize unfinished intent. No canonical bytes,
+receipt generation, digest algorithm, admission checks or budgets changed.
+Concurrent opens share only an *in-flight* opaque verification receipt when
+payload bytes, digest and complete binding are exactly equal. No completed result
+or path/stat-based authority is retained.
+
+The additive `writer300-refresh` family registers two labels under the existing
+unchanged Tasks/Food refresh budgets and ordinary growth rules. A fresh copy of
+each sealed shape receives enough deterministic synthetic joined installations
+to have exactly300 physical histories; every join must be admitted before the
+timers. Every repetition checks unchanged full Task/Food values and canonical
+inventory; reopen and original-prefix checks still apply. This is writer-count
+stress, not isolated history causation; actual GUI scheduling/paint stays separate.
+The manifest owner bound is unchanged. All prior254labels/limits are retained.

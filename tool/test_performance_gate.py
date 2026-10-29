@@ -109,6 +109,17 @@ class RegisteredCoveragePreflightTests(unittest.TestCase):
             self.coverage,self.limits,run_gate.scaling_specs(self.limits))
     def test_committed_registry_matches_all_budgets_and_growth_rules(self):
         self.assertEqual(set(self.check()),set(self.coverage['storageApplicationActionIds']))
+    def test_writer300_reuses_existing_refresh_budgets_and_growth_rules(self):
+        contract=self.coverage['writer300RefreshContract']
+        self.assertEqual(contract['physicalHistories'],300)
+        for module in ('tasks','food'):
+            original='refresh.'+module+'.unchanged'
+            added='writer300.'+original
+            self.assertIn(added,self.coverage['storageApplicationActionIds'])
+            for bounds in self.limits['actionsBySize'].values():
+                self.assertEqual(bounds[added],bounds[original])
+            for spec in run_gate.scaling_specs(self.limits).values():
+                self.assertEqual(spec['rules'][added],spec['rules'][original])
     def test_new_or_stale_registered_case_cannot_be_unbudgeted(self):
         self.coverage['storageApplicationActionIds'].append('unbudgeted.future.action')
         with self.assertRaisesRegex(ValueError,'coverage/budget'):self.check()
@@ -287,7 +298,7 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
         frozen=json.loads((PATH.parent/'original-action-ids-v1.json').read_text())['actions']
         self.assertEqual(len(frozen),146)
         self.assertTrue(set(frozen).issubset(coverage))
-        self.assertEqual(len(coverage),254)
+        self.assertEqual(len(coverage),256)
         products = {'food.product.' + name for name in (
             'edit','edit.undo','bulkEdit','bulkEdit.undo','merge','merge.undo',
             'addWithProduct','addWithProduct.undo','import.dryRun','import.commit',
@@ -520,7 +531,7 @@ class CalibratedInitialLimitTests(unittest.TestCase):
         opening=('startup.','agent.')
         for values in limits['actionsBySize'].values():
             ordinary={k:v for k,v in values.items() if not k.startswith(opening)}
-            self.assertEqual(len(ordinary),238)
+            self.assertEqual(len(ordinary),240)
             self.assertEqual(sum(k.startswith('startup.') for k in values),8)
             self.assertEqual(sum(k.startswith('agent.') for k in values),8)
             for bound in ordinary.values():

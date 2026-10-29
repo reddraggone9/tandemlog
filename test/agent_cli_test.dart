@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/agent/agent_workspace.dart';
 import 'package:tandemlog/agent/agent_profile.dart';
 import 'package:tandemlog/agent/cli.dart';
+import 'package:tandemlog/agent/command.dart';
 import 'package:tandemlog/agent/mcp_server.dart';
 import 'package:tandemlog/agent/registry.dart';
 import 'package:tandemlog/food/food_store.dart' show StaleFoodState;
@@ -905,6 +906,61 @@ void main() {
       await ws.close();
     }
   });
+
+  test(
+    'complete refuses an unseen peer checklist change before receipt',
+    () async {
+      await setUpAgent(profile: 'one');
+      await setUpAgent(profile: 'two', create: false);
+      await cli(['people', 'add', 'Lee'], profile: 'one');
+      final task =
+          ((await json([
+                        'tasks',
+                        'add',
+                        'Pack',
+                        '--for',
+                        'Lee',
+                      ], profile: 'one'))['affected']
+                      as List)
+                  .single
+              as Map;
+      final id = task['id'] as String;
+      final ws = await AgentWorkspace.open(
+        AgentProfile.resolve(selection: 'one', environment: env),
+        readOnly: false,
+      );
+      try {
+        final item = await json([
+          'checklist',
+          'add',
+          id,
+          'Incoming socks',
+          '--if-rev',
+          task['rev'] as String,
+        ], profile: 'two');
+        expect(item['error'], isNull, reason: '$item');
+        final before = await bytes(canonicalOnly: true);
+        final complete = registry.firstWhere((c) => c.name == 'tasks complete');
+        await expectLater(
+          complete.run(
+            AgentCall(
+              complete.validate({'id': id, 'if-rev': task['rev']}),
+              ws,
+              AgentOptions(timeZone: 'America/Chicago', environment: env),
+            ),
+          ),
+          throwsA(isA<StaleTaskSnapshot>()),
+        );
+        expect(await bytes(canonicalOnly: true), before);
+      } finally {
+        await ws.close();
+      }
+      expect(
+        (await json(['tasks', 'show', id], profile: 'one'))['completed'],
+        false,
+      );
+    },
+  );
 
   test('concurrent init of one profile keeps exactly one identity', () async {
     final results = await Future.wait([

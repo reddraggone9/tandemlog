@@ -18,7 +18,7 @@ import 'package:tandemlog/application/workspace_session.dart';
 import 'package:tandemlog/application/task_text_session.dart';
 import 'package:tandemlog/application/text_save_command.dart';
 import 'package:tandemlog/application/checklist_completion_command.dart';
-import 'package:tandemlog/domain/event.dart' show LogEvent;
+import 'package:tandemlog/domain/event.dart' show LogEvent, EventClock;
 import 'package:tandemlog/domain/task_view.dart';
 import 'package:tandemlog/domain/event_chain.dart' show canonicalDataJson;
 import 'package:tandemlog/domain/timed_view.dart';
@@ -1887,6 +1887,7 @@ Future<void> main(List<String> args) async {
     'first-derived-mixed': (a) =>
         firstDerivedPointAction(a, sampleStart, 'mixed'),
     'agent-cli': agentCli,
+    'writer300-refresh': writer300Refresh,
   };
   // Disk-stall resample: one family, all warmups and samples, fresh process.
   final only = args[0] == 'resample' ? args[4] : null;
@@ -3295,4 +3296,87 @@ Future<void> foodMoveSome(Audit a) async {
     'Move some Undo differs from the prior row',
   );
   require(jsonEncode(a.tasks.rows) == tasksBefore, 'Move some changed Tasks');
+}
+
+/// Installation-cardinality stress, not history-only causation. Canonical
+/// synthetic join records are setup outside timers; module values stay exact.
+Future<void> writer300Refresh(Audit a) async {
+  final beforeTasks = jsonEncode(a.tasks.rows),
+      beforeFood = productFoodState(a.food);
+  final manifest = a.history.manifest;
+  final originals = await a.inventory();
+  final existing = originals.keys.where((n) => n.endsWith('.applog')).length;
+  final added = <String, String>{};
+  for (var i = existing; i < 300; i++) {
+    final writer = benchmarkId('writer300:$i');
+    final head = unifiedGenesis(manifest.space, manifest.epoch, writer);
+    final record = UnifiedRecord(
+      space: manifest.space,
+      epoch: manifest.epoch,
+      writer: writer,
+      sequence: 1,
+      clock: EventClock(BigInt.one),
+      previousHash: head,
+      effect: UnifiedEffect.joined(),
+      observed: {writer: UnifiedFrontier(0, head)},
+    );
+    final name = unifiedLogName(writer);
+    require(!originals.containsKey(name), 'Writer300 identity collision');
+    await File(
+      '${a.shared.path}/$name',
+    ).writeAsString('${record.encode()}\n', flush: true);
+    added[name] = bytesDigest(
+      await File('${a.shared.path}/$name').readAsBytes(),
+    );
+  }
+  await a.tasks.refresh();
+  await a.food.refresh();
+  require(
+    (await a.inventory()).keys.where((n) => n.endsWith('.applog')).length ==
+        300,
+    'Writer300 fixture must have exactly 300 physical histories',
+  );
+  require(
+    a.history.snapshot.records
+            .where((r) => added.containsKey(unifiedLogName(r.writer)))
+            .length ==
+        added.length,
+    'Every synthetic joined installation must be admitted',
+  );
+  final clean = await a.inventory();
+  for (var rep = sampleStart; rep < sampleEnd; rep++) {
+    await a.measure(
+      'writer300.refresh.tasks.unchanged',
+      rep,
+      () => a.tasks.refresh(),
+      readOnly: true,
+    );
+    await a.measure(
+      'writer300.refresh.food.unchanged',
+      rep,
+      () => a.food.refresh(),
+      readOnly: true,
+    );
+    require(
+      jsonEncode(a.tasks.rows) == beforeTasks &&
+          productFoodState(a.food) == beforeFood,
+      'Writer-cardinality refresh changed module values',
+    );
+    require(
+      jsonEncode(await a.inventory()) == jsonEncode(clean),
+      'Writer-cardinality refresh changed canonical bytes',
+    );
+  }
+  print(
+    jsonEncode({
+      'measurement': 'writer300-setup',
+      'physicalWriters': 300,
+      'addedWriters': added.length,
+      'moduleStateUnchanged': true,
+      'allJoinRecordsAdmitted': true,
+      'canonicalBytesUnchanged': true,
+      'scope':
+          'shared Tasks/Food unchanged refresh, provider list/admission; UI scheduling/paint separate',
+    }),
+  );
 }

@@ -2,7 +2,7 @@
 
 Implements [ADR0033](decisions/0033-controlled-reference-performance.md). No
 hardware multiplier;`limits-v1.json` SHA256 remains
-`fb8dd13ad2a89bbce0b3e340b4fd3b4270a459684df1dbb87a1a2b6777501f32`.
+`335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb`.
 The implementation is not qualified until host/controller registration,a fresh
 reference receipt and exact-source hosted CI all pass. Do not promote old samples.
 
@@ -425,7 +425,7 @@ using its curated environment and the actual Dart SDK binary:
 /usr/bin/python3 "$qualification_source/tool/performance/run_gate.py" \
   --repo "$qualification_source" --dart "$reviewed_dart" \
   --native-library "$reviewed_native" --sqlite-library "$reviewed_sqlite" \
-  --expected-limits-sha256 fb8dd13ad2a89bbce0b3e340b4fd3b4270a459684df1dbb87a1a2b6777501f32 \
+  --expected-limits-sha256 335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb \
   --reference-request "$qualification_request" --output "$qualification_run"
 ```
 
