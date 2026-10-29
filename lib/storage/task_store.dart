@@ -5045,6 +5045,46 @@ void _insertTaskCacheRows(
   }
 }
 
+/// True only when [a] and [b] hold the same values with the same SQLite
+/// types, so their [_taskCacheDigest] inputs encode to identical bytes. Any
+/// value it cannot vouch for (NaN, an unexpected type) counts as different,
+/// which only forgoes a seal. Replaces a second full digest at close.
+bool sameTaskCacheRows(
+  List<List<List<Object?>>> a,
+  List<List<List<Object?>>> b,
+) {
+  bool same(Object? x, Object? y) {
+    if (x == null || x is String || x is bool) return x == y;
+    if (x is int) return y is int && x == y;
+    if (x is double) {
+      // -0.0 == 0.0 but they encode differently; NaN never equals.
+      return y is double && x == y && x.isNegative == y.isNegative;
+    }
+    if (x is List<int> && y is List<int>) {
+      if (x.length != y.length) return false;
+      for (var i = 0; i < x.length; i++) {
+        if (x[i] != y[i]) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  if (a.length != b.length) return false;
+  for (var t = 0; t < a.length; t++) {
+    final ra = a[t], rb = b[t];
+    if (ra.length != rb.length) return false;
+    for (var r = 0; r < ra.length; r++) {
+      final va = ra[r], vb = rb[r];
+      if (va.length != vb.length) return false;
+      for (var c = 0; c < va.length; c++) {
+        if (!same(va[c], vb[c])) return false;
+      }
+    }
+  }
+  return true;
+}
+
 String _taskCacheDigest(List<List<List<Object?>>> rows, List<String> ready) =>
     // Identical JSON UTF-8 bytes without a full intermediate UTF-16 string.
     // The entire ordered row inventory and ready list still enter the proof.
@@ -5924,9 +5964,10 @@ class TaskSemanticValidator {
     final ready = _ready!.toList()..sort();
     final rows = _taskCacheRows(source, tables);
     final expected = _taskCacheRows(_store!.db, _store!.tables);
-    final digest = _taskCacheDigest(rows, ready);
     // Do not bless an unobserved change to the live disposable cache at close.
-    if (digest != _taskCacheDigest(expected, ready)) return;
+    // Exact row equality implies equal digests, so one digest suffices.
+    if (!sameTaskCacheRows(rows, expected)) return;
+    final digest = _taskCacheDigest(rows, ready);
     source.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
       _proofKey,
       jsonEncode({
