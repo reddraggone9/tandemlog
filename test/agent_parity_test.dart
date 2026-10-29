@@ -37,7 +37,12 @@ const covered = {
   'add': ['food add', 'food add-another'],
   'remove': ['food remove'],
   'restore': ['food restore'],
-  'changeDetails': ['food edit', 'products set', 'products merge'],
+  'changeDetails': [
+    'food edit',
+    'food move-some',
+    'products set',
+    'products merge',
+  ],
   'commitPurchaseImport': ['purchases import'],
   'undoOperations': ['undo'],
   'undoRemovals': ['undo'],

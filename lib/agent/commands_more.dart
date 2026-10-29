@@ -782,6 +782,97 @@ List<AgentCommand> moreCommands() => [
     },
   ),
   AgentCommand(
+    'food move-some',
+    'Give some of a row\'s containers a new Location, as the row menu\'s '
+        'Move some…: one action, one Undo. The row is the named container\'s; '
+        'its first --count current containers move (the dry run lists them).',
+    CommandKind.write,
+    const [
+      AgentArg(
+        'id',
+        'string',
+        'Any container in the row.',
+        required: true,
+        positional: true,
+      ),
+      AgentArg(
+        'if-rev',
+        'string',
+        'Current rev of the named container.',
+        required: true,
+      ),
+      AgentArg(
+        'count',
+        'integer',
+        'How many to move, 1 to the row\'s count.',
+        required: true,
+      ),
+      AgentArg(
+        'location',
+        'string',
+        'The new Location ("" for none).',
+        required: true,
+      ),
+    ],
+    (call) async {
+      final state = foodState(call);
+      final named = foodContainer(call, call.require('id'));
+      final guard = foodGuard(call, [named.id], [call.require('if-rev')]);
+      if (named.deleted) {
+        throw const AgentFailure(
+          'validation',
+          'Removed containers cannot be moved. Restore them first.',
+          details: {'field': 'id', 'error': 'deleted'},
+        );
+      }
+      // The row's containers now, as the page resolves them at Move time.
+      final row = state
+          .rows[foodRowKey(named, state.usesProducts ? named.product : '')]!;
+      final count = call.integer('count')!;
+      if (count < 1 || count > row.length) {
+        throw AgentFailure(
+          'validation',
+          'Enter 1 to ${row.length}.',
+          details: {'field': 'count', 'error': 'range', 'max': row.length},
+        );
+      }
+      final location = call.require('location').trim();
+      final details = named.details;
+      if (location == details.location) {
+        throw const AgentFailure(
+          'validation',
+          'Choose a different location.',
+          details: {'field': 'location', 'error': 'unchanged'},
+        );
+      }
+      final moved = FoodDetails(
+        name: details.name,
+        brand: details.brand,
+        expiry: details.expiry,
+        estimated: details.estimated,
+        retention: details.retention,
+        location: location,
+        size: details.size,
+      )..validate();
+      final ids = [for (final c in row.take(count)) c.id];
+      final before = ownHead(call);
+      await call.ws.session.food.changeDetails(ids, moved, const [
+        'location',
+      ], canCommit: guard);
+      return writeResult(
+        call,
+        before,
+        'Moved $count ${details.name} to '
+        '${location.isEmpty ? 'no location' : location}.',
+        const [],
+        containerIds: ids,
+      );
+    },
+    // The command picks the containers, so the agent always sees them in a
+    // dry run first; the commit is bound to that plan.
+    requiresPlan: true,
+  ),
+  AgentCommand(
     'products set',
     'Set a product\'s store link and minimum to keep.',
     CommandKind.write,

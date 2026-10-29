@@ -1321,4 +1321,104 @@ void main() {
       expect(forLee['total'], 1);
     },
   );
+
+  test('food move-some splits a row as one action with one Undo', () async {
+    await setUpAgent();
+    final added = await json([
+      'food',
+      'add',
+      '--name',
+      'Soup',
+      '--expiry',
+      '2027-03-01',
+      '--location',
+      'Pantry',
+      '--count',
+      '3',
+    ]);
+    final row = [
+      for (final a in added['affected'] as List) (a as Map)['id'] as String,
+    ]..sort();
+    expect(row, hasLength(3));
+    Future<Map> show(String id) => json(['food', 'show', id]);
+    final named = await show(row.last);
+    final args = [
+      'food',
+      'move-some',
+      row.last,
+      '--if-rev',
+      named['rev'] as String,
+      '--count',
+      '2',
+      '--location',
+      'Freezer',
+    ];
+    // Plan required: the command chooses the containers.
+    final bare = await json(args);
+    expect(bare['error']['kind'], 'validation');
+    for (final bad in [
+      ['--count', '0'],
+      ['--count', '4'],
+      ['--location', 'Pantry'],
+    ]) {
+      final argv = [...args];
+      argv[argv.indexOf(bad[0]) + 1] = bad[1];
+      final refused = await json([...argv, '--dry-run']);
+      expect(refused['error']['kind'], 'validation', reason: '$bad');
+    }
+    final before = await bytes();
+    final dry = await json([...args, '--dry-run']);
+    expect(await bytes(), before);
+    // The row's first two current containers, as the page sends them.
+    expect(
+      [for (final e in dry['effects'] as List) (e as Map)['id']]..sort(),
+      row.take(2).toList(),
+    );
+
+    // Any change between plan and commit refuses the commit.
+    final other = await show(row.first);
+    await json([
+      'food',
+      'edit',
+      row.first,
+      '--rev=${row.first}=${other['rev']}',
+      '--expiry',
+      '2026-12-01',
+    ]);
+    final canonical = await bytes(canonicalOnly: true);
+    final changed = await json([
+      ...args,
+      '--expect-plan',
+      dry['planHash'] as String,
+    ]);
+    expect(changed['error']['kind'], 'plan_changed');
+    expect(changed['exit'], 6);
+    expect(await bytes(canonicalOnly: true), canonical);
+
+    // The edited container left the row; re-plan moves the next two.
+    final replanned = await json([...args, '--dry-run']);
+    expect(replanned['error'], isNull, reason: '$replanned');
+    final moved = await json([
+      ...args,
+      '--expect-plan',
+      replanned['planHash'] as String,
+    ]);
+    expect(moved['actions'], hasLength(1));
+    final movedIds = [
+      for (final a in moved['affected'] as List) (a as Map)['id'] as String,
+    ]..sort();
+    expect(movedIds, row.skip(1).toList());
+    for (final id in movedIds) {
+      expect((await show(id))['details']['location'], 'Freezer');
+    }
+    expect((await show(row.first))['details']['location'], 'Pantry');
+
+    // One Undo restores both.
+    final undone = await json(undoArgv(moved));
+    expect(undone['actions'], hasLength(1), reason: '$undone');
+    for (final id in movedIds) {
+      expect((await show(id))['details']['location'], 'Pantry');
+    }
+    expect((await json(['verify']))['error'], isNull);
+  });
 }
