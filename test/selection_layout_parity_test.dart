@@ -253,17 +253,19 @@ void registerSelectionLayoutParityTests({
             var measuring = true;
             final width = tester.getSize(search).width;
             WidgetsBinding.instance.addPersistentFrameCallback((_) {
-              if (measuring && search.evaluate().isNotEmpty)
+              if (measuring && search.evaluate().isNotEmpty) {
                 widths.add(tester.getSize(search).width);
+              }
             });
             await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
             await tester.tap(second);
             await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
-            if (!food)
+            if (!food) {
               await host.ready(
                 tester,
                 () => find.byType(TaskEditor).evaluate().isNotEmpty,
               );
+            }
             await tester.pumpAndSettle();
             expect(
               food ? find.byType(FoodEditor) : find.byType(TaskEditor),
@@ -272,11 +274,12 @@ void registerSelectionLayoutParityTests({
             await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
             await tester.tap(second);
             await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
-            if (!food)
+            if (!food) {
               await host.ready(
                 tester,
                 () => find.byType(BulkTaskEditor).evaluate().isNotEmpty,
               );
+            }
             await tester.pumpAndSettle();
             measuring = false;
             expect(
