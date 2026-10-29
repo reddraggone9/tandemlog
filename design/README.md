@@ -29,6 +29,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Released in stable2026.10.9 after accepted RC.1/RC.2 validation.
 
+- [Agent interface](agent-interface.md): proposed (not accepted) headless `tandemlog-cli` with JSON/text output and an MCP adapter, its own installation, every user-facing action with dry run, preconditions and Undo; open decisions for Lee in section 9. Target: the release after Food products is stable.
+
 - [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 
 - [Controlled reference performance](decisions/0033-controlled-reference-performance.md): Lee-approved prospective Farnsworth absolute/growth qualification with unchanged budgets,mandatory hosted correctness and advisory hosted timing;[operating protocol](performance-reference-qualification.md),fresh enforcing receipt and exact-source CI required. No persistent runner or multiplier.
