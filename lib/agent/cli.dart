@@ -318,6 +318,7 @@ String renderResult(AgentResult result, String format, AgentCommand command) {
         {'v': agentOutputVersion, ...result.data},
         nextAfter: result.nextAfter,
         nextWithinFirst: result.nextWithinFirst,
+        membersField: result.membersField,
       );
     case 'jsonl':
       final list = result.data.values.whereType<List>().firstOrNull;
@@ -340,6 +341,7 @@ String capJson(
   Map<String, Object?> data, {
   String? Function(int shown)? nextAfter,
   String Function(int members)? nextWithinFirst,
+  String? membersField,
 }) {
   var encoded = jsonEncode(data);
   int size(String s) => utf8.encode(s).length;
@@ -365,8 +367,17 @@ String capJson(
       hi = mid - 1;
     }
   }
-  if (lo == 0 && all.isNotEmpty && nextWithinFirst != null) {
-    final partial = _firstRowMembers(data, key, all, nextWithinFirst);
+  if (lo == 0 &&
+      all.isNotEmpty &&
+      nextWithinFirst != null &&
+      membersField != null) {
+    final partial = _firstRowMembers(
+      data,
+      key,
+      all,
+      membersField,
+      nextWithinFirst,
+    );
     if (partial != null) return partial;
   }
   return withRows(lo);
@@ -376,12 +387,11 @@ String? _firstRowMembers(
   Map<String, Object?> data,
   String key,
   List all,
+  String field,
   String Function(int members) nextWithinFirst,
 ) {
   final row = all.first;
-  if (row is! Map) return null;
-  final field = row.entries.where((e) => e.value is List).firstOrNull?.key;
-  if (field == null) return null;
+  if (row is! Map || row[field] is! List) return null;
   final members = row[field] as List;
   String withMembers(int k) => jsonEncode({
     ...data,

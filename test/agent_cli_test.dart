@@ -14,6 +14,7 @@ import 'package:tandemlog/food/food_store.dart' show StaleFoodState;
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
+import 'package:uuid/uuid.dart';
 
 /// In-process agent CLI against private synthetic workspaces; the packaged
 /// executable gets the same calls in the process smoke test.
@@ -1174,6 +1175,108 @@ void main() {
   );
 
   test(
+    'a member cursor restarts the row when rows before it changed',
+    () async {
+      await setUpAgent();
+      final (code, out) = await cli([
+        'food',
+        'add',
+        '--name',
+        'Apples',
+        '--expiry',
+        '2026-12-01',
+      ]);
+      expect(code, 0, reason: out);
+      for (final (name, expiry) in [
+        ('Beans', '2027-01-01'),
+        ('Carrots', '2027-02-01'),
+      ]) {
+        for (var i = 0; i < 6; i++) {
+          final (code, out) = await cli([
+            'food',
+            'add',
+            '--name',
+            name,
+            '--expiry',
+            expiry,
+            '--count',
+            '100',
+          ]);
+          expect(code, 0, reason: out);
+        }
+      }
+      // Page 1: Apples; page 2: Beans' first members, resuming inside Beans.
+      final first = await json(['food', 'list']);
+      final apples = (first['rows'] as List).first as Map;
+      expect(apples['name'], 'Apples');
+      final second = await json([
+        'food',
+        'list',
+        '--cursor',
+        first['next'] as String,
+      ]);
+      final beans = (second['rows'] as List).single as Map;
+      expect(beans['name'], 'Beans');
+      expect(beans['membersShown'], isPositive);
+      final inside = second['next'] as String;
+      // Removing Apples shifts Carrots to Beans' old offset.
+      final container = (apples['containers'] as List).single as Map;
+      final removed = await json([
+        'food',
+        'remove',
+        container['id'] as String,
+        '--if-rev',
+        container['rev'] as String,
+      ]);
+      expect(removed['error'], isNull, reason: '$removed');
+      final third = await json(['food', 'list', '--cursor', inside]);
+      final row = (third['rows'] as List).first as Map;
+      expect(row['name'], 'Carrots');
+      expect(row.containsKey('containersFrom'), isFalse);
+      // Unchanged rows still resume inside the row.
+      final again = await json(['food', 'list']);
+      final b2 = ((again['rows'] as List).single as Map);
+      expect(b2['name'], 'Beans');
+      final resumed = await json([
+        'food',
+        'list',
+        '--cursor',
+        again['next'] as String,
+      ]);
+      expect(
+        ((resumed['rows'] as List).first as Map)['containersFrom'],
+        b2['membersShown'],
+      );
+    },
+  );
+
+  test('a huge Food row in text clips its ID list and advances', () async {
+    await setUpAgent();
+    for (var i = 0; i < 37; i++) {
+      final (code, out) = await cli([
+        'food',
+        'add',
+        '--name',
+        'Beans',
+        '--expiry',
+        '2027-01-01',
+        '--count',
+        '100',
+      ]);
+      expect(code, 0, reason: out);
+    }
+    await cli(['food', 'add', '--name', 'Apples', '--expiry', '2027-02-01']);
+    final (code, text) = await cli(['food', 'list']);
+    expect(code, 0, reason: text);
+    expect(utf8.encode(text).length, lessThanOrEqualTo(32 * 1024));
+    final lines = text.split('\n');
+    final beans = lines.singleWhere((l) => l.contains('Beans'));
+    expect(beans, contains('(+3200 more; --format json pages them)'));
+    expect(lines.where((l) => l.contains('Apples')), hasLength(1));
+    expect(lines.where((l) => l.startsWith('next: ')), isEmpty);
+  });
+
+  test(
     'a peer checklist change invalidates the task rev completion names',
     () async {
       await setUpAgent(profile: 'one');
@@ -1224,6 +1327,97 @@ void main() {
         reread['rev'] as String,
       ], profile: 'one');
       expect(done['actions'], hasLength(1), reason: '$done');
+    },
+  );
+
+  test(
+    'a peer change to an inherited checklist item invalidates the successor rev',
+    () async {
+      await setUpAgent(profile: 'one');
+      await setUpAgent(profile: 'two', create: false);
+      await cli(['people', 'add', 'Lee'], profile: 'one');
+      final added =
+          ((await json([
+                        'tasks',
+                        'add',
+                        'Pack',
+                        '--for',
+                        'Lee',
+                      ], profile: 'one'))['affected']
+                      as List)
+                  .single
+              as Map;
+      final id = added['id'] as String;
+      final edited = await json([
+        'tasks',
+        'edit',
+        id,
+        '--if-rev',
+        added['rev'] as String,
+        '--due',
+        '2030-05-10',
+        '--repeat',
+        'every day',
+      ], profile: 'one');
+      expect(edited['error'], isNull, reason: '$edited');
+      var show = await json(['tasks', 'show', id], profile: 'one');
+      final item = await json([
+        'checklist',
+        'add',
+        id,
+        'Socks',
+        '--if-rev',
+        show['rev'] as String,
+      ], profile: 'one');
+      expect(item['error'], isNull, reason: '$item');
+      show = await json(['tasks', 'show', id], profile: 'one');
+      final done = await json([
+        'tasks',
+        'complete',
+        id,
+        '--if-rev',
+        show['rev'] as String,
+      ], profile: 'one');
+      expect(done['error'], isNull, reason: '$done');
+      final child = const Uuid().v5(id, 'successor');
+      final read = await json(['tasks', 'show', child], profile: 'one');
+      expect(read['error'], isNull, reason: '$read');
+      final copy = (read['checklist'] as List).single as Map;
+      // The successor's rev is its own, not the rev of an untouched entity.
+      expect(read['rev'], isNot(copy['rev']));
+      final checked = await json([
+        'checklist',
+        'check',
+        copy['id'] as String,
+        '--if-rev',
+        copy['rev'] as String,
+      ], profile: 'two');
+      expect(checked['error'], isNull, reason: '$checked');
+      final parent = (checked['affected'] as List).firstWhere(
+        (a) => (a as Map)['id'] == child,
+        orElse: () => null,
+      );
+      if (parent != null) expect(parent['rev'], isNot(read['rev']));
+      final before = await bytes(canonicalOnly: true);
+      final stale = await json([
+        'tasks',
+        'complete',
+        child,
+        '--if-rev',
+        read['rev'] as String,
+      ], profile: 'one');
+      expect((stale['error'] as Map)['kind'], 'stale', reason: '$stale');
+      expect(await bytes(canonicalOnly: true), before);
+      final reread = await json(['tasks', 'show', child], profile: 'one');
+      expect(reread['rev'], isNot(read['rev']));
+      final ok = await json([
+        'tasks',
+        'complete',
+        child,
+        '--if-rev',
+        reread['rev'] as String,
+      ], profile: 'one');
+      expect(ok['actions'], hasLength(1), reason: '$ok');
     },
   );
 

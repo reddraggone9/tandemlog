@@ -44,7 +44,14 @@ String resolveId(String input, Iterable<String> ids, String noun) {
 
 /// A page of rows with an opaque cursor bound to the query that produced it.
 class Page<T> {
-  Page(this.rows, this.total, this._key, this._offset, [this.memberOffset = 0]);
+  Page(
+    this.rows,
+    this.total,
+    this._key,
+    this._offset, [
+    this.memberOffset = 0,
+    this._rowKey,
+  ]);
   final List<T> rows;
   final int total;
   final String _key;
@@ -53,6 +60,10 @@ class Page<T> {
   /// Members of the first row already returned by earlier pages (a cursor
   /// that resumes inside an oversized row); later rows start at zero.
   final int memberOffset;
+
+  /// Identity of a row, bound into [within] cursors so a resumed member
+  /// offset never applies to a different row.
+  final String Function(T row)? _rowKey;
 
   String? get next => after(rows.length);
 
@@ -68,7 +79,12 @@ class Page<T> {
   /// its members; always advances, so an oversized row still pages.
   String within(int members) => base64Url.encode(
     utf8.encode(
-      jsonEncode({'q': _key, 'o': _offset, 'm': memberOffset + members}),
+      jsonEncode({
+        'q': _key,
+        'o': _offset,
+        'm': memberOffset + members,
+        if (_rowKey != null) 'r': _rowKey(rows.first),
+      }),
     ),
   );
 
@@ -77,6 +93,7 @@ class Page<T> {
     required int? limit,
     required String? cursor,
     required String query,
+    String Function(T row)? rowKey,
   }) {
     final bound = limit ?? defaultLimit;
     if (bound < 1) {
@@ -89,6 +106,7 @@ class Page<T> {
     final key = revOf(query);
     var offset = 0;
     var members = 0;
+    Object? row;
     if (cursor != null) {
       try {
         final j =
@@ -99,7 +117,11 @@ class Page<T> {
         if (j['q'] != key) throw const FormatException();
         offset = j['o'] as int;
         members = (j['m'] as int?) ?? 0;
+        row = j['r'];
         if (offset < 0 || members < 0) throw const FormatException();
+        if (members > 0 && rowKey != null && row is! String) {
+          throw const FormatException();
+        }
       } catch (_) {
         throw const AgentFailure(
           'validation',
@@ -110,12 +132,19 @@ class Page<T> {
     }
     final end = (offset + bound).clamp(0, all.length);
     final rows = offset >= all.length ? <T>[] : all.sublist(offset, end);
+    // The row the member offset was issued for moved (rows before it were
+    // added or removed): restart this row from its first member rather than
+    // skip members of another row.
+    if (rows.isNotEmpty && rowKey != null && row != rowKey(rows.first)) {
+      members = 0;
+    }
     return Page(
       rows,
       all.length,
       key,
       offset.clamp(0, all.length),
       rows.isEmpty ? 0 : members,
+      rowKey,
     );
   }
 }
@@ -242,6 +271,10 @@ Map<String, Object?> foodGroupJson(FoodGroup g, {int from = 0}) {
 
 String foodRev(FoodContainer c) => revOf(c.toJson());
 
+/// Container IDs listed on one text row. A longer list is clipped so the row
+/// always fits the output cap and a text cursor always advances.
+const foodLineIds = 500;
+
 String foodGroupLine(FoodGroup g, int thisYear) {
   final d = g.details;
   final parts = <String>[
@@ -253,8 +286,11 @@ String foodGroupLine(FoodGroup g, int thisYear) {
     if (d.retention.isNotEmpty) 'kept: ${d.retention}',
     if (g.containers.first.deleted) 'deleted',
   ];
-  final ids = g.containers.length > 1
-      ? ' · ids ${g.containers.map((c) => shortId(c.id)).join(',')}'
+  final n = g.containers.length;
+  final more = n - foodLineIds;
+  final ids = n > 1
+      ? ' · ids ${g.containers.take(foodLineIds).map((c) => shortId(c.id)).join(',')}'
+            '${more > 0 ? ' (+$more more; --format json pages them)' : ''}'
       : '';
   return '${parts.join(' · ')}$ids';
 }

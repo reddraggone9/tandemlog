@@ -36,6 +36,7 @@ class AgentResult {
     String text, {
     this.nextAfter,
     this.nextWithinFirst,
+    this.membersField,
     this.exitCode = 0,
   }) : _text = (() => text);
 
@@ -46,6 +47,7 @@ class AgentResult {
     String Function() text, {
     this.nextAfter,
     this.nextWithinFirst,
+    this.membersField,
     this.exitCode = 0,
   }) : _text = text;
   final Map<String, Object?> data;
@@ -60,6 +62,9 @@ class AgentResult {
   /// containers): the cursor resuming inside that row after [members] more
   /// of its members, used when that one row alone exceeds the output cap.
   final String Function(int members)? nextWithinFirst;
+
+  /// The first row's member list [nextWithinFirst] pages (`containers`).
+  final String? membersField;
 
   /// Non-zero for a result that is also a failure (a partial bulk edit).
   final int exitCode;

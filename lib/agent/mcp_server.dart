@@ -146,6 +146,7 @@ class McpServer {
                   {'v': agentOutputVersion, ...result.data},
                   nextAfter: result.nextAfter,
                   nextWithinFirst: result.nextWithinFirst,
+                  membersField: result.membersField,
                 ),
               )
               as Map<String, Object?>;

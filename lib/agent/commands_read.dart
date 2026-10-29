@@ -56,16 +56,22 @@ Map<String, dynamic>? taskRow(AgentCall call, String id) {
   return null;
 }
 
-/// Revision of a task: its admitted operation IDs plus those of its
-/// checklist items, sorted. Any admitted change, including one that restores
-/// identical visible fields or only touches the checklist (which completion
-/// reads), changes it. A task without checklist items keeps the same rev.
+/// Revision of a task: its admitted operation IDs, the completion that
+/// created it (recurring successor), and the operations of its checklist
+/// items, sorted. Items are those created under it and those it inherited
+/// from its predecessor's completion (as `hasDurableChecklistActivity`).
+/// Any admitted change, including one that restores identical visible fields
+/// or only touches the checklist (which completion reads), changes it.
 String taskRev(AgentCall call, String id) {
   final store = call.ws.session.tasks;
   final events = store.tables.events;
   final ids = [
     for (final r in store.db.select(
-      "SELECT id FROM $events WHERE entity=?1 OR entity IN (SELECT entity FROM $events WHERE json_extract(semantic,'\$.type')='checklist.itemCreated' AND json_extract(semantic,'\$.data.parent')=?1) ORDER BY id",
+      "SELECT id FROM $events WHERE entity=?1 "
+      "OR json_extract(semantic,'\$.data.successor.id')=?1 "
+      "OR entity IN (SELECT entity FROM $events WHERE json_extract(semantic,'\$.type')='checklist.itemCreated' AND json_extract(semantic,'\$.data.parent')=?1) "
+      "OR entity IN (SELECT json_extract(item.value,'\$.id') FROM $events, json_each($events.semantic,'\$.data.checklist.items') AS item WHERE json_extract($events.semantic,'\$.data.successor.id')=?1 AND json_extract($events.semantic,'\$.type')='task.completedWithChecklist') "
+      "ORDER BY id",
       [id],
     ))
       r['id'] as String,
@@ -251,6 +257,7 @@ Future<AgentResult> _food(AgentCall call, {String? query}) async {
     query:
         '$heading|${([for (final e in call.args.entries)
           if (e.key != 'cursor' && e.key != 'limit') '${e.key}=${e.value}']..sort()).join('&')}',
+    rowKey: (r) => revOf('${r.$1}|${r.$2.key}'),
   );
   final year = tz.TZDateTime.from(
     DateTime.now().toUtc(),
@@ -295,6 +302,7 @@ Future<AgentResult> _food(AgentCall call, {String? query}) async {
     ),
     nextAfter: page.after,
     nextWithinFirst: page.within,
+    membersField: 'containers',
   );
 }
 
