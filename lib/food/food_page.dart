@@ -18,6 +18,7 @@ import '../presentation/toolbar_action.dart';
 import '../presentation/editor_surface.dart';
 import '../presentation/free_text_autocomplete.dart';
 import 'food_editor.dart';
+import 'food_rows.dart';
 import 'expiration_presentation.dart';
 import 'inventory.dart';
 
@@ -88,28 +89,19 @@ class _FoodGrouping {
   }) : reasons = Set.unmodifiable(reasons),
        brands = Set.unmodifiable(brands),
        locations = Set.unmodifiable(locations) {
-    final querying = query.trim().isNotEmpty;
-    matches = List.unmodifiable(
-      state.view(
-        view == FoodView.inbox ? FoodView.inventory : view,
-        search: query,
-        reasons: reasons,
-        brands: brands,
-        locations: locations,
-      ),
+    final composed = FoodRows(
+      state: state,
+      view: view,
+      query: query,
+      reasons: this.reasons,
+      brands: this.brands,
+      locations: this.locations,
     );
-    inbox = List.unmodifiable(
-      (view == FoodView.inventory || view == FoodView.inbox) && !querying
-          ? state.view(FoodView.inbox, brands: brands, locations: locations)
-          : <FoodGroup>[],
-    );
-    groups = querying
-        ? List.unmodifiable(matches.where((g) => !g.containers.first.deleted))
-        : matches;
-    deletedGroups = querying
-        ? List.unmodifiable(matches.where((g) => g.containers.first.deleted))
-        : const [];
-    rows = List.unmodifiable([...inbox, ...groups, ...deletedGroups]);
+    matches = composed.matches;
+    inbox = composed.inbox;
+    groups = composed.groups;
+    deletedGroups = composed.deletedGroups;
+    rows = composed.rows;
     shown = List.unmodifiable([for (final g in rows) ...g.containers]);
     visibleIds = Set.unmodifiable(shown.map((item) => item.id));
   }
