@@ -389,9 +389,6 @@ class DiskStallReceiptTests(ReceiptFixture):
                          ['dense-food:' + LABEL, 'food-own-history:scaling:' + LABEL])
 
 
-if __name__ == '__main__':
-    unittest.main()
-
 
 class DiskStallBorderlineTests(borderline_tests.BorderlineBundleFixture):
     """Borderline judges the post-resample decision, never the replaced original samples."""
@@ -453,3 +450,6 @@ class DiskStallBorderlineTests(borderline_tests.BorderlineBundleFixture):
         result = self.verify()
         self.assertEqual([(m['label'], m['ratioOfBound']) for m in result['borderlineMetrics']], [(label, 1.04)])
         self.assertTrue((self.root / 'disk-stall-resample-0-0.log').is_file())
+
+if __name__ == '__main__':
+    unittest.main()

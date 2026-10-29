@@ -42,7 +42,7 @@ def action_diagnostics(log):
     return found
 
 
-FIXTURE_KEYS = ('baseHistoricalRecords', 'actualPhysicalRecords')
+FIXTURE_KEYS = ('baseHistoricalRecords', 'actualPhysicalRecords', 'growthKind')
 
 
 def completed_fixture(log):

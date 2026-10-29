@@ -1866,6 +1866,7 @@ Future<void> main(List<String> args) async {
       'fixtureSchemaVersion': fixtureSchemaVersion,
       'baseHistoricalRecords': count,
       'actualPhysicalRecords': fixture['actualPhysicalRecords'],
+      'growthKind': fixture['growthKind'],
       'warmups': benchmarkWarmups,
       'samples': benchmarkSamples,
       'costDiagnosticsEnabled': args[0] == 'diagnose',

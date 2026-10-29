@@ -427,7 +427,8 @@ def check_reference_toolchain(report, host):
 
 def check_resample_records(report):
     records = report.get('diskStallResamples', [])
-    need(isinstance(records, list) and all(isinstance(r, dict) and type(r.get('attempt')) is int and
+    fields = {'attempt', 'policy', 'resamples', 'executions', 'replacements', 'fixtures', 'absolute', 'paired'}
+    need(isinstance(records, list) and all(isinstance(r, dict) and fields <= set(r) and type(r['attempt']) is int and
                                            0 <= r['attempt'] <= report['rerunsUsed'] for r in records) and
          len({r['attempt'] for r in records}) == len(records), 'Missing/extra disk-stall resample record')
     return records
