@@ -287,7 +287,7 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
         frozen=json.loads((PATH.parent/'original-action-ids-v1.json').read_text())['actions']
         self.assertEqual(len(frozen),146)
         self.assertTrue(set(frozen).issubset(coverage))
-        self.assertEqual(len(coverage),244)
+        self.assertEqual(len(coverage),252)
         products = {'food.product.' + name for name in (
             'edit','edit.undo','bulkEdit','bulkEdit.undo','merge','merge.undo',
             'addWithProduct','addWithProduct.undo','import.dryRun','import.commit',
@@ -297,6 +297,24 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
             for action in products:
                 self.assertEqual(values[action],{'medianMs':15,'maxMs':20})
         self.assertTrue(limits['prospectiveFoodProductBudgets']['declaredBeforeMeasurement'])
+        agent = {'agent.read.coldOpenTasksList': (400, 600), 'agent.read.foodList': (400, 600),
+                 'agent.write.taskComplete': (500, 750), 'agent.write.textEdit': (500, 750),
+                 'agent.write.textEditUndo': (500, 750), 'agent.dryRun.bulkEdit2': (700, 1000),
+                 'agent.dryRun.purchaseImport2': (700, 1000), 'agent.write.purchaseImport2': (700, 1000)}
+        self.assertEqual({a for a in coverage if a.startswith('agent.')},set(agent))
+        for values in limits['actionsBySize'].values():
+            for action,(median,maximum) in agent.items():
+                self.assertEqual(values[action],{'medianMs':median,'maxMs':maximum})
+        prospective=limits['prospectiveAgentCliBudgets']
+        self.assertTrue(prospective['declaredBeforeMeasurement'])
+        self.assertEqual(prospective['actions'],len(agent))
+        contract=json.loads((PATH.parent/'coverage-v1.json').read_text())['agentCliContract']
+        self.assertEqual(contract['additiveMetrics'],list(agent))
+        # Every agent call contains a workspace open: startup class growth rule.
+        startup=limits['pairedScaling']['rules']['startup.warm.total']
+        for spec in run_gate.scaling_specs(limits).values():
+            for action in agent:
+                self.assertEqual(spec['rules'][action],startup)
         for action in ('firstDerived.metadata.tags', 'firstDerived.metadata.tags.undo', 'firstCopied.metadata.complete', 'firstCopied.metadata.complete.undo', 'firstDerived.mixed.save', 'firstDerived.mixed.undo'):
             self.assertIn(action,coverage)
         for action in ("converted.food.paired.details.confirmedSave", "converted.food.paired.details.confirmedUndo"):
@@ -492,16 +510,19 @@ class CalibratedInitialLimitTests(unittest.TestCase):
         self.assertFalse(limits['calibration']['policyOnlyReevaluationIsFreshEnforcingRun'])
     def test_ordinary_target_and_both_tight_pairs_keep_all_actions(self):
         limits=json.loads((PATH.parent/'limits-v1.json').read_text())
+        # Agent CLI calls each contain a workspace open: startup-class rules.
+        opening=('startup.','agent.')
         for values in limits['actionsBySize'].values():
-            ordinary={k:v for k,v in values.items() if not k.startswith('startup.')}
+            ordinary={k:v for k,v in values.items() if not k.startswith(opening)}
             self.assertEqual(len(ordinary),236)
-            self.assertEqual(len(values)-len(ordinary),8)
+            self.assertEqual(sum(k.startswith('startup.') for k in values),8)
+            self.assertEqual(sum(k.startswith('agent.') for k in values),8)
             for bound in ordinary.values():
                 self.assertLessEqual(bound['medianMs'],bound['maxMs'])
                 self.assertLessEqual(bound['maxMs'],100)
         for spec in run_gate.scaling_specs(limits).values():
             for action,rule in spec['rules'].items():
-                startup=action.startswith('startup.')
+                startup=action.startswith(opening)
                 self.assertEqual(rule['medianAdditiveMs'],100 if startup else 3)
                 self.assertEqual(rule['maximumAdditiveMs'],200 if startup else 5)
                 self.assertEqual(rule['maxMedianRatio'],2.25 if startup else 1.25)

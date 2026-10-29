@@ -989,6 +989,38 @@
       "food.product.import.undo": {
         "medianMs": 15,
         "maxMs": 20
+      },
+      "agent.read.coldOpenTasksList": {
+        "medianMs": 400,
+        "maxMs": 600
+      },
+      "agent.read.foodList": {
+        "medianMs": 400,
+        "maxMs": 600
+      },
+      "agent.write.taskComplete": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.write.textEdit": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.write.textEditUndo": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.dryRun.bulkEdit2": {
+        "medianMs": 700,
+        "maxMs": 1000
+      },
+      "agent.dryRun.purchaseImport2": {
+        "medianMs": 700,
+        "maxMs": 1000
+      },
+      "agent.write.purchaseImport2": {
+        "medianMs": 700,
+        "maxMs": 1000
       }
     },
     "dense-2": {
@@ -1967,6 +1999,38 @@
       "food.product.import.undo": {
         "medianMs": 15,
         "maxMs": 20
+      },
+      "agent.read.coldOpenTasksList": {
+        "medianMs": 400,
+        "maxMs": 600
+      },
+      "agent.read.foodList": {
+        "medianMs": 400,
+        "maxMs": 600
+      },
+      "agent.write.taskComplete": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.write.textEdit": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.write.textEditUndo": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.dryRun.bulkEdit2": {
+        "medianMs": 700,
+        "maxMs": 1000
+      },
+      "agent.dryRun.purchaseImport2": {
+        "medianMs": 700,
+        "maxMs": 1000
+      },
+      "agent.write.purchaseImport2": {
+        "medianMs": 700,
+        "maxMs": 1000
       }
     },
     "dense-food": {
@@ -2945,6 +3009,38 @@
       "food.product.import.undo": {
         "medianMs": 15,
         "maxMs": 20
+      },
+      "agent.read.coldOpenTasksList": {
+        "medianMs": 400,
+        "maxMs": 600
+      },
+      "agent.read.foodList": {
+        "medianMs": 400,
+        "maxMs": 600
+      },
+      "agent.write.taskComplete": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.write.textEdit": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.write.textEditUndo": {
+        "medianMs": 500,
+        "maxMs": 750
+      },
+      "agent.dryRun.bulkEdit2": {
+        "medianMs": 700,
+        "maxMs": 1000
+      },
+      "agent.dryRun.purchaseImport2": {
+        "medianMs": 700,
+        "maxMs": 1000
+      },
+      "agent.write.purchaseImport2": {
+        "medianMs": 700,
+        "maxMs": 1000
       }
     }
   },
@@ -4419,6 +4515,54 @@
         "medianAdditiveMs": 3,
         "maxMaximumRatio": 1.4,
         "maximumAdditiveMs": 5
+      },
+      "agent.read.coldOpenTasksList": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "agent.read.foodList": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "agent.write.taskComplete": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "agent.write.textEdit": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "agent.write.textEditUndo": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "agent.dryRun.bulkEdit2": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "agent.dryRun.purchaseImport2": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
+      },
+      "agent.write.purchaseImport2": {
+        "maxMedianRatio": 2.25,
+        "medianAdditiveMs": 100,
+        "maxMaximumRatio": 2.5,
+        "maximumAdditiveMs": 200
       }
     }
   },
@@ -5891,6 +6035,54 @@
           "medianAdditiveMs": 3,
           "maxMaximumRatio": 1.4,
           "maximumAdditiveMs": 5
+        },
+        "agent.read.coldOpenTasksList": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "agent.read.foodList": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "agent.write.taskComplete": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "agent.write.textEdit": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "agent.write.textEditUndo": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "agent.dryRun.bulkEdit2": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "agent.dryRun.purchaseImport2": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
+        },
+        "agent.write.purchaseImport2": {
+          "maxMedianRatio": 2.25,
+          "medianAdditiveMs": 100,
+          "maxMaximumRatio": 2.5,
+          "maximumAdditiveMs": 200
         }
       },
       "growthKind": "food"
@@ -5912,6 +6104,12 @@
     "declaredBeforeMeasurement": true,
     "actions": 12,
     "basis": "15ms median /20ms maximum per shape: existing Food details/add/Undo application bounds. Includes confirmation and session Undo; import is bounded to two purchase lines/four containers, not maximum-size import. No new-action measurements used; previous calibrated bounds unchanged.",
+    "qualificationPending": true
+  },
+  "prospectiveAgentCliBudgets": {
+    "declaredBeforeMeasurement": true,
+    "actions": 8,
+    "basis": "Intended human-time responsiveness of one agent tool call, declared by the release owner before any agent.* measurement and identical on all3shapes: reads400ms median/600ms maximum; single writes and whole-action Undo500/750; dry runs and the two-line purchase import700/1000. Each label times a whole in-process CLI call, so every one contains a complete workspace open (profile lock/read copy, history proof, Task/Food attach, open-time migration) and close; all8 therefore use the existing startup class growth rule (2.25x+100ms median/2.5x+200ms maximum) on both pairs. The per-action store cost stays guarded by the existing ordinary-rule labels for the same store paths. No agent measurement used; previous calibrated bounds unchanged.",
     "qualificationPending": true
   }
 }
