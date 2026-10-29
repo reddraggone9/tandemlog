@@ -1,6 +1,6 @@
 # Agent-interface implementation feasibility
 
-Status: **investigation in progress, no product implementation accepted**.
+Status: **section 9.4 and writer cardinality resolved; implementation in progress**.
 Baseline: stable2026.10.9/build106 source b6dbe70, current main452fe88;
 accepted design9a67395 integrated linearly in release branch
 `vex/agent-interface-20261029`. The separate accepted-design checkout is unchanged.
@@ -31,42 +31,62 @@ harness). That is a useful build precedent, **not proof of the agent CLI**.
 Packaged headless Flatpak launch, its folder sandbox access, and both Windows
 installer/ZIP launches remain pending and mandatory before release acceptance.
 
-## Writer cardinality — executed existing-source conflict, assessment pending
+## Writer cardinality — resolved: implementation limit, no format decision
 
 The accepted design requires distinct agent identities/installations/logs and
-no agent-count cap. Existing v5 has a shared256-installation ceiling, including
-GUI writers and preserved historical writers:
+no agent-count cap. Existing v5 source carries count-only ceilings of 256
+([probe](../test/support/agent_writer_limit_probe.dart),
+[receipt](../evidence/agent-interface-feasibility/writer-limit.json): 256
+accepted, 257 rejected, no writes).
 
-- `unified_manifest.dart`: at most256 bootstrap owners.
-- `unified_record.dart`: at most256 observed frontiers per canonical action.
-- `unified_history.dart`: at most256 protected observed writers and histories.
+Independent read-only review (2026-10-29) verdict: **not a canonical format or
+compatibility decision.** ADR0031 lists the canonical bounds (16 MiB action,
+32 MiB file, 256 MiB workspace, 10,000 effects) and sets no writer count; the
+256 exists only as code constants. Record shape, hashing, `v:5` and meaning are
+unchanged. Removing the count is already covered by the accepted "no agent-count
+cap". Old stable106 readers fail closed without writing above 256 writers
+(`Too many installation histories.` sets `safetyFailure`; commit/cache guards
+refuse; a >256-entry action fails decode), consistent with the existing rule that
+older readers must update.
 
-[Pure synthetic probe](../test/support/agent_writer_limit_probe.dart) constructs
-and round-trips256-writer manifests/actions, then attempts257. The
-[receipt](../evidence/agent-interface-feasibility/writer-limit.json) records256
-accepted (51746/31892bytes, far below byte limits),257 rejected. No filesystem,
-profile or canonical writes occur in this probe.
+Implementation path:
+1. Remove the count checks at `unified_record.dart` (observed > 256),
+   `unified_history.dart` folder history count and protected inventory count,
+   keeping per-entry, uniqueness and superset checks. Delete unused
+   `FoodStore.maximumStreams`. **Keep** the manifest owner cap: the manifest is
+   only the conversion snapshot; new installations join via `writer.joined`.
+2. Byte bounds remain the only admission limit (no replacement count).
+3. Tests: 257/1,000-writer actions accepted with manifest still capped; folder
+   with ≥257 histories; inventory round-trip >256; frozen stable106 refuses a
+   257-writer workspace with unchanged bytes.
+4. Add a ~300-writer case to performance coverage.
+5. Release note: workspaces above 256 installations (agents included) need every
+   device on this release or newer.
 
-This is not resolved by choosing profile directories: reusing a writer identity,
-deleting old histories or allocating an artificial fixed agent pool contradicts
-the accepted ownership/data constraints. The possible implementation is to remove
-count-only ceilings while retaining total workspace, file and action byte limits,
-bounded validation and exact frontier/hash checks. Whether that is an authorized
-implementation-resource change under the accepted unlimited-agent requirement,
-or requires a separate durable compatibility decision, is undergoing independent
-assessment. **Do not infer a new approval gate merely from this observation.**
-No count, byte or performance bound has been changed.
+## Restart-safe text Undo — feasible with existing native APIs
 
-## Restart-safe text Undo — independent native proof pending
+Private native spike (`tandemlog-agent-undo-spike-20261029`, Rust 7/7, prepared
+Undo 12/12) passed four fresh-process reconstructions: peer edits preserved,
+successive selective Undo, repeated Undo acknowledged without append, later own
+action undone. Conditions:
 
-Existing native `apply_owned` and `prepare_operation_undo` support named receipt
-ownership. Native `undo_operation` selects only that stack item, not an unrelated
-latest item, and documents disable GC. However TaskStore currently registers
-owners using process-retained captures/pre-Save bases and explicitly refuses
-out-of-session text Undo. The native proof must reconstruct ownership from
-canonical receipts after process teardown, preserve later peer/own contributions
-and establish all-or-nothing mixed-action preflight. Current session behavior is
-not accepted as a substitute. No claim of feasibility/completion yet.
+- Keep **one durable Undo actor/allocation per agent field context**, recovered
+  from the writer's own canonical `task.textEditUndone` claims; a first Undo
+  allocates normally through the existing claim.
+- Rebuild from canonical history (not a checkpoint): own edits via `apply_owned`
+  with effect IDs as operation metadata, peers via remote `apply`; replay each
+  own historical Undo via `prepare_operation_undo` + **exact durable byte
+  equality** + `commit_undo`. Plain remote replay of old Undo loses Yrs's
+  in-process redone graph (reproduced wrong `ReviewCheck…`).
+- Already-undone is decided from durable `data.operation`, appending nothing.
+- Atomic mixed action: build all text compensations and non-text retractions
+  inside one `prepareFromFreshInputsInProfileQueue` builder and one
+  `UnifiedRecord`; the GUI `_undoMixedTextOperations` loop is not reusable.
+- Not covered: GUI histories with multiple Undo actors per writer/context. Agent
+  profiles are new writers and never inherit GUI history as owned.
+
+Evidence is synthetic native payloads, not canonical-envelope crash qualification;
+integrated store crash tests remain required.
 
 ## Remaining section9 decisions and evidence
 
