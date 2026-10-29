@@ -353,6 +353,9 @@ List<AgentCommand> writeCommands() => [
         id,
         observeCompletionTime: () => viewTime(call, call.options.timeZone!),
         requireIncomplete: true,
+        expectedChecklistSnapshot: jsonEncode(
+          taskRow(call, id)?['checklist'] ?? [],
+        ),
         canCommit: guard,
       );
       return writeResult(call, before, 'Completed ${shortId(id)}.', [id]);

@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:isolate';
 import 'package:crypto/crypto.dart';
 
 /// One effect in a verified clean batch. Position, kind, raw evidence and typed
@@ -33,6 +34,43 @@ final class ValidatedActionCache {
   static const layout = 3;
   static const maximumBytes = 16 * 1024 * 1024;
   final List<ValidatedCachedAction> records;
+
+  // At most one in-flight verification. Two independently opened profiles can
+  // share only the exact same payload, digest AND scope, never a path/stat hint.
+  // The opaque immutable receipt is safe to share; no SQL/native owner crosses
+  // the isolate boundary. Drop all inputs as soon as verification settles.
+  static ({
+    String payload,
+    String digest,
+    String binding,
+    Future<ValidatedActionCache> result,
+  })?
+  _flight;
+
+  static Future<ValidatedActionCache> verifyOffThread(
+    String payload,
+    String digest,
+    String binding,
+  ) {
+    final old = _flight;
+    if (old != null &&
+        old.payload == payload &&
+        old.digest == digest &&
+        old.binding == binding) {
+      return old.result;
+    }
+    late final Future<ValidatedActionCache> result;
+    result = _verifyInIsolate(payload, digest, binding).whenComplete(() {
+      if (identical(_flight?.result, result)) _flight = null;
+    });
+    _flight = (
+      payload: payload,
+      digest: digest,
+      binding: binding,
+      result: result,
+    );
+    return result;
+  }
 
   static ValidatedActionCache verify(
     String payload,
@@ -137,3 +175,13 @@ Object? _freeze(Object? value) {
   }
   return value;
 }
+
+// Separate lexical scope: the worker must not capture the in-flight Future.
+Future<ValidatedActionCache> _verifyInIsolate(
+  String payload,
+  String digest,
+  String binding,
+) => Isolate.run(
+  () => ValidatedActionCache.verify(payload, digest, binding),
+  debugName: 'tandemlog-cache-verify',
+);

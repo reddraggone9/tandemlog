@@ -4934,9 +4934,7 @@ class TaskStore {
                   unified!.safetyFailure == null &&
                   !unified!.hasPending &&
                   !unified!.snapshot.pendingEffects) {
-                profileDatabase!.transaction(() {
-                  unified!.sealTaskProjectionCache(this);
-                });
+                await unified!.sealTaskProjectionCache(this);
               }
             });
           } on StateError {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
@@ -347,6 +348,13 @@ class UnifiedDecodedCache {
   static Uint8List encodeUtf8(List<UnifiedRecord> records, String binding) =>
       JsonUtf8Encoder().convert(_payload(records, binding)) as Uint8List;
 
+  /// Pure bounded encoding can overlap the independent Task-cache seal. Only
+  /// detached value trees cross this boundary, never a profile or native owner.
+  static Future<({Uint8List payload, String digest})?> prepareOffThread(
+    List<UnifiedRecord> records,
+    String binding,
+  ) => _encodeDecodedPayload(_payload(records, binding));
+
   static Map<String, Object?> _payload(
     List<UnifiedRecord> records,
     String binding,
@@ -504,3 +512,11 @@ bool isSyncthingAppLogStagingName(String name) {
   }
   return false;
 }
+
+Future<({Uint8List payload, String digest})?> _encodeDecodedPayload(
+  Map<String, Object?> value,
+) => Isolate.run(() {
+  final payload = JsonUtf8Encoder().convert(value) as Uint8List;
+  if (payload.length > UnifiedDecodedCache.maximumBytes) return null;
+  return (payload: payload, digest: sha256.convert(payload).toString());
+}, debugName: 'tandemlog-cache-seal');

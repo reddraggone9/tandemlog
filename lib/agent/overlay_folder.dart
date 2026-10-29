@@ -84,6 +84,9 @@ class OverlayLogFolder extends LocalLogFolder {
     Uint8List bytes,
   ) async {
     await _materialize(name);
+    // Recovery may archive and remove the interrupted atomic-write temporary.
+    // It must never obtain that file through the read-through base fallback.
+    await _materialize('$name.tmp');
     return super.recoverOwned(name, expected, bytes);
   }
 }
