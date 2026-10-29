@@ -1,3 +1,3 @@
 - Task and Food side panes stay open when you change the selection.
-- Running low is now a Food view, with a warning dot on the filter button when something is low.
+- Running low is now a Food view. When something is low, the filter button shows a warning dot and the menu shows how many products.
 - Food rows put expiration and location above brand and size. Store links are available from the row menu.
