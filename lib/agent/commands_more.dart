@@ -299,6 +299,52 @@ List<AgentCommand> moreCommands() => [
     requiresPlan: true,
   ),
   AgentCommand(
+    'tasks bulk-move',
+    'Move several tasks before another task (or to the end), keeping their order.',
+    CommandKind.write,
+    const [
+      AgentArg(
+        'id',
+        'string',
+        'Tasks to move.',
+        required: true,
+        positional: true,
+        repeated: true,
+      ),
+      AgentArg(
+        'before',
+        'string',
+        'Task to place them before, or "end".',
+        required: true,
+      ),
+      _revs,
+    ],
+    (call) async {
+      final all = _taskIds(call);
+      final ids = [
+        for (final i in call.strings('id')) resolveId(i, all, 'task'),
+      ];
+      final anchor = call.require('before') == 'end'
+          ? null
+          : resolveId(call.require('before'), all, 'task');
+      final guard = taskGuard(
+        call,
+        _requireRevs(call, [...ids, ?anchor], all, 'task'),
+      );
+      final store = call.ws.session.tasks;
+      final before = ownHead(call);
+      final result = await store.moveBlockBefore(
+        ids,
+        anchor,
+        expectedTaskSnapshot: store.taskSnapshot,
+        canCommit: guard,
+      );
+      if (result.error != null) throw result.error!;
+      return writeResult(call, before, 'Moved ${ids.length} tasks.', ids);
+    },
+    requiresPlan: true,
+  ),
+  AgentCommand(
     'checklist add',
     'Add a checklist item to a task.',
     CommandKind.write,
