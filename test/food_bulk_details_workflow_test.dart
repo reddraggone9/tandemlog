@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'support/food_product_fields.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/presentation/list_row_surface.dart';
 
 Future<void> verifyFoodBulkDetails(
   WidgetTester tester, {
@@ -112,7 +113,7 @@ Future<void> verifyFoodBulkDetails(
   final brand = find.widgetWithText(TextField, 'Brand');
   await tester.enterText(brand, 'Unified');
   await tester.pumpAndSettle();
-  // New matching arrivals cannot join an already captured edit.
+  // A new arrival in a different row does not join the selected rows.
   update(
     () => operations.add(
       FoodOperation(
@@ -206,14 +207,21 @@ Future<void> verifyFoodBulkDetails(
   final page = tester.state<FoodInventoryPageState>(
     find.byType(FoodInventoryPage),
   );
-  final groupTwo = find.byWidgetPredicate(
-    (w) =>
-        w is Checkbox &&
-        w.semanticLabel == 'Select 1 Synthetic food 2 containers',
+  // Rows have no selection checkbox; Ctrl/Cmd-click deselects a row, as on
+  // Tasks.
+  expect(
+    find.descendant(
+      of: find.byType(ListRowSurface),
+      matching: find.byType(Checkbox),
+    ),
+    findsNothing,
   );
-  await tap(groupTwo);
+  await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+  await tap(find.text('Synthetic food 2'));
+  await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+  await tester.pumpAndSettle();
   expect(page.bulkSelected, {id(1), id(3), id(4)});
-  await capture?.call('partial-selection');
+  await capture?.call('deselected-row');
   final scrolling = find.descendant(
     of: find.byType(CustomScrollView),
     matching: find.byWidgetPredicate(

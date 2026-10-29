@@ -99,6 +99,9 @@ class FoodEditorState extends State<FoodEditor> {
   int? _attemptAmount;
   List<String>? _attemptFields;
   FoodProductChange? _attemptProducts;
+  // Selected rows follow their current containers until Save; a retry of a
+  // pending save keeps the containers the first attempt sent.
+  List<FoodContainer>? _attemptTargets;
   double? editorViewportHeight;
   // Centered on open; actions stay put while validation text changes.
   final _placement = SettledDialogPlacement();
@@ -472,11 +475,12 @@ class FoodEditorState extends State<FoodEditor> {
             'The selected containers changed. Close this editor and select again.',
           );
         }
+        final items = retry ? _attemptTargets! : targets!;
         final after = details.toJson();
         final changed = [
           for (final field in bulkFields)
             if (applied.contains(field) &&
-                targets!.any((e) => e.details.toJson()[field] != after[field]))
+                items.any((e) => e.details.toJson()[field] != after[field]))
               field,
         ];
         final fields = retry
@@ -488,9 +492,10 @@ class FoodEditorState extends State<FoodEditor> {
         if (!retry) {
           _attemptFields = List.unmodifiable(fields);
           _attemptProducts = products;
+          _attemptTargets = items;
         }
         if (fields.isNotEmpty || !products.isEmpty) {
-          await changeDetails(targets!, details, fields, products);
+          await changeDetails(items, details, fields, products);
         }
         if (mounted) widget.onBulkApplied();
       } else if (group == null) {
@@ -508,12 +513,14 @@ class FoodEditorState extends State<FoodEditor> {
                   )
                   .toList();
         final products = retry ? _attemptProducts! : _productChange(details);
+        final items = retry ? _attemptTargets! : group.containers;
         if (!retry) {
           _attemptFields = List.unmodifiable(fields);
           _attemptProducts = products;
+          _attemptTargets = items;
         }
         if (fields.isNotEmpty || !products.isEmpty) {
-          await changeDetails(group.containers, details, fields, products);
+          await changeDetails(items, details, fields, products);
         }
       }
       if (dialogContext.mounted) {
