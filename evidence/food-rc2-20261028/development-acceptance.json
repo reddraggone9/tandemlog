@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "source": "deaeb729f4544cc8473fbb4e6c47a324fe02539c",
+  "scope": "Development regression/native GTK acceptance only; not reference qualification, signed Android/Windows or publication.",
+  "unitTests": {
+    "passed": 1699,
+    "runtimeSourceIdentical": true,
+    "testedRevision": "a4efe25cf2de48e0712204c999b9f4973708f6bb",
+    "finalHarnessDeltaHostPassed": 26
+  },
+  "toolTestsPassed": 293,
+  "analyzer": "clean",
+  "native": {
+    "platform": "Linux GTK debug, isolated Xvfb/software rendering",
+    "selectionParityPassed": 9,
+    "foodProductsPassed": 17,
+    "taskBasedAuditPassed": 3,
+    "viewports": "390/899/900/1400 parity;320 Light200%,390/1400 Dark product view; narrow editor Light/Dark100/200%",
+    "inspected": "Low view count/actions and no container metadata; regular row hierarchy; Tasks/Food panes; five-task capture, incoming refusal, user switch.",
+    "input": "Scripted Flutter input; native demo marks intended inputs with actual X pointer. Not physical-device input."
+  },
+  "stableAttribution": {
+    "revision": "6b8bb74",
+    "tasksAndFood": "Both gaps and sole-row recreation reproduce in native-engine/SQLite Flutter host; not a new Food-products regression.",
+    "boundary": "Host frame observations, not physical-presentation latency."
+  },
+  "reviews": {
+    "sourceNotesMedia": "Independent final review PASS for e346711..deaeb729; text-only notes approved, optional media provenance qualified.",
+    "fixedFinding": "Select matching now swaps in place; clean/dirty every-frame checks independently pass."
+  },
+  "cleanup": "Owned native controllers collected, no GUI/emulator/tester remains; existing household user portals untouched.",
+  "remaining": "Fresh enforcing reference qualification; hosted CI/signed candidate; exact APK native upgrade/demo; private draft with portable ZIP; anonymous public/prior-release verification.",
+  "noChangesTo": [
+    "durable format",
+    "durability",
+    "budgets",
+    "unapproved disk-stall gate policy",
+    "live data",
+    "stable Latest",
+    "signing key"
+  ],
+  "logsSHA256": {
+    "full-flutter-qualified-source.log": "a34566b3cc97c2ebd3aec6ca538ef684c5d660a70820c81a8873f41f76083553",
+    "tool-tests.log": "1106fa50ba07c3efb5984d0b3655e3509ce673cbb2e095246e6e3ec7727665d9",
+    "analyze-native-fix.log": "f865f2d6682e88076dfd753a77ddaf0d6327aa086a763b58e05015bc93f3f768",
+    "final-host-harness.log": "303d6b51a6cf1dd847b9d93a25033a4c9d88d53bb569c86a25625b8ff92d4b9e",
+    "final-native-parity.log": "780c10768f40b59dad0c64aa58dc1821cececfb1bfd12e091324bb4118dc6c69",
+    "final-native-products.log": "e4835fc2e651ef0c2a07736db00b2bcf9e24bb1da83d759d85d4354d791ab3f6",
+    "task-audit.log": "98a3f3de3d6ca22b981164b275fbf9e8f1cec26b945671637ca91048817746f0",
+    "final-review.md": "91f541b8ed2d08349660ea484de5e095b4a8c9cde7c2fa50b2725faca55fd2b3",
+    "native-final-cleanup.json": "7378e848cbc9d2a95c1b044834df79d82d4d882b4f7108ea508afffebb0f635c"
+  }
+}

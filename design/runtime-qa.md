@@ -1,3 +1,9 @@
+# Food RC.2 development acceptance — 2026-10-28
+
+[Sanitized acceptance](../evidence/food-rc2-20261028/development-acceptance.json) binds the scoped checks todeaeb729: full1699 unit/host cases (runtime-identical a4efe25 plus final harness26),293 tooling checks, clean analysis; final native GTK selection parity9,Food products17 and distinct task-based audit3 pass. The audit captures five tasks, resumes interrupted drafts, admits incoming changes, switches users and recovers read errors. Parent inspected actual native pixels at320/390/1400,including enlarged text/both themes and Task/Food pane/row workflows. Native input is scripted; the demo visibly marks targets with the X pointer. Food captures mount the production component with synthetic callbacks; Task parity/audit use the full app and isolated native storage. This is not Android/Windows or signed-installer acceptance.
+
+Independent source/notes/media review passed after repairing the separately reproduced Select matching pane gap. Stable6b8bb74 reproduces the original Tasks/Food gap and sole-row recreation: pre-existing behavior,not a new Food-products regression. The optional dark native comparison uses released-RC1-equivalent634cd9c and initial RC2e0508e3; subsequent fixes do not change its illustrated low-view rendering. Exact final native checks separately cover Space,dirty guard and Select matching. Owned native processes stopped; existing household portals and live data untouched. Fresh enforcing reference qualification,hosted/signed checks and exact native Android acceptance remain pending. No RC.1 owner override is applicable and no timing budget/policy is changed.
+
 # Review capture theme
 
 All review screenshots use the production theme from
