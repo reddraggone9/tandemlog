@@ -478,3 +478,11 @@ timers. Every repetition checks unchanged full Task/Food values and canonical
 inventory; reopen and original-prefix checks still apply. This is writer-count
 stress, not isolated history causation; actual GUI scheduling/paint stays separate.
 The manifest owner bound is unchanged. All prior254labels/limits are retained.
+
+The planned-import correctness pass additionally passes the plan guard into the
+store's freshly admitted append, binds exact external plan bytes (frozen once for
+the overlay preview and real command), and includes canonical history heads,
+manifest and installation in the in-append input witness. This covers hidden
+purchase/provenance evidence and net-zero peer edits, not just visible projected
+values. Effect-based dry-run planning and both workspace opens remain; no
+state-only single-open token substitutes for the reviewed effect plan.

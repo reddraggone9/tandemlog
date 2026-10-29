@@ -31,8 +31,13 @@ class AgentArg {
 enum CommandKind { read, write, setup }
 
 class AgentResult {
-  AgentResult(this.data, String text, {this.nextAfter, this.exitCode = 0})
-    : _text = (() => text);
+  AgentResult(
+    this.data,
+    String text, {
+    this.nextAfter,
+    this.nextWithinFirst,
+    this.exitCode = 0,
+  }) : _text = (() => text);
 
   /// Builds the text form only if a caller asks for it: a `--format json`
   /// call never renders it.
@@ -40,6 +45,7 @@ class AgentResult {
     this.data,
     String Function() text, {
     this.nextAfter,
+    this.nextWithinFirst,
     this.exitCode = 0,
   }) : _text = text;
   final Map<String, Object?> data;
@@ -49,6 +55,11 @@ class AgentResult {
   /// For paged results: the cursor resuming after the first [shown] rows of
   /// this page, so a truncated output still pages without skipping rows.
   final String? Function(int shown)? nextAfter;
+
+  /// For paged results whose first row has a member list (a Food row's
+  /// containers): the cursor resuming inside that row after [members] more
+  /// of its members, used when that one row alone exceeds the output cap.
+  final String Function(int members)? nextWithinFirst;
 
   /// Non-zero for a result that is also a failure (a partial bulk edit).
   final int exitCode;

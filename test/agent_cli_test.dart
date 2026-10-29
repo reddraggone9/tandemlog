@@ -1092,6 +1092,141 @@ void main() {
     },
   );
 
+  test(
+    'an oversized Food row pages its containers and always advances',
+    () async {
+      await setUpAgent();
+      for (var i = 0; i < 6; i++) {
+        final (code, out) = await cli([
+          'food',
+          'add',
+          '--name',
+          'Beans',
+          '--expiry',
+          '2027-01-01',
+          '--count',
+          '100',
+        ]);
+        expect(code, 0, reason: out);
+      }
+      final (_, all) = await cli(['food', 'list', '--format', 'jsonl']);
+      final expected = [
+        for (final l in const LineSplitter().convert(all))
+          for (final c in (jsonDecode(l) as Map)['containers'] as List)
+            (c as Map)['id'],
+      ];
+      expect(expected, hasLength(600));
+
+      Future<List<Object?>> collect(
+        Future<Map> Function(String? cursor) page,
+      ) async {
+        final seen = <Object?>[];
+        String? cursor;
+        final cursors = <String>{};
+        for (var n = 0; n < 50; n++) {
+          final p = await page(cursor);
+          expect(p['error'], isNull, reason: '$p');
+          expect(
+            utf8.encode(jsonEncode(p)).length,
+            lessThanOrEqualTo(32 * 1024),
+          );
+          final rows = p['rows'] as List;
+          expect(rows, isNotEmpty);
+          final row = rows.single as Map;
+          expect(row['count'], 600);
+          expect(row['containersFrom'] ?? 0, seen.length);
+          seen.addAll([for (final c in row['containers'] as List) c['id']]);
+          cursor = p['next'] as String?;
+          if (cursor == null) return seen;
+          expect(cursors.add(cursor), isTrue, reason: 'cursor repeated');
+          if (seen.length < 600) expect(row['membersShown'], isPositive);
+        }
+        fail('paging did not finish');
+      }
+
+      final viaCli = await collect(
+        (cursor) => json([
+          'food',
+          'list',
+          if (cursor != null) ...['--cursor', cursor],
+        ]),
+      );
+      expect(viaCli, expected);
+
+      final server = McpServer(environment: env, profile: 'default');
+      var id = 0;
+      final viaMcp = await collect((cursor) async {
+        final reply = await server.handle(
+          jsonEncode({
+            'jsonrpc': '2.0',
+            'id': ++id,
+            'method': 'tools/call',
+            'params': {
+              'name': 'food_list',
+              'arguments': {'cursor': ?cursor},
+            },
+          }),
+        );
+        return (reply!['result'] as Map)['structuredContent'] as Map;
+      });
+      expect(viaMcp, expected);
+    },
+  );
+
+  test(
+    'a peer checklist change invalidates the task rev completion names',
+    () async {
+      await setUpAgent(profile: 'one');
+      await setUpAgent(profile: 'two', create: false);
+      await cli(['people', 'add', 'Lee'], profile: 'one');
+      final task =
+          ((await json([
+                        'tasks',
+                        'add',
+                        'Pack',
+                        '--for',
+                        'Lee',
+                      ], profile: 'one'))['affected']
+                      as List)
+                  .single
+              as Map;
+      final id = task['id'] as String;
+      final read = await json(['tasks', 'show', id], profile: 'one');
+      expect(read['rev'], task['rev']);
+      final item = await json([
+        'checklist',
+        'add',
+        id,
+        'Socks',
+        '--if-rev',
+        read['rev'] as String,
+      ], profile: 'two');
+      expect(item['error'], isNull, reason: '$item');
+      final before = await bytes(canonicalOnly: true);
+      final stale = await json([
+        'tasks',
+        'complete',
+        id,
+        '--if-rev',
+        read['rev'] as String,
+      ], profile: 'one');
+      expect((stale['error'] as Map)['kind'], 'stale', reason: '$stale');
+      expect(await bytes(canonicalOnly: true), before);
+      final reread = await json(['tasks', 'show', id], profile: 'one');
+      expect(reread['completed'], false);
+      expect(reread['rev'], isNot(read['rev']));
+      expect((reread['checklist'] as List).single['title'], 'Socks');
+      final done = await json([
+        'tasks',
+        'complete',
+        id,
+        '--if-rev',
+        reread['rev'] as String,
+      ], profile: 'one');
+      expect(done['actions'], hasLength(1), reason: '$done');
+    },
+  );
+
   test('MCP answers malformed messages and keeps serving', () async {
     await setUpAgent();
     final server = McpServer(environment: env, profile: 'default');

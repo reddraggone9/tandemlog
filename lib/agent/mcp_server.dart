@@ -142,10 +142,11 @@ class McpServer {
       // The same 32 KB cap and resumable `next` as CLI JSON output.
       final structured =
           jsonDecode(
-                capJson({
-                  'v': agentOutputVersion,
-                  ...result.data,
-                }, nextAfter: result.nextAfter),
+                capJson(
+                  {'v': agentOutputVersion, ...result.data},
+                  nextAfter: result.nextAfter,
+                  nextWithinFirst: result.nextWithinFirst,
+                ),
               )
               as Map<String, Object?>;
       return {

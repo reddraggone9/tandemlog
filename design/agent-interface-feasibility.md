@@ -60,7 +60,7 @@ Implementation path:
 3. Tests: 257/1,000-writer actions accepted with manifest still capped; folder
    with ≥257 histories; inventory round-trip >256; frozen stable106 refuses a
    257-writer workspace with unchanged bytes.
-4. Add a ~300-writer case to performance coverage.
+4. Registered: `writer300-refresh` checks exactly300 physical histories, complete join admission, unchanged Tasks/Food values, canonical inventory and replay under the existing refresh budgets on all three shapes (see [performance coverage](performance-gate.md#bounded-cache-proof-overlap-and-installation-cardinality-refresh)).
 5. Release note: workspaces above 256 installations (agents included) need every
    device on this release or newer.
 

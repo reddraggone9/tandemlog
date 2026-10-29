@@ -56,13 +56,16 @@ Map<String, dynamic>? taskRow(AgentCall call, String id) {
   return null;
 }
 
-/// Revision of a task: its admitted operation IDs, sorted. Any admitted
-/// change, including one that restores identical visible fields, changes it.
+/// Revision of a task: its admitted operation IDs plus those of its
+/// checklist items, sorted. Any admitted change, including one that restores
+/// identical visible fields or only touches the checklist (which completion
+/// reads), changes it. A task without checklist items keeps the same rev.
 String taskRev(AgentCall call, String id) {
   final store = call.ws.session.tasks;
+  final events = store.tables.events;
   final ids = [
     for (final r in store.db.select(
-      'SELECT id FROM ${store.tables.events} WHERE entity=? ORDER BY id',
+      "SELECT id FROM $events WHERE entity=?1 OR entity IN (SELECT entity FROM $events WHERE json_extract(semantic,'\$.type')='checklist.itemCreated' AND json_extract(semantic,'\$.data.parent')=?1) ORDER BY id",
       [id],
     ))
       r['id'] as String,
@@ -261,8 +264,11 @@ Future<AgentResult> _food(AgentCall call, {String? query}) async {
       'view': heading,
       'total': page.total,
       'rows': [
-        for (final (section, g) in page.rows)
-          {'section': section, ...foodGroupJson(g)},
+        for (final (i, (section, g)) in page.rows.indexed)
+          {
+            'section': section,
+            ...foodGroupJson(g, from: i == 0 ? page.memberOffset : 0),
+          },
       ],
       if (low.isNotEmpty)
         'runningLow': [
@@ -288,6 +294,7 @@ Future<AgentResult> _food(AgentCall call, {String? query}) async {
       leading: low.isNotEmpty ? 1 : 0,
     ),
     nextAfter: page.after,
+    nextWithinFirst: page.within,
   );
 }
 

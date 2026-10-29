@@ -477,9 +477,15 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
 - Food revisions are projected-state hashes, not admitted operation IDs (the
   feasibility note asked for operation IDs). Consequence: a change that
   restores an identical projected state keeps the old rev (ABA), so a write
-  holding that rev proceeds. Tasks and checklist items use operation IDs.
+  holding that rev proceeds. Tasks and checklist items use operation IDs; a
+  task's rev also covers its checklist items' operations, because completion
+  reads the checklist (a peer checklist change makes `--if-rev` stale).
 - Output is capped at 32 KB of UTF-8 in text, JSON and MCP; dropped rows are
   reported (`truncated`, `shown`) and `next` resumes at the first dropped row.
+  A Food row too large on its own (many containers) is returned with its
+  container list cut (`membersShown`); `next` resumes inside that row and the
+  following page says `containersFrom`, so every cursor advances. Oversized
+  non-list envelopes are not yet bounded (rare; tracked).
 - A partial `tasks bulk-edit` (some batches committed) returns its actions with
   `partial: true` and the failure, and exits with that failure's code.
 - MCP marks deletes, removes and merges `destructiveHint`; malformed JSON-RPC

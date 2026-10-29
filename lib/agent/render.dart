@@ -44,11 +44,15 @@ String resolveId(String input, Iterable<String> ids, String noun) {
 
 /// A page of rows with an opaque cursor bound to the query that produced it.
 class Page<T> {
-  Page(this.rows, this.total, this._key, this._offset);
+  Page(this.rows, this.total, this._key, this._offset, [this.memberOffset = 0]);
   final List<T> rows;
   final int total;
   final String _key;
   final int _offset;
+
+  /// Members of the first row already returned by earlier pages (a cursor
+  /// that resumes inside an oversized row); later rows start at zero.
+  final int memberOffset;
 
   String? get next => after(rows.length);
 
@@ -59,6 +63,14 @@ class Page<T> {
         ? base64Url.encode(utf8.encode(jsonEncode({'q': _key, 'o': end})))
         : null;
   }
+
+  /// Cursor resuming inside this page's first row after [members] more of
+  /// its members; always advances, so an oversized row still pages.
+  String within(int members) => base64Url.encode(
+    utf8.encode(
+      jsonEncode({'q': _key, 'o': _offset, 'm': memberOffset + members}),
+    ),
+  );
 
   static Page<T> of<T>(
     List<T> all, {
@@ -76,6 +88,7 @@ class Page<T> {
     }
     final key = revOf(query);
     var offset = 0;
+    var members = 0;
     if (cursor != null) {
       try {
         final j =
@@ -85,6 +98,8 @@ class Page<T> {
                 as Map;
         if (j['q'] != key) throw const FormatException();
         offset = j['o'] as int;
+        members = (j['m'] as int?) ?? 0;
+        if (offset < 0 || members < 0) throw const FormatException();
       } catch (_) {
         throw const AgentFailure(
           'validation',
@@ -95,7 +110,13 @@ class Page<T> {
     }
     final end = (offset + bound).clamp(0, all.length);
     final rows = offset >= all.length ? <T>[] : all.sublist(offset, end);
-    return Page(rows, all.length, key, offset.clamp(0, all.length));
+    return Page(
+      rows,
+      all.length,
+      key,
+      offset.clamp(0, all.length),
+      rows.isEmpty ? 0 : members,
+    );
   }
 }
 
@@ -195,8 +216,11 @@ String taskScheduleText(Map<String, dynamic> schedule, int thisYear) {
 String recurrenceText(Object recurrence) =>
     recurrence is String ? recurrence : 'repeats';
 
-Map<String, Object?> foodGroupJson(FoodGroup g) {
+/// [from] skips containers an earlier page already returned (a cursor that
+/// resumes inside an oversized row); `count` stays the whole group's.
+Map<String, Object?> foodGroupJson(FoodGroup g, {int from = 0}) {
   final d = g.details;
+  final start = from.clamp(0, g.containers.length);
   return {
     'key': revOf(g.key),
     'product': g.product,
@@ -209,8 +233,9 @@ Map<String, Object?> foodGroupJson(FoodGroup g) {
     'count': g.containers.length,
     'summary': g.summary,
     'deleted': g.containers.first.deleted,
+    if (start > 0) 'containersFrom': start,
     'containers': [
-      for (final c in g.containers) {'id': c.id, 'rev': foodRev(c)},
+      for (final c in g.containers.skip(start)) {'id': c.id, 'rev': foodRev(c)},
     ],
   };
 }

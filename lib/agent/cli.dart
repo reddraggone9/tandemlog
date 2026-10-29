@@ -314,10 +314,11 @@ Future<AgentResult> _run(
 String renderResult(AgentResult result, String format, AgentCommand command) {
   switch (format) {
     case 'json':
-      return capJson({
-        'v': agentOutputVersion,
-        ...result.data,
-      }, nextAfter: result.nextAfter);
+      return capJson(
+        {'v': agentOutputVersion, ...result.data},
+        nextAfter: result.nextAfter,
+        nextWithinFirst: result.nextWithinFirst,
+      );
     case 'jsonl':
       final list = result.data.values.whereType<List>().firstOrNull;
       if (list == null) {
@@ -332,9 +333,13 @@ String renderResult(AgentResult result, String format, AgentCommand command) {
 /// The 32 KB (UTF-8) cap applies to JSON and MCP output too: trailing rows
 /// of the main list are dropped, `truncated`/`shown` say so and `next`
 /// resumes at the first dropped row; `--format jsonl` streams everything.
+/// When the first row alone is too large, its member list is cut instead:
+/// the row says `membersShown` and `next` resumes inside it, so a cursor
+/// always advances.
 String capJson(
   Map<String, Object?> data, {
   String? Function(int shown)? nextAfter,
+  String Function(int members)? nextWithinFirst,
 }) {
   var encoded = jsonEncode(data);
   int size(String s) => utf8.encode(s).length;
@@ -360,7 +365,44 @@ String capJson(
       hi = mid - 1;
     }
   }
+  if (lo == 0 && all.isNotEmpty && nextWithinFirst != null) {
+    final partial = _firstRowMembers(data, key, all, nextWithinFirst);
+    if (partial != null) return partial;
+  }
   return withRows(lo);
+}
+
+String? _firstRowMembers(
+  Map<String, Object?> data,
+  String key,
+  List all,
+  String Function(int members) nextWithinFirst,
+) {
+  final row = all.first;
+  if (row is! Map) return null;
+  final field = row.entries.where((e) => e.value is List).firstOrNull?.key;
+  if (field == null) return null;
+  final members = row[field] as List;
+  String withMembers(int k) => jsonEncode({
+    ...data,
+    key: [
+      {...row, field: members.sublist(0, k), 'membersShown': k},
+    ],
+    'truncated': true,
+    'shown': 0,
+    'next': nextWithinFirst(k),
+  });
+  int size(String s) => utf8.encode(s).length;
+  var lo = 0, hi = members.length;
+  while (lo < hi) {
+    final mid = (lo + hi + 1) ~/ 2;
+    if (size(withMembers(mid)) <= outputCapBytes) {
+      lo = mid;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  return lo == 0 ? null : withMembers(lo);
 }
 
 String usage(String? topic) {
