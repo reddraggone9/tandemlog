@@ -4711,10 +4711,16 @@ class TaskStore {
     owner.prepared = null;
   }
 
-  Future<TaskUndoResult> undoOperations(List<String> operations) =>
-      _serialize(() => _undoOperations(operations));
+  /// [canCommit] runs after fresh admission, immediately before the append.
+  Future<TaskUndoResult> undoOperations(
+    List<String> operations, {
+    bool Function()? canCommit,
+  }) => _serialize(() => _undoOperations(operations, canCommit: canCommit));
 
-  Future<TaskUndoResult> _undoOperations(List<String> operations) async {
+  Future<TaskUndoResult> _undoOperations(
+    List<String> operations, {
+    bool Function()? canCommit,
+  }) async {
     await _refresh();
     if (operations.isEmpty || operations.toSet().length != operations.length) {
       throw FormatFailure('Choose distinct saved operations.');
@@ -4737,6 +4743,9 @@ class TaskStore {
       targets[id] = event;
     }
     if (targets.values.any((event) => event.type == 'task.textEdited')) {
+      if (canCommit != null) {
+        throw ArgumentError('Text Undo does not take a commit guard here.');
+      }
       return _undoMixedTextOperations(operations, targets);
     }
     var newer = false;
@@ -4756,21 +4765,27 @@ class TaskStore {
     final prepared = <OperationReceipt>[];
     Object? error;
     try {
-      await _appendCommands([
-        for (final id in operations.where((id) => !alreadyUndone.contains(id)))
-          isTaskCompletion(targets[id]!.type) &&
-                  targets[id]!.data['successor'] != null
-              ? (
-                  targets[id]!.entity,
-                  'task.recurringCompletionUndone',
-                  {'completion': id},
-                )
-              : (
-                  targets[id]!.entity,
-                  'task.operationUndone',
-                  {'operation': id},
-                ),
-      ], onPrepared: prepared.add);
+      await _appendCommands(
+        [
+          for (final id in operations.where(
+            (id) => !alreadyUndone.contains(id),
+          ))
+            isTaskCompletion(targets[id]!.type) &&
+                    targets[id]!.data['successor'] != null
+                ? (
+                    targets[id]!.entity,
+                    'task.recurringCompletionUndone',
+                    {'completion': id},
+                  )
+                : (
+                    targets[id]!.entity,
+                    'task.operationUndone',
+                    {'operation': id},
+                  ),
+        ],
+        canCommit: canCommit,
+        onPrepared: prepared.add,
+      );
     } catch (failure) {
       error = failure;
       try {

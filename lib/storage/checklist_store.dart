@@ -9,6 +9,7 @@ extension ChecklistStore on TaskStore {
     String notes = '',
     String? before,
     String? id,
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
@@ -16,22 +17,30 @@ extension ChecklistStore on TaskStore {
       throw FormatFailure('Native text support is unavailable.');
     }
     final value = title.trim();
-    return _command(id ?? const Uuid().v4(), 'checklist.itemCreated', {
-      'parent': parent,
-      'title': value,
-      'description': notes,
-      'before': before,
-      'text': {
-        'codec': 'yrs-v1',
-        'adapter': 1,
-        'seeds': {
-          'title': sha256.convert(textEngine!.seedText(value).bytes).toString(),
-          'description': sha256
-              .convert(textEngine!.seedText(notes).bytes)
-              .toString(),
+    return _command(
+      id ?? const Uuid().v4(),
+      'checklist.itemCreated',
+      {
+        'parent': parent,
+        'title': value,
+        'description': notes,
+        'before': before,
+        'text': {
+          'codec': 'yrs-v1',
+          'adapter': 1,
+          'seeds': {
+            'title': sha256
+                .convert(textEngine!.seedText(value).bytes)
+                .toString(),
+            'description': sha256
+                .convert(textEngine!.seedText(notes).bytes)
+                .toString(),
+          },
         },
       },
-    }, onPrepared: onPrepared);
+      canCommit: canCommit,
+      onPrepared: onPrepared,
+    );
   });
 
   Future<LogEvent> setChecklistCompleted(
