@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/validated_action_cache.dart';
+import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 
 void main() {
   String payload(String binding) => jsonEncode({
@@ -10,6 +12,37 @@ void main() {
     'records': [],
   });
   String digest(String value) => sha256.convert(utf8.encode(value)).toString();
+  test('worker seal keeps exact existing UTF-8 payload and checksum', () async {
+    const space = '11111111-1111-4111-8111-111111111111';
+    const epoch = '22222222-2222-4222-8222-222222222222';
+    const writer = '33333333-3333-4333-8333-333333333333';
+    final genesis = unifiedGenesis(space, epoch, writer);
+    final records = [
+      UnifiedRecord(
+        space: space,
+        epoch: epoch,
+        writer: writer,
+        sequence: 1,
+        clock: EventClock(BigInt.one),
+        previousHash: genesis,
+        effect: UnifiedEffect.named('Café 🌾'),
+        observed: {writer: UnifiedFrontier(0, genesis)},
+      ),
+    ];
+    final result = (await UnifiedDecodedCache.prepareOffThread(
+      records,
+      'scope',
+    ))!;
+    expect(result.payload, UnifiedDecodedCache.encodeUtf8(records, 'scope'));
+    expect(result.digest, sha256.convert(result.payload).toString());
+    final restored = UnifiedDecodedCache.restore(
+      utf8.decode(result.payload),
+      result.digest,
+      'scope',
+    );
+    expect(restored.single.encode(), records.single.encode());
+  });
+
   test(
     'only exact in-flight payload, digest and binding share a receipt',
     () async {
