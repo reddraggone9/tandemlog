@@ -3160,7 +3160,7 @@ Future<void> agentCli(Audit a) async {
   require(
     dry['dryRun'] == true &&
         dry['status'] == 'ready' &&
-        dry['planHash'] == planned['planHash'],
+        dry['importPlanHash'] == planned['planHash'],
     'Agent purchase dry run differs',
   );
   requireLines(dry);
@@ -3181,7 +3181,8 @@ Future<void> agentCli(Audit a) async {
     ]),
   );
   require(
-    committed['dryRun'] == false &&
+    committed['dryRun'] != true &&
+        committed['importPlanHash'] == planned['planHash'] &&
         committed['status'] == 'ready' &&
         (committed['lines'] as List).every((l) => l['status'] == 'recorded') &&
         (committed['actions'] as List).length == 1,
