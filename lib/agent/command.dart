@@ -138,6 +138,7 @@ class AgentCommand {
     this.requiresPlan = false,
     this.planWhen,
     this.destructive = false,
+    this.planCheckedInAppend = false,
   });
   final String name, summary;
   final CommandKind kind;
@@ -152,6 +153,12 @@ class AgentCommand {
 
   /// Deletes, removes or merges (MCP `destructiveHint`).
   final bool destructive;
+
+  /// Its one append checks [AgentCall.commitGuard] (so the plan) inside the
+  /// append before writing anything; a planned commit then skips the
+  /// redundant plan check before the command, which would see the same or an
+  /// older state. Set only where a test proves the in-append refusal.
+  final bool planCheckedInAppend;
 
   bool needsPlan(Map<String, Object?> args) =>
       requiresPlan && (planWhen?.call(args) ?? true);

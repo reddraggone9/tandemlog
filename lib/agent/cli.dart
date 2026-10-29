@@ -285,7 +285,7 @@ Future<AgentResult> _run(
     planGuard: planInput == null ? null : planHolds,
   );
   try {
-    if (planInput != null && !planHolds()) {
+    if (planInput != null && !command.planCheckedInAppend && !planHolds()) {
       throw const AgentFailure(
         'plan_changed',
         'The workspace changed after the plan check; run the dry run again.',

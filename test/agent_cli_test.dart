@@ -1533,6 +1533,21 @@ void main() {
   );
 
   test(
+    'only commands with a tested in-append plan check skip the pre-check',
+    () {
+      // Each name here needs a test that a peer change after the plan check is
+      // refused inside the append (below for purchases import).
+      expect(
+        [
+          for (final c in registry)
+            if (c.planCheckedInAppend) c.name,
+        ],
+        ['purchases import'],
+      );
+    },
+  );
+
+  test(
     'purchase commit guards fresh admission and pins one exact file input',
     () async {
       await setUpAgent(profile: 'one');

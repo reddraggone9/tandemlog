@@ -1207,5 +1207,6 @@ List<AgentCommand> moreCommands() => [
       return result;
     },
     requiresPlan: true,
+    planCheckedInAppend: true,
   ),
 ];

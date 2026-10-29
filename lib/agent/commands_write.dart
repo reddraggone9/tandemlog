@@ -1000,23 +1000,34 @@ Object? _stable(Object? value) => switch (value) {
 };
 
 /// What a plan can change: task and checklist rows, the visible task order,
-/// Food containers, products (including merges) and purchases.
+/// Food containers, products (including merges) and purchases. Each entity is
+/// held as its JSON encoding, made once: the hash and the diff compare those.
 class _Observed {
   _Observed(this.entities, this.order, this.history);
-  final Map<String, Object?> entities;
+  final Map<String, String> entities;
   final List<String> order;
   final Object history;
-  String get hash => sha256
-      .convert(
-        utf8.encode(
-          jsonEncode({
-            'entities': entities,
-            'order': order,
-            'history': history,
-          }),
-        ),
-      )
-      .toString();
+
+  /// One line per entity (JSON-encoded ID, then its encoding; neither holds
+  /// a raw newline), then the order and history: an injective framing.
+  String get hash {
+    final digest = _DigestSink();
+    final input = sha256.startChunkedConversion(digest);
+    for (final e in entities.entries) {
+      input.add(utf8.encode('${jsonEncode(e.key)}\n${e.value}\n'));
+    }
+    input.add(utf8.encode(jsonEncode([order, history])));
+    input.close();
+    return digest.value.toString();
+  }
+}
+
+class _DigestSink implements Sink<Digest> {
+  late Digest value;
+  @override
+  void add(Digest data) => value = data;
+  @override
+  void close() {}
 }
 
 _Observed _observe(AgentCall call) {
@@ -1028,25 +1039,28 @@ _Observed _observe(AgentCall call) {
   return _Observed(
     {
       for (final r in rows)
-        r['id'] as String: {
+        r['id'] as String: jsonEncode({
           for (final e in r.entries)
             if (!_volatile.contains(e.key)) e.key: e.value,
-        },
-      for (final c in state.containers)
-        c.id: jsonDecode(jsonEncode(c.toJson())),
+        }),
+      for (final c in state.containers) c.id: jsonEncode(c.toJson()),
       for (final id in catalog.aliases.keys)
-        id: {'kind': 'product', 'mergedInto': catalog.resolve(id)},
+        id: jsonEncode({'kind': 'product', 'mergedInto': catalog.resolve(id)}),
       for (final p in state.products.values)
-        p.id: {
+        p.id: jsonEncode({
           'kind': 'product',
           'name': p.name,
           'brand': p.brand,
           'size': p.size,
           'links': p.links,
           'minimum': p.minimum,
-        },
+        }),
       for (final x in catalog.purchases.values)
-        x.id: {'kind': 'purchase', ...x.toJson(), 'voided': x.voided},
+        x.id: jsonEncode({
+          'kind': 'purchase',
+          ...x.toJson(),
+          'voided': x.voided,
+        }),
     },
     [
       for (final r in rows)
@@ -1065,18 +1079,24 @@ _Observed _observe(AgentCall call) {
 String observedStateHash(AgentCall call) => _observe(call).hash;
 
 List<Map<String, Object?>> _diff(
-  Map<String, Object?> before,
-  Map<String, Object?> after,
+  Map<String, String> before,
+  Map<String, String> after,
 ) {
   final out = <Map<String, Object?>>[];
-  final ids = {...before.keys, ...after.keys}.toList()..sort();
+  final ids = [
+    for (final e in before.entries)
+      if (after[e.key] != e.value) e.key,
+    for (final id in after.keys)
+      if (!before.containsKey(id)) id,
+  ]..sort();
   for (final id in ids) {
-    final a = before[id] as Map?, b = after[id] as Map?;
-    if (a == null) {
-      out.add({'id': id, 'change': 'created', 'fields': b});
-    } else if (b == null) {
+    final was = before[id], now = after[id];
+    if (was == null) {
+      out.add({'id': id, 'change': 'created', 'fields': jsonDecode(now!)});
+    } else if (now == null) {
       out.add({'id': id, 'change': 'removed'});
-    } else if (jsonEncode(a) != jsonEncode(b)) {
+    } else {
+      final a = jsonDecode(was) as Map, b = jsonDecode(now) as Map;
       out.add({
         'id': id,
         'change': 'changed',
