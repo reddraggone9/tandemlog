@@ -448,9 +448,10 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
    with startup-class growth rules
    ([performance gate](performance-gate.md#agent-cli-prospective-coverage-2026-10-29)).
    After the fixes recorded there, every label meets its budget on dense-1
-   and dense-2; on dense-food `tasks complete`, text edit and the planned
-   purchase import still miss their median by 1–57ms (warm history open plus
-   close-time seal). The ~300-writer refresh case from the writer-cap review
+   and dense-2; on dense-food single writes (complete, text edit, its Undo)
+   miss their 500ms median by 3–17ms and the planned purchase import its
+   700ms median by about 100ms (warm history open plus close-time seal; the
+   import opens twice). The ~300-writer refresh case from the writer-cap review
    is not registered yet. The `WorkspaceSession` change to the app's open
    path and these storage changes still owe the normal reference
    qualification.

@@ -445,5 +445,15 @@ Task cache proof included) and the close-time seal about 140ms (one Task cache
 digest, decoded-cache encode and SHA-256 of a ~5 MB payload); command work is
 under 10ms. Further cuts need incremental cache proofs or a faster warm open,
 both shared with the app's startup and outside this change. The planned
-import is two such opens partly overlapped. Budgets stay as declared; the
-three dense-food misses (two of them within 6ms) are open.
+import is two such opens partly overlapped. Budgets stay as declared.
+
+Full local measure-only gate at `f2d6fcf` (all fixes; same caps, ext4, all
+254 labels): correctness, pins and the Task growth pair passed; dense-1 and
+dense-2 passed every label. dense-food missed `agent.write.taskComplete`
+517/540, `agent.write.textEdit` 503/517, `agent.write.textEditUndo` 508/529
+and `agent.write.purchaseImport2` 798/835 (budgets 500/750 and 700/1000),
+and `food.product.edit.undo` maximum 23.6ms (one sample; the other four
+5.8–7.8ms; earlier runs 7.0 and 6.4ms maximum), which also failed the Food
+growth pair's maximum. That in-session Undo does not open, close or seal, so
+the spike is not attributed to these changes; it is unexplained. The
+dense-food write misses are open.
