@@ -350,6 +350,53 @@ void main() {
     },
   );
 
+  test('newer history stops reads and writes with update_required', () async {
+    await setUpAgent(profile: 'one');
+    await setUpAgent(profile: 'two', create: false);
+    await cli(['people', 'add', 'Lee'], profile: 'two');
+    final ws = Directory('${root.path}/ws');
+    final context = await json(['context'], profile: 'two');
+    final two =
+        (context['writers'] as List).firstWhere((w) => w['self'] == true)['id']
+            as String;
+    final log = File('${ws.path}/$two.applog');
+    final last = const LineSplitter().convert(log.readAsStringSync()).last;
+    final future = jsonDecode(last) as Map<String, dynamic>
+      ..['futureField'] = 1;
+    log.writeAsStringSync('${jsonEncode(future)}\n', mode: FileMode.append);
+    final before = await bytes(canonicalOnly: true);
+    final read = await json(['tasks', 'list'], profile: 'one');
+    expect(read['error']['kind'], 'update_required', reason: '$read');
+    expect(read['exit'], 3);
+    final write = await json(['people', 'add', 'Hester'], profile: 'one');
+    expect(write['error']['kind'], 'update_required', reason: '$write');
+    expect(await bytes(canonicalOnly: true), before);
+  });
+
+  test('JSON output is capped with an explicit marker', () async {
+    await setUpAgent();
+    await cli(['people', 'add', 'Lee']);
+    await cli([
+      'tasks',
+      'add',
+      for (var i = 0; i < 60; i++) 'Task $i ${'x' * 400}',
+      '--for',
+      'Lee',
+    ]);
+    final (_, out) = await cli([
+      'tasks',
+      'list',
+      '--limit',
+      '60',
+      '--format',
+      'json',
+    ]);
+    expect(utf8.encode(out).length, lessThanOrEqualTo(32 * 1024));
+    final page = jsonDecode(out) as Map;
+    expect(page['truncated'], true);
+    expect(page['total'], 60);
+  });
+
   test('a profile without the agent marker is refused', () async {
     await Directory('${root.path}/gui').create();
     final (code, out) = await cli([

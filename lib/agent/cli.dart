@@ -222,7 +222,7 @@ Future<AgentResult> _run(
 String renderResult(AgentResult result, String format, AgentCommand command) {
   switch (format) {
     case 'json':
-      return jsonEncode({'v': agentOutputVersion, ...result.data});
+      return capJson({'v': agentOutputVersion, ...result.data});
     case 'jsonl':
       final list = result.data.values.whereType<List>().firstOrNull;
       if (list == null) {
@@ -232,6 +232,26 @@ String renderResult(AgentResult result, String format, AgentCommand command) {
     default:
       return result.text;
   }
+}
+
+/// The 32 KB cap applies to JSON too: trailing rows of the main list are
+/// dropped and `truncated` says so; `--format jsonl` streams everything.
+String capJson(Map<String, Object?> data) {
+  var encoded = jsonEncode(data);
+  if (encoded.length <= outputCapBytes) return encoded;
+  final key = data.entries.where((e) => e.value is List).firstOrNull?.key;
+  if (key == null) return encoded;
+  final rows = List<Object?>.of(data[key] as List);
+  while (rows.isNotEmpty && utf8.encode(encoded).length > outputCapBytes) {
+    rows.removeRange((rows.length * 3) ~/ 4, rows.length);
+    encoded = jsonEncode({
+      ...data,
+      key: rows,
+      'truncated': true,
+      'shown': rows.length,
+    });
+  }
+  return encoded;
 }
 
 String usage(String? topic) {
