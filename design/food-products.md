@@ -345,3 +345,12 @@ Opening, closing and resizing follow the Tasks reference. Search closes guarded
 drafts and clears selection, matching Tasks today. The conflict with item (l)'s
 retention intent is recorded as an explicit question in
 [batch selection](batch-selection.md#exit); Tasks' behavior was not changed.
+
+### Row-level selection and Move some (Lee, 2026-10-29)
+
+A selected row means its current containers, so arrivals join and departures
+leave; the bulk editor counts them live and there is no checkbox or partial
+state. Row ⋮ Move some… splits a number of containers into their own row with a
+new Location as one Undo action. Rules and rationale are in
+[batch selection](batch-selection.md#row-level-food-selection-lee-2026-10-29)
+and [product behavior](product-behavior.md#approved-rc3-food-editing-refinements).

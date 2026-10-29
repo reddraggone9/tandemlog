@@ -112,7 +112,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [One app-wide local DB](decisions/0013-app-wide-local-database.md): approved single permanent DB and temporary recovery-file exception; published stable2026.10.3/build56 with verified import, activation, cleanup and startup/switch wiring. [Native handoff](local-db-native-acceptance.md) records completed bounded Windows/Android acceptance; [release receipts](../evidence/stable-2026.10.3/README.md) bind final native/artifact and public verification.
 
-- [Batch selection: Tasks and Food](batch-selection.md): shared selection rules, Deleted Food selection, Shift ranges, bulk Remove/Restore and all-field Food bulk editing; 2026-10-27 consistency audit with open questions. Local development implementation only.
+- [Batch selection: Tasks and Food](batch-selection.md): shared selection rules, row-level Food selection and Move some (2026-10-29), Deleted Food selection, Shift ranges, bulk Remove/Restore and all-field Food bulk editing; 2026-10-27 consistency audit with open questions. Local development implementation only.
 
 - [UX refinements2026-10-26](ux-improvements-20261026.md) and [ADR0034](decisions/0034-bounded-ux-refinements.md): local implementation, focused/full development checks; native/runtime/performance acceptance remains separate.
 

@@ -15,6 +15,9 @@ fields. Empty means any. Inclusive Food search pauses these saved filters too.
 Lee approved filtering, selecting matching active physical containers and bulk
 editing only Brand/Location. Capture exact IDs; exclude hidden/deleted rows and
 later arrivals. Allow partial selection and show an explicit selected count.
+(Superseded 2026-10-29 by Lee: Food selection is row-level and includes later
+arrivals in a selected row; there is no partial selection. See
+[batch selection](../batch-selection.md#row-level-food-selection-lee-2026-10-29).)
 Each field has Apply and Clear controls, so mixed values remain unchanged unless
 chosen. Reuse the existing host command, batched append and one Undo receipt.
 Cancel/no-op writes nothing; changed selection/workspace guards reject stale
