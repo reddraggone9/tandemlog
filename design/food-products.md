@@ -275,7 +275,7 @@ Changes:
   outside the selection, because "same SKU" is a fact about the product; the scope
   line states it ("Merges 3 products, 12 containers"). Location and Retention
   reason stay per container.
-- **Running low (Lee, 2026-10-28):** a view in the Stock/Retained/Deleted menu, offered only while a product is below its minimum; a warning dot on the closed filter button signals this. If the active view empties, return to Stock. No low-stock section in Stock. Product rows use the normal Food row name line with warning-colored “1 of 3”, omit container expiry/location/retention, then show brand · size. Linked low rows keep the open-link button; linked container rows offer “Open store link” only in their menu.
+- **Running low (Lee, 2026-10-28):** a view in the Stock/Retained/Deleted menu, offered only while a product is below its minimum; a warning dot on the closed filter button signals this. The menu entry repeats the warning dot and shows the number of low products (for example, “Running low · 2”); the filter and entry announce the product count to screen readers, including while search pauses saved filters. If the active view empties, return to Stock. No low-stock section in Stock. Product rows use the normal Food row name line with warning-colored “1 of 3”, omit container expiry/location/retention, then show brand · size. Linked low rows keep the open-link button; linked container rows offer “Open store link” only in their menu.
 
 - **Keyboard (j):** Up/Down move focus between Food rows; Shift+Up/Down extend
   the selection from the anchor, using the shared selection rules.

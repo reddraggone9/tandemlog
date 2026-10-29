@@ -387,9 +387,9 @@ void registerFoodProductsUiTests({
     expect(find.byKey(const ValueKey('food-low-warning')), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('food-filter')));
     await tester.pumpAndSettle();
-    expect(find.text('Running low'), findsOneWidget);
+    expect(find.text('Running low · 1'), findsOneWidget);
     await tester.tap(
-      find.widgetWithText(PopupMenuItem<FoodView>, 'Running low'),
+      find.widgetWithText(PopupMenuItem<FoodView>, 'Running low · 1'),
     );
     await tester.pumpAndSettle();
     expect(find.text('1 of 3'), findsOneWidget);
@@ -410,8 +410,96 @@ void registerFoodProductsUiTests({
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const ValueKey('food-search')), 'rice');
     await tester.pumpAndSettle();
-    expect(find.text('Running low'), findsNothing);
+    expect(find.textContaining('Running low'), findsNothing);
   });
+
+  testWidgets(
+    'Running low menu and filter announce product count, not containers',
+    (tester) async {
+      await _pump(
+        tester,
+        events: [
+          ..._events,
+          for (final (order, details) in [
+            (5, const FoodDetails(name: 'Beans')),
+            (
+              6,
+              const FoodDetails(
+                name: 'Milk',
+                brand: 'Great Value',
+                size: '1 gal',
+              ),
+            ),
+          ])
+            FoodOperation(
+              id: '$_writer:$order',
+              order: order,
+              action: FoodAction.product,
+              targets: [implicitFoodProductId(details)],
+              product: const {'minimum': 3},
+            ),
+        ],
+      );
+      const countLabel = '2 products running low';
+      expect(
+        find.byTooltip('Filter food: Stock · $countLabel'),
+        findsOneWidget,
+      );
+      expect(
+        tester.getSemantics(find.byKey(const ValueKey('food-filter'))),
+        matchesSemantics(
+          tooltip: 'Filter food: Stock · $countLabel',
+          isButton: true,
+          hasExpandedState: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          isFocusable: true,
+          hasTapAction: true,
+          hasFocusAction: true,
+        ),
+      );
+      final closed = tester.widget<Badge>(
+        find.byKey(const ValueKey('food-low-warning')),
+      );
+      await tester.tap(find.byKey(const ValueKey('food-filter')));
+      await tester.pumpAndSettle();
+      expect(find.text('Running low · 2'), findsOneWidget);
+      final menuDot = tester.widget<Badge>(
+        find.byKey(const ValueKey('food-low-menu-warning')),
+      );
+      expect(menuDot.backgroundColor, closed.backgroundColor);
+      expect(menuDot.smallSize, closed.smallSize);
+      expect(find.bySemanticsLabel('Running low, 2 products'), findsOneWidget);
+      await capture?.call(tester, 'low-menu-two-products');
+      await tester.tap(
+        find.widgetWithText(PopupMenuItem<FoodView>, 'Running low · 2'),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('1 of 3'), findsOneWidget);
+      expect(find.text('2 of 3'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('food-filter')));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Running low, 2 products')),
+        isSemantics(label: 'Running low, 2 products', isSelected: true),
+      );
+      expect(
+        find.byKey(const ValueKey('food-low-menu-warning')),
+        findsOneWidget,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(const ValueKey('food-search')), 'rice');
+      await tester.pumpAndSettle();
+      expect(
+        find.byTooltip(
+          'Filter food: all food; saved Running low filters paused · $countLabel',
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   for (final sample in [
     (320.0, false, 2.0),
@@ -447,7 +535,11 @@ void registerFoodProductsUiTests({
         expect(find.byKey(const ValueKey('food-low-warning')), findsNothing);
         await tester.tap(find.byKey(const ValueKey('food-filter')));
         await tester.pumpAndSettle();
-        expect(find.text('Running low'), findsNothing);
+        expect(find.textContaining('Running low'), findsNothing);
+        expect(
+          find.byKey(const ValueKey('food-low-menu-warning')),
+          findsNothing,
+        );
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
         await tester.pumpAndSettle();
         await _pump(
@@ -475,8 +567,14 @@ void registerFoodProductsUiTests({
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('food-filter')));
         await tester.pumpAndSettle();
+        expect(find.bySemanticsLabel('Running low, 1 product'), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('food-low-menu-warning')),
+          findsOneWidget,
+        );
+        await capture?.call(tester, 'low-menu-${width.toInt()}');
         await tester.tap(
-          find.widgetWithText(PopupMenuItem<FoodView>, 'Running low'),
+          find.widgetWithText(PopupMenuItem<FoodView>, 'Running low · 1'),
         );
         await tester.pumpAndSettle();
         expect(find.text('2 of 3'), findsOneWidget);

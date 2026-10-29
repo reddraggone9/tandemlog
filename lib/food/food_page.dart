@@ -948,7 +948,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       FoodView.runningLow => 'Running low',
       _ => 'Stock',
     };
-    final low = widget.state.runningLow.isNotEmpty;
+    final lowCount = widget.state.runningLow.length;
+    final low = lowCount > 0;
+    final lowProducts = '$lowCount ${lowCount == 1 ? "product" : "products"}';
+    final lowLabel = '$lowProducts running low';
     final icon = low
         ? Badge(
             key: const ValueKey('food-low-warning'),
@@ -963,8 +966,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       icon: icon,
       key: const ValueKey('food-filter'),
       tooltip: querying
-          ? 'Filter food: all food; saved $label filters paused'
-          : 'Filter food: $label${active ? ' · active filters' : ''}${low ? ' · running low' : ''}',
+          ? 'Filter food: all food; saved $label filters paused${low ? ' · $lowLabel' : ''}'
+          : 'Filter food: $label${active ? ' · active filters' : ''}${low ? ' · $lowLabel' : ''}',
       enabled: !widget.busy,
       onSelected: (next) => setState(() {
         view = next;
@@ -983,6 +986,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               value: mode,
               child: Semantics(
                 selected: mode == view,
+                label: mode == FoodView.runningLow
+                    ? 'Running low, $lowProducts'
+                    : null,
+                excludeSemantics: mode == FoodView.runningLow,
                 child: Row(
                   children: [
                     SizedBox(
@@ -995,9 +1002,17 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         FoodView.retained => 'Retained',
                         FoodView.deleted => 'Deleted',
                         FoodView.inbox => 'Inbox',
-                        FoodView.runningLow => 'Running low',
+                        FoodView.runningLow => 'Running low · $lowCount',
                       }),
                     ),
+                    // The closed filter button's warning dot, explained here.
+                    if (mode == FoodView.runningLow) ...[
+                      const SizedBox(width: 8),
+                      Badge(
+                        key: const ValueKey('food-low-menu-warning'),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    ],
                   ],
                 ),
               ),
