@@ -37,6 +37,7 @@ class AgentWorkspace {
   final bool readOnly;
 
   String get writer => settings.writer;
+  NativeTextEngine get textEngine => _engine;
 
   static Future<AgentWorkspace> open(
     AgentProfile agent, {

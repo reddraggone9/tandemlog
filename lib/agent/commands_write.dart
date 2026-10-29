@@ -17,6 +17,8 @@ import 'agent_workspace.dart';
 import 'command.dart';
 import 'commands_read.dart';
 import 'render.dart';
+import 'text_undo.dart';
+import '../storage/task_store.dart' show StaleTaskSnapshot;
 
 const _ifRev = AgentArg(
   'if-rev',
@@ -559,6 +561,12 @@ List<AgentCommand> writeCommands() => [
         required: true,
         positional: true,
       ),
+      AgentArg(
+        'rev',
+        'string',
+        'Current revision of each item the action changed, as id=rev.',
+        repeated: true,
+      ),
     ],
     (call) => undoAction(call),
   ),
@@ -639,20 +647,52 @@ Future<AgentResult> undoAction(AgentCall call) async {
       'Mixed Task and Food actions cannot be undone as one unit yet.',
     );
   }
-  if (taskOps.any(
+  final created = taskOps.where(
     (e) =>
-        e.type.contains('Text') ||
-        e.type == 'task.textEdited' ||
-        e.type == 'task.createdWithText',
-  )) {
+        e.type == 'task.created' ||
+        e.type == 'task.createdWithText' ||
+        e.type == 'user.created' ||
+        e.type == 'checklist.itemCreated',
+  );
+  if (created.isNotEmpty) {
     throw const AgentFailure(
       'undo_unavailable',
-      'This action changed title or notes text; whole-action text Undo is not available yet. Nothing was changed.',
+      'Creating an item is not undone; delete it instead. Nothing was changed.',
     );
   }
   final before = ownHead(call);
   final affected = <String>{for (final e in taskOps) e.entity};
-  if (taskOps.isNotEmpty) {
+  final containers = <String>{for (final r in foodOps) ...r.operation.targets};
+  final guard = _undoGuard(call, affected, containers);
+  final text = taskOps.where((e) => e.type == 'task.textEdited').toList();
+  if (text.isNotEmpty) {
+    if (taskOps.length != 1) {
+      throw const AgentFailure(
+        'undo_unavailable',
+        'This action mixes text with other operations. Nothing was changed.',
+      );
+    }
+    final target = text.single;
+    if (_undone(snapshot, target.id)) {
+      return writeResult(
+        call,
+        before,
+        'Already undone.',
+        affected.toList(),
+        extra: {'alreadyUndone': true},
+      );
+    }
+    final changes = await AgentTextUndo(
+      call.ws.session.tasks,
+      call.ws.textEngine,
+      writer,
+    ).prepare(target);
+    await call.ws.session.tasks.command(target.entity, 'task.textEditUndone', {
+      'operation': target.id,
+      'changes': changes,
+    }, canCommit: guard);
+  } else if (taskOps.isNotEmpty) {
+    if (!guard()) throw StaleTaskSnapshot();
     final result = await call.ws.session.tasks.undoOperations([
       for (final e in taskOps) e.id,
     ]);
@@ -667,6 +707,7 @@ Future<AgentResult> undoAction(AgentCall call) async {
       );
     }
   } else {
+    if (!guard()) throw StaleTaskSnapshot();
     await call.ws.session.food.undoOperations(foodOps);
     if (newActions(call, before).isEmpty) {
       return writeResult(
@@ -685,6 +726,77 @@ Future<AgentResult> undoAction(AgentCall call) async {
     affected.where((id) => taskRow(call, id) != null).toList(),
     containerIds: [for (final r in foodOps) ...r.operation.targets],
   );
+}
+
+bool _undone(dynamic snapshot, String operation) {
+  for (final r in snapshot.records) {
+    for (final e in r.effects) {
+      final t = e.task;
+      if (t != null &&
+          (t.type == 'task.textEditUndone' ||
+              t.type == 'task.operationUndone') &&
+          t.data['operation'] == operation) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/// Undo names the current revision of everything the action changed, so it
+/// never silently reverts over a change the agent has not seen.
+bool Function() _undoGuard(
+  AgentCall call,
+  Set<String> tasks,
+  Set<String> containers,
+) {
+  final given = <String, String>{};
+  for (final pair in call.strings('rev')) {
+    final eq = pair.lastIndexOf('=');
+    if (eq < 1) {
+      throw AgentFailure(
+        'validation',
+        'Write each revision as id=rev ("$pair").',
+        details: {'field': 'rev', 'error': 'format'},
+      );
+    }
+    given[resolveId(pair.substring(0, eq), {...tasks, ...containers}, 'item')] =
+        pair.substring(eq + 1);
+  }
+  String? current(String id) {
+    if (tasks.contains(id)) return taskRev(call, id);
+    for (final c in foodState(call).containers) {
+      if (c.id == id) return foodRev(c);
+    }
+    return null;
+  }
+
+  final missing = [
+    for (final id in {...tasks, ...containers})
+      if (!given.containsKey(id)) id,
+  ];
+  if (missing.isNotEmpty) {
+    throw AgentFailure(
+      'validation',
+      'Undo needs --rev for ${missing.map(shortId).join(', ')}.',
+      details: {
+        'field': 'rev',
+        'error': 'missing',
+        'revs': {for (final id in missing) id: current(id)},
+      },
+    );
+  }
+  for (final e in given.entries) {
+    final now = current(e.key);
+    if (now != e.value) {
+      throw AgentFailure(
+        'stale',
+        'Item ${shortId(e.key)} changed (rev $now, expected ${e.value}). Read it again.',
+        details: {'id': e.key, 'rev': now, 'expected': e.value},
+      );
+    }
+  }
+  return () => given.entries.every((e) => current(e.key) == e.value);
 }
 
 /// Dry run: perform the command on disposable copies of the profile and the

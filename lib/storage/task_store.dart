@@ -57,6 +57,14 @@ Map<String, dynamic>? calculateTaskTagChanges(
 }
 
 /// The task state observed by a caller changed before a guarded command.
+/// One field's canonical text history, eagerly copied out of the store.
+class TaskTextLineage {
+  const TaskTextLineage(this.context, this.seed, this.operations);
+  final String context;
+  final NativeTextUpdate seed;
+  final List<LineageTextOperation> operations;
+}
+
 class StaleTaskSnapshot implements Exception {
   @override
   String toString() => 'Tasks changed. Review the selection and try again.';
@@ -3761,6 +3769,24 @@ class TaskStore {
   bool _hasNativeTextRoot(String entity, List<LogEvent> history) =>
       history.any((event) => isNativeTextCreation(event.type)) ||
       _hasInheritedText(entity);
+
+  /// Fresh canonical text lineage of [entity]'s fields: context, root seed
+  /// and admitted packets in order. Read-only; for tools that rebuild private
+  /// native documents outside an editing session (agent whole-action Undo).
+  Future<Map<String, TaskTextLineage>> textLineage(String entity) =>
+      _serialize(() async {
+        await _refresh();
+        return {
+          for (final MapEntry(key: field, value: resolved) in _resolvedText(
+            entity,
+          ).entries)
+            field: TaskTextLineage(
+              resolved.context.hash,
+              resolved.seed,
+              List.unmodifiable(resolved.operations),
+            ),
+        };
+      });
 
   Map<String, ResolvedTextField> _resolvedText(
     String entity, {

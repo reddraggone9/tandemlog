@@ -171,23 +171,32 @@ void main() {
     expect(await bytes(), before);
   });
 
-  test('whole-action undo, repeated undo, and refused text undo', () async {
+  test('whole-action undo across processes, including text', () async {
     await setUpAgent();
     await cli(['people', 'add', 'Lee']);
     final added = await json(['tasks', 'add', 'Sweep', '--for', 'Lee']);
     final task = (added['affected'] as List).single as Map;
+    final id = task['id'] as String;
+    String rev(Map result) =>
+        ((result['affected'] as List).single as Map)['rev'] as String;
+    String action(Map result) => (result['actions'] as List).single as String;
     final done = await json([
       'tasks',
       'complete',
-      task['id'] as String,
+      id,
       '--if-rev',
       task['rev'] as String,
     ]);
-    final action = (done['actions'] as List).single as String;
-    final undone = await json(['undo', action]);
-    expect(undone['alreadyUndone'], isNull);
+    final needsRev = await json(['undo', action(done)]);
+    expect(needsRev['error']['kind'], 'validation');
+    final undone = await json(['undo', action(done), '--rev=$id=${rev(done)}']);
+    expect(undone['alreadyUndone'], isNull, reason: '$undone');
     expect((await json(['tasks', 'list']))['total'], 1);
-    final again = await json(['undo', action]);
+    final again = await json([
+      'undo',
+      action(done),
+      '--rev=$id=${rev(undone)}',
+    ]);
     expect(again['alreadyUndone'], true);
 
     final food = await json([
@@ -200,32 +209,113 @@ void main() {
       '--count',
       '2',
     ]);
-    expect(
-      (await json([
-        'undo',
-        (food['actions'] as List).single as String,
-      ]))['alreadyUndone'],
-      isNull,
-    );
+    final foodRevs = [
+      for (final c in food['affected'] as List) '--rev=${c['id']}=${c['rev']}',
+    ];
+    final foodUndo = await json(['undo', action(food), ...foodRevs]);
+    expect(foodUndo['alreadyUndone'], isNull, reason: '$foodUndo');
     expect((await json(['food', 'list']))['total'], 0);
 
-    final show = await json(['tasks', 'show', task['id'] as String]);
-    final text = await json([
+    // Each edit and Undo runs in a fresh open; selective Undo keeps later
+    // edits, and a repeated Undo appends nothing.
+    final first = await json([
       'tasks',
       'edit',
-      task['id'] as String,
+      id,
       '--if-rev',
-      show['rev'] as String,
+      rev(again),
       '--title',
       'Sweep porch',
     ]);
-    final before = await bytes(canonicalOnly: true);
-    final refused = await json([
-      'undo',
-      (text['actions'] as List).single as String,
+    final second = await json([
+      'tasks',
+      'edit',
+      id,
+      '--if-rev',
+      rev(first),
+      '--notes',
+      'Use the big broom',
     ]);
-    expect(refused['error']['kind'], 'undo_unavailable');
+    final u1 = await json(['undo', action(first), '--rev=$id=${rev(second)}']);
+    expect(u1['error'], isNull, reason: '$u1');
+    var shown = await json(['tasks', 'show', id]);
+    expect(shown['title'], 'Sweep');
+    expect(shown['notes'], 'Use the big broom');
+    final u2 = await json([
+      'undo',
+      action(second),
+      '--rev=$id=${shown['rev']}',
+    ]);
+    expect(u2['error'], isNull, reason: '$u2');
+    shown = await json(['tasks', 'show', id]);
+    expect(shown['notes'], '');
+    final third = await json([
+      'tasks',
+      'edit',
+      id,
+      '--if-rev',
+      shown['rev'] as String,
+      '--title',
+      'Sweep garage',
+    ]);
+    final u3 = await json(['undo', action(third), '--rev=$id=${rev(third)}']);
+    expect(u3['error'], isNull, reason: '$u3');
+    shown = await json(['tasks', 'show', id]);
+    expect(shown['title'], 'Sweep');
+    final before = await bytes(canonicalOnly: true);
+    final repeat = await json([
+      'undo',
+      action(first),
+      '--rev=$id=${shown['rev']}',
+    ]);
+    expect(repeat['alreadyUndone'], true);
     expect(await bytes(canonicalOnly: true), before);
+  });
+
+  test('text undo keeps another agent\'s later edit', () async {
+    await setUpAgent(profile: 'one');
+    await setUpAgent(profile: 'two', create: false);
+    await cli(['people', 'add', 'Lee'], profile: 'one');
+    final added = await json([
+      'tasks',
+      'add',
+      'Review notes',
+      '--for',
+      'Lee',
+    ], profile: 'one');
+    final task = (added['affected'] as List).single as Map;
+    final id = task['id'] as String;
+    final mine = await json([
+      'tasks',
+      'edit',
+      id,
+      '--if-rev',
+      task['rev'] as String,
+      '--title',
+      'Review notes today',
+    ], profile: 'one');
+    final peerView = await json(['tasks', 'show', id], profile: 'two');
+    expect(peerView['title'], 'Review notes today');
+    final peer = await json([
+      'tasks',
+      'edit',
+      id,
+      '--if-rev',
+      peerView['rev'] as String,
+      '--notes',
+      'peer notes',
+    ], profile: 'two');
+    expect(peer['error'], isNull, reason: '$peer');
+    final now = await json(['tasks', 'show', id], profile: 'one');
+    final undone = await json([
+      'undo',
+      (mine['actions'] as List).single as String,
+      '--rev=$id=${now['rev']}',
+    ], profile: 'one');
+    expect(undone['error'], isNull, reason: '$undone');
+    final after = await json(['tasks', 'show', id], profile: 'two');
+    expect(after['title'], 'Review notes');
+    expect(after['notes'], 'peer notes');
   });
 
   test(
