@@ -254,6 +254,35 @@ qualification bundle cannot carry a prior result. The local executor remains the
 trust boundary for presenting the failure:the original failed run,its logs and
 the diagnostic outputs stay retained.
 
+## Disk-stall resample
+
+Lee approved this rule on2026-10-28 21:37 CDT as a standing rule. Farnsworth's
+durable appends occasionally stall for tens of milliseconds off-CPU (RC.2 q1:
+`dense-food:food.product.merge.undo` 25.494ms against 20ms,17.573ms of it
+append,7.483ms CPU). Such a miss measures the disk,not the action.
+
+`run_gate.py` applies it inside the enforcing reference invocation only
+(`--reference-request`);hosted,measure-only and diagnostic runs never resample.
+After an attempt's three sizes and both comparisons are evaluated, it reads the
+per-sample `appendMicroseconds` and `cgroup.usage_usec` the benchmark already
+logs,and when every missed label is attributed (see
+[the rule](performance-gate.md)) runs `benchmark resample OUTPUT NATIVE MANIFEST
+FAMILY` once per attributed label,under the same binary,fixture,limits and
+binding checks and the same 600s child bound. The resample log
+`disk-stall-resample-ATTEMPT-ORDINAL.log` is sealed in the bundle beside the
+attempt logs. The extra child fits within the controller's original deadline; no
+controller,request or budget changes.
+
+A resample that misses again is an ordinary failure: the result keeps the usual
+timing refusal,its failing labels are the post-resample labels,and the existing
+[official rerun](#official-rerun-after-non-reproduction) and borderline rules
+apply to it as to any other failure. A label never gets a second resample,
+including in an in-invocation noise retry.
+
+`verify`/`seal` recompute attribution from the recorded numbers,check those
+numbers against the attempt log,check the replacement samples against the
+resample log,and recompute every decision from original plus replacement samples.
+
 ## Borderline result on already qualified source
 
 Lee approved this rule on2026-10-27 14:56 CDT and extended it to absolute misses

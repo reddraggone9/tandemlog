@@ -14,6 +14,7 @@ import sys
 
 from gate_policy import (evaluate, evaluate_scaling, validate_registered_coverage,
                          diagnostic_did_not_reproduce, OFFICIAL_RERUN_LIMIT)
+import disk_stall
 
 PROFILE = 'tool/performance/reference-host-v1.json'
 QUALIFICATION = 'evidence/reference-performance/current'
@@ -291,8 +292,15 @@ def failed_qualification_failures(prior_request, report):
          all(p['status'] in ('passed', 'timing-failed') for p in pairs),
          'Correctness, coverage or execution failures are terminal and cannot be rerun')
     last = max(a['attempt'] for a in attempts)
-    failures = sorted({a['size'] + ':' + f for a in attempts if a['attempt'] == last for f in a['failures']} |
-                      {p['comparison'] + ':' + f for p in pairs if p['attempt'] == last for f in p['failures']})
+    resampled = [r for r in report.get('diskStallResamples', []) if r['attempt'] == last]
+    if resampled:
+        # A resampled label that missed again is an ordinary failure; its effective labels are the failures.
+        need(len(resampled) == 1, 'Repeated disk-stall resample record')
+        failures = sorted({size + ':' + f for size, value in resampled[0]['absolute'].items() for f in value['failures']} |
+                          {name + ':' + f for name, value in resampled[0]['paired'].items() for f in value['failures']})
+    else:
+        failures = sorted({a['size'] + ':' + f for a in attempts if a['attempt'] == last for f in a['failures']} |
+                          {p['comparison'] + ':' + f for p in pairs if p['attempt'] == last for f in p['failures']})
     need(bool(failures), 'Prior result has no timing failure to rerun')
     instant(report['finishedAtUTC'])
     return failures
@@ -480,7 +488,10 @@ def validate_report(repo, report, request, host):
     need(len(report['pairedScalingAttempts']) == (retries + 1) * len(scaling_specs(limits)) and
          all(type(p['attempt']) is int and 0 <= p['attempt'] <= retries for p in report['pairedScalingAttempts']),
          'Missing/extra growth attempt')
-    decisions = {}
+    decisions, effective_paired, used = {}, {}, []
+    records = report.get('diskStallResamples', [])
+    need(isinstance(records, list) and all(type(r.get('attempt')) is int and 0 <= r['attempt'] <= retries for r in records) and
+         len({r['attempt'] for r in records}) == len(records), 'Missing/extra disk-stall resample record')
     for number in range(retries + 1):
         batch = [a for a in attempts if a['attempt'] == number]
         need(len(batch) == 3 and {a['size'] for a in batch} == set(contracts), 'Missing reference size')
@@ -505,17 +516,36 @@ def validate_report(repo, report, request, host):
             need(decision.status != 'correctness-failed' and decision.status == item['status'] and
                  list(decision.failures) == item['failures'] and decision.summaries == item['comparisons'],
                  'Growth correctness/rules/summary differs')
-            if number == retries:
-                need(decision.status == 'passed', 'Reference history-growth limit failed')
+            effective_paired[number, item['comparison']] = decision
+        record = next((r for r in records if r['attempt'] == number), None)
+        if record is not None:
+            # Lee's disk-stall rule: recompute attribution from the original samples and recorded
+            # append/CPU numbers (bound to the attempt log by verify_bundle), then the label's resample.
+            originals = {item['size']: item['result'] for item in batch}
+            planned, unattributed = disk_stall.plan(originals, disk_stall.recorded_diagnostics(record['resamples']),
+                                                    limits, specs, contracts, used)
+            need(record.get('policy') == disk_stall.POLICY and planned and not unattributed and
+                 planned == record['resamples'], 'Disk-stall resample is not attributed under the rule')
+            need(len(record['executions']) == len(planned) and
+                 all(type(e['exitCode']) is int and e['exitCode'] == 0 and e['childAbsent'] is True and
+                     e.get('childGroupAbsent') is True for e in record['executions']), 'Incomplete disk-stall resample')
+            used += [[item['size'], item['action']] for item in planned]
+            effective = disk_stall.apply(originals, planned, record['replacements'], limits)
+            absolute, pairs = disk_stall.evaluate_all(effective, limits, specs, contracts)
+            need(all(d.status != 'correctness-failed' for d in [*absolute.values(), *pairs.values()]) and
+                 record['absolute'] == {s: {'status': d.status, 'failures': list(d.failures), 'summaries': d.summaries}
+                                        for s, d in absolute.items()} and
+                 record['paired'] == {n: {'status': d.status, 'failures': list(d.failures), 'comparisons': d.summaries}
+                                      for n, d in pairs.items()}, 'Disk-stall resample decision differs')
+            decisions.update({(number, size): d for size, d in absolute.items()})
+            effective_paired.update({(number, name): d for name, d in pairs.items()})
         if number == retries:
+            need(all(effective_paired[number, name].status == 'passed' for name in specs), 'Reference history-growth limit failed')
             need(all(decisions[number, size].status == 'passed' for size in contracts), 'Reference absolute limit failed')
     if retries:
         from run_gate import may_rerun_all
         first = {a['size']: a for a in attempts if a['attempt'] == 0}
-        paired = [(scaling_specs(limits)[p['comparison']],
-                   evaluate_scaling({s: first[s]['summaries'] for s in first},
-                                    scaling_specs(limits)[p['comparison']], contracts))
-                  for p in report['pairedScalingAttempts'] if p['attempt'] == 0]
+        paired = [(scaling_specs(limits)[name], effective_paired[0, name]) for name in scaling_specs(limits)]
         need(may_rerun_all({s: decisions[0, s] for s in first}, paired, 0,
                           {s: first[s]['execution'] for s in first},
                           first[next(iter(first))]['binding'], first[next(iter(first))]['binding']),
@@ -560,10 +590,23 @@ def verify_bundle(repo, directory):
         need(PRIOR_RESULT not in members, 'Unexpected prior result in a first qualification')
     report = read(root / 'gate-result.json')
     result = validate_report(repo, report, request, host)
+    from run_gate import measurements
     for label, item in [('compile', report['compile']),
                         *[(size + '-generate', value['generation']) for size, value in report['fixtures'].items()],
                         *[(a['size'] + '-attempt-' + str(a['attempt']), a['execution']) for a in report['attempts']]]:
         need(digest(root / (label + '.log')) == item['logSHA256'], 'Missing/changed execution log')
+    for record in report.get('diskStallResamples', []):
+        for ordinal, (item, execution) in enumerate(zip(record['resamples'], record['executions'])):
+            label = 'disk-stall-resample-' + str(record['attempt']) + '-' + str(ordinal)
+            need(digest(root / (label + '.log')) == execution['logSHA256'], 'Missing/changed disk-stall resample log')
+            logged = disk_stall.action_diagnostics(root / (item['size'] + '-attempt-' + str(record['attempt']) + '.log'))
+            need(all(logged.get((item['action'], s['index'])) ==
+                     disk_stall.recorded_diagnostics([item])[item['size']][item['action'], s['index']]
+                     for s in item['samples']), 'Disk-stall attribution differs from the attempt log')
+            rows, complete = measurements(root / (label + '.log'))
+            need(complete and record['replacements'][ordinal] == [r for r in rows if r['action'] == item['action']] and
+                 {v['family'] for (a, _), v in disk_stall.action_diagnostics(root / (label + '.log')).items()} ==
+                 {item['family']}, 'Disk-stall resample differs from its log')
     for size, item in report['fixtures'].items():
         file = root / ('fixture-' + size) / 'fixture.json'
         need(digest(file) == item['manifestSHA256'] and read(file) == item['contract'], 'Fixture receipt changed')
@@ -683,6 +726,8 @@ def main():
         for name in ['gate-result.json', 'compile.log',
                      *[size + '-generate.log' for size in report['fixtures']],
                      *[a['size'] + '-attempt-' + str(a['attempt']) + '.log' for a in report['attempts']],
+                     *['disk-stall-resample-' + str(r['attempt']) + '-' + str(i) + '.log'
+                       for r in report.get('diskStallResamples', []) for i in range(len(r['executions']))],
                      *['fixture-' + size + '/fixture.json' for size in report['fixtures']]]:
             target = args.output / name
             target.parent.mkdir(exist_ok=True)

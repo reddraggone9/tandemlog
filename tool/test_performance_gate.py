@@ -148,7 +148,7 @@ class RegisteredCoveragePreflightTests(unittest.TestCase):
     def test_stale_registry_fails_measure_only_before_source_fork_or_compiler(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=pathlib.Path(tmp);tools=root/'tools';tools.mkdir()
-            for name in ['run_gate.py','gate_policy.py','reference_receipt.py','limits-v1.json']:
+            for name in ['run_gate.py','gate_policy.py','disk_stall.py','reference_receipt.py','limits-v1.json']:
                 (tools/name).write_bytes((PATH.parent/name).read_bytes())
             self.coverage['storageApplicationActionIds'].append('unbudgeted.future.action')
             (tools/'coverage-v1.json').write_text(json.dumps(self.coverage))

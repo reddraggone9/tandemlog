@@ -20,6 +20,7 @@ import time
 import shutil
 import urllib.parse
 from gate_policy import evaluate, evaluate_scaling, may_rerun, Evaluation, validate_registered_coverage, may_complete_with_advisory_timing
+import disk_stall
 from reference_receipt import request_context, package_contract, read as read_reference_json, utc, check_reference_toolchain, profile as reference_profile
 
 def digest(path):
@@ -448,6 +449,7 @@ def main():
     env=os.environ.copy();env.update(LD_PRELOAD=str(args.sqlite_library.resolve()),TANDEMLOG_TEXT_LIBRARY=str(args.native_library.resolve()),DART_SUPPRESS_ANALYTICS='true',CI='true')
     report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'correctnessAccepted':False,'timingRole':'hosted-advisory' if args.hosted_advisory else 'measure-only' if args.measure_only else 'enforcing','measureOnly':args.measure_only,'costDiagnosticsEnabled':args.diagnose_costs,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
     report['startedAtUTC']=utc()
+    if reference is not None:report['diskStallResamples']=[]
     report['packageContractSHA256']=package_contract_sha
     if reference is not None:report['referenceBinding']=reference
     try:
@@ -477,6 +479,28 @@ def main():
             check_pins()
             return {'source':hashlib.sha256(json.dumps(pins,sort_keys=True).encode()).hexdigest(),'fixtures':fixture_binding(fixtures),'limits':limits['sha256'],'binary':digest(binary)}
         original=binding();report['pairedScalingAttempts']=[]
+        resampled_labels=[]
+        def resample(attempt,originals,planned):
+            """Lee's disk-stall rule: one fresh-process resample per attributed label; budgets unchanged."""
+            record={'attempt':attempt,'policy':disk_stall.POLICY,'resamples':planned,'executions':[],'replacements':[]}
+            report['diskStallResamples'].append(record)
+            for ordinal,item in enumerate(planned):
+                label='disk-stall-resample-'+str(attempt)+'-'+str(ordinal);log=root/(label+'.log')
+                require_binding(original,binding())
+                execution=run_child([str(binary),'resample',str(root/label),str(args.native_library.resolve()),str(fixtures[item['size']]['manifest']),item['family']],log,env,600)
+                require_binding(original,binding())
+                rows,complete=measurements(log);record['executions'].append(execution)
+                if execution['exitCode']!=0 or not complete or not execution['childAbsent'] or not execution['childGroupAbsent']:
+                    raise RuntimeError('Disk-stall resample correctness/cleanup failed; retry prohibited')
+                record['replacements'].append([row for row in rows if row['action']==item['action']])
+                resampled_labels.append([item['size'],item['action']])
+            effective=disk_stall.apply(originals,planned,record['replacements'],limits)
+            absolute,pairs=disk_stall.evaluate_all(effective,limits,comparisons,{size:f['receipt'] for size,f in fixtures.items()})
+            record['absolute']={size:{'status':d.status,'failures':list(d.failures),'summaries':d.summaries} for size,d in absolute.items()}
+            record['paired']={name:{'status':d.status,'failures':list(d.failures),'comparisons':d.summaries} for name,d in pairs.items()}
+            if any(d.status=='correctness-failed' for d in [*absolute.values(),*pairs.values()]):
+                raise RuntimeError('Disk-stall resample correctness/coverage failed; retry prohibited')
+            return absolute,[(comparisons[name],d) for name,d in pairs.items()]
         for attempt in range(2):
             decisions={};executions={};summaries={}
             for size,fixture in fixtures.items():
@@ -499,6 +523,14 @@ def main():
             failures=[failure for d in decisions.values() for failure in d.failures]+[failure for _,d in paired for failure in d.failures]
             if not may_complete_with_advisory_timing([*decisions.values(),*(decision for _,decision in paired)]):
                 raise RuntimeError('Correctness/structure cannot be advisory')
+            if failures and reference is not None:
+                originals={item['size']:item['result'] for item in report['attempts'] if item['attempt']==attempt}
+                diagnostics={size:disk_stall.action_diagnostics(root/(size+'-attempt-'+str(attempt)+'.log')) for size in originals}
+                planned,_=disk_stall.plan(originals,diagnostics,limits,comparisons,{size:f['receipt'] for size,f in fixtures.items()},resampled_labels)
+                if planned:
+                    # A resampled label that misses again is an ordinary failure under the existing rules.
+                    decisions,paired=resample(attempt,originals,planned)
+                    failures=[failure for d in decisions.values() for failure in d.failures]+[failure for _,d in paired for failure in d.failures]
             if not failures:break
             if args.measure_only or args.hosted_advisory:
                 break

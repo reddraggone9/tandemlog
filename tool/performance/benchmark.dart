@@ -1751,8 +1751,8 @@ Future<void> coldStartup(Audit a) async {
 
 Future<void> main(List<String> args) async {
   require(
-    args.length == 4,
-    'Usage: benchmark generate OUTPUT_ROOT NATIVE_LIBRARY BASE_RECORDS | benchmark run OUTPUT_ROOT NATIVE_LIBRARY FIXTURE_MANIFEST',
+    args.length == 4 || (args.length == 5 && args[0] == 'resample'),
+    'Usage: benchmark generate OUTPUT_ROOT NATIVE_LIBRARY BASE_RECORDS | benchmark run OUTPUT_ROOT NATIVE_LIBRARY FIXTURE_MANIFEST | benchmark resample OUTPUT_ROOT NATIVE_LIBRARY FIXTURE_MANIFEST FAMILY',
   );
   final root = Directory(args[1]);
   require(
@@ -1782,7 +1782,10 @@ Future<void> main(List<String> args) async {
     );
     return;
   }
-  require({'run', 'diagnose'}.contains(args[0]), 'Unknown benchmark mode');
+  require(
+    {'run', 'diagnose', 'resample'}.contains(args[0]),
+    'Unknown benchmark mode',
+  );
   final fixture = Map<String, dynamic>.from(
     jsonDecode(await File(args[3]).readAsString()) as Map,
   );
@@ -1831,7 +1834,11 @@ Future<void> main(List<String> args) async {
     'first-derived-mixed': (a) =>
         firstDerivedPointAction(a, sampleStart, 'mixed'),
   };
+  // Disk-stall resample: one family, all warmups and samples, fresh process.
+  final only = args[0] == 'resample' ? args[4] : null;
+  require(only == null || all.containsKey(only), 'Unknown resample family');
   for (final entry in all.entries) {
+    if (only != null && entry.key != only) continue;
     if (entry.key == 'food-products' ||
         entry.key == 'derived-recurring' ||
         entry.key.startsWith('first-derived-') ||
@@ -1854,7 +1861,8 @@ Future<void> main(List<String> args) async {
   print(
     jsonEncode({
       'measurement': 'broad-all-pass',
-      'families': all.length,
+      'families': only == null ? all.length : 1,
+      'resampleFamily': ?only,
       'fixtureSchemaVersion': fixtureSchemaVersion,
       'baseHistoricalRecords': count,
       'actualPhysicalRecords': fixture['actualPhysicalRecords'],

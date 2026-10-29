@@ -32,6 +32,30 @@ every timing miss,absolute or history-growth,at most 5% over its unchanged bound
 99.8%/96.3%/101.6%). Anything else is an ordinary failure. Budgets are unchanged.
 See [borderline result](performance-reference-qualification.md#borderline-result-on-already-qualified-source).
 
+Disk-stall resample rule (Lee,2026-10-28 21:37;standing,no per-release approval):
+in a reference qualification,a timing miss gets ONE resample of its label when the
+failing sample's durable append (write+fsync) accounts for the overrun and its CPU
+time is within the bound:for every measured sample over the missed bound,the
+sample minus its append time is within that bound and its CPU time (cgroup
+`usage_usec` over the action) is within it too. Growth misses use their computed
+bound;a label missing two bounds must satisfy the tighter one. Budgets are
+unchanged. The resample re-measures the label: the label's whole family
+(warmups and samples) runs once more in a fresh process on the same sealed
+fixture and binary, and the label's seven observations replace the original
+ones; every absolute and growth limit is then evaluated again. Resamples are
+taken only when they can decide the attempt (every missed label attributed). A
+resampled label that misses again is an ordinary failure under the existing
+rules and is never resampled again. A miss that is not attributed (CPU over the
+bound,append too small to account for it,missing diagnostics,or any other
+unattributed miss in the attempt) follows the existing rules unchanged. The
+receipt keeps the original samples and failures and adds `diskStallResamples`
+with the attribution numbers (wall,append,CPU,throttled,wall minus append),the
+resample's execution and log hash,its replacement observations and the
+recomputed decisions;the verifier recomputes attribution from the attempt log and
+the decisions from the samples. Code:`tool/performance/disk_stall.py`;tests:
+`tool/test_disk_stall_resample.py`. This replaces an owner override for this case.
+See [disk-stall resample](performance-reference-qualification.md#disk-stall-resample).
+
 
 The standalone Dart executable measures production storage, application commands and readmodel queries in AOT release mode. It uses only generated public synthetic workspaces. There is no argument for a user workspace, mapping, profile, title or fixture import. Native text and SQLite libraries, compiler, package configuration, source and fixture bytes are sealed in the result.
 
@@ -50,7 +74,7 @@ Run `python3 tool/test_performance_gate.py` for gate policy and receipt regressi
 
 The runner accepts no caller package configuration, source override or alternate limits file. It reads the repository package configuration, rejects a `tandemlog` root that resolves outside that checkout, creates its own fresh source fork, and changes only that package root URI and normalizes its already-validated effective library URI to lib/. Every copied file retains identical original and compiled SHA-256 values. The standalone storage closure needs no Flutter notifier/platform shim: the rewrite and shim allowlists are empty. Reachable Flutter UI imports, missing/escaping project imports, source extraction changes, changed dependency files or changed SDK kernel inputs fail closed. Production `LocalLogFolder` and `LocalDurability` implementations remain byte-exact, including append/flush semantics. A release invocation must execute tooling from the same checkout and supply the workflow's expected SHA-256 for the fixed versioned limits file.
 
-One eligible timing rerun repeats ALL THREE original sealed shapes and BOTH comparisons in fresh processes/workload profiles, using the original sealed fixtures and all original bindings. It never regenerates different native actor bytes, cherry-picks action samples or repeats only until a ratio passes.
+One eligible timing rerun repeats ALL THREE original sealed shapes and BOTH comparisons in fresh processes/workload profiles, using the original sealed fixtures and all original bindings. It never regenerates different native actor bytes, cherry-picks action samples or repeats only until a ratio passes. The disk-stall resample above is the one per-label exception: it re-measures a whole label once, only when durable-append time accounts for the miss, and records both measurements.
 
 The shared validation workflow has a separate required Linux performance job; it is also required by signed-candidate checks. Its 65-minute whole-job bound includes native setup; the gate runs as the existing runner UID in a transient system-manager service with 55-minute runtime, 6 GiB physical-memory cap, no swap, 2 CPU quota and 128-task cap, plus bounded compile/generation/workload children. An outer timeout and exit/signal trap stop that exact service; actual cgroup bounds are recorded and required before release measurement. It retains preflight stderr/stdout, compile/generation logs, every timing attempt, paired comparisons, source/tool/fixture seals and per-size fixture contracts, including failures. Synthetic workspace payloads and local SQLite profiles are excluded from uploaded artifact paths. The committed initial calibrated limits are active and the workflow pins their exact SHA. Fresh exact-source enforcement is required after tooling or application changes; measure-only observations do not satisfy it. Food editor/controller construction/cancel/paint is explicitly a native-UI coverage gap; no storage-only number substitutes for it.
 
