@@ -218,7 +218,11 @@ void registerSelectionLayoutParityTests({
           final paneWidth = tester.getSize(search).width;
           WidgetsBinding.instance.addPersistentFrameCallback((_) {
             if (observing && search.evaluate().isNotEmpty) {
-              paneWidths.add(tester.getSize(search).width);
+              paneWidths.add(
+                (search.evaluate().single.findRenderObject()! as RenderBox)
+                    .size
+                    .width,
+              );
             }
           });
           await tester.tap(second);
@@ -254,7 +258,11 @@ void registerSelectionLayoutParityTests({
             final width = tester.getSize(search).width;
             WidgetsBinding.instance.addPersistentFrameCallback((_) {
               if (measuring && search.evaluate().isNotEmpty) {
-                widths.add(tester.getSize(search).width);
+                widths.add(
+                  (search.evaluate().single.findRenderObject()! as RenderBox)
+                      .size
+                      .width,
+                );
               }
             });
             await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
@@ -497,7 +505,11 @@ void registerSelectionLayoutParityTests({
     var observing = true;
     WidgetsBinding.instance.addPersistentFrameCallback((_) {
       if (observing && search.evaluate().isNotEmpty) {
-        widths.add(tester.getSize(search).width);
+        widths.add(
+          (search.evaluate().single.findRenderObject()! as RenderBox)
+              .size
+              .width,
+        );
       }
     });
     await matching();

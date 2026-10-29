@@ -11,6 +11,7 @@ import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/food_editor.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/editor_surface.dart';
+import 'package:tandemlog/presentation/tandemlog_theme.dart';
 
 const _writer = '00000000-0000-4000-8000-000000000093';
 FoodState paneFoods() => projectFood([
@@ -65,7 +66,9 @@ Future<GlobalKey<FoodInventoryPageState>> mountFoodPane(
   final key = GlobalKey<FoodInventoryPageState>();
   await tester.pumpWidget(
     MaterialApp(
-      theme: ThemeData(brightness: brightness, platform: TargetPlatform.linux),
+      theme: tandemlogTheme(
+        brightness,
+      ).copyWith(platform: TargetPlatform.linux),
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(
           context,
@@ -130,7 +133,14 @@ void registerFoodEditorPaneTests() {
       if (observing &&
           find.byKey(const ValueKey('food-search')).evaluate().isNotEmpty) {
         widths.add(
-          tester.getSize(find.byKey(const ValueKey('food-search'))).width,
+          (find
+                      .byKey(const ValueKey('food-search'))
+                      .evaluate()
+                      .single
+                      .findRenderObject()!
+                  as RenderBox)
+              .size
+              .width,
         );
       }
     });
