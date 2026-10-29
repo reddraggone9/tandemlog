@@ -348,13 +348,23 @@ final class UnifiedHistory {
     // transactions merely leaves one or both caches requiring strict replay.
     final prepared = _prepareDecodedCache();
     prepared.ignore();
-    profile.transaction(() {
-      _semanticValidator?.sealCleanCache(
-        store.db,
-        store.tables,
-        snapshot.tasks,
-      );
-    });
+    try {
+      profile.transaction(() {
+        _semanticValidator?.sealCleanCache(
+          store.db,
+          store.tables,
+          snapshot.tasks,
+        );
+      });
+    } catch (_) {
+      // Even a failed SQL seal drains its pure worker before close returns.
+      try {
+        await prepared;
+      } catch (_) {
+        /* Original SQL failure wins. */
+      }
+      rethrow;
+    }
     final ({Uint8List payload, String digest})? encoded;
     try {
       encoded = await prepared;
@@ -419,7 +429,7 @@ final class UnifiedHistory {
     }
     var estimate = 0;
     for (final record in current.records) {
-      estimate += record.encode().length * 4;
+      estimate += utf8.encode(record.encode()).length * 4;
       if (estimate > UnifiedDecodedCache.maximumBytes) {
         return Future.value(null);
       }
