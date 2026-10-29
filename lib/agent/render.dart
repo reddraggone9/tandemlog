@@ -1,0 +1,214 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+
+import '../food/inventory.dart';
+import 'agent_profile.dart';
+
+/// Output contract version; additive within v1, renames/removals bump it.
+const agentOutputVersion = 1;
+const outputCapBytes = 32 * 1024;
+const defaultLimit = 50;
+
+String shortId(String id) => id.length > 8 ? id.substring(0, 8) : id;
+
+String revOf(Object? canonical) => sha256
+    .convert(utf8.encode(jsonEncode(canonical)))
+    .toString()
+    .substring(0, 8);
+
+/// Unique prefix of 8+ characters, or the full ID. Ambiguity is an error,
+/// never a guess.
+String resolveId(String input, Iterable<String> ids, String noun) {
+  final needle = input.toLowerCase();
+  if (needle.length < 8) {
+    throw AgentFailure(
+      'validation',
+      'Use at least 8 characters of the $noun ID.',
+      details: {'field': 'id', 'error': 'too_short'},
+    );
+  }
+  final matches = ids.where((id) => id.startsWith(needle)).toSet().toList();
+  if (matches.isEmpty) {
+    throw AgentFailure('not_found', 'No $noun matches "$input".');
+  }
+  if (matches.length > 1) {
+    throw AgentFailure(
+      'ambiguous_id',
+      '"$input" matches ${matches.length} ${noun}s.',
+      details: {'candidates': matches.take(10).toList()},
+    );
+  }
+  return matches.single;
+}
+
+/// A page of rows with an opaque cursor bound to the query that produced it.
+class Page<T> {
+  Page(this.rows, this.total, this.next);
+  final List<T> rows;
+  final int total;
+  final String? next;
+
+  static Page<T> of<T>(
+    List<T> all, {
+    required int? limit,
+    required String? cursor,
+    required String query,
+  }) {
+    final bound = limit ?? defaultLimit;
+    if (bound < 1) {
+      throw const AgentFailure(
+        'validation',
+        'limit must be at least 1.',
+        details: {'field': 'limit', 'error': 'range'},
+      );
+    }
+    final key = revOf(query);
+    var offset = 0;
+    if (cursor != null) {
+      try {
+        final j =
+            jsonDecode(
+                  utf8.decode(base64Url.decode(base64Url.normalize(cursor))),
+                )
+                as Map;
+        if (j['q'] != key) throw const FormatException();
+        offset = j['o'] as int;
+      } catch (_) {
+        throw const AgentFailure(
+          'validation',
+          'This cursor belongs to a different query.',
+          details: {'field': 'cursor', 'error': 'invalid'},
+        );
+      }
+    }
+    final end = (offset + bound).clamp(0, all.length);
+    final rows = offset >= all.length ? <T>[] : all.sublist(offset, end);
+    final next = end < all.length
+        ? base64Url.encode(utf8.encode(jsonEncode({'q': key, 'o': end})))
+        : null;
+    return Page(rows, all.length, next);
+  }
+}
+
+/// Cap rendered text at [outputCapBytes]; the marker is explicit.
+String capText(List<String> lines, {String? header, String? footer}) {
+  final out = StringBuffer();
+  var size = 0;
+  var truncated = false;
+  void add(String line) {
+    final n = utf8.encode(line).length + 1;
+    if (size + n > outputCapBytes - 64) {
+      truncated = true;
+      return;
+    }
+    size += n;
+    out.writeln(line);
+  }
+
+  if (header != null) add(header);
+  for (final l in lines) {
+    if (truncated) break;
+    add(l);
+  }
+  if (truncated) {
+    out.writeln('… truncated at 32 KB; use --limit/--cursor or --format jsonl');
+  } else if (footer != null) {
+    out.writeln(footer);
+  }
+  return out.toString().trimRight();
+}
+
+String clip(String value, int max) {
+  final single = value.replaceAll(RegExp(r'\s+'), ' ').trim();
+  return single.length <= max ? single : '${single.substring(0, max - 1)}…';
+}
+
+const _months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+/// `2026-10-30` → `Oct 30`, adding the year when it differs from [thisYear].
+String shortDate(String? civil, int thisYear) {
+  if (civil == null) return '';
+  final parts = civil.split('-');
+  if (parts.length != 3) return civil;
+  final y = int.parse(parts[0]),
+      m = int.parse(parts[1]),
+      d = int.parse(parts[2]);
+  return '${_months[m - 1]} $d${y == thisYear ? '' : ', $y'}';
+}
+
+String taskScheduleText(Map<String, dynamic> schedule, int thisYear) {
+  final parts = <String>[];
+  String at(String? date, String? time) =>
+      [shortDate(date, thisYear), ?time].where((s) => s.isNotEmpty).join(' ');
+  if (schedule['startDate'] != null || schedule['startTime'] != null) {
+    parts.add('Start ${at(schedule['startDate'], schedule['startTime'])}');
+  }
+  if (schedule['dueDate'] != null || schedule['dueTime'] != null) {
+    parts.add('Due ${at(schedule['dueDate'], schedule['dueTime'])}');
+  }
+  if (schedule['scheduledDate'] != null) {
+    parts.add(
+      'This occurrence ${at(schedule['scheduledDate'], schedule['scheduledTime'])}',
+    );
+  }
+  final recurrence = schedule['recurrence'];
+  if (recurrence != null) parts.add('↻ ${recurrenceText(recurrence)}');
+  return parts.join(' · ');
+}
+
+/// The stored rule (for example `FREQ=MONTHLY`) is already terse.
+String recurrenceText(Object recurrence) =>
+    recurrence is String ? recurrence : 'repeats';
+
+Map<String, Object?> foodGroupJson(FoodGroup g) {
+  final d = g.details;
+  return {
+    'key': revOf(g.key),
+    'product': g.product,
+    'name': d.name,
+    'brand': d.brand,
+    'size': d.size,
+    'expiry': d.expiry,
+    'location': d.location,
+    'retention': d.retention,
+    'count': g.containers.length,
+    'summary': g.summary,
+    'deleted': g.containers.first.deleted,
+    'containers': [
+      for (final c in g.containers) {'id': c.id, 'rev': foodRev(c)},
+    ],
+  };
+}
+
+String foodRev(FoodContainer c) => revOf(c.toJson());
+
+String foodGroupLine(FoodGroup g, int thisYear) {
+  final d = g.details;
+  final parts = <String>[
+    '${shortId(g.containers.first.id)} ${d.name}',
+    if (d.brand.isNotEmpty) d.brand,
+    [if (d.size.isNotEmpty) d.size, '×${g.containers.length}'].join(' '),
+    if (d.expiry != null) 'exp ${shortDate(d.expiry, thisYear)}',
+    if (d.location.isNotEmpty) d.location,
+    if (d.retention.isNotEmpty) 'kept: ${d.retention}',
+    if (g.containers.first.deleted) 'deleted',
+  ];
+  final ids = g.containers.length > 1
+      ? ' · ids ${g.containers.map((c) => shortId(c.id)).join(',')}'
+      : '';
+  return '${parts.join(' · ')}$ids';
+}

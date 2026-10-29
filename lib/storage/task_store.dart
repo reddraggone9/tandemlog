@@ -2562,16 +2562,18 @@ class TaskStore {
   Future<void> reopen(
     String entity,
     List<String> observedCompletions, {
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) {
     final targets = observedCompletions.toSet();
     return _serialize(() async {
       await _refresh();
+      if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
       final active = activeCompletionIds(entity).toSet();
       await _appendCommandBatch('task.completionUndone', [
         for (final target in targets.where(active.contains))
           (entity, {'completion': target}),
-      ], onPrepared: onPrepared);
+      ], canCommit: canCommit, onPrepared: onPrepared);
     });
   }
 
@@ -4042,6 +4044,7 @@ class TaskStore {
     String? localZoneId,
     String? expectedChecklistSnapshot,
     bool requireIncomplete = false,
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
@@ -4157,6 +4160,7 @@ class TaskStore {
     final receipts = await _appendUnifiedCommands(
       [],
       buildFreshCommands: freshCompletion,
+      canCommit: canCommit,
       onPrepared: onPrepared,
     );
     return _recurringTextMemo.decodeCanonical(receipts.single.raw);
