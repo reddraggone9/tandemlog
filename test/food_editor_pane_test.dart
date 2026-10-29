@@ -156,6 +156,28 @@ void registerFoodEditorPaneTests() {
     );
   });
 
+  testWidgets(
+    'dirty replacement keeps its draft and does not acknowledge a concurrent close',
+    (tester) async {
+      final key = await mountFoodPane(tester);
+      await tester.tap(find.text('Pane beans 1').first);
+      await tester.pumpAndSettle();
+      await tester.enterText(foodField('Food name'), 'Unsaved beans');
+      await tester.tap(find.text('Pane beans 2').first);
+      await tester.pumpAndSettle();
+      expect(find.text('Discard food changes?'), findsOneWidget);
+      expect(await key.currentState!.requestCloseEditor(), isFalse);
+      await tester.tap(find.widgetWithText(TextButton, 'Keep editing'));
+      await tester.pumpAndSettle();
+      expect(controller(tester, 'Food name').text, 'Unsaved beans');
+      await tester.tap(find.text('Pane beans 2').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Discard'));
+      await tester.pumpAndSettle();
+      expect(controller(tester, 'Food name').text, 'Pane beans 2');
+    },
+  );
+
   testWidgets('Space toggles off a plain opened sole Food row', (tester) async {
     await mountFoodPane(tester);
     final row = find.text('Pane beans 1').first;
@@ -343,7 +365,7 @@ void registerFoodEditorPaneTests() {
   );
 
   testWidgets(
-    'row switch and Add another coalesce discard decisions and preserve template defaults',
+    'row switch and Add another serialize discard decisions and preserve template defaults',
     (tester) async {
       var writes = 0;
       final state = paneFoods();
@@ -381,8 +403,12 @@ void registerFoodEditorPaneTests() {
       discard();
       discard();
       await tester.pumpAndSettle();
-      expect(await firstClose, isTrue);
-      expect(await secondClose, isTrue);
+      expect(
+        await firstClose,
+        isFalse,
+        reason: 'A replacement decision is not a close acknowledgement.',
+      );
+      expect(await secondClose, isFalse);
       expect(find.byType(AlertDialog), findsNothing);
       expect(controller(tester, 'Food name').text, 'Pane beans 2');
       for (final value in [

@@ -413,7 +413,12 @@ void registerFoodProductsUiTests({
     expect(find.text('Running low'), findsNothing);
   });
 
-  for (final width in [390.0, 1400.0]) {
+  for (final sample in [
+    (320.0, false, 2.0),
+    (390.0, true, 1.0),
+    (1400.0, true, 1.0),
+  ]) {
+    final width = sample.$1;
     testWidgets(
       'Running low conditional menu, rows and empty fallback at $width',
       (tester) async {
@@ -433,7 +438,12 @@ void registerFoodProductsUiTests({
             'links': ['https://example.com/milk'],
           },
         );
-        await _pump(tester, size: Size(width, 900));
+        await _pump(
+          tester,
+          size: Size(width, 900),
+          dark: sample.$2,
+          textScale: sample.$3,
+        );
         expect(find.byKey(const ValueKey('food-low-warning')), findsNothing);
         await tester.tap(find.byKey(const ValueKey('food-filter')));
         await tester.pumpAndSettle();
@@ -443,6 +453,8 @@ void registerFoodProductsUiTests({
         await _pump(
           tester,
           size: Size(width, 900),
+          dark: sample.$2,
+          textScale: sample.$3,
           events: [..._events, linked],
         );
         expect(find.text('2 of 3'), findsNothing);
@@ -472,10 +484,12 @@ void registerFoodProductsUiTests({
         expect(find.text('2026-11-01'), findsNothing);
         expect(find.text('Beans'), findsNothing);
         expect(find.byTooltip('Open store link for Milk'), findsOneWidget);
-        expect(
-          tester.getCenter(find.text('Milk')).dy,
-          tester.getCenter(find.text('2 of 3')).dy,
-        );
+        if (sample.$3 == 1) {
+          expect(
+            tester.getCenter(find.text('Milk')).dy,
+            tester.getCenter(find.text('2 of 3')).dy,
+          );
+        }
         expect(
           tester.getTopLeft(find.text('Great Value · 1 gal')).dy,
           greaterThan(tester.getTopLeft(find.text('Milk')).dy),
@@ -485,6 +499,8 @@ void registerFoodProductsUiTests({
         await _pump(
           tester,
           size: Size(width, 900),
+          dark: sample.$2,
+          textScale: sample.$3,
           events: [
             ..._events,
             linked,

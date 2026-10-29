@@ -343,11 +343,22 @@ class FoodEditorState extends State<FoodEditor> {
     if (result != null && mounted && !auxiliaryOpen) answer(context, result);
   }
 
-  Future<bool> requestClose({bool close = true}) =>
-      closeRequest ??= _decideClose(close: close).whenComplete(() {
-        closeRequest = null;
-        widget.onReadinessChanged?.call();
-      });
+  bool _replacementDecision = false;
+
+  Future<bool> requestClose({bool close = true}) {
+    // A discard decision for replacement is not a close acknowledgement.
+    // Section/exit requests must retry after readiness rather than wait for an
+    // editor that deliberately remains mounted through this decision.
+    if (_replacementDecision || (!close && closeRequest != null)) {
+      return Future.value(false);
+    }
+    _replacementDecision = !close;
+    return closeRequest ??= _decideClose(close: close).whenComplete(() {
+      closeRequest = null;
+      _replacementDecision = false;
+      widget.onReadinessChanged?.call();
+    });
+  }
 
   Future<bool> _decideClose({required bool close}) async {
     if (closeBusy || deciding) return false;

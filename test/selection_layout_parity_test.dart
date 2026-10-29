@@ -249,6 +249,42 @@ void registerSelectionLayoutParityTests({
           );
           await snap('selected-two');
           if (wide) {
+            final widths = <double>[];
+            var measuring = true;
+            final width = tester.getSize(search).width;
+            WidgetsBinding.instance.addPersistentFrameCallback((_) {
+              if (measuring && search.evaluate().isNotEmpty)
+                widths.add(tester.getSize(search).width);
+            });
+            await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+            await tester.tap(second);
+            await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+            if (!food)
+              await host.ready(
+                tester,
+                () => find.byType(TaskEditor).evaluate().isNotEmpty,
+              );
+            await tester.pumpAndSettle();
+            expect(
+              food ? find.byType(FoodEditor) : find.byType(TaskEditor),
+              findsOneWidget,
+            );
+            await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+            await tester.tap(second);
+            await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+            if (!food)
+              await host.ready(
+                tester,
+                () => find.byType(BulkTaskEditor).evaluate().isNotEmpty,
+              );
+            await tester.pumpAndSettle();
+            measuring = false;
+            expect(
+              widths,
+              everyElement(width),
+              reason:
+                  'Removing and re-adding a selected row keeps the pane mounted.',
+            );
             // Use the actual visible input, not just its change callback.
             expect(search.hitTestable(), findsOneWidget);
             final draft = food
@@ -452,6 +488,15 @@ void registerSelectionLayoutParityTests({
       await tester.pumpAndSettle();
     }
 
+    final search = find.byKey(const ValueKey('food-search'));
+    final width = tester.getSize(search).width;
+    final widths = <double>[];
+    var observing = true;
+    WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      if (observing && search.evaluate().isNotEmpty) {
+        widths.add(tester.getSize(search).width);
+      }
+    });
     await matching();
     expect(find.text('Discard food changes?'), findsOneWidget);
     await tester.tap(find.text('Keep editing'));
@@ -468,6 +513,12 @@ void registerSelectionLayoutParityTests({
     await matching();
     await tester.tap(find.text('Discard'));
     await tester.pumpAndSettle();
+    observing = false;
+    expect(
+      widths,
+      everyElement(width),
+      reason: 'Select matching preserves the pane through Keep and Discard.',
+    );
     expect(page.bulkSelected, hasLength(2));
     expect(find.text('Edit 2 containers'), findsOneWidget);
     expect(find.byKey(const ValueKey('nameApply')), findsOneWidget);

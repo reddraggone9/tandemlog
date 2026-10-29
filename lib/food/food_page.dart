@@ -284,8 +284,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         !widget.busy &&
         widget.workspaceIdentity == workspace &&
         !(widget.hasPendingSave?.call() ?? widget.savePending);
-    if (!usable() || !await requestCloseEditor()) return;
-    await editorDone;
+    if (!usable()) return;
+    final replace = _wide && _editorBuilder != null && observed.isNotEmpty;
+    if (replace) {
+      if (!await (_canReplaceEditor?.call() ?? Future.value(false))) return;
+    } else {
+      if (!await requestCloseEditor()) return;
+      await editorDone;
+    }
     if (!usable()) return;
     final selected = observed.intersection(_grouping.visibleIds);
     if (selected.isEmpty) return;
@@ -296,7 +302,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         ..clear()
         ..addAll(selected);
     });
-    if (_wide) unawaited(_editSelection());
+    if (_wide) unawaited(_editSelection(replacingApproved: replace));
   }
 
   /// Keep Tasks' search-input behavior: resolve the draft, then clear selection.
