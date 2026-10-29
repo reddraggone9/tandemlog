@@ -287,3 +287,87 @@ explicitly two lines/four containers (one matched historical hand entry and thre
 new Inbox containers), not a maximum500-line import allowance. Native widget,
 input, publication/paint and larger bulk/import/merge-chain timings remain
 separate gaps. Fresh enforcing qualification is pending.
+
+## Agent CLI prospective coverage (2026-10-29)
+
+Eight additive `agent.*` labels cover the headless agent CLI
+([agent interface](agent-interface.md) section 8): `agent.read.coldOpenTasksList`,
+`agent.read.foodList`, `agent.write.taskComplete`, `agent.write.textEdit`,
+`agent.write.textEditUndo`, `agent.dryRun.bulkEdit2`,
+`agent.dryRun.purchaseImport2` and `agent.write.purchaseImport2`. The
+`agent-cli` family gives every repetition a fresh sealed fixture copy, joined
+outside timers by `init` with a fresh agent profile (its own writer). Each label
+times one whole in-process `runCli` call, as an agent's tool call experiences it:
+argument parsing, the profile lock (reads: a disposable profile copy),
+`WorkspaceSession.open` (read-only folder for reads; write mode with open-time
+occurrence migration otherwise), the registry command, close and JSON rendering.
+Targets are imported scalar Tasks3/6/9/18 and the imported Food1000 product for
+the matched receipt line; the import is the same two lines/four containers as
+`food.product.import`. Outside timers: listed IDs and rows; workspace and agent
+profile byte-identical after reads and the copy-on-write bulk dry run; canonical
+bytes unchanged by the import's own dry run (it opens the profile for writing);
+returned revs match a later show; whole-action Undo of the completion and the
+timed text Undo restore the shown task; the audit installation then replays the
+agent's history with Tasks unchanged and exactly three new purchase-linked
+containers. Previous244 labels and bounds remain unchanged.
+
+Budgets were declared before any `agent.*` measurement from the intended
+human-time response of one agent tool call, identical on all3shapes: reads
+400ms median/600ms maximum, single writes and whole-action Undo 500/750, dry
+runs and the two-line import 700/1000. Every label contains a complete,
+history-scaled workspace open and close (the same proof/replay the app's
+`startup.*` labels bound), so both growth pairs use the existing startup-class
+rule, 2.25x+100ms median/2.5x+200ms maximum. Applying the ordinary 1.25x+3ms
+rule to a call that includes the open would fail by construction from the
+existing startup budgets alone (dense-1 versus dense-2 warm history open
+270 versus 450ms). The per-action store work stays guarded under the ordinary
+rule by the existing labels for the same store paths (`task.complete.*`,
+`converted.task.title.*`, `task.bulkEdit.*`, `food.product.import.*`).
+
+Not covered in-process, and recorded as gaps in coverage-v1.json: process
+start, Dart AOT runtime boot, native text/SQLite library loading and stdout of
+a real `tandemlog-cli` run; packaged-binary timing (Flatpak second command,
+Windows installer/ZIP) and Windows zone lookup (calls pass `--tz`); MCP framing;
+lock waits with a concurrent GUI; commands without their own label (they share
+the timed open/close boundary).
+
+The app's open sequence moved into `WorkspaceSession.open`. The timed startup
+labels keep their per-phase store calls (history open, Task attach, Food
+attach), which are the session's own calls in the same order, so
+`startup.*.history`/`taskAttach` keep their meaning. Outside the timers, the
+startup family now opens the same profile through `WorkspaceSession.open` and
+requires identical Task/Food state and no canonical writes. Folder listing and
+the open-time occurrence migration remain outside the startup labels (the
+existing startup gap); `agent.*` calls time them end to end.
+
+First local measure-only observation (Farnsworth, AOT, ext4 scratch, one
+fresh process per shape, 2 warmups/5 samples; advisory, not qualification),
+median/maximum ms:
+
+- dense-1: tasks list 571/573 (miss), food list 310/314, complete 324/333,
+  text edit 317/328, Undo 316/331, bulk dry run 723/734 (median miss),
+  import dry run 306/311, import 311/315.
+- dense-2: tasks list 783/838, food list 524/562, complete 537/553, text edit
+  528/562, Undo 532/560, bulk dry run 1039/1142 (all misses); import dry run
+  511/539 and import 519/541 pass.
+- dense-food: like dense-2 (tasks list 827/975, food list 553/587, writes and
+  Undo 562-585 medians, bulk dry run 1143/1174 miss; import 545/584 and 558/591
+  pass).
+
+Phase probes attribute the misses to redundant work, not to the commands'
+store actions: (1) the warm history open is 165/275ms on dense-1/dense-2, the
+same as the app's warm startup; (2) every `TaskStore.close` re-seals the warm
+Task cache proof, 135/218ms, and on reads and the bulk dry run that seal goes
+into a disposable profile copy that is deleted immediately; (3) `tasks list`
+spends about290ms in the command because `people()` re-reads and JSON-decodes
+all visible Task rows (`TaskStore.rows`) once per listed task, for both the
+JSON and the eagerly rendered text form (`food list` takes 2ms); (4) the bulk
+dry run's shadow open is a cold full replay (530/770ms) because `_rebind`
+points the copied profile at the shadow folder, whose different location key
+misses the warm cache; the command and both state observations take about 45ms.
+Options, none applied here: skip the cache seal when closing read-only or
+disposable sessions; compute the people map once per call and render only the
+requested format; keep the real location for the copy-on-write overlay so the
+warm cache applies; reduce the history-scaled seal and proof for write calls.
+Budgets are unchanged. Fresh enforcing qualification is pending, and the
+private reference controller's hard-coded limits digest must be re-registered.
