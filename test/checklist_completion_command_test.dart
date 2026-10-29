@@ -178,6 +178,7 @@ class _BeforeCommitPeerStore implements TaskStore {
     String? localZoneId,
     String? expectedChecklistSnapshot,
     bool requireIncomplete = false,
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) async {
     attempts++;
@@ -191,6 +192,7 @@ class _BeforeCommitPeerStore implements TaskStore {
       localZoneId: localZoneId,
       expectedChecklistSnapshot: expectedChecklistSnapshot,
       requireIncomplete: requireIncomplete,
+      canCommit: canCommit,
       onPrepared: onPrepared,
     );
   }
