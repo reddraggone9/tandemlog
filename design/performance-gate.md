@@ -479,6 +479,30 @@ inventory; reopen and original-prefix checks still apply. This is writer-count
 stress, not isolated history causation; actual GUI scheduling/paint stays separate.
 The manifest owner bound is unchanged. All prior254labels/limits are retained.
 
+### Planned purchase import: one plan check, entities encoded once (2026-10-29)
+
+A phase probe of the dense-food planned import (reference caps) showed two
+full plan observations in the commit (one before the command and the one
+inside the append) and an effect diff that re-encoded every task, container,
+product and purchase twice. `purchases import` now skips the pre-command
+check: its append refuses inside fresh admission (`canCommit`, tested; a
+registry test pins which commands may skip). The observation keeps each
+entity's JSON encoding, made once; its hash uses an injective framing and the
+diff decodes only changed entities. Plan hashes are unchanged. No budgets,
+proofs or checks were relaxed.
+
+Local measure-only gate at `b282f03` (same caps, ext4, 256 labels, no
+reruns): correctness and pins accepted; dense-2 and dense-food passed every
+label. `agent.write.purchaseImport2` 707/716 → 686/692 on dense-food,
+641/660 → 611/616 on dense-2 and 416/422 → 397/400 on dense-1 (budget
+700/1000). dense-1 missed only `recurring.complete.undoUntouched` maximum:
+one sample 74.6ms against 70 (others 40.8–51.2; median 43.4 against 65; at
+`e535889` 35.6–38.2). That sample spent 66.6ms of its own CPU, with no
+throttling and a 0.6ms append, so it is not a disk stall. It is an app
+recurring-task path that this change (agent code only) does not run. It is
+reported as is, not resampled.
+
+
 The planned-import correctness pass additionally passes the plan guard into the
 store's freshly admitted append, binds exact external plan bytes (frozen once for
 the overlay preview and real command), and includes canonical history heads,
