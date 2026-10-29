@@ -1,14 +1,12 @@
 # Agent interface
 
-Status: **Accepted direction, not implemented** (Lee, 2026-10-28 22:10 CDT):
-“For the separate binaries/logs for agentic access, I think you've convinced me.
-Do what you think is best.” The requirements below incorporate that acceptance;
-section 9 separates implementation questions from settled product direction.
-[ADR0036](decisions/0036-agent-interface.md) records the choice and alternatives.
-
-Target: **its own release line after Food products is stable**. Food RC.2
-qualification is active; this change is documentation only. No implementation,
-refactor, benchmark, CI run, publication or live-data change is part of it.
+Status: **Accepted direction (Lee, 2026-10-28 22:10 CDT); implemented on the
+next release line, unreleased.** Lee: “For the separate binaries/logs for
+agentic access, I think you've convinced me. Do what you think is best.”
+[ADR0036](decisions/0036-agent-interface.md) records the choice and
+alternatives. Section 11 records how the implementation answered section 9 and
+where it differs from this text; the [feasibility record](agent-interface-feasibility.md)
+holds the evidence.
 
 ## 1. Goal (Lee, 2026-10-28)
 
@@ -375,3 +373,69 @@ evidence invalidates the accepted approach, documenting the tradeoff first.
 Notifications or background alerts (Running low stays in the app; Vex can run
 `products list --running-low` on its own schedule); a network API; signing agent
 writes; settings changes; any canonical format change.
+
+## 11. Implementation (2026-10-29)
+
+Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
+`lib/application/workspace_session.dart` (the app's open sequence, now shared),
+`lib/food/food_rows.dart`, `lib/platform/host_zone.dart`, `tool/build_agent_cli.py`.
+
+**Section 9 answers.**
+1. *Build and packaging.* `dart build cli` with the pinned SDK; the tool lays out
+   `bin/tandemlog-cli[.exe]` beside `lib/` (SQLite native asset plus the app's own
+   text library, copied byte-for-byte) and loads the text library by explicit
+   path. Flatpak: `/app/tandemlog-cli`, command `tandemlog-cli`. Windows: `cli\`
+   inside the Release bundle, so the installer and ZIP carry it unchanged.
+   Hosted CI builds and smokes it headlessly on both platforms and from the
+   installed packages. Windows reads the zone through
+   `GetDynamicTimeZoneInformation` and the system ICU, as the app runner does.
+2. *Profiles.* `TANDEMLOG_CLI_PROFILE` (or `--profile`) names a profile under
+   `<XDG_DATA_HOME>/com.reddraggone9.tandemlog-agents/` (Flatpak: the app's
+   sandbox data directory; Windows: `%APPDATA%\com.reddraggone9\tandemlog-agents`)
+   or gives a path; default `default`. `TANDEMLOG_PROFILE` is never read. A
+   profile is accepted only with its agent marker file, so the CLI cannot
+   open an app profile. `init` refuses a non-empty directory; if it fails before
+   joining it removes its own fresh profile, and once joined the profile is kept.
+   An OS lock (`agent.lock`) serializes one identity; `--wait` (default 30 s).
+3. *Read-only open.* Reads copy the private profile to a temporary directory
+   under the identity lock and open the workspace through a folder that refuses
+   every write; anything that would need to write fails as `write_pending`.
+   Reads leave the workspace and the profile byte-identical (tested). Reads skip
+   shared-text initialization and the occurrence migration; the next write runs
+   them, as the app's open does. Refused writes leave canonical bytes unchanged;
+   the agent's own disposable caches may refresh.
+4. *Text Undo.* As proven: one deterministic Undo allocation per agent writer
+   and field context; the native document is rebuilt from the canonical lineage
+   with own edits as owned receipts, peer packets as remote updates and own
+   earlier Undos regenerated and byte-compared. The compensation is one
+   `task.textEditUndone`. Inherited (recurring-successor) multi-context lineages
+   and creations are refused whole as `undo_unavailable`. Tested across fresh
+   opens with another agent's concurrent edit.
+5. *Revisions and plans.* A task's `rev` hashes its sorted admitted event IDs; a
+   Food container's hashes its projected state; a product's its described fields.
+   Each write checks the revisions once before and again inside the store's
+   serialized append (new `canCommit` hooks on `complete`, `reopen`, `command`
+   and Food `remove`/`restore`/`changeDetails`). A dry run executes the command
+   against a copy of the profile and a copy-on-write view of the workspace and
+   reports the field-level effects; `planHash` binds command, arguments and
+   effects without clock readings. Bulk edit/move/delete, multi-container or
+   product-changing Food edits and merges re-run the dry run under the held
+   identity lock and commit only on a matching `--expect-plan`. Purchase import
+   keeps its own plan hash. Undo takes `--rev` for every item the action changed.
+6. *Performance.* Prospective `agent.*` budgets and cases are registered under
+   the coverage contract before measurement (performance-gate.md).
+
+**Differences from sections 4–7.**
+- MCP opens the workspace for each tool call and closes it, instead of keeping
+  it open for 60 s: simpler, no idle work, peer arrivals admitted per call.
+- `tasks bulk-move`, `people add` and `products search` exist in addition to the
+  listed commands; device name stays a device setting (`init --name`).
+- Undo of a creation is refused; delete the item instead.
+- `init --person` sets the default assignee; captures otherwise need `--for`.
+- Exit codes: 2 validation/other, 3 update_required, 4 profile_in_use,
+  5 history_damaged, 6 stale/plan_changed, 7 write_pending, 8 not_found/ambiguous_id.
+- The registry is checked against the app's store calls by
+  `test/agent_parity_test.dart`.
+- Count-only writer ceilings were removed (feasibility record); workspaces with
+  more than 256 installations need every device on this release or newer.
+
