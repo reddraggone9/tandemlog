@@ -87,9 +87,23 @@ test -f "$HOME/.var/app/$app/data/com.reddraggone9.tandemlog-agents/default/tand
 cli people add "CI person" > /dev/null
 cli tasks add "Headless capture" --for "CI person" > /dev/null
 cli tasks list | python3 -c 'import json,sys; assert json.load(sys.stdin)["total"] == 1'
+
+# Documented setup: a host workspace folder granted with `flatpak override
+# --filesystem`, used by a second agent profile. The GUI gates above ran
+# without any override; the grant is removed again afterwards.
+host_ws="$HOME/tandemlog-agent-host-workspace"
+mkdir -p "$host_ws"
+flatpak override --user --filesystem="$host_ws" "$app"
+cli init --workspace "$host_ws" --name "CI host agent" --create --profile host > /dev/null
+cli people add "Host person" --profile host > /dev/null
+cli tasks add "Host folder capture" --for "Host person" --profile host > /dev/null
+cli tasks list --profile host | python3 -c 'import json,sys; assert json.load(sys.stdin)["total"] == 1'
+ls "$host_ws"/*.applog > /dev/null
+flatpak override --user --reset "$app"
 python3 - "$report" <<'PYREPORT'
 import json, sys
 report = json.load(open(sys.argv[1]))
-report['agent_cli'] = {'headless': True, 'command': 'tandemlog-cli', 'capture_listed': True}
+report['agent_cli'] = {'headless': True, 'command': 'tandemlog-cli', 'capture_listed': True,
+                       'host_folder_override_workspace': True}
 json.dump(report, open(sys.argv[1], 'w'), indent=2)
 PYREPORT

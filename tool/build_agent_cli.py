@@ -94,6 +94,11 @@ def smoke(cli):
         rev = done['affected'][0]['rev']
         run(cli, ['undo', done['actions'][0], f"--rev={task['id']}={rev}", *common],
             env)
+        # No --tz: the host zone path (Linux tzdata, Windows
+        # GetDynamicTimeZoneInformation + ICU) must resolve on its own.
+        context = run(cli, ['context'], env)
+        if not context.get('timeZone'):
+            raise SystemExit(f'Host time zone missing: {context}')
         mcp = subprocess.run(
             [str(cli), 'mcp', '--tz', 'America/Chicago'], env=env, text=True,
             capture_output=True, timeout=120,
@@ -109,6 +114,7 @@ def smoke(cli):
         if len(replies) != 3 or replies[2]['result']['isError']:
             raise SystemExit(f'MCP smoke failed: {mcp.stdout}{mcp.stderr}')
         return {'commands': len(commands),
+                'host_zone': context['timeZone'],
                 'mcp_tools': len(replies[1]['result']['tools'])}
 
 
