@@ -17,6 +17,7 @@ import 'agent_workspace.dart';
 import 'command.dart';
 import 'commands_read.dart';
 import 'render.dart';
+import 'overlay_folder.dart';
 import 'text_undo.dart';
 import '../storage/task_store.dart' show StaleTaskSnapshot;
 
@@ -811,28 +812,24 @@ Future<AgentResult> dryRunWrite(
   await profile.requireAgentProfile();
   final lock = held ?? await profile.lock(options.wait);
   final scratch = await Directory.systemTemp.createTemp('tandemlog-cli-plan-');
+  Directory? copy;
   try {
-    final copy = await profile.readCopy();
+    copy = await profile.readCopy();
     final probe = await LocalProfileDatabase.open(copy.path);
     final settings = LocalSettings(probe.root, profileDatabase: probe);
     await settings.load();
     await probe.close();
-    final source = Directory(settings.folder!);
+    // Copy-on-write: only files the command writes are copied.
+    final real = settings.folder!;
     final shadow = Directory('${scratch.path}/workspace');
     await shadow.create();
-    await for (final f in source.list(followLinks: false)) {
-      if (f is File) {
-        await f.copy('${shadow.path}/${f.uri.pathSegments.last}');
-      }
-    }
-    // Rebind the copied profile to the shadow folder without touching the
-    // real profile.
     final shadowProfile = AgentProfile(copy.path);
     await _rebind(shadowProfile, shadow.path);
     final before = await AgentWorkspace.open(
       shadowProfile,
       readOnly: false,
       wait: options.wait,
+      folderFor: (location) => OverlayLogFolder(location, real),
     );
     final beforeState = _observable(AgentCall(args, before, options));
     AgentResult result;
@@ -859,7 +856,6 @@ Future<AgentResult> dryRunWrite(
         ..remove('expect-plan'),
       'effects': _stable(effects),
     });
-    await copy.delete(recursive: true);
     return AgentResult(
       {'dryRun': true, 'planHash': planHash, 'effects': effects},
       [
@@ -873,6 +869,7 @@ Future<AgentResult> dryRunWrite(
   } finally {
     if (held == null) await lock.close();
     await scratch.delete(recursive: true);
+    await copy?.delete(recursive: true);
   }
 }
 

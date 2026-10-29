@@ -55,6 +55,7 @@ class AgentWorkspace {
     Duration wait = const Duration(seconds: 30),
     NativeTextEngine Function()? engineFactory,
     ProfileLock? held,
+    LogFolder Function(String location)? folderFor,
   }) async {
     await agent.requireAgentProfile();
     // A caller already holding the identity lock keeps ownership of it.
@@ -79,7 +80,7 @@ class AgentWorkspace {
           'This agent profile has no workspace. Run init.',
         );
       }
-      final LogFolder base = LocalLogFolder(location);
+      final LogFolder base = (folderFor ?? LocalLogFolder.new)(location);
       engine = (engineFactory ?? agentTextEngine)();
       final session = await WorkspaceSession.open(
         readOnly ? ReadOnlyLogFolder(base) : base,
