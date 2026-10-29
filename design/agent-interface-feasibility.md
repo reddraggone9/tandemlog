@@ -35,7 +35,8 @@ installer/ZIP launches remain pending and mandatory before release acceptance.
 
 The accepted design requires distinct agent identities/installations/logs and
 no agent-count cap. Existing v5 source carries count-only ceilings of 256
-([probe](../test/support/agent_writer_limit_probe.dart),
+(probe `test/support/agent_writer_limit_probe.dart` from commit c1f2444,
+removed with the ceilings in 46bde26 and superseded by `test/writer_count_test.dart`;
 [receipt](../evidence/agent-interface-feasibility/writer-limit.json): 256
 accepted, 257 rejected, no writes).
 
@@ -105,6 +106,14 @@ integrated store crash tests remain required.
   revisions, typed effects and command/API version. Validate under the same fresh
   append boundary; no distributed-lock guarantee. Existing action records supply
   durable action IDs; do not invent new canonical provenance kinds for receipts.
+  **Implementation deviation (2026-10-29):** task and checklist revisions follow
+  this (sorted admitted event IDs). Food container, product and purchase
+  revisions hash projected state instead, because Food targets are changed by
+  operations on other targets (product edits, merges, purchases) and a
+  per-target operation index is not exposed. Accepted consequence: an
+  intervening change that restores identical projected state (ABA) is not
+  detected by the rev; plans additionally bind the whole observed state at the
+  append (agent-interface.md section 11.5).
 - Generic purchase source keys are already represented as `{kind,key}` by
   FoodPurchaseLine/FoodPurchase; keep source identity independent of mutable
   receipt-line values. CLI planning/required revisions/planHash remain unbuilt.

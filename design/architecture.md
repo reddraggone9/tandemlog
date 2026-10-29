@@ -23,6 +23,12 @@ Use a modular monolith. Start with ordinary Dart modules; extract packages only 
 | Persistence/sync adapter | Canonical records, validation, ingestion, private cache, recovery | UI behavior or transport-defined conflict rules |
 | Platform adapters | Desktop paths, Android URI trees/grants, lifecycle, later notifications/capture | Task or quantity semantics |
 | UI | Rendering, input, navigation, accessible feedback | Direct SQL/log writes |
+| Agent interface (`lib/agent`, `bin/tandemlog_cli.dart`) | Headless CLI/stdio MCP: registry, argument validation, revisions, dry runs/plans, whole-action Undo | Its own write semantics; GUI profiles or writer identities |
+
+The second executable `tandemlog-cli` runs without Flutter UI. It and the app open
+workspaces through the same `application/workspace_session.dart` sequence and call
+the same store methods; each agent identity is its own installation with a private
+profile ([agent interface](agent-interface.md), [ADR0036](decisions/0036-agent-interface.md)).
 
 Inject time, IDs, storage and platform services at boundaries. Commands produce validated domain events; incoming events use the same versioned deterministic projection semantics, not current UI validation or current wall time. Keep diagnostics available even if a workspace cannot safely open for writing.
 

@@ -386,16 +386,22 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
    text library, copied byte-for-byte) and loads the text library by explicit
    path. Flatpak: `/app/tandemlog-cli`, command `tandemlog-cli`. Windows: `cli\`
    inside the Release bundle, so the installer and ZIP carry it unchanged.
-   Hosted CI builds and smokes it headlessly on both platforms and from the
-   installed packages. Windows reads the zone through
-   `GetDynamicTimeZoneInformation` and the system ICU, as the app runner does.
+   The hosted CI workflow is *configured* to build and smoke it headlessly on
+   both platforms and from the installed packages, including one Windows call
+   without `--tz` and a Flatpak call against a host folder granted with
+   `flatpak override --filesystem`; it has not run on this release line yet,
+   so packaged Windows/Flatpak launch remains unverified. Windows reads the
+   zone through `GetDynamicTimeZoneInformation` and the system ICU, as the app
+   runner does.
 2. *Profiles.* `TANDEMLOG_CLI_PROFILE` (or `--profile`) names a profile under
    `<XDG_DATA_HOME>/com.reddraggone9.tandemlog-agents/` (Flatpak: the app's
    sandbox data directory; Windows: `%APPDATA%\com.reddraggone9\tandemlog-agents`)
    or gives a path; default `default`. `TANDEMLOG_PROFILE` is never read. A
    profile is accepted only with its agent marker file, so the CLI cannot
-   open an app profile. `init` refuses a non-empty directory; if it fails before
-   joining it removes its own fresh profile, and once joined the profile is kept.
+   open an app profile. `init` holds the identity lock throughout and refuses a
+   non-empty directory, so concurrent inits of one profile yield exactly one
+   identity; if it fails before its join is written it removes only the files
+   it created, and once joined the profile is kept.
    An OS lock (`agent.lock`) serializes one identity; `--wait` (default 30 s).
 3. *Read-only open.* Reads copy the private profile to a temporary directory
    under the identity lock and open the workspace through a folder that refuses
@@ -411,29 +417,66 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
    `task.textEditUndone`. Inherited (recurring-successor) multi-context lineages
    and creations are refused whole as `undo_unavailable`. Tested across fresh
    opens with another agent's concurrent edit.
-5. *Revisions and plans.* A task's `rev` hashes its sorted admitted event IDs; a
-   Food container's hashes its projected state; a product's its described fields.
-   Each write checks the revisions once before and again inside the store's
-   serialized append (new `canCommit` hooks on `complete`, `reopen`, `command`
-   and Food `remove`/`restore`/`changeDetails`). A dry run executes the command
+5. *Revisions and plans.* A task's or checklist item's `rev` hashes its sorted
+   admitted event IDs. Food revisions hash projected state: a container's
+   projection; a product's name, brand, size, links and minimum; a merged-away
+   product's alias and root; a purchase's values. This is a recorded deviation
+   from the feasibility note (see below). Each write checks the revisions
+   before it starts and again inside the store's serialized append, after fresh
+   admission (`canCommit` on Task `complete`/`reopen`/`command`/bulk/move,
+   `addChecklistItem` (parent and anchor), Task and Food `undoOperations`, and
+   Food `remove`/`restore`/`changeDetails`). A dry run executes the command
    against a copy of the profile and a copy-on-write view of the workspace and
-   reports the field-level effects; `planHash` binds command, arguments and
-   effects without clock readings. Bulk edit/move/delete, multi-container or
-   product-changing Food edits and merges re-run the dry run under the held
-   identity lock and commit only on a matching `--expect-plan`. Purchase import
-   keeps its own plan hash. Undo takes `--rev` for every item the action changed.
-6. *Performance.* Prospective `agent.*` budgets and cases are registered under
-   the coverage contract before measurement (performance-gate.md).
+   reports the effects: changed fields, task moves (with the task each now
+   precedes), product changes including merges (`mergedInto`), and purchases.
+   `planHash` binds command, arguments and effects without clock readings.
+   Bulk edit/move/delete, multi-container Food edit/remove/restore,
+   product-changing Food edits, merges and purchase imports re-run the dry run
+   under the held identity lock and commit only on a matching `--expect-plan`.
+   The commit then appends only while the workspace still has exactly the
+   observed state the plan was computed from (tasks, order, containers,
+   products, purchases), checked again inside the append; any change in
+   between gives `plan_changed` and a retry re-plans. Undo takes `--rev` for
+   every task, checklist item, container, product and purchase the action
+   changed (`none` for a target that no longer exists); each write result
+   prints the complete Undo command with current revisions.
+6. *Performance.* **Pending.** Prospective `agent.*` budgets and cases
+   (cold open + list, purchase-import apply, and the ~300-writer refresh case
+   from the writer-cap review) are being registered under the coverage contract
+   on branch `vex/agent-perf-coverage-20261029`; they are not in
+   performance-gate.md until that branch merges. Implementation acceptance
+   waits for that registration, and the `WorkspaceSession` change to the app's
+   open path still owes the normal reference qualification.
 
 **Differences from sections 4–7.**
 - MCP opens the workspace for each tool call and closes it, instead of keeping
   it open for 60 s: simpler, no idle work, peer arrivals admitted per call.
 - `tasks bulk-move`, `people add` and `products search` exist in addition to the
   listed commands; device name stays a device setting (`init --name`).
-- Undo of a creation is refused; delete the item instead.
+- Undo of a creation is refused; delete the item instead. Undo of an Undo is
+  refused (`undo_unavailable`); repeat the change instead. Neither is
+  advertised in write results.
+- `purchases import` follows the general plan contract: its dry run runs on the
+  copy-on-write view, a missing `--expect-plan` is `validation`, and `planHash`
+  binds the import's effects (the plan file's own hash is `importPlanHash`).
+  `purchases plan` never overwrites a file without `--force` and never writes
+  inside the workspace folder.
+- Food revisions are projected-state hashes, not admitted operation IDs (the
+  feasibility note asked for operation IDs). Consequence: a change that
+  restores an identical projected state keeps the old rev (ABA), so a write
+  holding that rev proceeds. Tasks and checklist items use operation IDs.
+- Output is capped at 32 KB of UTF-8 in text, JSON and MCP; dropped rows are
+  reported (`truncated`, `shown`) and `next` resumes at the first dropped row.
+- A partial `tasks bulk-edit` (some batches committed) returns its actions with
+  `partial: true` and the failure, and exits with that failure's code.
+- MCP marks deletes, removes and merges `destructiveHint`; malformed JSON-RPC
+  messages (batches, non-object params) get errors and the server keeps going.
+  Unexpected failures use kind `internal` (exit 2), outside the section 7 list.
 - `init --person` sets the default assignee; captures otherwise need `--for`.
-- Exit codes: 2 validation/other, 3 update_required, 4 profile_in_use,
-  5 history_damaged, 6 stale/plan_changed, 7 write_pending, 8 not_found/ambiguous_id.
+- Exit codes: 2 validation/undo_unavailable/other, 3 update_required,
+  4 profile_in_use, 5 history_damaged, 6 stale/plan_changed, 7 write_pending
+  (also a peer's write arriving mid-command: retry the same command),
+  8 not_found/ambiguous_id.
 - The registry is checked against the app's store calls by
   `test/agent_parity_test.dart`.
 - Count-only writer ceilings were removed (feasibility record); workspaces with
