@@ -511,14 +511,31 @@ class FoodStore {
 
   /// Adds containers to the product matching the description, or to a new
   /// one, in one action (design/food-products.md, section 3).
-  Future<void> add(FoodDetails details, int count) {
+  ///
+  /// Caller-chosen [ids] make a retry idempotent: when every ID is already
+  /// present the add is complete and appends nothing.
+  Future<void> add(FoodDetails details, int count, {List<String>? ids}) {
     if (count < 1 || count > 100) {
       return Future.error(
         const FormatException('Choose between 1 and 100 physical containers.'),
       );
     }
+    if (ids != null &&
+        (ids.length != count ||
+            ids.toSet().length != count ||
+            !ids.every(isCanonicalId))) {
+      return Future.error(const FormatException('Invalid container IDs.'));
+    }
     return _queue(() {
       return _freshCommandLocked(() {
+        if (ids != null) {
+          final known = {for (final c in state.containers) c.id};
+          final present = ids.where(known.contains).length;
+          if (present == ids.length) return const [];
+          if (present != 0) {
+            throw const FormatException('Some of these containers exist.');
+          }
+        }
         final plan = planFoodAdd(state, details);
         return [
           if (plan.create != null)
@@ -527,7 +544,7 @@ class FoodStore {
             ], product: plan.create),
           _FoodChange(
             FoodAction.add,
-            List.generate(count, (_) => const Uuid().v4()),
+            List.generate(count, (i) => ids?[i] ?? const Uuid().v4()),
             details: details,
             contents: const Contents.fraction(1, 1),
             link: plan.product == null ? null : {'product': plan.product},

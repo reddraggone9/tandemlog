@@ -680,6 +680,11 @@ List<AgentCommand> moreCommands() => [
       const AgentArg('count', 'integer', 'Number of containers (default 1).'),
       const AgentArg('expiry', 'string', 'Expiry date YYYY-MM-DD, or "none".'),
       const AgentArg('location', 'string', 'Location.'),
+      const AgentArg(
+        'request-id',
+        'string',
+        'UUID making a retried add idempotent.',
+      ),
     ],
     (call) async {
       final source = foodContainer(call, call.require('id'));
@@ -687,7 +692,11 @@ List<AgentCommand> moreCommands() => [
       final known = {for (final c in store.state.containers) c.id};
       final count = call.integer('count') ?? 1;
       final before = ownHead(call);
-      await store.add(_withChanges(source.details, call), count);
+      await store.add(
+        _withChanges(source.details, call),
+        count,
+        ids: requestIds(call, count),
+      );
       return writeResult(
         call,
         before,

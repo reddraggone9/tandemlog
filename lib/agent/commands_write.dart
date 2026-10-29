@@ -33,6 +33,24 @@ const _requestId = AgentArg(
   'UUID making a retried create idempotent; new IDs derive from it.',
 );
 
+/// IDs derived from `--request-id`, so a retried create is a no-op.
+List<String>? requestIds(
+  AgentCall call,
+  int count, [
+  String kind = 'container',
+]) {
+  final request = call.string('request-id');
+  if (request == null) return null;
+  if (!Uuid.isValidUUID(fromString: request)) {
+    throw const AgentFailure(
+      'validation',
+      '--request-id must be a UUID.',
+      details: {'field': 'request-id', 'error': 'invalid'},
+    );
+  }
+  return [for (var i = 0; i < count; i++) const Uuid().v5(request, '$kind:$i')];
+}
+
 /// Own canonical action IDs (`writer:sequence`) appended since [before].
 List<String> newActions(AgentCall call, int before) {
   final own =
@@ -430,6 +448,7 @@ List<AgentCommand> writeCommands() => [
       AgentArg('inbox', 'boolean', 'Add to Inbox without an expiry.'),
       AgentArg('location', 'string', 'Location.'),
       AgentArg('count', 'integer', 'Number of containers (default 1).'),
+      _requestId,
     ],
     (call) async {
       final count = call.integer('count') ?? 1;
@@ -460,6 +479,7 @@ List<AgentCommand> writeCommands() => [
           location: call.string('location')?.trim() ?? '',
         ),
         count,
+        ids: requestIds(call, count),
       );
       final added = [
         for (final c in store.state.containers)

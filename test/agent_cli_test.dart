@@ -149,6 +149,21 @@ void main() {
       );
     }
     expect((await json(['tasks', 'list']))['total'], 1);
+    for (var i = 0; i < 2; i++) {
+      final added = await json([
+        'food',
+        'add',
+        '--name',
+        'Beans',
+        '--inbox',
+        '--count',
+        '2',
+        '--request-id',
+        request,
+      ]);
+      expect(added['actions'], i == 0 ? hasLength(1) : isEmpty);
+    }
+    expect(((await json(['food', 'list']))['rows'] as List).single['count'], 2);
   });
 
   test('dry run appends nothing and reports a stable plan', () async {
