@@ -1,0 +1,57 @@
+{
+  "state": "BLOCKED_NOT_QUALIFIED_NOT_PUBLISHED",
+  "source": "deaeb729f4544cc8473fbb4e6c47a324fe02539c",
+  "relevantSourceSHA256": "765267f98c24cbd99f3ed459f73ef28dccceaa62ca510eda56930a010cedb9c6",
+  "requestId": "9dcff49ce2ac053258789816429fe109",
+  "firstQualification": {
+    "finishedAtUTC": "2026-10-29T01:30:59.377206+00:00",
+    "failed": [
+      "dense-food:food.product.merge.undo",
+      "food-own-history:scaling:food.product.merge.undo"
+    ],
+    "maximumMs": 25.494,
+    "absoluteBoundMs": 20,
+    "growthBoundMs": 16.5542,
+    "medianMs": 8.762,
+    "appendMicrosecondsAtMaximum": 17573,
+    "cpuMicrosecondsAtMaximum": 7483,
+    "throttledMicroseconds": 0,
+    "cleanup": "MainPID0, owned cgroups/processes absent, input pins unchanged, within original deadline, swap0/OOM0"
+  },
+  "oneNonqualifyingDiagnostic": {
+    "resultSHA256": "99e4455fdd26692f5b350b6254acd5bfbefa808eba7ecf33ba28a593d751e504",
+    "valid": true,
+    "correctnessAccepted": true,
+    "allPinsMatch": true,
+    "measurementCompleted": true,
+    "reproducedFailures": [
+      "dense-food:food.product.merge.undo",
+      "food-own-history:scaling:food.product.merge.undo"
+    ],
+    "maximumMs": 28.541,
+    "absoluteBoundMs": 20,
+    "growthBoundMs": 16.2504,
+    "medianMs": 9.987,
+    "appendMicrosecondsAtMaximum": 19753,
+    "cpuMicrosecondsAtMaximum": 7744,
+    "otherTimingMisses": [
+      "dense-food:cardinality500.food.restore.1",
+      "dense-food:converted.checklist.reorder",
+      "dense-food:converted.task.metadata.assignee.undo",
+      "dense-food:food.product.import.undo",
+      "food-own-history:scaling:cardinality500.food.restore.1",
+      "food-own-history:scaling:converted.checklist.reorder",
+      "food-own-history:scaling:converted.task.metadata.assignee.undo",
+      "food-own-history:scaling:food.product.import.undo",
+      "task-own-history:scaling:cardinality500.food.add.1",
+      "task-own-history:scaling:cardinality500.food.add.1.undo"
+    ],
+    "largestObservedAppendMicroseconds": 134502,
+    "cleanup": "diagnostic unit inactive/MainPID0/cgroup absent, all3 original attempt children absent"
+  },
+  "decision": "Existing diagnostic_did_not_reproduce is FALSE. Official rerun not authorized; no q2 request or invocation. No same-source retry, no qualification seal, no owner override, no budget/policy/durability change.",
+  "attributionBoundary": "Existing uninstrumented resource/append spans localize each listed absolute miss to off-CPU durable append delay (up to134.502ms), normal CPU/no throttling; not a new kernel-level causal trace or an approved attribution/resampling rule. Durable append implementation is unchanged by RC2.",
+  "publication": "No CI, main update, signed candidate or RC2 release; stable2026.10.8 remains Latest pending anonymous preservation readback.",
+  "next": "Parent relay completed UI/media and exact blocker to Lee. Further release work needs actual host remediation/fresh valid qualification or new explicit owner decision; do not infer approval of deferred disk-stall rule or reuse RC1 override.",
+  "recordedAtUTC": "2026-10-29T01:47:51.992331+00:00"
+}
