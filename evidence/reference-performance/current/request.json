@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "9b29fa84ef453313e40425cfaf6fee94",
-  "issuedAtUTC": "2026-10-28T01:48:51.066237+00:00",
-  "sourceRevision": "d0391f488f881ef84774cf6a4467f7f4273984e1",
+  "requestId": "2ba27629ba22e2e02896338057e3b35f",
+  "issuedAtUTC": "2026-10-29T03:03:01.758344+00:00",
+  "sourceRevision": "7b7742e9550e7e800bf81e0aab2c9f9babe96873",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "4d8842a269e8664aa9803d0bcce1d503a8de4069777e257e8a08582da34fdeca",
+    "sha256": "35c499dc5027dd7a03f2ac412c778e6d823cccf03eb926b6a8a1b0fed6fe9853",
     "files": {
       ".gitattributes": {
-        "sha256": "6bc5159379c082d339b2120def94a13a59fc9cb58245669fe79da1c763891daa",
+        "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
         "mode": "100644"
       },
       ".github/actions/setup-flutter/action.yml": {
@@ -49,7 +49,7 @@
         "mode": "100644"
       },
       ".github/workflows/validate.yml": {
-        "sha256": "7bf042b9636f8c1b79e4d8f729880fee50e8ab96353bb888ab469b34bc3a4b44",
+        "sha256": "8e5b34eee31467afd593dc5cace1bb5a34505663703af23aa14584ed20c5275b",
         "mode": "100644"
       },
       ".github/workflows/windows-widget-qa.yml": {
@@ -765,11 +765,11 @@
         "mode": "100644"
       },
       "integration_test/food_inspect_accessibility_test.dart": {
-        "sha256": "ee2d7039a8e8eab20bc58b17f6e14f1c40693ecee85efc7fc7dbd8d32a1241a8",
+        "sha256": "2deba1dac047a3c3a7e29d0540a186192b5e144aebb1ced63bb20b410c471f12",
         "mode": "100644"
       },
       "integration_test/food_keyboard_selection_workflow_test.dart": {
-        "sha256": "1f9d261cc7d2a4c3ed0d2b4c55e7e9fdbeb30c0b01d3135d410bda80cb921487",
+        "sha256": "5eedfa1643b9a09a75127b6cb2f6706110e64fc397d14a7f23d7043046397751",
         "mode": "100644"
       },
       "integration_test/food_preview_workflow_test.dart": {
@@ -780,6 +780,10 @@
         "sha256": "c42b48c58b9cab3f78517cc6009de50107a88c80866194e6bd90f34e3b0555ce",
         "mode": "100644"
       },
+      "integration_test/food_products_workflow_test.dart": {
+        "sha256": "81351a9705d38cce18af8ecb9c50255e07e7643b9154f288e4561e443ada629d",
+        "mode": "100644"
+      },
       "integration_test/food_refinements_workflow_test.dart": {
         "sha256": "54a2d8f46bff0f0e1996e5d6c085eeaedb4470dbcb8615745b67bf0221010c56",
         "mode": "100644"
@@ -788,12 +792,16 @@
         "sha256": "9322d11e900631e9f80f986ae2f57310962c16bff0e230cf248a4b4b2f55dcfd",
         "mode": "100644"
       },
+      "integration_test/food_selection_retention_workflow_test.dart": {
+        "sha256": "044f6925897381f7daaef2ac58c1c5498ab6d2b4fb4fc2fa562d8433acc9f2a7",
+        "mode": "100644"
+      },
       "integration_test/food_stock_toolbar_workflow_test.dart": {
         "sha256": "a780ac6f289654ab477b63ef5f51a8c90641491caa7af83b141856b4bf0d36b6",
         "mode": "100644"
       },
       "integration_test/food_undo_stack_workflow_test.dart": {
-        "sha256": "e220b03a10f8707c3549738ede55c2906935cc358c37a46737dfd61e2cd1c943",
+        "sha256": "674b4eb3a9b4f44781d9aa6f588e00f0a2f16cbc6b4a869a30db687ac70a4203",
         "mode": "100644"
       },
       "integration_test/food_view_reachability_workflow_test.dart": {
@@ -864,6 +872,10 @@
         "sha256": "5e7e884a741b3266b5064b16aae0cc73d8f241153d4b8bc54a0bbb684f384a5c",
         "mode": "100644"
       },
+      "integration_test/selection_layout_parity_workflow_test.dart": {
+        "sha256": "cb25cdb5882840699c76c822176474a28b4886a0bcf63bb9ecca48623b62a454",
+        "mode": "100644"
+      },
       "integration_test/start_hints_test.dart": {
         "sha256": "dc63e837ed50cb20a2d0c160db5345e4a31da04885534d4a959a0e79da456dd9",
         "mode": "100644"
@@ -889,7 +901,7 @@
         "mode": "100644"
       },
       "integration_test/task_flow_test.dart": {
-        "sha256": "acd0d5070f447754ce83d357b7dcc3591a7a06355af15a55e696243bbeafe567",
+        "sha256": "6bf046d6b7b583954d985d7f0bb0c89d7d3fcdc3fe7c89d5ad655b3115a163ca",
         "mode": "100644"
       },
       "integration_test/task_input_mode_retry_test.dart": {
@@ -917,7 +929,7 @@
         "mode": "100644"
       },
       "integration_test/ux_feedback_workflow_test.dart": {
-        "sha256": "03da2b7ff0c1549f6f8346961bc84bb07c816079b9ab9234b3d59eda3c3ed24b",
+        "sha256": "72cc02927b560f8eba1b5ce1919b3a0235e6b9a2bb1dd2a86ba2d8f3c83fd366",
         "mode": "100644"
       },
       "integration_test/visible_task_move_workflow_test.dart": {
@@ -933,7 +945,7 @@
         "mode": "100644"
       },
       "lib/application/food_undo_history.dart": {
-        "sha256": "d4c9d076cf9b86388ced25080d7ebee152d9e66cca48f77d2a2976b2a90f223b",
+        "sha256": "dea813d41b47bdf8aa8e4fc8158a2b1cde8d141b555e17cf55c79ffc5755924f",
         "mode": "100644"
       },
       "lib/application/task_clock.dart": {
@@ -969,7 +981,7 @@
         "mode": "100644"
       },
       "lib/domain/current_operation.dart": {
-        "sha256": "cdb9a28e3bd7df4de7ebbde82a67c9bd4a4f0121706f27f516eea6e11053eb18",
+        "sha256": "9a889789b38d881f2b3aa1b6839587e483f39c6c4d3c33e13794d789e0646d28",
         "mode": "100644"
       },
       "lib/domain/event.dart": {
@@ -1077,11 +1089,11 @@
         "mode": "100644"
       },
       "lib/food/food_admission.dart": {
-        "sha256": "6698708a194d2d95d01bfa3771a767c9caa99c5c55deb08b0b638157e897e796",
+        "sha256": "b417443805e4dc56781c7a5de3e3a225afc27addff6197bafe006ea47e5fe46d",
         "mode": "100644"
       },
       "lib/food/food_editor.dart": {
-        "sha256": "df103fadb8dfc7718fa5f75899422e0c8ce52c19f1785f18d880d9f305aa17bb",
+        "sha256": "9b1ebbc065af5c42fd9f8d7cf907e87a4081868235e2441650ff0d67791b6c93",
         "mode": "100644"
       },
       "lib/food/food_import.dart": {
@@ -1093,23 +1105,31 @@
         "mode": "100644"
       },
       "lib/food/food_page.dart": {
-        "sha256": "d098f27de094359da24ecbfef612568f3f9731beb42b377608d9fb012161b401",
+        "sha256": "2e291f81dda00faa3e0241e4820775a62a8fe9380f45a23419ef26b6dd9f3b72",
+        "mode": "100644"
+      },
+      "lib/food/food_products.dart": {
+        "sha256": "fbc7692fb05245a087747574cfc75f00f483fb0de9c825c077381a17ad3cbaef",
+        "mode": "100644"
+      },
+      "lib/food/food_purchase_import.dart": {
+        "sha256": "67f80e9fed9e7e9aa5caac69fe33e2e1f064e6093b2134b5ff058bcd630f6163",
         "mode": "100644"
       },
       "lib/food/food_record.dart": {
-        "sha256": "01b58c067cfc1f1e5769d44d0d9f9b13c5de99731b82fd70647f1a7ed25b3cc4",
+        "sha256": "d6b56976d577e7414019fdabaad5a4db71f8083d2c35dffd62e745aab4aa9577",
         "mode": "100644"
       },
       "lib/food/food_store.dart": {
-        "sha256": "c2b605a45ab0728a4580291a36100f3351218231b15e9486c50728a247530fe6",
+        "sha256": "3343e2e8e1e10bb77bb9e6823dd6e923a46f4c9afc713462df2ded86ca25cedb",
         "mode": "100644"
       },
       "lib/food/inventory.dart": {
-        "sha256": "48a496c70d1b4132d9c93c2cc6fe39ec4a6555c9a8aa6937db1a28f9242716cd",
+        "sha256": "8afcf8bd889d015cfbcac8a092caf927b80d8ca64b9c44e1c1cf6adf2c73bfd6",
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "e58e2c2d6c27cb48a37a1ce108b8166fae343ef3ace345e2d2cda95b3c99f761",
+        "sha256": "61259b0eb52d92ad73ff7a6ecffea8608d941c4aa9d3456523e5f83463a12a4d",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1185,7 +1205,7 @@
         "mode": "100644"
       },
       "lib/presentation/free_text_autocomplete.dart": {
-        "sha256": "89c3ab94c01aed69d96981e38c2a3d36e2ac2ee558b135a347ea71e298c5e6e2",
+        "sha256": "b852daf14df32e8af2111858193c691d27fec045693f6c0da4d6686ce5aa902b",
         "mode": "100644"
       },
       "lib/presentation/list_row_surface.dart": {
@@ -1193,7 +1213,7 @@
         "mode": "100644"
       },
       "lib/presentation/list_selection.dart": {
-        "sha256": "69546934cf5ed9f443911c0a204e5c740e48abce0ffc03e3a667ad4cf73389ff",
+        "sha256": "ee508f22ea6629feeb975d016eed670ab58c76e772a241318b2849e23b212c9c",
         "mode": "100644"
       },
       "lib/presentation/name_entry_dialog.dart": {
@@ -1228,6 +1248,10 @@
         "sha256": "a3935f9032282b2774fa134a13254e6eb904585a87c4248939e09846e67650cc",
         "mode": "100644"
       },
+      "lib/presentation/tandemlog_theme.dart": {
+        "sha256": "b8f7871dbb2a5f2b8d076bf275ebf47dc95cf20077aa4184e603688285d79aec",
+        "mode": "100644"
+      },
       "lib/presentation/task_actions_menu.dart": {
         "sha256": "1044e513a8b4dee166463e001e28359be0339a158bd11d4cbf6eb85c8f8dc786",
         "mode": "100644"
@@ -1245,7 +1269,7 @@
         "mode": "100644"
       },
       "lib/presentation/task_entry_area.dart": {
-        "sha256": "afa2b669425555d53eb281a103db237a66e44ab240fcb3874df8b511b599c2e3",
+        "sha256": "45ae045ac9422bcf904a72e63edf09320dade7fc58561f1e730a8a478222c3c4",
         "mode": "100644"
       },
       "lib/presentation/task_field_help.dart": {
@@ -1329,7 +1353,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "043db7b978db0cfe5464fa51e4440d84703288eb2c796abcbf536df9e6efa659",
+        "sha256": "613a68c23dd1b0ea7fea794a25bae98ea6262b42053bd3d43e85887a6a92aca6",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -1337,7 +1361,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_record.dart": {
-        "sha256": "a3069d701c3b59f48377cedc1fa09d7095ebcd9cfa9aa03039c06f97b82b484d",
+        "sha256": "60a0ade96f258b5a0746d3458e52ac9fb103478677defb06ffe1549dccdab9b3",
         "mode": "100644"
       },
       "lib/storage/workspace_state.dart": {
@@ -1345,7 +1369,7 @@
         "mode": "100644"
       },
       "lib/storage/workspace_view.dart": {
-        "sha256": "ff46dfe041dc9d6f9e90ac5e5d9910a2ef6206dafe1d7f6db2c2d82d551fa43a",
+        "sha256": "740e429f24e287a3b84f80fcba510bcc36ccf548f26149ab727a028902f46d23",
         "mode": "100644"
       },
       "lib/storage/writer_guard.dart": {
@@ -1783,7 +1807,7 @@
         "mode": "100644"
       },
       "test/adaptive_text_read_test.dart": {
-        "sha256": "40982989b26c2f060c803c48046d249ed2ab837af43e0b5f3fcdbed1e77ff492",
+        "sha256": "a7d9fc26bf22653b33127b422b10f6cd5ad97cda373b4ed3e2a851273b67a180",
         "mode": "100644"
       },
       "test/android_log_folder_test.dart": {
@@ -1935,7 +1959,7 @@
         "mode": "100644"
       },
       "test/date_validation_action_sync_test.dart": {
-        "sha256": "0c3297d7b78f892ed9602026d4efef501f20ed01a208b85870334361d9a00cb3",
+        "sha256": "48032f924d42905b0f0720494993ca960e7f23f159ccfd88084d095289e2745c",
         "mode": "100644"
       },
       "test/device_name_layout_test.dart": {
@@ -1959,7 +1983,7 @@
         "mode": "100644"
       },
       "test/fast_month_picker_test.dart": {
-        "sha256": "c63f2f704f5de6488981746e386f1cd7db082cfc2e82b916fc43f77c0a504656",
+        "sha256": "7a17104533e786db8e062f8a9531037e1f779cdff1320830b5969586944f3bfa",
         "mode": "100644"
       },
       "test/fixtures/completion-instant-v3/README.md": {
@@ -2020,6 +2044,14 @@
       },
       "test/fixtures/food-import/plan-v1.json": {
         "sha256": "ef11751bf7c53a89951acbf8d85faaeca51fda0d68566c0c5d2cf96935998047",
+        "mode": "100644"
+      },
+      "test/fixtures/food-products/README.md": {
+        "sha256": "754d3b21cab8d41585b30cba36de618bd870f7db5a574b54b0404da0538e365d",
+        "mode": "100644"
+      },
+      "test/fixtures/food-products/concurrent-receipt.operations": {
+        "sha256": "9e66d5611bfd905e7b6f8f9cbdfe8ea6718098ca127efa509ef7f9d0aa438cff",
         "mode": "100644"
       },
       "test/fixtures/food-undo/mixed-v1-v2.foodlog": {
@@ -2199,7 +2231,7 @@
         "mode": "100644"
       },
       "test/focus_invalidation_test.dart": {
-        "sha256": "13be32dbd480d13ec16d96c4af640a260cd00608563f38a3b2add19c0ff8945c",
+        "sha256": "24c7082875a03d23b1b967b17446859b736c8c2259b748a884f30b24ad5f1f80",
         "mode": "100644"
       },
       "test/folder_actions_test.dart": {
@@ -2207,7 +2239,7 @@
         "mode": "100644"
       },
       "test/food_add_another_test.dart": {
-        "sha256": "cd5c40f7ebc2b534ee4e3f3540a3fc17a6f88ec4354436aea47f64528ef4dc6d",
+        "sha256": "dc0ac4c676d18fc9a3023815ab30a98cc034e157e9debb08cc327b7146097b8e",
         "mode": "100644"
       },
       "test/food_admission_incremental_test.dart": {
@@ -2215,31 +2247,31 @@
         "mode": "100644"
       },
       "test/food_all_status_search_workflow_test.dart": {
-        "sha256": "07c5efe224158106dc6a7ace5875d25c2dbfae6558fc633017cf1483de09a4df",
+        "sha256": "1307b25c468e6bc9a83dd4e82bb27d5947a608a3232a05290f614d23af0f658d",
         "mode": "100644"
       },
       "test/food_batch_selection_test.dart": {
-        "sha256": "64f925bf2aff8be520be4a9bb8407132cc289b2917751ead29cc7478837a77f3",
+        "sha256": "f559013b3fa6b6173f521d27a028dd7479d7b074c1a6e18ab316512959b15582",
         "mode": "100644"
       },
       "test/food_bulk_details_undo_review_test.dart": {
-        "sha256": "6199f6cabf6cb8af272e6ecb1b514b2aa9fbb1f97ae55e0e5c4fad7e039aa9b0",
+        "sha256": "8d785c0beb0de771ee8d945d274dda31aa60101b303a4e1a64f352d01ba1a546",
         "mode": "100644"
       },
       "test/food_bulk_details_workflow_test.dart": {
-        "sha256": "dbe6fe61e6d641b7047febd9199a37fa997bf7cb830497065631ff381e92d036",
+        "sha256": "e87805f316910083d118f98d53abe4357fa899e6fc4fdafe0372a0f5cd77228d",
         "mode": "100644"
       },
       "test/food_bulk_edit_fields_test.dart": {
-        "sha256": "94907ce0fe9d732e74338ba97d6fcbb4de20226966eb9cde0ef5d8eee4f51ca6",
+        "sha256": "62914c829db928b76fd22d2608c773cdbbb6f7021527c3bf16a400166dea3502",
         "mode": "100644"
       },
       "test/food_checklist_validation_test.dart": {
-        "sha256": "0a2487e7b0fbc1c3f61614c2f73c7e42507b3762b15682ebd67eb9fa46abe722",
+        "sha256": "38c81ccac91fd39632326311d684f79acf6abba1444fb6c5386801888436a81b",
         "mode": "100644"
       },
       "test/food_collapsed_inspect_guard_test.dart": {
-        "sha256": "555bdce27a5c85b4cf80fca870d69467ccbef1675f601661e6a7d4268965d8e1",
+        "sha256": "ce442f5d32f5e9ef00e7338c554395a71c6579c4dda736b4d3f75853072e644f",
         "mode": "100644"
       },
       "test/food_combined_stock_review_test.dart": {
@@ -2247,15 +2279,15 @@
         "mode": "100644"
       },
       "test/food_context_menu_test.dart": {
-        "sha256": "42ff1d783cc32eaf03cbb9c662f031b997e8a79b47a0270bf6e649153f05129b",
+        "sha256": "0deb3587f93a3880e5c68abeb71533b549b316f072bc259d83ff73b696329747",
         "mode": "100644"
       },
       "test/food_deleted_expiration_color_test.dart": {
-        "sha256": "9170be207bfd7f29090a0242f99f9df00f50514dcca5e67d15eaf6ad6abbf423",
+        "sha256": "d19254e3dd3c4dc0ed876c55de856631fb58f748c4e7a9988ca60a562a51d7db",
         "mode": "100644"
       },
       "test/food_durable_editor_test.dart": {
-        "sha256": "b4b8a938da2b0a7e905048fc7e3480e77df96966d966bd12023724c34567468d",
+        "sha256": "bf175a61e5b8d5d178f1b13765140cbf8e1c20216904820a037cb6bc041fdeae",
         "mode": "100644"
       },
       "test/food_editor_keyboard_layout_test.dart": {
@@ -2267,19 +2299,19 @@
         "mode": "100644"
       },
       "test/food_editor_pane_test.dart": {
-        "sha256": "fc81389190ef60306c5aa14820d35abfcd9143adfc380a28941268bd2dfc8244",
+        "sha256": "b7c39420eae71ebe15b18c50a7cba733d6a3a272269cec2f278fa1418b60ea75",
         "mode": "100644"
       },
       "test/food_expiration_color_workflow_test.dart": {
-        "sha256": "20984b3effba821306887665f14bfcd06277f6eb91178f48ca819807f68fef27",
+        "sha256": "c5bec5a2493ed4646ad22ed6e8c3d2c7afe9338ffedd518bd6f10a1cad061b28",
         "mode": "100644"
       },
       "test/food_expiration_deprecation_test.dart": {
-        "sha256": "2612bcb1b1ce5010e2cf7d30f98b9df2f4d7d61fd828581c96b7ca95e70f4d50",
+        "sha256": "d2558a0963dbcd6f544a51e0adfa5eddab1eeb405a75a27d7c13b0dea2469934",
         "mode": "100644"
       },
       "test/food_expiration_observed_group_review_test.dart": {
-        "sha256": "0259f6f181c2bf913b56f40d580d1a755c1ab328b30c375fde6247ada317d140",
+        "sha256": "2dac305ce0f4aceb70668e56be7ca55122bb2cf8bed8ada7ef7e8dbb7be34f0e",
         "mode": "100644"
       },
       "test/food_expiration_presentation_test.dart": {
@@ -2287,15 +2319,15 @@
         "mode": "100644"
       },
       "test/food_expiry_guidance_test.dart": {
-        "sha256": "f91456be169407ad056d454a47882e307302bf53a40f82b937e5609dbc5297dc",
+        "sha256": "41d13b5ab69f2f211f332e62302841eb39cc9355600474a44305246efaaac0aa",
         "mode": "100644"
       },
       "test/food_field_filter_workflow_test.dart": {
-        "sha256": "11d8a1b6b654aa11619c36ef3843f07e802b5a00b801ac9722a3079c6c68f6d2",
+        "sha256": "e5ca6561e02c86669ab79ea5a831575a268eefc60597f7489ae1e11d6eaec831",
         "mode": "100644"
       },
       "test/food_filter_route_ownership_test.dart": {
-        "sha256": "0057189f8de297b2c5c336d3af78336370f1ac913905146e14534e00a4413f0a",
+        "sha256": "2e6a1c4c3b39be3d740f132b4c09531c63f1644530b955055350807079d2f845",
         "mode": "100644"
       },
       "test/food_full_default_import_vector_test.dart": {
@@ -2307,7 +2339,7 @@
         "mode": "100644"
       },
       "test/food_group_action_geometry_test.dart": {
-        "sha256": "9d6d26116c2671490941e6652d733298c411aba3102f0de7b1719c7ccad70447",
+        "sha256": "6d41edaa1097c29af3a3bf631cccc229f5105f86c1fa7bd4d392bd67faecca2e",
         "mode": "100644"
       },
       "test/food_group_sort_test.dart": {
@@ -2315,7 +2347,7 @@
         "mode": "100644"
       },
       "test/food_grouping_memo_test.dart": {
-        "sha256": "c6b5c6ad4fea2cd7e18988c5dbb28560b1d0950f6dabfc61378319912d1097ae",
+        "sha256": "a263b42ac10d4968033b647a06406d0d19aae7eb02c4732d863f3f2730617e2c",
         "mode": "100644"
       },
       "test/food_import_contract_vector_test.dart": {
@@ -2331,11 +2363,11 @@
         "mode": "100644"
       },
       "test/food_keyboard_selection_test.dart": {
-        "sha256": "59a7bc9909838cdb89ebbfaae6bf3e28ce9b87d7e993baf31910a343a24a9e76",
+        "sha256": "b4ecbecccec1af92fa03941fed0fd4d357775b62b45f1136a36b86fe2a188e7d",
         "mode": "100644"
       },
       "test/food_more_filters_test.dart": {
-        "sha256": "479f3ad30b299fd9cbacf44216dcc4f88710cb13ead644e6215b8096eab088ba",
+        "sha256": "68ae43373293af87463987ee68a2bab78ffaf9abdf8e067811c20758bae9305e",
         "mode": "100644"
       },
       "test/food_operation_undo_test.dart": {
@@ -2343,7 +2375,15 @@
         "mode": "100644"
       },
       "test/food_preview_test.dart": {
-        "sha256": "ec103fcb2870af50c896695565e99f4c296e7ac2e2d756c33d60b940e691fc76",
+        "sha256": "70d4ab736d3297fd2663b8e2286207e2868c82a1220fee8c36d238e8f12f8b38",
+        "mode": "100644"
+      },
+      "test/food_products_test.dart": {
+        "sha256": "8f8c4bd35225345944f1cb2d5a1e2fedddda132c489897526685c8f2c553b473",
+        "mode": "100644"
+      },
+      "test/food_products_ui_test.dart": {
+        "sha256": "e8a50d83bc40e407585bbc281941df1d684acf1b331f0b04675728ff7fc1fd70",
         "mode": "100644"
       },
       "test/food_profile_upgrade_test.dart": {
@@ -2359,19 +2399,19 @@
         "mode": "100644"
       },
       "test/food_required_expiration_test.dart": {
-        "sha256": "9529f93152e91b8b79953417f4bfb807dddc1f83d44809639cd94d253b109319",
+        "sha256": "038cb6f399f926406431524efa31a25453a6365f910e8d8f79b0f8e2c1a400ed",
         "mode": "100644"
       },
       "test/food_restore_batch_callback_test.dart": {
-        "sha256": "0f1303856dbacf58f3f89a9c6695646490d8de19e68fc167e4d6b5dabd795e63",
+        "sha256": "df5348507c1a7c0dbb23f601da77d3f3b076ffdfb61373bb4a76cc0e5221fd4b",
         "mode": "100644"
       },
       "test/food_retained_flat_list_test.dart": {
-        "sha256": "53ede0d670e9949c3e481855fb522932a1cf96d8a890e31e9905c00c99fb7d02",
+        "sha256": "5baf4168efada3d1018df7f07b2aa35c8c392bf158c73bd865425055327cffb5",
         "mode": "100644"
       },
       "test/food_retention_draft_test.dart": {
-        "sha256": "87c5c06096329e394a58decf310fd442796dfdddc7b3aa86f8342d701f2a023d",
+        "sha256": "b8860cc1a1d28af9c2dbe816f667ca7345e3e20dc643ec0e0ace777d420e8eed",
         "mode": "100644"
       },
       "test/food_review_regression_test.dart": {
@@ -2379,15 +2419,19 @@
         "mode": "100644"
       },
       "test/food_section_width_test.dart": {
-        "sha256": "548dff4e2448c9795ec404e137d775fc813d16336cd1f9ab6a4dc455f853245d",
+        "sha256": "fbd2cf759fb1ac8a637317e0914f28d51eaadf33cd6331b00fe95b72ed93fe38",
         "mode": "100644"
       },
       "test/food_selection_deleted_edit_test.dart": {
-        "sha256": "3bd04f2555ddecbfa34b599fd0a413d793d5ac4ac0e3bd7664d43a66d15b828c",
+        "sha256": "8a4ed0672f7c7376373a5746aeee328fa563bb1768190d0a0705dacbac33efe2",
+        "mode": "100644"
+      },
+      "test/food_selection_retention_test.dart": {
+        "sha256": "1309d41e2065f3c05b8404a4688299d4dfaab56f62f02c900ff0c2298960c019",
         "mode": "100644"
       },
       "test/food_stock_toolbar_workflow_test.dart": {
-        "sha256": "e041a12fe9bbd2cdf975e43041f3c506b6c00f637020859b9976594438845a46",
+        "sha256": "0138e470bf4d36098606a45489fcb32712b415faf47df219298b7cef1b74387c",
         "mode": "100644"
       },
       "test/food_store_test.dart": {
@@ -2403,11 +2447,11 @@
         "mode": "100644"
       },
       "test/food_value_autocomplete_workflow_test.dart": {
-        "sha256": "4389235c47cc730da353755b0b42a2eeaa6fbebf0d676b837751e41403925244",
+        "sha256": "54e63f47b96e2f77a3f130078e1892a16c57e147b8a693d5f9a7da0523bf03b4",
         "mode": "100644"
       },
       "test/food_view_reachability_test.dart": {
-        "sha256": "6e34517c5a4aef5dd57da59dd2dcf7ef30aa2ad9abcb1f74899aafc2c352f05d",
+        "sha256": "fb63ec15e6d9bbb11d9a520b03a2bc071c8d7f319f61a1a2debb157956e572f6",
         "mode": "100644"
       },
       "test/foreground_importer_test.dart": {
@@ -2459,7 +2503,7 @@
         "mode": "100644"
       },
       "test/list_selection_test.dart": {
-        "sha256": "9aa6433a7b167953aff5d9c3dbcbec6e369b4f049bb057a77b6b7bc2f052a17a",
+        "sha256": "2808236d5d9c40fffc44937783cca7e2d28b222539e79c6e3d3246b2fc818d25",
         "mode": "100644"
       },
       "test/local_durability_test.dart": {
@@ -2586,6 +2630,10 @@
         "sha256": "9a52d0610b693bb99910a04e7222409fc1d96d76dc475a048d54e30e41f66afb",
         "mode": "100644"
       },
+      "test/selection_layout_parity_test.dart": {
+        "sha256": "b66fd6d8493ec593fe4aa07cb9d12fa21d055ed0e366c6890038a6da8854bcb7",
+        "mode": "100644"
+      },
       "test/semantic_history_observation_test.dart": {
         "sha256": "edb7b99a658281688cccefc16ce2a842de27ab19ec491982dc3d5d40566afa6b",
         "mode": "100644"
@@ -2616,6 +2664,10 @@
       },
       "test/storage_test.dart": {
         "sha256": "332f039dc3f7f3d00fec79859069c71cd9cb7981de92d4f2fbebb5df41fd0716",
+        "mode": "100644"
+      },
+      "test/support/food_product_fields.dart": {
+        "sha256": "9c838939bd378d0da81a7c6df15dade99e1dc39970c1f87fbdad49325ab3c352",
         "mode": "100644"
       },
       "test/support/frozen_complete_r2/README.md": {
@@ -2675,7 +2727,7 @@
         "mode": "100644"
       },
       "test/support/ux_capture.dart": {
-        "sha256": "ca0b5542f1c835f93125bf1ca9b4e4782c4e5add33ba87b824024e4aa4889347",
+        "sha256": "5833b757f5ef77d8b2ad18a7db2cde2702331710c9b8c1a0c559c145b8c4920a",
         "mode": "100644"
       },
       "test/tag_filter_picker_test.dart": {
@@ -2882,6 +2934,10 @@
         "sha256": "c809654d52509abcd356a4f023d05df11019af6236b0b0ff4b5d465d7836b7b6",
         "mode": "100644"
       },
+      "test/ux_capture_theme_test.dart": {
+        "sha256": "22b1915bd8a052524bb324ac85a69d890fb792987600c0c5bf34047c02912cb4",
+        "mode": "100644"
+      },
       "test/view_clock_test.dart": {
         "sha256": "4373baab28f9b6b9b90ac8cbac98f542000a565aab48b1ac5f8df18dc7db106e",
         "mode": "100644"
@@ -2979,7 +3035,7 @@
         "mode": "100644"
       },
       "tool/food_preview.dart": {
-        "sha256": "888aaab42956efa9b345f342679be5bc384387655c690cd29b56c7555d4c9783",
+        "sha256": "fd42da3f8656d0cf09d76758c65c4da1573f41425655c659bff6251e48ae5f23",
         "mode": "100644"
       },
       "tool/gradle-repositories.init.gradle": {
@@ -3031,11 +3087,11 @@
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
-        "sha256": "5598b9b34efa1a31e2cc273f159186363d6ee22419adfe3bd9a50b0599189feb",
+        "sha256": "b1ad7b1a81da761a981fb330ade211495e3cc630bdb13ee927b3bc9958369f45",
         "mode": "100644"
       },
       "tool/performance/borderline.py": {
-        "sha256": "ba7c45f82730701ef12824491fcee15df8d668ebf5afc3e9ff89196771fb4119",
+        "sha256": "49bd02fe8db7cbf5720183d2a00ca229ab4e93de41ba4dd4cf9774284a3dea64",
         "mode": "100644"
       },
       "tool/performance/cost_trace.dart": {
@@ -3043,7 +3099,11 @@
         "mode": "100644"
       },
       "tool/performance/coverage-v1.json": {
-        "sha256": "327445c22a7da20f476523eaa7c377df3ee947a7ef2289f7c3afc734a7b2383a",
+        "sha256": "37ac3b55ca8459c912948aae1099295f98ccaaa24baed20058270f39c583b5c1",
+        "mode": "100644"
+      },
+      "tool/performance/disk_stall.py": {
+        "sha256": "ceac362528f8086d8ddeb23cf31670c606103e8b15a0bb9ee91927a8c79eff31",
         "mode": "100644"
       },
       "tool/performance/food_tail_diagnostic.dart": {
@@ -3051,11 +3111,11 @@
         "mode": "100644"
       },
       "tool/performance/gate_policy.py": {
-        "sha256": "c06d7e084abce9e6221a73afa7fddd5dcb0179b3691779f843d60b10e6d7b920",
+        "sha256": "77c93de9b49f5aa002d3adf32e405ad16807d4a6310c2f6112791e02c4be6320",
         "mode": "100644"
       },
       "tool/performance/limits-v1.json": {
-        "sha256": "50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a17c95b39742e",
+        "sha256": "894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409",
         "mode": "100644"
       },
       "tool/performance/operation_diagnostics.dart": {
@@ -3067,15 +3127,15 @@
         "mode": "100644"
       },
       "tool/performance/owner_override.py": {
-        "sha256": "19058283b56aa0386c844641843edb5c40bf79ba3fc9187a3540dca388476376",
+        "sha256": "25a86dd76bfc2db5b10c87b5b4717c6a878ad0654c1b447fa8edee313cad08ac",
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "caedb1216cdcdfa6538e0a06415d0693a764d681b9cd9bf56d8c6a29683fdade",
+        "sha256": "439db75eb7498ebe05b6c328f0f185e1b835ba61257e54dc3f508c06b275e227",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
-        "sha256": "66ed4b31ae977014201018ad7a2b1524fa104abf4a1ac14e0eac60439ce65564",
+        "sha256": "ea26e0f706788dad82f98bb1e4d0465ba7c8809c5f9dd34ec9dff766004ebf3c",
         "mode": "100644"
       },
       "tool/performance/run_ci.sh": {
@@ -3083,7 +3143,7 @@
         "mode": "100644"
       },
       "tool/performance/run_gate.py": {
-        "sha256": "46aa6aea8a59b0799d10ec80e837c6965d11bb236fec1695a17dad830eb45ed6",
+        "sha256": "c9e170e22d53804a2a8ca58db532f265b885a361723aba75bee0a5d68b7ea129",
         "mode": "100644"
       },
       "tool/performance/run_linux_action_probe.py": {
@@ -3106,6 +3166,10 @@
         "sha256": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
         "mode": "100644"
       },
+      "tool/start_candidate_wait.py": {
+        "sha256": "a367795f8bf867594558b48156b4afe2a716d6c6638336808c226c58523e4d31",
+        "mode": "100644"
+      },
       "tool/synthetic_text_fixture.py": {
         "sha256": "4fc233e688d18038c4e9f16c264cf8194daa9cf70b20a8c2a1218b8bf11efa79",
         "mode": "100644"
@@ -3123,7 +3187,7 @@
         "mode": "100644"
       },
       "tool/test_borderline_performance.py": {
-        "sha256": "ac45b7845077925042b71a4892c62e14e0c7e87a5ed937a19371fb125c373965",
+        "sha256": "09b81454959ac09ad4b8518a385c7f07ce3ff4a53c08ca03c446702759979149",
         "mode": "100644"
       },
       "tool/test_collect_linux_core_stacks.py": {
@@ -3132,6 +3196,10 @@
       },
       "tool/test_diagnose_linux_close.py": {
         "sha256": "fc47a656d2078f25606d03f81d3931baaede79d9ec54d516423c0a4c13d945fa",
+        "mode": "100644"
+      },
+      "tool/test_disk_stall_resample.py": {
+        "sha256": "e815a4fda1c28a12793bf8bcc7f206ff40ad3723ed038f566987490a1697d605",
         "mode": "100644"
       },
       "tool/test_draft_release.py": {
@@ -3175,7 +3243,7 @@
         "mode": "100644"
       },
       "tool/test_owner_override.py": {
-        "sha256": "36f3fa1b03f7a3fb5f0060ad88dad0af5d9fe11cf3fe6c12d9b8afee274c9b4a",
+        "sha256": "b874d3a6e88de6f062a04ef393cd8f29ff64959d8436d21faee31e06a9c3e45c",
         "mode": "100644"
       },
       "tool/test_performance_child_cleanup.py": {
@@ -3183,11 +3251,15 @@
         "mode": "100644"
       },
       "tool/test_performance_gate.py": {
-        "sha256": "9d2db5471218cfd98ca1f4f5cb53fcb641f860151baa024b507dbbe1ed9eb864",
+        "sha256": "c605258fd0c51853b69c1a7a0a91681f0d969bcb15427eac72177a917d6d4522",
         "mode": "100644"
       },
       "tool/test_publish_inventory.py": {
         "sha256": "4c93ec6a32597e91a381ebfc11fe9436b7b69fcf24e12b3bc9a195c25b93d274",
+        "mode": "100644"
+      },
+      "tool/test_reference_git_blobs.py": {
+        "sha256": "cda3f01ce5d993ce06772e37f60a93173b8a926a9c2d3dffd25bd36c4f0efc5a",
         "mode": "100644"
       },
       "tool/test_reference_performance.py": {
@@ -3226,8 +3298,24 @@
         "sha256": "b8f6e809d3c8db16d8d6dce6859479b47a5ac81827a9fcc280ecb6d8afbe8688",
         "mode": "100644"
       },
+      "tool/test_verify_test_shards.py": {
+        "sha256": "eae3ba10f070539925e2fe200b2ef7184664dd13650e538b3c9666f7905912ea",
+        "mode": "100644"
+      },
+      "tool/test_wait_signed_candidate.py": {
+        "sha256": "e6803b0bec6022cd0f575a5aa89981dbdc6bb6a8277b473f2255930641d90ed4",
+        "mode": "100644"
+      },
       "tool/verify_linux_disposal.py": {
         "sha256": "bb10a6cbf743a8af0a5e10321b43daf8c51df7827ded9fd28b1efc32ca99a788",
+        "mode": "100644"
+      },
+      "tool/verify_test_shards.py": {
+        "sha256": "bc639d182646ffa0d2c691357ed19456569565ee3e8e225cf51c68769bdd604c",
+        "mode": "100644"
+      },
+      "tool/wait_signed_candidate.py": {
+        "sha256": "b4beb864742a10e3db351ff7252dd9b4130ceac085157da238fc62b8c17b3f80",
         "mode": "100644"
       },
       "tool/windows_widget_qa/package_qa.py": {
@@ -3332,7 +3420,7 @@
       }
     }
   },
-  "hostProfileSHA256": "caedb1216cdcdfa6538e0a06415d0693a764d681b9cd9bf56d8c6a29683fdade",
-  "controllerSHA256": "bd18287ab26734190d38f85f3ba332c1b0dd9457c51190ccf7e3ee12c802c389",
-  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/reference-completion-controller-2539-20261026/candidate/controller_r7.py"
+  "hostProfileSHA256": "439db75eb7498ebe05b6c328f0f185e1b835ba61257e54dc3f508c06b275e227",
+  "controllerSHA256": "0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3",
+  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-foodrc-20261028/controller/controller_r7.py"
 }
