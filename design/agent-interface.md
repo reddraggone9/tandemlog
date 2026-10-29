@@ -1,8 +1,14 @@
-# Agent interface (proposal)
+# Agent interface
 
-Status: **Proposed, not accepted.** This is a design only. Nothing here is
-implemented. Target: the first release after Food products reaches stable.
-Section 9 lists the decisions Lee still has to make.
+Status: **Accepted direction, not implemented** (Lee, 2026-10-28 22:10 CDT):
+“For the separate binaries/logs for agentic access, I think you've convinced me.
+Do what you think is best.” The requirements below incorporate that acceptance;
+section 9 separates implementation questions from settled product direction.
+[ADR0036](decisions/0036-agent-interface.md) records the choice and alternatives.
+
+Target: **its own release line after Food products is stable**. Food RC.2
+qualification is active; this change is documentation only. No implementation,
+refactor, benchmark, CI run, publication or live-data change is part of it.
 
 ## 1. Goal (Lee, 2026-10-28)
 
@@ -19,19 +25,24 @@ writing installation, the one-release format rule, fail closed on unknown data,
 no direct canonical-file writers ([food import contract](food-import-contract.md)),
 and the performance contract.
 
-## 2. Recommendation in one paragraph
+## 2. Accepted direction in one paragraph
 
 Ship one headless Dart executable, `tandemlog-cli`, built from the same source and
 version as the app. It links the app's pure-Dart domain/storage/Food code and the
 same native text engine, but not Flutter. Every command has terse text output and
 compact JSON output. `tandemlog-cli mcp` serves the same command registry as MCP
-tools over stdio. There is no network listener and no auth. The CLI is its own
-installation, with its own private profile, attached to the device's synced
-workspace folder like any other device. Its writes are ordinary actions attributed
-to that installation. **It needs no canonical format change**, so it adds no
-upgrade step for the other devices.
+tools over stdio. There is no network listener or separate service credential;
+local account/profile permissions govern access. The GUI and CLI ship together
+in the existing Flatpak, Windows installer and
+Windows ZIP; there is no separate CLI download. Each agent identity has its own
+installation, private profile and writer log, separate from the GUI and from
+other agents. The profile joins the ordinary synced workspace. Identity is not
+per machine, and there is no agent-count cap. Its writes are ordinary actions
+attributed to that installation. The design targets **no canonical format
+change**; that remains a feasibility constraint, not a proven result, especially
+for whole-action text Undo across process restarts (sections 6 and 9).
 
-## 3. What the code says (where the starting proposal changes)
+## 3. Implementation feasibility (inspection at the design baseline)
 
 1. **A headless binary is feasible.** `lib/domain`, `lib/application`,
    `lib/storage`, `food_store.dart`, `inventory.dart`, `food_products.dart` and
@@ -67,7 +78,8 @@ upgrade step for the other devices.
    profile lock. The only gain is avoiding one more `.applog`. Purchase-import
    idempotency comes from source-derived purchase IDs in canonical history, not
    from a private ledger, so nothing ties imports to e52144b5. It would be safe
-   only with exclusive ownership forever. A fresh installation is cleaner.
+   only with exclusive ownership forever. The accepted direction is a fresh agent
+   installation; do not reuse it.
 5. **"A local copy" is the device's synced folder itself.** On Farnsworth that is
    the Syncthing hub folder `mypool/sync/tandemlog`, which is lee-owned (ACL
    lee/hester rwx), so Vex can append to its own file there. The CLI never writes
@@ -89,12 +101,17 @@ tandemlog-cli (dart build cli; no Flutter)
   (machine-readable list of commands with JSON Schemas) and MCP `tools/list`.
   The app and the CLI cannot expose different action sets without a test noticing
   (section 8).
-- **Configuration once.** `tandemlog-cli init --workspace <folder> --name "Vex
-  (Farnsworth)"` creates the profile in the platform data directory
-  (`$XDG_DATA_HOME/tandemlog-cli`, `%APPDATA%\Tandemlog CLI`) and records the
-  folder. After that, commands need no flags. `TANDEMLOG_CLI_PROFILE` overrides
-  the profile location. The MCP client configuration is
-  `{"command":"tandemlog-cli","args":["mcp"]}`.
+- **Configuration once per agent identity.** `tandemlog-cli init --workspace
+  <folder> --name "Vex"` creates that agent's private profile in a platform data
+  directory and records the folder. `TANDEMLOG_CLI_PROFILE` selects the profile;
+  each additional agent gets a distinct profile, installation UUID and log, even
+  on the same host. Exact default paths and profile selection are implementation
+  questions (section 9). The host name may be descriptive, not the identity key.
+  Never copy one live identity/profile to concurrent hosts; a separate concurrent
+  writer needs a distinct installation. There is no fixed limit on agents.
+  After setup, commands need no workspace flags. Windows MCP clients launch the
+  installed `tandemlog-cli.exe` with `["mcp"]`; Flatpak clients launch `flatpak`
+  with `["run","--command=tandemlog-cli","com.reddraggone9.tandemlog","mcp"]`.
 - **No idle work.** CLI processes exit after each command. The MCP server opens
   the workspace on the first call, refreshes before each call (the stores already
   admit arriving peer bytes in the fresh-input callback), and closes the workspace
@@ -162,13 +179,21 @@ or before Due"}`), matching the app's beside-the-field errors.
 - Every write accepts `--dry-run`. A dry run prints the exact typed effects
   (entities, fields before→after, merges, counts) and a `planHash`, and appends
   nothing.
-- `--expect-plan <hash>` applies only if recomputing the plan yields the same hash.
-  Use it for anything previewed: bulk edits, merges and imports.
-- `--if-rev <rev>` on single-entity writes refuses with `stale` when the entity
-  changed since the agent read it, for example a phone edit arriving through sync.
-  The MCP schemas make `rev` required for complete, delete and merge, which are
-  the actions where acting twice or on stale data does damage (completing a
-  recurring task twice advances it twice).
+- `--expect-plan <hash>` is **required for bulk actions, merges and imports** in
+  both CLI and MCP commit calls. Dry runs can discover targets and supply the
+  required revision map/plan hash without committing. Recompute under the write
+  lock after fresh admission; reject
+  a changed plan before appending. A dry run provides the hash, including exact
+  target IDs, revisions and effects. A missing precondition is a validation error.
+- **`rev` is required for every write changing an existing item**, not just
+  complete/delete/merge. CLI uses `--if-rev <rev>` for one item; MCP requires
+  `rev`. Multi-item writes carry an ID→revision map in the input/plan, including
+  affected products, containers, checklist parents and ordering neighbors as
+  applicable. Undo also supplies current revisions for its affected existing
+  items. Create-only writes have no prior-item revision; creating something that
+  also changes an existing item still requires that item's revision. Reject
+  missing or stale revisions before any append. This prevents stale phone edits
+  being overwritten and repeated completion advancing recurrence twice.
 - Write output gives the action ID, affected IDs with their new `rev`, and the
   undo command.
 
@@ -178,9 +203,9 @@ capture after a timeout doesn't duplicate. Edits are set-to-value. Complete and
 delete rely on `--if-rev`. A crash mid-append leaves an unterminated suffix that
 the CLI's own next start compares and cleans, as the app does.
 
-**Purchase import (Food products decision 7).** This is Vex's YNAB itemization
-workflow producing a plan, using the existing `dryRunPurchaseImport` /
-`commitPurchaseImport` contract:
+**Purchase import (Food products decision 7).** Receipt/itemization workflows
+(including Vex's YNAB workflow) produce a plan, using the existing
+`dryRunPurchaseImport` / `commitPurchaseImport` contract:
 1. `purchases plan <lines.json>` takes loose lines (date, store, amount,
    currency, quantity, and either a product ID or name/brand/size/link), fills in
    `space`, `importId` and `sourceSha256`, and writes the canonical immutable plan
@@ -192,31 +217,49 @@ workflow producing a plan, using the existing `dryRunPurchaseImport` /
 3. `purchases import plan.json --expect-plan <hash>` commits one action with
    `food.purchase-import` provenance.
 
-Idempotency is per receipt line: `source = {kind:"ynab", key:"<YNAB transaction
-id>#<receipt line n>"}`. A YNAB transaction is one receipt, but a purchase is one
-line. A re-itemization that changes a line's values fails the dry run instead of
-duplicating. Retrying after an Undo is a no-op, as designed.
+Idempotency uses a **generic source key `{kind, key}`**, with a stable provider
+namespace and opaque per-line key. For example, a YNAB adapter may emit
+`{kind:"ynab", key:"<transaction id>#<stable receipt-line id>"}`; other receipt
+sources use their own kind and key without changing the interface. Line identity
+must survive reordering/re-itemization, rather than being recomputed from mutable
+values. A purchase is one line, not one transaction. Changed values under the
+same source identity fail the dry run instead of duplicating. Retrying after an
+Undo is a no-op, as designed.
 
-**Undo.** `undo <actionId>` retracts one whole earlier action by this
-installation, through the store-level retraction. Bulk edits and imports undo as
-one unit, survive process restarts, and keep independent later contributions
-(ADR0018 semantics). Two limits:
-- *Title/notes text.* Native text Undo is session-bound. The MCP server keeps a
-  per-session stack, so text edits made earlier in the same session can be undone
-  natively. Otherwise `undo` reports the text part as not undoable, and
-  `--revert-text` writes a compensating text edit only if the current text still
-  equals what the agent wrote.
-- *Other writers.* The agent cannot undo actions made by people's devices (Food
-  enforces same-writer retraction; the CLI applies the same rule to Tasks). The
-  app's toolbar Undo is per session, so Lee and Hester cannot toolbar-Undo an
-  agent write. They can edit it back or ask Vex.
+**Undo: only `undo <actionId>`.** Retract one whole earlier action by this
+agent installation, with current item revisions as above. Bulk edits and imports
+undo as one unit across process restarts and preserve independent later
+contributions (ADR0018 semantics). No partial field Undo, MCP per-session text
+Undo stack, compensating text-revert option or snapshot overwrite is exposed.
+Repeated Undo is an explicit already-undone/no-op result, not another retraction.
+
+Whole-action Undo includes title/notes contributions when present. **This is a
+required interface outcome, not functionality the current stores already
+provide.** Native text Undo currently needs retained editor ownership and stack
+order. Implementation must prove durable action-to-operation ownership and safe
+selective text retraction across short-lived CLI processes using supported
+mechanisms. It must preflight the entire action and append nothing if any part
+cannot be undone (`undo_unavailable`), rather than silently undoing only non-text
+fields. This limitation blocks claiming full action parity until resolved; it
+must not be hidden by keeping an MCP session alive (section 9).
+
+The agent cannot undo another writer's actions (Food already enforces same-writer
+retraction; apply the same restriction to Tasks). The GUI's session toolbar Undo
+does not gain ownership of agent actions. People can edit them or ask the agent
+to undo them; browsable cross-writer audit/Undo remains outside this release.
 
 ## 7. Concurrency, versions, packaging
 
 - **Same machine as a GUI.** Each has its own profile and installation, so there
   is no shared lock. Each appends only to its own `.applog`, and each sees the
   other's writes through ordinary admission (the GUI's folder watcher picks them
-  up within the debounce or the 15 s fallback poll).
+  up within the debounce or the 15 s fallback poll). Sharing a package does not
+  share the writer identity: independent processes sharing one log could race its
+  own-writer append sequence/hash-chain head and private recovery state; a lock
+  alone would not supply native text-actor/Undo ownership. Use the existing text
+  actor allocation rules per installation and editing allocation, never a cloned
+  actor or GUI session. Profile locks serialize same-identity calls while
+  distinct identities admit each other's writes normally.
 - **Same agent profile.** `ProfileLock` is exclusive and non-blocking. The CLI
   retries for up to `--wait 30s` (agents run calls in parallel), then exits with
   `profile_in_use`. A CLI must never point at a GUI's profile.
@@ -228,21 +271,23 @@ one unit, survive process restarts, and keep independent later contributions
   additively; renames and removals bump it.
 - **Errors.** Stable JSON error kinds and exit codes: `not_found`, `ambiguous_id`,
   `validation`, `stale`, `plan_changed`, `update_required`, `profile_in_use`,
-  `history_damaged`, `write_pending` (retry the same command).
-- **Packaging.**
-  - Linux: `tandemlog-cli-<version>-linux-x64.tar.gz` (executable plus `lib/`
-    with sqlite3 and the text engine) and its checksum, attached to each release
-    before publishing, as the portable ZIP is.
-  - Windows: `tandemlog-cli.exe` inside the existing portable ZIP and installer,
-    next to `tandemlog_text.dll`.
-  - Android: none.
-  - The Flatpak is left out initially (`flatpak run --command` adds friction and
-    no host needs it).
-- **Install on Farnsworth.** Vex downloads the tarball with `gh release
-  download`, verifies its SHA256, unpacks it into
-  `~/.local/opt/tandemlog-cli/<version>/`, points `~/.local/bin/tandemlog-cli` at
-  it, and runs `init` once. Each app update includes a CLI update, and the CLI
-  refuses newer data until then.
+  `history_damaged`, `undo_unavailable`, `write_pending` (retry the same command).
+- **Packaging (accepted).**
+  - Linux: GUI and headless executable in the **same existing Flatpak**.
+    Invoke `flatpak run --command=tandemlog-cli com.reddraggone9.tandemlog` with
+    CLI arguments appended. The default app command still opens the GUI.
+    Package sqlite3 and the text engine for both entry points; do not require
+    GTK/display initialization for CLI calls.
+  - Windows: `tandemlog-cli.exe` inside **both the existing installer and ZIP**,
+    alongside its native libraries, with the same release version as the GUI.
+  - **No additional tarball, download, package or independently updated CLI.**
+    Android has no CLI entry point.
+- **Install on Farnsworth.** Install/update the ordinary Flatpak once, run its
+  second command headlessly, select Vex's private profile and `init` it against
+  the synced workspace. This does not initialize or reuse a GUI profile. Verify
+  sandbox workspace access and native-library loading during implementation;
+  neither requires a separate archive or a running GUI. Updates deliver both
+  executables together; newer unsupported history still fails closed.
 
 ## 8. Testing and the performance gate
 
@@ -256,53 +301,74 @@ one unit, survive process restarts, and keep independent later contributions
   workspaces:
   - The CLI and a second installation (a stand-in for a GUI) write
     concurrently, and each sees the other's writes.
-  - `--dry-run` appends no bytes; `--if-rev` and `--expect-plan` refuse stale
-    state.
+  - `--dry-run` appends no bytes; all existing-item writes reject missing/stale
+    revisions; bulk/merge/import reject missing or changed plan hashes.
   - Request-ID retry doesn't duplicate.
-  - Undo works across a restart.
+  - Whole-action Undo (including mixed text/non-text) works across a restart,
+    preserves peer contributions and repeated Undo is a no-op. An unavailable
+    text retraction refuses the whole action with unchanged canonical bytes.
+  - Several agent identities on one host use distinct profiles/logs; same-profile
+    parallel calls serialize or fail without chain/text-actor collisions.
   - A newer-format fixture gives `update_required` with unchanged bytes.
   - A crash mid-append recovers.
   - Reads leave the workspace and the profile byte-identical.
   - An MCP `initialize` / `tools/list` / `tools/call` smoke test.
-- **CI.** Build and smoke-test on the hosted Linux and Windows runners (mandatory
-  correctness).
+- **Future CI/native acceptance.** Build and smoke-test on hosted Linux and
+  Windows runners (mandatory correctness). Exercise the packaged Flatpak second
+  command without a display, Windows installer and ZIP, per-agent profile
+  selection, sandbox workspace access and native-library loading. These are
+  future implementation gates; no CI or benchmarks run for this design change.
 - **Performance.** The CLI reuses already-budgeted store paths. The
   `WorkspaceSession` extraction changes the app's open/command path, so the RC
-  gets the normal reference qualification under unchanged budgets. Proposed (D7):
-  record CLI cold-open+list and purchase-import apply timings as advisory, not
-  new mandatory budgets.
+  gets the normal reference qualification under unchanged budgets. Before
+  implementation acceptance, register new CLI/MCP actions and intended
+  responsiveness budgets under the existing performance coverage contract.
+  Cold-open+list and purchase-import apply need measurement coverage; whether
+  additional CLI-specific timings are advisory or mandatory is an implementation
+  gate question, not permission to waive existing budgets.
 
-## 9. Open decisions for Lee
+## 9. Settled requirements and implementation questions
 
-Each has a recommendation.
+**Settled (Lee's accepted direction, 2026-10-28):** separate headless Dart
+`tandemlog-cli`, CLI and stdio MCP using shared domain commands, shipped together
+with the GUI in Flatpak/Windows installer/Windows ZIP; no extra download. One
+installation/private profile/log per agent identity, not per host, without an
+agent-count cap or GUI log sharing. Whole-action `undo <actionId>` only; required
+revisions for every existing-item mutation; required plan hashes for
+bulk/merge/import; generic `{kind, key}` source identity. Implement on a separate
+release line only after Food products is stable, not during RC.2 qualification.
 
-1. **Identity on Farnsworth.** **Rec: a new installation "Vex (Farnsworth)"** with
-   its own profile under Vex's account. Don't reuse e52144b5 (section 3.4). Cost:
-   a sixth permanent writer file.
-2. **Agents on other machines.** **Rec: allowed when useful, one installation per
-   machine, named "<agent> (<host>)"**, never sharing a GUI profile. Only
-   Farnsworth gets one now.
-3. **CLI plus MCP in one binary.** **Rec: yes.** The CLI needs no configuration
-   for any agent with a shell, and MCP is a thin adapter for agents without one.
-   Alternatives rejected:
-   - Localhost HTTP inside the GUI: needs the app running, plus auth, and doesn't
-     fit serverless sync.
-   - A Python reader/writer: duplicates semantics and the CRDT text code, and
-     violates the no-direct-writers rule.
-   - A headless mode in the Flutter binary: GTK isn't installed on Farnsworth.
-4. **Undo of agent writes from the app.** **Rec: not now.** Vex undoes on request,
-   and people can edit back. Revisit with the "browsable audit history" idea.
-5. **Required preconditions.** **Rec:** `rev` required (in MCP schemas) only for
-   complete, delete and merge; optional elsewhere; dry run optional except where
-   the agent's own policy asks for it (Vex: bulk, merge, import).
-6. **Packaging.** **Rec:** a Linux tarball plus the CLI inside the Windows ZIP and
-   installer; no Flatpak or Android CLI.
-7. **Performance gate.** **Rec:** correctness tests mandatory; CLI timings
-   advisory; the refactor qualifies under the existing budgets.
-8. **Purchase source key.** **Rec:** `ynab:<transaction id>#<receipt line>`, so
-   idempotency is per receipt line, not per transaction.
-9. **Name.** **Rec:** `tandemlog-cli` (avoids clashing with the app's executable
-   on Windows).
+**Implementation questions to resolve on that later line (not requests to
+re-approve the direction):**
+
+1. Prove the pinned Dart/native-assets build and library path injection on both
+   platforms, including headless Flatpak launch and sandbox folder access.
+2. Choose per-agent profile paths/selection in Flatpak and Windows, with explicit
+   isolation from the GUI, no accidental identity cloning and profile locks.
+3. Extract shared workspace sequencing/read-only open without changing GUI
+   semantics. Determine how private disposable caches can refresh while reads
+   keep durable workspace/profile state unchanged; qualify changed hot paths.
+4. Prove whole-action text Undo across process restarts and after intervening
+   peer edits, including crash-safe all-or-nothing preflight. Current native
+   session-bound Undo is insufficient. If this cannot be achieved under the
+   existing canonical semantics, stop and record the blocker: do not weaken Undo,
+   fabricate a compensation or introduce a format change under this acceptance.
+   Any necessary durable-format change needs its own compatibility design and
+   explicit decision under the one-release format rule.
+5. Finalize canonical revision/plan hashing, multi-item dependency scope, action
+   receipt persistence and retry behavior (including already-undone actions).
+   Admission plus validation must be serialized with the append; peer arrivals
+   after that boundary remain ordinary concurrent contributions, not a promise
+   of distributed locking.
+6. Set CLI-specific timing coverage/budgets under the performance contract before
+   accepting implementation. Existing mandatory GUI/store budgets stay intact.
+
+Rejected alternatives: an HTTP server inside the GUI (running app and network
+access/auth needed); a Python canonical writer (duplicates semantics and violates
+no-direct-writers); a headless Flutter mode (unneeded GUI dependency); shared
+GUI/agent writer state (chain/recovery/text ownership coupling); and a separate
+Linux tarball (extra installation/update path). Revisit only if implementation
+evidence invalidates the accepted approach, documenting the tradeoff first.
 
 ## 10. Not in scope
 
