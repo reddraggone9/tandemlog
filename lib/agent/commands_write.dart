@@ -902,21 +902,16 @@ Future<AgentResult> dryRunWrite(
   Directory? copy;
   try {
     copy = await profile.readCopy();
-    final probe = await LocalProfileDatabase.open(copy.path);
-    final settings = LocalSettings(probe.root, profileDatabase: probe);
-    await settings.load();
-    await probe.close();
-    // Copy-on-write: only files the command writes are copied.
-    final real = settings.folder!;
+    // Copy-on-write: only files the command writes are copied. The profile
+    // copy keeps the real workspace location, so its warm cache applies.
     final shadow = Directory('${scratch.path}/workspace');
     await shadow.create();
-    final shadowProfile = AgentProfile(copy.path);
-    await _rebind(shadowProfile, shadow.path);
     final before = await AgentWorkspace.open(
-      shadowProfile,
+      AgentProfile(copy.path),
       readOnly: false,
       wait: options.wait,
-      folderFor: (location) => OverlayLogFolder(location, real),
+      folderFor: (location) => OverlayLogFolder(shadow.path, location),
+      disposable: true,
     );
     final beforeState = _observe(AgentCall(args, before, options));
     AgentResult result;
@@ -971,18 +966,6 @@ Future<AgentResult> dryRunWrite(
     if (held == null) await lock.close();
     await scratch.delete(recursive: true);
     await copy?.delete(recursive: true);
-  }
-}
-
-Future<void> _rebind(AgentProfile profile, String folder) async {
-  final db = await LocalProfileDatabase.open(profile.root);
-  try {
-    final settings = LocalSettings(db.root, profileDatabase: db);
-    await settings.load();
-    settings.folder = folder;
-    await settings.save();
-  } finally {
-    await db.close();
   }
 }
 

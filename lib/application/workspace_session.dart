@@ -146,12 +146,14 @@ class WorkspaceSession {
     }
   }
 
-  Future<void> close() async {
+  /// [sealCache] false is for sessions on a disposable profile copy: the
+  /// warm Task cache seal would be discarded with the copy.
+  Future<void> close({bool sealCache = true}) async {
     try {
       await food.close();
     } finally {
       try {
-        await tasks.close();
+        await tasks.close(sealCache: sealCache);
       } finally {
         await history.close();
       }

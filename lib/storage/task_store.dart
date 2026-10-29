@@ -4896,7 +4896,10 @@ class TaskStore {
     onPrepared: onPrepared,
   );
 
-  Future<void> close() {
+  /// [sealCache] false skips re-sealing the warm Task cache proof; for
+  /// sessions whose profile is a disposable copy (agent reads and dry runs),
+  /// where the seal would be written and deleted unused.
+  Future<void> close({bool sealCache = true}) {
     _closed = true;
     return _closing ??= _queue.then((_) async {
       var disposed = false;
@@ -4926,7 +4929,8 @@ class TaskStore {
               // Foreign module refreshes finish before their shared projection
               // is detached; no publication can target disposed native owners.
               detachAndDispose();
-              if (unified != null &&
+              if (sealCache &&
+                  unified != null &&
                   unified!.safetyFailure == null &&
                   !unified!.hasPending &&
                   !unified!.snapshot.pendingEffects) {

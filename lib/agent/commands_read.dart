@@ -22,14 +22,22 @@ ViewTime viewTime(AgentCall call, String zone) {
 }
 
 /// People are `user` rows; `--for`/assignee accept a name or ID prefix.
-Map<String, String> people(AgentCall call) => {
-  for (final r in call.ws.session.tasks.rows)
+Map<String, String> people(AgentCall call) =>
+    peopleIn(call.ws.session.tasks.rows);
+
+/// [people] from already-read Task rows; decoding the rows dominates.
+Map<String, String> peopleIn(List<Map<String, dynamic>> rows) => {
+  for (final r in rows)
     if (r['kind'] == 'user' && r['deleted'] != true)
       r['id'] as String: r['name'] as String? ?? '',
 };
 
-String resolvePerson(AgentCall call, String input) {
-  final all = people(call);
+String resolvePerson(
+  AgentCall call,
+  String input, {
+  Map<String, String>? names,
+}) {
+  final all = names ?? people(call);
   final byName = all.entries
       .where((e) => e.value.toLowerCase() == input.toLowerCase())
       .map((e) => e.key)
@@ -62,12 +70,14 @@ String taskRev(AgentCall call, String id) {
   return revOf(ids);
 }
 
+/// [names] is [people] when the caller already has it (one map per call).
 Map<String, Object?> taskJson(
   AgentCall call,
   Map<String, dynamic> t, {
   bool full = false,
+  Map<String, String>? names,
 }) {
-  final names = people(call);
+  names ??= people(call);
   final notes = t['description'] as String? ?? '';
   return {
     'id': t['id'],
@@ -92,8 +102,14 @@ Map<String, Object?> taskJson(
   };
 }
 
-String taskLine(AgentCall call, Map<String, dynamic> t, int year) {
-  final names = people(call);
+String taskLine(
+  AgentCall call,
+  Map<String, dynamic> t,
+  int year, {
+  Map<String, String>? names,
+  String? rev,
+}) {
+  names ??= people(call);
   final parts = <String>[
     '${shortId(t['id'] as String)} ${clip(t['title'] as String? ?? '', 120)}',
     taskScheduleText(Map<String, dynamic>.from(t['schedule'] as Map), year),
@@ -102,7 +118,7 @@ String taskLine(AgentCall call, Map<String, dynamic> t, int year) {
       for (final tag in (t['tags'] as List? ?? const [])) '#$tag',
     ].join(' '),
     if (t['completed'] == true) 'done',
-    'rev ${taskRev(call, t['id'] as String)}',
+    'rev ${rev ?? taskRev(call, t['id'] as String)}',
   ];
   return parts.where((p) => p.isNotEmpty).join(' · ');
 }
@@ -122,11 +138,13 @@ const _taskListArgs = [
 Future<AgentResult> _tasks(AgentCall call, {String? query}) async {
   final zone = call.options.timeZone!;
   final time = viewTime(call, zone);
+  final rows = call.ws.session.tasks.rows;
+  final names = peopleIn(rows);
   final assignee = call.string('for') == null
       ? null
-      : resolvePerson(call, call.string('for')!);
+      : resolvePerson(call, call.string('for')!, names: names);
   final view = projectTaskView(
-    call.ws.session.tasks.rows,
+    rows,
     time,
     assignee: assignee,
     includeUpcoming: call.flag('upcoming') || query != null,
@@ -143,7 +161,7 @@ Future<AgentResult> _tasks(AgentCall call, {String? query}) async {
   final heading = query != null
       ? 'Search "$query"'
       : '${completed ? 'Completed' : 'Open'} tasks'
-            '${assignee == null ? '' : ' for ${people(call)[assignee]}'}'
+            '${assignee == null ? '' : ' for ${names[assignee]}'}'
             '${call.strings('tag').isEmpty ? '' : ' tagged ${call.strings('tag').map((t) => '#$t').join(' ')}'}';
   final page = Page.of(
     entries,
@@ -152,15 +170,23 @@ Future<AgentResult> _tasks(AgentCall call, {String? query}) async {
     query: '$heading|${call.flag('upcoming')}',
   );
   final year = tz.TZDateTime.from(time.instant, timeZoneLocation(zone)).year;
-  return AgentResult(
-    {
-      'view': heading,
-      'total': page.total,
-      'tasks': [for (final e in page.rows) taskJson(call, e.task)],
-      'next': page.next,
-    },
-    capText(
-      [for (final e in page.rows) taskLine(call, e.task, year)],
+  final tasks = [
+    for (final e in page.rows) taskJson(call, e.task, names: names),
+  ];
+  // The text form is built after the workspace closes: no store reads here.
+  return AgentResult.lazy(
+    {'view': heading, 'total': page.total, 'tasks': tasks, 'next': page.next},
+    () => capText(
+      [
+        for (var i = 0; i < page.rows.length; i++)
+          taskLine(
+            call,
+            page.rows[i].task,
+            year,
+            names: names,
+            rev: tasks[i]['rev'] as String,
+          ),
+      ],
       header: '$heading · ${page.total}',
       page: page,
     ),

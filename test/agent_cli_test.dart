@@ -1233,4 +1233,92 @@ void main() {
       affected[item['id']],
     );
   });
+
+  test(
+    'reads and dry runs reuse the warm cache; writes still seal it',
+    () async {
+      await setUpAgent();
+      await cli(['people', 'add', 'Lee']);
+      final added = await json([
+        'tasks',
+        'add',
+        'Sweep',
+        'Mop',
+        '--for',
+        'Lee',
+      ]);
+      final task = (added['affected'] as List).first as Map;
+      final opened = <({bool disposable, int reuses})>[];
+      debugAgentWorkspaceOpened = (ws) => opened.add((
+        disposable: ws.disposable,
+        reuses: ws.session.history.decodedCacheReuses,
+      ));
+      addTearDown(() => debugAgentWorkspaceOpened = null);
+      final before = await bytes();
+      final list = await json(['tasks', 'list']);
+      final dry = await json([
+        'tasks',
+        'complete',
+        task['id'] as String,
+        '--if-rev',
+        task['rev'] as String,
+        '--dry-run',
+      ]);
+      expect(list['total'], 2);
+      expect(dry['effects'], isNotEmpty);
+      expect(await bytes(), before);
+      // Both ran on disposable profile copies bound to the real location, so
+      // the decoded cache sealed by the last write applied (no cold replay).
+      expect(opened, hasLength(2));
+      expect(opened.every((o) => o.disposable && o.reuses > 0), isTrue);
+
+      // The seal itself: opening consumes the proof. A disposable close does
+      // not re-seal; an ordinary close (the app's) does, as before.
+      debugAgentWorkspaceOpened = null;
+      final profile = AgentProfile.resolve(
+        selection: 'default',
+        environment: env,
+      );
+      Future<int> openClose({required bool disposable}) async {
+        final ws = await AgentWorkspace.open(
+          profile,
+          readOnly: false,
+          disposable: disposable,
+        );
+        final reuses = ws.session.history.decodedCacheReuses;
+        await ws.close();
+        return reuses;
+      }
+
+      expect(await openClose(disposable: true), greaterThan(0));
+      expect(await openClose(disposable: false), 0);
+      expect(await openClose(disposable: false), greaterThan(0));
+    },
+  );
+
+  test(
+    'tasks list renders people and revs identically in both formats',
+    () async {
+      await setUpAgent();
+      await cli(['people', 'add', 'Lee']);
+      await cli(['people', 'add', 'Hester']);
+      await json(['tasks', 'add', 'Water plants', '--for', 'Lee']);
+      await json(['tasks', 'add', 'Call vet', '--for', 'Hester']);
+      final listed = await json(['tasks', 'list']);
+      final (code, text) = await cli(['tasks', 'list']);
+      expect(code, 0);
+      final tasks = (listed['tasks'] as List).cast<Map>();
+      expect(tasks.map((t) => t['assigneeName']).toSet(), {'Lee', 'Hester'});
+      for (final t in tasks) {
+        final line = text
+            .split('\n')
+            .singleWhere((l) => l.contains(t['title'] as String));
+        expect(line, contains('@${t['assigneeName']}'));
+        expect(line, contains('rev ${t['rev']}'));
+      }
+      final forLee = await json(['tasks', 'list', '--for', 'Lee']);
+      expect(forLee['view'], 'Open tasks for Lee');
+      expect(forLee['total'], 1);
+    },
+  );
 }

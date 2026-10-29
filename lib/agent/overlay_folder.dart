@@ -4,22 +4,28 @@ import 'dart:typed_data';
 import '../storage/log_folder.dart';
 
 /// Copy-on-write view of a workspace for dry runs: reads fall through to the
-/// real folder, and the first write to a file copies it into [location] (a
-/// private scratch directory) before changing only the copy. Other writers'
+/// real folder, and the first write to a file copies it into [scratch] (a
+/// private directory) before changing only the copy. Other writers'
 /// histories are never copied, so a dry run costs the files it touches.
+///
+/// [location] stays the real folder's, so the profile copy's warm cache and
+/// workspace binding apply and the dry run does not replay history cold.
 class OverlayLogFolder extends LocalLogFolder {
-  OverlayLogFolder(super.location, this.base);
-  final String base;
+  OverlayLogFolder(this.scratch, super.location);
+  final String scratch;
 
-  File _shadow(String name) => super.file(name); // validates the name
-  File _base(String name) => File('$base${Platform.pathSeparator}$name');
+  File _shadow(String name) {
+    _base(name);
+    return File('$scratch${Platform.pathSeparator}$name');
+  }
+
+  File _base(String name) => super.file(name); // validates the name
 
   @override
   File file(String name) {
     final shadow = _shadow(name);
-    return shadow.existsSync() || !_base(name).existsSync()
-        ? shadow
-        : _base(name);
+    final base = _base(name);
+    return shadow.existsSync() || !base.existsSync() ? shadow : base;
   }
 
   Future<void> _materialize(String name) async {
@@ -30,11 +36,11 @@ class OverlayLogFolder extends LocalLogFolder {
 
   @override
   Future<List<LogFileInfo>> list() async {
-    final shadow = await super.list();
+    final shadow = await LocalLogFolder(scratch).list();
     final names = {for (final f in shadow) f.name};
     return [
       ...shadow,
-      for (final f in await LocalLogFolder(base).list())
+      for (final f in await super.list())
         if (!names.contains(f.name)) f,
     ];
   }

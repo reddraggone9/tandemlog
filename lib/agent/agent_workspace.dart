@@ -25,6 +25,9 @@ String packagedTextLibrary() {
   return '${bin.parent.path}${Platform.pathSeparator}lib${Platform.pathSeparator}$name';
 }
 
+/// Test hook: observes each opened agent workspace (cache reuse, mode).
+void Function(AgentWorkspace workspace)? debugAgentWorkspaceOpened;
+
 /// An open agent workspace for one command (or one MCP call). Reads run on a
 /// disposable profile copy and a write-refusing folder; writes use the real
 /// profile under the identity lock.
@@ -37,6 +40,7 @@ class AgentWorkspace {
     this._engine,
     this._copy,
     this.readOnly,
+    this.disposable,
   );
   final LocalProfileDatabase profile;
   final LocalSettings settings;
@@ -45,6 +49,9 @@ class AgentWorkspace {
   final NativeTextEngine _engine;
   final Directory? _copy;
   final bool readOnly;
+
+  /// The profile is a copy discarded after the call (reads and dry runs).
+  final bool disposable;
 
   String get writer => settings.writer;
   NativeTextEngine get textEngine => _engine;
@@ -56,6 +63,7 @@ class AgentWorkspace {
     NativeTextEngine Function()? engineFactory,
     ProfileLock? held,
     LogFolder Function(String location)? folderFor,
+    bool disposable = false,
   }) async {
     await agent.requireAgentProfile();
     // A caller already holding the identity lock keeps ownership of it.
@@ -89,7 +97,7 @@ class AgentWorkspace {
         textEngine: engine,
         readOnly: readOnly,
       );
-      return AgentWorkspace._(
+      final workspace = AgentWorkspace._(
         profile,
         settings,
         session!,
@@ -97,7 +105,10 @@ class AgentWorkspace {
         engine,
         copy,
         readOnly,
+        readOnly || disposable,
       );
+      debugAgentWorkspaceOpened?.call(workspace);
+      return workspace;
     } catch (e) {
       await profile?.close();
       engine?.dispose();
@@ -107,9 +118,11 @@ class AgentWorkspace {
     }
   }
 
+  /// A session on a disposable profile copy (reads, dry runs) does not seal
+  /// the warm Task cache; the copy is deleted right after.
   Future<void> close() async {
     try {
-      await session.close();
+      await session.close(sealCache: !disposable);
     } finally {
       try {
         await profile.close();

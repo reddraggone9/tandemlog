@@ -31,9 +31,20 @@ class AgentArg {
 enum CommandKind { read, write, setup }
 
 class AgentResult {
-  AgentResult(this.data, this.text, {this.nextAfter, this.exitCode = 0});
+  AgentResult(this.data, String text, {this.nextAfter, this.exitCode = 0})
+    : _text = (() => text);
+
+  /// Builds the text form only if a caller asks for it: a `--format json`
+  /// call never renders it.
+  AgentResult.lazy(
+    this.data,
+    String Function() text, {
+    this.nextAfter,
+    this.exitCode = 0,
+  }) : _text = text;
   final Map<String, Object?> data;
-  final String text;
+  final String Function() _text;
+  late final String text = _text();
 
   /// For paged results: the cursor resuming after the first [shown] rows of
   /// this page, so a truncated output still pages without skipping rows.
