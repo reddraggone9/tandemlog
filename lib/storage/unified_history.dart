@@ -394,16 +394,17 @@ final class UnifiedHistory {
       estimate += utf8.encode(record.encode()).length * 4;
       if (estimate > UnifiedDecodedCache.maximumBytes) return;
     }
-    final payload = UnifiedDecodedCache.encode(
+    final payloadBytes = UnifiedDecodedCache.encodeUtf8(
       current.records,
       _decodedCacheBinding(manifest),
     );
-    final payloadBytes = utf8.encode(payload);
     if (payloadBytes.length > UnifiedDecodedCache.maximumBytes) return;
-    db.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
-      _decodedPayloadKey,
-      payload,
-    ]);
+    // Stored as the same TEXT value, bound as its UTF-8 bytes so the
+    // payload is not converted to a string and back.
+    db.execute(
+      'INSERT OR REPLACE INTO profile_metadata VALUES (?,CAST(? AS TEXT))',
+      [_decodedPayloadKey, payloadBytes],
+    );
     db.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
       _decodedProofKey,
       bytesDigest(payloadBytes),

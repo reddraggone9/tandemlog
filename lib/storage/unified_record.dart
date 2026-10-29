@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
@@ -340,25 +341,34 @@ class UnifiedDecodedCache {
   static const maximumBytes = ValidatedActionCache.maximumBytes;
 
   static String encode(List<UnifiedRecord> records, String binding) =>
-      jsonEncode({
-        'generation': generation,
-        'binding': binding,
-        'records': [
-          for (final record in records)
-            [
-              record.encode(),
-              [
-                for (final effect in record.effects)
-                  if (effect.task != null)
-                    [effect.kind, _task(effect.task!)]
-                  else if (effect.food != null)
-                    [effect.kind, _food(effect.food!)]
-                  else
-                    null,
-              ],
-            ],
+      jsonEncode(_payload(records, binding));
+
+  /// The UTF-8 bytes of [encode], without the intermediate string.
+  static Uint8List encodeUtf8(List<UnifiedRecord> records, String binding) =>
+      JsonUtf8Encoder().convert(_payload(records, binding)) as Uint8List;
+
+  static Map<String, Object?> _payload(
+    List<UnifiedRecord> records,
+    String binding,
+  ) => {
+    'generation': generation,
+    'binding': binding,
+    'records': [
+      for (final record in records)
+        [
+          record.encode(),
+          [
+            for (final effect in record.effects)
+              if (effect.task != null)
+                [effect.kind, _task(effect.task!)]
+              else if (effect.food != null)
+                [effect.kind, _food(effect.food!)]
+              else
+                null,
+          ],
         ],
-      });
+    ],
+  };
 
   static List<Object?> _task(LogEvent event) => [
     event.space,
