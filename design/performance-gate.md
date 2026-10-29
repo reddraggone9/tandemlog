@@ -340,19 +340,21 @@ requires identical Task/Food state and no canonical writes. Folder listing and
 the open-time occurrence migration remain outside the startup labels (the
 existing startup gap); `agent.*` calls time them end to end.
 
-First local measure-only observation (Farnsworth, AOT, ext4 scratch, one
-fresh process per shape, 2 warmups/5 samples; advisory, not qualification),
-median/maximum ms:
+First local `run_gate.py --measure-only` observation (Farnsworth, the
+reference unit caps, ext4 output, all252labels, 2 warmups/5 samples; advisory,
+not qualification): correctness, pins and both growth pairs passed, every
+previous label met its limits, and only `agent.*` absolute budgets missed.
+Median/maximum ms:
 
-- dense-1: tasks list 571/573 (miss), food list 310/314, complete 324/333,
-  text edit 317/328, Undo 316/331, bulk dry run 723/734 (median miss),
-  import dry run 306/311, import 311/315.
-- dense-2: tasks list 783/838, food list 524/562, complete 537/553, text edit
-  528/562, Undo 532/560, bulk dry run 1039/1142 (all misses); import dry run
-  511/539 and import 519/541 pass.
-- dense-food: like dense-2 (tasks list 827/975, food list 553/587, writes and
-  Undo 562-585 medians, bulk dry run 1143/1174 miss; import 545/584 and 558/591
-  pass).
+- dense-1: tasks list 571/573 (miss), food list 308/317, complete 324/341,
+  text edit 314/314, Undo 313/319, bulk dry run 717/727 (median miss),
+  import dry run 305/309, import 310/316.
+- dense-2: tasks list 786/791, food list 518/522, complete 546/566, text edit
+  524/565, Undo 525/570, bulk dry run 1042/1139 (all misses); import dry run
+  509/518 and import 513/518 pass.
+- dense-food: tasks list 833/842, food list 559/565, complete 564/566, text
+  edit 567/571, Undo 566/573, bulk dry run 1086/1151 (misses); import dry run
+  554/583 and import 565/587 pass.
 
 Phase probes attribute the misses to redundant work, not to the commands'
 store actions: (1) the warm history open is 165/275ms on dense-1/dense-2, the
