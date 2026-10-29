@@ -162,7 +162,8 @@ entity, with writer names), and `verify` (the Settings integrity audit, read-onl
 - Food: add (count; expiry required as in the app, or `--inbox`), add another,
   edit (expiry, location, retention reason; name/brand/size edit the product, with
   the same "Also changes N other containers" scope report), remove one/remove,
-  restore, and bulk edit, including unify-by-rename. Products: set store link,
+  restore, move some (`food move-some <id> --count N --location L`, the row
+  menu's Move some…), and bulk edit, including unify-by-rename. Products: set store link,
   set minimum (`products set <id> --link URL --min 2`), and `products merge <src>
   --into <dst> [--keep source|target]`.
 - Undo (see below). Excluded: device-local settings (folder, appearance, device
@@ -440,19 +441,30 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
    every task, checklist item, container, product and purchase the action
    changed (`none` for a target that no longer exists); each write result
    prints the complete Undo command with current revisions.
-6. *Performance.* **Pending.** Prospective `agent.*` budgets and cases
-   (cold open + list, purchase-import apply, and the ~300-writer refresh case
-   from the writer-cap review) are being registered under the coverage contract
-   on branch `vex/agent-perf-coverage-20261029`; they are not in
-   performance-gate.md until that branch merges. Implementation acceptance
-   waits for that registration, and the `WorkspaceSession` change to the app's
-   open path still owes the normal reference qualification.
+6. *Performance.* Registered (merged from `vex/agent-perf-coverage-20261029`):
+   eight `agent.*` labels with budgets declared before measurement — reads
+   400ms median/600ms maximum, single writes and whole-action Undo 500/750,
+   dry runs and the two-line purchase import 700/1000 — on all three shapes,
+   with startup-class growth rules
+   ([performance gate](performance-gate.md#agent-cli-prospective-coverage-2026-10-29)).
+   After the fixes recorded there, every label meets its budget on dense-1
+   and dense-2; on dense-food `tasks complete`, text edit and the planned
+   purchase import still miss their median by 1–57ms (warm history open plus
+   close-time seal). The ~300-writer refresh case from the writer-cap review
+   is not registered yet. The `WorkspaceSession` change to the app's open
+   path and these storage changes still owe the normal reference
+   qualification.
 
 **Differences from sections 4–7.**
 - MCP opens the workspace for each tool call and closes it, instead of keeping
   it open for 60 s: simpler, no idle work, peer arrivals admitted per call.
 - `tasks bulk-move`, `people add` and `products search` exist in addition to the
   listed commands; device name stays a device setting (`init --name`).
+- `food move-some` names the row by any of its containers (`--if-rev` of that
+  container) and moves the row's first `--count` current containers, as the
+  page does at Move time. It always needs `--expect-plan`, because the command
+  rather than the agent picks the containers; the dry run lists them. One
+  Location `changeDetails`, one action, one Undo.
 - Undo of a creation is refused; delete the item instead. Undo of an Undo is
   refused (`undo_unavailable`); repeat the change instead. Neither is
   advertised in write results.

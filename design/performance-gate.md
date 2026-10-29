@@ -394,3 +394,56 @@ requested format; keep the real location for the copy-on-write overlay so the
 warm cache applies; reduce the history-scaled seal and proof for write calls.
 Budgets are unchanged. Fresh enforcing qualification is pending, and the
 private reference controller's hard-coded limits digest must be re-registered.
+
+### Agent CLI fixes after the merge (2026-10-29)
+
+Applied on `vex/agent-interface-20261029`, budgets unchanged:
+
+1. Agent reads and dry runs run on a disposable profile copy and no longer seal
+   the warm Task/decoded caches at close (`close(sealCache: false)`); the app
+   and agent write calls still seal (default unchanged).
+2. `tasks list` decodes Task rows once (people map and view from one read) and
+   builds its text form only when asked.
+3. The copy-on-write dry-run overlay reports the real folder's location, so the
+   profile copy keeps its workspace binding and warm decoded cache (no cold
+   replay).
+4. Write calls: the Task cache seal compares live and validator rows exactly
+   (type-strict; NaN and -0.0 refuse) instead of digesting both, and the
+   decoded cache seal hashes and stores its JSON UTF-8 bytes directly (same
+   TEXT value and proof). A planned commit opens the real workspace while its
+   dry run runs on the profile copy (started after the copy exists; the
+   command still runs only after the plan check).
+
+The purchase-import labels changed meaning before these fixes: after the
+agent review, `purchases import` follows the general plan contract, so the
+timed commit re-runs the dry run under the identity lock and then commits
+(two workspace opens), where the first measurement timed one open.
+
+Local measure-only gate at `041cfed` (fixes 1–3; reference unit caps, ext4,
+all254labels): correctness, pins and both growth pairs passed and every
+non-agent label met its limits. `agent-cli` family resampled at `700d456`
+(fixes 1–4, same caps and fixtures, 2 warmups/5 samples), median/maximum ms,
+before → after:
+
+- dense-1: tasks list 571/573 → 183/188, food list 308/317 → 178/180,
+  complete 324/341 → 276/279, text edit 314/314 → 271/279, Undo 313/319 →
+  268/270, bulk dry run 717/727 → 230/236, import dry run 305/309 → 218/222,
+  import 310/316 → 444/446. All pass.
+- dense-2: tasks list 786/791 → 304/307, food list 518/522 → 301/302,
+  complete 546/566 → 457/467, text edit 524/565 → 455/460, Undo 525/570 →
+  445/460, bulk dry run 1042/1139 → 363/377, import dry run 509/518 →
+  333/346, import 513/518 → 694/731. All pass; import is within 6 ms of its
+  700 ms median.
+- dense-food: tasks list 833/842 → 353/360, food list 559/565 → 350/355,
+  complete 564/566 → 506/514 (median miss), text edit 567/571 → 501/512
+  (median miss), Undo 566/573 → 494/498, bulk dry run 1086/1151 → 411/432,
+  import dry run 554/583 → 386/408, import 565/587 → 757/769 (median miss).
+
+Remaining cost, dense-food write call (phase probe): the warm history open
+about 320ms (the app's `startup.warm.history` path, decoded-cache proof and
+Task cache proof included) and the close-time seal about 140ms (one Task cache
+digest, decoded-cache encode and SHA-256 of a ~5 MB payload); command work is
+under 10ms. Further cuts need incremental cache proofs or a faster warm open,
+both shared with the app's startup and outside this change. The planned
+import is two such opens partly overlapped. Budgets stay as declared; the
+three dense-food misses (two of them within 6ms) are open.

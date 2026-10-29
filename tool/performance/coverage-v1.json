@@ -495,7 +495,7 @@
         "Packaged-binary timing (Flatpak second command, Windows installer/ZIP) and Windows host time-zone lookup; agent.* calls pass --tz and run on Linux only.",
         "MCP stdio server framing and session reuse across tool calls (each MCP tool call opens and closes like one CLI call; not separately timed).",
         "Concurrent agent and GUI installations on one workspace, lock waits and profile_in_use retries; correctness-covered by process tests, not timed.",
-        "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges); they share the timed open/close boundary and existing store-path labels."
+        "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges, food move-some, whose store path is timed by food.moveSome); they share the timed open/close boundary and existing store-path labels."
       ]
     }
   ],
@@ -646,7 +646,7 @@
       "Packaged-binary timing (Flatpak second command, Windows installer/ZIP) and Windows host time-zone lookup; agent.* calls pass --tz and run on Linux only.",
       "MCP stdio server framing and session reuse across tool calls (each MCP tool call opens and closes like one CLI call; not separately timed).",
       "Concurrent agent and GUI installations on one workspace, lock waits and profile_in_use retries; correctness-covered by process tests, not timed.",
-      "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges); they share the timed open/close boundary and existing store-path labels."
+      "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges, food move-some, whose store path is timed by food.moveSome); they share the timed open/close boundary and existing store-path labels."
     ]
   },
   "foodMoveSomeContract": {
