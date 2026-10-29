@@ -83,7 +83,12 @@ Map<String, Object?> taskJson(
     'completedInstant': t['completedInstant'],
     'inbox': t['inbox'] == true,
     'deleted': t['deleted'] == true,
-    if (t['checklist'] != null) 'checklist': t['checklist'],
+    if (t['checklist'] != null)
+      'checklist': [
+        for (final item in t['checklist'] as List)
+          if (item is Map)
+            {...item, 'rev': taskRev(call, item['id'] as String)},
+      ],
   };
 }
 
@@ -157,8 +162,9 @@ Future<AgentResult> _tasks(AgentCall call, {String? query}) async {
     capText(
       [for (final e in page.rows) taskLine(call, e.task, year)],
       header: '$heading · ${page.total}',
-      footer: page.next == null ? null : 'next: ${page.next}',
+      page: page,
     ),
+    nextAfter: page.after,
   );
 }
 
@@ -213,9 +219,14 @@ Future<AgentResult> _food(AgentCall call, {String? query}) async {
     tagged,
     limit: call.integer('limit'),
     cursor: call.string('cursor'),
-    query: '$heading|${call.args}',
+    query:
+        '$heading|${([for (final e in call.args.entries)
+          if (e.key != 'cursor' && e.key != 'limit') '${e.key}=${e.value}']..sort()).join('&')}',
   );
-  final year = DateTime.now().year;
+  final year = tz.TZDateTime.from(
+    DateTime.now().toUtc(),
+    timeZoneLocation(call.options.timeZone!),
+  ).year;
   final low = view == FoodView.inventory && query == null
       ? foodState(call).runningLow
       : const [];
@@ -247,8 +258,10 @@ Future<AgentResult> _food(AgentCall call, {String? query}) async {
           '${section == 'stock' ? '' : '[$section] '}${foodGroupLine(g, year)}',
       ],
       header: '$heading · ${page.total} rows',
-      footer: page.next == null ? null : 'next: ${page.next}',
+      page: page,
+      leading: low.isNotEmpty ? 1 : 0,
     ),
+    nextAfter: page.after,
   );
 }
 
@@ -262,7 +275,7 @@ Map<String, Object?> productJson(dynamic p) => {
   'onHand': p.onHand,
   'containers': p.containers,
   'runningLow': p.runningLow,
-  'rev': revOf([p.id, p.name, p.brand, p.size, p.links, p.minimum]),
+  'rev': productRev(p),
   if (p.last != null)
     'lastPurchase': {
       'date': p.last.date,
@@ -272,6 +285,39 @@ Map<String, Object?> productJson(dynamic p) => {
       'quantity': p.last.quantity,
     },
 };
+
+/// A product's rev hashes its described fields (name, brand, size, links,
+/// minimum); a Food container's hashes its projected state. Both are
+/// projected-state revisions, unlike a task's admitted operation IDs (see the
+/// feasibility record).
+String productRev(dynamic p) =>
+    revOf([p.id, p.name, p.brand, p.size, p.links, p.minimum]);
+
+/// Current rev of any Food target an action can name: a container, a live or
+/// merged-away product, or a purchase. Null when the ID names none of them.
+String? foodTargetRev(FoodState state, String id) {
+  for (final c in state.containers) {
+    if (c.id == id) return foodRev(c);
+  }
+  final product = state.products[id];
+  if (product != null) return productRev(product);
+  final catalog = state.catalog;
+  if (catalog.aliases.containsKey(id)) {
+    final root = state.products[catalog.resolve(id)];
+    return revOf([
+      'merged',
+      id,
+      catalog.resolve(id),
+      catalog.products[id],
+      root == null ? null : productRev(root),
+    ]);
+  }
+  final purchase = catalog.purchases[id];
+  if (purchase != null) {
+    return revOf(['purchase', id, purchase.toJson(), purchase.voided]);
+  }
+  return null;
+}
 
 String productLine(dynamic p) => [
   '${shortId(p.id as String)} ${p.name}',
@@ -522,8 +568,9 @@ List<AgentCommand> readCommands() => [
           [for (final p in page.rows) productLine(p)],
           header:
               '${call.flag('running-low') ? 'Running low' : 'Products'} · ${page.total}',
-          footer: page.next == null ? null : 'next: ${page.next}',
+          page: page,
         ),
+        nextAfter: page.after,
       );
     },
     paged: true,
@@ -566,8 +613,9 @@ List<AgentCommand> readCommands() => [
         capText(
           [for (final p in page.rows) productLine(p)],
           header: 'Products matching "${call.args['query']}" · ${page.total}',
-          footer: page.next == null ? null : 'next: ${page.next}',
+          page: page,
         ),
+        nextAfter: page.after,
       );
     },
     paged: true,
@@ -663,8 +711,9 @@ List<AgentCommand> readCommands() => [
               '${x.date} · ${names[x.product] ?? shortId(x.product)} · ${x.store} · ${x.quantity}× ${(x.amount / 100).toStringAsFixed(2)} ${x.currency}',
           ],
           header: 'Purchases · ${page.total}',
-          footer: page.next == null ? null : 'next: ${page.next}',
+          page: page,
         ),
+        nextAfter: page.after,
       );
     },
     paged: true,

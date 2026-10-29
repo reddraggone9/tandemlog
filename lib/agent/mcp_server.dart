@@ -33,13 +33,42 @@ class McpServer {
     await queue;
   }
 
+  /// One JSON-RPC message. Malformed input gets a JSON-RPC error and never
+  /// stops the server; batches are not supported.
   Future<Map<String, Object?>?> handle(String line) async {
     Object? id;
     try {
-      final message = jsonDecode(line) as Map<String, Object?>;
+      final Object? decoded;
+      try {
+        decoded = jsonDecode(line);
+      } on FormatException catch (e) {
+        throw _RpcError(-32700, 'Parse error: ${e.message}');
+      }
+      if (decoded is! Map) {
+        throw _RpcError(
+          -32600,
+          decoded is List
+              ? 'Batch requests are not supported.'
+              : 'A request must be a JSON object.',
+        );
+      }
+      final message = decoded.cast<String, Object?>();
       id = message['id'];
-      final method = message['method'] as String?;
-      final params = (message['params'] as Map?)?.cast<String, Object?>() ?? {};
+      if (id != null && id is! String && id is! num) {
+        id = null;
+        throw _RpcError(-32600, 'Invalid request id.');
+      }
+      final method = message['method'];
+      if (method is! String) {
+        if (id == null) return null;
+        throw _RpcError(-32600, 'Missing method.');
+      }
+      final rawParams = message['params'];
+      if (rawParams != null && rawParams is! Map) {
+        if (id == null) return null;
+        throw _RpcError(-32602, 'params must be an object.');
+      }
+      final params = (rawParams as Map?)?.cast<String, Object?>() ?? {};
       if (id == null) return null; // notification
       final result = switch (method) {
         'initialize' => {
@@ -64,7 +93,7 @@ class McpServer {
                 'inputSchema': c.inputSchema,
                 'annotations': {
                   'readOnlyHint': c.kind == CommandKind.read,
-                  'destructiveHint': false,
+                  'destructiveHint': c.destructive,
                   'idempotentHint': c.kind == CommandKind.read,
                 },
               },
@@ -80,11 +109,11 @@ class McpServer {
         'id': id,
         'error': {'code': e.code, 'message': e.message},
       };
-    } on FormatException catch (e) {
+    } catch (e) {
       return {
         'jsonrpc': '2.0',
         'id': id,
-        'error': {'code': -32700, 'message': e.message},
+        'error': {'code': -32603, 'message': 'Internal error: $e'},
       };
     }
   }
@@ -95,9 +124,13 @@ class McpServer {
         .where((c) => c.toolName == name && c.kind != CommandKind.setup)
         .firstOrNull;
     if (command == null) throw _RpcError(-32602, 'Unknown tool $name');
+    final arguments = params['arguments'];
+    if (arguments != null && arguments is! Map) {
+      throw _RpcError(-32602, 'arguments must be an object.');
+    }
     try {
       final args = command.validate(
-        Map<String, Object?>.from((params['arguments'] as Map?) ?? {}),
+        Map<String, Object?>.from((arguments as Map?) ?? {}),
       );
       final env = environment ?? Platform.environment;
       final options = AgentOptions(
@@ -106,12 +139,21 @@ class McpServer {
         environment: env,
       );
       final result = await execute(command, args, options);
+      // The same 32 KB cap and resumable `next` as CLI JSON output.
+      final structured =
+          jsonDecode(
+                capJson({
+                  'v': agentOutputVersion,
+                  ...result.data,
+                }, nextAfter: result.nextAfter),
+              )
+              as Map<String, Object?>;
       return {
         'content': [
-          {'type': 'text', 'text': result.text},
+          {'type': 'text', 'text': _capText(result.text)},
         ],
-        'structuredContent': {'v': agentOutputVersion, ...result.data},
-        'isError': false,
+        'structuredContent': structured,
+        'isError': result.exitCode != 0,
       };
     } catch (e) {
       final f = AgentWorkspace.translate(e);
@@ -131,6 +173,16 @@ class McpServer {
       };
     }
   }
+}
+
+String _capText(String text) {
+  final bytes = utf8.encode(text);
+  if (bytes.length <= outputCapBytes) return text;
+  final cut = utf8.decode(
+    bytes.sublist(0, outputCapBytes - 128),
+    allowMalformed: true,
+  );
+  return '$cut\n\u2026 truncated at 32 KB; see structuredContent';
 }
 
 class _RpcError implements Exception {

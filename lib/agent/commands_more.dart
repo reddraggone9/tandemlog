@@ -12,6 +12,7 @@ import '../storage/task_store.dart';
 import 'agent_profile.dart';
 import 'command.dart';
 import 'commands_read.dart';
+import 'agent_workspace.dart';
 import 'commands_write.dart';
 import 'render.dart';
 
@@ -163,6 +164,58 @@ List<String> _productContainers(AgentCall call, List<String> products) {
   return ids;
 }
 
+Future<List<int>> _readInput(String path, String field) async {
+  try {
+    return await File(path).readAsBytes();
+  } on FileSystemException catch (e) {
+    throw AgentFailure(
+      'validation',
+      'Cannot read $path: ${e.osError?.message ?? e.message}',
+      details: {'field': field, 'error': 'unreadable'},
+    );
+  }
+}
+
+/// Plan files never overwrite silently and never land in the synced
+/// workspace folder, where peers would see a stray file.
+Future<void> _writePlan(AgentCall call, String out, String content) async {
+  final file = File(out).absolute;
+  final parent = await file.parent.exists()
+      ? await file.parent.resolveSymbolicLinks()
+      : file.parent.path;
+  final folder = call.ws.settings.folder;
+  if (folder != null) {
+    final workspace = await Directory(folder).exists()
+        ? await Directory(folder).resolveSymbolicLinks()
+        : folder;
+    final sep = Platform.pathSeparator;
+    if (parent == workspace || parent.startsWith('$workspace$sep')) {
+      throw AgentFailure(
+        'validation',
+        'Write the plan outside the workspace folder ($workspace).',
+        details: {'field': 'out', 'error': 'inside_workspace'},
+      );
+    }
+  }
+  if (!call.flag('force') && await file.exists()) {
+    throw AgentFailure(
+      'validation',
+      '$out exists; choose another --out or pass --force.',
+      details: {'field': 'out', 'error': 'exists'},
+    );
+  }
+  try {
+    if (!call.flag('force')) await file.create(exclusive: true);
+    await file.writeAsString(content, flush: true);
+  } on FileSystemException catch (e) {
+    throw AgentFailure(
+      'validation',
+      'Cannot write $out: ${e.osError?.message ?? e.message}',
+      details: {'field': 'out', 'error': 'unwritable'},
+    );
+  }
+}
+
 List<AgentCommand> moreCommands() => [
   AgentCommand(
     'tasks move',
@@ -253,14 +306,25 @@ List<AgentCommand> moreCommands() => [
       if (result.error != null && result.committedIds.isEmpty) {
         throw result.error!;
       }
+      // A partial edit is reported with its actions and fails the call.
+      final failure = result.succeeded
+          ? null
+          : AgentWorkspace.translate(result.error ?? 'Not all tasks changed.');
+      final error = failure is AgentFailure
+          ? failure
+          : AgentFailure('internal', '$failure');
       return writeResult(
         call,
         before,
         result.succeeded
             ? 'Edited ${result.committedIds.length} tasks.'
-            : 'Edited ${result.committedIds.length} of ${ids.length}; ${result.remainingIds.length} not changed: ${result.error}',
+            : 'Edited ${result.committedIds.length} of ${ids.length}; ${result.remainingIds.length} not changed: ${error.message}',
         ids,
-        extra: {'remaining': result.remainingIds},
+        extra: {
+          'remaining': result.remainingIds,
+          if (failure != null) ...{'partial': true, 'error': error.toJson()},
+        },
+        exitCode: failure == null ? 0 : error.exitCode,
       );
     },
     requiresPlan: true,
@@ -297,6 +361,7 @@ List<AgentCommand> moreCommands() => [
       return writeResult(call, before, 'Deleted ${ids.length} tasks.', ids);
     },
     requiresPlan: true,
+    destructive: true,
   ),
   AgentCommand(
     'tasks bulk-move',
@@ -379,7 +444,18 @@ List<AgentCommand> moreCommands() => [
     ],
     (call) async {
       final parent = resolveId(call.require('task'), _taskIds(call), 'task');
-      taskGuard(call, {parent: call.require('if-rev')});
+      final anchor = call.string('before') == null
+          ? null
+          : resolveId(
+              call.string('before')!,
+              _checklistIds(call),
+              'checklist item',
+            );
+      // The parent's given rev and the anchor's rev as read now are both
+      // checked again inside the append.
+      final expected = {parent: call.require('if-rev')};
+      if (anchor != null) expected[anchor] = taskRev(call, anchor);
+      final guard = taskGuard(call, expected);
       final title = call.require('title').trim();
       if (title.isEmpty) {
         throw const AgentFailure(
@@ -399,14 +475,9 @@ List<AgentCommand> moreCommands() => [
           parent,
           title,
           notes: call.string('notes') ?? '',
-          before: call.string('before') == null
-              ? null
-              : resolveId(
-                  call.string('before')!,
-                  _checklistIds(call),
-                  'checklist item',
-                ),
+          before: anchor,
           id: id,
+          canCommit: guard,
         );
       }
       return writeResult(
@@ -538,6 +609,7 @@ List<AgentCommand> moreCommands() => [
         parent,
       ]);
     },
+    destructive: true,
   ),
   AgentCommand(
     'checklist move',
@@ -774,16 +846,20 @@ List<AgentCommand> moreCommands() => [
         const FoodDetails(name: ''),
         const [],
         products: FoodProductChange(roots: [id], changes: changes),
-        canCommit: () {
+        canCommit: call.commitGuard(() {
           final now = foodState(call).products[id];
           return now != null && rev(now) == call.require('if-rev');
-        },
+        }),
       );
       final now = foodState(call).products[id];
-      return AgentResult({
-        'actions': newActions(call, before),
-        'product': now == null ? null : productJson(now),
-      }, now == null ? 'Saved.' : 'Saved ${productLine(now)}');
+      return writeResult(
+        call,
+        before,
+        now == null ? 'Saved.' : 'Saved ${productLine(now)}',
+        const [],
+        containerIds: [id],
+        extra: {'product': now == null ? null : productJson(now)},
+      );
     },
   ),
   AgentCommand(
@@ -848,16 +924,24 @@ List<AgentCommand> moreCommands() => [
           roots: call.string('keep') == 'source' ? [source, target] : [source],
           changes: {'name': keep.name, 'brand': keep.brand, 'size': keep.size},
         ),
-        canCommit: () => revs.entries.every(
-          (e) =>
-              foodState(call).products[e.key] != null && rev(e.key) == e.value,
+        canCommit: call.commitGuard(
+          () => revs.entries.every(
+            (e) =>
+                foodState(call).products[e.key] != null &&
+                rev(e.key) == e.value,
+          ),
         ),
       );
-      return AgentResult({
-        'actions': newActions(call, before),
-      }, 'Merged ${shortId(source)} into ${shortId(target)}.');
+      return writeResult(
+        call,
+        before,
+        'Merged ${shortId(source)} into ${shortId(target)}.',
+        const [],
+        containerIds: [source, target],
+      );
     },
     requiresPlan: true,
+    destructive: true,
   ),
   AgentCommand(
     'purchases plan',
@@ -874,13 +958,23 @@ List<AgentCommand> moreCommands() => [
       AgentArg(
         'out',
         'string',
-        'Where to write the plan (default <lines>.plan.json).',
+        'Where to write the plan (default <lines>.plan.json); never inside the workspace folder.',
       ),
+      AgentArg('force', 'boolean', 'Replace an existing plan file.'),
     ],
     (call) async {
       final path = call.require('lines');
-      final bytes = await File(path).readAsBytes();
-      final raw = jsonDecode(utf8.decode(bytes));
+      final bytes = await _readInput(path, 'lines');
+      final Object? raw;
+      try {
+        raw = jsonDecode(utf8.decode(bytes));
+      } on FormatException catch (e) {
+        throw AgentFailure(
+          'validation',
+          'The lines file is not JSON: ${e.message}',
+          details: {'field': 'lines', 'error': 'invalid'},
+        );
+      }
       if (raw is! List) {
         throw const AgentFailure(
           'validation',
@@ -937,7 +1031,7 @@ List<AgentCommand> moreCommands() => [
         lines: lines,
       );
       final out = call.string('out') ?? '$path.plan.json';
-      await File(out).writeAsString(plan.canonicalJson);
+      await _writePlan(call, out, plan.canonicalJson);
       return AgentResult(
         {
           'plan': out,
@@ -968,22 +1062,21 @@ List<AgentCommand> moreCommands() => [
       ),
     ],
     (call) async {
-      final plan = FoodPurchaseImportPlan.decode(
-        await File(call.require('plan')).readAsString(),
-      );
-      final store = call.ws.session.food;
-      final dry = call.flag('dry-run');
-      if (!dry && call.string('expect-plan') != plan.planHash) {
+      final FoodPurchaseImportPlan plan;
+      try {
+        plan = FoodPurchaseImportPlan.decode(
+          utf8.decode(await _readInput(call.require('plan'), 'plan')),
+        );
+      } on FormatException catch (e) {
         throw AgentFailure(
-          'plan_changed',
-          'Pass --expect-plan ${plan.planHash} from the dry run.',
-          details: {'field': 'expect-plan', 'planHash': plan.planHash},
+          'validation',
+          'Invalid purchase-import plan: ${e.message}',
+          details: {'field': 'plan', 'error': 'invalid'},
         );
       }
+      final store = call.ws.session.food;
       final before = ownHead(call);
-      final report = dry
-          ? await store.dryRunPurchaseImport(plan)
-          : await store.commitPurchaseImport(plan);
+      final report = await store.commitPurchaseImport(plan);
       final names = {
         for (final p in foodState(call).products.values) p.id: p.name,
       };
@@ -999,21 +1092,23 @@ List<AgentCommand> moreCommands() => [
             'created': l.created,
           },
       ];
-      return AgentResult(
-        {
-          'dryRun': dry,
-          'planHash': report.planHash,
+      final result = writeResult(
+        call,
+        before,
+        [
+          'Purchase import: ${report.status.name} \u00b7 import plan ${report.planHash}',
+          for (final l in lines)
+            '${l['status']} ${l['productName'] ?? shortId(l['product'] as String)}${l['newProduct'] == true ? ' (new product)' : ''} \u00b7 matched ${(l['matched'] as List).length} \u00b7 Inbox +${(l['created'] as List).length}',
+        ].join('\n'),
+        const [],
+        extra: {
+          'importPlanHash': report.planHash,
           'status': report.status.name,
           'lines': lines,
-          if (!dry) 'actions': newActions(call, before),
         },
-        [
-          '${dry ? 'Dry run' : 'Imported'}: ${report.status.name} · planHash ${report.planHash}',
-          for (final l in lines)
-            '${l['status']} ${l['productName'] ?? shortId(l['product'] as String)}${l['newProduct'] == true ? ' (new product)' : ''} · matched ${(l['matched'] as List).length} · Inbox +${(l['created'] as List).length}',
-        ].join('\n'),
       );
+      return result;
     },
-    ownDryRun: true,
+    requiresPlan: true,
   ),
 ];

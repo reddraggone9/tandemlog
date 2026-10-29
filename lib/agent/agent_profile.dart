@@ -98,21 +98,38 @@ class AgentProfile {
     }
   }
 
-  /// A new profile directory must be absent or empty; init never adopts an
-  /// existing (possibly GUI) profile.
+  /// A new profile directory must be absent or empty apart from its lock;
+  /// init never adopts an existing (possibly GUI) profile. The caller holds
+  /// [lock], so a concurrent init sees this marker and refuses.
   Future<void> createMarker() async {
     final dir = Directory(root);
-    if (await dir.exists() && !await dir.list().isEmpty) {
+    await dir.create(recursive: true);
+    if ((await _entries()).isNotEmpty) {
       throw AgentFailure(
         'validation',
         'Profile directory $root is not empty; choose a new profile.',
       );
     }
-    await dir.create(recursive: true);
     if (!Platform.isWindows) {
       await Process.run('chmod', ['700', dir.path]);
     }
     await _markerFile.writeAsString(_marker, flush: true);
+  }
+
+  /// Everything in the profile directory except the identity lock.
+  Future<List<FileSystemEntity>> _entries() => Directory(root)
+      .list(followLinks: false)
+      .where(
+        (e) => e.uri.pathSegments.lastWhere((s) => s.isNotEmpty) != lockName,
+      )
+      .toList();
+
+  /// Undo a failed init under the held lock: remove what it created (the
+  /// directory was empty apart from the lock), keeping the lock file.
+  Future<void> removeCreated() async {
+    for (final entry in await _entries()) {
+      await entry.delete(recursive: true);
+    }
   }
 
   /// Same-identity calls serialize on one OS lock; parallel agent calls wait

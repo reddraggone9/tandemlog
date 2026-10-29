@@ -44,10 +44,21 @@ String resolveId(String input, Iterable<String> ids, String noun) {
 
 /// A page of rows with an opaque cursor bound to the query that produced it.
 class Page<T> {
-  Page(this.rows, this.total, this.next);
+  Page(this.rows, this.total, this._key, this._offset);
   final List<T> rows;
   final int total;
-  final String? next;
+  final String _key;
+  final int _offset;
+
+  String? get next => after(rows.length);
+
+  /// Cursor of the first row after the first [shown] rows of this page.
+  String? after(int shown) {
+    final end = _offset + shown;
+    return end < total
+        ? base64Url.encode(utf8.encode(jsonEncode({'q': _key, 'o': end})))
+        : null;
+  }
 
   static Page<T> of<T>(
     List<T> all, {
@@ -84,38 +95,48 @@ class Page<T> {
     }
     final end = (offset + bound).clamp(0, all.length);
     final rows = offset >= all.length ? <T>[] : all.sublist(offset, end);
-    final next = end < all.length
-        ? base64Url.encode(utf8.encode(jsonEncode({'q': key, 'o': end})))
-        : null;
-    return Page(rows, all.length, next);
+    return Page(rows, all.length, key, offset.clamp(0, all.length));
   }
 }
 
-/// Cap rendered text at [outputCapBytes]; the marker is explicit.
-String capText(List<String> lines, {String? header, String? footer}) {
+/// Cap rendered text at [outputCapBytes] (UTF-8); the marker is explicit.
+/// The first [leading] lines are not page rows. When rows are dropped and
+/// [page] is given, the marker carries the cursor of the first dropped row.
+String capText(
+  List<String> lines, {
+  String? header,
+  Page<Object?>? page,
+  int leading = 0,
+}) {
   final out = StringBuffer();
   var size = 0;
   var truncated = false;
-  void add(String line) {
+  var shown = 0;
+  // Room for the marker and its cursor line.
+  const reserve = 512;
+  bool add(String line) {
     final n = utf8.encode(line).length + 1;
-    if (size + n > outputCapBytes - 64) {
+    if (size + n > outputCapBytes - reserve) {
       truncated = true;
-      return;
+      return false;
     }
     size += n;
     out.writeln(line);
+    return true;
   }
 
   if (header != null) add(header);
-  for (final l in lines) {
-    if (truncated) break;
-    add(l);
+  for (var i = 0; i < lines.length && !truncated; i++) {
+    if (add(lines[i]) && i >= leading) shown++;
   }
+  final next = truncated ? page?.after(shown) : page?.next;
   if (truncated) {
-    out.writeln('… truncated at 32 KB; use --limit/--cursor or --format jsonl');
-  } else if (footer != null) {
-    out.writeln(footer);
+    out.writeln(
+      '… truncated at 32 KB after $shown rows; '
+      '${page == null ? 'use --format jsonl' : 'continue with --cursor or use --format jsonl'}',
+    );
   }
+  if (next != null) out.writeln('next: $next');
   return out.toString().trimRight();
 }
 

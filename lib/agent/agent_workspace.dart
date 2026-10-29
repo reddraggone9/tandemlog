@@ -143,9 +143,19 @@ class AgentWorkspace {
         message.contains('Update TandemLog')) {
       return AgentFailure('update_required', message);
     }
+    if (e is FormatFailure &&
+        e.message == 'App history changed while preparing this command.') {
+      // A peer's write arrived mid-command: retry the same command.
+      return AgentFailure('write_pending', e.message);
+    }
+    if (e is FormatFailure && e.message == 'This operation cannot be undone.') {
+      return AgentFailure('undo_unavailable', e.message);
+    }
     if (e is FormatFailure || e is FoodHistoryFailure) {
       return AgentFailure('history_damaged', message);
     }
+    // Store-level input refusals (Food selection, product planning).
+    if (e is FormatException) return AgentFailure('validation', e.message);
     return e;
   }
 }

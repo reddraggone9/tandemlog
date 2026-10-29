@@ -7,7 +7,7 @@ import 'agent_profile.dart';
 import 'agent_workspace.dart';
 import '../storage/profile_lock.dart';
 import 'command.dart';
-import 'commands_write.dart' show dryRunWrite;
+import 'commands_write.dart' show dryRunWrite, observedStateHash;
 import 'registry.dart';
 import 'render.dart';
 import 'windows_zone.dart';
@@ -109,7 +109,15 @@ Future<(int, String)> runCli(
     final (command, used) = findCommand(rest);
     final tail = rest.sublist(used);
     if (tail.contains('--help')) return (0, command.help);
-    final wait = Duration(seconds: int.tryParse(globals['wait'] ?? '') ?? 30);
+    final waitSeconds = int.tryParse(globals['wait'] ?? '30');
+    if (waitSeconds == null || waitSeconds < 0) {
+      throw const AgentFailure(
+        'validation',
+        '--wait must be a whole number of seconds.',
+        details: {'field': 'wait', 'error': 'integer'},
+      );
+    }
+    final wait = Duration(seconds: waitSeconds);
     final options = AgentOptions(
       profile: globals['profile'],
       wait: wait,
@@ -121,7 +129,7 @@ Future<(int, String)> runCli(
     final args = command.parse(tail);
     if (format == 'jsonl' && command.paged) args['limit'] = 1 << 30;
     final result = await execute(command, args, options);
-    return (0, renderResult(result, format, command));
+    return (result.exitCode, renderResult(result, format, command));
   } catch (e) {
     final failure = AgentWorkspace.translate(e);
     final f = failure is AgentFailure
@@ -148,6 +156,10 @@ Future<(int, String)> runCli(
   );
 }
 
+/// Test hook: runs after a planned commit's plan check, before it opens the
+/// workspace to append.
+Future<void> Function()? debugAfterPlanCheck;
+
 /// Open the right workspace mode, run, close. Shared with the MCP server.
 Future<AgentResult> execute(
   AgentCommand command,
@@ -162,8 +174,10 @@ Future<AgentResult> execute(
     return command.run(AgentCall(args, null, options, profile: profile));
   }
   final dryRun = args['dry-run'] == true;
-  if (command.kind == CommandKind.write && dryRun && !command.ownDryRun) {
-    return dryRunWrite(command, args, options, profile);
+  if (command.kind == CommandKind.write && dryRun) {
+    final plan = await dryRunWrite(command, args, options, profile);
+    plan.data.remove('inputHash');
+    return plan;
   }
   if (command.kind != CommandKind.write || !command.needsPlan(args)) {
     return _run(command, args, options, profile, null);
@@ -176,7 +190,9 @@ Future<AgentResult> execute(
       details: {'field': 'expect-plan', 'error': 'required'},
     );
   }
-  // Hold the identity lock from the plan check through the append.
+  // Hold the identity lock from the plan check through the append. The
+  // commit runs only while the workspace still has exactly the observed state
+  // the plan was computed from; that check repeats inside the append.
   await profile.requireAgentProfile();
   final lock = await profile.lock(options.wait);
   try {
@@ -191,7 +207,9 @@ Future<AgentResult> execute(
         },
       );
     }
-    return await _run(command, args, options, profile, lock);
+    final input = plan.data['inputHash'] as String;
+    await debugAfterPlanCheck?.call();
+    return await _run(command, args, options, profile, lock, planInput: input);
   } finally {
     await lock.close();
   }
@@ -202,8 +220,9 @@ Future<AgentResult> _run(
   Map<String, Object?> args,
   AgentOptions options,
   AgentProfile profile,
-  ProfileLock? held,
-) async {
+  ProfileLock? held, {
+  String? planInput,
+}) async {
   final ws = await AgentWorkspace.open(
     profile,
     readOnly: command.kind == CommandKind.read,
@@ -211,7 +230,21 @@ Future<AgentResult> _run(
     held: held,
   );
   try {
-    return await command.run(AgentCall(args, ws, options));
+    late final AgentCall call;
+    bool planHolds() => observedStateHash(call) == planInput;
+    call = AgentCall(
+      args,
+      ws,
+      options,
+      planGuard: planInput == null ? null : planHolds,
+    );
+    if (planInput != null && !planHolds()) {
+      throw const AgentFailure(
+        'plan_changed',
+        'The workspace changed after the plan check; run the dry run again.',
+      );
+    }
+    return await command.run(call);
   } catch (e) {
     throw AgentWorkspace.translate(e);
   } finally {
@@ -222,7 +255,10 @@ Future<AgentResult> _run(
 String renderResult(AgentResult result, String format, AgentCommand command) {
   switch (format) {
     case 'json':
-      return capJson({'v': agentOutputVersion, ...result.data});
+      return capJson({
+        'v': agentOutputVersion,
+        ...result.data,
+      }, nextAfter: result.nextAfter);
     case 'jsonl':
       final list = result.data.values.whereType<List>().firstOrNull;
       if (list == null) {
@@ -234,24 +270,38 @@ String renderResult(AgentResult result, String format, AgentCommand command) {
   }
 }
 
-/// The 32 KB cap applies to JSON too: trailing rows of the main list are
-/// dropped and `truncated` says so; `--format jsonl` streams everything.
-String capJson(Map<String, Object?> data) {
+/// The 32 KB (UTF-8) cap applies to JSON and MCP output too: trailing rows
+/// of the main list are dropped, `truncated`/`shown` say so and `next`
+/// resumes at the first dropped row; `--format jsonl` streams everything.
+String capJson(
+  Map<String, Object?> data, {
+  String? Function(int shown)? nextAfter,
+}) {
   var encoded = jsonEncode(data);
-  if (encoded.length <= outputCapBytes) return encoded;
+  int size(String s) => utf8.encode(s).length;
+  if (size(encoded) <= outputCapBytes) return encoded;
   final key = data.entries.where((e) => e.value is List).firstOrNull?.key;
   if (key == null) return encoded;
-  final rows = List<Object?>.of(data[key] as List);
-  while (rows.isNotEmpty && utf8.encode(encoded).length > outputCapBytes) {
-    rows.removeRange((rows.length * 3) ~/ 4, rows.length);
-    encoded = jsonEncode({
-      ...data,
-      key: rows,
-      'truncated': true,
-      'shown': rows.length,
-    });
+  final all = data[key] as List;
+  String withRows(int n) => jsonEncode({
+    ...data,
+    key: all.sublist(0, n),
+    'truncated': true,
+    'shown': n,
+    if (nextAfter != null || data.containsKey('next'))
+      'next': nextAfter?.call(n),
+  });
+  // Largest row count that fits (binary search; output size grows with n).
+  var lo = 0, hi = all.length;
+  while (lo < hi) {
+    final mid = (lo + hi + 1) ~/ 2;
+    if (size(withRows(mid)) <= outputCapBytes) {
+      lo = mid;
+    } else {
+      hi = mid - 1;
+    }
   }
-  return encoded;
+  return withRows(lo);
 }
 
 String usage(String? topic) {

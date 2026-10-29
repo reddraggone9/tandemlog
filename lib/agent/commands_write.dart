@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 
 import '../application/task_text_session.dart';
@@ -19,7 +20,7 @@ import 'commands_read.dart';
 import 'render.dart';
 import 'overlay_folder.dart';
 import 'text_undo.dart';
-import '../storage/task_store.dart' show StaleTaskSnapshot;
+import '../storage/unified_record.dart' show UnifiedRecord;
 
 const _ifRev = AgentArg(
   'if-rev',
@@ -94,9 +95,80 @@ bool Function() taskGuard(AgentCall call, Map<String, String> expected) {
       );
     }
   }
-  return () => expected.entries.every((e) => taskRev(call, e.key) == e.value);
+  return call.commitGuard(
+    () => expected.entries.every((e) => taskRev(call, e.key) == e.value),
+  );
 }
 
+/// Own records appended since [before].
+List<UnifiedRecord> newRecords(AgentCall call, int before) => [
+  for (final r
+      in call.ws.session.history.snapshot.recordsByWriter[call.ws.writer] ??
+          const <UnifiedRecord>[])
+    if (r.sequence > before) r,
+];
+
+/// Task entities and Food targets (containers, products, purchases) whose
+/// current revisions an Undo of [record] must name.
+({Set<String> tasks, Set<String> food}) undoScope(UnifiedRecord record) {
+  final tasks = <String>{}, food = <String>{};
+  for (final e in record.effects) {
+    if (e.task != null) tasks.add(e.task!.entity);
+    final f = e.food;
+    if (f != null) {
+      food.addAll(f.operation.targets);
+      if (f.operation.into != null) food.add(f.operation.into!);
+    }
+  }
+  return (tasks: tasks, food: food);
+}
+
+const _creations = {
+  'task.created',
+  'task.createdWithText',
+  'user.created',
+  'checklist.itemCreated',
+};
+const _undoTypes = {
+  'task.operationUndone',
+  'task.textEditUndone',
+  'task.recurringCompletionUndone',
+};
+
+/// Why an Undo of [record] is refused whole, or null if it can be undone.
+String? undoRefusal(UnifiedRecord record) {
+  final task = [
+    for (final e in record.effects)
+      if (e.task != null) e.task!,
+  ];
+  final food = [
+    for (final e in record.effects)
+      if (e.food != null) e.food!,
+  ];
+  if (task.any((e) => _undoTypes.contains(e.type)) ||
+      food.any((r) => r.operation.action == FoodAction.undo)) {
+    return 'This action is itself an Undo and is not undone again; redo the change instead. Nothing was changed.';
+  }
+  if (task.isNotEmpty && food.isNotEmpty) {
+    return 'Mixed Task and Food actions cannot be undone as one unit yet. Nothing was changed.';
+  }
+  if (task.any((e) => _creations.contains(e.type))) {
+    return 'Creating an item is not undone; delete it instead. Nothing was changed.';
+  }
+  if (task.any((e) => e.type == 'task.textEdited') && task.length != 1) {
+    return 'This action mixes text with other operations. Nothing was changed.';
+  }
+  return null;
+}
+
+String _revText(String? rev) => rev ?? 'none';
+
+/// Current rev of a Task entity or Food target named by an action.
+String? currentRev(AgentCall call, String id, {required bool task}) =>
+    task ? taskRev(call, id) : foodTargetRev(foodState(call), id);
+
+/// Write output: action IDs, every affected item with its new rev, and the
+/// complete Undo command (with current revs) when the action can be undone.
 AgentResult writeResult(
   AgentCall call,
   int before,
@@ -104,17 +176,39 @@ AgentResult writeResult(
   List<String> taskIds, {
   List<String> containerIds = const [],
   Map<String, Object?> extra = const {},
+  int exitCode = 0,
 }) {
   final actions = newActions(call, before);
-  final containers = {for (final c in foodState(call).containers) c.id: c};
-  final affected = [
-    for (final id in taskIds) {'id': id, 'rev': taskRev(call, id)},
-    for (final id in containerIds)
-      if (containers[id] != null) {'id': id, 'rev': foodRev(containers[id]!)},
-  ];
-  final undo = actions.length == 1
-      ? 'tandemlog-cli undo ${actions.single}'
-      : null;
+  final records = newRecords(call, before);
+  final state = foodState(call);
+  final affected = <Map<String, Object?>>[];
+  final seen = <String>{};
+  void addTask(String id) {
+    if (seen.add(id)) affected.add({'id': id, 'rev': taskRev(call, id)});
+  }
+
+  void addFood(String id) {
+    final rev = foodTargetRev(state, id);
+    if (rev != null && seen.add(id)) affected.add({'id': id, 'rev': rev});
+  }
+
+  taskIds.forEach(addTask);
+  containerIds.forEach(addFood);
+  for (final r in records) {
+    final scope = undoScope(r);
+    scope.tasks.forEach(addTask);
+    scope.food.forEach(addFood);
+  }
+  String? undo;
+  if (records.length == 1 && undoRefusal(records.single) == null) {
+    final scope = undoScope(records.single);
+    undo = [
+      'tandemlog-cli undo ${actions.single}',
+      for (final id in scope.tasks) '--rev=$id=${_revText(taskRev(call, id))}',
+      for (final id in scope.food)
+        '--rev=$id=${_revText(foodTargetRev(state, id))}',
+    ].join(' ');
+  }
   return AgentResult(
     {'actions': actions, 'affected': affected, 'undo': ?undo, ...extra},
     [
@@ -122,6 +216,7 @@ AgentResult writeResult(
       for (final a in affected) '${shortId(a['id'] as String)} rev ${a['rev']}',
       if (undo != null) 'undo: $undo',
     ].join('\n'),
+    exitCode: exitCode,
   );
 }
 
@@ -315,6 +410,7 @@ List<AgentCommand> writeCommands() => [
       );
       return writeResult(call, before, 'Deleted ${shortId(id)}.', [id]);
     },
+    destructive: true,
   ),
   AgentCommand(
     'tasks edit',
@@ -530,6 +626,9 @@ List<AgentCommand> writeCommands() => [
         containerIds: ids,
       );
     },
+    requiresPlan: true,
+    planWhen: (args) => (args['id'] as List).length > 1,
+    destructive: true,
   ),
   AgentCommand(
     'food restore',
@@ -569,6 +668,8 @@ List<AgentCommand> writeCommands() => [
         containerIds: [for (final c in containers) c.id],
       );
     },
+    requiresPlan: true,
+    planWhen: (args) => (args['id'] as List).length > 1,
   ),
   AgentCommand(
     'undo',
@@ -619,22 +720,22 @@ bool Function() foodGuard(AgentCall call, List<String> ids, List<String> revs) {
       );
     }
   }
-  return () {
+  return call.commitGuard(() {
     for (var i = 0; i < ids.length; i++) {
       if (actual(ids[i]) != revs[i]) return false;
     }
     return true;
-  };
+  });
 }
 
-/// Whole-action Undo of this installation's own action. Text contributions
-/// are not yet retractable across processes, so such actions are refused
-/// whole (`undo_unavailable`) rather than partially undone.
+/// Whole-action Undo of this installation's own action, across processes.
+/// Text contributions are retracted selectively (text_undo.dart); anything
+/// that cannot be undone refuses the whole action (`undo_unavailable`).
 Future<AgentResult> undoAction(AgentCall call) async {
   final input = call.require('action');
   final parts = input.split(':');
   final seq = parts.length == 2 ? int.tryParse(parts[1]) : null;
-  if (seq == null) {
+  if (seq == null || parts[0].isEmpty) {
     throw const AgentFailure(
       'validation',
       'Use the action ID from a write result (writer:sequence).',
@@ -654,6 +755,8 @@ Future<AgentResult> undoAction(AgentCall call) async {
       .where((r) => r.sequence == seq)
       .firstOrNull;
   if (record == null) throw AgentFailure('not_found', 'No action $input.');
+  final refusal = undoRefusal(record);
+  if (refusal != null) throw AgentFailure('undo_unavailable', refusal);
   final taskOps = [
     for (final e in record.effects)
       if (e.task != null) e.task!,
@@ -662,44 +765,18 @@ Future<AgentResult> undoAction(AgentCall call) async {
     for (final e in record.effects)
       if (e.food != null) e.food!,
   ];
-  if (taskOps.isNotEmpty && foodOps.isNotEmpty) {
-    throw const AgentFailure(
-      'undo_unavailable',
-      'Mixed Task and Food actions cannot be undone as one unit yet.',
-    );
-  }
-  final created = taskOps.where(
-    (e) =>
-        e.type == 'task.created' ||
-        e.type == 'task.createdWithText' ||
-        e.type == 'user.created' ||
-        e.type == 'checklist.itemCreated',
-  );
-  if (created.isNotEmpty) {
-    throw const AgentFailure(
-      'undo_unavailable',
-      'Creating an item is not undone; delete it instead. Nothing was changed.',
-    );
-  }
   final before = ownHead(call);
-  final affected = <String>{for (final e in taskOps) e.entity};
-  final containers = <String>{for (final r in foodOps) ...r.operation.targets};
-  final guard = _undoGuard(call, affected, containers);
+  final scope = undoScope(record);
+  final guard = _undoGuard(call, scope.tasks, scope.food);
   final text = taskOps.where((e) => e.type == 'task.textEdited').toList();
   if (text.isNotEmpty) {
-    if (taskOps.length != 1) {
-      throw const AgentFailure(
-        'undo_unavailable',
-        'This action mixes text with other operations. Nothing was changed.',
-      );
-    }
     final target = text.single;
     if (_undone(snapshot, target.id)) {
       return writeResult(
         call,
         before,
         'Already undone.',
-        affected.toList(),
+        scope.tasks.toList(),
         extra: {'alreadyUndone': true},
       );
     }
@@ -713,39 +790,29 @@ Future<AgentResult> undoAction(AgentCall call) async {
       'changes': changes,
     }, canCommit: guard);
   } else if (taskOps.isNotEmpty) {
-    if (!guard()) throw StaleTaskSnapshot();
     final result = await call.ws.session.tasks.undoOperations([
       for (final e in taskOps) e.id,
-    ]);
+    ], canCommit: guard);
     if (result.error != null) throw result.error!;
-    if (newActions(call, before).isEmpty) {
-      return writeResult(
-        call,
-        before,
-        'Already undone.',
-        affected.toList(),
-        extra: {'alreadyUndone': true},
-      );
-    }
   } else {
-    if (!guard()) throw StaleTaskSnapshot();
-    await call.ws.session.food.undoOperations(foodOps);
-    if (newActions(call, before).isEmpty) {
-      return writeResult(
-        call,
-        before,
-        'Already undone.',
-        const [],
-        extra: {'alreadyUndone': true},
-      );
-    }
+    await call.ws.session.food.undoOperations(foodOps, canCommit: guard);
+  }
+  if (newActions(call, before).isEmpty) {
+    return writeResult(
+      call,
+      before,
+      'Already undone.',
+      scope.tasks.toList(),
+      containerIds: scope.food.toList(),
+      extra: {'alreadyUndone': true},
+    );
   }
   return writeResult(
     call,
     before,
     'Undid $input.',
-    affected.where((id) => taskRow(call, id) != null).toList(),
-    containerIds: [for (final r in foodOps) ...r.operation.targets],
+    scope.tasks.where((id) => taskRow(call, id) != null).toList(),
+    containerIds: scope.food.toList(),
   );
 }
 
@@ -765,11 +832,12 @@ bool _undone(dynamic snapshot, String operation) {
 }
 
 /// Undo names the current revision of everything the action changed, so it
-/// never silently reverts over a change the agent has not seen.
+/// never silently reverts over a change the agent has not seen. A target that
+/// no longer exists (for example a retracted purchase) has rev `none`.
 bool Function() _undoGuard(
   AgentCall call,
   Set<String> tasks,
-  Set<String> containers,
+  Set<String> food,
 ) {
   final given = <String, String>{};
   for (final pair in call.strings('rev')) {
@@ -781,19 +849,14 @@ bool Function() _undoGuard(
         details: {'field': 'rev', 'error': 'format'},
       );
     }
-    given[resolveId(pair.substring(0, eq), {...tasks, ...containers}, 'item')] =
-        pair.substring(eq + 1);
+    given[resolveId(pair.substring(0, eq), {...tasks, ...food}, 'item')] = pair
+        .substring(eq + 1);
   }
-  String? current(String id) {
-    if (tasks.contains(id)) return taskRev(call, id);
-    for (final c in foodState(call).containers) {
-      if (c.id == id) return foodRev(c);
-    }
-    return null;
-  }
+  String current(String id) =>
+      _revText(currentRev(call, id, task: tasks.contains(id)));
 
   final missing = [
-    for (final id in {...tasks, ...containers})
+    for (final id in {...tasks, ...food})
       if (!given.containsKey(id)) id,
   ];
   if (missing.isNotEmpty) {
@@ -817,11 +880,15 @@ bool Function() _undoGuard(
       );
     }
   }
-  return () => given.entries.every((e) => current(e.key) == e.value);
+  return call.commitGuard(
+    () => given.entries.every((e) => current(e.key) == e.value),
+  );
 }
 
 /// Dry run: perform the command on disposable copies of the profile and the
 /// workspace, report the resulting typed effects and a planHash, discard.
+/// `inputHash` identifies the observed state the plan was computed from; a
+/// planned commit appends only while the workspace still has that state.
 Future<AgentResult> dryRunWrite(
   AgentCommand command,
   Map<String, Object?> args,
@@ -851,9 +918,9 @@ Future<AgentResult> dryRunWrite(
       wait: options.wait,
       folderFor: (location) => OverlayLogFolder(location, real),
     );
-    final beforeState = _observable(AgentCall(args, before, options));
+    final beforeState = _observe(AgentCall(args, before, options));
     AgentResult result;
-    Map<String, Object?> afterState;
+    _Observed afterState;
     try {
       result = await command.run(
         AgentCall(
@@ -864,11 +931,14 @@ Future<AgentResult> dryRunWrite(
           options,
         ),
       );
-      afterState = _observable(AgentCall(args, before, options));
+      afterState = _observe(AgentCall(args, before, options));
     } finally {
       await before.close();
     }
-    final effects = _diff(beforeState, afterState);
+    final effects = [
+      ..._diff(beforeState.entities, afterState.entities),
+      ..._orderEffects(beforeState.order, afterState.order),
+    ]..sort((a, b) => (a['id'] as String).compareTo(b['id'] as String));
     final planHash = revOf({
       'command': command.name,
       'args': {...args}
@@ -876,8 +946,19 @@ Future<AgentResult> dryRunWrite(
         ..remove('expect-plan'),
       'effects': _stable(effects),
     });
+    final outcome = {
+      for (final e in result.data.entries)
+        if (!const {'actions', 'affected', 'undo'}.contains(e.key))
+          e.key: e.value,
+    };
     return AgentResult(
-      {'dryRun': true, 'planHash': planHash, 'effects': effects},
+      {
+        ...outcome,
+        'dryRun': true,
+        'planHash': planHash,
+        'effects': effects,
+        'inputHash': beforeState.hash,
+      },
       [
         'Dry run: ${command.name} (nothing written)',
         for (final e in effects)
@@ -905,11 +986,18 @@ Future<void> _rebind(AgentProfile profile, String folder) async {
   }
 }
 
+/// Order is reported separately as moves (see [_orderEffects]); the other
+/// keys are device-local or derived.
 const _volatile = {'order', 'completionOrder', 'completedMicros', 'tagRefs'};
 
 /// Observation times differ between a dry run and its commit; the plan binds
 /// targets and field changes, not the clock reading.
-const _clockFields = {'completedInstant', 'createdAt', 'deletedAt'};
+const _clockFields = {
+  'completedInstant',
+  'createdAt',
+  'deletedAt',
+  'deletedOrder',
+};
 
 Object? _stable(Object? value) => switch (value) {
   Map m => {
@@ -920,15 +1008,53 @@ Object? _stable(Object? value) => switch (value) {
   _ => value,
 };
 
-Map<String, Object?> _observable(AgentCall call) => {
-  for (final r in call.ws.session.tasks.rows)
-    r['id'] as String: {
-      for (final e in r.entries)
-        if (!_volatile.contains(e.key)) e.key: e.value,
+/// What a plan can change: task and checklist rows, the visible task order,
+/// Food containers, products (including merges) and purchases.
+class _Observed {
+  _Observed(this.entities, this.order);
+  final Map<String, Object?> entities;
+  final List<String> order;
+  String get hash => sha256
+      .convert(utf8.encode(jsonEncode({'entities': entities, 'order': order})))
+      .toString();
+}
+
+_Observed _observe(AgentCall call) {
+  final rows = call.ws.session.tasks.rows;
+  final state = call.ws.session.food.state;
+  final catalog = state.catalog;
+  return _Observed(
+    {
+      for (final r in rows)
+        r['id'] as String: {
+          for (final e in r.entries)
+            if (!_volatile.contains(e.key)) e.key: e.value,
+        },
+      for (final c in state.containers)
+        c.id: jsonDecode(jsonEncode(c.toJson())),
+      for (final id in catalog.aliases.keys)
+        id: {'kind': 'product', 'mergedInto': catalog.resolve(id)},
+      for (final p in state.products.values)
+        p.id: {
+          'kind': 'product',
+          'name': p.name,
+          'brand': p.brand,
+          'size': p.size,
+          'links': p.links,
+          'minimum': p.minimum,
+        },
+      for (final x in catalog.purchases.values)
+        x.id: {'kind': 'purchase', ...x.toJson(), 'voided': x.voided},
     },
-  for (final c in call.ws.session.food.state.containers)
-    c.id: jsonDecode(jsonEncode(c.toJson())),
-};
+    [
+      for (final r in rows)
+        if (r['kind'] == 'task') r['id'] as String,
+    ],
+  );
+}
+
+/// Hash of everything a plan observes, for the in-append plan check.
+String observedStateHash(AgentCall call) => _observe(call).hash;
 
 List<Map<String, Object?>> _diff(
   Map<String, Object?> before,
@@ -955,6 +1081,60 @@ List<Map<String, Object?>> _diff(
     }
   }
   return out;
+}
+
+/// Tasks whose place in the visible order changed: every task outside one
+/// longest kept subsequence, with the task it now precedes (`null` = end).
+List<Map<String, Object?>> _orderEffects(
+  List<String> before,
+  List<String> after,
+) {
+  final position = {for (var i = 0; i < before.length; i++) before[i]: i};
+  final common = [
+    for (final id in after)
+      if (position.containsKey(id)) id,
+  ];
+  // Longest increasing subsequence of old positions, in new order.
+  final tails = <int>[], previous = List<int>.filled(common.length, -1);
+  for (var i = 0; i < common.length; i++) {
+    final p = position[common[i]]!;
+    var lo = 0, hi = tails.length;
+    while (lo < hi) {
+      final mid = (lo + hi) >> 1;
+      if (position[common[tails[mid]]]! < p) {
+        lo = mid + 1;
+      } else {
+        hi = mid;
+      }
+    }
+    if (lo > 0) previous[i] = tails[lo - 1];
+    if (lo == tails.length) {
+      tails.add(i);
+    } else {
+      tails[lo] = i;
+    }
+  }
+  final kept = <String>{};
+  for (var i = tails.isEmpty ? -1 : tails.last; i >= 0; i = previous[i]) {
+    kept.add(common[i]);
+  }
+  final afterIndex = {for (var i = 0; i < after.length; i++) after[i]: i};
+  String? next(List<String> list, int i) =>
+      i + 1 < list.length ? list[i + 1] : null;
+  return [
+    for (final id in common)
+      if (!kept.contains(id))
+        {
+          'id': id,
+          'change': 'moved',
+          'fields': {
+            'before': {
+              'from': next(before, position[id]!),
+              'to': next(after, afterIndex[id]!),
+            },
+          },
+        },
+  ];
 }
 
 /// `init`: create this agent's private profile and join the workspace.
@@ -1000,25 +1180,28 @@ AgentCommand initCommand() => AgentCommand(
         details: {'field': 'workspace', 'error': 'empty'},
       );
     }
-    // Load native code before creating anything, then remove this fresh
-    // profile again if joining fails so a retry starts clean.
+    // Load native code before creating anything. The identity lock is held
+    // for the whole of init, so concurrent inits of one profile serialize and
+    // all but the first find it non-empty. On failure before joining, only
+    // the files this init created are removed (never the lock or a peer's).
     final engine = agentTextEngine();
-    try {
-      await profile.createMarker();
-    } catch (_) {
-      engine.dispose();
-      rethrow;
-    }
+    ProfileLock? lock;
+    var created = false;
     LocalProfileDatabase? db;
     WorkspaceSession? session;
+    String? writer;
     var joined = false;
     try {
+      lock = await profile.lock(call.options.wait);
+      await profile.createMarker();
+      created = true;
       db = await LocalProfileDatabase.open(profile.root);
       await LocalSettings.initialize(db);
       final settings = LocalSettings(db.root, profileDatabase: db);
       await settings.load();
       settings.folder = location;
       await settings.save();
+      writer = settings.writer;
       session = await WorkspaceSession.open(
         LocalLogFolder(location),
         profile: db,
@@ -1059,10 +1242,22 @@ AgentCommand initCommand() => AgentCommand(
         'Initialized agent profile ${profile.root}\nwriter ${settings.writer} "${call.require('name')}"\nworkspace $location${warning == null ? '' : '\n$warning'}',
       );
     } finally {
-      await session?.close();
-      await db?.close();
-      engine.dispose();
-      if (!joined) await Directory(profile.root).delete(recursive: true);
+      try {
+        await session?.close();
+        await db?.close();
+      } finally {
+        engine.dispose();
+        // A join may have been written even if opening failed afterwards.
+        if (created &&
+            !joined &&
+            !(writer != null &&
+                await File(
+                  '$location${Platform.pathSeparator}$writer.applog',
+                ).exists())) {
+          await profile.removeCreated();
+        }
+        await lock?.close();
+      }
     }
   },
 );

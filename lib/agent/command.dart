@@ -31,18 +31,42 @@ class AgentArg {
 enum CommandKind { read, write, setup }
 
 class AgentResult {
-  AgentResult(this.data, this.text);
+  AgentResult(this.data, this.text, {this.nextAfter, this.exitCode = 0});
   final Map<String, Object?> data;
   final String text;
+
+  /// For paged results: the cursor resuming after the first [shown] rows of
+  /// this page, so a truncated output still pages without skipping rows.
+  final String? Function(int shown)? nextAfter;
+
+  /// Non-zero for a result that is also a failure (a partial bulk edit).
+  final int exitCode;
 }
 
 /// Arguments after parsing, plus the open workspace for read/write commands.
 class AgentCall {
-  AgentCall(this.args, this.workspace, this.options, {this.profile});
+  AgentCall(
+    this.args,
+    this.workspace,
+    this.options, {
+    this.profile,
+    this.planGuard,
+  });
   final Map<String, Object?> args;
   final AgentWorkspace? workspace;
   final AgentOptions options;
   final AgentProfile? profile;
+
+  /// For a planned commit: true while the workspace still has exactly the
+  /// state the dry run planned against. Every store `canCommit` of a planned
+  /// command includes it, so the check runs inside the serialized append.
+  final bool Function()? planGuard;
+
+  /// [guard] plus the plan check, for a store's `canCommit`.
+  bool Function() commitGuard(bool Function() guard) {
+    final plan = planGuard;
+    return plan == null ? guard : () => guard() && plan();
+  }
 
   AgentWorkspace get ws => workspace!;
   String? string(String name) => args[name] as String?;
@@ -82,7 +106,7 @@ class AgentCommand {
     this.paged = false,
     this.requiresPlan = false,
     this.planWhen,
-    this.ownDryRun = false,
+    this.destructive = false,
   });
   final String name, summary;
   final CommandKind kind;
@@ -95,8 +119,8 @@ class AgentCommand {
   final bool requiresPlan;
   final bool Function(Map<String, Object?> args)? planWhen;
 
-  /// The command implements its own dry run and plan check (purchase import).
-  final bool ownDryRun;
+  /// Deletes, removes or merges (MCP `destructiveHint`).
+  final bool destructive;
 
   bool needsPlan(Map<String, Object?> args) =>
       requiresPlan && (planWhen?.call(args) ?? true);
@@ -107,7 +131,7 @@ class AgentCommand {
     ...args,
     if (paged) ...pagingArgs,
     if (kind == CommandKind.write) ...writeArgs,
-    if (requiresPlan || ownDryRun) planArg,
+    if (requiresPlan) planArg,
   ];
 
   static const planArg = AgentArg(

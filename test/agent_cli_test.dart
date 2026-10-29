@@ -1,12 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/agent/agent_workspace.dart';
+import 'package:tandemlog/agent/agent_profile.dart';
 import 'package:tandemlog/agent/cli.dart';
 import 'package:tandemlog/agent/mcp_server.dart';
 import 'package:tandemlog/agent/registry.dart';
+import 'package:tandemlog/food/food_store.dart' show StaleFoodState;
+import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 
 /// In-process agent CLI against private synthetic workspaces; the packaged
@@ -538,7 +543,7 @@ void main() {
     ]);
     expect(dry['status'], 'ready');
     final refused = await json(['purchases', 'import', plan['plan'] as String]);
-    expect(refused['error']['kind'], 'plan_changed');
+    expect(refused['error']['kind'], 'validation');
     final done = await json([
       'purchases',
       'import',
@@ -547,12 +552,28 @@ void main() {
       dry['planHash'] as String,
     ]);
     expect(done['actions'], hasLength(1));
-    final again = await json([
+    // The plan binds its effects: a retry plans nothing and appends nothing.
+    final stale = await json([
       'purchases',
       'import',
       plan['plan'] as String,
       '--expect-plan',
       dry['planHash'] as String,
+    ]);
+    expect(stale['error']['kind'], 'plan_changed');
+    final retry = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--dry-run',
+    ]);
+    expect(retry['effects'], isEmpty);
+    final again = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--expect-plan',
+      retry['planHash'] as String,
     ]);
     expect(again['actions'], isEmpty);
     expect((await json(['purchases', 'list']))['total'], 1);
@@ -580,5 +601,636 @@ void main() {
       }),
     );
     expect((call!['result'] as Map)['isError'], false);
+  });
+
+  /// The advertised Undo command of a write result, as argv.
+  List<String> undoArgv(Map result) {
+    final hint = result['undo'] as String?;
+    expect(hint, isNotNull, reason: '$result');
+    return hint!.split(' ').sublist(1);
+  }
+
+  Future<Map<String, dynamic>> planned(List<String> args) async {
+    final dry = await json([...args, '--dry-run']);
+    expect(dry['planHash'], isNotNull, reason: '$dry');
+    return json([...args, '--expect-plan', dry['planHash'] as String]);
+  }
+
+  Future<List<Map>> products() async => [
+    for (final p in (await json(['products', 'list']))['products'] as List)
+      p as Map,
+  ];
+
+  test(
+    'product, purchase and product-changing actions undo as one unit',
+    () async {
+      await setUpAgent();
+      final added = await json([
+        'food',
+        'add',
+        '--name',
+        'Milk',
+        '--brand',
+        'GV',
+        '--size',
+        '1 gal',
+        '--expiry',
+        '2026-11-03',
+      ]);
+      final c = (added['affected'] as List).first as Map;
+
+      final renamed = await planned([
+        'food',
+        'edit',
+        c['id'] as String,
+        '--rev=${c['id']}=${c['rev']}',
+        '--name',
+        'Whole milk',
+      ]);
+      expect(renamed['error'], isNull, reason: '$renamed');
+      expect((await products()).single['name'], 'Whole milk');
+      final undoRename = await json(undoArgv(renamed));
+      expect(undoRename['error'], isNull, reason: '$undoRename');
+      expect((await products()).single['name'], 'Milk');
+
+      var p = (await products()).single;
+      final set = await json([
+        'products',
+        'set',
+        p['id'] as String,
+        '--if-rev',
+        p['rev'] as String,
+        '--min',
+        '3',
+      ]);
+      expect(set['error'], isNull, reason: '$set');
+      final undoSet = await json(undoArgv(set));
+      expect(undoSet['error'], isNull, reason: '$undoSet');
+      p = (await products()).single;
+      expect(p['minimum'], isNull);
+
+      final lines = File('${root.path}/lines.json')
+        ..writeAsStringSync(
+          jsonEncode([
+            {
+              'source': {'kind': 'test', 'key': 'r1#1'},
+              'date': '2026-10-28',
+              'store': 'Walmart',
+              'amount': 348,
+              'quantity': 2,
+              'product': p['id'],
+            },
+          ]),
+        );
+      final plan = await json(['purchases', 'plan', lines.path]);
+      final imported = await planned([
+        'purchases',
+        'import',
+        plan['plan'] as String,
+      ]);
+      expect(imported['actions'], hasLength(1), reason: '$imported');
+      expect((await json(['purchases', 'list']))['total'], 1);
+      final undoImport = await json(undoArgv(imported));
+      expect(undoImport['error'], isNull, reason: '$undoImport');
+      expect((await json(['purchases', 'list']))['total'], 0);
+
+      await json(['food', 'add', '--name', 'Lait', '--expiry', '2026-11-04']);
+      final all = await products();
+      final src = all.firstWhere((x) => x['name'] == 'Lait');
+      final dst = all.firstWhere((x) => x['name'] == 'Milk');
+      final mergeArgs = [
+        'products',
+        'merge',
+        src['id'] as String,
+        '--into',
+        dst['id'] as String,
+        '--rev=${src['id']}=${src['rev']}',
+        '--rev=${dst['id']}=${dst['rev']}',
+      ];
+      final dry = await json([...mergeArgs, '--dry-run']);
+      final mergeEffect =
+          (dry['effects'] as List).firstWhere((e) => e['id'] == src['id'])
+              as Map;
+      expect(mergeEffect['fields']['mergedInto']['to'], dst['id']);
+      final merged = await json([
+        ...mergeArgs,
+        '--expect-plan',
+        dry['planHash'] as String,
+      ]);
+      expect(merged['error'], isNull, reason: '$merged');
+      expect(await products(), hasLength(1));
+      final undoMerge = await json(undoArgv(merged));
+      expect(undoMerge['error'], isNull, reason: '$undoMerge');
+      expect(await products(), hasLength(2));
+    },
+  );
+
+  test('dry runs report moves and product changes in the plan', () async {
+    await setUpAgent();
+    await cli(['people', 'add', 'Lee']);
+    await cli(['tasks', 'add', 'A1', 'A2', 'A3', '--for', 'Lee']);
+    final list = (await json(['tasks', 'list']))['tasks'] as List;
+    final first = list.first as Map, last = list.last as Map;
+    final args = [
+      'tasks',
+      'bulk-move',
+      last['id'] as String,
+      '--before',
+      first['id'] as String,
+      '--rev=${last['id']}=${last['rev']}',
+      '--rev=${first['id']}=${first['rev']}',
+    ];
+    final dry = await json([...args, '--dry-run']);
+    final moved = (dry['effects'] as List).where((e) => e['change'] == 'moved');
+    expect(moved.single['id'], last['id']);
+    expect(moved.single['fields']['before']['to'], first['id']);
+    final done = await json([
+      ...args,
+      '--expect-plan',
+      dry['planHash'] as String,
+    ]);
+    expect(done['error'], isNull, reason: '$done');
+    final after = (await json(['tasks', 'list']))['tasks'] as List;
+    expect(after.first['id'], last['id']);
+
+    final single = await json([
+      'tasks',
+      'move',
+      after.first['id'] as String,
+      '--before',
+      'end',
+      '--rev=${after.first['id']}=${after.first['rev']}',
+      '--dry-run',
+    ]);
+    expect(single['effects'], isNotEmpty);
+
+    await json(['food', 'add', '--name', 'Rice', '--expiry', '2027-01-01']);
+    final p = (await products()).single;
+    final set = await json([
+      'products',
+      'set',
+      p['id'] as String,
+      '--if-rev',
+      p['rev'] as String,
+      '--min',
+      '2',
+      '--dry-run',
+    ]);
+    final effect =
+        (set['effects'] as List).firstWhere((e) => e['id'] == p['id']) as Map;
+    expect(effect['fields']['minimum'], {'from': null, 'to': 2});
+  });
+
+  test(
+    'a planned commit refuses when the workspace changed after the plan check',
+    () async {
+      await setUpAgent(profile: 'one');
+      await setUpAgent(profile: 'two', create: false);
+      await cli(['people', 'add', 'Lee'], profile: 'one');
+      final added = await json([
+        'tasks',
+        'add',
+        'A',
+        'B',
+        '--for',
+        'Lee',
+      ], profile: 'one');
+      final args = [
+        'tasks',
+        'bulk-edit',
+        for (final a in added['affected'] as List) a['id'] as String,
+        for (final a in added['affected'] as List)
+          '--rev=${a['id']}=${a['rev']}',
+        '--tag',
+        'home',
+      ];
+      final dry = await json([...args, '--dry-run'], profile: 'one');
+      debugAfterPlanCheck = () async {
+        final (code, out) = await cli([
+          'tasks',
+          'add',
+          'Peer',
+          '--for',
+          'Lee',
+        ], profile: 'two');
+        expect(code, 0, reason: out);
+      };
+      try {
+        final refused = await json([
+          ...args,
+          '--expect-plan',
+          dry['planHash'] as String,
+        ], profile: 'one');
+        expect(refused['error']['kind'], 'plan_changed', reason: '$refused');
+      } finally {
+        debugAfterPlanCheck = null;
+      }
+      expect(
+        (await json([
+          'tasks',
+          'list',
+          '--tag',
+          'home',
+        ], profile: 'one'))['total'],
+        0,
+      );
+      // The peer's task is unrelated, so the same plan applies on a retry.
+      final again = await json([
+        ...args,
+        '--expect-plan',
+        dry['planHash'] as String,
+      ], profile: 'one');
+      expect(again['actions'], hasLength(1), reason: '$again');
+    },
+  );
+
+  test('Undo and checklist add check their guard inside the append', () async {
+    await setUpAgent();
+    await cli(['people', 'add', 'Lee']);
+    final task =
+        ((await json(['tasks', 'add', 'Pack', '--for', 'Lee']))['affected']
+                    as List)
+                .single
+            as Map;
+    final done = await json([
+      'tasks',
+      'complete',
+      task['id'] as String,
+      '--if-rev',
+      task['rev'] as String,
+    ]);
+    final food = await json([
+      'food',
+      'add',
+      '--name',
+      'Beans',
+      '--expiry',
+      '2027-01-01',
+    ]);
+    final ws = await AgentWorkspace.open(
+      AgentProfile.resolve(selection: 'default', environment: env),
+      readOnly: false,
+    );
+    try {
+      final own = ws.session.history.snapshot.recordsByWriter[ws.writer]!;
+      UnifiedRecord record(Map result) {
+        final seq = int.parse(
+          ((result['actions'] as List).single as String).split(':').last,
+        );
+        return own.firstWhere((r) => r.sequence == seq);
+      }
+
+      final before = await bytes(canonicalOnly: true);
+      final taskOp = record(done).effects.single.task!.id;
+      final undo = await ws.session.tasks.undoOperations([
+        taskOp,
+      ], canCommit: () => false);
+      expect(undo.error, isA<StaleTaskSnapshot>());
+      await expectLater(
+        ws.session.food.undoOperations([
+          for (final e in record(food).effects) e.food!,
+        ], canCommit: () => false),
+        throwsA(isA<StaleFoodState>()),
+      );
+      await expectLater(
+        ws.session.tasks.addChecklistItem(
+          task['id'] as String,
+          'Socks',
+          canCommit: () => false,
+        ),
+        throwsA(isA<StaleTaskSnapshot>()),
+      );
+      expect(await bytes(canonicalOnly: true), before);
+    } finally {
+      await ws.close();
+    }
+  });
+
+  test('concurrent init of one profile keeps exactly one identity', () async {
+    final results = await Future.wait([
+      for (var i = 0; i < 6; i++)
+        cli([
+          'init',
+          '--workspace',
+          '${root.path}/ws',
+          '--name',
+          'Vex',
+          '--create',
+        ]),
+    ]);
+    expect(results.where((r) => r.$1 == 0), hasLength(1), reason: '$results');
+    for (final (code, out) in results.where((r) => r.$1 != 0)) {
+      expect(code, 2);
+      expect(out, contains('not empty'));
+    }
+    final logs = Directory(
+      '${root.path}/ws',
+    ).listSync().where((f) => f.path.endsWith('.applog'));
+    expect(logs, hasLength(1));
+    expect((await cli(['context'])).$1, 0);
+    final again = await cli([
+      'init',
+      '--workspace',
+      '${root.path}/ws',
+      '--name',
+      'Vex',
+    ]);
+    expect(again.$1, 2);
+    expect((await cli(['context'])).$1, 0);
+  });
+
+  test(
+    'Food paging and truncated output resume at the first dropped row',
+    () async {
+      await setUpAgent();
+      for (final name in ['Apples', 'Beans', 'Corn']) {
+        await cli(['food', 'add', '--name', name, '--expiry', '2027-01-01']);
+      }
+      final page1 = await json(['food', 'list', '--limit', '1']);
+      final page2 = await json([
+        'food',
+        'list',
+        '--limit',
+        '1',
+        '--cursor',
+        page1['next'] as String,
+      ]);
+      expect(page2['error'], isNull, reason: '$page2');
+      expect(page2['rows'].single['name'], 'Beans');
+
+      await cli(['people', 'add', 'Lee']);
+      await cli([
+        'tasks',
+        'add',
+        for (var i = 0; i < 130; i++)
+          'T${i.toString().padLeft(3, '0')} ${'é' * 300}',
+        '--for',
+        'Lee',
+      ]);
+      final (_, all) = await cli(['tasks', 'list', '--format', 'jsonl']);
+      final ids = [
+        for (final l in const LineSplitter().convert(all))
+          (jsonDecode(l) as Map)['id'],
+      ];
+      expect(ids, hasLength(130));
+      final (_, out) = await cli([
+        'tasks',
+        'list',
+        '--limit',
+        '130',
+        '--format',
+        'json',
+      ]);
+      expect(utf8.encode(out).length, lessThanOrEqualTo(32 * 1024));
+      final page = jsonDecode(out) as Map;
+      expect(page['truncated'], true);
+      final shown = page['shown'] as int;
+      expect(shown, lessThan(130));
+      final rest = await json([
+        'tasks',
+        'list',
+        '--limit',
+        '130',
+        '--cursor',
+        page['next'] as String,
+      ]);
+      expect(rest['tasks'].first['id'], ids[shown]);
+      final (_, text) = await cli(['tasks', 'list', '--limit', '130']);
+      expect(utf8.encode(text).length, lessThanOrEqualTo(32 * 1024));
+      final textShown = int.parse(
+        RegExp(r'truncated at 32 KB after (\d+) rows').firstMatch(text)![1]!,
+      );
+      final textNext = RegExp(
+        r'^next: (\S+)$',
+        multiLine: true,
+      ).firstMatch(text)![1]!;
+      final resumed = await json([
+        'tasks',
+        'list',
+        '--limit',
+        '130',
+        '--cursor',
+        textNext,
+      ]);
+      expect(resumed['tasks'].first['id'], ids[textShown]);
+
+      final server = McpServer(environment: env, profile: 'default');
+      final reply = await server.handle(
+        jsonEncode({
+          'jsonrpc': '2.0',
+          'id': 1,
+          'method': 'tools/call',
+          'params': {
+            'name': 'tasks_list',
+            'arguments': {'limit': 130},
+          },
+        }),
+      );
+      final structured = (reply!['result'] as Map)['structuredContent'] as Map;
+      expect(structured['truncated'], true);
+      expect(structured['next'], page['next']);
+      expect(
+        utf8.encode(jsonEncode(structured)).length,
+        lessThanOrEqualTo(32 * 1024),
+      );
+    },
+  );
+
+  test('MCP answers malformed messages and keeps serving', () async {
+    await setUpAgent();
+    final server = McpServer(environment: env, profile: 'default');
+    final input = Stream.fromIterable(
+      [
+        '[{"jsonrpc":"2.0","id":2,"method":"ping"}]',
+        '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":"x"}',
+        '"just a string"',
+        '{bad json',
+        '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"context","arguments":[1]}}',
+        '{"jsonrpc":"2.0","id":5,"method":"ping"}',
+      ].map<List<int>>((l) => utf8.encode('$l\n')),
+    );
+    final controller = StreamController<List<int>>();
+    final collected = controller.stream.expand((b) => b).toList();
+    final sink = IOSink(controller);
+    await server.serve(input, sink);
+    await sink.close();
+    final replies = [
+      for (final l in const LineSplitter().convert(
+        utf8.decode(await collected),
+      ))
+        jsonDecode(l) as Map,
+    ];
+    expect(
+      [for (final r in replies) r['error']?['code']],
+      [-32600, -32602, -32600, -32700, -32602, null],
+    );
+    expect(replies.last['id'], 5);
+  });
+
+  test('undo of an undo is refused cleanly and never advertised', () async {
+    await setUpAgent();
+    final person = await json(['people', 'add', 'Lee']);
+    expect(person['undo'], isNull);
+    final added = await json(['tasks', 'add', 'Mop', '--for', 'Lee']);
+    expect(added['undo'], isNull);
+    final task = (added['affected'] as List).single as Map;
+    final done = await json([
+      'tasks',
+      'complete',
+      task['id'] as String,
+      '--if-rev',
+      task['rev'] as String,
+    ]);
+    final undone = await json(undoArgv(done));
+    expect(undone['error'], isNull, reason: '$undone');
+    expect(undone['undo'], isNull);
+    final before = await bytes(canonicalOnly: true);
+    final again = await json([
+      'undo',
+      (undone['actions'] as List).single as String,
+      '--rev=${task['id']}=${undone['affected'].first['rev']}',
+    ]);
+    expect(again['error']['kind'], 'undo_unavailable', reason: '$again');
+    expect(again['exit'], 2);
+    final empty = await json(['undo', ':1']);
+    expect(empty['error']['kind'], 'validation');
+    expect(await bytes(canonicalOnly: true), before);
+  });
+
+  test(
+    'multi-container remove needs a plan; MCP marks destructive tools',
+    () async {
+      await setUpAgent();
+      await json([
+        'food',
+        'add',
+        '--name',
+        'Eggs',
+        '--expiry',
+        '2027-01-01',
+        '--count',
+        '2',
+      ]);
+      final containers =
+          ((await json(['food', 'list']))['rows'] as List).single['containers']
+              as List;
+      final args = [
+        'food',
+        'remove',
+        for (final c in containers) c['id'] as String,
+        for (final c in containers) ...['--if-rev', c['rev'] as String],
+      ];
+      final missing = await json(args);
+      expect(missing['error']['kind'], 'validation');
+      expect(missing['error']['details']['field'], 'expect-plan');
+      final removed = await planned(args);
+      expect(removed['actions'], hasLength(1), reason: '$removed');
+
+      final server = McpServer(environment: env, profile: 'default');
+      final list = await server.handle(
+        jsonEncode({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list'}),
+      );
+      final hints = {
+        for (final t in (list!['result'] as Map)['tools'] as List)
+          t['name']: t['annotations']['destructiveHint'],
+      };
+      for (final name in [
+        'tasks_delete',
+        'tasks_bulk-delete',
+        'food_remove',
+        'products_merge',
+        'checklist_delete',
+      ]) {
+        expect(hints[name], true, reason: name);
+      }
+      expect(hints['tasks_add'], false);
+    },
+  );
+
+  test('purchase plans never overwrite and dry runs write nothing', () async {
+    await setUpAgent();
+    await json(['food', 'add', '--name', 'Tea', '--expiry', '2027-01-01']);
+    final p = (await products()).single;
+    final lines = File('${root.path}/lines.json')
+      ..writeAsStringSync(
+        jsonEncode([
+          {
+            'source': {'kind': 'test', 'key': 'r2#1'},
+            'date': '2026-10-28',
+            'store': 'Aldi',
+            'amount': 199,
+            'quantity': 1,
+            'product': p['id'],
+          },
+        ]),
+      );
+    final plan = await json(['purchases', 'plan', lines.path]);
+    expect(plan['error'], isNull, reason: '$plan');
+    final exists = await json(['purchases', 'plan', lines.path]);
+    expect(exists['error']['details']['error'], 'exists');
+    expect(
+      (await json(['purchases', 'plan', lines.path, '--force']))['error'],
+      isNull,
+    );
+    final inside = await json([
+      'purchases',
+      'plan',
+      lines.path,
+      '--out',
+      '${root.path}/ws/plan.json',
+    ]);
+    expect(inside['error']['details']['error'], 'inside_workspace');
+    final before = await bytes();
+    final dry = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--dry-run',
+    ]);
+    expect(dry['status'], 'ready', reason: '$dry');
+    expect(
+      (dry['effects'] as List).where((e) => e['fields']?['kind'] == 'purchase'),
+      hasLength(1),
+    );
+    expect(await bytes(), before);
+  });
+
+  test('checklist item revs reach JSON clients', () async {
+    await setUpAgent();
+    await cli(['people', 'add', 'Lee']);
+    final task =
+        ((await json(['tasks', 'add', 'Trip', '--for', 'Lee']))['affected']
+                    as List)
+                .single
+            as Map;
+    final item = await json([
+      'checklist',
+      'add',
+      task['id'] as String,
+      'Tickets',
+      '--if-rev',
+      task['rev'] as String,
+    ]);
+    final shown = await json(['tasks', 'show', task['id'] as String]);
+    final row = (shown['checklist'] as List).single as Map;
+    expect(row['rev'], item['rev']);
+    final edited = await json([
+      'checklist',
+      'edit',
+      item['id'] as String,
+      '--if-rev',
+      row['rev'] as String,
+      '--title',
+      'Train tickets',
+    ]);
+    final affected = {
+      for (final a in edited['affected'] as List) a['id']: a['rev'],
+    };
+    expect(affected.keys, contains(item['id']));
+    final again = await json(['tasks', 'show', task['id'] as String]);
+    expect(
+      ((again['checklist'] as List).single as Map)['rev'],
+      affected[item['id']],
+    );
   });
 }
