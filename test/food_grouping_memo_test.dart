@@ -224,7 +224,14 @@ void main() {
       expect(food.views, 1);
       expect(old.views, 11);
       expect(find.text('Memo new arrival'), findsOneWidget);
-      update(() => page.bulkSelected.add(_stockA));
+      // Selection holds row identities that resolve to current containers.
+      update(
+        () => page.selectedRows.add(
+          food.rows.entries
+              .firstWhere((row) => row.value.any((c) => c.id == _stockA))
+              .key,
+        ),
+      );
       await tester.pumpAndSettle();
       expect(page.bulkSelected, {_stockA});
       update(() => workspace = Object());

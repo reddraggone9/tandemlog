@@ -2,14 +2,14 @@
 
 Implements [ADR0033](decisions/0033-controlled-reference-performance.md). No
 hardware multiplier;`limits-v1.json` SHA256 remains
-`894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409`.
+`e118730325d00468f0218b70c0bbae939a68e363fd960bef68e743196f0672d8`.
 The implementation is not qualified until host/controller registration,a fresh
 reference receipt and exact-source hosted CI all pass. Do not promote old samples.
 
 ## Required roles
 
 - Hosted Linux/Windows/Android correctness/build/native checks remain required.
-  Hosted AOT uses `--hosted-advisory`,strict physical caps and all244metrics across
+  Hosted AOT uses `--hosted-advisory`,strict physical caps and all246metrics across
   all3shapes. Correctness,replay,integrity,coverage,source/tool/fixture drift,
   invalid growth contracts and incomplete child cleanup remain fatal. Only timing
   comparisons become advisory;every raw miss/log remains. No timing retry.
@@ -424,14 +424,14 @@ using its curated environment and the actual Dart SDK binary:
 /usr/bin/python3 "$qualification_source/tool/performance/run_gate.py" \
   --repo "$qualification_source" --dart "$reviewed_dart" \
   --native-library "$reviewed_native" --sqlite-library "$reviewed_sqlite" \
-  --expected-limits-sha256 894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409 \
+  --expected-limits-sha256 e118730325d00468f0218b70c0bbae939a68e363fd960bef68e743196f0672d8 \
   --reference-request "$qualification_request" --output "$qualification_run"
 ```
 
 No `--measure-only`,`--hosted-advisory` or `--diagnose-costs`. Do not set SQLite
 LD_PRELOAD on the manager/shell;the driver applies it to actual Dart/AOT children.
 The fresh output must not exist. All3shapes retain identical current state and
-initial prefixes,their module-specific history growth,all244labels,2warmups/5samples,
+initial prefixes,their module-specific history growth,all246labels,2warmups/5samples,
 first-use fixtures and complete replay/prefix/native-owner assertions. Failures
 remain raw data. No per-action rerun or discarded outlier.
 

@@ -154,6 +154,8 @@
     "food.product.import.dryRun",
     "food.product.import.retry",
     "food.product.import.undo",
+    "food.moveSome",
+    "food.moveSome.undo",
     "food.product.merge",
     "food.product.merge.undo",
     "food.restore.1",
@@ -330,6 +332,12 @@
       "productionAPI": "changeDetails(ids,details,fields,products: FoodProductChange) -> planFoodProductChanges",
       "actualUIPath": "main.dart:1092; food_editor.dart bulk Save",
       "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending. Product-level name/brand/size/link/minimum edits and merges are measured by food.product.edit, bulkEdit, merge and their .undo labels with prospective unchanged 15ms median/20ms maximum limits; see food-products family for correctness and native/UI gaps."
+    },
+    {
+      "interaction": "Food row \u22ee Move some\u2026: how many + new Location, splitting them into their own row; session Undo",
+      "productionAPI": "changeDetails(ids,details,['location']) via FoodInventoryPage.onDetails; undoOperations",
+      "actualUIPath": "food_page.dart _moveSome/_MoveSomeDialog; main.dart onDetails",
+      "boundary": "food.moveSome and .undo time the production Location changeDetails over two of a three-container row (imported container plus two added) with exact confirmation and FoodUndoHistory. Widget food_row_selection_test covers validation, live row resolution and the single onDetails call; store-level one-Undo there too. Dialog open/typing/paint are a native UI timing gap."
     },
     {
       "interaction": "Food delete, restore,single/group/bulk selection",
@@ -593,6 +601,21 @@
       "Two-line receipt distribution only; maximum500-line import not timed.",
       "No separate timing distributions for large bulk selections or deep/concurrent merge chains.",
       "Concurrent offline receipt allocation and its rare targeted full-admission fallback are correctness-covered, not a separate timing distribution."
+    ]
+  },
+  "foodMoveSomeContract": {
+    "family": "food-move-some",
+    "additiveMetrics": [
+      "food.moveSome",
+      "food.moveSome.undo"
+    ],
+    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
+    "boundary": "Untimed Add of two containers matching the imported container's row; timed production changeDetails Location move of the row's first two current containers with exact confirmation and FoodUndoHistory record; timed undoOperations.",
+    "correctness": "Exactly two containers leave the row into their own row; one Undo action; active-state reopen before the inverse; Undo restores full containers/catalog/products and the three-container row; Tasks unchanged.",
+    "budgets": "Prospective15ms median/20ms maximum, all3shapes, equal to existing Food details/Undo and food.product.bulkEdit; both ordinary growth pairs1.25x+3ms /1.4x+5ms. No measurements used to choose budgets.",
+    "gaps": [
+      "No actual widget/input/paint timing acceptance for the dialog.",
+      "Two-container move only; no separate timing distribution for moving hundreds of containers (bounded by the same changeDetails batching as bulk edits)."
     ]
   }
 }

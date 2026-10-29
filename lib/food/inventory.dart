@@ -657,6 +657,10 @@ class FoodGroup {
 
   /// Distinguishes rows of different products with equal descriptions.
   String get key => '$productKey\n${details.displayGroupKey}';
+
+  /// Row identity: product, description, expiry, retention, location and
+  /// deletion status. A selected row means whichever containers have it now.
+  String get rowKey => foodRowKey(containers.first, productKey);
   bool get contentsConflict => containers.any((e) => e.contentsConflict);
   String? get quickRemoveTarget =>
       !contentsConflict && containers.every((e) => e.contents.full)
@@ -743,6 +747,21 @@ class FoodState {
       });
     }
     return result;
+  }();
+
+  /// Every container by [FoodGroup.rowKey], whether shown or not, so a
+  /// selected row resolves to its current containers at use time.
+  late final Map<String, List<FoodContainer>> rows = () {
+    final result = <String, List<FoodContainer>>{};
+    for (final item in containers) {
+      (result[foodRowKey(item, usesProducts ? item.product : '')] ??= []).add(
+        item,
+      );
+    }
+    for (final list in result.values) {
+      list.sort((a, b) => a.id.compareTo(b.id));
+    }
+    return Map<String, List<FoodContainer>>.unmodifiable(result);
   }();
 
   /// Products below their keep-at-least minimum, by name (decision 5/6).
@@ -1069,6 +1088,10 @@ FoodState projectFood(
     for (final item in reconciled) item.withCatalog(products),
   ], catalog: products);
 }
+
+String foodRowKey(FoodContainer item, String productKey) =>
+    '${item.deleted ? 'deleted' : 'active'}:$productKey\n'
+    '${item.details.displayGroupKey}';
 
 List<FoodGroup> _group(Iterable<FoodContainer> values, bool products) {
   final grouped = <String, List<FoodContainer>>{};
