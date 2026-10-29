@@ -43,14 +43,21 @@ Candidate Windows artifacts may retain a complete portable QA archive, checksum
 and source-bound member-hash provenance alongside the required installer evidence.
 The publication policy validates that exact optional three-file set, archive and
 member bytes; partial sets, unknown extras and unsafe payload members fail.
-Previously accepted candidates without portable QA remain readable. These QA files
-stay in candidate evidence; public staging still copies only the three versioned
-installers. A reviewed later trusted dispatch policy can validate already-built
+Previously accepted candidates without portable QA remain readable. The checksum/provenance QA files
+stay in candidate evidence. Public staging includes the three versioned installers
+plus the exact original portable ZIP, attached and verified while still a private
+draft because immutable releases reject later uploads (Lee, 2026-10-28). A reviewed later trusted dispatch policy can validate already-built
 candidate artifacts without changing their source or rebuilding them.
 
 Versions follow the approved [CalVer decision](decisions/0008-calver-and-release-promotion.md): year.month.patch, unpadded month, optional -rc.N, and a separate monotonic build. Tags must match the candidate's display version. The parser accepts stable names and previews separately, retains old prerelease build floors, and rejects Windows resource components above 65535 before compilation. Build 5 is the first owner-signing candidate, beyond the previously handed-out debug builds 1–4. Version checks cover that floor, published tags and prior successful signed-candidate runs from different commits; same-source retries are allowed before publication. Candidate runs are serialized to avoid version-check races. Increment the build number before handing out a changed candidate. Ordinary local/push/PR debug QA remains possible without signing secrets and is never selected as the public Android release asset. Installation/runtime guidance is in [packaging](../packaging/README.md).
 
 A separately gated manual **Publish accepted stable release** workflow requires Lee's authorization. On 2026-10-04 he granted standing approval for reviewed stable updates that do not change user-facing behavior, after every existing gate; behavior-changing stable releases still require his explicit acceptance. Record the applicable authorization and why behavior is unchanged in the candidate receipt before setting the existing `lee_accepted` attestation. This is not automatic merging or permission to publish unreviewed dependencies. Build a stable-name candidate with a new monotonic build number, pass the full matrix and native acceptance, then promote those exact artifacts. Do not relabel or rebuild accepted RC artifacts inside publication. Required gates remain: full integrity/recovery/convergence suite; all target builds; native install/launch and workflow acceptance on Windows and Android; persisted SAF grant and remote replacement/provider tests; measured target startup; applicable Lee authorization. New signing credentials need action-time authorization. Do not claim native runtime coverage from a cross-build or browser preview.
+
+## Candidate run and promotion metadata policy
+
+Run CI once per commit under test; batch work before dispatch. Do not redispatch unchanged source to fish for green. One `rerun --failed` is permitted without renewed approval for a diagnosed infrastructure failure, preserving the original evidence and exact source/run identity. Deterministic app, test or packaging failures require a reviewed source fix and fresh once-per-commit validation. This is separate from the reference-performance noise/resample rules above.
+
+When promoting an RC to stable, replace the same-base RC entries in AppStream with the stable release entry instead of prepending stable above them. Strict AppStream ordering can consider the stable name older than its `-rc.N` entries. Retain unrelated historical releases and validate with the packaging-pinned AppStream tool. Gate identity v2 still ignores this version-only release-list change; verify the qualified identity rather than rerunning performance unnecessarily.
 
 ## Dependency maintenance
 
@@ -73,11 +80,12 @@ RC4 replaces loose desktop archives with a Linux x64 Flatpak bundle and per-user
 
 ## Public downloads and internal evidence
 
-From RC7, publish only versioned installers: `tandemlog-<version>-android.apk`, `tandemlog-<version>-windows-x64-setup.exe`, and `tandemlog-<version>-linux-x64.flatpak`. Derive `<version>` from the validated candidate source; copy exact accepted bytes after all existing gates rather than rebuild. Signer behavior is unchanged. [Installation guidance](../packaging/README.md) holds prerequisites; signing status is explained once in installation-warning troubleshooting. Release notes describe changes and release-specific compatibility, not a repeated verification transcript. GitHub supplies automatic source ZIP/tarball links; upload no extra source archive. Historical release assets remain unchanged.
+From RC7, publish versioned installers: `tandemlog-<version>-android.apk`, `tandemlog-<version>-windows-x64-setup.exe`, and `tandemlog-<version>-linux-x64.flatpak`. Derive `<version>` from the validated candidate source; copy exact accepted bytes after all existing gates rather than rebuild. Signer behavior is unchanged. [Installation guidance](../packaging/README.md) holds prerequisites; signing status is explained once in installation-warning troubleshooting. Release notes describe changes and release-specific compatibility, not a repeated verification transcript. Also attach `tandemlog-<version>-windows-x64-portable.zip` before finalizing the draft (Lee, 2026-10-28); no release-notes mention is needed. GitHub supplies automatic source ZIP/tarball links; upload no extra source archive. Historical release assets remain unchanged.
 
 | Existing candidate file | Purpose / current consumer | Public from RC7 |
 | --- | --- | --- |
 | APK / setup EXE / Flatpak | User installation; candidate native QA | Yes, versioned names |
+| Windows portable ZIP | Side-by-side isolated RC use or no-install desktop use | Yes, versioned name |
 | Three platform SHA256SUMS files | Publication verifies accepted bytes | No, retained inside candidate artifacts |
 | Android signature report and release metadata | Signer, package, version, source and exact accepted APK gates | No, retained inside candidate artifacts |
 | Linux startup report | Measured release startup evidence | No, retained inside candidate artifacts |
@@ -395,3 +403,7 @@ Historical cause and local/live read-only evidence:
 ## Published experimental 2026.10.9-rc.2/build105 — 2026-10-28
 
 [RC.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9-rc.2) published 2026-10-29T04:54:12Z (10-28 23:54 CDT), immutable prerelease/not-Latest, from exact source `bf266e6` (relevant source `4a34046`). Controlled-reference q3 `df710a4c` qualified with zero resamples/reruns; budgets are unchanged and RC.1's owner override does not apply. Original CI40814756221, signed candidate40817088690 and promotion40820223599 each passed on the first attempt. Both native Android in-place upgrades, stable103→105 and RC.1_104→105, passed on separate synthetic API30 AVDs with retained SAF grants, product minimum/Running low menu count+dot/view, cold reopen and append-only canonical history. A private draft held the three exact installers plus the original portable ZIP before finalization. Anonymous public bytes, tag/source and reviewed notes pass; stable2026.10.8 remains Latest and all42 prior releases/tags are unchanged. [Receipts and coverage limits](../evidence/prerelease-2026.10.9-rc.2/README.md). No live data or physical owner-device install was performed.
+
+## Published stable 2026.10.9/build106 — 2026-10-29
+
+[Stable2026.10.9](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9), release428147543, is immutable Latest, published 2026-10-29T16:54:16Z from `b6dbe70e2911ad34a6b7cb1c45b2f54e8cf1c8f4`. Lee accepted RC.2 at10:13CDT. Version/documentation-only promotion reuses qualified q3 `df710a4c` through identity v2 without an override or fresh reference run. Deterministic AppStream ordering on the first source was repaired by replacing same-base RC rows; corrected CI40904687047 passes. Candidate40904707689 passed attempt2 after its one diagnosed setup-flutter SDK-download infra retry (curl92), preserving all failed evidence. Exact original Android103/105→106 and GTK103→106 native upgrade acceptance passes. Three installers and portable ZIP were verified in draft before publication, with no rebuild. Anonymous public verification checks all4assets, owner APK signer, exact reviewed notes/tag/source/Latest and all43 previous releases/tags unchanged. [Receipts and platform limits](../evidence/stable-2026.10.9/README.md). No owner-device installation/live operation.

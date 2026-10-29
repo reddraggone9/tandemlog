@@ -1,0 +1,57 @@
+{
+  "result": "PASS",
+  "source": "b6dbe70e2911ad34a6b7cb1c45b2f54e8cf1c8f4",
+  "version": "2026.10.9",
+  "build": 106,
+  "candidateRun": 40904707689,
+  "candidateAttempt": 2,
+  "apkSHA256": "85dd10d86a7f387730ff625795cab5fffb1ecaba8b695c5db77e17dd0f1ef6fe",
+  "flatpakSHA256": "c6c33661eb744f07d965590d2d8b699c0558d0e6e494cafd78d768f69b0805a4",
+  "android": {
+    "platform": "Android 11 / API30 / x86_64 synthetic retained AVDs",
+    "upgrades": [
+      "stable103->106",
+      "RC2_105->106"
+    ],
+    "inPlaceInstall": true,
+    "firstInstallTimesUnchanged": true,
+    "identityTasksHistorySAFGrantRetained": true,
+    "minimums": [
+      7,
+      8
+    ],
+    "runningLowCountDotView": true,
+    "coldPersistence": true,
+    "appendOnlyHistory": true,
+    "newProductEditPerLab": 1
+  },
+  "gtk": {
+    "platform": "Linux GTK / installed Flatpak / synthetic retained profile",
+    "upgrade": "stable103->106",
+    "installedCommit": "ab22000a6d647178b6d3c64ca045344d9575e32ee592e9290d5bfac893caedbe",
+    "identityOpenCompletedTasksRetained": true,
+    "minimum": 9,
+    "runningLowCountDotView": true,
+    "normalExitCode": 0,
+    "coldPersistence": true,
+    "appendOnlyHistory": true,
+    "newProductEditPerLab": 1
+  },
+  "cleanup": {
+    "allNativeUnitsInactive": true,
+    "allMainPIDsZero": true,
+    "nativeProcessesPortsDisplayAbsent": true
+  },
+  "liveDataTouched": false,
+  "ownerDeviceTouched": false,
+  "fullPerformanceQualificationRerun": false,
+  "notCovered": [
+    "physical Android / ARM runtime",
+    "new manual Windows GUI acceptance"
+  ],
+  "rawReceiptSHA256": {
+    "native-upgrade-acceptance.json": "3bab4b4c8bf72e7e90efcb3b74733d4982a27e3b899e8b04220889a3830e4cd3",
+    "gtk-upgrade-acceptance.json": "40fe0573ba923193275fe5b65b06d67690deb7c98a46e69f68013af3761a7b65",
+    "final-cleanup.json": "cab74a999417e2d821e2c2205c3faa6184841ae6d3a37258fab3442a468cf5aa"
+  }
+}

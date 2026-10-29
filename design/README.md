@@ -1,6 +1,6 @@
 # Design map
 
-Current stable2026.10.8/build103 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.8). Food products [2026.10.9-rc.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9-rc.2) is the current prerelease. See [release receipts](releases.md).
+Current stable2026.10.9/build106 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9), promoting accepted Food products RC.2. See [release receipts](../evidence/stable-2026.10.9/README.md) and [release policy](releases.md).
 
 ## Current source of truth
 
@@ -27,7 +27,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
-- [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Published in 2026.10.9-rc.1; approved RC.2 UI follow-up is published as a prerelease.
+- [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Released in stable2026.10.9 after accepted RC.1/RC.2 validation.
 
 - [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 

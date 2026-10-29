@@ -1,0 +1,30 @@
+{
+  "source": "b6dbe70e2911ad34a6b7cb1c45b2f54e8cf1c8f4",
+  "version": [
+    "2026.10.9",
+    106
+  ],
+  "pin": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "apk_sha256": "85dd10d86a7f387730ff625795cab5fffb1ecaba8b695c5db77e17dd0f1ef6fe",
+  "checksums": {
+    "tandemlog-linux-x64.flatpak": "c6c33661eb744f07d965590d2d8b699c0558d0e6e494cafd78d768f69b0805a4",
+    "tandemlog-windows-x64-unsigned-setup.exe": "7257d0bf4c44de8e016b83c57e9f123ec2678dcf6e60a01a44c51da50077f77e",
+    "tandemlog-android.apk": "85dd10d86a7f387730ff625795cab5fffb1ecaba8b695c5db77e17dd0f1ef6fe",
+    "tandemlog-windows-x64-unsigned-portable.zip": "9b8be795b1e1b2832c7dad851db2c2cb2edc85fb24dd042a13d720c333f423e5"
+  },
+  "apksigner_schemes": [
+    "Verified using v1 scheme (JAR signing): false",
+    "Verified using v2 scheme (APK Signature Scheme v2): true",
+    "Verified using v3 scheme (APK Signature Scheme v3): false",
+    "Verified using v3.1 scheme (APK Signature Scheme v3.1): false",
+    "Verified using v4 scheme (APK Signature Scheme v4): false"
+  ],
+  "sdk_line": [
+    "sdkVersion:'24'"
+  ],
+  "native_code": [
+    "native-code: 'arm64-v8a' 'armeabi-v7a' 'x86_64'"
+  ],
+  "debuggable": false,
+  "result": "PASS"
+}
