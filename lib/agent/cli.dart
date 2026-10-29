@@ -10,6 +10,7 @@ import 'command.dart';
 import 'commands_write.dart' show dryRunWrite;
 import 'registry.dart';
 import 'render.dart';
+import 'windows_zone.dart';
 
 /// Global options precede or follow the command words.
 const globalOptions = {'profile', 'wait', 'tz', 'format'};
@@ -23,16 +24,31 @@ class CliInvocation {
 }
 
 Future<String> hostZone(Map<String, String> env, String? override) async {
-  final zone =
-      override ??
-      (Platform.isLinux
-          ? await readLinuxZone(environment: env)
-          : (env['TZ']?.isNotEmpty ?? false)
-          ? env['TZ']!
-          : throw const AgentFailure(
-              'validation',
-              'Cannot determine the time zone; pass --tz <IANA zone>.',
-            ));
+  String zone;
+  if (override != null) {
+    zone = override;
+  } else {
+    try {
+      if (Platform.isLinux) {
+        zone = await readLinuxZone(environment: env);
+      } else if (Platform.isWindows) {
+        final observed = readWindowsZone();
+        zone = observed.id;
+        validateLocalOffset(
+          zone,
+          DateTime.now().toUtc(),
+          Duration(seconds: observed.offsetSeconds),
+        );
+      } else {
+        throw StateError('Unsupported platform.');
+      }
+    } catch (_) {
+      throw const AgentFailure(
+        'validation',
+        'Cannot determine this device\'s time zone; pass --tz <IANA zone>.',
+      );
+    }
+  }
   try {
     timeZoneLocation(zone);
   } catch (_) {
