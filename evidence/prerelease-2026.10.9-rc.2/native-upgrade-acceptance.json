@@ -1,0 +1,186 @@
+{
+  "kind": "foodrc2-105-native-android-upgrade-acceptance",
+  "result": "PASS",
+  "observedAt": "2026-10-28T23:52:56.462741-05:00",
+  "device": "Android11/API30 x86_64 emulator, 390x850, production dark theme; isolated synthetic AVDs only",
+  "source": "bf266e665840e1c9a75c32690d95ee9a5d06377e",
+  "candidateRun": 40817088690,
+  "candidateAttempt": 1,
+  "apkSHA256": "9a8d041053ac96f86177dc0740fbc50a80bd2f5a4b336549d6f97f4534af420a",
+  "paths": {
+    "stable": {
+      "result": "PASS",
+      "before": {
+        "packageLines": [
+          "versionCode=103 minSdk=24 targetSdk=36",
+          "versionName=2026.10.8",
+          "firstInstallTime=2026-10-28 22:18:06",
+          "lastUpdateTime=2026-10-28 22:18:06"
+        ],
+        "canonical": {
+          "tandemlog-space.json": {
+            "size": 491,
+            "sha256": "472bd8b58a5feb67326bcff6c7157bff546b3bc5291a7518c97c9c6f0031a47e"
+          },
+          "f2d10220-8037-4b4a-9b4a-6121973be6bb.applog": {
+            "size": 670,
+            "sha256": "8e066c593bfa55ea1ff03a18dfa97fa8a7b96c63806d6a412cbf20aa7141b4b7"
+          },
+          "d9f0bbf5-f72a-4ad4-b703-59280ed6e23f.applog": {
+            "size": 24556,
+            "sha256": "1c8733c4f5bf9be3883f24f6fddace976e4f9cc5d2c66de9de767d8cc71dc298"
+          }
+        }
+      },
+      "installed": {
+        "packageLines": [
+          "versionCode=105 minSdk=24 targetSdk=36",
+          "versionName=2026.10.9-rc.2",
+          "firstInstallTime=2026-10-28 22:18:06",
+          "lastUpdateTime=2026-10-28 23:49:15"
+        ],
+        "canonical": {
+          "tandemlog-space.json": {
+            "size": 491,
+            "sha256": "472bd8b58a5feb67326bcff6c7157bff546b3bc5291a7518c97c9c6f0031a47e"
+          },
+          "f2d10220-8037-4b4a-9b4a-6121973be6bb.applog": {
+            "size": 670,
+            "sha256": "8e066c593bfa55ea1ff03a18dfa97fa8a7b96c63806d6a412cbf20aa7141b4b7"
+          },
+          "d9f0bbf5-f72a-4ad4-b703-59280ed6e23f.applog": {
+            "size": 24556,
+            "sha256": "1c8733c4f5bf9be3883f24f6fddace976e4f9cc5d2c66de9de767d8cc71dc298"
+          }
+        }
+      },
+      "after": {
+        "packageLines": [
+          "versionCode=105 minSdk=24 targetSdk=36",
+          "versionName=2026.10.9-rc.2",
+          "firstInstallTime=2026-10-28 22:18:06",
+          "lastUpdateTime=2026-10-28 23:49:15"
+        ],
+        "canonical": {
+          "tandemlog-space.json": {
+            "size": 491,
+            "sha256": "472bd8b58a5feb67326bcff6c7157bff546b3bc5291a7518c97c9c6f0031a47e"
+          },
+          "f2d10220-8037-4b4a-9b4a-6121973be6bb.applog": {
+            "size": 2169,
+            "sha256": "26eae508b553c82d0695f589ee525878fa2576a30d28ad5e450d1cb2632478ee"
+          },
+          "d9f0bbf5-f72a-4ad4-b703-59280ed6e23f.applog": {
+            "size": 24556,
+            "sha256": "1c8733c4f5bf9be3883f24f6fddace976e4f9cc5d2c66de9de767d8cc71dc298"
+          }
+        }
+      },
+      "minimumSaved": 5,
+      "checks": [
+        "adb install -r Success; versionCode105; firstInstallTime unchanged",
+        "Existing SAF grant, user Synthetic Tester and Seed beans containers retained",
+        "Running low \u00b7 1 with warning dot; native screenshot visually inspected; accessibility Running low, 1 product",
+        "Native low view 2 of 5 on hand",
+        "Force-stop/cold launch retains minimum and warning count; no folder prompt",
+        "Manifest unchanged; existing canonical files preserved byte-for-byte or append-only; product.edit event verified"
+      ],
+      "cleanup": {
+        "emulatorAbsent": true,
+        "portsAbsent": {
+          "5049": true,
+          "5680": true,
+          "5681": true,
+          "8568": true
+        },
+        "errors": [],
+        "seconds": 116.60125548101496
+      },
+      "evidence": "/home/lee/aux/vex-private/tandemlog-food-rc2-evidence-20261028/android/stable"
+    },
+    "rc1": {
+      "result": "PASS",
+      "before": {
+        "packageLines": [
+          "versionCode=104 minSdk=24 targetSdk=36",
+          "versionName=2026.10.9-rc.1",
+          "firstInstallTime=2026-10-27 11:38:52",
+          "lastUpdateTime=2026-10-28 18:01:29"
+        ],
+        "canonical": {
+          "tandemlog-space.json": {
+            "size": 491,
+            "sha256": "472bd8b58a5feb67326bcff6c7157bff546b3bc5291a7518c97c9c6f0031a47e"
+          },
+          "d9f0bbf5-f72a-4ad4-b703-59280ed6e23f.applog": {
+            "size": 25934,
+            "sha256": "0975d6b8d10d536ebdcca614a201147b62daed382fa4790328588b534aabe77b"
+          }
+        }
+      },
+      "installed": {
+        "packageLines": [
+          "versionCode=105 minSdk=24 targetSdk=36",
+          "versionName=2026.10.9-rc.2",
+          "firstInstallTime=2026-10-27 11:38:52",
+          "lastUpdateTime=2026-10-28 23:51:27"
+        ],
+        "canonical": {
+          "tandemlog-space.json": {
+            "size": 491,
+            "sha256": "472bd8b58a5feb67326bcff6c7157bff546b3bc5291a7518c97c9c6f0031a47e"
+          },
+          "d9f0bbf5-f72a-4ad4-b703-59280ed6e23f.applog": {
+            "size": 25934,
+            "sha256": "0975d6b8d10d536ebdcca614a201147b62daed382fa4790328588b534aabe77b"
+          }
+        }
+      },
+      "after": {
+        "packageLines": [
+          "versionCode=105 minSdk=24 targetSdk=36",
+          "versionName=2026.10.9-rc.2",
+          "firstInstallTime=2026-10-27 11:38:52",
+          "lastUpdateTime=2026-10-28 23:51:27"
+        ],
+        "canonical": {
+          "tandemlog-space.json": {
+            "size": 491,
+            "sha256": "472bd8b58a5feb67326bcff6c7157bff546b3bc5291a7518c97c9c6f0031a47e"
+          },
+          "d9f0bbf5-f72a-4ad4-b703-59280ed6e23f.applog": {
+            "size": 27259,
+            "sha256": "be9006776ebed0e2db783d1cb35640a680fc29954ba2213297abebec6908d250"
+          }
+        }
+      },
+      "minimumSaved": 6,
+      "checks": [
+        "adb install -r Success; versionCode105; firstInstallTime unchanged",
+        "Existing SAF grant, user Synthetic Tester and Seed beans containers retained",
+        "Running low \u00b7 1 with warning dot; native screenshot visually inspected; accessibility Running low, 1 product",
+        "Native low view 2 of 6 on hand",
+        "Force-stop/cold launch retains minimum and warning count; no folder prompt",
+        "Manifest unchanged; existing canonical files preserved byte-for-byte or append-only; product.edit event verified"
+      ],
+      "cleanup": {
+        "emulatorAbsent": true,
+        "portsAbsent": {
+          "5049": true,
+          "5680": true,
+          "5681": true,
+          "8568": true
+        },
+        "errors": [],
+        "seconds": 111.4718015579856
+      },
+      "evidence": "/home/lee/aux/vex-private/tandemlog-food-rc2-evidence-20261028/android/rc1"
+    }
+  },
+  "notCovered": [
+    "No physical Android/ARM device acceptance or owner installation",
+    "Wide desktop panes, keyboard/selection and store-link workflows use prior qualified native GTK evidence, not repeated on Android",
+    "Manual Windows GUI acceptance not newly performed; existing documented RC platform qualification remains unchanged"
+  ],
+  "liveDataTouched": false
+}

@@ -391,3 +391,7 @@ that `dist` exactly as before. This waiter does not install or qualify a candida
 Regression checks: `python3 -m unittest discover -s tool -p test_wait_signed_candidate.py`.
 Historical cause and local/live read-only evidence:
 [wait/download lifecycle repair](../evidence/release-wait-repair-20261028/README.md).
+
+## Published experimental 2026.10.9-rc.2/build105 — 2026-10-28
+
+[RC.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9-rc.2) published 2026-10-29T04:54:12Z (10-28 23:54 CDT), immutable prerelease/not-Latest, from exact source `bf266e6` (relevant source `4a34046`). Controlled-reference q3 `df710a4c` qualified with zero resamples/reruns; budgets are unchanged and RC.1's owner override does not apply. Original CI40814756221, signed candidate40817088690 and promotion40820223599 each passed on the first attempt. Both native Android in-place upgrades, stable103→105 and RC.1_104→105, passed on separate synthetic API30 AVDs with retained SAF grants, product minimum/Running low menu count+dot/view, cold reopen and append-only canonical history. A private draft held the three exact installers plus the original portable ZIP before finalization. Anonymous public bytes, tag/source and reviewed notes pass; stable2026.10.8 remains Latest and all42 prior releases/tags are unchanged. [Receipts and coverage limits](../evidence/prerelease-2026.10.9-rc.2/README.md). No live data or physical owner-device install was performed.
