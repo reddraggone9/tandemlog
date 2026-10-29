@@ -1366,6 +1366,12 @@ void main() {
       final refused = await json([...argv, '--dry-run']);
       expect(refused['error']['kind'], 'validation', reason: '$bad');
     }
+    // A planned commit whose own dry run fails opens and closes the real
+    // workspace cleanly: the refusal is reported and the next call proceeds.
+    final zero = [...args];
+    zero[zero.indexOf('--count') + 1] = '0';
+    final failed = await json([...zero, '--expect-plan', 'x']);
+    expect(failed['error']['kind'], 'validation', reason: '$failed');
     final before = await bytes();
     final dry = await json([...args, '--dry-run']);
     expect(await bytes(), before);

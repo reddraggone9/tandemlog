@@ -195,8 +195,24 @@ Future<AgentResult> execute(
   // the plan was computed from; that check repeats inside the append.
   await profile.requireAgentProfile();
   final lock = await profile.lock(options.wait);
+  // The real workspace opens while the dry run runs on its profile copy (it
+  // starts once the copy exists); the command runs only after the plan check.
+  Future<AgentWorkspace>? opening;
+  var handedOver = false;
   try {
-    final plan = await dryRunWrite(command, args, options, profile, held: lock);
+    final plan = await dryRunWrite(
+      command,
+      args,
+      options,
+      profile,
+      held: lock,
+      afterCopy: () => opening = AgentWorkspace.open(
+        profile,
+        readOnly: false,
+        wait: options.wait,
+        held: lock,
+      )..ignore(),
+    );
     if (plan.data['planHash'] != expected) {
       throw AgentFailure(
         'plan_changed',
@@ -209,8 +225,24 @@ Future<AgentResult> execute(
     }
     final input = plan.data['inputHash'] as String;
     await debugAfterPlanCheck?.call();
-    return await _run(command, args, options, profile, lock, planInput: input);
+    handedOver = true;
+    return await _run(
+      command,
+      args,
+      options,
+      profile,
+      lock,
+      planInput: input,
+      opened: opening,
+    );
   } finally {
+    if (!handedOver && opening != null) {
+      try {
+        await (await opening!).close();
+      } catch (_) {
+        // The refusal or failure already being reported takes precedence.
+      }
+    }
     await lock.close();
   }
 }
@@ -222,22 +254,25 @@ Future<AgentResult> _run(
   AgentProfile profile,
   ProfileLock? held, {
   String? planInput,
+  Future<AgentWorkspace>? opened,
 }) async {
-  final ws = await AgentWorkspace.open(
-    profile,
-    readOnly: command.kind == CommandKind.read,
-    wait: options.wait,
-    held: held,
+  final ws =
+      await opened ??
+      await AgentWorkspace.open(
+        profile,
+        readOnly: command.kind == CommandKind.read,
+        wait: options.wait,
+        held: held,
+      );
+  late final AgentCall call;
+  bool planHolds() => observedStateHash(call) == planInput;
+  call = AgentCall(
+    args,
+    ws,
+    options,
+    planGuard: planInput == null ? null : planHolds,
   );
   try {
-    late final AgentCall call;
-    bool planHolds() => observedStateHash(call) == planInput;
-    call = AgentCall(
-      args,
-      ws,
-      options,
-      planGuard: planInput == null ? null : planHolds,
-    );
     if (planInput != null && !planHolds()) {
       throw const AgentFailure(
         'plan_changed',
@@ -246,7 +281,19 @@ Future<AgentResult> _run(
     }
     return await command.run(call);
   } catch (e) {
-    throw AgentWorkspace.translate(e);
+    final failure = AgentWorkspace.translate(e);
+    // A planned commit's in-append guard refused because the workspace moved
+    // on since the plan: report it as such (re-plan), not as a stale rev.
+    if (planInput != null &&
+        failure is AgentFailure &&
+        failure.kind == 'stale' &&
+        !planHolds()) {
+      throw const AgentFailure(
+        'plan_changed',
+        'The workspace changed after the plan check; run the dry run again.',
+      );
+    }
+    throw failure;
   } finally {
     await ws.close();
   }

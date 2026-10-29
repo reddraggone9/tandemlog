@@ -895,6 +895,7 @@ Future<AgentResult> dryRunWrite(
   AgentOptions options,
   AgentProfile profile, {
   ProfileLock? held,
+  void Function()? afterCopy,
 }) async {
   await profile.requireAgentProfile();
   final lock = held ?? await profile.lock(options.wait);
@@ -902,6 +903,8 @@ Future<AgentResult> dryRunWrite(
   Directory? copy;
   try {
     copy = await profile.readCopy();
+    // Nothing may open the real profile before this copy is complete.
+    afterCopy?.call();
     // Copy-on-write: only files the command writes are copied. The profile
     // copy keeps the real workspace location, so its warm cache applies.
     final shadow = Directory('${scratch.path}/workspace');
