@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "2ba27629ba22e2e02896338057e3b35f",
-  "issuedAtUTC": "2026-10-29T03:03:01.758344+00:00",
-  "sourceRevision": "7b7742e9550e7e800bf81e0aab2c9f9babe96873",
+  "requestId": "df710a4c09dfedcf9ca1c3ff9bbea535",
+  "issuedAtUTC": "2026-10-29T03:41:57.388408+00:00",
+  "sourceRevision": "4a3404648ecefdbe9ae5cf802b8823eeba22c8b5",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "35c499dc5027dd7a03f2ac412c778e6d823cccf03eb926b6a8a1b0fed6fe9853",
+    "sha256": "1b0ef76ab7505c1e0ca854c1c7f13fae486b53e3340de9b70132cf4808230040",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -805,7 +805,7 @@
         "mode": "100644"
       },
       "integration_test/food_view_reachability_workflow_test.dart": {
-        "sha256": "680a648d6933141eed1d0f8e2b8e0647a39caa8c202c41ec1c3bf0e8fad3ec78",
+        "sha256": "13db31395d3dfe495101754808b7affcddfdf960f637bc1e801207b5460d45b7",
         "mode": "100644"
       },
       "integration_test/header_search_test.dart": {
@@ -813,7 +813,7 @@
         "mode": "100644"
       },
       "integration_test/header_selection_test.dart": {
-        "sha256": "52990723c1a2d3cd7571e879fb986f671f9ec335f22f2eb7ed94cc754049e291",
+        "sha256": "05bafd675b6034e954ed835fa5480f72b662a7056729d8d3520760f206f03473",
         "mode": "100644"
       },
       "integration_test/historical_checklist_recompletion_test.dart": {
@@ -901,7 +901,7 @@
         "mode": "100644"
       },
       "integration_test/task_flow_test.dart": {
-        "sha256": "6bf046d6b7b583954d985d7f0bb0c89d7d3fcdc3fe7c89d5ad655b3115a163ca",
+        "sha256": "abf7d8761e1d13fe36060d30035ef3dcb2c16cd627330de7895b65fd6b49c564",
         "mode": "100644"
       },
       "integration_test/task_input_mode_retry_test.dart": {
@@ -3087,11 +3087,11 @@
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
-        "sha256": "b1ad7b1a81da761a981fb330ade211495e3cc630bdb13ee927b3bc9958369f45",
+        "sha256": "30cad44418c5254252d9c92f60559e73bfe34ff1655d5420ccc0a3f6347a300a",
         "mode": "100644"
       },
       "tool/performance/borderline.py": {
-        "sha256": "49bd02fe8db7cbf5720183d2a00ca229ab4e93de41ba4dd4cf9774284a3dea64",
+        "sha256": "654f16cac87a8e7e3767b83f586284285f5ca53d3fcd260b2f8fa9c4d2f1e04b",
         "mode": "100644"
       },
       "tool/performance/cost_trace.dart": {
@@ -3103,7 +3103,7 @@
         "mode": "100644"
       },
       "tool/performance/disk_stall.py": {
-        "sha256": "ceac362528f8086d8ddeb23cf31670c606103e8b15a0bb9ee91927a8c79eff31",
+        "sha256": "dcd9c19b9ec24f4cbc560f4281684e43b64b14b80f3ea41adddc0ca328ee985f",
         "mode": "100644"
       },
       "tool/performance/food_tail_diagnostic.dart": {
@@ -3127,7 +3127,7 @@
         "mode": "100644"
       },
       "tool/performance/owner_override.py": {
-        "sha256": "25a86dd76bfc2db5b10c87b5b4717c6a878ad0654c1b447fa8edee313cad08ac",
+        "sha256": "d4461f450a6650690c03098df03d55bcaf1d9e6c71935714de55df8a0a7a5c6f",
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
@@ -3135,7 +3135,7 @@
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
-        "sha256": "ea26e0f706788dad82f98bb1e4d0465ba7c8809c5f9dd34ec9dff766004ebf3c",
+        "sha256": "eea52e947627b72999c300ad3b81393322f499096c23cb580a2c23c4a5503dc4",
         "mode": "100644"
       },
       "tool/performance/run_ci.sh": {
@@ -3143,7 +3143,7 @@
         "mode": "100644"
       },
       "tool/performance/run_gate.py": {
-        "sha256": "c9e170e22d53804a2a8ca58db532f265b885a361723aba75bee0a5d68b7ea129",
+        "sha256": "b6d952805f9927f96207c8df84127874786ba800b0698f9e848311f0d884101a",
         "mode": "100644"
       },
       "tool/performance/run_linux_action_probe.py": {
@@ -3187,7 +3187,7 @@
         "mode": "100644"
       },
       "tool/test_borderline_performance.py": {
-        "sha256": "09b81454959ac09ad4b8518a385c7f07ce3ff4a53c08ca03c446702759979149",
+        "sha256": "b1eba898fba65b51ef4806ee29b75c1cf20813ac8045aa54b2086bd3f0f724b9",
         "mode": "100644"
       },
       "tool/test_collect_linux_core_stacks.py": {
@@ -3199,7 +3199,7 @@
         "mode": "100644"
       },
       "tool/test_disk_stall_resample.py": {
-        "sha256": "e815a4fda1c28a12793bf8bcc7f206ff40ad3723ed038f566987490a1697d605",
+        "sha256": "5d78102e90de09a42fd4ba8375714808f25796ebd09a876e6f6a7156e686aff5",
         "mode": "100644"
       },
       "tool/test_draft_release.py": {
