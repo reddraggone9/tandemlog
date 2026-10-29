@@ -11,7 +11,7 @@ import '../food/inventory.dart';
 import '../storage/local_profile_database.dart';
 import '../storage/local_settings.dart';
 import '../storage/log_folder.dart';
-import '../storage/task_store.dart';
+import '../storage/profile_lock.dart';
 import 'agent_profile.dart';
 import 'agent_workspace.dart';
 import 'command.dart';
@@ -430,10 +430,10 @@ List<AgentCommand> writeCommands() => [
     ],
     (call) async {
       final count = call.integer('count') ?? 1;
-      if (count < 1 || count > 999) {
+      if (count < 1 || count > 100) {
         throw const AgentFailure(
           'validation',
-          'Count must be 1–999.',
+          'Count must be 1–100.',
           details: {'field': 'count', 'error': 'range'},
         );
       }
@@ -496,9 +496,9 @@ List<AgentCommand> writeCommands() => [
       final ids = [
         for (final i in call.strings('id')) foodContainer(call, i).id,
       ];
-      _requireFoodRevs(call, ids, call.strings('if-rev'));
+      final guard = foodGuard(call, ids, call.strings('if-rev'));
       final before = ownHead(call);
-      await call.ws.session.food.remove(ids);
+      await call.ws.session.food.remove(ids, canCommit: guard);
       return writeResult(
         call,
         before,
@@ -533,11 +533,11 @@ List<AgentCommand> writeCommands() => [
       final containers = [
         for (final i in call.strings('id')) foodContainer(call, i),
       ];
-      _requireFoodRevs(call, [
+      final guard = foodGuard(call, [
         for (final c in containers) c.id,
       ], call.strings('if-rev'));
       final before = ownHead(call);
-      await call.ws.session.food.restore(containers);
+      await call.ws.session.food.restore(containers, canCommit: guard);
       return writeResult(
         call,
         before,
@@ -564,7 +564,8 @@ List<AgentCommand> writeCommands() => [
   ),
 ];
 
-void _requireFoodRevs(AgentCall call, List<String> ids, List<String> revs) {
+/// Check container revs now and again inside the store's append.
+bool Function() foodGuard(AgentCall call, List<String> ids, List<String> revs) {
   if (ids.length != revs.length) {
     throw const AgentFailure(
       'validation',
@@ -572,17 +573,29 @@ void _requireFoodRevs(AgentCall call, List<String> ids, List<String> revs) {
       details: {'field': 'if-rev', 'error': 'count'},
     );
   }
-  final state = {for (final c in foodState(call).containers) c.id: c};
+  String? actual(String id) {
+    for (final c in foodState(call).containers) {
+      if (c.id == id) return foodRev(c);
+    }
+    return null;
+  }
+
   for (var i = 0; i < ids.length; i++) {
-    final actual = foodRev(state[ids[i]]!);
-    if (actual != revs[i]) {
+    final rev = actual(ids[i]);
+    if (rev != revs[i]) {
       throw AgentFailure(
         'stale',
-        'Container ${shortId(ids[i])} changed (rev $actual, expected ${revs[i]}). Read it again.',
-        details: {'id': ids[i], 'rev': actual, 'expected': revs[i]},
+        'Container ${shortId(ids[i])} changed (rev $rev, expected ${revs[i]}). Read it again.',
+        details: {'id': ids[i], 'rev': rev, 'expected': revs[i]},
       );
     }
   }
+  return () {
+    for (var i = 0; i < ids.length; i++) {
+      if (actual(ids[i]) != revs[i]) return false;
+    }
+    return true;
+  };
 }
 
 /// Whole-action Undo of this installation's own action. Text contributions
@@ -680,10 +693,11 @@ Future<AgentResult> dryRunWrite(
   AgentCommand command,
   Map<String, Object?> args,
   AgentOptions options,
-  AgentProfile profile,
-) async {
+  AgentProfile profile, {
+  ProfileLock? held,
+}) async {
   await profile.requireAgentProfile();
-  final lock = await profile.lock(options.wait);
+  final lock = held ?? await profile.lock(options.wait);
   final scratch = await Directory.systemTemp.createTemp('tandemlog-cli-plan-');
   try {
     final copy = await profile.readCopy();
@@ -713,7 +727,13 @@ Future<AgentResult> dryRunWrite(
     Map<String, Object?> afterState;
     try {
       result = await command.run(
-        AgentCall({...args}..remove('dry-run'), before, options),
+        AgentCall(
+          {...args}
+            ..remove('dry-run')
+            ..remove('expect-plan'),
+          before,
+          options,
+        ),
       );
       afterState = _observable(AgentCall(args, before, options));
     } finally {
@@ -722,7 +742,9 @@ Future<AgentResult> dryRunWrite(
     final effects = _diff(beforeState, afterState);
     final planHash = revOf({
       'command': command.name,
-      'args': {...args}..remove('dry-run'),
+      'args': {...args}
+        ..remove('dry-run')
+        ..remove('expect-plan'),
       'effects': _stable(effects),
     });
     await copy.delete(recursive: true);
@@ -737,7 +759,7 @@ Future<AgentResult> dryRunWrite(
       ].join('\n'),
     );
   } finally {
-    await lock.close();
+    if (held == null) await lock.close();
     await scratch.delete(recursive: true);
   }
 }
@@ -849,11 +871,20 @@ AgentCommand initCommand() => AgentCommand(
         details: {'field': 'workspace', 'error': 'empty'},
       );
     }
-    await profile.createMarker();
-    final db = await LocalProfileDatabase.open(profile.root);
+    // Load native code before creating anything, then remove this fresh
+    // profile again if joining fails so a retry starts clean.
     final engine = agentTextEngine();
-    WorkspaceSession? session;
     try {
+      await profile.createMarker();
+    } catch (_) {
+      engine.dispose();
+      rethrow;
+    }
+    LocalProfileDatabase? db;
+    WorkspaceSession? session;
+    var joined = false;
+    try {
+      db = await LocalProfileDatabase.open(profile.root);
       await LocalSettings.initialize(db);
       final settings = LocalSettings(db.root, profileDatabase: db);
       await settings.load();
@@ -865,7 +896,11 @@ AgentCommand initCommand() => AgentCommand(
         writer: settings.writer,
         textEngine: engine,
       );
+      // From here the installation exists in shared history; keep its
+      // profile even if a later step fails, so it is never orphaned.
+      joined = true;
       await session!.history.renameDevice(call.require('name'));
+      String? warning;
       final person = call.string('person');
       if (person != null) {
         final users = {
@@ -877,31 +912,28 @@ AgentCommand initCommand() => AgentCommand(
             .where((e) => e.value.toLowerCase() == person.toLowerCase())
             .map((e) => e.key)
             .toList();
-        if (match.length != 1) {
-          throw AgentFailure(
-            'validation',
-            'No single person named "$person".',
-            details: {'field': 'person', 'error': 'not_found'},
-          );
+        if (match.length == 1) {
+          settings.user = match.single;
+          await settings.save();
+        } else {
+          warning =
+              'No single person named "$person"; captures need --for until `people add` and a default exist.';
         }
-        settings.user = match.single;
-        await settings.save();
       }
       return AgentResult(
         {
           'profile': profile.root,
           'writer': settings.writer,
           'workspace': location,
+          'warning': ?warning,
         },
-        'Initialized agent profile ${profile.root}\nwriter ${settings.writer} "${call.require('name')}"\nworkspace $location',
+        'Initialized agent profile ${profile.root}\nwriter ${settings.writer} "${call.require('name')}"\nworkspace $location${warning == null ? '' : '\n$warning'}',
       );
     } finally {
       await session?.close();
-      await db.close();
+      await db?.close();
       engine.dispose();
+      if (!joined) await Directory(profile.root).delete(recursive: true);
     }
   },
 );
-
-/// Errors the stores raise for a stale precondition.
-bool isStale(Object e) => e is StaleTaskSnapshot;

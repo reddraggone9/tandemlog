@@ -2570,10 +2570,15 @@ class TaskStore {
       await _refresh();
       if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
       final active = activeCompletionIds(entity).toSet();
-      await _appendCommandBatch('task.completionUndone', [
-        for (final target in targets.where(active.contains))
-          (entity, {'completion': target}),
-      ], canCommit: canCommit, onPrepared: onPrepared);
+      await _appendCommandBatch(
+        'task.completionUndone',
+        [
+          for (final target in targets.where(active.contains))
+            (entity, {'completion': target}),
+        ],
+        canCommit: canCommit,
+        onPrepared: onPrepared,
+      );
     });
   }
 
@@ -2581,8 +2586,17 @@ class TaskStore {
     String entity,
     String type,
     Map<String, dynamic> data, {
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
-  }) => _serialize(() => _command(entity, type, data, onPrepared: onPrepared));
+  }) => _serialize(
+    () => _command(
+      entity,
+      type,
+      data,
+      canCommit: canCommit,
+      onPrepared: onPrepared,
+    ),
+  );
 
   Future<LogEvent> _command(
     String entity,

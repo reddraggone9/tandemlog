@@ -115,7 +115,7 @@ class McpServer {
       };
     } catch (e) {
       final f = AgentWorkspace.translate(e);
-      final failure = f is AgentFailure ? f : AgentFailure('error', '$f');
+      final failure = f is AgentFailure ? f : AgentFailure('internal', '$f');
       return {
         'content': [
           {

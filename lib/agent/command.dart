@@ -80,6 +80,9 @@ class AgentCommand {
     this.args,
     this.run, {
     this.paged = false,
+    this.requiresPlan = false,
+    this.planWhen,
+    this.ownDryRun = false,
   });
   final String name, summary;
   final CommandKind kind;
@@ -87,13 +90,31 @@ class AgentCommand {
   final Future<AgentResult> Function(AgentCall call) run;
   final bool paged;
 
+  /// Bulk actions, merges and imports commit only with the planHash of a dry
+  /// run (`--expect-plan`); [planWhen] narrows that to some argument shapes.
+  final bool requiresPlan;
+  final bool Function(Map<String, Object?> args)? planWhen;
+
+  /// The command implements its own dry run and plan check (purchase import).
+  final bool ownDryRun;
+
+  bool needsPlan(Map<String, Object?> args) =>
+      requiresPlan && (planWhen?.call(args) ?? true);
+
   String get toolName => name.replaceAll(' ', '_');
 
   List<AgentArg> get allArgs => [
     ...args,
     if (paged) ...pagingArgs,
     if (kind == CommandKind.write) ...writeArgs,
+    if (requiresPlan || ownDryRun) planArg,
   ];
+
+  static const planArg = AgentArg(
+    'expect-plan',
+    'string',
+    'planHash from the dry run; required to commit bulk actions, merges and imports.',
+  );
 
   static const pagingArgs = [
     AgentArg('limit', 'integer', 'Maximum rows (default 50).'),

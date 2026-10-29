@@ -5,6 +5,7 @@ import '../platform/host_zone.dart';
 import '../domain/wall_time.dart';
 import 'agent_profile.dart';
 import 'agent_workspace.dart';
+import '../storage/profile_lock.dart';
 import 'command.dart';
 import 'commands_write.dart' show dryRunWrite;
 import 'registry.dart';
@@ -109,7 +110,7 @@ Future<(int, String)> runCli(
     final failure = AgentWorkspace.translate(e);
     final f = failure is AgentFailure
         ? failure
-        : AgentFailure('error', failure.toString());
+        : AgentFailure('internal', failure.toString());
     final body = format == 'text'
         ? 'error: ${f.kind}: ${f.message}${f.details == null ? '' : '\n${jsonEncode(f.details)}'}'
         : jsonEncode({'v': agentOutputVersion, 'error': f.toJson()});
@@ -145,13 +146,53 @@ Future<AgentResult> execute(
     return command.run(AgentCall(args, null, options, profile: profile));
   }
   final dryRun = args['dry-run'] == true;
-  if (command.kind == CommandKind.write && dryRun) {
+  if (command.kind == CommandKind.write && dryRun && !command.ownDryRun) {
     return dryRunWrite(command, args, options, profile);
   }
+  if (command.kind != CommandKind.write || !command.needsPlan(args)) {
+    return _run(command, args, options, profile, null);
+  }
+  final expected = args['expect-plan'] as String?;
+  if (expected == null) {
+    throw const AgentFailure(
+      'validation',
+      'This action needs --expect-plan <planHash> from a --dry-run.',
+      details: {'field': 'expect-plan', 'error': 'required'},
+    );
+  }
+  // Hold the identity lock from the plan check through the append.
+  await profile.requireAgentProfile();
+  final lock = await profile.lock(options.wait);
+  try {
+    final plan = await dryRunWrite(command, args, options, profile, held: lock);
+    if (plan.data['planHash'] != expected) {
+      throw AgentFailure(
+        'plan_changed',
+        'The plan changed since the dry run; review it again.',
+        details: {
+          'planHash': plan.data['planHash'],
+          'effects': plan.data['effects'],
+        },
+      );
+    }
+    return await _run(command, args, options, profile, lock);
+  } finally {
+    await lock.close();
+  }
+}
+
+Future<AgentResult> _run(
+  AgentCommand command,
+  Map<String, Object?> args,
+  AgentOptions options,
+  AgentProfile profile,
+  ProfileLock? held,
+) async {
   final ws = await AgentWorkspace.open(
     profile,
     readOnly: command.kind == CommandKind.read,
     wait: options.wait,
+    held: held,
   );
   try {
     return await command.run(AgentCall(args, ws, options));

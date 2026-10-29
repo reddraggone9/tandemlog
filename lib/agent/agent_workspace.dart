@@ -43,16 +43,19 @@ class AgentWorkspace {
     required bool readOnly,
     Duration wait = const Duration(seconds: 30),
     NativeTextEngine Function()? engineFactory,
+    ProfileLock? held,
   }) async {
     await agent.requireAgentProfile();
-    ProfileLock? lock = await agent.lock(wait);
+    // A caller already holding the identity lock keeps ownership of it.
+    ProfileLock? lock = held ?? await agent.lock(wait);
+    final owned = held == null;
     Directory? copy;
     LocalProfileDatabase? profile;
     NativeTextEngine? engine;
     try {
       if (readOnly) {
         copy = await agent.readCopy();
-        await lock.close();
+        if (owned) await lock.close();
         lock = null;
       }
       profile = await LocalProfileDatabase.open(copy?.path ?? agent.root);
@@ -78,7 +81,7 @@ class AgentWorkspace {
         profile,
         settings,
         session!,
-        lock,
+        owned ? lock : null,
         engine,
         copy,
         readOnly,
@@ -86,7 +89,7 @@ class AgentWorkspace {
     } catch (e) {
       await profile?.close();
       engine?.dispose();
-      await lock?.close();
+      if (owned) await lock?.close();
       await copy?.delete(recursive: true);
       throw translate(e);
     }
@@ -113,7 +116,7 @@ class AgentWorkspace {
       return AgentFailure('write_pending', e.message);
     }
     if (e is ProfileInUse) return AgentFailure('profile_in_use', e.message);
-    if (e is StaleTaskSnapshot) {
+    if (e is StaleTaskSnapshot || e is StaleFoodState) {
       return const AgentFailure(
         'stale',
         'The item changed before the write. Read it again.',

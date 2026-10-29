@@ -255,6 +255,157 @@ void main() {
     expect(out, contains('No agent profile'));
   });
 
+  test(
+    'bulk edit needs the dry-run planHash and applies as one action',
+    () async {
+      await setUpAgent();
+      await cli(['people', 'add', 'Lee']);
+      final added = await json(['tasks', 'add', 'A', 'B', '--for', 'Lee']);
+      final revs = [
+        for (final a in added['affected'] as List)
+          '--rev=${a['id']}=${a['rev']}',
+      ];
+      final ids = [
+        for (final a in added['affected'] as List) a['id'] as String,
+      ];
+      final args = ['tasks', 'bulk-edit', ...ids, ...revs, '--tag', 'home'];
+      final missing = await json(args);
+      expect(missing['error']['kind'], 'validation');
+      final dry = await json([...args, '--dry-run']);
+      expect(dry['effects'], hasLength(2));
+      final wrong = await json([...args, '--expect-plan', 'deadbeef']);
+      expect(wrong['error']['kind'], 'plan_changed');
+      final done = await json([
+        ...args,
+        '--expect-plan',
+        dry['planHash'] as String,
+      ]);
+      expect(done['actions'], hasLength(1));
+      final list = await json(['tasks', 'list', '--tag', 'home']);
+      expect(list['total'], 2);
+    },
+  );
+
+  test('checklist add, check and delete with revisions', () async {
+    await setUpAgent();
+    await cli(['people', 'add', 'Lee']);
+    final task =
+        ((await json(['tasks', 'add', 'Pack', '--for', 'Lee']))['affected']
+                    as List)
+                .single
+            as Map;
+    final item = await json([
+      'checklist',
+      'add',
+      task['id'] as String,
+      'Socks',
+      '--if-rev',
+      task['rev'] as String,
+    ]);
+    final checked = await json([
+      'checklist',
+      'check',
+      item['id'] as String,
+      '--if-rev',
+      item['rev'] as String,
+    ]);
+    expect(checked['actions'], hasLength(1));
+    final show = await json(['tasks', 'show', task['id'] as String]);
+    final items = show['checklist'] as List;
+    expect(items.single['completed'], true);
+    final deleted = await json([
+      'checklist',
+      'delete',
+      item['id'] as String,
+      '--if-rev',
+      checked['rev'] as String,
+    ]);
+    expect(deleted['actions'], hasLength(1));
+  });
+
+  test('food edit, products set and purchase import', () async {
+    await setUpAgent();
+    final added = await json([
+      'food',
+      'add',
+      '--name',
+      'Milk',
+      '--brand',
+      'GV',
+      '--size',
+      '1 gal',
+      '--expiry',
+      '2026-11-03',
+      '--location',
+      'Fridge',
+    ]);
+    final c = (added['affected'] as List).single as Map;
+    final moved = await json([
+      'food',
+      'edit',
+      c['id'] as String,
+      '--rev=${c['id']}=${c['rev']}',
+      '--location',
+      'Pantry',
+    ]);
+    expect(moved['actions'], hasLength(1));
+    final products = await json(['products', 'list']);
+    final p = (products['products'] as List).single as Map;
+    final set = await json([
+      'products',
+      'set',
+      p['id'] as String,
+      '--if-rev',
+      p['rev'] as String,
+      '--min',
+      '2',
+      '--link',
+      'https://example.com/milk',
+    ]);
+    expect(set['product']['minimum'], 2);
+    expect((await json(['products', 'list', '--running-low']))['total'], 1);
+    final lines = File('${root.path}/lines.json')
+      ..writeAsStringSync(
+        jsonEncode([
+          {
+            'source': {'kind': 'test', 'key': 'r1#1'},
+            'date': '2026-10-28',
+            'store': 'Walmart',
+            'amount': 348,
+            'quantity': 1,
+            'product': p['id'],
+          },
+        ]),
+      );
+    final plan = await json(['purchases', 'plan', lines.path]);
+    final dry = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--dry-run',
+    ]);
+    expect(dry['status'], 'ready');
+    final refused = await json(['purchases', 'import', plan['plan'] as String]);
+    expect(refused['error']['kind'], 'plan_changed');
+    final done = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--expect-plan',
+      dry['planHash'] as String,
+    ]);
+    expect(done['actions'], hasLength(1));
+    final again = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--expect-plan',
+      dry['planHash'] as String,
+    ]);
+    expect(again['actions'], isEmpty);
+    expect((await json(['purchases', 'list']))['total'], 1);
+  });
+
   test('MCP lists every non-setup registry command and calls tools', () async {
     await setUpAgent();
     final server = McpServer(environment: env, profile: 'default');

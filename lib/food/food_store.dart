@@ -14,6 +14,11 @@ import 'inventory.dart';
 
 /// Isolated canonical Food history/provider admission failure. Shared profile,
 /// installation identity and manifest faults deliberately retain their own type.
+/// A caller precondition failed after fresh admission; nothing was appended.
+class StaleFoodState implements Exception {
+  const StaleFoodState();
+}
+
 class FoodHistoryFailure extends FormatException {
   const FoodHistoryFailure(super.message);
 }
@@ -224,9 +229,11 @@ class FoodStore {
     List<_FoodChange> Function() plan, {
     Map<String, dynamic>? provenance,
     bool validateOnly = false,
+    bool Function()? canCommit,
   }) async {
     try {
       List<UnifiedEffectBuilder> build() {
+        if (canCommit != null && !canCommit()) throw const StaleFoodState();
         final changes = plan();
         if (changes.isEmpty) throw const _EmptyFoodPlan();
         return _unifiedBuilders(changes);
@@ -304,13 +311,20 @@ class FoodStore {
   Future<void> recoverPrepared() =>
       _queue(() => unified!.recoverPreparedInProfileQueue());
 
-  Future<List<FoodRecord>> _command(List<_FoodChange> changes) =>
-      _queue(() => _commandLocked(changes));
+  Future<List<FoodRecord>> _command(
+    List<_FoodChange> changes, {
+    bool Function()? canCommit,
+  }) => _queue(() => _commandLocked(changes, canCommit: canCommit));
   Future<List<FoodRecord>> _commandLocked(
     List<_FoodChange> changes, {
     Map<String, dynamic>? provenance,
+    bool Function()? canCommit,
   }) async {
-    return _freshCommandLocked(() => changes, provenance: provenance);
+    return _freshCommandLocked(
+      () => changes,
+      provenance: provenance,
+      canCommit: canCommit,
+    );
   }
 
   // Import identity is committed with the actual containers. No private
@@ -643,12 +657,20 @@ class FoodStore {
     return report;
   });
 
-  Future<List<FoodRecord>> remove(List<String> ids) => _command(
+  /// [canCommit] runs after fresh admission, immediately before the append.
+  Future<List<FoodRecord>> remove(
+    List<String> ids, {
+    bool Function()? canCommit,
+  }) => _command(
     _batches(
       ids,
     ).map((batch) => _FoodChange(FoodAction.remove, batch)).toList(),
+    canCommit: canCommit,
   );
-  Future<void> restore(List<FoodContainer> observed) async {
+  Future<void> restore(
+    List<FoodContainer> observed, {
+    bool Function()? canCommit,
+  }) async {
     _batches(observed.map((item) => item.id).toList());
     final changes = <_FoodChange>[];
     for (final item in observed) {
@@ -661,7 +683,7 @@ class FoodStore {
         );
       }
     }
-    await _command(changes);
+    await _command(changes, canCommit: canCommit);
   }
 
   /// Container fields of [ids] and product changes of [products], planned
@@ -671,10 +693,12 @@ class FoodStore {
     FoodDetails details,
     List<String> fields, {
     FoodProductChange products = const FoodProductChange(),
+    bool Function()? canCommit,
   }) {
     _batches(ids);
     return _queue(
       () => _freshCommandLocked(
+        canCommit: canCommit,
         () => [
           if (fields.isNotEmpty)
             for (final batch in _batches(ids))

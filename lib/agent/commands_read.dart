@@ -415,7 +415,7 @@ List<AgentCommand> readCommands() => [
       final t = taskRow(call, id)!;
       final json = taskJson(call, t, full: true);
       final year = DateTime.now().year;
-      final checklist = (t['checklist'] as Map?)?['items'] as List? ?? const [];
+      final checklist = t['checklist'] as List? ?? const [];
       return AgentResult(
         json,
         [
@@ -425,7 +425,7 @@ List<AgentCommand> readCommands() => [
             '\n${t['description']}',
           for (final item in checklist)
             if (item is Map)
-              '${item['checked'] == true ? '[x]' : '[ ]'} ${item['text'] ?? item['title'] ?? ''}',
+              '${item['completed'] == true ? '[x]' : '[ ]'} ${shortId(item['id'] as String)} ${item['title'] ?? ''} · rev ${taskRev(call, item['id'] as String)}',
         ].join('\n'),
       );
     },
