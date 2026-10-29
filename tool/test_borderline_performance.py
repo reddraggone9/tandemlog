@@ -46,14 +46,17 @@ HISTORICAL_LIMITS_SHA256 = '50a606cb302eb6a769c760188901132fb8b35b153ecc41dde11a
 
 
 def historical_limits():
-    """Limits bound by retained q9-q11: current limits minus the additive food.product.* labels.
+    """Limits bound by retained q9-q11: current limits minus the additive food.product.* and
+    food.moveSome* labels.
     The byte-exact SHA match proves every earlier bound is unchanged."""
     def strip(value):
         if isinstance(value, dict):
-            return {k: strip(v) for k, v in value.items() if not k.startswith('food.product.')}
+            return {k: strip(v) for k, v in value.items()
+                    if not k.startswith(('food.product.', 'food.moveSome'))}
         return value
     current = json.loads((TOOLS / 'limits-v1.json').read_text())
     current.pop('prospectiveFoodProductBudgets')
+    current.pop('prospectiveFoodMoveSomeBudgets')
     limits = strip(current)
     text = json.dumps(limits, indent=2) + '\n'
     limits['sha256'] = hashlib.sha256(text.encode()).hexdigest()

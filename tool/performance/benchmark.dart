@@ -1827,6 +1827,7 @@ Future<void> main(List<String> args) async {
     'food-cardinality500': foodCardinality500,
     'converted-food-confirmed': convertedConfirmedFood,
     'food-products': foodProducts,
+    'food-move-some': foodMoveSome,
     'first-derived-tags': (a) =>
         firstDerivedPointAction(a, sampleStart, 'tags'),
     'first-copied-checkbox': (a) =>
@@ -1840,6 +1841,7 @@ Future<void> main(List<String> args) async {
   for (final entry in all.entries) {
     if (only != null && entry.key != only) continue;
     if (entry.key == 'food-products' ||
+        entry.key == 'food-move-some' ||
         entry.key == 'derived-recurring' ||
         entry.key.startsWith('first-derived-') ||
         entry.key == 'first-copied-checkbox') {
@@ -2831,4 +2833,94 @@ Future<void> foodProducts(Audit a) async {
         jsonEncode(a.tasks.rows) == tasksBefore,
     'Fresh canonical product/catalog replay differs',
   );
+}
+
+/// Food row ⋮ Move some…: the page's onDetails path moves the first two
+/// current containers of a three-container row (the imported container plus
+/// two Add another containers) to a new Location as one changeDetails action,
+/// with exact confirmation and session Undo. Fresh sealed workspace per
+/// repetition, as in food-products.
+Future<void> foodMoveSome(Audit a) async {
+  final rep = sampleStart;
+  final tasksBefore = jsonEncode(a.tasks.rows);
+  final base = a.config['fixtureBaseIdentity'] as int;
+  final imported = benchmarkId('food:$base:${base == 60 ? 4 : 1000}');
+  requireImportedFoodTargets(a, [imported]);
+  final source = a.food.state.containers.singleWhere((c) => c.id == imported);
+  require(!source.deleted, 'Move some needs an active imported container');
+  // Untimed setup: two more containers join the imported container's row.
+  await a.food.add(source.details, 2);
+  String rowKey() {
+    final item = a.food.state.containers.singleWhere((c) => c.id == imported);
+    return foodRowKey(item, a.food.state.usesProducts ? item.product : '');
+  }
+
+  final key = rowKey();
+  final members = a.food.state.rows[key]!;
+  require(
+    members.length == 3 && members.any((c) => c.id == imported),
+    'Move some row setup differs',
+  );
+  final moving = members.take(2).map((c) => c.id).toList();
+  final details = members.first.details;
+  final before = productFoodState(a.food);
+  final undo = FoodUndoHistory()..setWorkspace(a.shared.path);
+  await a.measure('food.moveSome', rep, () async {
+    await a.food.changeDetails(
+      moving,
+      FoodDetails(
+        name: details.name,
+        brand: details.brand,
+        expiry: details.expiry,
+        estimated: details.estimated,
+        retention: details.retention,
+        location: 'Benchmark moved shelf',
+        size: details.size,
+      ),
+      const ['location'],
+    );
+    final records = List<FoodRecord>.of(a.food.lastPreparedRecords);
+    require(
+      records.isNotEmpty && records.every(a.food.isAdmitted),
+      'Move some not exactly confirmed',
+    );
+    undo.record('editing', records, confirmed: a.food.isAdmitted);
+  }, expectedDelta: 1);
+  final moved = a.food.state.containers
+      .where((c) => moving.contains(c.id))
+      .toList();
+  require(
+    undo.length == 1 &&
+        moved.length == 2 &&
+        moved.every((c) => c.details.location == 'Benchmark moved shelf') &&
+        (a.food.state.rows[key]?.length ?? 0) == 1 &&
+        a
+                .food
+                .state
+                .rows[foodRowKey(
+                  moved.first,
+                  a.food.state.usesProducts ? moved.first.product : '',
+                )]!
+                .length ==
+            2,
+    'Move some did not split exactly two containers into their own row',
+  );
+  // Reopen while the move is still active, as food-products does.
+  await a.replayCheck();
+  final entry = undo.latest!;
+  await a.measure('food.moveSome.undo', rep, () async {
+    await a.food.undoOperations(entry.records);
+    require(
+      a.food.lastPreparedRecords.every(a.food.isAdmitted),
+      'Move some inverse not exactly confirmed',
+    );
+    undo.complete(entry);
+  }, expectedDelta: 1);
+  require(
+    undo.length == 0 &&
+        productFoodState(a.food) == before &&
+        a.food.state.rows[rowKey()]!.length == 3,
+    'Move some Undo differs from the prior row',
+  );
+  require(jsonEncode(a.tasks.rows) == tasksBefore, 'Move some changed Tasks');
 }

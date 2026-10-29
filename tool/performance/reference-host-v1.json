@@ -32,7 +32,7 @@
     "cpu.max": "200000 100000",
     "pids.max": "128"
   },
-  "limitsSHA256": "894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409",
+  "limitsSHA256": "e118730325d00468f0218b70c0bbae939a68e363fd960bef68e743196f0672d8",
   "pubspecLockSHA256": "f78669e0f9f033c5404ea390826dff5a734736199db0d82e73e7e29cdd41a0ac",
   "compiledDependencies": {
     "count": 5281,
@@ -131,7 +131,7 @@
     "/bin/utils/gen_snapshot": "85d0beecbf834cc6e617dd5adb1b28008292ddd1198d7c476bf751c1460fcb7c",
     "/libtandemlog_text.so": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2",
     "/libsqlite3.so": "d3d1eac2a4e0eb84f4e8d94d820e5963fddfd11aa95179ea215ddc3bc7bd1078",
-    "/tool/performance/limits-v1.json": "894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409"
+    "/tool/performance/limits-v1.json": "e118730325d00468f0218b70c0bbae939a68e363fd960bef68e743196f0672d8"
   },
   "libraryReregistration": {
     "reason": "sqlite3 3.8.0 (SQLite 3.54.1) and text-engine source changes on the 2026.10.8 line",

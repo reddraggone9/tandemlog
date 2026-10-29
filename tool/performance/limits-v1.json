@@ -989,6 +989,14 @@
       "food.product.import.undo": {
         "medianMs": 15,
         "maxMs": 20
+      },
+      "food.moveSome": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.moveSome.undo": {
+        "medianMs": 15,
+        "maxMs": 20
       }
     },
     "dense-2": {
@@ -1967,6 +1975,14 @@
       "food.product.import.undo": {
         "medianMs": 15,
         "maxMs": 20
+      },
+      "food.moveSome": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.moveSome.undo": {
+        "medianMs": 15,
+        "maxMs": 20
       }
     },
     "dense-food": {
@@ -2943,6 +2959,14 @@
         "maxMs": 20
       },
       "food.product.import.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.moveSome": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.moveSome.undo": {
         "medianMs": 15,
         "maxMs": 20
       }
@@ -4419,6 +4443,18 @@
         "medianAdditiveMs": 3,
         "maxMaximumRatio": 1.4,
         "maximumAdditiveMs": 5
+      },
+      "food.moveSome": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.moveSome.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
       }
     }
   },
@@ -5891,6 +5927,18 @@
           "medianAdditiveMs": 3,
           "maxMaximumRatio": 1.4,
           "maximumAdditiveMs": 5
+        },
+        "food.moveSome": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.moveSome.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
         }
       },
       "growthKind": "food"
@@ -5912,6 +5960,12 @@
     "declaredBeforeMeasurement": true,
     "actions": 12,
     "basis": "15ms median /20ms maximum per shape: existing Food details/add/Undo application bounds. Includes confirmation and session Undo; import is bounded to two purchase lines/four containers, not maximum-size import. No new-action measurements used; previous calibrated bounds unchanged.",
+    "qualificationPending": true
+  },
+  "prospectiveFoodMoveSomeBudgets": {
+    "declaredBeforeMeasurement": true,
+    "actions": 2,
+    "basis": "15ms median /20ms maximum per shape: Move some is one Location changeDetails over a row's containers, the same production path and bound as existing Food details/Undo and food.product.bulkEdit. Includes confirmation and session Undo. No new-action measurements used; previous calibrated bounds unchanged.",
     "qualificationPending": true
   }
 }
