@@ -156,6 +156,18 @@ void registerFoodEditorPaneTests() {
     );
   });
 
+  testWidgets('Space toggles off a plain opened sole Food row', (tester) async {
+    await mountFoodPane(tester);
+    final row = find.text('Pane beans 1').first;
+    await tester.tap(row);
+    await tester.pumpAndSettle();
+    Focus.of(tester.element(row)).requestFocus();
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(find.byType(FoodEditor), findsNothing);
+  });
+
   testWidgets(
     'narrow editor stays above keyboard after Review and after field focus ends',
     (tester) async {

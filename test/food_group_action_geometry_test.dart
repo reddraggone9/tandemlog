@@ -134,7 +134,12 @@ Future<void> verifyFoodGroupActionGeometry(
       expect(tester.getSize(control).width, greaterThanOrEqualTo(48));
       expect(tester.getSize(control).height, greaterThanOrEqualTo(48));
     }
-    expect(find.text('500 g · Freezer'), findsOneWidget);
+    expect(find.text('500 g'), findsOneWidget);
+    expect(find.text('Freezer'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Freezer')).dy,
+      lessThan(tester.getTopLeft(find.text('500 g')).dy),
+    );
     expect(find.text('2 containers'), findsOneWidget);
     expect(find.text('Full'), findsNothing);
     expect(find.text('Remaining contents'), findsNothing);

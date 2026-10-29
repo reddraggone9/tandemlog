@@ -113,6 +113,37 @@ void registerSelectionLayoutParityTests({
             findsOneWidget,
           );
           expect(compact(), isFalse);
+          if (wide) {
+            if (food) {
+              Focus.of(tester.element(first)).requestFocus();
+            } else {
+              final dynamic page = tester.state(find.byType(TasksPage));
+              (page.rowFocus[page.selectedTasks.single] as FocusNode)
+                  .requestFocus();
+            }
+            await tester.pumpAndSettle();
+            await tester.sendKeyEvent(LogicalKeyboardKey.space);
+            if (!food) {
+              await host.ready(
+                tester,
+                () => find.byType(TaskEditor).evaluate().isEmpty,
+              );
+            }
+            await tester.pumpAndSettle();
+            expect(
+              food ? find.byType(FoodEditor) : find.byType(TaskEditor),
+              findsNothing,
+              reason: 'Space toggles off a plain-opened sole row.',
+            );
+            await tester.tap(first);
+            if (!food) {
+              await host.ready(
+                tester,
+                () => find.byType(TaskEditor).evaluate().isNotEmpty,
+              );
+            }
+            await tester.pumpAndSettle();
+          }
           await snap('single');
           await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
           await tester.pumpAndSettle();

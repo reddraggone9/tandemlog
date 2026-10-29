@@ -94,7 +94,7 @@ void main() {
           );
           final metadata = find.descendant(
             of: card,
-            matching: find.text('500 g · Freezer'),
+            matching: find.text('Sample Foods · 500 g'),
           );
           expect(metadata.hitTestable(), findsOneWidget);
           expect(find.text('Remaining contents'), findsNothing);

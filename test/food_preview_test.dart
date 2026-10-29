@@ -45,13 +45,13 @@ void main() {
       await tester.pumpWidget(FoodPreviewApp(initialOperations: operations));
       await tester.pumpAndSettle();
       expect(find.text('Rice'), findsOneWidget);
-      expect(find.text('Sample Foods'), findsOneWidget);
+      expect(find.text('Sample Foods · 1 lb'), findsOneWidget);
       if (contents.length == 1) {
         expect(find.text('1 container'), findsNothing);
       } else {
         expect(find.text('${contents.length} containers'), findsOneWidget);
       }
-      expect(find.text('1 lb · Freezer'), findsOneWidget);
+      expect(find.text('Freezer'), findsOneWidget);
       expect(find.text('Full'), findsNothing);
       expect(find.text('Remaining contents'), findsNothing);
       expect(find.byTooltip('Remove one Rice container'), findsOneWidget);
@@ -101,7 +101,7 @@ void main() {
                     (w.key as ValueKey<String>).value.startsWith('food-group:'),
               ),
             ),
-            matching: find.text('1 lb'),
+            matching: find.text('Sample Foods · 1 lb'),
           ),
           findsOneWidget,
         );

@@ -1328,7 +1328,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               return KeyEventResult.ignored;
             }
             if (event is KeyDownEvent && editable) {
-              select(SelectionGesture.longPress);
+              select(SelectionGesture.toggle);
             }
             return KeyEventResult.handled;
           },

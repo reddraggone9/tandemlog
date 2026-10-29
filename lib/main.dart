@@ -5770,7 +5770,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                       LogicalKeyboardKey.space) {
                                     _selectTask(
                                       task,
-                                      gesture: SelectionGesture.longPress,
+                                      gesture: SelectionGesture.toggle,
                                     );
                                     return KeyEventResult.handled;
                                   }

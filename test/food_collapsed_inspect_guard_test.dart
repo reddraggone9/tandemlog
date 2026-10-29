@@ -98,7 +98,8 @@ void main() {
         expect(find.byTooltip('Remove one Rice container'), findsOneWidget);
         expect(find.text('Full'), findsNothing);
         expect(find.text('Remaining contents'), findsNothing);
-        expect(find.text('500 g · Freezer'), findsOneWidget);
+        expect(find.text('Sample Foods · 500 g'), findsOneWidget);
+        expect(find.text('Freezer'), findsOneWidget);
         await keyboardActivate(tester, find.text('Rice'));
         expect(find.text('Edit 1 container'), findsOneWidget);
         expect(find.text('Remaining contents'), findsNothing);
