@@ -838,7 +838,6 @@ final class UnifiedHistory {
       final j = jsonDecode(raw);
       if (j is! List ||
           j.any((v) => !isCanonicalId(v)) ||
-          j.length > 256 ||
           j.toSet().length != j.length ||
           !j.contains(writer) ||
           !j.toSet().containsAll(current.owners.keys) ||
@@ -889,9 +888,6 @@ final class UnifiedHistory {
           'Legacy history is not accepted in a normalized workspace. Preserve it outside this folder.',
         );
       }
-    }
-    if (ownerSet.length > 256) {
-      throw FormatFailure('Too many installation histories.');
     }
     if (!forceFullAudit && _snapshot == null) {
       await _primeDecodedCache(current);

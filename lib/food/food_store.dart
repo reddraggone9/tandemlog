@@ -59,8 +59,7 @@ class FoodStore {
   List<String> _pendingOperationIds = const [];
   List<String> get pendingOperationIds => _pendingOperationIds;
   Set<String> _readyIds = {};
-  static const maximumStreams = 256,
-      maximumStreamBytes = 16 * 1024 * 1024,
+  static const maximumStreamBytes = 16 * 1024 * 1024,
       maximumTotalBytes = 32 * 1024 * 1024,
       maximumRecords = 50000,
       maximumContainers = 100000;

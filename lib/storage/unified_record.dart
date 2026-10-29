@@ -131,7 +131,6 @@ class UnifiedRecord {
     final historical = this.effects.every((e) => e.historical);
     if (this.effects.any((e) => e.historical) && !historical ||
         historical && this.effects.length != 1 ||
-        observed.length > 256 ||
         observed.entries.any(
           (e) =>
               !isCanonicalId(e.key) ||
