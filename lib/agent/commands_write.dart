@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
@@ -13,12 +14,14 @@ import '../storage/local_profile_database.dart';
 import '../storage/local_settings.dart';
 import '../storage/log_folder.dart';
 import '../storage/profile_lock.dart';
+import '../text/native_text_engine.dart';
 import 'agent_profile.dart';
 import 'agent_workspace.dart';
 import 'command.dart';
 import 'commands_read.dart';
 import 'render.dart';
 import 'overlay_folder.dart';
+import 'registry.dart';
 import 'text_undo.dart';
 import '../storage/unified_record.dart' show UnifiedRecord;
 
@@ -892,6 +895,11 @@ bool Function() _undoGuard(
 /// workspace, report the resulting typed effects and a planHash, discard.
 /// `inputHash` identifies the observed state the plan was computed from; a
 /// planned commit appends only while the workspace still has that state.
+///
+/// [isolated] runs the plan (its own full open of the profile copy, the
+/// command and both observations) on a worker isolate, so a planned commit's
+/// real workspace open, started by [afterCopy] on this isolate, proceeds in
+/// parallel instead of interleaving with it. The copy is made here first.
 Future<AgentResult> dryRunWrite(
   AgentCommand command,
   Map<String, Object?> args,
@@ -899,6 +907,7 @@ Future<AgentResult> dryRunWrite(
   AgentProfile profile, {
   ProfileLock? held,
   void Function()? afterCopy,
+  bool isolated = false,
 }) async {
   await profile.requireAgentProfile();
   final lock = held ?? await profile.lock(options.wait);
@@ -912,69 +921,110 @@ Future<AgentResult> dryRunWrite(
     // copy keeps the real workspace location, so its warm cache applies.
     final shadow = Directory('${scratch.path}/workspace');
     await shadow.create();
-    final before = await AgentWorkspace.open(
-      AgentProfile(copy.path),
-      readOnly: false,
-      wait: options.wait,
-      folderFor: (location) => OverlayLogFolder(shadow.path, location),
-      disposable: true,
-    );
-    final beforeState = _observe(AgentCall(args, before, options));
-    AgentResult result;
-    _Observed afterState;
-    try {
-      result = await command.run(
-        AgentCall(
-          {...args}
-            ..remove('dry-run')
-            ..remove('expect-plan'),
-          before,
-          options,
-        ),
-      );
-      afterState = _observe(AgentCall(args, before, options));
-    } finally {
-      await before.close();
-    }
-    final effects = [
-      ..._diff(beforeState.entities, afterState.entities),
-      ..._orderEffects(beforeState.order, afterState.order),
-    ]..sort((a, b) => (a['id'] as String).compareTo(b['id'] as String));
-    final planHash = revOf({
-      'command': command.name,
-      if (options.purchasePlanBytes != null)
-        'inputDigest': sha256.convert(options.purchasePlanBytes!).toString(),
-      'args': {...args}
-        ..remove('dry-run')
-        ..remove('expect-plan'),
-      'effects': _stable(effects),
-    });
-    final outcome = {
-      for (final e in result.data.entries)
-        if (!const {'actions', 'affected', 'undo'}.contains(e.key))
-          e.key: e.value,
-    };
-    return AgentResult(
-      {
-        ...outcome,
-        'dryRun': true,
-        'planHash': planHash,
-        'effects': effects,
-        'inputHash': beforeState.hash,
-      },
-      [
-        'Dry run: ${command.name} (nothing written)',
-        for (final e in effects)
-          '${shortId(e['id'] as String)} ${e['change']}${e['fields'] == null ? '' : ' ${jsonEncode(e['fields'])}'}',
-        'planHash: $planHash',
-        if (result.data['affected'] == null) result.text,
-      ].join('\n'),
-    );
+    final plan = isolated
+        ? await _planOffThread(
+            command.name,
+            args,
+            options,
+            copy.path,
+            shadow.path,
+            agentTextEngine,
+          )
+        : await _plan(command, args, options, copy.path, shadow.path);
+    return AgentResult(plan.data, plan.text);
   } finally {
     if (held == null) await lock.close();
     await scratch.delete(recursive: true);
     await copy?.delete(recursive: true);
   }
+}
+
+// Separate lexical scope: the worker receives only plain values (no lock,
+// open file, database or pending Future). Its globals start fresh, so the
+// text engine factory is handed over; registry commands are looked up there.
+Future<({Map<String, Object?> data, String text})> _planOffThread(
+  String name,
+  Map<String, Object?> args,
+  AgentOptions options,
+  String copy,
+  String shadow,
+  NativeTextEngine Function() engine,
+) => Isolate.run(() {
+  agentTextEngine = engine;
+  return _plan(
+    registry.singleWhere((c) => c.name == name),
+    args,
+    options,
+    copy,
+    shadow,
+  );
+}, debugName: 'tandemlog-cli-plan');
+
+Future<({Map<String, Object?> data, String text})> _plan(
+  AgentCommand command,
+  Map<String, Object?> args,
+  AgentOptions options,
+  String copy,
+  String shadow,
+) async {
+  final before = await AgentWorkspace.open(
+    AgentProfile(copy),
+    readOnly: false,
+    wait: options.wait,
+    folderFor: (location) => OverlayLogFolder(shadow, location),
+    disposable: true,
+  );
+  final beforeState = _observe(AgentCall(args, before, options));
+  AgentResult result;
+  _Observed afterState;
+  try {
+    result = await command.run(
+      AgentCall(
+        {...args}
+          ..remove('dry-run')
+          ..remove('expect-plan'),
+        before,
+        options,
+      ),
+    );
+    afterState = _observe(AgentCall(args, before, options));
+  } finally {
+    await before.close();
+  }
+  final effects = [
+    ..._diff(beforeState.entities, afterState.entities),
+    ..._orderEffects(beforeState.order, afterState.order),
+  ]..sort((a, b) => (a['id'] as String).compareTo(b['id'] as String));
+  final planHash = revOf({
+    'command': command.name,
+    if (options.purchasePlanBytes != null)
+      'inputDigest': sha256.convert(options.purchasePlanBytes!).toString(),
+    'args': {...args}
+      ..remove('dry-run')
+      ..remove('expect-plan'),
+    'effects': _stable(effects),
+  });
+  final outcome = {
+    for (final e in result.data.entries)
+      if (!const {'actions', 'affected', 'undo'}.contains(e.key))
+        e.key: e.value,
+  };
+  return (
+    data: <String, Object?>{
+      ...outcome,
+      'dryRun': true,
+      'planHash': planHash,
+      'effects': effects,
+      'inputHash': beforeState.hash,
+    },
+    text: [
+      'Dry run: ${command.name} (nothing written)',
+      for (final e in effects)
+        '${shortId(e['id'] as String)} ${e['change']}${e['fields'] == null ? '' : ' ${jsonEncode(e['fields'])}'}',
+      'planHash: $planHash',
+      if (result.data['affected'] == null) result.text,
+    ].join('\n'),
+  );
 }
 
 /// Order is reported separately as moves (see [_orderEffects]); the other

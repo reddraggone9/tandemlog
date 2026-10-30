@@ -1932,6 +1932,75 @@ void main() {
   );
 
   test(
+    'a planned commit plans on a worker isolate beside the real open',
+    () async {
+      await setUpAgent();
+      final added = await json([
+        'food',
+        'add',
+        '--name',
+        'Rice',
+        '--expiry',
+        '2027-03-01',
+        '--location',
+        'Pantry',
+        '--count',
+        '3',
+      ]);
+      expect(added['error'], isNull, reason: '$added');
+      final id = ((added['affected'] as List).first as Map)['id'] as String;
+      final rev = (await json(['food', 'show', id]))['rev'] as String;
+      final args = [
+        'food',
+        'move-some',
+        id,
+        '--if-rev',
+        rev,
+        '--count',
+        '2',
+        '--location',
+        'Freezer',
+      ];
+      final opened = <bool>[];
+      debugAgentWorkspaceOpened = (ws) => opened.add(ws.disposable);
+      addTearDown(() => debugAgentWorkspaceOpened = null);
+      // A plain dry run still plans here, on its disposable copy.
+      final dry = await json([...args, '--dry-run']);
+      expect(opened, [true]);
+      opened.clear();
+      // The planned commit's own dry run opens its copy on a worker isolate
+      // (whose hooks start unset), so only the real workspace opens here;
+      // the plan is still checked before the command runs.
+      final committed = await json([
+        ...args,
+        '--expect-plan',
+        dry['planHash'] as String,
+      ]);
+      expect(committed['actions'], hasLength(1), reason: '$committed');
+      expect(opened, [false]);
+      opened.clear();
+      // Failures inside the worker keep their stable kinds: a refused dry
+      // run (validation) and a changed plan.
+      final bad = [...args];
+      bad[bad.indexOf('--count') + 1] = '9';
+      bad[bad.indexOf('--if-rev') + 1] =
+          (await json(['food', 'show', id]))['rev'] as String;
+      final invalid = await json([...bad, '--expect-plan', 'x']);
+      expect(invalid['error']['kind'], 'validation', reason: '$invalid');
+      // The old rev is stale now; the worker's dry run refuses it.
+      final stale = await json([
+        ...args,
+        '--expect-plan',
+        dry['planHash'] as String,
+      ]);
+      expect(stale['error']['kind'], 'stale', reason: '$stale');
+      // Each refused commit opened and closed the real workspace cleanly.
+      final next = await json(['food', 'show', id]);
+      expect(next['error'], isNull, reason: '$next');
+    },
+  );
+
+  test(
     'tasks list renders people and revs identically in both formats',
     () async {
       await setUpAgent();

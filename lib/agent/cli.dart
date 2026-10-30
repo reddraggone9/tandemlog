@@ -207,8 +207,9 @@ Future<AgentResult> execute(
   // the plan was computed from; that check repeats inside the append.
   await profile.requireAgentProfile();
   final lock = await profile.lock(options.wait);
-  // The real workspace opens while the dry run runs on its profile copy (it
-  // starts once the copy exists); the command runs only after the plan check.
+  // The real workspace opens here while the dry run runs on its profile copy
+  // on a worker isolate (it starts once the copy exists); the command runs
+  // only after the plan check.
   Future<AgentWorkspace>? opening;
   var handedOver = false;
   try {
@@ -224,6 +225,7 @@ Future<AgentResult> execute(
         wait: options.wait,
         held: lock,
       )..ignore(),
+      isolated: true,
     );
     if (plan.data['planHash'] != expected) {
       throw AgentFailure(
