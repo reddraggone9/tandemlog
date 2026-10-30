@@ -1,0 +1,27 @@
+{
+  "source": "aefa95bf5334cde31b23ccef98b330d43ed830b2",
+  "gateResultSHA256": "cc304be6ec0df0be00efbe0f40c4e49f3ab0fc84eb86cfd58f54b14d88c6ad3c",
+  "startedAtUTC": "2026-10-30T00:53:35.279608+00:00",
+  "finishedAtUTC": "2026-10-30T01:06:04.638390+00:00",
+  "correctnessAccepted": true,
+  "allPinsMatch": true,
+  "measurementCompleted": true,
+  "timingLimitsPassed": true,
+  "rerunsUsed": 0,
+  "timingRole": "measure-only, not qualification",
+  "denseFoodPurchaseImport": {
+    "allSamplesMs": [
+      676.388,
+      669.244,
+      689.377,
+      670.983,
+      691.756
+    ],
+    "medianMs": 676.388,
+    "maxMs": 691.756,
+    "warmupSamplesMs": [
+      691.668,
+      689.181
+    ]
+  }
+}

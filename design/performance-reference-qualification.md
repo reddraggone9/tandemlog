@@ -38,7 +38,7 @@ from the parent's read-only collection,not a cloud host probe. The reviewed
 controller with the reviewed held-worker completion protocol and admission-ordering corrections is registered by SHA256
 `0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3`.
 For the Food-products244-label inventory,the controller differs from R7 only in its hard-coded limits digest (now the registered894f3af1…);existing232-label action budgets and all lifetime/resource controls remain unchanged. The old controller/request remain retained and were never launched.
-The combined Food Move some + Agent CLI254-label inventory (2026-10-29) changes the limits digest again (now fb8dd13a…, superseding the branch-local e1187303… and31c41229…);the registered controller's hard-coded digest must be re-registered before any qualification of that inventory. Existing244-label budgets are unchanged.
+The combined Food Move some + Agent CLI and 300-writer refresh256-label inventory (2026-10-29) uses limits335cdc94… (superseding fb8dd13a… and branch-local inventories). The controller is re-registered as SHA256 `1780871bed8ff20438569f93b929ed6e0229af0f985579d3765e31bb9584f8a5`: its sole byte change from the registered0174e5cb… controller is the hard-coded limits digest. Pressure, admission, lifetime/resource/cleanup controls and every existing budget remain unchanged. Original controller and failed/advisory results are retained.
 Its adjacent pressure module remains SHA256
 `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`.
 The source and original host fault evidence were reviewed privately;registration

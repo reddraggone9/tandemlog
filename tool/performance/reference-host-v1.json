@@ -25,7 +25,7 @@
       "findmnt -n -o FSTYPE -T measurement-path"
     ]
   },
-  "controllerSHA256": "0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3",
+  "controllerSHA256": "1780871bed8ff20438569f93b929ed6e0229af0f985579d3765e31bb9584f8a5",
   "resourceBounds": {
     "memory.max": "6442450944",
     "memory.swap.max": "0",
