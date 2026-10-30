@@ -14,3 +14,20 @@ The reviewed R7 controller changes only its hard-coded limits digest from894f3af
 `failed-q1/`, `failed-q2/` retain original source-bound requests, gate results and cleanup (plus q2 authorization); `diagnostic/` retains the nonqualifying result/record. Raw logs/controller/pressure/executor evidence remain private under `vex-agentrc-20261029`. Previous `reference-performance/current/` is retained historical evidence and **does not qualify this identity**. No CI/signing/publication/main/stable/live-data action was taken.
 
 Next owner work: diagnose/fix import performance on changed source, then fresh qualification under unchanged policy; another unchanged-source rerun is not authorized. Private exact checkpoint: tandemlog-agent-reference-20261029/CHECKPOINT.md.
+
+## Changed-source qualification q3 (2026-10-29)
+
+The repeatable dense-food import miss was profiled and fixed on changed source:
+a planned commit now plans on a worker isolate beside the real workspace open
+(`c720766`, review fixes `ffb43a8`; [details](../../design/performance-gate.md#planned-commit-plan-on-a-worker-isolate-2026-10-29)).
+Budgets are unchanged and no unchanged-source qualification was repeated.
+
+Fresh enforcing reference qualification `9f99c96d…` of `ffb43a8`
+(relevant-source-v2 `0d25af61…`, registered controller `1780871b…`) **passed**:
+correctness, all 256 absolute labels on all three shapes and both growth
+comparisons, zero reruns, zero resamples; cleanup clean within the deadline.
+`agent.write.purchaseImport2` median/max: dense-food 577.9/586.5, dense-2
+491.1/503.2, dense-1 319.4/322.4 ms (budget 700/1000). `food.product.merge`
+dense-food 5.525/7.896 ms. Sealed receipt: `evidence/reference-performance/current/`;
+the previous current (`df710a4c`, RC.2 source) is retained as
+`retained-df710a4c/`. The failed q1/q2 evidence above is unchanged.

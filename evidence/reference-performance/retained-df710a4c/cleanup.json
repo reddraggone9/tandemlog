@@ -1,0 +1,17 @@
+{
+  "requestId": "df710a4c09dfedcf9ca1c3ff9bbea535",
+  "controllerSHA256": "0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3",
+  "ownedUnitsInactive": true,
+  "ownedProcessesAbsent": true,
+  "inputPinsUnchanged": true,
+  "withinDeadline": true,
+  "activeProcesses": 0,
+  "workloadSwapBytes": 0,
+  "oomKills": 0,
+  "resourceCaptureBoundary": "work-complete/pre-exit",
+  "verifiedCompletionCapture": true,
+  "completionCaptureSHA256": "17db92760240237297c6e87e54261af15e73675e4c81768e8a6886a7b6cf22c7",
+  "completedAtUTC": "2026-10-29T03:53:37.873352+00:00",
+  "deadlineUTC": "2026-10-29T04:09:24.738440+00:00",
+  "errors": []
+}

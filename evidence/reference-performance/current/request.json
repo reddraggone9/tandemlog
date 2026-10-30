@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "df710a4c09dfedcf9ca1c3ff9bbea535",
-  "issuedAtUTC": "2026-10-29T03:41:57.388408+00:00",
-  "sourceRevision": "4a3404648ecefdbe9ae5cf802b8823eeba22c8b5",
+  "requestId": "9f99c96d6860004ebfa0d099846f286d",
+  "issuedAtUTC": "2026-10-30T03:30:33.973791+00:00",
+  "sourceRevision": "ffb43a821c56505c84f2789f395bfed64f6a6e5f",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "1b0ef76ab7505c1e0ca854c1c7f13fae486b53e3340de9b70132cf4808230040",
+    "sha256": "0d25af61e37e494d72aba9bce3eddf216ef23dcfc3daf85eb7527e3af9ebb0b4",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -49,7 +49,7 @@
         "mode": "100644"
       },
       ".github/workflows/validate.yml": {
-        "sha256": "8e5b34eee31467afd593dc5cace1bb5a34505663703af23aa14584ed20c5275b",
+        "sha256": "6172ad2ed39871f7261dae316acc6c0584d3bd21edb9afaf7e94ce08664d3005",
         "mode": "100644"
       },
       ".github/workflows/windows-widget-qa.yml": {
@@ -190,6 +190,10 @@
       },
       "android/signing-certificate.sha256": {
         "sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3",
+        "mode": "100644"
+      },
+      "bin/tandemlog_cli.dart": {
+        "sha256": "547859edfe10f062113372aea91cb063ca471a8d5ebe433ec6c028d24d24115f",
         "mode": "100644"
       },
       "experiments/yrs-spike/.gitignore": {
@@ -792,6 +796,10 @@
         "sha256": "9322d11e900631e9f80f986ae2f57310962c16bff0e230cf248a4b4b2f55dcfd",
         "mode": "100644"
       },
+      "integration_test/food_row_selection_workflow_test.dart": {
+        "sha256": "36fe7001185c0b170bd2ad69a8bc80fbc55ccca59a86b03221989f0ec02a4c8d",
+        "mode": "100644"
+      },
       "integration_test/food_selection_retention_workflow_test.dart": {
         "sha256": "044f6925897381f7daaef2ac58c1c5498ab6d2b4fb4fc2fa562d8433acc9f2a7",
         "mode": "100644"
@@ -940,6 +948,58 @@
         "sha256": "1a4af30cb2ea9a9d95f49e5de4d3a3ecc434381480574923158efe58e33bba6f",
         "mode": "100644"
       },
+      "lib/agent/agent_profile.dart": {
+        "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
+        "mode": "100644"
+      },
+      "lib/agent/agent_workspace.dart": {
+        "sha256": "ba49d78fad6cacc2eb57d8beaaa8a58d0f99ab0c72e001e6c12ab54407310465",
+        "mode": "100644"
+      },
+      "lib/agent/cli.dart": {
+        "sha256": "6c630877b1d3b0fbb6b3ce74606b5d1e3c1db8eb298f1352b7ff2a6c33a42456",
+        "mode": "100644"
+      },
+      "lib/agent/command.dart": {
+        "sha256": "559e0f70a723e796596293b0b49164cb0deba71777bb849012ba9a223dd071bc",
+        "mode": "100644"
+      },
+      "lib/agent/commands_more.dart": {
+        "sha256": "f86d972371b36e6b496deacbc9cb9c96f38d5975607caaaff2350fd3cebe06b1",
+        "mode": "100644"
+      },
+      "lib/agent/commands_read.dart": {
+        "sha256": "4da32fc300ea0303533ff2c1887075d895f915e24afc053a603cac3be5e3717a",
+        "mode": "100644"
+      },
+      "lib/agent/commands_write.dart": {
+        "sha256": "8df417d96a44a4695230a9712e5b24a72d175a64befa84171019ad14202eeeac",
+        "mode": "100644"
+      },
+      "lib/agent/mcp_server.dart": {
+        "sha256": "0cfb682fdfde9d113c2d63ca661c47fccb9754aa887a79ff434c69a0cc9d6068",
+        "mode": "100644"
+      },
+      "lib/agent/overlay_folder.dart": {
+        "sha256": "e03a8ddb837629a1961d747d71b81bb7cfd0ce1a56e0bcd819277ff237e74284",
+        "mode": "100644"
+      },
+      "lib/agent/registry.dart": {
+        "sha256": "2a2da1f9f6ca48f59ac2e6ef2dc00bf19823d711c6b8df0ae6de984ba26570ec",
+        "mode": "100644"
+      },
+      "lib/agent/render.dart": {
+        "sha256": "50ed4a0e67f8d4bf86302b2c06bb5220d80680f8297859638aeae8a50349b4fa",
+        "mode": "100644"
+      },
+      "lib/agent/text_undo.dart": {
+        "sha256": "a29de6c0286a071cbf20ca693a6bc5c80ce1075103cc61c4b46d462332293d81",
+        "mode": "100644"
+      },
+      "lib/agent/windows_zone.dart": {
+        "sha256": "1677b9a776fdd18cbb12e1df22a884494856288171fbb6cb984ee0351a6ce530",
+        "mode": "100644"
+      },
       "lib/application/checklist_completion_command.dart": {
         "sha256": "40073f8e55ceea3de51bdd40eadc1584c525b9ba7d533996bb174094ccb500d7",
         "mode": "100644"
@@ -962,6 +1022,10 @@
       },
       "lib/application/undo_history.dart": {
         "sha256": "78dcf6157ce9c0caafcfd219e65eab0564a8338202c630e21ad0a3055b617ff1",
+        "mode": "100644"
+      },
+      "lib/application/workspace_session.dart": {
+        "sha256": "3a2fca66a65b212086b8cbef49c3a45c04ec2b8bcdc0e77fc683a76633daea29",
         "mode": "100644"
       },
       "lib/diagnostics/operation_observer.dart": {
@@ -1073,7 +1137,7 @@
         "mode": "100644"
       },
       "lib/domain/validated_action_cache.dart": {
-        "sha256": "ed6eeb3865c4b889f0f04da063404bb478780005a95294be74193e6236740025",
+        "sha256": "6cb8530f7ee5875ecdeb7a640847fab7b6bfcef981db0bd4cf7d6a487c8c11dd",
         "mode": "100644"
       },
       "lib/domain/visible_task_move.dart": {
@@ -1093,7 +1157,7 @@
         "mode": "100644"
       },
       "lib/food/food_editor.dart": {
-        "sha256": "9b1ebbc065af5c42fd9f8d7cf907e87a4081868235e2441650ff0d67791b6c93",
+        "sha256": "a251a380fb67b1b4df9a7e3421b8879c302ab8882a933fd6d161a35a85aa8fd9",
         "mode": "100644"
       },
       "lib/food/food_import.dart": {
@@ -1105,7 +1169,7 @@
         "mode": "100644"
       },
       "lib/food/food_page.dart": {
-        "sha256": "2e291f81dda00faa3e0241e4820775a62a8fe9380f45a23419ef26b6dd9f3b72",
+        "sha256": "c331ad1b00afb99e6283414d3888f28867ddb92e52142566be84a233abcb567e",
         "mode": "100644"
       },
       "lib/food/food_products.dart": {
@@ -1120,16 +1184,20 @@
         "sha256": "d6b56976d577e7414019fdabaad5a4db71f8083d2c35dffd62e745aab4aa9577",
         "mode": "100644"
       },
+      "lib/food/food_rows.dart": {
+        "sha256": "694ff6a16a731f078e33b4f7c768a0767906f924ebb3e87eba58d66fb35c25c9",
+        "mode": "100644"
+      },
       "lib/food/food_store.dart": {
-        "sha256": "3343e2e8e1e10bb77bb9e6823dd6e923a46f4c9afc713462df2ded86ca25cedb",
+        "sha256": "4e15a4c41909ae0fbbf6a9268372bd7a38d0078866c0885433c5f91030957cec",
         "mode": "100644"
       },
       "lib/food/inventory.dart": {
-        "sha256": "8afcf8bd889d015cfbcac8a092caf927b80d8ca64b9c44e1c1cf6adf2c73bfd6",
+        "sha256": "82ce1d378cdaa2c8796bdd0593a88f1b2d2daffb45fa09439eaa53faa95740d7",
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "61259b0eb52d92ad73ff7a6ecffea8608d941c4aa9d3456523e5f83463a12a4d",
+        "sha256": "2caffb2c75d3c6260bf42a730f8e3b6348bdf0f34a1905c35b5a2aee22dc2acb",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1144,12 +1212,16 @@
         "sha256": "a61df034f31273f84e4aa9ac75d2d6e763d252e29da0bc5c79d9e615536b3bbc",
         "mode": "100644"
       },
+      "lib/platform/host_zone.dart": {
+        "sha256": "17b4b1e48e6ec8b55da43748b4817d3d15aafe5a8673e503c91c6a67eec0a70f",
+        "mode": "100644"
+      },
       "lib/platform/log_folder.dart": {
         "sha256": "499153d2ef3425d7e391068464efde97fbda69c14ce5429f5a89486e52ce41f4",
         "mode": "100644"
       },
       "lib/platform/view_time_source.dart": {
-        "sha256": "78ded19e969f16d411e0a77f188c79a92745131f1889766417f0510cad97be54",
+        "sha256": "d328e31c43c6ea3c1a8730a595892ab3bedfbc5e997f043f1d1a367174cce826",
         "mode": "100644"
       },
       "lib/presentation/bulk_apply.dart": {
@@ -1313,7 +1385,7 @@
         "mode": "100644"
       },
       "lib/storage/checklist_store.dart": {
-        "sha256": "f88d635199b76468036d11101d5d9ad396948d99d401c4184dd3dfbb7fac0b0e",
+        "sha256": "027f31af14a48afbeadf0fd1984330dbc0609f4766a6d90bae01e98d6d841980",
         "mode": "100644"
       },
       "lib/storage/diagnostic_database.dart": {
@@ -1341,7 +1413,7 @@
         "mode": "100644"
       },
       "lib/storage/task_store.dart": {
-        "sha256": "e9460f11b54ef2e419470a91669b3948bab338a814ffe1fba71b4e0d62160a40",
+        "sha256": "3cad641d9b5d0ed9a8613002b5aac18e99f5a3cc14ec24ca3de23afda096a6e0",
         "mode": "100644"
       },
       "lib/storage/task_tables.dart": {
@@ -1353,7 +1425,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "613a68c23dd1b0ea7fea794a25bae98ea6262b42053bd3d43e85887a6a92aca6",
+        "sha256": "82d2e660d754f2376dc7ada292726284188d2f0127b5a28d4ef64f20d0440b7a",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -1361,7 +1433,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_record.dart": {
-        "sha256": "60a0ade96f258b5a0746d3458e52ac9fb103478677defb06ffe1549dccdab9b3",
+        "sha256": "a8a2c7b169c2da3bbb48eae4acec98e982b8274b8b046f29170ad5a017109304",
         "mode": "100644"
       },
       "lib/storage/workspace_state.dart": {
@@ -1741,11 +1813,11 @@
         "mode": "100644"
       },
       "packaging/README.md": {
-        "sha256": "cc7bb4b6356ce910342e6a7e2b2569b529284497be99aa9959f65dbfc4c81d58",
+        "sha256": "836fa1cf7d56744dbe678a2aa52a9231e636671ee4167e56e1d7813c686b2550",
         "mode": "100644"
       },
       "packaging/linux/build-flatpak.sh": {
-        "sha256": "bb09613c8d7e25e2b4f44856961a3eadf410e2fed1b0cb201f47d37fb1cbe4bf",
+        "sha256": "ce3a6cf56bae4515005325055a9c9d3477b7ff8c3b6ced6750e3ccecbb3436e5",
         "mode": "100755"
       },
       "packaging/linux/com.reddraggone9.tandemlog.desktop": {
@@ -1762,7 +1834,7 @@
         "mode": "100644"
       },
       "packaging/linux/install-smoke.sh": {
-        "sha256": "8e3a69db3316f32d8499f2c683da91f94643cfaabbdc0f021dd69e9481a83de2",
+        "sha256": "e8d187b3423d337d1325e7ba7111f5932c83487ae21e83e827c9e27c61c36867",
         "mode": "100755"
       },
       "packaging/linux/prepare_appstream_tools.py": {
@@ -1771,6 +1843,10 @@
       },
       "packaging/linux/tandemlog": {
         "sha256": "e4cd23b50a4b11439ab35865a691854b396a5d7ce93539aea5df455cd0a3df26",
+        "mode": "100755"
+      },
+      "packaging/linux/tandemlog-cli": {
+        "sha256": "09950dcd7a3ee7fdb008ba6ca577911ab2957bf1a401493351536589020f17e7",
         "mode": "100755"
       },
       "packaging/linux/verify_flatpak.py": {
@@ -1782,11 +1858,11 @@
         "mode": "100644"
       },
       "packaging/windows/build-and-smoke.ps1": {
-        "sha256": "b0442ee1541b30e67180343c73a73c19870c757f02724c065bbc18b13c1bb451",
+        "sha256": "b6c86a726c26bc91761a64e89f38530ea44cf003c04d82ce0f41363893cb48a4",
         "mode": "100644"
       },
       "packaging/windows/package_portable.py": {
-        "sha256": "8e4251b400c92d40394a0eae89e0d82f78962190bcf6c29255f6cff6a1e8a137",
+        "sha256": "4fb666cbd6714f7d74cc70befcf9f40098f2534a65b8b72c5d0ad66c5c78decf",
         "mode": "100644"
       },
       "packaging/windows/tandemlog.iss": {
@@ -1802,12 +1878,28 @@
         "mode": "100644",
         "normalized": "pubspec-version-v1"
       },
+      "test/action_cache_flight_test.dart": {
+        "sha256": "c9e3ec73393deeabe111fa431f703042c5769353b60abbb8822f53350aa70bfd",
+        "mode": "100644"
+      },
       "test/action_history_test.dart": {
         "sha256": "f1b2b6e6aa460f735a32e8a64b712c73e3358523cb76ec20d98695a7298faf72",
         "mode": "100644"
       },
       "test/adaptive_text_read_test.dart": {
         "sha256": "a7d9fc26bf22653b33127b422b10f6cd5ad97cda373b4ed3e2a851273b67a180",
+        "mode": "100644"
+      },
+      "test/agent_cli_test.dart": {
+        "sha256": "2d688bdce1e73178deac22f8b76968a3035c62e95bc644179ed7b1f5a223e536",
+        "mode": "100644"
+      },
+      "test/agent_overlay_folder_test.dart": {
+        "sha256": "f77df591775908a859852f93da102ecbfab5e29ac46d6ea4cc60bf5e5bc3a60a",
+        "mode": "100644"
+      },
+      "test/agent_parity_test.dart": {
+        "sha256": "06fbbd1dd004cc33b331d734db46511cd1839bf75efd15218c4ff43fd7cf4436",
         "mode": "100644"
       },
       "test/android_log_folder_test.dart": {
@@ -1847,7 +1939,7 @@
         "mode": "100644"
       },
       "test/checklist_completion_command_test.dart": {
-        "sha256": "22335355840c9c34d60d09cb0bff7f524231f445a3655a26b68f50e3518143d4",
+        "sha256": "a4d9674b7de0835b6be355e7ec0992429a96b4d34520c5e9f1d5507d97efd3e1",
         "mode": "100644"
       },
       "test/checklist_delivery_test.dart": {
@@ -2259,7 +2351,7 @@
         "mode": "100644"
       },
       "test/food_bulk_details_workflow_test.dart": {
-        "sha256": "e87805f316910083d118f98d53abe4357fa899e6fc4fdafe0372a0f5cd77228d",
+        "sha256": "7bc5f27e59d02fe7a5e6fed92720e822353e4a2641b6f2e49aa7e38dc42b1dcb",
         "mode": "100644"
       },
       "test/food_bulk_edit_fields_test.dart": {
@@ -2279,7 +2371,7 @@
         "mode": "100644"
       },
       "test/food_context_menu_test.dart": {
-        "sha256": "0deb3587f93a3880e5c68abeb71533b549b316f072bc259d83ff73b696329747",
+        "sha256": "726b2609dec3adf5b672653d65ff99b5224d69faef1594897506d2e4790eef6f",
         "mode": "100644"
       },
       "test/food_deleted_expiration_color_test.dart": {
@@ -2339,7 +2431,7 @@
         "mode": "100644"
       },
       "test/food_group_action_geometry_test.dart": {
-        "sha256": "6d41edaa1097c29af3a3bf631cccc229f5105f86c1fa7bd4d392bd67faecca2e",
+        "sha256": "7392a0b880a9071c2a4a0f423954c6d5a36fc0698d8c8b3c9a0010842292a0cd",
         "mode": "100644"
       },
       "test/food_group_sort_test.dart": {
@@ -2347,7 +2439,7 @@
         "mode": "100644"
       },
       "test/food_grouping_memo_test.dart": {
-        "sha256": "a263b42ac10d4968033b647a06406d0d19aae7eb02c4732d863f3f2730617e2c",
+        "sha256": "835e884f8ee83b13441b1b74342a41e3e990712a38ec12fec3af8b5508490f0d",
         "mode": "100644"
       },
       "test/food_import_contract_vector_test.dart": {
@@ -2379,7 +2471,7 @@
         "mode": "100644"
       },
       "test/food_products_test.dart": {
-        "sha256": "8f8c4bd35225345944f1cb2d5a1e2fedddda132c489897526685c8f2c553b473",
+        "sha256": "cf94a80a666a8a8c3c735386f8e1a3db79699014d33a86d4875283cddab0e944",
         "mode": "100644"
       },
       "test/food_products_ui_test.dart": {
@@ -2416,6 +2508,10 @@
       },
       "test/food_review_regression_test.dart": {
         "sha256": "b405c5c4ada24cce0672b83a4471df94eb6c62149c91993c7f5cbadda5e74887",
+        "mode": "100644"
+      },
+      "test/food_row_selection_test.dart": {
+        "sha256": "6dcddb9b4698a9ef5e51aa591d55fc72cbaedc0fa6f0555d34ab1a2fd1245a31",
         "mode": "100644"
       },
       "test/food_section_width_test.dart": {
@@ -2666,6 +2762,10 @@
         "sha256": "332f039dc3f7f3d00fec79859069c71cd9cb7981de92d4f2fbebb5df41fd0716",
         "mode": "100644"
       },
+      "test/support/agent_headless_probe.dart": {
+        "sha256": "6e9ed8977981ac436d475be52730740ce34e58be22e52816aed62cc68ba0b3da",
+        "mode": "100644"
+      },
       "test/support/food_product_fields.dart": {
         "sha256": "9c838939bd378d0da81a7c6df15dade99e1dc39970c1f87fbdad49325ab3c352",
         "mode": "100644"
@@ -2718,6 +2818,10 @@
         "sha256": "ac0992cfc612fed3bb5e8d5c4d581f1c97936a297acba26faece71856401b14d",
         "mode": "100644"
       },
+      "test/support/stable106_writer_cap_probe.dart": {
+        "sha256": "ecde436f443da70b8441af11c8e145cbf3c1dfa2b5bf1a1dfebeae7b5da7d880",
+        "mode": "100644"
+      },
       "test/support/toolbar_button.dart": {
         "sha256": "28cfacd3e218673abca39451691c2fb5fc9ca2efa0dd914a75eb4637753f1198",
         "mode": "100644"
@@ -2744,6 +2848,10 @@
       },
       "test/task_cache_digest_test.dart": {
         "sha256": "5f5bfc22d7ecc2b91fb01ac4c9e790d3ab794e82a2d9af2f92f00951aa7a1f51",
+        "mode": "100644"
+      },
+      "test/task_cache_rows_compare_test.dart": {
+        "sha256": "60c01227e6be0e2e26c609281471ce382704536324c7d92a1064efb3c39ba507",
         "mode": "100644"
       },
       "test/task_chronology_host_test.dart": {
@@ -2903,7 +3011,7 @@
         "mode": "100644"
       },
       "test/unified_decoded_cache_test.dart": {
-        "sha256": "555ef42899e8624ca1ddd905ca1c2d52b25ce38e96bb744a1221a8ae601ce202",
+        "sha256": "3fbc6cf176c5db1ea77835d7ba10613b3143f2f328f6d61a3b72a819e0a70ace",
         "mode": "100644"
       },
       "test/unified_enrollment_test.dart": {
@@ -2962,6 +3070,10 @@
         "sha256": "32622b21d3058989597b8e7310e0d6f06ba856a5c25733cc6e59c2cd3adf0b31",
         "mode": "100644"
       },
+      "test/writer_count_test.dart": {
+        "sha256": "d92133b04b005a4c53403efc43461dd6a0faa36b2fee69bd497a61332936932e",
+        "mode": "100644"
+      },
       "test/writer_identity_test.dart": {
         "sha256": "38b3cac54beffd1ac8af35efa33db1a1fe9198024c00d02e140f6ea9c35b981c",
         "mode": "100644"
@@ -3004,6 +3116,10 @@
       },
       "tool/bootstrap_text_engine.py": {
         "sha256": "b40a6f02f0c878e022b4fe8243e90f6ab5b4849af0084ff0e9b220822c01a672",
+        "mode": "100644"
+      },
+      "tool/build_agent_cli.py": {
+        "sha256": "b4659f681d3f48ed8fbebce2bd721cc77802a3347ef26f420e4d1a84c7329f47",
         "mode": "100644"
       },
       "tool/build_android_release.sh": {
@@ -3087,7 +3203,7 @@
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
-        "sha256": "30cad44418c5254252d9c92f60559e73bfe34ff1655d5420ccc0a3f6347a300a",
+        "sha256": "8abf73ffd03050b622f7bd1cda41ea66730f0b30f5622aaec24ca49962b3c3d3",
         "mode": "100644"
       },
       "tool/performance/borderline.py": {
@@ -3099,7 +3215,7 @@
         "mode": "100644"
       },
       "tool/performance/coverage-v1.json": {
-        "sha256": "37ac3b55ca8459c912948aae1099295f98ccaaa24baed20058270f39c583b5c1",
+        "sha256": "1ba8ce04682e4eb84a35c286faf34151b07e5c9eba82931c9bde5ac94e892220",
         "mode": "100644"
       },
       "tool/performance/disk_stall.py": {
@@ -3115,7 +3231,7 @@
         "mode": "100644"
       },
       "tool/performance/limits-v1.json": {
-        "sha256": "894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409",
+        "sha256": "335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb",
         "mode": "100644"
       },
       "tool/performance/operation_diagnostics.dart": {
@@ -3131,7 +3247,7 @@
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "439db75eb7498ebe05b6c328f0f185e1b835ba61257e54dc3f508c06b275e227",
+        "sha256": "abd2891bab4a4c99883d79491d2f612396815a2882857f3827c7bb8da09433dc",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
@@ -3187,7 +3303,7 @@
         "mode": "100644"
       },
       "tool/test_borderline_performance.py": {
-        "sha256": "b1eba898fba65b51ef4806ee29b75c1cf20813ac8045aa54b2086bd3f0f724b9",
+        "sha256": "35761d18d356596148a7aa4848331f2b555583a363663b2b983ba809142de7ef",
         "mode": "100644"
       },
       "tool/test_collect_linux_core_stacks.py": {
@@ -3251,11 +3367,11 @@
         "mode": "100644"
       },
       "tool/test_performance_gate.py": {
-        "sha256": "c605258fd0c51853b69c1a7a0a91681f0d969bcb15427eac72177a917d6d4522",
+        "sha256": "7b1ce1f51deed60a97e560ddd78a6259dac4ed094eaaccbacf5ca918f58d015e",
         "mode": "100644"
       },
       "tool/test_publish_inventory.py": {
-        "sha256": "4c93ec6a32597e91a381ebfc11fe9436b7b69fcf24e12b3bc9a195c25b93d274",
+        "sha256": "962c4122d9480cef81a5706783c4978f1dcdfd58def78dd5950e918ada2d517d",
         "mode": "100644"
       },
       "tool/test_reference_git_blobs.py": {
@@ -3420,7 +3536,7 @@
       }
     }
   },
-  "hostProfileSHA256": "439db75eb7498ebe05b6c328f0f185e1b835ba61257e54dc3f508c06b275e227",
-  "controllerSHA256": "0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3",
-  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-foodrc-20261028/controller/controller_r7.py"
+  "hostProfileSHA256": "abd2891bab4a4c99883d79491d2f612396815a2882857f3827c7bb8da09433dc",
+  "controllerSHA256": "1780871bed8ff20438569f93b929ed6e0229af0f985579d3765e31bb9584f8a5",
+  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-agentrc-20261029/controller/controller_r7.py"
 }
