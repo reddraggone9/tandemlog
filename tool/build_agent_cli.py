@@ -94,6 +94,20 @@ def smoke(cli):
         rev = done['affected'][0]['rev']
         run(cli, ['undo', done['actions'][0], f"--rev={task['id']}={rev}", *common],
             env)
+        # A planned commit plans on a worker isolate: SQLite and the text
+        # library must load there too in the packaged binary.
+        food = run(cli, ['food', 'add', '--name', 'Smoke soup', '--expiry',
+                         '2027-03-01', '--location', 'Pantry', '--count', '3',
+                         *common], env)
+        container = run(cli, ['food', 'show', food['affected'][0]['id'],
+                              *common], env)
+        split = ['food', 'move-some', container['id'], '--if-rev',
+                 container['rev'], '--count', '2', '--location', 'Freezer',
+                 *common]
+        plan = run(cli, [*split, '--dry-run'], env)
+        moved = run(cli, [*split, '--expect-plan', plan['planHash']], env)
+        if len(moved.get('actions', [])) != 1:
+            raise SystemExit(f'Planned commit failed: {moved}')
         # No --tz: the host zone path (Linux tzdata, Windows
         # GetDynamicTimeZoneInformation + ICU) must resolve on its own.
         context = run(cli, ['context'], env)

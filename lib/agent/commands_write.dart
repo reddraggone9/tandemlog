@@ -942,6 +942,8 @@ Future<AgentResult> dryRunWrite(
 // Separate lexical scope: the worker receives only plain values (no lock,
 // open file, database or pending Future). Its globals start fresh, so the
 // text engine factory is handed over; registry commands are looked up there.
+// Failures are translated to their stable kinds inside the worker, so even a
+// storage error that could not cross the isolate boundary keeps its kind.
 Future<({Map<String, Object?> data, String text})> _planOffThread(
   String name,
   Map<String, Object?> args,
@@ -949,15 +951,19 @@ Future<({Map<String, Object?> data, String text})> _planOffThread(
   String copy,
   String shadow,
   NativeTextEngine Function() engine,
-) => Isolate.run(() {
+) => Isolate.run(() async {
   agentTextEngine = engine;
-  return _plan(
-    registry.singleWhere((c) => c.name == name),
-    args,
-    options,
-    copy,
-    shadow,
-  );
+  try {
+    return await _plan(
+      registry.singleWhere((c) => c.name == name),
+      args,
+      options,
+      copy,
+      shadow,
+    );
+  } catch (e) {
+    throw AgentWorkspace.translate(e);
+  }
 }, debugName: 'tandemlog-cli-plan');
 
 Future<({Map<String, Object?> data, String text})> _plan(
@@ -974,10 +980,11 @@ Future<({Map<String, Object?> data, String text})> _plan(
     folderFor: (location) => OverlayLogFolder(shadow, location),
     disposable: true,
   );
-  final beforeState = _observe(AgentCall(args, before, options));
+  final _Observed beforeState;
   AgentResult result;
   _Observed afterState;
   try {
+    beforeState = _observe(AgentCall(args, before, options));
     result = await command.run(
       AgentCall(
         {...args}

@@ -511,7 +511,7 @@ purchase/provenance evidence and net-zero peer edits, not just visible projected
 values. Effect-based dry-run planning and both workspace opens remain; no
 state-only single-open token substitutes for the reviewed effect plan.
 
-### Planned commit: plan on a worker isolate (2026-10-30)
+### Planned commit: plan on a worker isolate (2026-10-29)
 
 Reference qualification of `24f2927` failed twice (see
 [evidence](../evidence/agent-interface-performance/README.md)): q1
@@ -541,6 +541,16 @@ throughout. A plain `--dry-run` still plans on the calling isolate. Diagnostic
 dense-1 318/323; the other agent labels did not change. Test: a planned commit
 opens only the real workspace on the calling isolate, and refusals raised in
 the worker keep their kinds (mutation-checked).
+
+Costs of the move: the two opens no longer share one in-flight decoded-cache
+verification, so the worker repeats it (about 160 ms of extra CPU on a second
+core) and reloads the time-zone database; the wall-time gain therefore needs
+at least two CPUs (the reference unit has a 2-CPU quota; a single-core host
+gets roughly the old serial time). Calling-isolate test hooks and phase probes
+no longer see the plan side. Failures are translated to their stable kinds
+inside the worker. The packaged-CLI smoke test (`tool/build_agent_cli.py`)
+now runs one planned commit, so the worker path is exercised in the built
+binary on Linux and Windows.
 
 The q1 merge-growth miss did not reproduce in either bounded diagnostic
 (dense-food median 6.585 and 6.194 ms; dense-1 4.599 ms; bound about 8.75 ms);
