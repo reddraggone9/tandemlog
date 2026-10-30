@@ -19,15 +19,22 @@ Retain continuing installation IDs and folder selections plus simple preferences
 Only a separate live-cutover approval can adopt converted history. Old applications must remain stopped afterward. Reverting after new-format writes requires reconciliation rather than copying old files over new work. No development test opens, resets or converts a production profile/workspace.
 
 
-Clean-cache startup preserves the same generation2 byte digest, scope binding,
+Clean-cache startup preserves the same generation3 byte digest, scope binding,
 kind/position checks and opaque receipts. Fresh decoded JSON trees are frozen in
 place before unmodifiable views escape, avoiding redundant collection copies.
 Pure whole-batch verification runs in a short-lived Dart isolate with only three
 immutable strings; profile transactions, canonical reads/admission and native
 text ownership stay on the owning queue. The one-shot proof is consumed durably
-before awaiting the worker. Unavailable or failed optional verification falls
+before awaiting the worker. Concurrent opens may share only an in-flight opaque
+receipt with exactly equal payload bytes, checksum and full binding; completed
+receipts are not retained in a process-wide cache. Unavailable or failed optional verification falls
 back to strict canonical reconstruction. This improves UI responsiveness rather
 than promising a particular duration for verification or disk durability.
+At clean close, bounded decoded-payload encoding/checksumming overlaps the
+independent Task-cache seal. Each proof is published in its own transaction on
+the serialized profile queue; no SQL or native owner crosses the worker boundary.
+A crash between the transactions only forgoes one or both optional caches.
+The same payload bytes, checksum, bounds and canonical comparison remain.
 A full owned canonical candidate may reuse its already-computed Task root after
 an exact cached ID/raw bijection; a cached prefix retains its own root check
 before any arriving delta is admitted.

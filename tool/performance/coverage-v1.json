@@ -1,6 +1,14 @@
 {
   "schemaVersion": 1,
   "storageApplicationActionIds": [
+    "agent.dryRun.bulkEdit2",
+    "agent.dryRun.purchaseImport2",
+    "agent.read.coldOpenTasksList",
+    "agent.read.foodList",
+    "agent.write.purchaseImport2",
+    "agent.write.taskComplete",
+    "agent.write.textEdit",
+    "agent.write.textEditUndo",
     "cardinality500.food.add.1",
     "cardinality500.food.add.1.undo",
     "cardinality500.food.add.3",
@@ -144,6 +152,8 @@
     "food.matched.location",
     "food.matched.retention",
     "food.matched.search",
+    "food.moveSome",
+    "food.moveSome.undo",
     "food.product.addWithProduct",
     "food.product.addWithProduct.undo",
     "food.product.bulkEdit",
@@ -244,7 +254,9 @@
     "task.view.openCompleted",
     "task.view.search",
     "task.view.tags",
-    "task.view.upcoming"
+    "task.view.upcoming",
+    "writer300.refresh.food.unchanged",
+    "writer300.refresh.tasks.unchanged"
   ],
   "inventory": [
     {
@@ -332,6 +344,12 @@
       "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending. Product-level name/brand/size/link/minimum edits and merges are measured by food.product.edit, bulkEdit, merge and their .undo labels with prospective unchanged 15ms median/20ms maximum limits; see food-products family for correctness and native/UI gaps."
     },
     {
+      "interaction": "Food row \u22ee Move some\u2026: how many + new Location, splitting them into their own row; session Undo",
+      "productionAPI": "changeDetails(ids,details,['location']) via FoodInventoryPage.onDetails; undoOperations",
+      "actualUIPath": "food_page.dart _moveSome/_MoveSomeDialog; main.dart onDetails",
+      "boundary": "food.moveSome and .undo time the production Location changeDetails over two of a three-container row (imported container plus two added) with exact confirmation and FoodUndoHistory. Widget food_row_selection_test covers validation, live row resolution and the single onDetails call; store-level one-Undo there too. Dialog open/typing/paint are a native UI timing gap."
+    },
+    {
       "interaction": "Food delete, restore,single/group/bulk selection",
       "productionAPI": "remove/restore",
       "actualUIPath": "main.dart:1086,1023; food_editor.dart bulk Remove/Restore",
@@ -376,8 +394,8 @@
     {
       "interaction": "First fresh profile and repeated clean-cache startup",
       "productionAPI": "LocalProfileDatabase\u2192UnifiedHistory\u2192TaskStore/FoodStore +LocalSettings.load",
-      "actualUIPath": "main.dart startup/open; unified_history.dart",
-      "boundary": "Audit.open stops after FoodStore/settings loading; main startup occurrence maintenance, bindWorkspace/publication, widget construction and first useful paint are outside this storage timer."
+      "actualUIPath": "main.dart WorkspaceSession.open; application/workspace_session.dart; unified_history.dart",
+      "boundary": "Audit.open stops after FoodStore/settings loading; main startup occurrence maintenance, bindWorkspace/publication, widget construction and first useful paint are outside this storage timer. The app (and agent CLI) open through WorkspaceSession.open; its history/Task/Food calls are the timed store calls in the same order, and the startup family asserts outside timers that the composed session reaches identical Task/Food state without writing. Folder listing and the open-time occurrence migration stay outside these labels; agent.* calls time them end to end."
     },
     {
       "interaction": "Explicit native Task title/Notes/both editor open, Save, Undo and cancel",
@@ -468,6 +486,19 @@
       "productionAPI": "FoodInventoryPage::_focusRelative/_select; presentation/list_selection.dart nextListSelection",
       "actualUIPath": "lib/food/food_page.dart::_group onKeyEvent -> _focusRelative; _select -> _editSelection(pane)",
       "boundary": "No write; food_products_ui_test drives real key events and wide/narrow layouts; selection_layout_parity_test asserts every-frame pane geometry for Tasks/Food and sole-row no-op with explicit Ctrl/Space deselection. Native visible-response timing pending; unchanged budgets."
+    },
+    {
+      "interaction": "Headless agent CLI tool call (tandemlog-cli / MCP): cold open + tasks list or food list; task complete with rev; title edit and whole-action Undo; two-task bulk-edit dry run; two-line purchase import dry run and commit",
+      "productionAPI": "lib/agent/cli.dart runCli -> execute -> AgentWorkspace.open (AgentProfile lock/readCopy, LocalProfileDatabase, WorkspaceSession.open) -> registry command -> close -> renderResult; dry runs via dryRunWrite (profile copy + OverlayLogFolder copy-on-write) or the import's own dryRunPurchaseImport",
+      "actualUIPath": "No app UI; bin/tandemlog_cli.dart and lib/agent/mcp_server.dart call the same execute()",
+      "boundary": "agent.* labels time one whole in-process runCli call per action (parse, lock/copy, open, command, close, JSON render) on a fresh per-repetition agent profile joined to a fresh fixture copy by init. Prospective budgets in limits-v1.json prospectiveAgentCliBudgets; startup class growth rule because every call contains a workspace open.",
+      "gaps": [
+        "Process start, Dart AOT runtime boot, native text/SQLite library loading and stdout/stderr transfer of a real tandemlog-cli invocation; agent.* labels time in-process runCli calls.",
+        "Packaged-binary timing (Flatpak second command, Windows installer/ZIP) and Windows host time-zone lookup; agent.* calls pass --tz and run on Linux only.",
+        "MCP stdio server framing and session reuse across tool calls (each MCP tool call opens and closes like one CLI call; not separately timed).",
+        "Concurrent agent and GUI installations on one workspace, lock waits and profile_in_use retries; correctness-covered by process tests, not timed.",
+        "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges, food move-some, whose store path is timed by food.moveSome); they share the timed open/close boundary and existing store-path labels."
+      ]
     }
   ],
   "actualUITimingAccepted": false,
@@ -594,5 +625,53 @@
       "No separate timing distributions for large bulk selections or deep/concurrent merge chains.",
       "Concurrent offline receipt allocation and its rare targeted full-admission fallback are correctness-covered, not a separate timing distribution."
     ]
+  },
+  "agentCliContract": {
+    "family": "agent-cli",
+    "additiveMetrics": [
+      "agent.read.coldOpenTasksList",
+      "agent.read.foodList",
+      "agent.write.taskComplete",
+      "agent.write.textEdit",
+      "agent.write.textEditUndo",
+      "agent.dryRun.bulkEdit2",
+      "agent.dryRun.purchaseImport2",
+      "agent.write.purchaseImport2"
+    ],
+    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, joined outside timers by `init` with a fresh agent profile (new writer, distinct from the fixture writers); the audit installation stays closed during agent calls.",
+    "targets": "Imported scalar Tasks3/6/9/18 (Task3 complete, Task6 title edit/Undo, Task9+18 bulk-edit dry run); imported Food1000 product for the matched receipt line (small60 functional-only Food4).",
+    "boundary": "In-process runCli with --profile <path> --tz America/Chicago --format json: argument parsing, AgentProfile lock (reads: disposable profile copy), LocalProfileDatabase open, WorkspaceSession.open (read-only folder for reads; write mode with occurrence migration otherwise), the registry command, close and JSON rendering. Bulk dry run uses dryRunWrite (profile copy, real-location binding, OverlayLogFolder copy-on-write); purchase import dry run uses the same disposable profile/overlay path; commit passes --expect-plan.",
+    "correctness": "Reads: listed Task IDs belong to the fixture, rows/totals present, workspace and agent profile byte-identical. Complete: one action, returned rev equals shown rev; whole-action undo restores the shown task. Text edit applied; timed undo appends one inverse and restores the shown task. Bulk dry run: two changed schedule effects on the two targets, planHash, workspace and agent profile byte-identical. Import dry run: ready, plan hash equals the plan file, one matched hand entry and three new Inbox containers, canonical bytes unchanged; commit: one action, both lines recorded. Afterwards the audit installation replays the agent history with Tasks unchanged and exactly three new purchase-linked containers; family replay/original-prefix checks unchanged.",
+    "budgets": "Prospective, all3shapes: reads400/600ms, single writes and Undo500/750ms, dry runs and two-line import700/1000ms (median/maximum). Growth: startup class2.25x+100ms /2.5x+200ms on both pairs because each call includes a history-scaled open; per-action store cost remains under existing ordinary-rule labels.",
+    "gaps": [
+      "Process start, Dart AOT runtime boot, native text/SQLite library loading and stdout/stderr transfer of a real tandemlog-cli invocation; agent.* labels time in-process runCli calls.",
+      "Packaged-binary timing (Flatpak second command, Windows installer/ZIP) and Windows host time-zone lookup; agent.* calls pass --tz and run on Linux only.",
+      "MCP stdio server framing and session reuse across tool calls (each MCP tool call opens and closes like one CLI call; not separately timed).",
+      "Concurrent agent and GUI installations on one workspace, lock waits and profile_in_use retries; correctness-covered by process tests, not timed.",
+      "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges, food move-some, whose store path is timed by food.moveSome); they share the timed open/close boundary and existing store-path labels."
+    ]
+  },
+  "foodMoveSomeContract": {
+    "family": "food-move-some",
+    "additiveMetrics": [
+      "food.moveSome",
+      "food.moveSome.undo"
+    ],
+    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
+    "boundary": "Untimed Add of two containers matching the imported container's row; timed production changeDetails Location move of the row's first two current containers with exact confirmation and FoodUndoHistory record; timed undoOperations.",
+    "correctness": "Exactly two containers leave the row into their own row; one Undo action; active-state reopen before the inverse; Undo restores full containers/catalog/products and the three-container row; Tasks unchanged.",
+    "budgets": "Prospective15ms median/20ms maximum, all3shapes, equal to existing Food details/Undo and food.product.bulkEdit; both ordinary growth pairs1.25x+3ms /1.4x+5ms. No measurements used to choose budgets.",
+    "gaps": [
+      "No actual widget/input/paint timing acceptance for the dialog.",
+      "Two-container move only; no separate timing distribution for moving hundreds of containers (bounded by the same changeDetails batching as bulk edits)."
+    ]
+  },
+  "writer300RefreshContract": {
+    "family": "writer300-refresh",
+    "physicalHistories": 300,
+    "setup": "Fresh sealed-fixture copy for each shape; original histories plus deterministic synthetic joined installations, all admitted outside timers. Manifest owner cap unchanged. Cardinality stress, not isolated history-growth causation.",
+    "metrics": "Shared production TaskStore.refresh and FoodStore.refresh, unchanged case; existing refresh absolute and paired-growth budgets copied unchanged.",
+    "correctness": "Exactly300 physical histories, every added join admitted; exact Task/Food values and canonical inventory unchanged after each repetition; full replay and original-prefix checks.",
+    "uiBoundary": "Provider listing/shared admission and projection refresh only; GUI scheduling/paint remains separate."
   }
 }

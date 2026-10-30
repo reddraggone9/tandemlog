@@ -2,14 +2,14 @@
 
 Implements [ADR0033](decisions/0033-controlled-reference-performance.md). No
 hardware multiplier;`limits-v1.json` SHA256 remains
-`894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409`.
+`335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb`.
 The implementation is not qualified until host/controller registration,a fresh
 reference receipt and exact-source hosted CI all pass. Do not promote old samples.
 
 ## Required roles
 
 - Hosted Linux/Windows/Android correctness/build/native checks remain required.
-  Hosted AOT uses `--hosted-advisory`,strict physical caps and all244metrics across
+  Hosted AOT uses `--hosted-advisory`,strict physical caps and all254metrics across
   all3shapes. Correctness,replay,integrity,coverage,source/tool/fixture drift,
   invalid growth contracts and incomplete child cleanup remain fatal. Only timing
   comparisons become advisory;every raw miss/log remains. No timing retry.
@@ -38,6 +38,7 @@ from the parent's read-only collection,not a cloud host probe. The reviewed
 controller with the reviewed held-worker completion protocol and admission-ordering corrections is registered by SHA256
 `0174e5cb313275afa671292ec2a71411c1a0f69d021afa6a188e72c70125d4d3`.
 For the Food-products244-label inventory,the controller differs from R7 only in its hard-coded limits digest (now the registered894f3af1…);existing232-label action budgets and all lifetime/resource controls remain unchanged. The old controller/request remain retained and were never launched.
+The combined Food Move some + Agent CLI254-label inventory (2026-10-29) changes the limits digest again (now fb8dd13a…, superseding the branch-local e1187303… and31c41229…);the registered controller's hard-coded digest must be re-registered before any qualification of that inventory. Existing244-label budgets are unchanged.
 Its adjacent pressure module remains SHA256
 `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`.
 The source and original host fault evidence were reviewed privately;registration
@@ -424,14 +425,14 @@ using its curated environment and the actual Dart SDK binary:
 /usr/bin/python3 "$qualification_source/tool/performance/run_gate.py" \
   --repo "$qualification_source" --dart "$reviewed_dart" \
   --native-library "$reviewed_native" --sqlite-library "$reviewed_sqlite" \
-  --expected-limits-sha256 894f3af11a2cf642fe8a18aaceeb1cd05077346ac2b3a384b558109676f98409 \
+  --expected-limits-sha256 335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb \
   --reference-request "$qualification_request" --output "$qualification_run"
 ```
 
 No `--measure-only`,`--hosted-advisory` or `--diagnose-costs`. Do not set SQLite
 LD_PRELOAD on the manager/shell;the driver applies it to actual Dart/AOT children.
 The fresh output must not exist. All3shapes retain identical current state and
-initial prefixes,their module-specific history growth,all244labels,2warmups/5samples,
+initial prefixes,their module-specific history growth,all254labels,2warmups/5samples,
 first-use fixtures and complete replay/prefix/native-owner assertions. Failures
 remain raw data. No per-action rerun or discarded outlier.
 

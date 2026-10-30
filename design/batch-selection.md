@@ -61,10 +61,11 @@ Views that allow selection:
 Selection affordances:
 - Both highlight selected rows and swap the selected count, Clear Selection and
   Edit into the shared entry area on narrow layouts.
-- Checkbox column: Food shows a tristate checkbox per row while selecting; Tasks
-  deliberately has none. Deliberate: a Food row is a group of physical
-  containers, and a matching arrival makes it partially selected, which the
-  tristate box shows.
+- Checkbox column: removed (Lee, 2026-10-29). Food used a tristate checkbox per
+  row because selection held exact container IDs, so an arrival left a row
+  partially selected. Food selection is now row-level like Tasks (see
+  [Row-level Food selection](#row-level-food-selection-lee-2026-10-29)), so no
+  partial state exists and neither section has a checkbox column.
 - Wide layouts: Tasks opens the bulk editor in the side pane as soon as a
   selection exists; Food kept a modal bulk editor opened from Edit. Resolved
   (Lee, 2026-10-27, on `vex/food-products`): at pane widths a Food selection
@@ -95,12 +96,14 @@ Bulk actions:
 
 Exit:
 - Both exit on Clear Selection, deselecting the last row, closing an editor
-  (after resolving any dirty draft), and after a bulk command; neither uses
-  Escape for selection. Escape dismisses an open editor, following its normal
-  draft guard.
+  (after resolving any dirty draft), and after a bulk command. Escape clears a
+  selection in both (Tasks' existing shortcut; Food since 2026-10-29), resolving
+  an open editor's draft first; without a selection it dismisses an open editor,
+  following its normal draft guard.
 - Item (l) shares `retainVisibleListSelection` for **view recomputation**:
-  retain visible IDs, drop hidden IDs, always forget hidden range anchors, and
-  preserve captured IDs while an editor is open. Pruning to zero visible IDs
+  retain visible rows (task IDs; Food row identities), drop hidden ones, always
+  forget hidden range anchors, and preserve the captured selection while an
+  editor is open. Pruning to zero visible IDs
   does not exit explicit selecting mode; expanding the view does not resurrect
   IDs already pruned. This did not change Tasks' input/filter handlers.
 - Native audit of `5721659` (2026-10-28): Tasks' search-input and Clear search
@@ -126,6 +129,37 @@ Undo:
   in a reopened and a fresh profile. Undo history itself is session-local
   (ADR0018), so it does not survive a restart by design.
 
+## Row-level Food selection (Lee, 2026-10-29)
+
+Lee: "Food selection = row-level, like Tasks: remove selection checkboxes (no
+column shift); a selected row means all containers currently in it, so a
+container that joins a selected group is included and no partial state/'3 of 4'
+display exists; the bulk editor shows the live container count. Add 'Move some…'
+to the Food row ⋮ menu."
+
+- Goal: selecting a Food row means "this food", not a snapshot of container IDs,
+  and splitting a row takes one action.
+- Method: the page's selection holds row identities (`FoodGroup.rowKey`:
+  product, description, expiration, retention, location and deletion status,
+  the same identity rows are grouped by). `FoodState.rows` resolves each to its
+  current containers whenever they are used: the compact count, the editor
+  title, Save, Remove and Restore. The shared `nextListSelection` rules run with
+  one member per row, so gestures, ranges and two-to-one behavior are unchanged.
+  One selected row opens its single editor, which also follows the row; a
+  plain-click edit keeps its observed containers, as before. A pending-save
+  retry reuses the containers its first attempt sent (exact host retry).
+- A row whose containers all left contributes nothing; a selected row that is
+  still populated but newly hidden is refused, as hidden IDs were.
+- Rejected: keeping exact IDs and auto-adding arrivals (still needs a partial
+  state when containers leave), and keeping the checkbox without tristate (still
+  shifts the row when selection starts).
+- Move some… (row ⋮ and secondary click, active rows with two or more
+  containers): how many, 1 to the current count, and a new Location. It is the
+  existing Location `changeDetails` over that many current containers, so the
+  canonical format, storage semantics and Undo (one action) are unchanged.
+  Allowing the full count avoids an error for "move all of them", which is the
+  same as editing the row.
+
 ## Responsive regression coverage
 
 `test/selection_layout_parity_test.dart` runs both sections at 390, 899, 900 and
@@ -136,7 +170,11 @@ these workflows on native Linux and is registered in the main native CI suite.
 
 ## Compatibility and performance
 
-No record, schema or Undo meaning changes: a bulk edit is the existing Food edit
+No record, schema or Undo meaning changes: row-level selection only changes
+which containers the page sends, and Move some is an ordinary Location edit,
+registered as `food.moveSome`/`.undo` (see
+[performance gate](performance-gate.md#food-move-some-prospective-coverage-2026-10-29)).
+A bulk edit is the existing Food edit
 operation with an explicit field list, already able to carry name, brand, size,
 location and retention per container. Bulk Remove/Restore reuse the existing
 remove and restore-batch commands. The `food.details.3` benchmark now measures

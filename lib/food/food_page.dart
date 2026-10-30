@@ -16,7 +16,9 @@ import '../presentation/list_selection.dart';
 import '../presentation/task_entry_area.dart';
 import '../presentation/toolbar_action.dart';
 import '../presentation/editor_surface.dart';
+import '../presentation/free_text_autocomplete.dart';
 import 'food_editor.dart';
+import 'food_rows.dart';
 import 'expiration_presentation.dart';
 import 'inventory.dart';
 
@@ -87,28 +89,19 @@ class _FoodGrouping {
   }) : reasons = Set.unmodifiable(reasons),
        brands = Set.unmodifiable(brands),
        locations = Set.unmodifiable(locations) {
-    final querying = query.trim().isNotEmpty;
-    matches = List.unmodifiable(
-      state.view(
-        view == FoodView.inbox ? FoodView.inventory : view,
-        search: query,
-        reasons: reasons,
-        brands: brands,
-        locations: locations,
-      ),
+    final composed = FoodRows(
+      state: state,
+      view: view,
+      query: query,
+      reasons: this.reasons,
+      brands: this.brands,
+      locations: this.locations,
     );
-    inbox = List.unmodifiable(
-      (view == FoodView.inventory || view == FoodView.inbox) && !querying
-          ? state.view(FoodView.inbox, brands: brands, locations: locations)
-          : <FoodGroup>[],
-    );
-    groups = querying
-        ? List.unmodifiable(matches.where((g) => !g.containers.first.deleted))
-        : matches;
-    deletedGroups = querying
-        ? List.unmodifiable(matches.where((g) => g.containers.first.deleted))
-        : const [];
-    rows = List.unmodifiable([...inbox, ...groups, ...deletedGroups]);
+    matches = composed.matches;
+    inbox = composed.inbox;
+    groups = composed.groups;
+    deletedGroups = composed.deletedGroups;
+    rows = composed.rows;
     shown = List.unmodifiable([for (final g in rows) ...g.containers]);
     visibleIds = Set.unmodifiable(shown.map((item) => item.id));
   }
@@ -121,10 +114,13 @@ class _FoodGrouping {
   late final List<FoodGroup> matches, inbox, groups, deletedGroups;
 
   /// Visible rows in display order, including Deleted rows; selection ranges
-  /// and selectable IDs follow exactly what is shown.
+  /// and selectable rows follow exactly what is shown.
   late final List<FoodGroup> rows;
   late final List<FoodContainer> shown;
   late final Set<String> visibleIds;
+  late final Set<String> visibleRows = Set.unmodifiable(
+    rows.map((row) => row.rowKey),
+  );
 
   bool accepts(
     FoodState nextState,
@@ -149,21 +145,33 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   final search = TextEditingController();
   String _lastSearchText = '';
   Set<String> reasons = {}, brands = {}, locations = {};
-  final bulkSelected = <String>{};
+
+  /// Selected rows by [FoodGroup.rowKey]. A selected row means whichever
+  /// containers are in it at use time: arrivals join, departures leave.
+  final selectedRows = <String>{};
   bool selecting = false;
   String? _selectionAnchor;
   // The group open in a single-group editor; explicit selection starts with it.
   FoodGroup? _editingGroup;
   Object? _focusedGroup;
 
+  /// The selected rows' current container IDs.
+  Set<String> get bulkSelected => {
+    for (final container in _rowContainers(selectedRows)) container.id,
+  };
+
+  /// The current containers of [keys], hidden or shown, in key order.
+  List<FoodContainer> _rowContainers(Iterable<String> keys) => [
+    for (final key in keys) ...?widget.state.rows[key],
+  ];
+
   void _clearBulkSelection() {
     selecting = false;
-    bulkSelected.clear();
+    selectedRows.clear();
     _selectionAnchor = null;
   }
 
-  static String _rowKey(FoodGroup group) =>
-      '${group.containers.first.deleted ? 'deleted' : 'active'}:${group.key}';
+  static String _rowKey(FoodGroup group) => group.rowKey;
 
   /// Wide windows edit a selection in the side pane, as Tasks does.
   bool _wide = false;
@@ -183,13 +191,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         _canUseGroupMenu(group, workspace);
     if (!usable()) return;
     final rows = {for (final row in _grouping.rows) _rowKey(row): row};
-    var selected = Set<String>.of(bulkSelected);
+    var selected = Set<String>.of(selectedRows);
     var anchor = _selectionAnchor;
     final editing = _editingGroup == null
         ? null
         : rows[_rowKey(_editingGroup!)];
     if (!selecting && editing != null) {
-      selected = editing.containers.map((e) => e.id).toSet();
+      selected = {_rowKey(editing)};
       anchor = _rowKey(editing);
     }
     final result = nextListSelection<String>(
@@ -198,28 +206,21 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       anchor: anchor,
       target: _rowKey(group),
       order: rows.keys.toList(),
-      members: (key) => rows[key]?.containers.map((e) => e.id) ?? const [],
+      members: (key) => [key],
       gesture: gesture,
     );
     if (gesture == SelectionGesture.plain &&
         setEquals(selected, result.selected)) {
       return;
     }
-    // Two-to-one: narrowing a wide selection to one whole row returns to
-    // that row's single editor, as on Tasks.
-    final rowsBefore = rows.values
-        .where((row) => row.containers.any((e) => selected.contains(e.id)))
-        .length;
-    final single = result.selecting && _wide && rowsBefore >= 2
-        ? rows.values
-              .where(
-                (row) =>
-                    row.containers.every(
-                      (e) => result.selected.contains(e.id),
-                    ) &&
-                    row.containers.length == result.selected.length,
-              )
-              .firstOrNull
+    // Two-to-one: narrowing a wide selection to one row returns to that
+    // row's single editor, as on Tasks.
+    final single =
+        result.selecting &&
+            _wide &&
+            selected.length >= 2 &&
+            result.selected.length == 1
+        ? rows[result.selected.single]
         : null;
     if (_editorBuilder != null) {
       if (result.selected.isEmpty) {
@@ -235,6 +236,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       unawaited(
         _edit(
           group: single,
+          rows: {_rowKey(single)},
           detailsCommand: widget.onDetails,
           replacingApproved: true,
         ),
@@ -242,40 +244,39 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       return;
     }
     setState(() {
-      bulkSelected
+      selectedRows
         ..clear()
         ..addAll(
           result.selecting
-              ? result.selected.intersection(_grouping.visibleIds)
+              ? result.selected.intersection(_grouping.visibleRows)
               : const <String>{},
         );
-      selecting = bulkSelected.isNotEmpty;
+      selecting = selectedRows.isNotEmpty;
       _selectionAnchor = selecting ? result.anchor : null;
     });
     if (selecting && _wide) unawaited(_editSelection(replacingApproved: true));
   }
 
-  /// One whole row uses its own editor; multiple rows use the bulk editor,
-  /// just as Tasks opens its single editor for one selected task.
+  /// One row uses its own editor; multiple rows use the bulk editor, just as
+  /// Tasks opens its single editor for one selected task. Either edits the
+  /// selected rows' current containers.
   Future<void> _editSelection({bool replacingApproved = false}) {
-    final selected = [
-      for (final item in _shown())
-        if (bulkSelected.contains(item.id)) item,
+    final rows = [
+      for (final row in _grouping.rows)
+        if (selectedRows.contains(_rowKey(row))) row,
     ];
-    final single = _grouping.rows
-        .where(
-          (row) =>
-              row.containers.length == selected.length &&
-              row.containers.every((item) => bulkSelected.contains(item.id)),
-        )
-        .firstOrNull;
-    return single != null
+    if (rows.isEmpty) return Future.value();
+    return rows.length == 1
         ? _edit(
-            group: single,
+            group: rows.single,
+            rows: {_rowKey(rows.single)},
             detailsCommand: widget.onDetails,
             replacingApproved: replacingApproved,
           )
-        : _edit(bulkTargets: selected, replacingApproved: replacingApproved);
+        : _edit(
+            rows: {for (final row in rows) _rowKey(row)},
+            replacingApproved: replacingApproved,
+          );
   }
 
   Future<void> _selectMatching(Set<String> observed, Object? workspace) async {
@@ -293,12 +294,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       await editorDone;
     }
     if (!usable()) return;
-    final selected = observed.intersection(_grouping.visibleIds);
+    final selected = observed.intersection(_grouping.visibleRows);
     if (selected.isEmpty) return;
     setState(() {
       selecting = true;
       _selectionAnchor = null;
-      bulkSelected
+      selectedRows
         ..clear()
         ..addAll(selected);
     });
@@ -386,9 +387,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     if (mounted) _rowFocus[key]?.requestFocus();
   }
 
+  /// Lets open dialogs follow incoming Food changes.
+  late final _stateChanges = ValueNotifier<FoodState>(widget.state);
+
   @override
   void didUpdateWidget(covariant FoodInventoryPage oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _stateChanges.value = widget.state;
     if (oldWidget.workspaceIdentity != widget.workspaceIdentity) {
       _clearBulkSelection();
       _focusedGroup = null;
@@ -423,7 +428,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   List<FoodGroup> _matches() => _grouping.matches;
   List<FoodGroup> _inbox() => _grouping.inbox;
-  List<FoodContainer> _shown() => _grouping.shown;
   Future<bool> Function()? _canReplaceEditor;
   Widget Function(bool panel)? _editorBuilder;
   int _editorRequest = 0;
@@ -446,6 +450,23 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     _expirationClock = FoodExpirationClock(now: widget.now)
       ..addListener(_expirationChanged);
     FocusManager.instance.addListener(_focusChanged);
+    HardwareKeyboard.instance.addHandler(_escapeClearsSelection);
+  }
+
+  /// Escape clears a selection, as on Tasks, even when no row or input has
+  /// focus. Focused inputs keep Escape for themselves first (for example to
+  /// dismiss suggestions) and reach the page's DismissIntent action instead.
+  bool _escapeClearsSelection(KeyEvent event) {
+    if (event is! KeyDownEvent ||
+        event.logicalKey != LogicalKeyboardKey.escape ||
+        !mounted ||
+        !selecting ||
+        _textHasFocus ||
+        !(ModalRoute.of(context)?.isCurrent ?? true)) {
+      return false;
+    }
+    unawaited(_clearSelection());
+    return true;
   }
 
   void _focusChanged() {
@@ -478,6 +499,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   @override
   void dispose() {
     FocusManager.instance.removeListener(_focusChanged);
+    HardwareKeyboard.instance.removeHandler(_escapeClearsSelection);
+    _stateChanges.dispose();
     _expirationClock.removeListener(_expirationChanged);
     _expirationClock.dispose();
     search.dispose();
@@ -532,16 +555,17 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final inboxGroups = grouping.inbox;
     final visibleIds = grouping.visibleIds;
     final selection = retainVisibleListSelection<String>(
-      selected: bulkSelected,
+      selected: selectedRows,
       selecting: selecting,
       anchor: _selectionAnchor,
       visibleRows: live,
-      visibleIds: visibleIds,
+      visibleIds: live,
       editorOpen: _editorBuilder != null,
     );
-    bulkSelected
+    selectedRows
       ..clear()
       ..addAll(selection.selected);
+    final selectedCount = _rowContainers(selectedRows).length;
     selecting = selection.selecting;
     _selectionAnchor = selection.anchor;
     final groups = grouping.groups;
@@ -560,10 +584,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             (_editorBuilder != null || textHasFocus),
         body: Actions(
           actions: {
-            if (_editorBuilder != null)
+            // Escape clears a selection (resolving its editor first), as on
+            // Tasks; otherwise it dismisses an open editor.
+            if (_editorBuilder != null || selecting)
               DismissIntent: CallbackAction<DismissIntent>(
                 onInvoke: (_) {
-                  unawaited(requestCloseEditor());
+                  unawaited(
+                    selecting ? _clearSelection() : requestCloseEditor(),
+                  );
                   return null;
                 },
               ),
@@ -580,13 +608,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                     // reveals its editor automatically, as on Tasks.
                     if (_wide &&
                         selecting &&
-                        bulkSelected.isNotEmpty &&
+                        selectedRows.isNotEmpty &&
                         _editorBuilder == null) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (mounted &&
                             _wide &&
                             selecting &&
-                            bulkSelected.isNotEmpty &&
+                            selectedRows.isNotEmpty &&
                             _editorBuilder == null) {
                           unawaited(_editSelection());
                         }
@@ -633,7 +661,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                             wideLayout: _wide,
                                             editorOpen: _editorBuilder != null,
                                             captureVisible: true,
-                                            selectionCount: bulkSelected.length,
+                                            selectionCount: selectedCount,
                                             maximumSelectionCount:
                                                 visibleIds.length,
                                             onClear: () =>
@@ -641,7 +669,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                             onEdit:
                                                 widget.busy ||
                                                     pending ||
-                                                    bulkSelected.isEmpty
+                                                    selectedRows.isEmpty
                                                 ? null
                                                 : _editSelection,
                                             capture: TextField(
@@ -973,7 +1001,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         view = next;
       }),
       itemBuilder: (_) {
-        final observed = _shown().map((e) => e.id).toSet();
+        final observed = Set.of(_grouping.visibleRows);
         final workspace = widget.workspaceIdentity;
         return [
           for (final mode in [
@@ -1175,7 +1203,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       );
 
   bool _groupSelected(FoodGroup group) =>
-      selecting && group.containers.every((e) => bulkSelected.contains(e.id));
+      selecting && selectedRows.contains(_rowKey(group));
 
   bool _groupHighlighted(FoodGroup group) =>
       _groupSelected(group) ||
@@ -1203,6 +1231,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       value: 'select',
       child: Text(_groupSelected(group) ? 'Deselect' : 'Select'),
     ),
+    // Moving all of them is an ordinary Location edit, so Move some needs
+    // at least two containers.
+    if (!group.containers.first.deleted && group.containers.length > 1)
+      PopupMenuItem<String>(
+        enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),
+        value: 'move-some',
+        child: const Text('Move some…'),
+      ),
     if (group.containers.first.deleted) ...[
       PopupMenuItem<String>(
         value: 'restore',
@@ -1301,6 +1337,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         }
       }
       if (action == 'select') select(SelectionGesture.longPress);
+      if (action == 'move-some' &&
+          !(widget.hasPendingSave?.call() ?? widget.savePending)) {
+        unawaited(_moveSome(group));
+      }
       if (action == 'remove') _confirmRemove(group, removeCommand);
       if (action == 'restore') restoreGroup();
     }
@@ -1329,7 +1369,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           skipTraversal: true,
           // Space on the focused row selects, as on Task rows; Enter still
           // edits. Only the row's own InkWell focus node is a direct child;
-          // its checkbox and buttons keep their own Space activation.
+          // its buttons keep their own Space activation.
           onKeyEvent: (node, event) {
             if (FocusManager.instance.primaryFocus?.parent == node &&
                 event is! KeyUpEvent &&
@@ -1380,26 +1420,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (selecting)
-                    Checkbox(
-                      key: ValueKey('food-group-selection:$key'),
-                      semanticLabel:
-                          'Select ${group.containers.length} ${details.name} containers',
-                      tristate: true,
-                      value:
-                          group.containers.every(
-                            (e) => bulkSelected.contains(e.id),
-                          )
-                          ? true
-                          : group.containers.any(
-                              (e) => bulkSelected.contains(e.id),
-                            )
-                          ? null
-                          : false,
-                      onChanged: widget.busy
-                          ? null
-                          : (_) => select(SelectionGesture.toggle),
-                    ),
                   Expanded(
                     child: Semantics(
                       button: true,
@@ -1606,11 +1626,55 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     }
   }
 
+  /// Move some… gives some of a row's containers a new Location, so they form
+  /// their own row. It is one Location edit: one command and one Undo action.
+  /// Moving every container is allowed too; it equals editing the row.
+  Future<void> _moveSome(FoodGroup group) async {
+    final workspace = widget.workspaceIdentity;
+    final key = _rowKey(group);
+    final details = group.details;
+    List<FoodContainer> current() => widget.state.rows[key] ?? const [];
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => _MoveSomeDialog(
+        details: details,
+        changes: _stateChanges,
+        available: () => current().length,
+        locations: () => widget.state.locations,
+        move: (count, location) async {
+          final pending = widget.hasPendingSave?.call() ?? widget.savePending;
+          if (!mounted || workspace != widget.workspaceIdentity || pending) {
+            throw FormatException(
+              pending
+                  ? 'Finish the pending save first.'
+                  : 'The food workspace changed. Close and try again.',
+            );
+          }
+          // The row's containers at Move time, not when the dialog opened.
+          await widget.onDetails(
+            current().take(count).toList(),
+            FoodDetails(
+              name: details.name,
+              brand: details.brand,
+              expiry: details.expiry,
+              estimated: details.estimated,
+              retention: details.retention,
+              location: location,
+              size: details.size,
+            ),
+            const ['location'],
+            const FoodProductChange(),
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> _edit({
     FoodGroup? group,
     bool replacingApproved = false,
     FoodDetails? template,
-    List<FoodContainer>? bulkTargets,
+    Set<String>? rows,
     FutureOr<void> Function(FoodDetails, int)? addCommand,
     FutureOr<void> Function(
       List<FoodContainer>,
@@ -1630,9 +1694,42 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final workspace = widget.workspaceIdentity;
     final add = addCommand ?? widget.onAdd;
     final changeDetails = detailsCommand ?? widget.onDetails;
-    final targets = bulkTargets == null
-        ? null
-        : List<FoodContainer>.unmodifiable(bulkTargets);
+    // Selected rows resolve to their current containers on every build, so
+    // the editor's count and targets follow arrivals and departures. A row
+    // whose containers all left keeps its last membership for display, and
+    // Save refuses it. Plain-click editing keeps its observed containers.
+    final rowKeys = rows == null ? null : List<String>.unmodifiable(rows);
+    final bulk = rowKeys != null && group == null;
+    var lastGroup = group;
+    var lastTargets = bulk
+        ? List<FoodContainer>.unmodifiable(_rowContainers(rowKeys))
+        : null;
+    FoodGroup? currentGroup() {
+      if (group == null || rowKeys == null) return group;
+      final members = widget.state.rows[_rowKey(group)];
+      if (members != null && members.isNotEmpty) {
+        lastGroup = FoodGroup(members, productKey: group.productKey);
+      }
+      return lastGroup;
+    }
+
+    List<FoodContainer>? currentTargets() {
+      if (!bulk) return null;
+      final members = _rowContainers(rowKeys);
+      if (members.isNotEmpty) lastTargets = List.unmodifiable(members);
+      return lastTargets;
+    }
+
+    // Every row with containers is still shown: a newly hidden row is
+    // refused rather than silently dropped from the edit.
+    bool rowsShown() =>
+        rowKeys == null ||
+        (_rowContainers(rowKeys).isNotEmpty &&
+            rowKeys.every(
+              (key) =>
+                  (widget.state.rows[key]?.isEmpty ?? true) ||
+                  _grouping.visibleRows.contains(key),
+            ));
     if (_editorDone != null && !replacingApproved) {
       if (!await (_canReplaceEditor?.call() ?? Future.value(false))) return;
     }
@@ -1641,8 +1738,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         workspace != widget.workspaceIdentity ||
         (widget.hasPendingSave?.call() ?? widget.savePending) ||
         (group != null && !_canUseGroupMenu(group, workspace)) ||
-        (targets != null &&
-            targets.any((e) => !_shown().any((item) => item.id == e.id)))) {
+        (bulk && (lastTargets!.isEmpty || !rowsShown()))) {
       return;
     }
     final removeCommand = widget.onRemove,
@@ -1662,9 +1758,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       () => _editorBuilder = (panel) => FoodEditor(
         key: key,
         panel: panel,
-        group: group,
+        group: currentGroup(),
         template: template,
-        targets: targets,
+        targets: currentTargets(),
         state: widget.state,
         onAdd: add,
         onDetails: changeDetails,
@@ -1674,25 +1770,25 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             workspace == widget.workspaceIdentity &&
             (group == null ||
                 (widget.hasPendingSave?.call() ?? widget.savePending) ||
-                group.containers.every(
-                  (e) => widget.state.containers.any(
-                    (item) =>
-                        item.id == e.id &&
-                        item.deleted == e.deleted &&
-                        item.deletions.length == e.deletions.length &&
-                        item.deletions.containsAll(e.deletions),
-                  ),
-                )),
-        areTargetsVisible: () =>
-            targets == null ||
-            targets.every((e) => _shown().any((item) => item.id == e.id)),
+                (rowKeys != null
+                    ? rowsShown()
+                    : group.containers.every(
+                        (e) => widget.state.containers.any(
+                          (item) =>
+                              item.id == e.id &&
+                              item.deleted == e.deleted &&
+                              item.deletions.length == e.deletions.length &&
+                              item.deletions.containsAll(e.deletions),
+                        ),
+                      ))),
+        areTargetsVisible: () => !bulk || rowsShown(),
         onBulkApplied: () {
           if (mounted) setState(_clearBulkSelection);
         },
-        onRemoveTargets: targets == null
+        onRemoveTargets: !bulk
             ? null
             : (items) => removeCommand(items.map((e) => e.id).toList()),
-        onRestoreTargets: targets == null
+        onRestoreTargets: !bulk
             ? null
             : (items) async {
                 if (restoreBatchCommand != null) {
@@ -1733,7 +1829,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       _editorDone = null;
     }
     if (!mounted) return;
-    if (accepted != null && targets == null && group == null) {
+    if (accepted != null && !bulk && group == null) {
       setState(
         () => view = accepted!.$1.retention.isNotEmpty
             ? FoodView.retained
@@ -1812,4 +1908,166 @@ class FoodInventoryToolbar extends StatelessWidget {
             icon: const Icon(Icons.undo),
           ),
   );
+}
+
+/// How many containers of one row move, and where to; errors sit beside the
+/// fields once Move reveals them.
+class _MoveSomeDialog extends StatefulWidget {
+  const _MoveSomeDialog({
+    required this.details,
+    required this.changes,
+    required this.available,
+    required this.locations,
+    required this.move,
+  });
+  final FoodDetails details;
+  final Listenable changes;
+  final int Function() available;
+  final List<String> Function() locations;
+  final Future<void> Function(int count, String location) move;
+
+  @override
+  State<_MoveSomeDialog> createState() => _MoveSomeDialogState();
+}
+
+class _MoveSomeDialogState extends State<_MoveSomeDialog> {
+  final amount = TextEditingController(text: '1')
+    ..selection = const TextSelection(baseOffset: 0, extentOffset: 1);
+  final location = TextEditingController();
+  String? amountError, locationError, failure;
+  var revealed = false, saving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.changes.addListener(_changed);
+  }
+
+  @override
+  void dispose() {
+    widget.changes.removeListener(_changed);
+    amount.dispose();
+    location.dispose();
+    super.dispose();
+  }
+
+  // Food changes arrive while the page rebuilds; follow them after the frame.
+  void _changed() => WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!mounted) return;
+    setState(() {
+      if (revealed) _validate();
+    });
+  });
+
+  /// The count to move, or null with field errors set.
+  int? _validate() {
+    final available = widget.available();
+    final count = int.tryParse(amount.text.trim());
+    amountError = available == 0
+        ? 'These containers changed. Close and choose the row again.'
+        : count == null || count < 1 || count > available
+        ? 'Enter 1 to $available.'
+        : null;
+    final value = location.text.trim();
+    locationError = value == widget.details.location
+        ? 'Choose a different location.'
+        : value.length > 200 || value.contains('\u0000')
+        ? 'Use 200 characters or fewer.'
+        : null;
+    return amountError == null && locationError == null ? count : null;
+  }
+
+  Future<void> _move() async {
+    if (saving) return;
+    final count = _validate();
+    setState(() {
+      revealed = true;
+      failure = null;
+    });
+    if (count == null) return;
+    setState(() => saving = true);
+    try {
+      await widget.move(count, location.text.trim());
+      if (mounted) _answerOnce<void>(context)(null);
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          saving = false;
+          failure = e is FormatException ? e.message : '$e';
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final available = widget.available(), details = widget.details;
+    void edited(String _) {
+      if (revealed) setState(_validate);
+    }
+
+    return AlertDialog(
+      key: const ValueKey('food-move-some'),
+      title: Text('Move some ${details.name}'),
+      content: SizedBox(
+        width: 400,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                '$available ${available == 1 ? 'container is' : 'containers are'} '
+                'in ${details.location.isEmpty ? 'no location' : details.location}. '
+                'The ones you move get their own row.',
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                key: const ValueKey('food-move-count'),
+                controller: amount,
+                autofocus: true,
+                enabled: !saving,
+                keyboardType: TextInputType.number,
+                onChanged: edited,
+                onSubmitted: (_) => unawaited(_move()),
+                decoration: InputDecoration(
+                  labelText: 'How many',
+                  errorText: revealed ? amountError : null,
+                  errorMaxLines: 3,
+                ),
+              ),
+              const SizedBox(height: 12),
+              FreeTextAutocomplete(
+                key: const ValueKey('food-move-location'),
+                controller: location,
+                enabled: !saving,
+                label: 'New location',
+                values: widget.locations(),
+                errorText: revealed ? locationError : null,
+                onChanged: edited,
+                onSelected: edited,
+              ),
+              if (failure != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  failure!,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: saving ? null : () => _answerOnce<void>(context)(null),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: saving ? null : () => unawaited(_move()),
+          child: const Text('Move'),
+        ),
+      ],
+    );
+  }
 }

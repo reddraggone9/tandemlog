@@ -1,0 +1,174 @@
+import 'dart:io';
+
+import '../application/workspace_session.dart';
+import '../domain/event.dart' show FormatFailure;
+import '../food/food_store.dart';
+import '../storage/local_profile_database.dart';
+import '../storage/local_settings.dart';
+import '../storage/log_folder.dart';
+import '../storage/profile_lock.dart';
+import '../storage/task_store.dart' show StaleTaskSnapshot;
+import '../text/native_text_engine.dart';
+import 'agent_profile.dart';
+
+/// Creates the native text engine. The packaged CLI keeps the app's reviewed
+/// library in its own `lib/` beside `bin/` (tool/build_agent_cli.py); tests
+/// point it at a specific build.
+NativeTextEngine Function() agentTextEngine = () =>
+    NativeTextEngine(libraryPath: packagedTextLibrary());
+
+String packagedTextLibrary() {
+  final bin = File(Platform.resolvedExecutable).parent;
+  final name = Platform.isWindows
+      ? 'tandemlog_text.dll'
+      : 'libtandemlog_text.so';
+  return '${bin.parent.path}${Platform.pathSeparator}lib${Platform.pathSeparator}$name';
+}
+
+/// Test hook: observes each opened agent workspace (cache reuse, mode).
+void Function(AgentWorkspace workspace)? debugAgentWorkspaceOpened;
+
+/// An open agent workspace for one command (or one MCP call). Reads run on a
+/// disposable profile copy and a write-refusing folder; writes use the real
+/// profile under the identity lock.
+class AgentWorkspace {
+  AgentWorkspace._(
+    this.profile,
+    this.settings,
+    this.session,
+    this._lock,
+    this._engine,
+    this._copy,
+    this.readOnly,
+    this.disposable,
+  );
+  final LocalProfileDatabase profile;
+  final LocalSettings settings;
+  final WorkspaceSession session;
+  final ProfileLock? _lock;
+  final NativeTextEngine _engine;
+  final Directory? _copy;
+  final bool readOnly;
+
+  /// The profile is a copy discarded after the call (reads and dry runs).
+  final bool disposable;
+
+  String get writer => settings.writer;
+  NativeTextEngine get textEngine => _engine;
+
+  static Future<AgentWorkspace> open(
+    AgentProfile agent, {
+    required bool readOnly,
+    Duration wait = const Duration(seconds: 30),
+    NativeTextEngine Function()? engineFactory,
+    ProfileLock? held,
+    LogFolder Function(String location)? folderFor,
+    bool disposable = false,
+  }) async {
+    await agent.requireAgentProfile();
+    // A caller already holding the identity lock keeps ownership of it.
+    ProfileLock? lock = held ?? await agent.lock(wait);
+    final owned = held == null;
+    Directory? copy;
+    LocalProfileDatabase? profile;
+    NativeTextEngine? engine;
+    try {
+      if (readOnly) {
+        copy = await agent.readCopy();
+        if (owned) await lock.close();
+        lock = null;
+      }
+      profile = await LocalProfileDatabase.open(copy?.path ?? agent.root);
+      final settings = LocalSettings(profile.root, profileDatabase: profile);
+      await settings.load();
+      final location = settings.folder;
+      if (location == null) {
+        throw const AgentFailure(
+          'validation',
+          'This agent profile has no workspace. Run init.',
+        );
+      }
+      final LogFolder base = (folderFor ?? LocalLogFolder.new)(location);
+      engine = (engineFactory ?? agentTextEngine)();
+      final session = await WorkspaceSession.open(
+        readOnly ? ReadOnlyLogFolder(base) : base,
+        profile: profile,
+        writer: settings.writer,
+        textEngine: engine,
+        readOnly: readOnly,
+      );
+      final workspace = AgentWorkspace._(
+        profile,
+        settings,
+        session!,
+        owned ? lock : null,
+        engine,
+        copy,
+        readOnly,
+        readOnly || disposable,
+      );
+      debugAgentWorkspaceOpened?.call(workspace);
+      return workspace;
+    } catch (e) {
+      await profile?.close();
+      engine?.dispose();
+      if (owned) await lock?.close();
+      await copy?.delete(recursive: true);
+      throw translate(e);
+    }
+  }
+
+  /// A session on a disposable profile copy (reads, dry runs) does not seal
+  /// the warm Task cache; the copy is deleted right after.
+  Future<void> close() async {
+    try {
+      await session.close(sealCache: !disposable);
+    } finally {
+      try {
+        await profile.close();
+      } finally {
+        _engine.dispose();
+        await _lock?.close();
+        await _copy?.delete(recursive: true);
+      }
+    }
+  }
+
+  /// Map storage failures to the stable error kinds.
+  static Object translate(Object e) {
+    if (e is AgentFailure) return e;
+    if (e is ReadOnlyWorkspaceWrite) {
+      return AgentFailure('write_pending', e.message);
+    }
+    if (e is ProfileInUse) return AgentFailure('profile_in_use', e.message);
+    if (e is StaleTaskSnapshot || e is StaleFoodState) {
+      return const AgentFailure(
+        'stale',
+        'The item changed before the write. Read it again.',
+      );
+    }
+    if (e is LocalDatabaseFailure &&
+        e.message.startsWith('Unsupported local database')) {
+      return AgentFailure('update_required', e.message);
+    }
+    final message = e.toString();
+    if (message.contains('Update the app') ||
+        message.contains('Update TandemLog')) {
+      return AgentFailure('update_required', message);
+    }
+    if (e is FormatFailure &&
+        e.message == 'App history changed while preparing this command.') {
+      // A peer's write arrived mid-command: retry the same command.
+      return AgentFailure('write_pending', e.message);
+    }
+    if (e is FormatFailure && e.message == 'This operation cannot be undone.') {
+      return AgentFailure('undo_unavailable', e.message);
+    }
+    if (e is FormatFailure || e is FoodHistoryFailure) {
+      return AgentFailure('history_damaged', message);
+    }
+    // Store-level input refusals (Food selection, product planning).
+    if (e is FormatException) return AgentFailure('validation', e.message);
+    return e;
+  }
+}

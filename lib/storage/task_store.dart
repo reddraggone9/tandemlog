@@ -57,6 +57,14 @@ Map<String, dynamic>? calculateTaskTagChanges(
 }
 
 /// The task state observed by a caller changed before a guarded command.
+/// One field's canonical text history, eagerly copied out of the store.
+class TaskTextLineage {
+  const TaskTextLineage(this.context, this.seed, this.operations);
+  final String context;
+  final NativeTextUpdate seed;
+  final List<LineageTextOperation> operations;
+}
+
 class StaleTaskSnapshot implements Exception {
   @override
   String toString() => 'Tasks changed. Review the selection and try again.';
@@ -2562,16 +2570,23 @@ class TaskStore {
   Future<void> reopen(
     String entity,
     List<String> observedCompletions, {
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) {
     final targets = observedCompletions.toSet();
     return _serialize(() async {
       await _refresh();
+      if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
       final active = activeCompletionIds(entity).toSet();
-      await _appendCommandBatch('task.completionUndone', [
-        for (final target in targets.where(active.contains))
-          (entity, {'completion': target}),
-      ], onPrepared: onPrepared);
+      await _appendCommandBatch(
+        'task.completionUndone',
+        [
+          for (final target in targets.where(active.contains))
+            (entity, {'completion': target}),
+        ],
+        canCommit: canCommit,
+        onPrepared: onPrepared,
+      );
     });
   }
 
@@ -2579,8 +2594,17 @@ class TaskStore {
     String entity,
     String type,
     Map<String, dynamic> data, {
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
-  }) => _serialize(() => _command(entity, type, data, onPrepared: onPrepared));
+  }) => _serialize(
+    () => _command(
+      entity,
+      type,
+      data,
+      canCommit: canCommit,
+      onPrepared: onPrepared,
+    ),
+  );
 
   Future<LogEvent> _command(
     String entity,
@@ -3746,6 +3770,24 @@ class TaskStore {
       history.any((event) => isNativeTextCreation(event.type)) ||
       _hasInheritedText(entity);
 
+  /// Fresh canonical text lineage of [entity]'s fields: context, root seed
+  /// and admitted packets in order. Read-only; for tools that rebuild private
+  /// native documents outside an editing session (agent whole-action Undo).
+  Future<Map<String, TaskTextLineage>> textLineage(String entity) =>
+      _serialize(() async {
+        await _refresh();
+        return {
+          for (final MapEntry(key: field, value: resolved) in _resolvedText(
+            entity,
+          ).entries)
+            field: TaskTextLineage(
+              resolved.context.hash,
+              resolved.seed,
+              List.unmodifiable(resolved.operations),
+            ),
+        };
+      });
+
   Map<String, ResolvedTextField> _resolvedText(
     String entity, {
     List<LogEvent> pending = const [],
@@ -4042,6 +4084,7 @@ class TaskStore {
     String? localZoneId,
     String? expectedChecklistSnapshot,
     bool requireIncomplete = false,
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
@@ -4157,6 +4200,7 @@ class TaskStore {
     final receipts = await _appendUnifiedCommands(
       [],
       buildFreshCommands: freshCompletion,
+      canCommit: canCommit,
       onPrepared: onPrepared,
     );
     return _recurringTextMemo.decodeCanonical(receipts.single.raw);
@@ -4667,10 +4711,16 @@ class TaskStore {
     owner.prepared = null;
   }
 
-  Future<TaskUndoResult> undoOperations(List<String> operations) =>
-      _serialize(() => _undoOperations(operations));
+  /// [canCommit] runs after fresh admission, immediately before the append.
+  Future<TaskUndoResult> undoOperations(
+    List<String> operations, {
+    bool Function()? canCommit,
+  }) => _serialize(() => _undoOperations(operations, canCommit: canCommit));
 
-  Future<TaskUndoResult> _undoOperations(List<String> operations) async {
+  Future<TaskUndoResult> _undoOperations(
+    List<String> operations, {
+    bool Function()? canCommit,
+  }) async {
     await _refresh();
     if (operations.isEmpty || operations.toSet().length != operations.length) {
       throw FormatFailure('Choose distinct saved operations.');
@@ -4693,6 +4743,9 @@ class TaskStore {
       targets[id] = event;
     }
     if (targets.values.any((event) => event.type == 'task.textEdited')) {
+      if (canCommit != null) {
+        throw ArgumentError('Text Undo does not take a commit guard here.');
+      }
       return _undoMixedTextOperations(operations, targets);
     }
     var newer = false;
@@ -4712,21 +4765,27 @@ class TaskStore {
     final prepared = <OperationReceipt>[];
     Object? error;
     try {
-      await _appendCommands([
-        for (final id in operations.where((id) => !alreadyUndone.contains(id)))
-          isTaskCompletion(targets[id]!.type) &&
-                  targets[id]!.data['successor'] != null
-              ? (
-                  targets[id]!.entity,
-                  'task.recurringCompletionUndone',
-                  {'completion': id},
-                )
-              : (
-                  targets[id]!.entity,
-                  'task.operationUndone',
-                  {'operation': id},
-                ),
-      ], onPrepared: prepared.add);
+      await _appendCommands(
+        [
+          for (final id in operations.where(
+            (id) => !alreadyUndone.contains(id),
+          ))
+            isTaskCompletion(targets[id]!.type) &&
+                    targets[id]!.data['successor'] != null
+                ? (
+                    targets[id]!.entity,
+                    'task.recurringCompletionUndone',
+                    {'completion': id},
+                  )
+                : (
+                    targets[id]!.entity,
+                    'task.operationUndone',
+                    {'operation': id},
+                  ),
+        ],
+        canCommit: canCommit,
+        onPrepared: prepared.add,
+      );
     } catch (failure) {
       error = failure;
       try {
@@ -4837,7 +4896,10 @@ class TaskStore {
     onPrepared: onPrepared,
   );
 
-  Future<void> close() {
+  /// [sealCache] false skips re-sealing the warm Task cache proof; for
+  /// sessions whose profile is a disposable copy (agent reads and dry runs),
+  /// where the seal would be written and deleted unused.
+  Future<void> close({bool sealCache = true}) {
     _closed = true;
     return _closing ??= _queue.then((_) async {
       var disposed = false;
@@ -4867,13 +4929,12 @@ class TaskStore {
               // Foreign module refreshes finish before their shared projection
               // is detached; no publication can target disposed native owners.
               detachAndDispose();
-              if (unified != null &&
+              if (sealCache &&
+                  unified != null &&
                   unified!.safetyFailure == null &&
                   !unified!.hasPending &&
                   !unified!.snapshot.pendingEffects) {
-                profileDatabase!.transaction(() {
-                  unified!.sealTaskProjectionCache(this);
-                });
+                await unified!.sealTaskProjectionCache(this);
               }
             });
           } on StateError {
@@ -4980,6 +5041,46 @@ void _insertTaskCacheRows(
       insert.close();
     }
   }
+}
+
+/// True only when [a] and [b] hold the same values with the same SQLite
+/// types, so their [_taskCacheDigest] inputs encode to identical bytes. Any
+/// value it cannot vouch for (NaN, an unexpected type) counts as different,
+/// which only forgoes a seal. Replaces a second full digest at close.
+bool sameTaskCacheRows(
+  List<List<List<Object?>>> a,
+  List<List<List<Object?>>> b,
+) {
+  bool same(Object? x, Object? y) {
+    if (x == null || x is String || x is bool) return x == y;
+    if (x is int) return y is int && x == y;
+    if (x is double) {
+      // -0.0 == 0.0 but they encode differently; NaN never equals.
+      return y is double && x == y && x.isNegative == y.isNegative;
+    }
+    if (x is List<int> && y is List<int>) {
+      if (x.length != y.length) return false;
+      for (var i = 0; i < x.length; i++) {
+        if (x[i] != y[i]) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  if (a.length != b.length) return false;
+  for (var t = 0; t < a.length; t++) {
+    final ra = a[t], rb = b[t];
+    if (ra.length != rb.length) return false;
+    for (var r = 0; r < ra.length; r++) {
+      final va = ra[r], vb = rb[r];
+      if (va.length != vb.length) return false;
+      for (var c = 0; c < va.length; c++) {
+        if (!same(va[c], vb[c])) return false;
+      }
+    }
+  }
+  return true;
 }
 
 String _taskCacheDigest(List<List<List<Object?>>> rows, List<String> ready) =>
@@ -5861,9 +5962,10 @@ class TaskSemanticValidator {
     final ready = _ready!.toList()..sort();
     final rows = _taskCacheRows(source, tables);
     final expected = _taskCacheRows(_store!.db, _store!.tables);
-    final digest = _taskCacheDigest(rows, ready);
     // Do not bless an unobserved change to the live disposable cache at close.
-    if (digest != _taskCacheDigest(expected, ready)) return;
+    // Exact row equality implies equal digests, so one digest suffices.
+    if (!sameTaskCacheRows(rows, expected)) return;
+    final digest = _taskCacheDigest(rows, ready);
     source.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
       _proofKey,
       jsonEncode({

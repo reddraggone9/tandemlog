@@ -43,6 +43,8 @@ function Install-App {
 Install-App
 python packaging/smoke.py --workspace $fixture --report $report --phase after-install --seed -- (Join-Path $installDir 'tandemlog.exe')
 if ($LASTEXITCODE -ne 0) { throw 'Installed launch failed' }
+python tool/build_agent_cli.py --smoke-only (Join-Path $installDir 'cli/bin/tandemlog-cli.exe')
+if ($LASTEXITCODE -ne 0) { throw 'Installed agent CLI smoke failed' }
 # Same-AppId replacement rehearses the upgrade mechanism without fabricating an old build.
 Install-App
 python packaging/smoke.py --workspace $fixture --report $report --phase after-upgrade -- (Join-Path $installDir 'tandemlog.exe')

@@ -296,6 +296,22 @@ void main() {
         );
 
     test(
+      'purchase import refusal runs before reservation and leaves no bytes',
+      () async {
+        final before = records().length;
+        final report = await food.dryRunPurchaseImport(plan([milk()]));
+        expect(report.status, FoodPurchaseImportStatus.ready);
+        await expectLater(
+          food.commitPurchaseImport(plan([milk()]), canCommit: () => false),
+          throwsA(isA<StaleFoodState>()),
+        );
+        expect(records().length, before);
+        expect(food.state.catalog.purchases, isEmpty);
+        expect(tasks.unified!.hasPending, false);
+      },
+    );
+
+    test(
       'links recent hand entries and creates the rest in the Inbox',
       () async {
         await food.add(

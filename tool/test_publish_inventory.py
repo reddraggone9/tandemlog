@@ -72,7 +72,8 @@ class PublishInventory(unittest.TestCase):
     def test_actual_portable_producer_is_compatible(self):
         bundle = self.root / 'bundle'
         for name in ('tandemlog.exe', 'tandemlog_text.dll', 'flutter_windows.dll',
-                     'data/flutter_assets/AssetManifest.bin'):
+                     'data/flutter_assets/AssetManifest.bin',
+                     'cli/bin/tandemlog-cli.exe', 'cli/lib/tandemlog_text.dll'):
             path = bundle / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(name.encode())

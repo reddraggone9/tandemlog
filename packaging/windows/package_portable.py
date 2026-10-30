@@ -20,7 +20,8 @@ def main():
     bundle = args.bundle.resolve()
     output = args.output.resolve()
     for name in ('tandemlog.exe', 'tandemlog_text.dll', 'flutter_windows.dll',
-                 'data/flutter_assets/AssetManifest.bin'):
+                 'data/flutter_assets/AssetManifest.bin',
+                 'cli/bin/tandemlog-cli.exe', 'cli/lib/tandemlog_text.dll'):
         if not (bundle / name).is_file():
             raise SystemExit(f'Missing verified bundle payload: {name}')
     files = sorted(path for path in bundle.rglob('*') if path.is_file())

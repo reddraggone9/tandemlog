@@ -146,7 +146,7 @@ quiescent app rather than exposing half-closed resources. Host tests verify leas
 release, witness creation and actual proof reuse without relying on unmount;
 actual GTK/Windows native-close validation remains a separate gate.
 
-A separate layout2 decode cache stores exact outer record strings and their
+A separate layout3 decode cache stores exact outer record strings and their
 already validated typed Task/Food fields, bounded to 4,096 records and a 16 MiB
 payload. Its one-shot clean-close receipt binds location, installation, manifest,
 protected heads, native support and cache layout. Restoration verifies the whole
@@ -156,7 +156,13 @@ raw string. Food retains its cheap operation-shape validation. Missing, damaged,
 stale or unsupported receipts fall back to strict canonical decoding. This is
 private disposable-cache corruption detection, not authentication against an
 adversary replacing both the cache and its proof. Closed validation or
-normalization changes require a cache-layout change.
+normalization changes require a cache-layout change. Clean-close encoding and
+checksum preparation now run as bounded pure worker work while the independent
+Task seal is computed. The serialized queue publishes the two independent proofs
+in separate transactions and drains the worker before returning, including SQL
+failure. A crash between publication transactions merely requires one strict
+reconstruction. Exact UTF-8/checksum parity (including Unicode) is tested; no
+canonical/cache layout or digest change accompanies this scheduling optimization.
 
 The cache never authorizes unseen bytes: startup still reads actual canonical
 files and checks their physical chains, protected heads and sealed migration

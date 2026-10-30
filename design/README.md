@@ -29,6 +29,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Released in stable2026.10.9 after accepted RC.1/RC.2 validation.
 
+- [Agent interface](agent-interface.md): accepted direction (Lee, 2026-10-28), implemented on release line `vex/agent-interface-20261029` and not yet released (review fixes integrated and performance coverage registered; CI and qualification pending; see section 11); separate headless Dart CLI/MCP shipped with the GUI in Flatpak and Windows installer/ZIP, per-agent private profile/log, required revisions/plans and whole-action Undo. [ADR0036](decisions/0036-agent-interface.md); implementation questions in section 9. Own release line only after Food products is stable.
+
 - [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 
 - [Controlled reference performance](decisions/0033-controlled-reference-performance.md): Lee-approved prospective Farnsworth absolute/growth qualification with unchanged budgets,mandatory hosted correctness and advisory hosted timing;[operating protocol](performance-reference-qualification.md),fresh enforcing receipt and exact-source CI required. No persistent runner or multiplier.
@@ -110,7 +112,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [One app-wide local DB](decisions/0013-app-wide-local-database.md): approved single permanent DB and temporary recovery-file exception; published stable2026.10.3/build56 with verified import, activation, cleanup and startup/switch wiring. [Native handoff](local-db-native-acceptance.md) records completed bounded Windows/Android acceptance; [release receipts](../evidence/stable-2026.10.3/README.md) bind final native/artifact and public verification.
 
-- [Batch selection: Tasks and Food](batch-selection.md): shared selection rules, Deleted Food selection, Shift ranges, bulk Remove/Restore and all-field Food bulk editing; 2026-10-27 consistency audit with open questions. Local development implementation only.
+- [Batch selection: Tasks and Food](batch-selection.md): shared selection rules, row-level Food selection and Move some (2026-10-29), Deleted Food selection, Shift ranges, bulk Remove/Restore and all-field Food bulk editing; 2026-10-27 consistency audit with open questions. Local development implementation only.
 
 - [UX refinements2026-10-26](ux-improvements-20261026.md) and [ADR0034](decisions/0034-bounded-ux-refinements.md): local implementation, focused/full development checks; native/runtime/performance acceptance remains separate.
 

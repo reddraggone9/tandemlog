@@ -18,3 +18,5 @@ Record consequential choices with status, context, alternatives, consequences, v
 - [0033: controlled reference performance](0033-controlled-reference-performance.md) — accepted prospective host-role change;unchanged budgets,mandatory hosted correctness/advisory timing,fresh source-bound Farnsworth qualification.
 
 - [0034: bounded UX refinements](0034-bounded-ux-refinements.md) — accepted requested scope; local implementation with explicit native/performance gaps.
+
+- [0036 — Agent interface](0036-agent-interface.md): accepted direction, not implemented; bundled headless CLI/MCP with per-agent state, own release line after Food products stable.

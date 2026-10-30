@@ -83,6 +83,8 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
     expect(actions(), [
       ('add-another', true),
       ('select', true),
+      // Move some needs at least two containers to split.
+      if (name == 'Active beans') ('move-some', true),
       ('remove', true),
     ]);
     expect(removals, isEmpty);
@@ -125,6 +127,7 @@ Future<void> verifyFoodContextMenu(WidgetTester tester) async {
   expect(actions(), [
     ('add-another', false),
     ('select', false),
+    ('move-some', false),
     ('remove', true),
   ]);
   await dismiss();

@@ -111,6 +111,7 @@ Future<void> verifyFoodGroupActionGeometry(
     expect(menuActions(), [
       ('add-another', true),
       ('select', true),
+      ('move-some', true),
       ('remove', true),
     ]);
     for (final item in find.byType(PopupMenuItem<String>).evaluate()) {

@@ -62,6 +62,31 @@ void main() {
         };
         await store.close();
         store = null;
+        if (damage == 'none') {
+          // The seal binds UTF-8 bytes but stores the same TEXT value.
+          final profile = await LocalProfileDatabase.open(profilePath);
+          try {
+            final payload = profile.database
+                .select(
+                  "SELECT typeof(value) AS t, value FROM profile_metadata WHERE key LIKE 'app5.decoded.payload.%'",
+                )
+                .single;
+            final proof = profile.database
+                .select(
+                  "SELECT value FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
+                )
+                .single;
+            expect(payload['t'], 'text');
+            expect(
+              proof['value'],
+              sha256
+                  .convert(utf8.encode(payload['value'] as String))
+                  .toString(),
+            );
+          } finally {
+            await profile.close();
+          }
+        }
         if (damage != 'none') {
           final profile = await LocalProfileDatabase.open(profilePath);
           try {
@@ -180,6 +205,10 @@ void main() {
         final payload = UnifiedDecodedCache.encode(
           records,
           'Synthetic binding',
+        );
+        expect(
+          UnifiedDecodedCache.encodeUtf8(records, 'Synthetic binding'),
+          utf8.encode(payload),
         );
         final batch = ValidatedActionCache.verify(
           payload,

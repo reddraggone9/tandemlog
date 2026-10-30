@@ -1,3 +1,4 @@
 - Task and Food side panes stay open when you change the selection.
 - Running low is now a Food view. When something is low, the filter button shows a warning dot and the menu shows how many products.
 - Food rows put expiration and location above brand and size. Store links are available from the row menu.
+- Workspaces with more than 256 installations (including agents) need every device on this release or newer. Older versions stop with "Too many installation histories" and write nothing.

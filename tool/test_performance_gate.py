@@ -109,6 +109,17 @@ class RegisteredCoveragePreflightTests(unittest.TestCase):
             self.coverage,self.limits,run_gate.scaling_specs(self.limits))
     def test_committed_registry_matches_all_budgets_and_growth_rules(self):
         self.assertEqual(set(self.check()),set(self.coverage['storageApplicationActionIds']))
+    def test_writer300_reuses_existing_refresh_budgets_and_growth_rules(self):
+        contract=self.coverage['writer300RefreshContract']
+        self.assertEqual(contract['physicalHistories'],300)
+        for module in ('tasks','food'):
+            original='refresh.'+module+'.unchanged'
+            added='writer300.'+original
+            self.assertIn(added,self.coverage['storageApplicationActionIds'])
+            for bounds in self.limits['actionsBySize'].values():
+                self.assertEqual(bounds[added],bounds[original])
+            for spec in run_gate.scaling_specs(self.limits).values():
+                self.assertEqual(spec['rules'][added],spec['rules'][original])
     def test_new_or_stale_registered_case_cannot_be_unbudgeted(self):
         self.coverage['storageApplicationActionIds'].append('unbudgeted.future.action')
         with self.assertRaisesRegex(ValueError,'coverage/budget'):self.check()
@@ -287,7 +298,7 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
         frozen=json.loads((PATH.parent/'original-action-ids-v1.json').read_text())['actions']
         self.assertEqual(len(frozen),146)
         self.assertTrue(set(frozen).issubset(coverage))
-        self.assertEqual(len(coverage),244)
+        self.assertEqual(len(coverage),256)
         products = {'food.product.' + name for name in (
             'edit','edit.undo','bulkEdit','bulkEdit.undo','merge','merge.undo',
             'addWithProduct','addWithProduct.undo','import.dryRun','import.commit',
@@ -297,6 +308,30 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
             for action in products:
                 self.assertEqual(values[action],{'medianMs':15,'maxMs':20})
         self.assertTrue(limits['prospectiveFoodProductBudgets']['declaredBeforeMeasurement'])
+        move = {'food.moveSome','food.moveSome.undo'}
+        self.assertEqual({a for a in coverage if a.startswith('food.moveSome')},move)
+        for values in limits['actionsBySize'].values():
+            for action in move:
+                self.assertEqual(values[action],{'medianMs':15,'maxMs':20})
+        self.assertTrue(limits['prospectiveFoodMoveSomeBudgets']['declaredBeforeMeasurement'])
+        agent = {'agent.read.coldOpenTasksList': (400, 600), 'agent.read.foodList': (400, 600),
+                 'agent.write.taskComplete': (500, 750), 'agent.write.textEdit': (500, 750),
+                 'agent.write.textEditUndo': (500, 750), 'agent.dryRun.bulkEdit2': (700, 1000),
+                 'agent.dryRun.purchaseImport2': (700, 1000), 'agent.write.purchaseImport2': (700, 1000)}
+        self.assertEqual({a for a in coverage if a.startswith('agent.')},set(agent))
+        for values in limits['actionsBySize'].values():
+            for action,(median,maximum) in agent.items():
+                self.assertEqual(values[action],{'medianMs':median,'maxMs':maximum})
+        prospective=limits['prospectiveAgentCliBudgets']
+        self.assertTrue(prospective['declaredBeforeMeasurement'])
+        self.assertEqual(prospective['actions'],len(agent))
+        contract=json.loads((PATH.parent/'coverage-v1.json').read_text())['agentCliContract']
+        self.assertEqual(contract['additiveMetrics'],list(agent))
+        # Every agent call contains a workspace open: startup class growth rule.
+        startup=limits['pairedScaling']['rules']['startup.warm.total']
+        for spec in run_gate.scaling_specs(limits).values():
+            for action in agent:
+                self.assertEqual(spec['rules'][action],startup)
         for action in ('firstDerived.metadata.tags', 'firstDerived.metadata.tags.undo', 'firstCopied.metadata.complete', 'firstCopied.metadata.complete.undo', 'firstDerived.mixed.save', 'firstDerived.mixed.undo'):
             self.assertIn(action,coverage)
         for action in ("converted.food.paired.details.confirmedSave", "converted.food.paired.details.confirmedUndo"):
@@ -492,16 +527,19 @@ class CalibratedInitialLimitTests(unittest.TestCase):
         self.assertFalse(limits['calibration']['policyOnlyReevaluationIsFreshEnforcingRun'])
     def test_ordinary_target_and_both_tight_pairs_keep_all_actions(self):
         limits=json.loads((PATH.parent/'limits-v1.json').read_text())
+        # Agent CLI calls each contain a workspace open: startup-class rules.
+        opening=('startup.','agent.')
         for values in limits['actionsBySize'].values():
-            ordinary={k:v for k,v in values.items() if not k.startswith('startup.')}
-            self.assertEqual(len(ordinary),236)
-            self.assertEqual(len(values)-len(ordinary),8)
+            ordinary={k:v for k,v in values.items() if not k.startswith(opening)}
+            self.assertEqual(len(ordinary),240)
+            self.assertEqual(sum(k.startswith('startup.') for k in values),8)
+            self.assertEqual(sum(k.startswith('agent.') for k in values),8)
             for bound in ordinary.values():
                 self.assertLessEqual(bound['medianMs'],bound['maxMs'])
                 self.assertLessEqual(bound['maxMs'],100)
         for spec in run_gate.scaling_specs(limits).values():
             for action,rule in spec['rules'].items():
-                startup=action.startswith('startup.')
+                startup=action.startswith(opening)
                 self.assertEqual(rule['medianAdditiveMs'],100 if startup else 3)
                 self.assertEqual(rule['maximumAdditiveMs'],200 if startup else 5)
                 self.assertEqual(rule['maxMedianRatio'],2.25 if startup else 1.25)

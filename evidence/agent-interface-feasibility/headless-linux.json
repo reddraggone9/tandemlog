@@ -1,0 +1,26 @@
+{
+  "status": "PASS_SOURCE_PROBE_NOT_PACKAGED_ACCEPTANCE",
+  "sdk": "Dart 3.13.4 stable linux_x64",
+  "command": "dart build cli --target test/support/agent_headless_probe.dart --output build/agent-headless-probe",
+  "runtime_environment": {
+    "DISPLAY": "unset",
+    "WAYLAND_DISPLAY": "unset"
+  },
+  "assertions": {
+    "native_text_seed": true,
+    "canonical_unified_workspace_create": true,
+    "task_store_open_and_shared_text_initialize": true,
+    "food_store_open": true,
+    "sqlite_native_asset_load": true
+  },
+  "payload_sha256": {
+    "executable": "a4238db18cbc6138b7c230b313e34a2d246c081ffdc2585ec97f9a4eea46bc6f",
+    "sqlite": "d3d1eac2a4e0eb84f4e8d94d820e5963fddfd11aa95179ea215ddc3bc7bd1078",
+    "text_engine": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2"
+  },
+  "scope": "Compiled Linux AOT executable on Farnsworth, no Flutter/display libraries linked by ldd. Existing reviewed text library copied to bin/lib for default path resolution. Not Flatpak/Windows/native release acceptance.",
+  "retained_failures": [
+    "First build hook failed TLS through inherited proxy; direct HTTPS build succeeded with proxy variables unset (no TLS bypass).",
+    "First runtime probe failed missing synthetic workspace folder; probe creates folder before create now."
+  ]
+}

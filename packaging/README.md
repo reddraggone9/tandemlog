@@ -119,3 +119,37 @@ Primary references: [Flatpak sandbox permissions](https://docs.flatpak.org/en/la
 [Inno Setup privilege policy](https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm),
 [Inno Setup license](https://jrsoftware.org/files/is/license.txt),
 [standard Windows runner software](https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md).
+
+## Agent CLI (`tandemlog-cli`)
+
+The same packages carry a headless command-line program for LLM agents and
+scripts. It needs no display and no running app. Each agent has its own
+installation, private profile and history file, separate from the app's.
+
+Linux (Flatpak):
+
+```sh
+flatpak override --user --filesystem=/absolute/sync/folder com.reddraggone9.tandemlog
+flatpak run --command=tandemlog-cli com.reddraggone9.tandemlog init --workspace /absolute/sync/folder --name "Vex" --person Lee
+flatpak run --command=tandemlog-cli com.reddraggone9.tandemlog context
+```
+
+The folder grant is needed because the CLI cannot use the file chooser portal.
+
+Windows: `%LOCALAPPDATA%\Programs\Tandemlog\cli\bin\tandemlog-cli.exe` (or
+`cli\bin\tandemlog-cli.exe` in the portable ZIP), with the same arguments.
+
+Use `tandemlog-cli help` for commands and `tandemlog-cli schema` for their JSON
+Schemas. Use `--format json` for compact JSON and `--format jsonl` to stream
+whole lists. Use `TANDEMLOG_CLI_PROFILE=<name>` (or `--profile`) to choose an
+agent profile. Use a separate profile for each agent; never copy one profile to
+another machine or agent.
+
+MCP clients start `tandemlog-cli mcp` over stdio. For example, Flatpak: command
+`flatpak`, arguments `["run","--command=tandemlog-cli","com.reddraggone9.tandemlog","mcp"]`.
+Windows: command `...\cli\bin\tandemlog-cli.exe`, arguments `["mcp"]`.
+
+Writes to existing items need the item's current `rev`. Bulk changes, merges
+and purchase imports need the `planHash` from a `--dry-run`. `undo <action>`
+reverses one whole earlier action by the same agent.
+

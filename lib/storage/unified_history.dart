@@ -31,17 +31,6 @@ typedef UnifiedEffectBuilder =
       String commonPredecessor,
     );
 
-// A top-level boundary captures only three immutable strings. No history,
-// SQLite/profile object or native text owner can enter the worker isolate.
-Future<ValidatedActionCache> _verifyDecodedCacheOffThread(
-  String payload,
-  String digest,
-  String binding,
-) => Isolate.run(
-  () => ValidatedActionCache.verify(payload, digest, binding),
-  debugName: 'tandemlog-cache-verify',
-);
-
 // A same-session proof of the ORIGINAL reservation base, independent of any
 // protected head advanced by lost-acknowledgement reconciliation.
 class _PendingBaseProof {
@@ -353,9 +342,54 @@ final class UnifiedHistory {
       verifiesTaskRevision(candidate, revision) &&
       (_semanticValidator?.copyProjectionTo(store, candidate.tasks) ?? false);
 
-  void sealTaskProjectionCache(TaskStore store) {
-    _semanticValidator?.sealCleanCache(store.db, store.tables, snapshot.tasks);
-    _sealDecodedCache();
+  Future<void> sealTaskProjectionCache(TaskStore store) async {
+    // Invalidate the decode witness before starting any asynchronous work.
+    // Each witness is independently consumed on open; a crash between these
+    // transactions merely leaves one or both caches requiring strict replay.
+    final prepared = _prepareDecodedCache();
+    prepared.ignore();
+    try {
+      profile.transaction(() {
+        _semanticValidator?.sealCleanCache(
+          store.db,
+          store.tables,
+          snapshot.tasks,
+        );
+      });
+    } catch (_) {
+      // Even a failed SQL seal drains its pure worker before close returns.
+      try {
+        await prepared;
+      } catch (_) {
+        /* Original SQL failure wins. */
+      }
+      rethrow;
+    }
+    final ({Uint8List payload, String digest})? encoded;
+    try {
+      encoded = await prepared;
+    } on IsolateSpawnException {
+      return;
+    } on RemoteError {
+      return;
+    } on ArgumentError {
+      return;
+    } on UnsupportedError {
+      return;
+    }
+    if (encoded == null) return;
+    final result = encoded;
+    profile.transaction(() {
+      final db = profile.database;
+      db.execute(
+        'INSERT OR REPLACE INTO profile_metadata VALUES (?,CAST(? AS TEXT))',
+        [_decodedPayloadKey, result.payload],
+      );
+      db.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
+        _decodedProofKey,
+        result.digest,
+      ]);
+    });
   }
 
   String get _decodedPayloadKey => 'app5.decoded.payload.$_locationKey';
@@ -372,9 +406,13 @@ final class UnifiedHistory {
     UnifiedDecodedCache.generation,
   ]);
 
-  void _sealDecodedCache() {
+  Future<({Uint8List payload, String digest})?> _prepareDecodedCache() {
     final db = profile.database;
-    db.execute('DELETE FROM profile_metadata WHERE key=?', [_decodedProofKey]);
+    profile.transaction(
+      () => db.execute('DELETE FROM profile_metadata WHERE key=?', [
+        _decodedProofKey,
+      ]),
+    );
     final current = _snapshot;
     if (current == null ||
         safetyFailure != null ||
@@ -387,27 +425,19 @@ final class UnifiedHistory {
           (record) => record.sequence > (current.published[record.writer] ?? 0),
         ) ||
         _acceptedHeads != _protectedHeads(manifest)) {
-      return;
+      return Future.value(null);
     }
     var estimate = 0;
     for (final record in current.records) {
       estimate += utf8.encode(record.encode()).length * 4;
-      if (estimate > UnifiedDecodedCache.maximumBytes) return;
+      if (estimate > UnifiedDecodedCache.maximumBytes) {
+        return Future.value(null);
+      }
     }
-    final payload = UnifiedDecodedCache.encode(
+    return UnifiedDecodedCache.prepareOffThread(
       current.records,
       _decodedCacheBinding(manifest),
     );
-    final payloadBytes = utf8.encode(payload);
-    if (payloadBytes.length > UnifiedDecodedCache.maximumBytes) return;
-    db.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
-      _decodedPayloadKey,
-      payload,
-    ]);
-    db.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
-      _decodedProofKey,
-      bytesDigest(payloadBytes),
-    ]);
   }
 
   Future<void> _primeDecodedCache(UnifiedManifest current) async {
@@ -442,7 +472,7 @@ final class UnifiedHistory {
               as String;
       final ValidatedActionCache batch;
       try {
-        batch = await _verifyDecodedCacheOffThread(
+        batch = await ValidatedActionCache.verifyOffThread(
           payload,
           digest,
           _decodedCacheBinding(current),
@@ -838,7 +868,6 @@ final class UnifiedHistory {
       final j = jsonDecode(raw);
       if (j is! List ||
           j.any((v) => !isCanonicalId(v)) ||
-          j.length > 256 ||
           j.toSet().length != j.length ||
           !j.contains(writer) ||
           !j.toSet().containsAll(current.owners.keys) ||
@@ -889,9 +918,6 @@ final class UnifiedHistory {
           'Legacy history is not accepted in a normalized workspace. Preserve it outside this folder.',
         );
       }
-    }
-    if (ownerSet.length > 256) {
-      throw FormatFailure('Too many installation histories.');
     }
     if (!forceFullAudit && _snapshot == null) {
       await _primeDecodedCache(current);

@@ -7,9 +7,12 @@ repo="$RUNNER_TEMP/tandemlog-flatpak-repo"
 flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --user --noninteractive flathub "org.gnome.Platform//$runtime_version" "org.gnome.Sdk//$runtime_version"
 flatpak build-init "$build" "$app" org.gnome.Sdk org.gnome.Platform "$runtime_version"
-mkdir -p "$build/files/tandemlog" "$build/files/bin" "$build/files/share/metainfo" "$build/files/share/applications" "$build/files/share/icons/hicolor/scalable/apps"
+mkdir -p "$build/files/tandemlog" "$build/files/tandemlog-cli" "$build/files/bin" "$build/files/share/metainfo" "$build/files/share/applications" "$build/files/share/icons/hicolor/scalable/apps"
 cp -a build/linux/x64/release/bundle/. "$build/files/tandemlog/"
 install -m 755 packaging/linux/tandemlog "$build/files/bin/tandemlog"
+# Headless agent CLI: second command of the same package, same version.
+cp -a build/agent-cli/. "$build/files/tandemlog-cli/"
+install -m 755 packaging/linux/tandemlog-cli "$build/files/bin/tandemlog-cli"
 install -m 644 "packaging/linux/$app.desktop" "$build/files/share/applications/"
 install -m 644 "packaging/linux/$app.svg" "$build/files/share/icons/hicolor/scalable/apps/"
 install -m 644 "packaging/linux/$app.metainfo.xml" "$build/files/share/metainfo/"

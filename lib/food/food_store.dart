@@ -14,6 +14,11 @@ import 'inventory.dart';
 
 /// Isolated canonical Food history/provider admission failure. Shared profile,
 /// installation identity and manifest faults deliberately retain their own type.
+/// A caller precondition failed after fresh admission; nothing was appended.
+class StaleFoodState implements Exception {
+  const StaleFoodState();
+}
+
 class FoodHistoryFailure extends FormatException {
   const FoodHistoryFailure(super.message);
 }
@@ -59,8 +64,7 @@ class FoodStore {
   List<String> _pendingOperationIds = const [];
   List<String> get pendingOperationIds => _pendingOperationIds;
   Set<String> _readyIds = {};
-  static const maximumStreams = 256,
-      maximumStreamBytes = 16 * 1024 * 1024,
+  static const maximumStreamBytes = 16 * 1024 * 1024,
       maximumTotalBytes = 32 * 1024 * 1024,
       maximumRecords = 50000,
       maximumContainers = 100000;
@@ -225,9 +229,11 @@ class FoodStore {
     List<_FoodChange> Function() plan, {
     Map<String, dynamic>? provenance,
     bool validateOnly = false,
+    bool Function()? canCommit,
   }) async {
     try {
       List<UnifiedEffectBuilder> build() {
+        if (canCommit != null && !canCommit()) throw const StaleFoodState();
         final changes = plan();
         if (changes.isEmpty) throw const _EmptyFoodPlan();
         return _unifiedBuilders(changes);
@@ -305,13 +311,20 @@ class FoodStore {
   Future<void> recoverPrepared() =>
       _queue(() => unified!.recoverPreparedInProfileQueue());
 
-  Future<List<FoodRecord>> _command(List<_FoodChange> changes) =>
-      _queue(() => _commandLocked(changes));
+  Future<List<FoodRecord>> _command(
+    List<_FoodChange> changes, {
+    bool Function()? canCommit,
+  }) => _queue(() => _commandLocked(changes, canCommit: canCommit));
   Future<List<FoodRecord>> _commandLocked(
     List<_FoodChange> changes, {
     Map<String, dynamic>? provenance,
+    bool Function()? canCommit,
   }) async {
-    return _freshCommandLocked(() => changes, provenance: provenance);
+    return _freshCommandLocked(
+      () => changes,
+      provenance: provenance,
+      canCommit: canCommit,
+    );
   }
 
   // Import identity is committed with the actual containers. No private
@@ -498,14 +511,31 @@ class FoodStore {
 
   /// Adds containers to the product matching the description, or to a new
   /// one, in one action (design/food-products.md, section 3).
-  Future<void> add(FoodDetails details, int count) {
+  ///
+  /// Caller-chosen [ids] make a retry idempotent: when every ID is already
+  /// present the add is complete and appends nothing.
+  Future<void> add(FoodDetails details, int count, {List<String>? ids}) {
     if (count < 1 || count > 100) {
       return Future.error(
         const FormatException('Choose between 1 and 100 physical containers.'),
       );
     }
+    if (ids != null &&
+        (ids.length != count ||
+            ids.toSet().length != count ||
+            !ids.every(isCanonicalId))) {
+      return Future.error(const FormatException('Invalid container IDs.'));
+    }
     return _queue(() {
       return _freshCommandLocked(() {
+        if (ids != null) {
+          final known = {for (final c in state.containers) c.id};
+          final present = ids.where(known.contains).length;
+          if (present == ids.length) return const [];
+          if (present != 0) {
+            throw const FormatException('Some of these containers exist.');
+          }
+        }
         final plan = planFoodAdd(state, details);
         return [
           if (plan.create != null)
@@ -514,7 +544,7 @@ class FoodStore {
             ], product: plan.create),
           _FoodChange(
             FoodAction.add,
-            List.generate(count, (_) => const Uuid().v4()),
+            List.generate(count, (i) => ids?[i] ?? const Uuid().v4()),
             details: details,
             contents: const Contents.fraction(1, 1),
             link: plan.product == null ? null : {'product': plan.product},
@@ -626,10 +656,12 @@ class FoodStore {
   /// Records every new purchase line as one action. A retry finds its
   /// purchases present and writes nothing.
   Future<FoodPurchaseImportReport> commitPurchaseImport(
-    FoodPurchaseImportPlan plan,
-  ) => _queue(() async {
+    FoodPurchaseImportPlan plan, {
+    bool Function()? canCommit,
+  }) => _queue(() async {
     late FoodPurchaseImportReport report;
     await _freshCommandLocked(
+      canCommit: canCommit,
       () {
         report = _inspectPurchaseImport(plan);
         return _purchaseImportChanges(_planPurchaseImport(plan).steps);
@@ -644,12 +676,20 @@ class FoodStore {
     return report;
   });
 
-  Future<List<FoodRecord>> remove(List<String> ids) => _command(
+  /// [canCommit] runs after fresh admission, immediately before the append.
+  Future<List<FoodRecord>> remove(
+    List<String> ids, {
+    bool Function()? canCommit,
+  }) => _command(
     _batches(
       ids,
     ).map((batch) => _FoodChange(FoodAction.remove, batch)).toList(),
+    canCommit: canCommit,
   );
-  Future<void> restore(List<FoodContainer> observed) async {
+  Future<void> restore(
+    List<FoodContainer> observed, {
+    bool Function()? canCommit,
+  }) async {
     _batches(observed.map((item) => item.id).toList());
     final changes = <_FoodChange>[];
     for (final item in observed) {
@@ -662,7 +702,7 @@ class FoodStore {
         );
       }
     }
-    await _command(changes);
+    await _command(changes, canCommit: canCommit);
   }
 
   /// Container fields of [ids] and product changes of [products], planned
@@ -672,10 +712,12 @@ class FoodStore {
     FoodDetails details,
     List<String> fields, {
     FoodProductChange products = const FoodProductChange(),
+    bool Function()? canCommit,
   }) {
     _batches(ids);
     return _queue(
       () => _freshCommandLocked(
+        canCommit: canCommit,
         () => [
           if (fields.isNotEmpty)
             for (final batch in _batches(ids))
@@ -741,48 +783,51 @@ class FoodStore {
   /// Retract exact admitted local contributions without writing old snapshots.
   /// A failed append retains all prepared receipts in [lastPreparedRecords];
   /// callers acknowledge only the exact receipts admitted after read-back.
-  Future<List<FoodRecord>> undoOperations(List<FoodRecord> originals) =>
-      _queue(() async {
-        await _refresh();
-        if (originals.isEmpty ||
-            originals.map((r) => r.id).toSet().length != originals.length ||
-            originals.length > 10000) {
-          throw const FormatException('Choose distinct saved Food operations.');
-        }
-        for (final original in originals) {
-          if (original.space != space ||
-              !_ownsFood(original.writer) ||
-              original.operation.action == FoodAction.undo ||
-              !isAdmitted(original)) {
-            throw const FormatException(
-              'Undo requires an exact admitted local Food operation.',
-            );
-          }
-        }
-        Set<String>? fallbackRetractions;
-        bool retracted(String operation) =>
-            _stagedFoodAdmission?.hasReadyRetraction(operation) ??
-            (fallbackRetractions ??= {
-              for (final record in _records)
-                if (_readyIds.contains(record.id) &&
-                    record.operation.action == FoodAction.undo)
-                  record.operation.retracts!,
-            }).contains(operation);
-        final changes = [
-          for (final original in originals)
-            if (!retracted(original.id))
-              _FoodChange(
-                FoodAction.undo,
-                original.operation.targets,
-                retracts: original.id,
-                productUndo: original.operation.action.productLevel,
-              ),
-        ];
-        // An exact retry after acknowledgement failure is already complete;
-        // do not append another inverse or replace the prepared receipt set.
-        if (changes.isEmpty) return <FoodRecord>[];
-        return _commandLocked(changes);
-      });
+  /// [canCommit] runs after fresh admission, immediately before the append.
+  Future<List<FoodRecord>> undoOperations(
+    List<FoodRecord> originals, {
+    bool Function()? canCommit,
+  }) => _queue(() async {
+    await _refresh();
+    if (originals.isEmpty ||
+        originals.map((r) => r.id).toSet().length != originals.length ||
+        originals.length > 10000) {
+      throw const FormatException('Choose distinct saved Food operations.');
+    }
+    for (final original in originals) {
+      if (original.space != space ||
+          !_ownsFood(original.writer) ||
+          original.operation.action == FoodAction.undo ||
+          !isAdmitted(original)) {
+        throw const FormatException(
+          'Undo requires an exact admitted local Food operation.',
+        );
+      }
+    }
+    Set<String>? fallbackRetractions;
+    bool retracted(String operation) =>
+        _stagedFoodAdmission?.hasReadyRetraction(operation) ??
+        (fallbackRetractions ??= {
+          for (final record in _records)
+            if (_readyIds.contains(record.id) &&
+                record.operation.action == FoodAction.undo)
+              record.operation.retracts!,
+        }).contains(operation);
+    final changes = [
+      for (final original in originals)
+        if (!retracted(original.id))
+          _FoodChange(
+            FoodAction.undo,
+            original.operation.targets,
+            retracts: original.id,
+            productUndo: original.operation.action.productLevel,
+          ),
+    ];
+    // An exact retry after acknowledgement failure is already complete;
+    // do not append another inverse or replace the prepared receipt set.
+    if (changes.isEmpty) return <FoodRecord>[];
+    return _commandLocked(changes, canCommit: canCommit);
+  });
   static List<List<String>> _batches(List<String> ids) {
     if (ids.isEmpty || ids.toSet().length != ids.length || ids.length > 10000) {
       throw const FormatException('Invalid food selection.');

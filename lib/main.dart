@@ -15,6 +15,7 @@ import 'application/food_undo_history.dart';
 import 'application/task_text_session.dart';
 import 'application/text_save_command.dart';
 import 'application/checklist_completion_command.dart';
+import 'application/workspace_session.dart';
 import 'text/native_text_engine.dart';
 import 'text/native_text_licenses.dart';
 import 'domain/visible_task_move.dart';
@@ -58,7 +59,6 @@ import 'storage/local_settings.dart';
 import 'storage/local_durability.dart';
 import 'storage/local_profile_database.dart';
 import 'storage/task_store.dart';
-import 'storage/unified_history.dart';
 import 'storage/workspace_state.dart';
 import 'storage/checklist_expansion_store.dart';
 import 'food/food_page.dart';
@@ -563,83 +563,32 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             : LocalLogFolder(location));
     final engine = textEngine ??=
         widget.textEngineFactory?.call() ?? NativeTextEngine();
-    UnifiedHistory? unified;
-    late TaskStore opened;
-    try {
-      final names = await folder.list();
-      unified = names.isEmpty
-          ? await UnifiedHistory.create(
-              folder,
-              profile: profileDatabase!,
-              writer: settings!.writer,
-              textEngine: engine,
-            )
-          : await UnifiedHistory.open(
-              folder,
-              profile: profileDatabase!,
-              writer: settings!.writer,
-              textEngine: engine,
-            );
-      opened = await TaskStore.openUnified(unified);
-      if (!opened.sharedTextInitialized && unified.snapshot.tasks.isEmpty) {
-        await opened.initializeSharedText();
-      }
-    } catch (_) {
-      await unified?.close();
-      rethrow;
-    }
-    if (!mounted) {
-      await opened.close();
-      await unified.close();
-      return false;
-    }
+    final session = await WorkspaceSession.open(
+      folder,
+      profile: profileDatabase!,
+      writer: settings!.writer,
+      textEngine: engine,
+      alive: () => mounted,
+    );
+    if (session == null) return false;
+    final opened = session.tasks;
+    occurrenceMigrationError = session.occurrenceMigrationError == null
+        ? null
+        : failureMessage(session.occurrenceMigrationError!);
     Set<String> expanded;
-    FoodStore? openedFood;
-    String? openedFoodError;
     try {
-      try {
-        if (folder is! BoundedLogFolder) {
-          throw const FoodHistoryFailure(
-            'This folder cannot enforce safe Food reads. Tasks remain available.',
-          );
-        }
-        openedFood = await FoodStore.openUnified(unified);
-      } on FoodHistoryFailure {
-        rethrow;
-      }
-      if (!mounted) {
-        await openedFood.close();
-        await opened.close();
-        await unified.close();
-        return false;
-      }
-      final migration = await opened.migrateOccurrenceDates(
-        canCommit: () => mounted,
-      );
-      occurrenceMigrationError = migration.error == null
-          ? null
-          : failureMessage(migration.error!);
-      if (!mounted) {
-        await openedFood.close();
-        await opened.close();
-        await unified.close();
-        return false;
-      }
-
       expanded = ChecklistExpansionStore(
         opened.db,
         tables: opened.tables,
         profileDatabase: profileDatabase,
       ).load();
     } catch (_) {
-      await openedFood?.close();
-      await opened.close();
-      await unified.close();
+      await session.close();
       rethrow;
     }
     store = opened;
-    foodStore = openedFood;
-    foodError = openedFoodError;
+    foodStore = session.food;
+    foodError = null;
     expandedChecklists = expanded;
     _bindWorkspaceState();
     if (_hasPendingOperation(store!)) {

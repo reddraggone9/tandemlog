@@ -2,6 +2,8 @@
 
 See [ADR 0001](decisions/0001-client-and-storage.md). Flutter/Dart, SQLite, canonical JSONL logs and native folder adapters remain the application stack. [ADR 0010](decisions/0010-collaborative-text-adoption.md) authorizes a narrow Yrs/Rust bridge for collaborative task text; this integration is unreleased and retains its platform/compatibility gates. Domain commands and SQLite stay in Dart. Tasks first; no future-domain implementation.
 
+The headless agent CLI (`tandemlog-cli`, [agent interface](agent-interface.md)) is plain Dart built with `dart build cli` (native assets for SQLite) and loads the app's own text library by explicit path; it ships inside the Flatpak and the Windows installer/ZIP, not separately.
+
 Current toolchain: Flutter 3.47.5 / Dart 3.13.4, pinned dependencies in `pubspec.lock`. SQLite uses the maintained `sqlite3` native-assets package rather than its retired companion library package. Android uses a Kotlin MethodChannel for document-tree permissions and file operations; desktop uses Dart files plus the Flutter team's file selector.
 
 ## Storage and runtime constraints

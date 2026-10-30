@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
@@ -131,7 +133,6 @@ class UnifiedRecord {
     final historical = this.effects.every((e) => e.historical);
     if (this.effects.any((e) => e.historical) && !historical ||
         historical && this.effects.length != 1 ||
-        observed.length > 256 ||
         observed.entries.any(
           (e) =>
               !isCanonicalId(e.key) ||
@@ -341,25 +342,41 @@ class UnifiedDecodedCache {
   static const maximumBytes = ValidatedActionCache.maximumBytes;
 
   static String encode(List<UnifiedRecord> records, String binding) =>
-      jsonEncode({
-        'generation': generation,
-        'binding': binding,
-        'records': [
-          for (final record in records)
-            [
-              record.encode(),
-              [
-                for (final effect in record.effects)
-                  if (effect.task != null)
-                    [effect.kind, _task(effect.task!)]
-                  else if (effect.food != null)
-                    [effect.kind, _food(effect.food!)]
-                  else
-                    null,
-              ],
-            ],
+      jsonEncode(_payload(records, binding));
+
+  /// The UTF-8 bytes of [encode], without the intermediate string.
+  static Uint8List encodeUtf8(List<UnifiedRecord> records, String binding) =>
+      JsonUtf8Encoder().convert(_payload(records, binding)) as Uint8List;
+
+  /// Pure bounded encoding can overlap the independent Task-cache seal. Only
+  /// detached value trees cross this boundary, never a profile or native owner.
+  static Future<({Uint8List payload, String digest})?> prepareOffThread(
+    List<UnifiedRecord> records,
+    String binding,
+  ) => _encodeDecodedPayload(_payload(records, binding));
+
+  static Map<String, Object?> _payload(
+    List<UnifiedRecord> records,
+    String binding,
+  ) => {
+    'generation': generation,
+    'binding': binding,
+    'records': [
+      for (final record in records)
+        [
+          record.encode(),
+          [
+            for (final effect in record.effects)
+              if (effect.task != null)
+                [effect.kind, _task(effect.task!)]
+              else if (effect.food != null)
+                [effect.kind, _food(effect.food!)]
+              else
+                null,
+          ],
         ],
-      });
+    ],
+  };
 
   static List<Object?> _task(LogEvent event) => [
     event.space,
@@ -495,3 +512,11 @@ bool isSyncthingAppLogStagingName(String name) {
   }
   return false;
 }
+
+Future<({Uint8List payload, String digest})?> _encodeDecodedPayload(
+  Map<String, Object?> value,
+) => Isolate.run(() {
+  final payload = JsonUtf8Encoder().convert(value) as Uint8List;
+  if (payload.length > UnifiedDecodedCache.maximumBytes) return null;
+  return (payload: payload, digest: sha256.convert(payload).toString());
+}, debugName: 'tandemlog-cache-seal');
