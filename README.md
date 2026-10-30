@@ -5,6 +5,8 @@ Shared household tasks and food inventory for Android, Windows and Linux. Work o
 - Capture tasks quickly, one at a time or several together.
 - Track food containers, expiration dates and locations.
 - Share product details across containers and see which products are running low.
+- Select Food rows to edit them together or move some containers to another location.
+- Give agents Tasks and Food access through the desktop CLI and MCP tools.
 - Organize tasks with tags, dates, times and recurring schedules.
 - Keep smaller steps in inline checklists with item notes and ordering.
 - Edit task titles and notes collaboratively across devices.

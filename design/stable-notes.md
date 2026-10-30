@@ -1,19 +1,4 @@
-# 2026.10.9
-
-This is a one-release workspace format change. Older installs stop with “Update the app” until updated.
-
-- Food containers now share a product: changing its name, brand or container size updates every container of that product.
-- Products merge when their name, brand and container size match.
-- Add food suggests existing products and fills in their brand and size.
-- Set a store link and a minimum to keep on hand for each product.
-- Running low is now a Food view for products below their minimum.
-- When something is low, the Food filter button shows a warning dot and the menu shows how many products.
-- Food can store purchases from receipt imports made outside the app; there is no import screen.
-- Receipt imports record purchase prices, link recent hand-entered containers and put remaining purchased containers in the Food Inbox.
-- The product editor shows the last price per container and, when available, a typical price.
-- Use Up/Down to move between Food rows and Shift+Up/Down to select a range.
-- On wide windows, selecting Food rows opens the editor beside the list and keeps Search available.
-- Food keeps selected containers that remain visible when you change views or apply More filters.
-- Task and Food side panes stay open when you change the selection.
-- Food rows put expiration and location above brand and size.
-- Store links are available from the Food row menu.
+- Tandemlog now includes `tandemlog-cli` for agent access to Tasks and Food, with text/JSON output and MCP tools. It ships with the desktop app; each agent uses its own profile.
+- Food selection now covers whole rows, without checkboxes. Selected rows include containers that arrive from another device, and the editor count updates with them.
+- **Move some…** in a Food row’s menu lets you move a chosen number of containers to another location. It is also available through the CLI.
+- Workspaces with more than 256 installations, including agents, require this release or newer on every device. Older versions stop with “Too many installation histories”.
