@@ -1,7 +1,7 @@
 # Agent interface
 
-Status: **Accepted direction (Lee, 2026-10-28 22:10 CDT); implemented on the
-next release line, unreleased.** Lee: “For the separate binaries/logs for
+Status: **Accepted (Lee, 2026-10-28 22:10 CDT); released in stable
+2026.10.10.** Lee: “For the separate binaries/logs for
 agentic access, I think you've convinced me. Do what you think is best.”
 [ADR0036](decisions/0036-agent-interface.md) records the choice and
 alternatives. Section 11 records how the implementation answered section 9 and
