@@ -1,6 +1,6 @@
 # Design map
 
-Current stable2026.10.9/build106 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9), promoting accepted Food products RC.2. See [release receipts](../evidence/stable-2026.10.9/README.md) and [release policy](releases.md).
+Current stable 2026.10.10/build108 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.10), promoting accepted 2026.10.10-rc.1. See [release receipts](../evidence/stable-2026.10.10/README.md) and [release policy](releases.md).
 
 ## Current source of truth
 
@@ -29,7 +29,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Released in stable2026.10.9 after accepted RC.1/RC.2 validation.
 
-- [Agent interface](agent-interface.md): accepted direction (Lee, 2026-10-28), implemented on release line `vex/agent-interface-20261029` and not yet released (review fixes integrated and performance coverage registered; CI and qualification pending; see section 11); separate headless Dart CLI/MCP shipped with the GUI in Flatpak and Windows installer/ZIP, per-agent private profile/log, required revisions/plans and whole-action Undo. [ADR0036](decisions/0036-agent-interface.md); implementation questions in section 9. Own release line only after Food products is stable.
+- [Agent interface](agent-interface.md): accepted direction (Lee, 2026-10-28), released in stable 2026.10.10 after accepted 2026.10.10-rc.1.
 
 - [Release performance gate](performance-gate.md) and [ADR0032](decisions/0032-release-performance-gate.md): approved synthetic AOT regression budgets, bounded noise handling and separate native UI acceptance; initial calibrated AOT limits are active; fresh exact-source enforcement and native UI acceptance remain separate requirements.
 

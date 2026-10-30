@@ -1,0 +1,69 @@
+{
+  "result": "PASS",
+  "source": "12b9f03b55915813345e8940c361ae58366ac02c",
+  "version": "2026.10.10",
+  "build": 108,
+  "candidateRun": 41106539516,
+  "candidateAttempt": 1,
+  "ciRun": 41106541492,
+  "artifacts": {
+    "apkSHA256": "804dcb33dc29a982ce5a6a73a1a0e5764846981ebcd1c6de1d4310b291740c53",
+    "flatpakSHA256": "2193aea22859faa2c3e4792ac1b8e3cb6e264fcf455fab31e2d35bf1473db88a"
+  },
+  "androidStable106to108": {
+    "firstInstallUnchanged": true,
+    "canonicalIdenticalAfterInstall": true,
+    "minimum": 11,
+    "newRecords": 1,
+    "family": "product.edit",
+    "prefixPreserved": true,
+    "bulkCancelExitsNoWrite": true,
+    "runningLow": true,
+    "integrity": true,
+    "coldReopen": true,
+    "safPersisted": true,
+    "driverNote": "first run stopped on a stale second Done tap after integrity PASS; remaining steps resumed"
+  },
+  "androidRC107to108": {
+    "firstInstallUnchanged": true,
+    "canonicalIdenticalAfterInstall": true,
+    "minimum": 12,
+    "newRecords": 1,
+    "family": "product.edit",
+    "prefixPreserved": true,
+    "bulkCancelExitsNoWrite": true,
+    "runningLow": true,
+    "integrity": true,
+    "coldReopen": true,
+    "safPersisted": true
+  },
+  "gtkStable106to108": {
+    "flatpakDigestProvenEqualToFinalCandidate": true,
+    "canonicalIdenticalAfterInstall": true,
+    "minimum": 11,
+    "newRecords": 1,
+    "family": "product.edit",
+    "prefixPreserved": true,
+    "runningLow": true,
+    "integrity": true,
+    "normalCloseExit": 0,
+    "coldReopen": true,
+    "tasksAndCompletedHistoryRetained": true
+  },
+  "limits": "Synthetic Android API30 x86_64 emulators and native Linux GTK only; no physical device, Windows GUI or live data.",
+  "rawReceiptSHA256": {
+    "native/stable-workflows.json": "898cc50e9617d570629e5a4bca1b49e32b13fcd7a1aaea45e118b25cd9928422",
+    "native/rc107-workflows.json": "966d70d3ca31b949b0451d3e20881daa81d55068678fc34a6343f5f0533862fe",
+    "native/stable/evidence/before/snapshot.json": "522beb264aad8ae9886473e1269a5189ab57a3e81c3fcf793ef66feb6ad4281b",
+    "native/stable/evidence/installed/snapshot.json": "fc099b897b5d13b40b3a58bdf9df49830fb19feb72f7d981291ad55111ef5dba",
+    "native/stable/evidence/after/snapshot.json": "ed72b4b06ff1aaa67ee71e378d6ad051bb2e1ebf33f74c5f136720565c39c073",
+    "native/rc107/evidence/before/snapshot.json": "67777d5c8cebb90641c717daa82cb84c0ca4fab07bd17f7de24a6335aa13ac30",
+    "native/rc107/evidence/installed/snapshot.json": "562b66231d812eaf7c1da3143a3ca10e69dfbbe72b97619c89efddc355d13236",
+    "native/rc107/evidence/after/snapshot.json": "90a5cbd96a701892ec5a4f377db1e421f6293a04dc8ad17793c844415ad59aa3",
+    "native/gtk/baseline106/hashes.json": "73f45bc9a8553c32decc78917ebd5b1ec22dbfb3a1e1d0d6a565504d7d493dc1",
+    "native/gtk/installed/hashes.json": "73f45bc9a8553c32decc78917ebd5b1ec22dbfb3a1e1d0d6a565504d7d493dc1",
+    "native/gtk/after/hashes.json": "d63e3d0f36cd77eb7c34529c1019c9fc7407786701beae0db431a04cd86f66dd",
+    "native/gtk/upgrade.json": "ed7acb9a9a6590a5f4b998565bc7afc11aa67f36e12185dc9cbc4a24e9f25d78",
+    "native/gtk/cleanup.json": "ad1037fe2888b3f5fd944092221aa8cd40e75e50a206201bea4b423bc491bf35"
+  }
+}

@@ -1,9 +1,9 @@
 # ADR0036 — Agent interface shipped with the GUI
 
-Status: **Accepted direction** (Lee, 2026-10-28 22:10 CDT). Implemented on
-release line `vex/agent-interface-20261029` (2026-10-29), not yet released;
-see [section 11](../agent-interface.md#11-implementation-2026-10-29) for
-deviations and pending gates.
+Status: **Accepted** (Lee, 2026-10-28 22:10 CDT). Released in
+[stable 2026.10.10](../../evidence/stable-2026.10.10/README.md); see
+[section 11](../agent-interface.md#11-implementation-2026-10-29) for
+implementation deviations.
 
 ## Context and decision
 

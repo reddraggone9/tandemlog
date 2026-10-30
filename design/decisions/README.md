@@ -19,4 +19,4 @@ Record consequential choices with status, context, alternatives, consequences, v
 
 - [0034: bounded UX refinements](0034-bounded-ux-refinements.md) — accepted requested scope; local implementation with explicit native/performance gaps.
 
-- [0036 — Agent interface](0036-agent-interface.md): accepted direction, not implemented; bundled headless CLI/MCP with per-agent state, own release line after Food products stable.
+- [0036 — Agent interface](0036-agent-interface.md): accepted, released in stable 2026.10.10; bundled headless CLI/MCP with per-agent state.

@@ -1,0 +1,33 @@
+{
+  "result": "PASS",
+  "release": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.10",
+  "releaseId": 429395840,
+  "source": "12b9f03b55915813345e8940c361ae58366ac02c",
+  "prerelease": false,
+  "latest": true,
+  "immutable": true,
+  "stableLatest": "v2026.10.10",
+  "publishedAt": "2026-10-30T19:10:10Z",
+  "notesMatchReviewedBytes": true,
+  "noteImagesVerified": 0,
+  "assets": {
+    "tandemlog-2026.10.10-android.apk": {
+      "sha256": "804dcb33dc29a982ce5a6a73a1a0e5764846981ebcd1c6de1d4310b291740c53",
+      "size": 68600141
+    },
+    "tandemlog-2026.10.10-linux-x64.flatpak": {
+      "sha256": "2193aea22859faa2c3e4792ac1b8e3cb6e264fcf455fab31e2d35bf1473db88a",
+      "size": 11735728
+    },
+    "tandemlog-2026.10.10-windows-x64-portable.zip": {
+      "sha256": "81dad0199960ffa13f050ddf80644d76e053c0b5dc68ff5d242ef4cde9e9165c",
+      "size": 20042075
+    },
+    "tandemlog-2026.10.10-windows-x64-setup.exe": {
+      "sha256": "095da17de6b7e8d786bff21cb64fb99063b0277ab2d063ae4f1bd5b63e765e0c",
+      "size": 16445958
+    }
+  },
+  "priorReleasesUnchanged": 45,
+  "priorTagsUnchanged": 45
+}

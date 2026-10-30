@@ -1,5 +1,9 @@
 # Development status
 
+## Stable 2026.10.10/build108 published — 2026-10-30
+
+[Stable 2026.10.10](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.10) is immutable Latest, published 19:10:10Z (14:10 CDT) from exact `12b9f03`. Lee accepted 2026.10.10-rc.1 at 13:21 CDT. Version metadata and documentation changed only; reference `50a8ca56` stays valid, with no performance rerun or override. CI 41106541492 and candidate 41106539516 passed on attempt 1. Android 106→108, Android RC 107→108 and GTK 106→108 upgrades pass on synthetic labs; anonymous public verification passes. [Receipts and limits](../evidence/stable-2026.10.10/README.md).
+
 ## Stable 2026.10.9/build106 published — 2026-10-29
 
 [Stable 2026.10.9](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.9) is immutable Latest, published 16:54:16Z (11:54 CDT) from exact `b6dbe70`. Lee explicitly accepted RC.2 for stable. Only version metadata/documentation changed; qualified q3 `df710a4c` remains valid, with no performance rerun or override. Strict AppStream ordering required removing same-base superseded RC rows. Corrected automatic CI40904687047 passes; candidate40904707689 attempt2 passes after the one diagnosed SDK-download infrastructure retry. Exact Android103/105→106 and GTK Flatpak103→106 synthetic native upgrades pass, including identity/SAF/task/history continuity, minimums/Running low and cold persistence. All native runtimes cleaned up. Four original assets were verified in draft and anonymously after publication; reviewed notes/tag/source/Latest match, all43 prior releases/tags unchanged. [Receipts, failed-attempt attribution and platform limits](../evidence/stable-2026.10.9/README.md). No owner-device install or live-data operation. Food selection/Move some follow-ups remain next-release scope.
