@@ -481,7 +481,10 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
   task's rev also covers its checklist items' operations, because completion
   reads the checklist (a peer checklist change makes `--if-rev` stale). That
   includes items a recurring successor inherited from its predecessor's
-  completion, and that completion itself. Consequence: any checklist change,
+  completion, and that completion itself. An inherited item's own rev also
+  covers the completion that seeded it: after Undo of a completion, an edit of
+  the predecessor's item and a new completion, the copy keeps its deterministic
+  ID but gets a new rev, so a write holding the old one is `stale`. Consequence: any checklist change,
   including the agent's own tick or one made in the app, makes earlier task
   revs stale for edit/move/delete/complete and for task-level Undo commands
   issued before it; checklist writes return the parent's new rev in
@@ -498,7 +501,15 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
   fits and its cursor advances. Oversized non-list envelopes (for example a
   very long `runningLow`) are not yet bounded: if even one container does not
   fit beside them, the cursor restarts the row instead of advancing (rare;
-  tracked).
+  tracked). If rows before a bound row are removed so it moves earlier, the
+  cursor's offset lands on the following row, which restarts at its first
+  container; the moved row's remaining containers are not shown in that
+  pagination (the same class as row-offset skips; read again to see them).
+  A cursor that is not valid for this command says so (`validation`); start
+  again without `--cursor`.
+- `planHash` and `rev` are 8 hex characters of sha256 (32 bits). The commit's
+  real state binding is the full-length input hash checked inside the append;
+  a full-length planHash is a candidate for a later output version.
 - A partial `tasks bulk-edit` (some batches committed) returns its actions with
   `partial: true` and the failure, and exits with that failure's code.
 - MCP marks deletes, removes and merges `destructiveHint`; malformed JSON-RPC

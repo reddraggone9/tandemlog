@@ -108,13 +108,17 @@ class Page<T> {
     var members = 0;
     Object? row;
     if (cursor != null) {
+      var otherQuery = false;
       try {
         final j =
             jsonDecode(
                   utf8.decode(base64Url.decode(base64Url.normalize(cursor))),
                 )
                 as Map;
-        if (j['q'] != key) throw const FormatException();
+        if (j['q'] != key) {
+          otherQuery = true;
+          throw const FormatException();
+        }
         offset = j['o'] as int;
         members = (j['m'] as int?) ?? 0;
         row = j['r'];
@@ -123,10 +127,12 @@ class Page<T> {
           throw const FormatException();
         }
       } catch (_) {
-        throw const AgentFailure(
+        throw AgentFailure(
           'validation',
-          'This cursor belongs to a different query.',
-          details: {'field': 'cursor', 'error': 'invalid'},
+          otherQuery
+              ? 'This cursor belongs to a different query.'
+              : 'This cursor is invalid. Start again without --cursor.',
+          details: const {'field': 'cursor', 'error': 'invalid'},
         );
       }
     }

@@ -155,7 +155,8 @@ class AgentCommand {
   final bool destructive;
 
   /// Its one append checks [AgentCall.commitGuard] (so the plan) inside the
-  /// append before writing anything; a planned commit then skips the
+  /// append before reserving anything (crash-tail cleanup of the own log may
+  /// precede a refusal, as for any append); a planned commit then skips the
   /// redundant plan check before the command, which would see the same or an
   /// older state. Set only where a test proves the in-append refusal.
   final bool planCheckedInAppend;

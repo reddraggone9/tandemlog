@@ -10,6 +10,7 @@ import 'package:tandemlog/agent/cli.dart';
 import 'package:tandemlog/agent/command.dart';
 import 'package:tandemlog/agent/mcp_server.dart';
 import 'package:tandemlog/agent/registry.dart';
+import 'package:tandemlog/agent/render.dart' show revOf;
 import 'package:tandemlog/food/food_store.dart' show StaleFoodState;
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/unified_record.dart';
@@ -1383,8 +1384,10 @@ void main() {
       final read = await json(['tasks', 'show', child], profile: 'one');
       expect(read['error'], isNull, reason: '$read');
       final copy = (read['checklist'] as List).single as Map;
-      // The successor's rev is its own, not the rev of an untouched entity.
-      expect(read['rev'], isNot(copy['rev']));
+      // Neither the successor nor its untouched copy has the rev of an entity
+      // without operations: both cover the completion that created them.
+      expect(read['rev'], isNot(revOf(const [])));
+      expect(copy['rev'], isNot(revOf(const [])));
       final checked = await json([
         'checklist',
         'check',
@@ -1393,11 +1396,14 @@ void main() {
         copy['rev'] as String,
       ], profile: 'two');
       expect(checked['error'], isNull, reason: '$checked');
-      final parent = (checked['affected'] as List).firstWhere(
-        (a) => (a as Map)['id'] == child,
-        orElse: () => null,
-      );
-      if (parent != null) expect(parent['rev'], isNot(read['rev']));
+      final parent =
+          (checked['affected'] as List).firstWhere(
+                (a) => (a as Map)['id'] == child,
+                orElse: () => null,
+              )
+              as Map?;
+      expect(parent, isNotNull, reason: '$checked');
+      expect(parent!['rev'], isNot(read['rev']));
       final before = await bytes(canonicalOnly: true);
       final stale = await json([
         'tasks',
@@ -1418,6 +1424,104 @@ void main() {
         reread['rev'] as String,
       ], profile: 'one');
       expect(ok['actions'], hasLength(1), reason: '$ok');
+    },
+  );
+
+  test(
+    'an inherited item re-seeded after Undo and re-complete gets a new rev',
+    () async {
+      await setUpAgent();
+      await cli(['people', 'add', 'Lee']);
+      final added =
+          ((await json(['tasks', 'add', 'Pack', '--for', 'Lee']))['affected']
+                      as List)
+                  .single
+              as Map;
+      final id = added['id'] as String;
+      final edited = await json([
+        'tasks',
+        'edit',
+        id,
+        '--if-rev',
+        added['rev'] as String,
+        '--due',
+        '2030-05-10',
+        '--repeat',
+        'every day',
+      ]);
+      expect(edited['error'], isNull, reason: '$edited');
+      var show = await json(['tasks', 'show', id]);
+      final item = await json([
+        'checklist',
+        'add',
+        id,
+        'Socks',
+        '--if-rev',
+        show['rev'] as String,
+      ]);
+      expect(item['error'], isNull, reason: '$item');
+      show = await json(['tasks', 'show', id]);
+      final done = await json([
+        'tasks',
+        'complete',
+        id,
+        '--if-rev',
+        show['rev'] as String,
+      ]);
+      expect(done['error'], isNull, reason: '$done');
+      final child = const Uuid().v5(id, 'successor');
+      final first = await json(['tasks', 'show', child]);
+      final copy = (first['checklist'] as List).single as Map;
+      expect(copy['title'], 'Socks');
+      final undone = await json(
+        (done['undo'] as String).split(' ').skip(1).toList(),
+      );
+      expect(undone['error'], isNull, reason: '$undone');
+      show = await json(['tasks', 'show', id]);
+      final source = (show['checklist'] as List).single as Map;
+      final renamed = await json([
+        'checklist',
+        'edit',
+        source['id'] as String,
+        '--title',
+        'Shoes',
+        '--if-rev',
+        source['rev'] as String,
+      ]);
+      expect(renamed['error'], isNull, reason: '$renamed');
+      show = await json(['tasks', 'show', id]);
+      final again = await json([
+        'tasks',
+        'complete',
+        id,
+        '--if-rev',
+        show['rev'] as String,
+      ]);
+      expect(again['error'], isNull, reason: '$again');
+      final second = await json(['tasks', 'show', child]);
+      final reseeded = (second['checklist'] as List).single as Map;
+      // Same deterministic ID, new content: the item's rev must move too.
+      expect(reseeded['id'], copy['id']);
+      expect(reseeded['title'], 'Shoes');
+      expect(reseeded['rev'], isNot(copy['rev']));
+      final before = await bytes(canonicalOnly: true);
+      final stale = await json([
+        'checklist',
+        'check',
+        copy['id'] as String,
+        '--if-rev',
+        copy['rev'] as String,
+      ]);
+      expect((stale['error'] as Map)['kind'], 'stale', reason: '$stale');
+      expect(await bytes(canonicalOnly: true), before);
+      final ok = await json([
+        'checklist',
+        'check',
+        reseeded['id'] as String,
+        '--if-rev',
+        reseeded['rev'] as String,
+      ]);
+      expect(ok['error'], isNull, reason: '$ok');
     },
   );
 
