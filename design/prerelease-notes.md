@@ -1,4 +1,4 @@
-- Task and Food side panes stay open when you change the selection.
-- Running low is now a Food view. When something is low, the filter button shows a warning dot and the menu shows how many products.
-- Food rows put expiration and location above brand and size. Store links are available from the row menu.
-- Workspaces with more than 256 installations (including agents) need every device on this release or newer. Older versions stop with "Too many installation histories" and write nothing.
+- Tandemlog now includes `tandemlog-cli` for agent access to Tasks and Food, with text/JSON output and MCP tools. It ships with the desktop app; each agent uses its own profile.
+- Food selection now covers whole rows, without checkboxes. Selected rows include containers that arrive from another device, and the editor count updates with them.
+- **Move some…** in a Food row’s menu lets you move a chosen number of containers to another location. It is also available through the CLI.
+- Workspaces with more than 256 installations, including agents, require this release or newer on every device. Older versions stop with “Too many installation histories”.
