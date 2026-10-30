@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "9f99c96d6860004ebfa0d099846f286d",
-  "issuedAtUTC": "2026-10-30T03:30:33.973791+00:00",
-  "sourceRevision": "ffb43a821c56505c84f2789f395bfed64f6a6e5f",
+  "requestId": "50a8ca56db6f36a140e1af8ee5ef1dd7",
+  "issuedAtUTC": "2026-10-30T05:19:52.171897+00:00",
+  "sourceRevision": "e2125752a7585a67204240bfa33ae867f0f63a1d",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "0d25af61e37e494d72aba9bce3eddf216ef23dcfc3daf85eb7527e3af9ebb0b4",
+    "sha256": "12a2167cf6a7e80f70bf72253860a1fe93619ffa78e433cb6eaddb9735684bf4",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -1891,7 +1891,7 @@
         "mode": "100644"
       },
       "test/agent_cli_test.dart": {
-        "sha256": "2d688bdce1e73178deac22f8b76968a3035c62e95bc644179ed7b1f5a223e536",
+        "sha256": "63a09581e679bc87dc1db68b3799cc985f545a99a091921aaa19cd83935d7468",
         "mode": "100644"
       },
       "test/agent_overlay_folder_test.dart": {

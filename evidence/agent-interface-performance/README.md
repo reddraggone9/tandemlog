@@ -31,3 +31,15 @@ comparisons, zero reruns, zero resamples; cleanup clean within the deadline.
 dense-food 5.525/7.896 ms. Sealed receipt: `evidence/reference-performance/current/`;
 the previous current (`df710a4c`, RC.2 source) is retained as
 `retained-df710a4c/`. The failed q1/q2 evidence above is unchanged.
+
+CI on `4abf6b2` then failed only on Windows: all 36 `agent_cli_test` cases
+stopped at `APPDATA is not set` because the test's private environment had only
+the Linux profile root. The test-only fix `e212575` changes relevant source, so
+q3 no longer applies and is retained as `retained-9f99c96d/`.
+
+Fresh enforcing qualification q4 `50a8ca56…` of `e212575` (relevant-source-v2
+`12a2167c…`) **passed**: correctness, all 256 absolute labels on all three shapes
+and both growth comparisons, zero reruns, zero resamples; cleanup clean within the
+deadline. `agent.write.purchaseImport2` median/max: dense-food 582.6/586.5,
+dense-2 490.4/493.7, dense-1 313.2/321.5 ms (budget 700/1000). This is the
+current receipt.
