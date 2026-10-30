@@ -1,0 +1,3575 @@
+{
+  "schemaVersion": 1,
+  "kind": "official-rerun-authorization-v1",
+  "ordinal": 2,
+  "requestId": "c4d1baa7b68ab9491fbd06a34c77a774",
+  "requestSHA256": "9e9ff46a9bdfe62c55e93aba0e218ce3be8f0eae2e03803f725badc9b87292af",
+  "priorRequest": {
+    "schemaVersion": 1,
+    "purpose": "controlled-reference-performance-v1",
+    "requestId": "767260cc31a596057dc90c341f0ecb73",
+    "issuedAtUTC": "2026-10-30T01:08:33.976446+00:00",
+    "sourceRevision": "24f2927b0e20a9efc20910e6568722dcbb4bb491",
+    "relevantSource": {
+      "scheme": "relevant-source-v2",
+      "sha256": "5b044e06df602302f6fc833281e28670661f66a4a3b683451d85f4453482c86f",
+      "files": {
+        ".gitattributes": {
+          "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
+          "mode": "100644"
+        },
+        ".github/actions/setup-flutter/action.yml": {
+          "sha256": "d0b94d3f1eea9e4cc260eeabe008df39ef2aab9290fd29fb895481dca5896c22",
+          "mode": "100644"
+        },
+        ".github/actions/setup-text-engine/action.yml": {
+          "sha256": "381c945e6249b0892e48c73078374b043ce640e3281770dd94b4b9f71d311426",
+          "mode": "100644"
+        },
+        ".github/dependabot.yml": {
+          "sha256": "9949a643c82ca050bb6484373cf417f84907b3258510d91670f68a80114cd042",
+          "mode": "100644"
+        },
+        ".github/workflows/android-candidate.yml": {
+          "sha256": "2c7c1e22afdb6e7fc78a84ce0b316ef6b013e962e88d497a11268f95f648f694",
+          "mode": "100644"
+        },
+        ".github/workflows/ci.yml": {
+          "sha256": "87426b6dc13ed926bcaefe57a00e8550ab4872273dd74922f806613334613f12",
+          "mode": "100644"
+        },
+        ".github/workflows/prerelease.yml": {
+          "sha256": "b5f26cfbe6cad058eb86b94c575c45d43de22c14e5265645b5ba2b64651e4254",
+          "mode": "100644"
+        },
+        ".github/workflows/rc4-linux-close-diagnostic.yml": {
+          "sha256": "983d9186b5f06542bb3a959b2f1e46e3830e79432c9a01625d3c266d723a47f6",
+          "mode": "100644"
+        },
+        ".github/workflows/stable.yml": {
+          "sha256": "fd03e19b37585fe62bf1a7e877989ec31b2f2e9b838f3103daeec1b9f3ca6dbf",
+          "mode": "100644"
+        },
+        ".github/workflows/text-merge-spike.yml": {
+          "sha256": "14239fcec7d46de351f366b60651e7c9bf6e8880c074a9182e6daf4c2e23a8aa",
+          "mode": "100644"
+        },
+        ".github/workflows/validate.yml": {
+          "sha256": "6172ad2ed39871f7261dae316acc6c0584d3bd21edb9afaf7e94ce08664d3005",
+          "mode": "100644"
+        },
+        ".github/workflows/windows-widget-qa.yml": {
+          "sha256": "78bf3c892b57a5fe87df64a46810513c7f1bca963b22a04b850491e0c7eb43fe",
+          "mode": "100644"
+        },
+        ".github/workflows/workspace-upgrade-qa.yml": {
+          "sha256": "4b600ff922540aea37f21e040c0888ea9465f2998869a02910f4c548223eff4e",
+          "mode": "100644"
+        },
+        ".gitignore": {
+          "sha256": "b6318852b63ac37f8b5e22d5775942e1063bc03bdac804a94639f493fcd3bff2",
+          "mode": "100644"
+        },
+        ".metadata": {
+          "sha256": "243f2f7b66b909e27df677ac2c6989c0d47dfcc9a953635b9117ff5a84e5e66e",
+          "mode": "100644"
+        },
+        "LICENSE": {
+          "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+          "mode": "100644"
+        },
+        "analysis_options.yaml": {
+          "sha256": "4fc867ca09c5145d99eecab9bc2829a8cda56f8d341d64a478f6006b4912a467",
+          "mode": "100644"
+        },
+        "android/.gitignore": {
+          "sha256": "b027c9de1011765c015e5819bf857c0d75bfcd0886fb01721c091159012e50f1",
+          "mode": "100644"
+        },
+        "android/app/build.gradle.kts": {
+          "sha256": "729ced73cb750a925d4144de2b80e4f28182610ba818390e3fcb738601d767b5",
+          "mode": "100644"
+        },
+        "android/app/src/debug/AndroidManifest.xml": {
+          "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+          "mode": "100644"
+        },
+        "android/app/src/main/AndroidManifest.xml": {
+          "sha256": "51020f2c78aa1758e2736c991e3350b5db9174053669422f847c55eb51a234f7",
+          "mode": "100644"
+        },
+        "android/app/src/main/kotlin/com/reddraggone9/tandemlog/CheckedReplacement.kt": {
+          "sha256": "c3f5987a80c511ea0d8fdb3af275585d495c4c35abc880dc22b62c25354dc1b1",
+          "mode": "100644"
+        },
+        "android/app/src/main/kotlin/com/reddraggone9/tandemlog/ExpectedFolderGrant.kt": {
+          "sha256": "d5ce11eefff66a01f8b0e7e8ac221d95349d10cf7a84faa0829e4921959c1bc1",
+          "mode": "100644"
+        },
+        "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt": {
+          "sha256": "151d2e84577b1cc222aa76753103547668cf8df4b8fe26a52f33043d65dc5974",
+          "mode": "100644"
+        },
+        "android/app/src/main/kotlin/com/reddraggone9/tandemlog/SectionShortcuts.kt": {
+          "sha256": "fe00758b16b468139c3b10b5dcd5de090e8a662b3f1d31b3df75c5cfb11637a9",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/drawable-v21/launch_background.xml": {
+          "sha256": "7ca6d5cec2169c5a98661a119db23a6f3399c8fef2256ff04f3a642831282478",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/drawable/ic_launcher_foreground.xml": {
+          "sha256": "4f38617189ae04867ed74a82c137b8f3031fd4b9f49f8e06838f4cc12b595aa8",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/drawable/ic_shortcut_food_foreground.xml": {
+          "sha256": "2e1c2356468ba2418f1c39aeb0dcceae8ff8dd123496cd2a8527dd128c60fa62",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/drawable/launch_background.xml": {
+          "sha256": "94433756fe10005ddd6fc55cc5c0b1e9f3c10b66a08ceac795ece6713d34e28a",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml": {
+          "sha256": "9fc4bb4a8338a88c01a6f23902366c891ad5208915137fe76338372764b48f45",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-anydpi-v26/ic_shortcut_food.xml": {
+          "sha256": "7c7607cdcf34677ca3f67bfde17140bf67e38715d40df271b5adc67a43461c3c",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-anydpi/ic_shortcut_food.xml": {
+          "sha256": "221431a66130b2678a8ff521647e8d32af894e97729eb85148500ffd1860d064",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+          "sha256": "281b7ef02c05da046833cefc76a6d16c53bb58f5ead0eb24bc222f7754a0f2fe",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+          "sha256": "30d8c3947fb0042e81b7f42789db1527bb0ab71a70a9e880ad64498b2a2cb82b",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+          "sha256": "09548741e3236ae30aa4dc843e87cf0d4c32ba6ed9dc36214c61fb32b9be286c",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+          "sha256": "fd95ff5704abac0c1fcc57a29720a005a9eb32c3e2dde8c2f9708416386e6553",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+          "sha256": "b75c2f68c8ba9857e18894142fada2c3a0282dd78db62f812f0511c0c7ad271e",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/values-night/styles.xml": {
+          "sha256": "8c5bad5152f217e837519f9c15211d19f39bd45f5f67faf6dd81cb4b299e518f",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/values/ic_launcher_background.xml": {
+          "sha256": "aff998a55a5d4a70cedfb933d80848d75f5504e9ea2c4a2e6fac65e77f700be8",
+          "mode": "100644"
+        },
+        "android/app/src/main/res/values/styles.xml": {
+          "sha256": "937d7c82f539c72eb94fd3a3773f29b3d3fef1997213c92cb632298cedf4bda9",
+          "mode": "100644"
+        },
+        "android/app/src/profile/AndroidManifest.xml": {
+          "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+          "mode": "100644"
+        },
+        "android/build.gradle.kts": {
+          "sha256": "6a26dba2cb8dfba1e74f540b0d17a89d96c1301d3c3bfda14348bed257fddcba",
+          "mode": "100644"
+        },
+        "android/gradle.properties": {
+          "sha256": "0f82b18017fba6bb5ce3aa4b2d1a00c9382fc8aae7b1d9326e44b18abd66d80b",
+          "mode": "100644"
+        },
+        "android/gradle/wrapper/gradle-wrapper.properties": {
+          "sha256": "5fae3ec3252de35dfb3b676fb1f915827aac6d8b9f059783551ea8a31ec8170c",
+          "mode": "100644"
+        },
+        "android/settings.gradle.kts": {
+          "sha256": "f36ce862e73b9afe72900a0d7d75e34d8eaf6f414f80732d14f9dd28e12008af",
+          "mode": "100644"
+        },
+        "android/signing-certificate.sha256": {
+          "sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3",
+          "mode": "100644"
+        },
+        "bin/tandemlog_cli.dart": {
+          "sha256": "547859edfe10f062113372aea91cb063ca471a8d5ebe433ec6c028d24d24115f",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/.gitignore": {
+          "sha256": "e1a649ddcd0e06bf7d73eb5ad8fdd89898f62a59b3a85802e8832ff1208a64ae",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/Cargo.lock": {
+          "sha256": "5b7d12c4b16750d8eab164f08dca755191e81175721cbf283a989b48720a8697",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/Cargo.toml": {
+          "sha256": "4eb683d2c582f8cb68cd2f1d1703f307aa7f9b5a1e181105b3597a3236485da5",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/README.md": {
+          "sha256": "5268abac0bd66cdd0165dfb1900c4d530c761f5c9194b4df6a0c0c7b1322969e",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/README.md": {
+          "sha256": "00a4ef16f39eba95a84ed9dbd294e6dfd34ffe6006b8fcea557bd967fffde061",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/analysis_options.yaml": {
+          "sha256": "cb339f0c7e824c0b95d0a0bd872231b7a0125d3b8222b0e3d789cfafc500726d",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/bin/replay_probe.dart": {
+          "sha256": "6eacac57bb8ef77eb11184e10689ed8eb5943a97262b5152fcea4b498421920c",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/lib/activation.dart": {
+          "sha256": "e48683a580af286311383e1e76c50433188a9b90cf93f40639188b4784cdd026",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/lib/flutter_draft.dart": {
+          "sha256": "e6ffff09e71b3eae797313cc0ffac1b7cec6b74bcb2c97f87c01acfbbcc35996",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/test/activation_safety_test.dart": {
+          "sha256": "9d2a5b375a7de5925b5a5556609a88c2891e09081157b9a2d083ac13da9d00e6",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/test/activation_test.dart": {
+          "sha256": "d2bf867966c0eca8f0d4b289a7b7d5b918f1798a082d252864c0603b43565cee",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/test/native_creation_test.dart": {
+          "sha256": "6a0f4d5f3964143c53ea04b7b3f2a581e74d44af5ecafc80349453310b0f87bf",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/test/native_prepare_test.dart": {
+          "sha256": "0cfaf8829d1e72db4991ebcd74d6bb159146d1a77cf5ab69b5bc9006db29d761",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart": {
+          "sha256": "fc33b72de38d7cd221cddec0f26b7582c945c4e51293db15ccd3abe070ede6ea",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/bin/ffi_smoke.dart": {
+          "sha256": "d21de00a53dbbe8367fb4b81be62d3ad8ea548337ac61e1db962c37c97f1af29",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/bin/malformed_probe.py": {
+          "sha256": "4248d472692461b3d54b18b795d714f4160c81075d462e5044bddeaa8ac18627",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/bin/measure.py": {
+          "sha256": "3b5dd034d6a0e6b6597a28d41b613e5a5a47078daf7dc220c358845134c87cc7",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/.gitignore": {
+          "sha256": "d8deda1955275795a678d98fb5abadda9a70931e82eeddb190d229d0acbfe1b9",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/.metadata": {
+          "sha256": "fb9e38ebaad3586bc15c62708e26ecaff32f3944db2f7971f20d39daa7580935",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/README.md": {
+          "sha256": "5ac2066f260ff3f0c750f9d82fd2828ef270254b8df30a53eb6363eba52fe28e",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/analysis_options.yaml": {
+          "sha256": "3071875e2e304c604be0615e17f17caf60d6c4c632bd2be9b9e1e1e3b8fc8249",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/.gitignore": {
+          "sha256": "b027c9de1011765c015e5819bf857c0d75bfcd0886fb01721c091159012e50f1",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/build.gradle.kts": {
+          "sha256": "0384b53dc55cccc49546d80d17a1fb1e9051cd8b1101074aa88675af4929abaa",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/debug/AndroidManifest.xml": {
+          "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/AndroidManifest.xml": {
+          "sha256": "1ce5f205d2d707bd027f8baea431c4ef8bde92f23f3da1764b82f7a77c21d318",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/kotlin/com/reddraggone9/tandemlog/yrs_editor_lab/MainActivity.kt": {
+          "sha256": "646462bba190545ff47b1566e9b09e9f3a53742fc0e57eec6bd2212590a99218",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/drawable-v21/launch_background.xml": {
+          "sha256": "7ca6d5cec2169c5a98661a119db23a6f3399c8fef2256ff04f3a642831282478",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/drawable/launch_background.xml": {
+          "sha256": "94433756fe10005ddd6fc55cc5c0b1e9f3c10b66a08ceac795ece6713d34e28a",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+          "sha256": "6a7c8f0d703e3682108f9662f813302236240d3f8f638bb391e32bfb96055fef",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+          "sha256": "c7c0c0189145e4e32a401c61c9bdc615754b0264e7afae24e834bb81049eaf81",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+          "sha256": "e14aa40904929bf313fded22cf7e7ffcbf1d1aac4263b5ef1be8bfce650397aa",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+          "sha256": "4d470bf22d5c17d84edc5f82516d1ba8a1c09559cd761cefb792f86d9f52b540",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+          "sha256": "3c34e1f298d0c9ea3455d46db6b7759c8211a49e9ec6e44b635fc5c87dfb4180",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/values-night/styles.xml": {
+          "sha256": "8c5bad5152f217e837519f9c15211d19f39bd45f5f67faf6dd81cb4b299e518f",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/main/res/values/styles.xml": {
+          "sha256": "937d7c82f539c72eb94fd3a3773f29b3d3fef1997213c92cb632298cedf4bda9",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/app/src/profile/AndroidManifest.xml": {
+          "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/build.gradle.kts": {
+          "sha256": "6a26dba2cb8dfba1e74f540b0d17a89d96c1301d3c3bfda14348bed257fddcba",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/gradle.properties": {
+          "sha256": "17cce4d7b8c6fb6c5d308577312e22e1f59a40cf3d71a12ea0d7fe5eaab591ad",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/gradle/wrapper/gradle-wrapper.properties": {
+          "sha256": "b690d26223576fe4e63889fad9a00df81945cb870b9476cc5a563152a1a88a74",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/android/settings.gradle.kts": {
+          "sha256": "016759283e88ade6eba92910583feeef88b962839b957aa414296afd2952d122",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/integration_test/editor_flow_test.dart": {
+          "sha256": "c870d14919f12485a13274b3e186ff6988130b13e48d0644daa067eb41ed5a27",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/lib/editor_session.dart": {
+          "sha256": "a25768453d14cb59ad503901410bdbea133d10a33d239dd56891376536e141c3",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/lib/main.dart": {
+          "sha256": "159d99d7fdd32c8132e56f929ccb4347e7804518dbda86955cb103c7ba31f130",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/lib/native_bridge.dart": {
+          "sha256": "63b00effe30cd24874e454e703c6a3c895ac0eb0c49cf7f852c5dda95de41ecb",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/.gitignore": {
+          "sha256": "5ded4f1a9d10d34bf6ee5beb0711d88ee2ef07b0f07ace9ed77935a246e8eb82",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/CMakeLists.txt": {
+          "sha256": "8d2f71d5b786dcb3ec1c2f747caf6cfde9e90d02569a13f83a2fd8c552598220",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/flutter/CMakeLists.txt": {
+          "sha256": "787189e2623313cfee590a0b553338eb9fc68b3af922ddd77c5d39c75f989aeb",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/flutter/generated_plugin_registrant.cc": {
+          "sha256": "7861b227b10a10cc1d7643f82a246b7db35b503f2d9ff1d3c906136e6c260dce",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/flutter/generated_plugin_registrant.h": {
+          "sha256": "00f93bb5b1faefdede8f6065df327522900fb0b8efee86bacf424fd947ed14bb",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/flutter/generated_plugins.cmake": {
+          "sha256": "d5aaa52ef8594d3128b35b6619c6a353e1be5f3c5a63a9c29c0a32b424e91952",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/runner/CMakeLists.txt": {
+          "sha256": "8cdcfd911e770fd7d511c97c7bce6559486a815352a47c953f7ef632e236d2cc",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/runner/main.cc": {
+          "sha256": "ea23f7cdf74091d63bba29ef60486370b766157b848f0cfe62bd8b1c1695a0c1",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/runner/my_application.cc": {
+          "sha256": "770899f7016e1899787d997c795a064fca24146afc27f5028197a8353cc87d2a",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/linux/runner/my_application.h": {
+          "sha256": "a4218d7ac0db8a9a6716daf216b2d4fc6bdc7ac647e3183078b2c962ebdfcf70",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/pubspec.lock": {
+          "sha256": "c9a518555fcea53dbb393a04a5212bac10f2091be255efffd691c5653eafa282",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/pubspec.yaml": {
+          "sha256": "9cc02a3ad3de4005a58901c2d645dca8903148daf43d4f4f8b6c1b9420c0e404",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/test/editor_session_test.dart": {
+          "sha256": "49915992d5aa611cb963bef5dfd8f3f74fd6e519bc2643435a81cfc7c8716b64",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/editor_lab/test/editor_widget_test.dart": {
+          "sha256": "ee368e9808f47016ce9c4575e04d18532d57d609e227c29d21bb56bee17cd2a9",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-analysis.txt": {
+          "sha256": "cc45ffa0712e2ae07df91e31db56be137733f26aa151484c530786eddb4ad009",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-clock-regressions.txt": {
+          "sha256": "1e63f4e3ddb8adf5691eb6fbb6c1826495e04237b9761c063cf88fd264fe001c",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-draft-policy-matrix.json": {
+          "sha256": "1aeb611ef8b521fd9dec859b6500a64dc8348d6d710f41851f1351e88cddd9eb",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-editor-regressions.txt": {
+          "sha256": "138f21a2f77175b10162f6d23c31871189e5fc5045b8450095fb1514dd85139a",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-followup-red.txt": {
+          "sha256": "edb9f94610a5a3890cc8fcd1c3848f9d34b49d2e4fb0e5b2ab0d9c0d47990918",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-followup-test-first.json": {
+          "sha256": "558f8c66d5a742ebfe8e5f1101cd81fd99448010fd5fc16eb130c431683bb26b",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-future-clock-warning.txt": {
+          "sha256": "770340062590f7b20a5f9c7dda34faa2adc83b17bb4bf28ce00f2df6fc10419c",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-linux-ffi.json": {
+          "sha256": "3818898d1312a947e63ae396aca68c8cf97b08d91557df4d82f347264e53f2ec",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-native-performance.json": {
+          "sha256": "0a54d405bae2aa4ff9f1a1156b086e41c301a8443a1f40a2736c7c539adac57a",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-native-regressions.txt": {
+          "sha256": "5d04a0be03a7746503a079ac383965ad111752785fcc6000f1b39ae1c92c9cc6",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-policy-matrix.json": {
+          "sha256": "a43c7b10dc4bd3e359f69ba39069272660318238c5e2a32b7408f07ab37646c2",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-policy-red.txt": {
+          "sha256": "8a56c2ffae740dcf35e8d94ada38471add812adab764990e4dcd6cdf5963d654",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-policy-tests.txt": {
+          "sha256": "d974b37565f7d98f26dbff34324430c91a9d0686e60023cc877e3384de2911df",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-results.json": {
+          "sha256": "5694f8af3c5f3a2ec14dde208c12904ba673745bda5236a9ee1cb7dccd23783a",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/activation-test-first.json": {
+          "sha256": "577403e5ad428a5e13d8bad478c23f9b868eb91ac0d9ce71480cf8ed16cc4374",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/admission-linux-ffi.json": {
+          "sha256": "3818898d1312a947e63ae396aca68c8cf97b08d91557df4d82f347264e53f2ec",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/admission-malformed-sample.json": {
+          "sha256": "4704eb2704eba863903e791cc04f2903823c164287359e1aff29ed79f8f736c0",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/admission-resource-measurement.json": {
+          "sha256": "fb49ed4a1640a7d67173020c4dd5884ada7677dcbf630f3b2809125b9b774cb2",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/admission-source-verification.json": {
+          "sha256": "337be208f7f9c21c5c2700605591e62cf020a25cc4ac3df006a069a24bcf3117",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/admission-test-first.json": {
+          "sha256": "3623cd5959785584df6dfdcbd4b8e72206065ac056d2d72195beba6e9b7477cb",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/editor-android-hosted-verification.json": {
+          "sha256": "612969c3357d2789027a2ebb74dcb2c6d791e3c3588c8aec322ff6b73050574f",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/editor-android-local-verification.json": {
+          "sha256": "9c6cfefcb61d6a6fef3163356d43fd6ee8ebe94871b581ac079e48b0754c10f3",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/editor-matrix.json": {
+          "sha256": "ad8b9596db4401828286069c7aa3b9e982edac6f809cef90caa8d7ad5ede79c7",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/editor-results.json": {
+          "sha256": "81b29a2c93c2833dfd50ef38adeb67d51b00fbf005497cdfeaa477e24b23a7b1",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/extended-performance.json": {
+          "sha256": "f64d686849be463f0bc3b107638491445389aa03f5dc81f7b5d5e655087ac4e0",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/focused-review.md": {
+          "sha256": "f4e8378cd48dba37bde1fcc21586aec7b2ce662088d8b11c757a2cb2cbf86164",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/foreign-root-probe.json": {
+          "sha256": "e39915aaeb1100837839a198e4e71de8f02c9e61c31773b8988357de37de37cb",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/hardened-hosted-artifact-verification.json": {
+          "sha256": "0ef9372bf27b846ccf067e91837e869471a82be5b2dd9b1fde3fe56b63072860",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/hosted-artifact-verification.json": {
+          "sha256": "4009e0fe63343b9c00be0741b03cc762a77548208e6b4320cfe1f243361d17d2",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/malformed-probe.json": {
+          "sha256": "4704eb2704eba863903e791cc04f2903823c164287359e1aff29ed79f8f736c0",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/native-creation-red.txt": {
+          "sha256": "e9842e735ea19310c97005623ac2fa029216f2c88bb6cf5d25dcfe3c267c8f3d",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/native-creation-test-first.json": {
+          "sha256": "3b4335a6624edfc89bdfb09d2bb47b56f69ecea32f87f456d0aa8131e03c4e45",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/ownership-test-first.sha256": {
+          "sha256": "d9e3c2f12b399eb9fa54df60a0fdacb33a48551f2ed4b5dc74761c0dfe27b312",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/performance.json": {
+          "sha256": "8a3e11abeaa10a6b2158680fb6f3283ba44237ca7b2e90c23a23e12d3b41c557",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/prototype-dependencies.json": {
+          "sha256": "e71ec57a71b319e5f99f0523eca599a07af2701f41ceb025b07e06003ccbba43",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/results.json": {
+          "sha256": "b1a7002a7783e485e4fbcee3becc70fac42ffabe51a640db3ad89613eec550ab",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/seed-conflict-probe.json": {
+          "sha256": "c1fb06ff9eba2915255f4364113061f715632d653f943a9875d3d208ee2e89ce",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/test-first.json": {
+          "sha256": "02507ea81ce3997a0214db3442cd43995640ccda51e4c40bc8d10db9c3cfe214",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/test-first.sha256": {
+          "sha256": "3ed6f73944c1a6f99932005af77df5e8b71459000a9b863e1612b13e0a6d353d",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/text-actor-red.txt": {
+          "sha256": "ebb70ac43bdf4b5293e996abb6a7b571d03a18ea7154e461ccaa55d28dc4dd8b",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/text-actor-test-first.json": {
+          "sha256": "2a717257d4fff4b5461beda53b31d980a433edcbd77e600c7512fb558c1a1d56",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/undo-receipt-red.txt": {
+          "sha256": "efe96242927db34d633a4a73f3a3773d49c88e47e5f984e705da1d2956c81be2",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/evidence/undo-receipt-test-first.json": {
+          "sha256": "27ed05813d71f7b8f35ee9906acae5a777b73cbcea9549ba6ac47e10dd218744",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/src/admission.rs": {
+          "sha256": "4b5fa1cff2c212939b311d5c8dcdcaf8fd6c0b7e519b7a18d355f58b928fb7f2",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/src/lib.rs": {
+          "sha256": "8e5ee85a4aabaf00711b9798a46bf771b97035506692c5bcb09547d2e99ea19b",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/cases.json": {
+          "sha256": "ca8e98d43691820308f3327104c171da29e56723d6c31253a92008c79731e524",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_admission.py": {
+          "sha256": "b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_admission_units.py": {
+          "sha256": "a8d03b906fceffa824c23ac2fb843f2848cec1c0bd31d057d185151db3f2b790",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_contract.py": {
+          "sha256": "436c9ce892e61f85bd9af3eacf1b4ff95cddf389e88253e439c1153f4c978c79",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_ownership.py": {
+          "sha256": "73c07f8dd9b313d4deeb76936d2a2c35e9155dd8a55f2365521c52cc3f7c0885",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_prepared_undo.py": {
+          "sha256": "32891283f0b425fc0b992287c6faef68bbd57266ed09d515798a48ba7dcc7043",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_resource_atomic.py": {
+          "sha256": "8948da2a3bb684d044439d39b78fe1148ca8b24e4fb4e73df7f05c2aaf8fae6f",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_resource_limits.py": {
+          "sha256": "663064224a7d5fb30abd4624bb58fed592bee95974be8080b1625321793487f4",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_shared_history_materializer.py": {
+          "sha256": "9f27b95865330208a8d929dd5692b64b1ae5a29cd501fc55de8e95bf9a03ec10",
+          "mode": "100644"
+        },
+        "experiments/yrs-spike/tests/test_worker_ownership.py": {
+          "sha256": "f42c1216e970aab6034b1afab91a72f70e2ee5946c149399804d25f3d443948f",
+          "mode": "100644"
+        },
+        "integration_test/bulk_apply_semantics_test.dart": {
+          "sha256": "138e23019c0c2731309c520ff75b06ad5809036f7cf6695176c43d9b6ecd55e2",
+          "mode": "100644"
+        },
+        "integration_test/bulk_failure_visibility_test.dart": {
+          "sha256": "7ae824c8c30155ba1f4f94befaaaca500fb1d086c17378d57e76590d9861303a",
+          "mode": "100644"
+        },
+        "integration_test/checklist_disclosure_layout_test.dart": {
+          "sha256": "6246a6662e248310e1b889e8a948689960a97c7f676ef51be3e443c2ef32a525",
+          "mode": "100644"
+        },
+        "integration_test/checklist_lifecycle_test.dart": {
+          "sha256": "c236700b9e4304c2cabc7af59c3243e72f7489b2582f2dff61577ef8bf5eb652",
+          "mode": "100644"
+        },
+        "integration_test/checklist_workflow_test.dart": {
+          "sha256": "0cabc234e17a7651ca3c16d270e46717b7c8ff113b7a7cd0df1bb495cc7ed066",
+          "mode": "100644"
+        },
+        "integration_test/civil_date_picker_workflow_test.dart": {
+          "sha256": "2a8ee7d4ec515cafa4614619929a617976f1ab2b5814da8f7ae18e69db2505e5",
+          "mode": "100644"
+        },
+        "integration_test/completion_actions_test.dart": {
+          "sha256": "f9a7ede5ebe84f7a51e2bd2385e752a8e6fef6a4b2636364b8df7ae0969e900d",
+          "mode": "100644"
+        },
+        "integration_test/completion_confirmation_progress_test.dart": {
+          "sha256": "2f3a69b69a208de978f4d6212c92f32763ef0c9bae43aceac7f82ddd64645c9d",
+          "mode": "100644"
+        },
+        "integration_test/completion_disabled_opacity_workflow_test.dart": {
+          "sha256": "6c41429d30ed7369ffd6b1c014d01e5ab61557c1c0f9767d03f20162a9e9f093",
+          "mode": "100644"
+        },
+        "integration_test/completion_focus_test.dart": {
+          "sha256": "6b6f43003703598c5506f8d377e3c96565dbdc771f739870e8e9278c53cfc6d4",
+          "mode": "100644"
+        },
+        "integration_test/completion_timestamp_workflow_test.dart": {
+          "sha256": "4f8944e9d69a273209729c73dddc640df9efacd49020434d95cb3e845225456b",
+          "mode": "100644"
+        },
+        "integration_test/continuous_drag_test.dart": {
+          "sha256": "4386075172df4501bbfeaa52054276fb8cc7978e1367e867d2d7663b41e9b1b0",
+          "mode": "100644"
+        },
+        "integration_test/data_integrity_test.dart": {
+          "sha256": "25732cc5a2c8acf272ff584fe92f8413de81cab688c58e696e39cf4a5f3b3ac9",
+          "mode": "100644"
+        },
+        "integration_test/date_time_layout_test.dart": {
+          "sha256": "9d466a2b5d4a7bbf23f2095aec8d8beb54a3a68716b8643eae4fbf1ab76d6264",
+          "mode": "100644"
+        },
+        "integration_test/date_time_rows_test.dart": {
+          "sha256": "8e6d7389927322e4877709ef2f0e76fa72304138419816ef723a30ddd0361ee8",
+          "mode": "100644"
+        },
+        "integration_test/field_layout_test.dart": {
+          "sha256": "6df3815efcb6441a7a5d99bac3fe7ef38d5d8af7749e84a74ec7149ec80c802d",
+          "mode": "100644"
+        },
+        "integration_test/fixtures/task_completion_checkbox_before.dart": {
+          "sha256": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161",
+          "mode": "100644"
+        },
+        "integration_test/folder_actions_smoke_test.dart": {
+          "sha256": "4770e53cb7186b3a52f64f50a84afd548221d2fe5ee67340dec78267b4e61525",
+          "mode": "100644"
+        },
+        "integration_test/folder_picker_progress_workflow_test.dart": {
+          "sha256": "b25420d2e5d953fd4649ae4e222a8388c46703943cf66f551da111de047ac849",
+          "mode": "100644"
+        },
+        "integration_test/food_account_workflow_test.dart": {
+          "sha256": "67b76648de3c7feedb688de8ec6e58709c0b6509f4eaa3eb25ffc06673fd7809",
+          "mode": "100644"
+        },
+        "integration_test/food_add_another_workflow_test.dart": {
+          "sha256": "e7565d79c1a2d7b258aa349a66506278d0b6b771dc96b68e8601b516a1b5dcfb",
+          "mode": "100644"
+        },
+        "integration_test/food_all_status_search_workflow_test.dart": {
+          "sha256": "18145feadefd0feeb40778d9ad28034d8d62ccf5831bb0e119b142344654a140",
+          "mode": "100644"
+        },
+        "integration_test/food_bulk_details_host_undo_review_test.dart": {
+          "sha256": "cffcb1ed84b93642d953bdcf012435a365d2cbf294ccc0111aab0ff28e4ae274",
+          "mode": "100644"
+        },
+        "integration_test/food_density_workflow_test.dart": {
+          "sha256": "b1651068260e1019b4b13413d6521265a6c93546101bd1504fd0ca73215349fa",
+          "mode": "100644"
+        },
+        "integration_test/food_editor_keyboard_workflow_test.dart": {
+          "sha256": "1d282705dd80934bd5b74da067c4e3b7c2efc579c44bb7177d9ef70986d961e8",
+          "mode": "100644"
+        },
+        "integration_test/food_editor_pane_workflow_test.dart": {
+          "sha256": "e0af1e716f6312fbd7d0b21b568f5d2e028f949ad906f152394c584960c558af",
+          "mode": "100644"
+        },
+        "integration_test/food_expiration_color_workflow_test.dart": {
+          "sha256": "73eb11e044c82c7baaadb67715ff94f51331beaab5cd3026bdadbc65a00a00a5",
+          "mode": "100644"
+        },
+        "integration_test/food_expiration_deprecation_workflow_test.dart": {
+          "sha256": "8116c52233e80198bee8fbfb18450fd822db9c3c369e3fcf25f4441a8572a543",
+          "mode": "100644"
+        },
+        "integration_test/food_expiry_guidance_workflow_test.dart": {
+          "sha256": "f69b2f3956c41f930d31c32b157d63a3603f5edf7bf2933b27fd5afadf3ca20d",
+          "mode": "100644"
+        },
+        "integration_test/food_group_action_geometry_workflow_test.dart": {
+          "sha256": "f7a21bda43dc3286bc2762140ca45e484109e7f2b441a24afbfe3fb4367149de",
+          "mode": "100644"
+        },
+        "integration_test/food_inspect_accessibility_test.dart": {
+          "sha256": "2deba1dac047a3c3a7e29d0540a186192b5e144aebb1ced63bb20b410c471f12",
+          "mode": "100644"
+        },
+        "integration_test/food_keyboard_selection_workflow_test.dart": {
+          "sha256": "5eedfa1643b9a09a75127b6cb2f6706110e64fc397d14a7f23d7043046397751",
+          "mode": "100644"
+        },
+        "integration_test/food_preview_workflow_test.dart": {
+          "sha256": "fa72bc36730575010a4c0d06f0a24046781d303bd8a0ef74f07e0ecc20004d1a",
+          "mode": "100644"
+        },
+        "integration_test/food_production_workflow_test.dart": {
+          "sha256": "c42b48c58b9cab3f78517cc6009de50107a88c80866194e6bd90f34e3b0555ce",
+          "mode": "100644"
+        },
+        "integration_test/food_products_workflow_test.dart": {
+          "sha256": "81351a9705d38cce18af8ecb9c50255e07e7643b9154f288e4561e443ada629d",
+          "mode": "100644"
+        },
+        "integration_test/food_refinements_workflow_test.dart": {
+          "sha256": "54a2d8f46bff0f0e1996e5d6c085eeaedb4470dbcb8615745b67bf0221010c56",
+          "mode": "100644"
+        },
+        "integration_test/food_required_expiration_workflow_test.dart": {
+          "sha256": "9322d11e900631e9f80f986ae2f57310962c16bff0e230cf248a4b4b2f55dcfd",
+          "mode": "100644"
+        },
+        "integration_test/food_row_selection_workflow_test.dart": {
+          "sha256": "36fe7001185c0b170bd2ad69a8bc80fbc55ccca59a86b03221989f0ec02a4c8d",
+          "mode": "100644"
+        },
+        "integration_test/food_selection_retention_workflow_test.dart": {
+          "sha256": "044f6925897381f7daaef2ac58c1c5498ab6d2b4fb4fc2fa562d8433acc9f2a7",
+          "mode": "100644"
+        },
+        "integration_test/food_stock_toolbar_workflow_test.dart": {
+          "sha256": "a780ac6f289654ab477b63ef5f51a8c90641491caa7af83b141856b4bf0d36b6",
+          "mode": "100644"
+        },
+        "integration_test/food_undo_stack_workflow_test.dart": {
+          "sha256": "674b4eb3a9b4f44781d9aa6f588e00f0a2f16cbc6b4a869a30db687ac70a4203",
+          "mode": "100644"
+        },
+        "integration_test/food_view_reachability_workflow_test.dart": {
+          "sha256": "13db31395d3dfe495101754808b7affcddfdf960f637bc1e801207b5460d45b7",
+          "mode": "100644"
+        },
+        "integration_test/header_search_test.dart": {
+          "sha256": "f102d0e7171129f1942427fd6f34bdd7abbd71a4ff2917c88eb0ecf412118f7d",
+          "mode": "100644"
+        },
+        "integration_test/header_selection_test.dart": {
+          "sha256": "05bafd675b6034e954ed835fa5480f72b662a7056729d8d3520760f206f03473",
+          "mode": "100644"
+        },
+        "integration_test/historical_checklist_recompletion_test.dart": {
+          "sha256": "1ce5cf5a0d3fa5592f1ce872aa6cf8fb547c4004cebf956fd506d54f473f5dc0",
+          "mode": "100644"
+        },
+        "integration_test/inbox_flow_test.dart": {
+          "sha256": "406978e77ce30c2e34aae7464196cd40a07ac74f3a105d62390d28a1cb6d6457",
+          "mode": "100644"
+        },
+        "integration_test/inline_checklist_workflow_test.dart": {
+          "sha256": "44380265aaf840e08fa653816de2f3fe94e5db2a34264cf335f260093864c98f",
+          "mode": "100644"
+        },
+        "integration_test/inline_checklist_workspace_test.dart": {
+          "sha256": "a9dfffe93ec6e52385d8bcc820e51c95f15da0b3c775cb50bfe946973c8401ec",
+          "mode": "100644"
+        },
+        "integration_test/linux_release_action_costs.dart": {
+          "sha256": "af030996471ef1513c0728a654234ae1de56f182728416f9a96c1e71e49b8f27",
+          "mode": "100644"
+        },
+        "integration_test/local_profile_workflow_test.dart": {
+          "sha256": "0e9b90b92b6eddae962438e8812eeffc4e5b95dd9c941c05d1bc9a4b36551ecc",
+          "mode": "100644"
+        },
+        "integration_test/native_text_fixtures.dart": {
+          "sha256": "d2eab7a472adb88febea192a54ad11e69515c826d6a62eb2c296f0ff8f0bd37a",
+          "mode": "100644"
+        },
+        "integration_test/profile_fixture.dart": {
+          "sha256": "1e8e8f4d443942649e8c2fecccaedd6c4cc1502fdde560d3c988c506114721db",
+          "mode": "100644"
+        },
+        "integration_test/quick_capture_workflow_test.dart": {
+          "sha256": "d963afa99ae40682d5fc89893b8e904b13645f6255c02e7afc7d67da2cc22cda",
+          "mode": "100644"
+        },
+        "integration_test/rc3_affected_acceptance_test.dart": {
+          "sha256": "8e47ec679a3906e69c06206200747877a85b14c3d83471f1d5cc6f62f7076fc3",
+          "mode": "100644"
+        },
+        "integration_test/recurring_text_workflow_test.dart": {
+          "sha256": "9bc001c24259b9b2fc77cbc9196311524a6956d75e331cb00d6dedc549c9d91e",
+          "mode": "100644"
+        },
+        "integration_test/release_version_test.dart": {
+          "sha256": "9e8267a7143228d19160fd726fa731cbac65390192fb6458dec002b823968d72",
+          "mode": "100644"
+        },
+        "integration_test/save_acknowledgement_test.dart": {
+          "sha256": "24e042b8b5d5788349675b97182ae978a32fa2f43071dd73a2f025093ff618a9",
+          "mode": "100644"
+        },
+        "integration_test/section_navigation_workflow_test.dart": {
+          "sha256": "5e7e884a741b3266b5064b16aae0cc73d8f241153d4b8bc54a0bbb684f384a5c",
+          "mode": "100644"
+        },
+        "integration_test/selection_layout_parity_workflow_test.dart": {
+          "sha256": "cb25cdb5882840699c76c822176474a28b4886a0bcf63bb9ecca48623b62a454",
+          "mode": "100644"
+        },
+        "integration_test/start_hints_test.dart": {
+          "sha256": "dc63e837ed50cb20a2d0c160db5345e4a31da04885534d4a959a0e79da456dd9",
+          "mode": "100644"
+        },
+        "integration_test/sticky_task_groups_test.dart": {
+          "sha256": "fb954e4e62f10f7ec9504fa109caca72f3872168f35ab85432296f00f58a5948",
+          "mode": "100644"
+        },
+        "integration_test/tag_input_workflow_test.dart": {
+          "sha256": "00f11696489a22db1afe61802d6b0fbe696913b3a0f78a2a211220208515a00c",
+          "mode": "100644"
+        },
+        "integration_test/task_body_hit_test.dart": {
+          "sha256": "59706dcf3630ec2f976515c847dac9259f6a3d3175e6fef3e2a481d8ec4993a2",
+          "mode": "100644"
+        },
+        "integration_test/task_drag_boundary_test.dart": {
+          "sha256": "d3f1d46ceb3f51c5973556e40720f1bb14653d6b085c7bd94eff3c8b8f4bece7",
+          "mode": "100644"
+        },
+        "integration_test/task_editor_error_keyboard_workflow_test.dart": {
+          "sha256": "85601b096840e7ea0c17032d38a39107c6dd9b4e4be07a515d22f561e1a00436",
+          "mode": "100644"
+        },
+        "integration_test/task_flow_test.dart": {
+          "sha256": "abf7d8761e1d13fe36060d30035ef3dcb2c16cd627330de7895b65fd6b49c564",
+          "mode": "100644"
+        },
+        "integration_test/task_input_mode_retry_test.dart": {
+          "sha256": "5e9676fc0c1fe5ed2aaba59e2e76ca42a7bc3db18077cdf20e5fa3265b03d42f",
+          "mode": "100644"
+        },
+        "integration_test/task_input_mode_workflow_test.dart": {
+          "sha256": "7d4a6746969fcc7f0e6bce4519d2785406c4ccaff41fc4131e61a80cb767d08b",
+          "mode": "100644"
+        },
+        "integration_test/task_precision_test.dart": {
+          "sha256": "0ab2972560aa80007460ffe197672d9e55c03d123bfe510da8cd88c268c839a2",
+          "mode": "100644"
+        },
+        "integration_test/text_workflow_test.dart": {
+          "sha256": "9353aef7a1044f5b06b8c24bd0cdaad10b31595a9a645d72aeefefbaf03ac975",
+          "mode": "100644"
+        },
+        "integration_test/toolbar_parity_workflow_test.dart": {
+          "sha256": "027ec55cf64c6dec0dfbb910d79ee0b6716617e8afd46b0a2c9470f3009eedc4",
+          "mode": "100644"
+        },
+        "integration_test/unified_history_workflow_test.dart": {
+          "sha256": "46fa494384d74820b4264bb98498cda8d57198e8b9f00fd3860b57d24d1735b5",
+          "mode": "100644"
+        },
+        "integration_test/ux_feedback_workflow_test.dart": {
+          "sha256": "72cc02927b560f8eba1b5ce1919b3a0235e6b9a2bb1dd2a86ba2d8f3c83fd366",
+          "mode": "100644"
+        },
+        "integration_test/visible_task_move_workflow_test.dart": {
+          "sha256": "22840b98ddaad788d70a185debecea0e93508bddd10eb9fb55e4fa2216bcbbd3",
+          "mode": "100644"
+        },
+        "integration_test/windows_release_widget_viability.dart": {
+          "sha256": "1a4af30cb2ea9a9d95f49e5de4d3a3ecc434381480574923158efe58e33bba6f",
+          "mode": "100644"
+        },
+        "lib/agent/agent_profile.dart": {
+          "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
+          "mode": "100644"
+        },
+        "lib/agent/agent_workspace.dart": {
+          "sha256": "ba49d78fad6cacc2eb57d8beaaa8a58d0f99ab0c72e001e6c12ab54407310465",
+          "mode": "100644"
+        },
+        "lib/agent/cli.dart": {
+          "sha256": "00f641c6e6b58125f18bbd908077530850e713a853d77043e55ad1a67cb7184e",
+          "mode": "100644"
+        },
+        "lib/agent/command.dart": {
+          "sha256": "559e0f70a723e796596293b0b49164cb0deba71777bb849012ba9a223dd071bc",
+          "mode": "100644"
+        },
+        "lib/agent/commands_more.dart": {
+          "sha256": "f86d972371b36e6b496deacbc9cb9c96f38d5975607caaaff2350fd3cebe06b1",
+          "mode": "100644"
+        },
+        "lib/agent/commands_read.dart": {
+          "sha256": "4da32fc300ea0303533ff2c1887075d895f915e24afc053a603cac3be5e3717a",
+          "mode": "100644"
+        },
+        "lib/agent/commands_write.dart": {
+          "sha256": "241be572ca6f6f39195c9a70c8811d767106368027b927151c234c96399a2419",
+          "mode": "100644"
+        },
+        "lib/agent/mcp_server.dart": {
+          "sha256": "0cfb682fdfde9d113c2d63ca661c47fccb9754aa887a79ff434c69a0cc9d6068",
+          "mode": "100644"
+        },
+        "lib/agent/overlay_folder.dart": {
+          "sha256": "e03a8ddb837629a1961d747d71b81bb7cfd0ce1a56e0bcd819277ff237e74284",
+          "mode": "100644"
+        },
+        "lib/agent/registry.dart": {
+          "sha256": "2a2da1f9f6ca48f59ac2e6ef2dc00bf19823d711c6b8df0ae6de984ba26570ec",
+          "mode": "100644"
+        },
+        "lib/agent/render.dart": {
+          "sha256": "50ed4a0e67f8d4bf86302b2c06bb5220d80680f8297859638aeae8a50349b4fa",
+          "mode": "100644"
+        },
+        "lib/agent/text_undo.dart": {
+          "sha256": "a29de6c0286a071cbf20ca693a6bc5c80ce1075103cc61c4b46d462332293d81",
+          "mode": "100644"
+        },
+        "lib/agent/windows_zone.dart": {
+          "sha256": "1677b9a776fdd18cbb12e1df22a884494856288171fbb6cb984ee0351a6ce530",
+          "mode": "100644"
+        },
+        "lib/application/checklist_completion_command.dart": {
+          "sha256": "40073f8e55ceea3de51bdd40eadc1584c525b9ba7d533996bb174094ccb500d7",
+          "mode": "100644"
+        },
+        "lib/application/food_undo_history.dart": {
+          "sha256": "dea813d41b47bdf8aa8e4fc8158a2b1cde8d141b555e17cf55c79ffc5755924f",
+          "mode": "100644"
+        },
+        "lib/application/task_clock.dart": {
+          "sha256": "bd302389744ccc04fac881306d7eda55291fd372c8fa17df08f0198711995d8a",
+          "mode": "100644"
+        },
+        "lib/application/task_text_session.dart": {
+          "sha256": "2a3a07584307b71b471e73914d31efd5ba8eca424a0a925f9d7cf056d9b8efbd",
+          "mode": "100644"
+        },
+        "lib/application/text_save_command.dart": {
+          "sha256": "6d33ec54c101682c4b8f123ec725ac95592f0785936d6e5a67d66ad999dd26ae",
+          "mode": "100644"
+        },
+        "lib/application/undo_history.dart": {
+          "sha256": "78dcf6157ce9c0caafcfd219e65eab0564a8338202c630e21ad0a3055b617ff1",
+          "mode": "100644"
+        },
+        "lib/application/workspace_session.dart": {
+          "sha256": "3a2fca66a65b212086b8cbef49c3a45c04ec2b8bcdc0e77fc683a76633daea29",
+          "mode": "100644"
+        },
+        "lib/diagnostics/operation_observer.dart": {
+          "sha256": "05d0e5050a8d85a59b1ad5bf49b9d659311b8b447270216277c2314ec021fc14",
+          "mode": "100644"
+        },
+        "lib/domain/bulk_task_edit.dart": {
+          "sha256": "5b28c567e9d7c137aa733ced037e1c4dfce6865408177798c75df909b2e80d17",
+          "mode": "100644"
+        },
+        "lib/domain/checklist.dart": {
+          "sha256": "c51fc52455f212158d5294ea4d0ff4eca53098f20e3a7bb47bb9aa3998d79657",
+          "mode": "100644"
+        },
+        "lib/domain/completion_instant.dart": {
+          "sha256": "d62f195dddec7e9141286389745e77865027998489fe5bbdcda20c0f58212ab5",
+          "mode": "100644"
+        },
+        "lib/domain/current_operation.dart": {
+          "sha256": "9a889789b38d881f2b3aa1b6839587e483f39c6c4d3c33e13794d789e0646d28",
+          "mode": "100644"
+        },
+        "lib/domain/event.dart": {
+          "sha256": "9b50f363162477c64766c42282d0c775944d7c6d8801c17219c8c13250ddfb7c",
+          "mode": "100644"
+        },
+        "lib/domain/event_chain.dart": {
+          "sha256": "b48037b9b4c00dd5847f2fa18ec48baf8cb86c74b639012efc3f92abcefb8e1e",
+          "mode": "100644"
+        },
+        "lib/domain/event_clock.dart": {
+          "sha256": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f",
+          "mode": "100644"
+        },
+        "lib/domain/historical_completion.dart": {
+          "sha256": "3f2e3f6ae5a6357d9be980ae076cb56e5881ca237d96ceed5403d6b99fd58afe",
+          "mode": "100644"
+        },
+        "lib/domain/occurrence_due_migration.dart": {
+          "sha256": "d005ab66d847fc677c87a489580b66493aab3e87fdb42bd729884572022ea5d6",
+          "mode": "100644"
+        },
+        "lib/domain/projection.dart": {
+          "sha256": "6c3620363c814f2b0112cb2c6e76aeebbb699a4cd840185163083620b3e662b0",
+          "mode": "100644"
+        },
+        "lib/domain/schedule.dart": {
+          "sha256": "522de14f73d9bb54f57f8acafa6cac41f2916227ca150181ffcb73112573a614",
+          "mode": "100644"
+        },
+        "lib/domain/task_view.dart": {
+          "sha256": "9f13f9bc7ca3b23e71e1b1d3e9a7571c6ac40d5b0f9622f9880b3b38149198e4",
+          "mode": "100644"
+        },
+        "lib/domain/text_actor.dart": {
+          "sha256": "fc7b0c3bdd4b1dae23e1d5dea96f682c6deee10d8c08187431946adcadead9c4",
+          "mode": "100644"
+        },
+        "lib/domain/text_context.dart": {
+          "sha256": "797dc27aac34a622bd33f9c56432b6017f78f98f4aa0b65836c43750ffec62c2",
+          "mode": "100644"
+        },
+        "lib/domain/text_inheritance.dart": {
+          "sha256": "a00bfbbd9d957e7fb59cc392aca8318b38e19db3f69a8792833e5bd66451eb62",
+          "mode": "100644"
+        },
+        "lib/domain/time_zone_policy.dart": {
+          "sha256": "e6c264f115756b6835cc5068ea7925f2e84a22fbdd27a72177d17ac077dfb468",
+          "mode": "100644"
+        },
+        "lib/domain/timed_view.dart": {
+          "sha256": "281d674e2c94d3c5cd07edb2afb1e4fe23e839c4d6ef7ab8013075dc0b2d53c6",
+          "mode": "100644"
+        },
+        "lib/domain/timezone_data/AUTHORS": {
+          "sha256": "6f225c2f0aedb7c5445b89eb97e55106996990b1307b9a066df1682a0fb36d9e",
+          "mode": "100644"
+        },
+        "lib/domain/timezone_data/LICENSE": {
+          "sha256": "d8f160d6dcdd4ec77522646d04c139d89d55910d6852792d2b441625763c012f",
+          "mode": "100644"
+        },
+        "lib/domain/timezone_data/NOTICE": {
+          "sha256": "5d1b8882cec5e1c241a6f59d8e75dbb538f2ec68becf1115eae9cb3dba5ec2b4",
+          "mode": "100644"
+        },
+        "lib/domain/timezone_data/README.md": {
+          "sha256": "dc1290d80d78232e101f8966f265a889ed794839cb0614f84aba6455f81cc83b",
+          "mode": "100644"
+        },
+        "lib/domain/timezone_data/iana_2025c.dart": {
+          "sha256": "efa33b3543ad9e84369a0fcb3ba017c9ee6c31c9eebcdae6b6a06b722279ddc7",
+          "mode": "100644"
+        },
+        "lib/domain/timezone_data/iana_2026e_additional.dart": {
+          "sha256": "485b3dad9559c35628e41cac9694ced10e0389ee5d29c5ce8deaf87a132a7b85",
+          "mode": "100644"
+        },
+        "lib/domain/timezone_data/provenance.json": {
+          "sha256": "ac272fd07ac4da02a43ba3ae52b340d6de176148efde274716b9f1d8547f3415",
+          "mode": "100644"
+        },
+        "lib/domain/undo.dart": {
+          "sha256": "0db909db40b21cb3846d85511054530bfb7925f029f960bf3a82dca70ad671d7",
+          "mode": "100644"
+        },
+        "lib/domain/utf8_byte_limit.dart": {
+          "sha256": "427e5ec6917c597c505a08788b8b1953a39ae40ef54862fe35d75c558ff1defa",
+          "mode": "100644"
+        },
+        "lib/domain/validated_action_cache.dart": {
+          "sha256": "6cb8530f7ee5875ecdeb7a640847fab7b6bfcef981db0bd4cf7d6a487c8c11dd",
+          "mode": "100644"
+        },
+        "lib/domain/visible_task_move.dart": {
+          "sha256": "a74548466fef592e60a620358eee12a138cd29533f8fb111b941e355b39436b1",
+          "mode": "100644"
+        },
+        "lib/domain/wall_time.dart": {
+          "sha256": "985eac5d08ace5006fee591d3b315181f1f70057bb7b50980f3849334b2bc9ef",
+          "mode": "100644"
+        },
+        "lib/food/expiration_presentation.dart": {
+          "sha256": "72541cb7dc094ca66481d410f277e729833c0d928477634ea9ea7bee8f95922b",
+          "mode": "100644"
+        },
+        "lib/food/food_admission.dart": {
+          "sha256": "b417443805e4dc56781c7a5de3e3a225afc27addff6197bafe006ea47e5fe46d",
+          "mode": "100644"
+        },
+        "lib/food/food_editor.dart": {
+          "sha256": "a251a380fb67b1b4df9a7e3421b8879c302ab8882a933fd6d161a35a85aa8fd9",
+          "mode": "100644"
+        },
+        "lib/food/food_import.dart": {
+          "sha256": "404f56da757b682420d166fac0df28d1c63bde81c4cf0d465ac5d8b09f62b7a4",
+          "mode": "100644"
+        },
+        "lib/food/food_import_evidence.dart": {
+          "sha256": "987db990c359bed57edfd07e76601c76c3e196bc746e869a4e08cf2c3c7fb7c7",
+          "mode": "100644"
+        },
+        "lib/food/food_page.dart": {
+          "sha256": "c331ad1b00afb99e6283414d3888f28867ddb92e52142566be84a233abcb567e",
+          "mode": "100644"
+        },
+        "lib/food/food_products.dart": {
+          "sha256": "fbc7692fb05245a087747574cfc75f00f483fb0de9c825c077381a17ad3cbaef",
+          "mode": "100644"
+        },
+        "lib/food/food_purchase_import.dart": {
+          "sha256": "67f80e9fed9e7e9aa5caac69fe33e2e1f064e6093b2134b5ff058bcd630f6163",
+          "mode": "100644"
+        },
+        "lib/food/food_record.dart": {
+          "sha256": "d6b56976d577e7414019fdabaad5a4db71f8083d2c35dffd62e745aab4aa9577",
+          "mode": "100644"
+        },
+        "lib/food/food_rows.dart": {
+          "sha256": "694ff6a16a731f078e33b4f7c768a0767906f924ebb3e87eba58d66fb35c25c9",
+          "mode": "100644"
+        },
+        "lib/food/food_store.dart": {
+          "sha256": "4e15a4c41909ae0fbbf6a9268372bd7a38d0078866c0885433c5f91030957cec",
+          "mode": "100644"
+        },
+        "lib/food/inventory.dart": {
+          "sha256": "82ce1d378cdaa2c8796bdd0593a88f1b2d2daffb45fa09439eaa53faa95740d7",
+          "mode": "100644"
+        },
+        "lib/main.dart": {
+          "sha256": "2caffb2c75d3c6260bf42a730f8e3b6348bdf0f34a1905c35b5a2aee22dc2acb",
+          "mode": "100644"
+        },
+        "lib/platform/android_section_navigation.dart": {
+          "sha256": "20239c36398d50913328a30dc4fb4c58999b995d61cb7c59cb5af248f84844aa",
+          "mode": "100644"
+        },
+        "lib/platform/folder_actions.dart": {
+          "sha256": "4c376650b26b5411be9d1840b487cdfd9950877ccb3dfb96ea5186fb27e8467b",
+          "mode": "100644"
+        },
+        "lib/platform/foreground_importer.dart": {
+          "sha256": "a61df034f31273f84e4aa9ac75d2d6e763d252e29da0bc5c79d9e615536b3bbc",
+          "mode": "100644"
+        },
+        "lib/platform/host_zone.dart": {
+          "sha256": "17b4b1e48e6ec8b55da43748b4817d3d15aafe5a8673e503c91c6a67eec0a70f",
+          "mode": "100644"
+        },
+        "lib/platform/log_folder.dart": {
+          "sha256": "499153d2ef3425d7e391068464efde97fbda69c14ce5429f5a89486e52ce41f4",
+          "mode": "100644"
+        },
+        "lib/platform/view_time_source.dart": {
+          "sha256": "d328e31c43c6ea3c1a8730a595892ab3bedfbc5e997f043f1d1a367174cce826",
+          "mode": "100644"
+        },
+        "lib/presentation/bulk_apply.dart": {
+          "sha256": "b03762f05198c7a9a1ee468879222c65df5c20bf4ed2ecfbd9f5010c09f906c0",
+          "mode": "100644"
+        },
+        "lib/presentation/calendar_date_picker_fork.dart": {
+          "sha256": "b2acd34ea703c5f5d19731acb0fdf742711a53b9d8e4be404ae85a0b81caee54",
+          "mode": "100644"
+        },
+        "lib/presentation/checklist_disclosure_ink_border.dart": {
+          "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b",
+          "mode": "100644"
+        },
+        "lib/presentation/checklist_item_editor.dart": {
+          "sha256": "ee016889dd771148f24eb76877e17854d8cd9c7fee2ccdff8f816fc2660c77b6",
+          "mode": "100644"
+        },
+        "lib/presentation/checklist_panel.dart": {
+          "sha256": "4bd18d19797da50342b3e5f95358d7c10c2281a716684bf3b9fdb20437d949a1",
+          "mode": "100644"
+        },
+        "lib/presentation/civil_date_input.dart": {
+          "sha256": "61c43a263836b1abab39a7a969684fc3c39a6308f56ac43b7ac3d59b1e2ec02f",
+          "mode": "100644"
+        },
+        "lib/presentation/civil_month_year_grids.dart": {
+          "sha256": "b02608ab58ddb083f2b58de431fc989812940435b56d9fbe16fc9bcfaa55c22a",
+          "mode": "100644"
+        },
+        "lib/presentation/compact_selection_actions.dart": {
+          "sha256": "a9f3ad737eefbb48221aa36f506b2bc4bffc3ddc4953c13d88029857c2da9bbd",
+          "mode": "100644"
+        },
+        "lib/presentation/device_name_dialog.dart": {
+          "sha256": "a986260d1dee8ee65b784f5c15cbb576d9227fec652f564bf86b08845082ac6a",
+          "mode": "100644"
+        },
+        "lib/presentation/editor_surface.dart": {
+          "sha256": "b85ace55addcd4a0937098c5e361c72ef956df08e7339bfbaba9efbedf8b46c8",
+          "mode": "100644"
+        },
+        "lib/presentation/failure_message.dart": {
+          "sha256": "471d40e4cdd36004286914d3cec30b9b13f71e5fdb0ec1fecc4d2a07d203a303",
+          "mode": "100644"
+        },
+        "lib/presentation/focused_dialog_viewport.dart": {
+          "sha256": "de08dfa20365ee6865fff52ebfac2a2e9a8f8ef24ffdb05371f3ea1efb3edb89",
+          "mode": "100644"
+        },
+        "lib/presentation/form_validation.dart": {
+          "sha256": "77e4b0f5a6ef7e00195ac350134463904d2beb5ac616f3e6174be8a67973ed78",
+          "mode": "100644"
+        },
+        "lib/presentation/free_text_autocomplete.dart": {
+          "sha256": "b852daf14df32e8af2111858193c691d27fec045693f6c0da4d6686ce5aa902b",
+          "mode": "100644"
+        },
+        "lib/presentation/list_row_surface.dart": {
+          "sha256": "25f55010e8638077902ee638d1bbf04c5c4f18557fac5c00af726d0ec657f698",
+          "mode": "100644"
+        },
+        "lib/presentation/list_selection.dart": {
+          "sha256": "ee508f22ea6629feeb975d016eed670ab58c76e772a241318b2849e23b212c9c",
+          "mode": "100644"
+        },
+        "lib/presentation/name_entry_dialog.dart": {
+          "sha256": "ecabc3a1977705a2204eedc471f434fc98637ef7a912508ced38abf177e1c3d5",
+          "mode": "100644"
+        },
+        "lib/presentation/release_version_tile.dart": {
+          "sha256": "8020ef52e48223556e53b45438605e64f6e964e9af7e1103e75882c7e475499c",
+          "mode": "100644"
+        },
+        "lib/presentation/section_content.dart": {
+          "sha256": "4847f43d6939c8a747b68679517090819f9e382a1f9dd4d2c9bb0cbf1467be6b",
+          "mode": "100644"
+        },
+        "lib/presentation/section_menu.dart": {
+          "sha256": "763320d2a86e5e5b15f9114086de5f07f7b8dd57a5c2248f68cc950e2e36cb07",
+          "mode": "100644"
+        },
+        "lib/presentation/settled_center_alignment.dart": {
+          "sha256": "8447f1259a10c9d31934d75361b5af0d2ba59177b3ac91f70dc8b159617ebc46",
+          "mode": "100644"
+        },
+        "lib/presentation/sticky_task_group.dart": {
+          "sha256": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77",
+          "mode": "100644"
+        },
+        "lib/presentation/tag_filter_picker.dart": {
+          "sha256": "bc4242262a07f90a86aeb24889cef66ba4fd262a3fb1a92696b29e7a8aacba7e",
+          "mode": "100644"
+        },
+        "lib/presentation/tag_input.dart": {
+          "sha256": "a3935f9032282b2774fa134a13254e6eb904585a87c4248939e09846e67650cc",
+          "mode": "100644"
+        },
+        "lib/presentation/tandemlog_theme.dart": {
+          "sha256": "b8f7871dbb2a5f2b8d076bf275ebf47dc95cf20077aa4184e603688285d79aec",
+          "mode": "100644"
+        },
+        "lib/presentation/task_actions_menu.dart": {
+          "sha256": "1044e513a8b4dee166463e001e28359be0339a158bd11d4cbf6eb85c8f8dc786",
+          "mode": "100644"
+        },
+        "lib/presentation/task_completion_checkbox.dart": {
+          "sha256": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8",
+          "mode": "100644"
+        },
+        "lib/presentation/task_drop_indicator.dart": {
+          "sha256": "355b6ee293243fa93f5ad7b7130880b7d0d539c17ed54d1924e0f42a660ddb76",
+          "mode": "100644"
+        },
+        "lib/presentation/task_editor.dart": {
+          "sha256": "f5f15391303de3a8ba65d65a6e43b43fdde0c341d5464e30a1a114020e6f3d60",
+          "mode": "100644"
+        },
+        "lib/presentation/task_entry_area.dart": {
+          "sha256": "45ae045ac9422bcf904a72e63edf09320dade7fc58561f1e730a8a478222c3c4",
+          "mode": "100644"
+        },
+        "lib/presentation/task_field_help.dart": {
+          "sha256": "d7590f0db19ce2dd21e50367ad7c6bbc3435c6efbaff0ab23869dbef36950484",
+          "mode": "100644"
+        },
+        "lib/presentation/task_metadata.dart": {
+          "sha256": "1368b720bc16a0feb1b3a77c2a80e61385d0b6256a9b3744ef48187ba3a5fcb4",
+          "mode": "100644"
+        },
+        "lib/presentation/task_toolbar.dart": {
+          "sha256": "965ff55187c0f9bff4a1a00185c88a6313812080722d8c8fbbd4e4e803c1b818",
+          "mode": "100644"
+        },
+        "lib/presentation/title_line_formatter.dart": {
+          "sha256": "2bee26a9a0b17b4b874b71ff4905b2419db05436037baf0d30d3a4fad34a01cd",
+          "mode": "100644"
+        },
+        "lib/presentation/toolbar_action.dart": {
+          "sha256": "2ab66238a0b0bfe9c1a4e57d3f0e53c34a8c8fa256027869fcbba8275fa48601",
+          "mode": "100644"
+        },
+        "lib/presentation/unavailable_completion.dart": {
+          "sha256": "4026c64c0033e350f2a9899db6f1818eab8f3a7f5635cc81222bb7fe9e3ecb8b",
+          "mode": "100644"
+        },
+        "lib/presentation/unsaved_draft_dialog.dart": {
+          "sha256": "c7a6daa9e9da19b9ffd82a674799187b0003203b0a1370300c73e12d0aba498e",
+          "mode": "100644"
+        },
+        "lib/presentation/view_clock.dart": {
+          "sha256": "c176b9fe1e42bd0fd443a1b3a7261a7b2c1c9bd4709d4e1541a7e39c13d0b74e",
+          "mode": "100644"
+        },
+        "lib/storage/checklist_copy_index.dart": {
+          "sha256": "330dd52464ee47c69827db15c285d0e9b407a74d338ea8be6534428b3c54b456",
+          "mode": "100644"
+        },
+        "lib/storage/checklist_expansion_store.dart": {
+          "sha256": "641a6f8ba4a71bec97f059a9c6e792b377bbe2298509136ec6161431a9c6e250",
+          "mode": "100644"
+        },
+        "lib/storage/checklist_store.dart": {
+          "sha256": "027f31af14a48afbeadf0fd1984330dbc0609f4766a6d90bae01e98d6d841980",
+          "mode": "100644"
+        },
+        "lib/storage/diagnostic_database.dart": {
+          "sha256": "566e37df4ad4a212c4b645e8ae432faefe38ea5d1075e46d9f2336f6b8db3587",
+          "mode": "100644"
+        },
+        "lib/storage/local_durability.dart": {
+          "sha256": "fc3f6811d9c956c78f4fa64737fa1f4a9da88ce4590eadef74b4785e16d9d6ef",
+          "mode": "100644"
+        },
+        "lib/storage/local_profile_database.dart": {
+          "sha256": "dcf7b9f10a2578226b62aae16da3a8df65625daf589d7570d53f8949550daf22",
+          "mode": "100644"
+        },
+        "lib/storage/local_settings.dart": {
+          "sha256": "a9ff3fdf5b362d933aa86be4abdbd5317554b5c555fb96c2a1426d977c966342",
+          "mode": "100644"
+        },
+        "lib/storage/log_folder.dart": {
+          "sha256": "9b30ff4c01c1cfd05ed74bdcb0d66b5696fbb7647ce42b9ae492143dfd9fb4da",
+          "mode": "100644"
+        },
+        "lib/storage/profile_lock.dart": {
+          "sha256": "8517fa29e81770cb1cca6bb23b9d68c4b32d53147e199fff84c36aae5938fbc6",
+          "mode": "100644"
+        },
+        "lib/storage/task_store.dart": {
+          "sha256": "3cad641d9b5d0ed9a8613002b5aac18e99f5a3cc14ec24ca3de23afda096a6e0",
+          "mode": "100644"
+        },
+        "lib/storage/task_tables.dart": {
+          "sha256": "9cd94cb2e785100ecae820fa2ffee78454505001e9be89cac1bf8799c69ffa5f",
+          "mode": "100644"
+        },
+        "lib/storage/text_cache.dart": {
+          "sha256": "b189e03add5efcb6ae38765a0419cde397311f4b798303134a258b853677a376",
+          "mode": "100644"
+        },
+        "lib/storage/unified_history.dart": {
+          "sha256": "82d2e660d754f2376dc7ada292726284188d2f0127b5a28d4ef64f20d0440b7a",
+          "mode": "100644"
+        },
+        "lib/storage/unified_manifest.dart": {
+          "sha256": "f3a34d5aa0ae69d8f55de9a4c0ec2eb6da3d887510d0a78b29f03e92782a5ce1",
+          "mode": "100644"
+        },
+        "lib/storage/unified_record.dart": {
+          "sha256": "a8a2c7b169c2da3bbb48eae4acec98e982b8274b8b046f29170ad5a017109304",
+          "mode": "100644"
+        },
+        "lib/storage/workspace_state.dart": {
+          "sha256": "48099ff28daebe9b099a94724126115dc05257d207d0215f7a6a02c31177905c",
+          "mode": "100644"
+        },
+        "lib/storage/workspace_view.dart": {
+          "sha256": "740e429f24e287a3b84f80fcba510bcc36ccf548f26149ab727a028902f46d23",
+          "mode": "100644"
+        },
+        "lib/storage/writer_guard.dart": {
+          "sha256": "4729ad8be1f8fbff52538177afbee21de85e084767eb0f7c482811ad8e1c9b68",
+          "mode": "100644"
+        },
+        "lib/text/native_text_engine.dart": {
+          "sha256": "064446bfd208fb14d4d62800e5db8732d610890513f6524b932f7a719812317b",
+          "mode": "100644"
+        },
+        "lib/text/native_text_licenses.dart": {
+          "sha256": "1334cc454f628791e221e9a1e318357d4234b1f525c743c9bbe2d535e0882962",
+          "mode": "100644"
+        },
+        "lib/text/recurring_text.dart": {
+          "sha256": "1ff8c019f8f318b2e450b48884ed5c63c428425725d9646690cfc9a47709384e",
+          "mode": "100644"
+        },
+        "lib/text/shared_text_history.dart": {
+          "sha256": "147b90600383efd6b84969a6f9f0af39d9e05cedbcc4dcd9d87740eac07681df",
+          "mode": "100644"
+        },
+        "lib/text/text_history_operation.dart": {
+          "sha256": "b09ec0c0ab39c084b77adeb1c0ad6e153029771ee2cbcbe2e3b912c1733850cd",
+          "mode": "100644"
+        },
+        "linux/.gitignore": {
+          "sha256": "5ded4f1a9d10d34bf6ee5beb0711d88ee2ef07b0f07ace9ed77935a246e8eb82",
+          "mode": "100644"
+        },
+        "linux/CMakeLists.txt": {
+          "sha256": "37079088872ce0305fdeb54bbf925539ad485057ee37933eb98c05591ea83453",
+          "mode": "100644"
+        },
+        "linux/flutter/CMakeLists.txt": {
+          "sha256": "787189e2623313cfee590a0b553338eb9fc68b3af922ddd77c5d39c75f989aeb",
+          "mode": "100644"
+        },
+        "linux/flutter/generated_plugin_registrant.cc": {
+          "sha256": "be4702057f167b6f2c3fedb9a5d36cde7870c7370867018dcbc6e28cc9c6622c",
+          "mode": "100644"
+        },
+        "linux/flutter/generated_plugin_registrant.h": {
+          "sha256": "00f93bb5b1faefdede8f6065df327522900fb0b8efee86bacf424fd947ed14bb",
+          "mode": "100644"
+        },
+        "linux/flutter/generated_plugins.cmake": {
+          "sha256": "58c7d076efeef8b3277ff06907891f13a01dfdb5f4042b7f71fdc9cafa994acf",
+          "mode": "100644"
+        },
+        "linux/runner/CMakeLists.txt": {
+          "sha256": "b59fb2bb4641bd00dbd8f94a95094c5388a8e7ea0aa39fca64ac82c19c561fc7",
+          "mode": "100644"
+        },
+        "linux/runner/main.cc": {
+          "sha256": "546bd23f20d3010cdb31ea46dac8da04265570cca0e135f049f35d79d61b6c78",
+          "mode": "100644"
+        },
+        "linux/runner/my_application.cc": {
+          "sha256": "1f1603e4950906aec47d09d6c35c8224d6902a60f2aeb0788288e3a0b8ef142b",
+          "mode": "100644"
+        },
+        "linux/runner/my_application.h": {
+          "sha256": "342790a8a3543dea87a8daf8c44b1a38c314544e4979473d8f2a04033880f462",
+          "mode": "100644"
+        },
+        "linux/runner/time_observer.cc": {
+          "sha256": "032aa7f6923bbdaf5bbaa3cc04c2652d925e8d50b5777d35c4a8bab80cc13e4b",
+          "mode": "100644"
+        },
+        "linux/runner/time_observer.h": {
+          "sha256": "cb8a0f823a50d8ea3127841367f1733fd357a72d073a355eae7c9d50351961b7",
+          "mode": "100644"
+        },
+        "native/text_engine/Cargo.lock": {
+          "sha256": "40c0e68cdef664412d4cc65006cbfa8e35830d2ba0434b0525efed6a797b14b4",
+          "mode": "100644"
+        },
+        "native/text_engine/Cargo.toml": {
+          "sha256": "e61f0f558d3f6e94ee77623dd842cedd98ee3f3f8a3505cdc2d3a25fc7f02395",
+          "mode": "100644"
+        },
+        "native/text_engine/THIRD_PARTY_NOTICES.txt": {
+          "sha256": "4a869fdca16eb36a8970867f4cde5faa7df7894440c49bc6716ba82adbd13d39",
+          "mode": "100644"
+        },
+        "native/text_engine/src/admission.rs": {
+          "sha256": "a0efe257c67c8452a12fb0e8a8c3d3c487768e41cede6b71349fdb6d0d9e4d5e",
+          "mode": "100644"
+        },
+        "native/text_engine/src/lib.rs": {
+          "sha256": "acee0a754b6c534d785ea0f1749f7071d4610d368804df1eb4c153682f38bf5a",
+          "mode": "100644"
+        },
+        "native/text_engine/tests/test_third_party_notices.py": {
+          "sha256": "e1bfd25dfa87663323077ffef7210b935630cbd83e4ec30de71180a0766f1a91",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/.cargo_vcs_info.json": {
+          "sha256": "b360afa38057d789a27f70f3be1fa454e8b99159824beb4893cb4be37efcdb41",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/.gitignore": {
+          "sha256": "206b35dbf8d7a73bad6e0f3afc1ad34f3b7c7b05be2c74057b7ae8febb96cc0d",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/Cargo.lock": {
+          "sha256": "53a56e3e14693c1ecbde5cc93828fc1c9799cd2a89925a37b9efa999c8990314",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/Cargo.toml": {
+          "sha256": "2085b13775601afe212f93a5fbbe31abfd45e840da0f62c557b91a1ffd0d346a",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/Cargo.toml.orig": {
+          "sha256": "ad560977cdad06a087d94fafcf0a464754fd5f0b2a527b5bafd1471b684b60ba",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/README.md": {
+          "sha256": "6c56d67ee262839d49c3d5bba0930800274f78d5a3a3aacb7225d9649f019b6c",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/benches/benches.rs": {
+          "sha256": "b3196024b9e3904085a3927e1cfcfee3dce38baeb71c7f259d83384a38bb6784",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/benches/id_set.rs": {
+          "sha256": "90790cde288a056b6dcf33f5b4e006295e4e400eebafc3c936fc904350be6761",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/benches/serialization.rs": {
+          "sha256": "ba868f355a910b39e4121621b585ef885a583340d1fca856d7c3c1249042fb23",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/alt.rs": {
+          "sha256": "cdd569c656ac5bb94f353886f5f1bf9d49e07b40bff2033d840c75975d50e272",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/any.rs": {
+          "sha256": "2e5ee918b0c29a707ae259bd71474f5f6a72045f8bf062de2f5aa979c4591230",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/atomic.rs": {
+          "sha256": "3a3f2cfeacbc6d97a678d72a6a975ee0fde6e54f8e95a8ed8c74989cafb24784",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/block.rs": {
+          "sha256": "86dcf0f33bc59c40e3793679badecab6dc3cc8d9651d34096d48c70cda6511d3",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/block_iter.rs": {
+          "sha256": "176074723260296892a8567cb660c5a81b87984c7149407bee745483fd9354b2",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/block_store.rs": {
+          "sha256": "f847209b60ca6e2b9d5667a586fe8fc5271dfa1b844e9b3d9b2d6d0bdd976391",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/branch.rs": {
+          "sha256": "22734a9877161f87f1543fbd6fe27099dc4a14d886f9485e04d8b328008aa794",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/doc.rs": {
+          "sha256": "d44dff119bba51fbcd7a69d3b179f1190096e531a8742b4d96c5e1e7113120a8",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/encoding/mod.rs": {
+          "sha256": "bde6947363f0c42106035b2da31d5e62e964d15af507f533e8a7a4d052fc3c02",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/encoding/read.rs": {
+          "sha256": "733ef78e1d2f2db7d6a3da6fcc77d27f642b65ea2ce7ab3c23d173ecb91d1936",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/encoding/serde/de.rs": {
+          "sha256": "a4cfb97aca9fa5045dafd55ac89406a1ff00846f543319c569f78b378f3cf31c",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/encoding/serde/mod.rs": {
+          "sha256": "fcc015de3dd54231a2588b4827961e2f65de0cbe0d5ada574eb25de81e7b1a78",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/encoding/serde/ser.rs": {
+          "sha256": "02c607ee20c839a5a74047446b4ac29b04bdbd83251dd541737c54d83edbd211",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/encoding/varint.rs": {
+          "sha256": "37d24f5ee019a59ec83d95e1b85b2d12432e8ac09ec26d2ac4ac352c728c7dfc",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/encoding/write.rs": {
+          "sha256": "a0117c689ec93bcb2871115791e33e3e91588486561b5811d41a0c5e53e5090d",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/error.rs": {
+          "sha256": "4a57f59683c17347022fd087fad9a2a30b22ee825f8ff52b29b992558da6f2f2",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/event.rs": {
+          "sha256": "2658442ab8b5eea485217ec2ff7dae57599f9c5623734ad2d893f3604642bd9a",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/gc.rs": {
+          "sha256": "fa1ab49207697d8c2e182048e3023e226513f9331b90c3aef065a950b795d63d",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/id_map.rs": {
+          "sha256": "579ccb3ec2208eb983106d65ffcae30c500b3e24c92174451868e709b09105cf",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/id_set.rs": {
+          "sha256": "49e386c51b6297ae278361abea6f3181c8939ef5bb5c33c70d0f8060f07f0d25",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/ids.rs": {
+          "sha256": "9040539c9ef680ca10e04f765cfc0a23052be0f0b56ef8b17891f7c0099c299d",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/input.rs": {
+          "sha256": "78eff9f0128a0bb2b13e9c6e844d5a1b15904c6b30498469944f0b4df3ba5fd1",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/iter.rs": {
+          "sha256": "c1303953bec70bb2b68b02b7948fa7c2f43b8c3f7389885f457e8d9a501c552f",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/json_path/iter_any.rs": {
+          "sha256": "8a4d997539c6a25df95ad606c12d2087f9be849ee8d193fc29477bea1d2efa9e",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/json_path/iter_txn.rs": {
+          "sha256": "ce864d642ec05dfc5bceabf0c526ed340c0a99c16e13332af899363462729585",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/json_path/mod.rs": {
+          "sha256": "da4d9067a1e8d868899d0c6762a2afabf51ab04a8d0601008b6a3a56fdf8dd1e",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/json_path/parse.rs": {
+          "sha256": "4f521787b5bb445d02ab601a0e2cf0acf6ee4b59a0552993f7938e4aece16829",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/lib.rs": {
+          "sha256": "32bcc29e46572aef447528ac8421a41898c108863f8c34bbeb8135e887943a59",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/observer.rs": {
+          "sha256": "b08f6e1c3f390eec764d316033373eb460437d1b6ccc308e2215895da6133aac",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/out.rs": {
+          "sha256": "7f4562d84cc16d56e679d0ec178617367660e70a0c86bab5147ee340a38a7c85",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/slice.rs": {
+          "sha256": "328df6ab85a13990b6de10839900d0b97c4469d498fb3dec7fbe8758943e6210",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/state_vector.rs": {
+          "sha256": "19a03d6cf0a4f174df9d7e2b22ed1f96d13064aed42f3af41edcfd3e4ba6680b",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/sticky_index.rs": {
+          "sha256": "e2bfa8cbfc8407c0c1585a65a50c1def49b5696a6435c5c75b3e556a0c41e7b5",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/store.rs": {
+          "sha256": "c4fbebccd29c2552a3c0f657fb94dbe9d1bc783ac1b37106d31bca7c203bb9ae",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/sync/awareness.rs": {
+          "sha256": "c322d3efeec96b36a0c2fa53c96c49c84ead2de51c7e307ae09f8dc8e74440e8",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/sync/mod.rs": {
+          "sha256": "5999c93424d3bba819de2922ef49f93857e5b286f334150e2a9358b977cb7f7a",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/sync/protocol.rs": {
+          "sha256": "0887f7e7d1007a879316bc8adb1fe1dbd7aabfa71842571ce6183b7779a7bbdd",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/sync/time.rs": {
+          "sha256": "bc302d99aa85f9d3169752c3369882e6cd806e5856f70e4c2828f6063c35087c",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/test_utils.rs": {
+          "sha256": "31e0845546d85300f6f12a5c35b0ff607a96794c4a83405ba357020753863881",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/tests/compatibility_tests.rs": {
+          "sha256": "6a6e9761d6174f598b530901ccfec965b07eba2cf54e9ff652fc18e146ac5947",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/tests/edit_traces.rs": {
+          "sha256": "f8b5965ae50bd369fc5e2ce73e1ed7a43b29d6461224512fed93f8dd5d810e8f",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/tests/edit_traces_tests.rs": {
+          "sha256": "11f875b7abbbc6ec664c1e7f28ccaac9c903307f05baada6e65bfa440aad1962",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/tests/mod.rs": {
+          "sha256": "bed339b92949cceadfc5d128c85a35a6009a72cb4affb676988f41e440431eca",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/transact.rs": {
+          "sha256": "e0ee48b3a108a0bf05669be06c90db5b2dc6c846579d624ac587b7759ea0520c",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/transaction.rs": {
+          "sha256": "f08d4836260d047382586976b741c30e7a992536b1dd77e2a9829eec1908d500",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/types/array.rs": {
+          "sha256": "93d985cb367551577af2d6534a85f09ad057a42cee8dab9cd58054dd3c490e88",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/types/map.rs": {
+          "sha256": "5ebd1a960cf258ee97904dd69d8bc81d68763fb288afc089d6a466d4ff496e13",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/types/mod.rs": {
+          "sha256": "835ed9cdfddcb65e1a91b2db3cf5cd9c3b039a443c719f331b651be352855d05",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/types/text.rs": {
+          "sha256": "0f9dfa82c11ab8f9547f100367653feb0891318e055cb0932585e043c8eb1691",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/types/weak.rs": {
+          "sha256": "d27a49c7ab115e8e72b729c153cc7065f5293a348df542fcf94d1e4db269fa39",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/types/xml.rs": {
+          "sha256": "aa1071730511d373d2766e9af38326e160099e03bf4b6928817d53722e14f0e2",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/undo.rs": {
+          "sha256": "2e37cd3f1114822a18be6fc9cebd2acc3da79786a342bd0a528e9a4e8afb14f6",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/update.rs": {
+          "sha256": "f3719ef93e9dad0221f658077ad89bab251a466c87f092e75c6777655db31f8d",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/updates/decoder.rs": {
+          "sha256": "4ac62a307eabd8ac156526e22c32966db72fcf696d4208ff92c42c71d27eb5d1",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/updates/encoder.rs": {
+          "sha256": "808dca538a0cb6cc8b2f526995a72ae89906f22c39e777623b3b5f0876367aa5",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/updates/mod.rs": {
+          "sha256": "12954b9be2c0512f93e93d6bf57584536aaed2689c9003a11873cc36d2850903",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/utils/client_hasher.rs": {
+          "sha256": "f72c959781699537adc96b036d62aa6b91cf7f64da7c8a615be7f035b6ccc3d6",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-0.28.0/src/utils/mod.rs": {
+          "sha256": "814a38a0ca1b078d656b8e70236d3b0412cd8d0aee4a5405299d8342fb4574b1",
+          "mode": "100644"
+        },
+        "native/text_engine/vendor/yrs-provenance.json": {
+          "sha256": "9bb7bcd022394f5a692fb9ea2192e1b5566c83a948d68eaeab2473c48b809a0e",
+          "mode": "100644"
+        },
+        "packaging/README.md": {
+          "sha256": "836fa1cf7d56744dbe678a2aa52a9231e636671ee4167e56e1d7813c686b2550",
+          "mode": "100644"
+        },
+        "packaging/linux/build-flatpak.sh": {
+          "sha256": "ce3a6cf56bae4515005325055a9c9d3477b7ff8c3b6ced6750e3ccecbb3436e5",
+          "mode": "100755"
+        },
+        "packaging/linux/com.reddraggone9.tandemlog.desktop": {
+          "sha256": "ee98f5cac88bf43f2637e23948b944bbf9d7d21a5f5d6c12fa5aa9a1a298c7ab",
+          "mode": "100644"
+        },
+        "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml": {
+          "sha256": "7f3e0bb629095bd3a588cccd97e9591b95687294a4d8df3e0907db4be85510fb",
+          "mode": "100644",
+          "normalized": "appstream-release-list-v1"
+        },
+        "packaging/linux/com.reddraggone9.tandemlog.svg": {
+          "sha256": "eb70e3d64e7a401396d5d324bc2e971d66b505bf6670decac719f745dc9f1070",
+          "mode": "100644"
+        },
+        "packaging/linux/install-smoke.sh": {
+          "sha256": "e8d187b3423d337d1325e7ba7111f5932c83487ae21e83e827c9e27c61c36867",
+          "mode": "100755"
+        },
+        "packaging/linux/prepare_appstream_tools.py": {
+          "sha256": "105fdc78aaa88783fef06458e4c471250f2c8a7173c30883c7dce27742cb3052",
+          "mode": "100644"
+        },
+        "packaging/linux/tandemlog": {
+          "sha256": "e4cd23b50a4b11439ab35865a691854b396a5d7ce93539aea5df455cd0a3df26",
+          "mode": "100755"
+        },
+        "packaging/linux/tandemlog-cli": {
+          "sha256": "09950dcd7a3ee7fdb008ba6ca577911ab2957bf1a401493351536589020f17e7",
+          "mode": "100755"
+        },
+        "packaging/linux/verify_flatpak.py": {
+          "sha256": "428b03056e70a301077dec082e0130f7836bb97261c33364f1b5167f30f01362",
+          "mode": "100644"
+        },
+        "packaging/smoke.py": {
+          "sha256": "d465c37adad7b4da8e46ddc36c3d86bec78dc7366198888d2a20505b4faead14",
+          "mode": "100644"
+        },
+        "packaging/windows/build-and-smoke.ps1": {
+          "sha256": "b6c86a726c26bc91761a64e89f38530ea44cf003c04d82ce0f41363893cb48a4",
+          "mode": "100644"
+        },
+        "packaging/windows/package_portable.py": {
+          "sha256": "4fb666cbd6714f7d74cc70befcf9f40098f2534a65b8b72c5d0ad66c5c78decf",
+          "mode": "100644"
+        },
+        "packaging/windows/tandemlog.iss": {
+          "sha256": "c556931b1de31c549509c9b4853fabe7dba0c86f146fbc84b8000f0bbb39d7b0",
+          "mode": "100644"
+        },
+        "pubspec.lock": {
+          "sha256": "f78669e0f9f033c5404ea390826dff5a734736199db0d82e73e7e29cdd41a0ac",
+          "mode": "100644"
+        },
+        "pubspec.yaml": {
+          "sha256": "60439ad821980d55d46dae857c4b91325699c2fbf5e14c94af13f29107e4fc98",
+          "mode": "100644",
+          "normalized": "pubspec-version-v1"
+        },
+        "test/action_cache_flight_test.dart": {
+          "sha256": "c9e3ec73393deeabe111fa431f703042c5769353b60abbb8822f53350aa70bfd",
+          "mode": "100644"
+        },
+        "test/action_history_test.dart": {
+          "sha256": "f1b2b6e6aa460f735a32e8a64b712c73e3358523cb76ec20d98695a7298faf72",
+          "mode": "100644"
+        },
+        "test/adaptive_text_read_test.dart": {
+          "sha256": "a7d9fc26bf22653b33127b422b10f6cd5ad97cda373b4ed3e2a851273b67a180",
+          "mode": "100644"
+        },
+        "test/agent_cli_test.dart": {
+          "sha256": "3c82d02e00e7b771f280592fc9e7b9f37faacd614a9c209da3c138b9db636f80",
+          "mode": "100644"
+        },
+        "test/agent_overlay_folder_test.dart": {
+          "sha256": "f77df591775908a859852f93da102ecbfab5e29ac46d6ea4cc60bf5e5bc3a60a",
+          "mode": "100644"
+        },
+        "test/agent_parity_test.dart": {
+          "sha256": "06fbbd1dd004cc33b331d734db46511cd1839bf75efd15218c4ff43fd7cf4436",
+          "mode": "100644"
+        },
+        "test/android_log_folder_test.dart": {
+          "sha256": "d124a03b26bf46e49065284dc957801b4790d570933cabf38f8e99b2e0052b5a",
+          "mode": "100644"
+        },
+        "test/android_recovery_harness_test.dart": {
+          "sha256": "15217dd3a99c933dc4a591ed49ae51d90e5846f34cc6fa7950e5ed67767eec42",
+          "mode": "100644"
+        },
+        "test/android_section_navigation_test.dart": {
+          "sha256": "f75e89d18a9c19a5f8411683b5f80b1135056f3bda8357b04bf12463a71523a2",
+          "mode": "100644"
+        },
+        "test/batch_storage_test.dart": {
+          "sha256": "ce626a7a5885f79b54ff9f151652025d6be8a256e7b4f93cb961004194c5d71c",
+          "mode": "100644"
+        },
+        "test/bulk_apply_semantics_test.dart": {
+          "sha256": "3378add7ea6cdafb914ff905f777cff4d2ece39faa94e3f319c3b527f753d0d5",
+          "mode": "100644"
+        },
+        "test/bulk_failure_visibility_test.dart": {
+          "sha256": "ca240d166fca6cbd608e5827bcc8351a1904f1f4660b1c4736285473255024bb",
+          "mode": "100644"
+        },
+        "test/bulk_selection_projection_test.dart": {
+          "sha256": "a027351d0d782b0a331454c457e6fae0695ee10c20149d33070b6f91d410f304",
+          "mode": "100644"
+        },
+        "test/checklist_architecture_gate_test.dart": {
+          "sha256": "63b3f6cdbacf1439e9eb593bbe85127ddd0d72b3a8f02569a391b56c9b205f96",
+          "mode": "100644"
+        },
+        "test/checklist_baseline_selection_test.dart": {
+          "sha256": "90011e9ae126eb6ecf753e1bbb8316095c7f637c711f21e1286f7320388bfb0a",
+          "mode": "100644"
+        },
+        "test/checklist_completion_command_test.dart": {
+          "sha256": "a4d9674b7de0835b6be355e7ec0992429a96b4d34520c5e9f1d5507d97efd3e1",
+          "mode": "100644"
+        },
+        "test/checklist_delivery_test.dart": {
+          "sha256": "e8a758946a4538daccd2937415736373859bdf3e3ab8f8063c542f17a601c427",
+          "mode": "100644"
+        },
+        "test/checklist_error_keyboard_layout_test.dart": {
+          "sha256": "0ddd003c48bb6be8de9ec9d54482242446a8b24790e25753702fe457b1e97a2a",
+          "mode": "100644"
+        },
+        "test/checklist_expansion_store_test.dart": {
+          "sha256": "89f6100d69910fdf947718d51f6cad8053e18f5d105cd533a2e8135fba700837",
+          "mode": "100644"
+        },
+        "test/checklist_input_projection_test.dart": {
+          "sha256": "7c1e5eb6c81ca5ce808fec4e656b9d42567799c819852af00e4350707e27866f",
+          "mode": "100644"
+        },
+        "test/checklist_item_native_editor_test.dart": {
+          "sha256": "1e10bbd0b87ebb98102244a49b994a394679527c9b54330de7098ee583098ee7",
+          "mode": "100644"
+        },
+        "test/checklist_modal_preappend_host_test.dart": {
+          "sha256": "fa54c3abe7b6a3d7a85c8665c574dcf3c4fd402f75c79b19ed7ee78c69d7d519",
+          "mode": "100644"
+        },
+        "test/checklist_modal_retry_host_test.dart": {
+          "sha256": "09fd2a6d75efcd9ec73b2e6623a2a875d68717ab87525f1fad18f7ddcf82db02",
+          "mode": "100644"
+        },
+        "test/checklist_presentation_test.dart": {
+          "sha256": "22213659fb0cdde5f9d8e5a0d8c5a23086f7801d6ea8b2fc8691e455dba1e75c",
+          "mode": "100644"
+        },
+        "test/checklist_security_review_test.dart": {
+          "sha256": "3b40e19cb051eaf797816b550bda1c237ff7188ff7345d282d5b37985bf0cab0",
+          "mode": "100644"
+        },
+        "test/checklist_storage_test.dart": {
+          "sha256": "5a049a3238250e2f530c768b31e21750014e5a6fa738332afbcb8177dad8899c",
+          "mode": "100644"
+        },
+        "test/checklist_suppressed_capture_test.dart": {
+          "sha256": "f31ff7a9f64f87a6fc9c6d40c9e6ed701d7bc92b1733389e3b50c84e00955bf3",
+          "mode": "100644"
+        },
+        "test/checklist_suppressed_item_capture_test.dart": {
+          "sha256": "ffc1e1a420cb3bf4b881daacd096ab7464828d8886acf75969072ea11ac80fe3",
+          "mode": "100644"
+        },
+        "test/civil_date_input_test.dart": {
+          "sha256": "bdecd06350a19baa708478ffbb596066e7d3b09d979914cbe5b67e8def34b5d8",
+          "mode": "100644"
+        },
+        "test/civil_date_picker_layout_test.dart": {
+          "sha256": "cd070c61ddf406156cb5bc5dc376e19f49a70b5ab53cbb7d3a80fe637bb3c5b0",
+          "mode": "100644"
+        },
+        "test/close_peer_refresh_test.dart": {
+          "sha256": "6d394c51ed9dd2a1d3301bbf8230fedd461150e232c20741f1190a5d4a65d739",
+          "mode": "100644"
+        },
+        "test/closed_runtime_actor_test.dart": {
+          "sha256": "8dcfbd55207b06ce149a9b3675273b4fde6a80931369da4caed33ff596596dd1",
+          "mode": "100644"
+        },
+        "test/command_acknowledgement_test.dart": {
+          "sha256": "e4d97544c146f39df0c3fde0cf0bbcbbfd4488b79553d9f181dea36ff70cff8f",
+          "mode": "100644"
+        },
+        "test/compact_selection_actions_test.dart": {
+          "sha256": "513f860984a7d7980e4663b4bed93c245feb35a772b6024b733fcd29e2bd33f6",
+          "mode": "100644"
+        },
+        "test/completion_frozen_replay_test.dart": {
+          "sha256": "8f012c58f5d9257faf7f24622fee737ae2e0c6d65dd69db5adfa654984f15478",
+          "mode": "100644"
+        },
+        "test/completion_instant_test.dart": {
+          "sha256": "b81c821014a10ae3eba7a85921113e975af4ef5553e0d3ba591fecb50c4b4b5b",
+          "mode": "100644"
+        },
+        "test/completion_timestamp_recovery_test.dart": {
+          "sha256": "c71a160666211aefaaff5c2913d41331200be5ef3fbc37e33ed4311dc54849b6",
+          "mode": "100644"
+        },
+        "test/current_history_fixture.dart": {
+          "sha256": "33a01aeb487f469cebd3e986556e92ed534f7f39d3953af6bead7acb6b8255af",
+          "mode": "100644"
+        },
+        "test/current_operation_test.dart": {
+          "sha256": "5f7474a338f792031d87003af8771662f42ec6de2d206b050f84256ca7f46f74",
+          "mode": "100644"
+        },
+        "test/current_unified_history_test.dart": {
+          "sha256": "43a2eda4780122d88996c9541cd483537f5940bb45afc35d98ea273dff469c92",
+          "mode": "100644"
+        },
+        "test/date_input_alignment_workflow_test.dart": {
+          "sha256": "0d87574d7b319629530613b116a9c182ce93f36b43bc2813ba1c698d1882f099",
+          "mode": "100644"
+        },
+        "test/date_picker_header_test.dart": {
+          "sha256": "770d1bad70d1e4cef994eb4c7fe0200e3a2f1b40b8567a1bc432232f81d103aa",
+          "mode": "100644"
+        },
+        "test/date_time_layout_test.dart": {
+          "sha256": "6b21c9e39039d365831c56dfceedd791e8831d84bfb8a943897a8192df9ddc3c",
+          "mode": "100644"
+        },
+        "test/date_validation_action_sync_test.dart": {
+          "sha256": "48032f924d42905b0f0720494993ca960e7f23f159ccfd88084d095289e2745c",
+          "mode": "100644"
+        },
+        "test/device_name_layout_test.dart": {
+          "sha256": "b0f30e814f0d4ddad936664e50a567bd74f4423e8a7b71a88a158360851777b9",
+          "mode": "100644"
+        },
+        "test/domain_test.dart": {
+          "sha256": "557045972fd1a05962b09eceb100506e5262e66fb3054f6537ffc8ee15730848",
+          "mode": "100644"
+        },
+        "test/editor_surface_lifecycle_test.dart": {
+          "sha256": "617c06183590841e5610b2c5158acecbb89df3e421909e536a92bc078d46c88e",
+          "mode": "100644"
+        },
+        "test/event_chain_test.dart": {
+          "sha256": "377a2122de32371807caf18a822bc4b0c3cee3f6e0cc387eaf5635de07c795b3",
+          "mode": "100644"
+        },
+        "test/event_clock_test.dart": {
+          "sha256": "56fbc981ef018cc2f67cb45ad1d9adcce6a7a67a2040c3a7326f95a9b1a8bd07",
+          "mode": "100644"
+        },
+        "test/fast_month_picker_test.dart": {
+          "sha256": "7a17104533e786db8e062f8a9531037e1f779cdff1320830b5969586944f3bfa",
+          "mode": "100644"
+        },
+        "test/fixtures/completion-instant-v3/README.md": {
+          "sha256": "9b8e87ad6b279e7d2e55e01a8d2553cbe97435c74aae0ee0b5a211f900c01709",
+          "mode": "100644"
+        },
+        "test/fixtures/completion-instant-v3/action.json": {
+          "sha256": "d0003998d06d3364721f5ab09ea9ad3ed72f9b8db347c824afd1dfe415c5d803",
+          "mode": "100644"
+        },
+        "test/fixtures/completion-instant-v3/conversion-report.json": {
+          "sha256": "fd552f5ee50d004f01e14f69b4a0b9658ea2bd042421526071658880f1a1053e",
+          "mode": "100644"
+        },
+        "test/fixtures/completion-instant-v3/converted-stable-v3/22222222-2222-4222-8222-222222222222.applog": {
+          "sha256": "50eff41938987956742ab064d6fcc55dcfae1ca849878db42c67a4345128b547",
+          "mode": "100644"
+        },
+        "test/fixtures/completion-instant-v3/converted-stable-v3/33333333-3333-4333-8333-333333333333.applog": {
+          "sha256": "9a722f7af88383d3db08bc13f3ffa664735de9ce7f4af6cad12a57894f56012e",
+          "mode": "100644"
+        },
+        "test/fixtures/completion-instant-v3/converted-stable-v3/tandemlog-space.json": {
+          "sha256": "1324f011d1e272a61b0a255e62c61f791f52f71c8412e191cb8fbe952c72ce8f",
+          "mode": "100644"
+        },
+        "test/fixtures/completion-instant-v3/operation.json": {
+          "sha256": "a3767d09b2ec932e200b7d8479ff1eba32fcbf5b3d47fad69634c9d44b1079d9",
+          "mode": "100644"
+        },
+        "test/fixtures/current-operation-v1/food.operations": {
+          "sha256": "79de9af9c528fafebea549beb95397d15b0549d05412eb106e379cb9933d369f",
+          "mode": "100644"
+        },
+        "test/fixtures/current-operation-v1/persons.operations": {
+          "sha256": "4c8c32877d15e520e510a8d96d4b38fb9cd16787f9a15c1875e010f3e52b741d",
+          "mode": "100644"
+        },
+        "test/fixtures/current-operation-v1/provenance.json": {
+          "sha256": "4417bd1d7504dfa00b58a39c0b15c7604f51f04856623f280b8b0d5768d93441",
+          "mode": "100644"
+        },
+        "test/fixtures/event_chain_v3.jsonl": {
+          "sha256": "3d07e0f95329f77fed3320c241bb6021f7f49c50c2a2dd5cfbfcc343d97431a5",
+          "mode": "100644"
+        },
+        "test/fixtures/food-import/expected-v1-full-default.json": {
+          "sha256": "4056ddb7ccbb0648c2bc5c51aa7429b20d1c9c460105dbd42e010edf43f0f143",
+          "mode": "100644"
+        },
+        "test/fixtures/food-import/expected-v1.json": {
+          "sha256": "22cbb31b33bf3fc97944b09c9c556a7bd1d2f12a4905965e19ac9d5112c4470e",
+          "mode": "100644"
+        },
+        "test/fixtures/food-import/plan-v1-full-default.json": {
+          "sha256": "102096a7f994fa846931a411e7c7477bcec89be9f6b4cca40462e667b681b501",
+          "mode": "100644"
+        },
+        "test/fixtures/food-import/plan-v1.json": {
+          "sha256": "ef11751bf7c53a89951acbf8d85faaeca51fda0d68566c0c5d2cf96935998047",
+          "mode": "100644"
+        },
+        "test/fixtures/food-products/README.md": {
+          "sha256": "754d3b21cab8d41585b30cba36de618bd870f7db5a574b54b0404da0538e365d",
+          "mode": "100644"
+        },
+        "test/fixtures/food-products/concurrent-receipt.operations": {
+          "sha256": "9e66d5611bfd905e7b6f8f9cbdfe8ea6718098ca127efa509ef7f9d0aa438cff",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/mixed-v1-v2.foodlog": {
+          "sha256": "e866b4f013010ebff810d7cce7d2ffa2c756b5c6d94444573574d3a0afcf32fe",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/README.md": {
+          "sha256": "de992c16065ec8ff7bf496faac5288082795f4857bc0042271198203b34df873",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/domain/event.dart": {
+          "sha256": "f889ddac0df435b3e37cea01d1d30549bb3595f9a305ca141bdf5c813fff9788",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/domain/event_chain.dart": {
+          "sha256": "640e7c151d51d47bb53479ca8e7607de4213445c895ac98cc4d3b0222d23795e",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/food/food_import.dart": {
+          "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/food/food_record.dart": {
+          "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/food/food_store.dart": {
+          "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/food/inventory.dart": {
+          "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/provenance.json": {
+          "sha256": "c12d3b896371cda21ca1d0874a82926245904c86b8ba67e40e2dee6b039bc389",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/storage/local_profile_database.dart": {
+          "sha256": "5e64fcacfbb431c045c2e6ced2235791c999001737a5a3fd7f5165feb02867b7",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/storage/local_settings.dart": {
+          "sha256": "3a5803a1897abd4eaf11eb23dcee866a98800a8865e6973f37aa2c6ccd0223fe",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/storage/log_folder.dart": {
+          "sha256": "2e91e7d0018b2cb43183eea4f54aaa1ec09b2db9aa117310cfa62da3b05a9d24",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/storage/profile_food_intents.dart": {
+          "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1",
+          "mode": "100644"
+        },
+        "test/fixtures/food-undo/released-build60/storage/writer_guard.dart": {
+          "sha256": "bd24f2ee99cd74843b121d4f193ae5bbcf5e7872665cebaee8109e76097f6175",
+          "mode": "100644"
+        },
+        "test/fixtures/recurring_operation_undone_v2.jsonl": {
+          "sha256": "f942f2142ac06ae8c9061535223b00574b8fc2dabc326448f8a435aa2dd70bf6",
+          "mode": "100644"
+        },
+        "test/fixtures/stable-v3-2026.10.0/22222222-2222-4222-8222-222222222222.jsonl": {
+          "sha256": "288c5695f760dc2abc4b4815c42b80bef3052b4f769086c21b3c2b66eebdbd5e",
+          "mode": "100644"
+        },
+        "test/fixtures/stable-v3-2026.10.0/33333333-3333-4333-8333-333333333333.jsonl": {
+          "sha256": "a358e34769fc7d58a909dba4e7ff12d9285e623e95198f2229732c5a4d248dde",
+          "mode": "100644"
+        },
+        "test/fixtures/stable-v3-2026.10.0/README.md": {
+          "sha256": "ca81165c474bf7d81800484e138b546dbf45b1ef4610302f799b9261e97db7db",
+          "mode": "100644"
+        },
+        "test/fixtures/stable-v3-2026.10.0/expected-rows.json": {
+          "sha256": "bfd2eb917d586a56ade7b66a13ad6052561c1457be22f0cfb100a77dc0b2c38b",
+          "mode": "100644"
+        },
+        "test/fixtures/stable-v3-2026.10.0/fixture-metadata.json": {
+          "sha256": "f8fb504c16aef3bd7af5365102fe3c622f4225169225040e3b5d9bd7283f7539",
+          "mode": "100644"
+        },
+        "test/fixtures/stable-v3-2026.10.0/tandemlog-space.json": {
+          "sha256": "e2bbcbc4e7ea85b2a4b10e727dd762615e1de721ae03c9b89b5a6a81cd48e420",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/AUTHORS": {
+          "sha256": "6f225c2f0aedb7c5445b89eb97e55106996990b1307b9a066df1682a0fb36d9e",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/LICENSE": {
+          "sha256": "d8f160d6dcdd4ec77522646d04c139d89d55910d6852792d2b441625763c012f",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/NOTICE": {
+          "sha256": "cd3c68730df6a3d0b9c66af382d37ca7f1d898fff12cbbdf79f5a35e9755be72",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/README.md": {
+          "sha256": "6d69e5de7461c0c1485b0056e64edbd67132936851a8c0ddc3e0c7cd656efd29",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/app/schedule.dart": {
+          "sha256": "65a0bdf7ab4fc0a7a8841d312e4e9b907f42ef736925940af7da7a443bad93ca",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/app/wall_time.dart": {
+          "sha256": "8e5983718226a1b5491eaa2249a6e9c50d19d05bc75857eceb2b1c4c143af09e",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/default.tzf": {
+          "sha256": "e67e57be5d320b54e96381b59fdc2e7b0ec803b7e1be98621e445312cf5f295e",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/names.json": {
+          "sha256": "b7f2cc7325bc9a81c37dc2f2a3ed883c415ce88c2892c54be0a5cacd38f1b3ef",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/provenance.json": {
+          "sha256": "b2617f3f625cf88bfe47a3020ff29a2144d486a9ab41b58e0a13def019bbecb1",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/data/latest.dart": {
+          "sha256": "1ccebce1e204206fad6f24dcf469beb288ae06ca6eb999795fa875ad97e85226",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/src/date_time.dart": {
+          "sha256": "5257d56366e7e48851fa86770748fae1aa54a757ad62f544dcf99ee92a99cbd5",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/src/env.dart": {
+          "sha256": "680e1089b5cd7b067aa130bd131f64513a0f69af5eb4ffdbf83860839e3796fb",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/src/exceptions.dart": {
+          "sha256": "8ef87edc62df130770c6ba32cf12ee73a0247b9684a2fc8a2054d724279924d2",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/src/location.dart": {
+          "sha256": "8217a743b270b9fe8812071451264705a0f0091677ad1c29d7c6da1231c0587b",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/src/location_database.dart": {
+          "sha256": "91a944d66e4ebb25bc541f5a2a2e06db281311c6bde1131f1e1cc63848a53657",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/src/tzdb.dart": {
+          "sha256": "7bbf81c69e9fd0efe58333372367abb82adf56d930a13a602f174befa20c9adb",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/reader/lib/timezone.dart": {
+          "sha256": "d29c23f59a447e0538971ac8ff677e71029bceedca3e37be1b57db61170d44ab",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-2025c/wall-time-vectors.json": {
+          "sha256": "228426f38ed82721beee96e30aae9446414474c7f621c927057e4e0b48e0dc35",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-additional-2026e/README.md": {
+          "sha256": "06c00d493eb7fad4392b3200660af78957390f954a2ed2264e3db545f40e98bc",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-additional-2026e/default-four.tzf": {
+          "sha256": "157d7906210f5331f21db80763a5e85601182890ff5c2a32adb0bd4721b7047f",
+          "mode": "100644"
+        },
+        "test/fixtures/timezone-additional-2026e/provenance.json": {
+          "sha256": "7b77d66197304e2d8a432f814a2a1b78fdaff8b5a263f5453135f0e2c08d57bc",
+          "mode": "100644"
+        },
+        "test/fixtures/utf8-size-guards/action-v5.jsonl": {
+          "sha256": "fce05c3138dd5c41def3dfdba0f37c88544baffab0b143d39c0ec0c5b312bc21",
+          "mode": "100644"
+        },
+        "test/fixtures/utf8-size-guards/callers-e23.json": {
+          "sha256": "6aa5c8b71b8dc7c2776383129dad3f075cf96d4186cc9f9f43abe43e719bfbb4",
+          "mode": "100644"
+        },
+        "test/focus_invalidation_test.dart": {
+          "sha256": "24c7082875a03d23b1b967b17446859b736c8c2259b748a884f30b24ad5f1f80",
+          "mode": "100644"
+        },
+        "test/folder_actions_test.dart": {
+          "sha256": "92e4cf561fbf8023a34d60a4fefe156327043dc499ceca5817febb879d5a9fd9",
+          "mode": "100644"
+        },
+        "test/food_add_another_test.dart": {
+          "sha256": "dc0ac4c676d18fc9a3023815ab30a98cc034e157e9debb08cc327b7146097b8e",
+          "mode": "100644"
+        },
+        "test/food_admission_incremental_test.dart": {
+          "sha256": "3e0a1e9a1b9af16ded612fb53a9deb6609b41ba1842841dc0628ffd39acdfbfc",
+          "mode": "100644"
+        },
+        "test/food_all_status_search_workflow_test.dart": {
+          "sha256": "1307b25c468e6bc9a83dd4e82bb27d5947a608a3232a05290f614d23af0f658d",
+          "mode": "100644"
+        },
+        "test/food_batch_selection_test.dart": {
+          "sha256": "f559013b3fa6b6173f521d27a028dd7479d7b074c1a6e18ab316512959b15582",
+          "mode": "100644"
+        },
+        "test/food_bulk_details_undo_review_test.dart": {
+          "sha256": "8d785c0beb0de771ee8d945d274dda31aa60101b303a4e1a64f352d01ba1a546",
+          "mode": "100644"
+        },
+        "test/food_bulk_details_workflow_test.dart": {
+          "sha256": "7bc5f27e59d02fe7a5e6fed92720e822353e4a2641b6f2e49aa7e38dc42b1dcb",
+          "mode": "100644"
+        },
+        "test/food_bulk_edit_fields_test.dart": {
+          "sha256": "62914c829db928b76fd22d2608c773cdbbb6f7021527c3bf16a400166dea3502",
+          "mode": "100644"
+        },
+        "test/food_checklist_validation_test.dart": {
+          "sha256": "38c81ccac91fd39632326311d684f79acf6abba1444fb6c5386801888436a81b",
+          "mode": "100644"
+        },
+        "test/food_collapsed_inspect_guard_test.dart": {
+          "sha256": "ce442f5d32f5e9ef00e7338c554395a71c6579c4dda736b4d3f75853072e644f",
+          "mode": "100644"
+        },
+        "test/food_combined_stock_review_test.dart": {
+          "sha256": "d8c4605d0ad53d2bd3bcac808962538110eb8e50c3927f544908d994313c295e",
+          "mode": "100644"
+        },
+        "test/food_context_menu_test.dart": {
+          "sha256": "726b2609dec3adf5b672653d65ff99b5224d69faef1594897506d2e4790eef6f",
+          "mode": "100644"
+        },
+        "test/food_deleted_expiration_color_test.dart": {
+          "sha256": "d19254e3dd3c4dc0ed876c55de856631fb58f748c4e7a9988ca60a562a51d7db",
+          "mode": "100644"
+        },
+        "test/food_durable_editor_test.dart": {
+          "sha256": "bf175a61e5b8d5d178f1b13765140cbf8e1c20216904820a037cb6bc041fdeae",
+          "mode": "100644"
+        },
+        "test/food_editor_keyboard_layout_test.dart": {
+          "sha256": "61145f9e466529c912f4177fd2c538845225f8089028ea724e3675b887414e1b",
+          "mode": "100644"
+        },
+        "test/food_editor_pane_host_test.dart": {
+          "sha256": "2f637efeb49c95ce1c79de926e7a4cd330c4583791d46269ccae1976dd36285e",
+          "mode": "100644"
+        },
+        "test/food_editor_pane_test.dart": {
+          "sha256": "b7c39420eae71ebe15b18c50a7cba733d6a3a272269cec2f278fa1418b60ea75",
+          "mode": "100644"
+        },
+        "test/food_expiration_color_workflow_test.dart": {
+          "sha256": "c5bec5a2493ed4646ad22ed6e8c3d2c7afe9338ffedd518bd6f10a1cad061b28",
+          "mode": "100644"
+        },
+        "test/food_expiration_deprecation_test.dart": {
+          "sha256": "d2558a0963dbcd6f544a51e0adfa5eddab1eeb405a75a27d7c13b0dea2469934",
+          "mode": "100644"
+        },
+        "test/food_expiration_observed_group_review_test.dart": {
+          "sha256": "2dac305ce0f4aceb70668e56be7ca55122bb2cf8bed8ada7ef7e8dbb7be34f0e",
+          "mode": "100644"
+        },
+        "test/food_expiration_presentation_test.dart": {
+          "sha256": "ed6631893cb34943619f2f1e53c7da1c8ac45a55a80ea1f0c2f7cce5aec767e7",
+          "mode": "100644"
+        },
+        "test/food_expiry_guidance_test.dart": {
+          "sha256": "41d13b5ab69f2f211f332e62302841eb39cc9355600474a44305246efaaac0aa",
+          "mode": "100644"
+        },
+        "test/food_field_filter_workflow_test.dart": {
+          "sha256": "e5ca6561e02c86669ab79ea5a831575a268eefc60597f7489ae1e11d6eaec831",
+          "mode": "100644"
+        },
+        "test/food_filter_route_ownership_test.dart": {
+          "sha256": "2e6a1c4c3b39be3d740f132b4c09531c63f1644530b955055350807079d2f845",
+          "mode": "100644"
+        },
+        "test/food_full_default_import_vector_test.dart": {
+          "sha256": "e51c4803c27ceca143d39a5cdc567ce017f2bc0167da0fc1ccd606d29b3f5c6e",
+          "mode": "100644"
+        },
+        "test/food_full_default_test.dart": {
+          "sha256": "7034278a0015c123a6dcd091b932908d0e1c06f90be24b1cf1d02fdc1807c0ab",
+          "mode": "100644"
+        },
+        "test/food_group_action_geometry_test.dart": {
+          "sha256": "7392a0b880a9071c2a4a0f423954c6d5a36fc0698d8c8b3c9a0010842292a0cd",
+          "mode": "100644"
+        },
+        "test/food_group_sort_test.dart": {
+          "sha256": "c2476db8e6adb203aa1d53657a2db55b6baa22b853fff062eefea7240a275b4d",
+          "mode": "100644"
+        },
+        "test/food_grouping_memo_test.dart": {
+          "sha256": "835e884f8ee83b13441b1b74342a41e3e990712a38ec12fec3af8b5508490f0d",
+          "mode": "100644"
+        },
+        "test/food_import_contract_vector_test.dart": {
+          "sha256": "51a833324bbee63a47202a8f967b34b1db4608c762e54508a6819c4a9f4458d4",
+          "mode": "100644"
+        },
+        "test/food_import_test.dart": {
+          "sha256": "37beb127b0abad394ffd87f3f3ffbd06e43f7d24e38b72b4f11854125c8127cb",
+          "mode": "100644"
+        },
+        "test/food_inventory_test.dart": {
+          "sha256": "7aae02586aa01a113479e8f5053118b1ad18aafceff5bd1acd778548e32eb556",
+          "mode": "100644"
+        },
+        "test/food_keyboard_selection_test.dart": {
+          "sha256": "b4ecbecccec1af92fa03941fed0fd4d357775b62b45f1136a36b86fe2a188e7d",
+          "mode": "100644"
+        },
+        "test/food_more_filters_test.dart": {
+          "sha256": "68ae43373293af87463987ee68a2bab78ffaf9abdf8e067811c20758bae9305e",
+          "mode": "100644"
+        },
+        "test/food_operation_undo_test.dart": {
+          "sha256": "2ee2bdb4a7e147f6ba755401bfadf678ee51f788084e154ebb7f38743d799247",
+          "mode": "100644"
+        },
+        "test/food_preview_test.dart": {
+          "sha256": "70d4ab736d3297fd2663b8e2286207e2868c82a1220fee8c36d238e8f12f8b38",
+          "mode": "100644"
+        },
+        "test/food_products_test.dart": {
+          "sha256": "cf94a80a666a8a8c3c735386f8e1a3db79699014d33a86d4875283cddab0e944",
+          "mode": "100644"
+        },
+        "test/food_products_ui_test.dart": {
+          "sha256": "e8a50d83bc40e407585bbc281941df1d684acf1b331f0b04675728ff7fc1fd70",
+          "mode": "100644"
+        },
+        "test/food_profile_upgrade_test.dart": {
+          "sha256": "890a1d9aa35ba3ad2623455166879f2e120ed6fb0187b8ec8ac5ad2ee6d1ae62",
+          "mode": "100644"
+        },
+        "test/food_record_test.dart": {
+          "sha256": "133fd0ffb073c9887bd055bcceede2cd868338427ceab38b4680afb6a28a740e",
+          "mode": "100644"
+        },
+        "test/food_replay_budget_test.dart": {
+          "sha256": "383cf4b3f4670589492e67f1230626b6edba0b94afec4ee83500c2d9e912a952",
+          "mode": "100644"
+        },
+        "test/food_required_expiration_test.dart": {
+          "sha256": "038cb6f399f926406431524efa31a25453a6365f910e8d8f79b0f8e2c1a400ed",
+          "mode": "100644"
+        },
+        "test/food_restore_batch_callback_test.dart": {
+          "sha256": "df5348507c1a7c0dbb23f601da77d3f3b076ffdfb61373bb4a76cc0e5221fd4b",
+          "mode": "100644"
+        },
+        "test/food_retained_flat_list_test.dart": {
+          "sha256": "5baf4168efada3d1018df7f07b2aa35c8c392bf158c73bd865425055327cffb5",
+          "mode": "100644"
+        },
+        "test/food_retention_draft_test.dart": {
+          "sha256": "b8860cc1a1d28af9c2dbe816f667ca7345e3e20dc643ec0e0ace777d420e8eed",
+          "mode": "100644"
+        },
+        "test/food_review_regression_test.dart": {
+          "sha256": "b405c5c4ada24cce0672b83a4471df94eb6c62149c91993c7f5cbadda5e74887",
+          "mode": "100644"
+        },
+        "test/food_row_selection_test.dart": {
+          "sha256": "6dcddb9b4698a9ef5e51aa591d55fc72cbaedc0fa6f0555d34ab1a2fd1245a31",
+          "mode": "100644"
+        },
+        "test/food_section_width_test.dart": {
+          "sha256": "fbd2cf759fb1ac8a637317e0914f28d51eaadf33cd6331b00fe95b72ed93fe38",
+          "mode": "100644"
+        },
+        "test/food_selection_deleted_edit_test.dart": {
+          "sha256": "8a4ed0672f7c7376373a5746aeee328fa563bb1768190d0a0705dacbac33efe2",
+          "mode": "100644"
+        },
+        "test/food_selection_retention_test.dart": {
+          "sha256": "1309d41e2065f3c05b8404a4688299d4dfaab56f62f02c900ff0c2298960c019",
+          "mode": "100644"
+        },
+        "test/food_stock_toolbar_workflow_test.dart": {
+          "sha256": "0138e470bf4d36098606a45489fcb32712b415faf47df219298b7cef1b74387c",
+          "mode": "100644"
+        },
+        "test/food_store_test.dart": {
+          "sha256": "f468b549192fa08cd557a6b85e21f9cfb9f90b704bb919f4b4972aa07bdaa5aa",
+          "mode": "100644"
+        },
+        "test/food_store_undo_test.dart": {
+          "sha256": "54431efe0ba6a2addc0854e7628d6173772b0e6dcfb1e6775f58f4c5802f0bcf",
+          "mode": "100644"
+        },
+        "test/food_undo_history_test.dart": {
+          "sha256": "931e7987198c18096b8e07110cfa783329a9a21bae3f9645bcc079588b5c1fa1",
+          "mode": "100644"
+        },
+        "test/food_value_autocomplete_workflow_test.dart": {
+          "sha256": "54e63f47b96e2f77a3f130078e1892a16c57e147b8a693d5f9a7da0523bf03b4",
+          "mode": "100644"
+        },
+        "test/food_view_reachability_test.dart": {
+          "sha256": "fb63ec15e6d9bbb11d9a520b03a2bc071c8d7f319f61a1a2debb157956e572f6",
+          "mode": "100644"
+        },
+        "test/foreground_importer_test.dart": {
+          "sha256": "d961f8b70bf38242dcc2740e50b107552975f0b942ae9616c70babae19088681",
+          "mode": "100644"
+        },
+        "test/form_setup_capture_host_test.dart": {
+          "sha256": "99d0f9c6e5a2e5d61f117a4f758ab3d4b2f28330ad8adf82c713a4434b3ea832",
+          "mode": "100644"
+        },
+        "test/form_validation_action_state_test.dart": {
+          "sha256": "b7140b7c711f0a166ea79d98e565e3d709e14e5f92919a5cf5ace7949591ec22",
+          "mode": "100644"
+        },
+        "test/form_validation_test.dart": {
+          "sha256": "8bc644f0f710b49f376823474b3daa063845912b7d697c5a4eb33d067c3aa84d",
+          "mode": "100644"
+        },
+        "test/historical_completion_event_test.dart": {
+          "sha256": "2761bbcb8fd78817b4e5daa3d67c0798daac338d6b7b3a4a84d3d897e5082db1",
+          "mode": "100644"
+        },
+        "test/historical_delivery_test.dart": {
+          "sha256": "32518316eb506b337d815cf2365f45f30a82c14fa32bd227b446580cf284006d",
+          "mode": "100644"
+        },
+        "test/historical_recompletion_test.dart": {
+          "sha256": "85ae34d233d999130e7a6d1d4f3c6431322f4a98907542934dc04dc74e062e5a",
+          "mode": "100644"
+        },
+        "test/history_verification_report_test.dart": {
+          "sha256": "62dc6d921e84b1f22939fbbc32e452681c5f043dbbbfd6bc980c515aeed42f6c",
+          "mode": "100644"
+        },
+        "test/inbox_test.dart": {
+          "sha256": "7fc929d6ce48d26d30fc3139da00f37f08de062574eced5c6995e409c6413ba0",
+          "mode": "100644"
+        },
+        "test/initial_task_rank_test.dart": {
+          "sha256": "621f48541ccc7186918e8093433c9dd15b9145ca9c48cbc133d2e6036a9d0b93",
+          "mode": "100644"
+        },
+        "test/list_row_body_ink_test.dart": {
+          "sha256": "146ee9be3576ea3e1fab8826d012e4042ff1a47390323ecb306960f400539862",
+          "mode": "100644"
+        },
+        "test/list_row_surface_test.dart": {
+          "sha256": "793aae5d1c9eb6119a341145e4e1f6f855bf5b24adb54b05efa0fb9577eb0cba",
+          "mode": "100644"
+        },
+        "test/list_selection_test.dart": {
+          "sha256": "2808236d5d9c40fffc44937783cca7e2d28b222539e79c6e3d3246b2fc818d25",
+          "mode": "100644"
+        },
+        "test/local_durability_test.dart": {
+          "sha256": "ca71ed9147560adc92438f698f29834a700409e5a3dcda265a51156ea5eb8149",
+          "mode": "100644"
+        },
+        "test/local_log_folder_list_batch_test.dart": {
+          "sha256": "651c34c25416c63e96d14265d18f56365a241e15e9c59436450c0eac39fcc485",
+          "mode": "100644"
+        },
+        "test/local_profile_database_test.dart": {
+          "sha256": "3e0b6a67905d083d85e9dfaa7f9a31fb02c2dc86f42d7f34e38cbc71905a55c0",
+          "mode": "100644"
+        },
+        "test/local_section_settings_test.dart": {
+          "sha256": "b5f05f0700a3b19c6b01c80029db9723a9fa58e84ddef8beb86d82fa5ed64599",
+          "mode": "100644"
+        },
+        "test/local_settings_test.dart": {
+          "sha256": "815361065438c895c49fb45d3119772cf3763344e081cace75957f65a087cea8",
+          "mode": "100644"
+        },
+        "test/name_entry_layout_test.dart": {
+          "sha256": "52a8b07faa830ad4084f65290cf9a8be7d593f18e9297468dab5de1470d9d2c6",
+          "mode": "100644"
+        },
+        "test/native_checklist_recompletion_test.dart": {
+          "sha256": "9f008093258bb84a897a5b081198d7fdc17620f9e8e2a6e2641a0313146b1346",
+          "mode": "100644"
+        },
+        "test/native_exit_host_test.dart": {
+          "sha256": "adeee4838282c10cc808b8f5f983fa2d42e1ce592bd5443e97c761bb472ef2a7",
+          "mode": "100644"
+        },
+        "test/native_text_engine_test.dart": {
+          "sha256": "3e4cae82ae8e1923b3c57df62bfc655440fa72b93cfe3e43e5850da4757f9063",
+          "mode": "100644"
+        },
+        "test/new_workspace_text_initialization_test.dart": {
+          "sha256": "4ddb712f9663a7a8a0faa98a6bc0a0c9862e653fcf6d81d3a18c7eff98df6738",
+          "mode": "100644"
+        },
+        "test/occurrence_due_migration_test.dart": {
+          "sha256": "6bea815262feff34144979138ad38eeb71840deab5f22c4327045119b55439b4",
+          "mode": "100644"
+        },
+        "test/occurrence_due_store_test.dart": {
+          "sha256": "4969dbde72eed42863b8398f613438cdf52fb87344a0b57205794477b7f647e1",
+          "mode": "100644"
+        },
+        "test/order_projection_test.dart": {
+          "sha256": "9aff1ff7f49fcb73247596754d89c4134d4531a950db34f8f73438aeca3980bd",
+          "mode": "100644"
+        },
+        "test/owned_replacement_test.dart": {
+          "sha256": "6f3a4c36b15a42a2c325e9ffd6ac53f0fb89d2541dafaa67299215a7a1a15b8a",
+          "mode": "100644"
+        },
+        "test/performance_diagnostics_test.dart": {
+          "sha256": "3070942f854f0e2d8fc34ce34445d27c83b4712d2be0e6abbbac895e0f41369c",
+          "mode": "100644"
+        },
+        "test/probe_cost_trace_test.dart": {
+          "sha256": "5bf7fad9d2609e73c98e61e6c21ad4ba6b840b5141d6c8ef9ae542dd73d13655",
+          "mode": "100644"
+        },
+        "test/profile_cutover_settings_test.dart": {
+          "sha256": "f91b68562ab802dfc486be33ccb722229ff78a3d2fd690d6957c241c168c7b43",
+          "mode": "100644"
+        },
+        "test/profile_diagnostics_test.dart": {
+          "sha256": "640c6a3d78fdf15b99f90887475780462bf1c5867b97c8c01d52e8a9f35ff53b",
+          "mode": "100644"
+        },
+        "test/profile_lock_test.dart": {
+          "sha256": "9df7894637f6a971c7d057ddc2156d9b92bd181a9335374be8ee7c2b4338f510",
+          "mode": "100644"
+        },
+        "test/profile_task_store_test.dart": {
+          "sha256": "7c70f97d94c782d0536c707a772424b053febc75e9b59f5c858d36b3aa9d3a1e",
+          "mode": "100644"
+        },
+        "test/quick_capture_empty_host_test.dart": {
+          "sha256": "c4e39ee58d8f524966ec278ef1e58898175e9dbf715e33fb0fdd61c294f80112",
+          "mode": "100644"
+        },
+        "test/recurring_completion_undo_test.dart": {
+          "sha256": "c5db500052136f04ce6c44f20fc1ec5d230f89438bfe86cc1bcfd0320423657c",
+          "mode": "100644"
+        },
+        "test/recurring_store_test.dart": {
+          "sha256": "5c596174a9d436c4343059b97ae593cecf5b4508a74d85b6e2537e3d0c3db1c2",
+          "mode": "100644"
+        },
+        "test/recurring_text_input_test.dart": {
+          "sha256": "3b0dfc1c48d75aea53b26283bddf5485ce9480619d79a9fffab6ca8f0d1e2a0f",
+          "mode": "100644"
+        },
+        "test/recurring_text_test.dart": {
+          "sha256": "49875225e4b192ac2e285b0bdab43f7cf69119dc6e6c185e16ea99a94ca438c7",
+          "mode": "100644"
+        },
+        "test/release_version_tile_test.dart": {
+          "sha256": "d314000a1865144bc1f091f16302beafea0cd11065935bb96461d022e7692efc",
+          "mode": "100644"
+        },
+        "test/schedule_test.dart": {
+          "sha256": "22a4ff38b07cb2a970390bd58a7257b528a01f1b4fda220ba14d3f9491db8861",
+          "mode": "100644"
+        },
+        "test/section_menu_search_geometry_test.dart": {
+          "sha256": "b8795660d19857fa83257036be0b4999631e5d59d20391750f9f2ce2dcbfafe4",
+          "mode": "100644"
+        },
+        "test/section_menu_test.dart": {
+          "sha256": "3dd2e6f0d89830dc6b1d604ce2ecda53a3b61f44507ce33f9b23acb0b20bf8d5",
+          "mode": "100644"
+        },
+        "test/section_navigation_host_test.dart": {
+          "sha256": "5cf0a3c06f6781ef6646246c85bc88d112e19174ef977c7c317817c2728e47b8",
+          "mode": "100644"
+        },
+        "test/selected_decode_memo_test.dart": {
+          "sha256": "9a52d0610b693bb99910a04e7222409fc1d96d76dc475a048d54e30e41f66afb",
+          "mode": "100644"
+        },
+        "test/selection_layout_parity_test.dart": {
+          "sha256": "b66fd6d8493ec593fe4aa07cb9d12fa21d055ed0e366c6890038a6da8854bcb7",
+          "mode": "100644"
+        },
+        "test/semantic_history_observation_test.dart": {
+          "sha256": "edb7b99a658281688cccefc16ce2a842de27ab19ec491982dc3d5d40566afa6b",
+          "mode": "100644"
+        },
+        "test/shared_refresh_host_test.dart": {
+          "sha256": "839bbd3ac8345321d87b19fc348d3b1e6edc2792276490c7d996acfc8c1a8fbc",
+          "mode": "100644"
+        },
+        "test/shared_tag_semantics_test.dart": {
+          "sha256": "3f95bced2e55200192206b3ae5431710fc4bbe92bf4484b99584a6ec94345233",
+          "mode": "100644"
+        },
+        "test/shared_text_history_test.dart": {
+          "sha256": "075de1d65e5102d5c16aa47f92fdf272c52abafeca82972cfbbf7e302df0b169",
+          "mode": "100644"
+        },
+        "test/shared_text_storage_test.dart": {
+          "sha256": "fa239688f07127f3440936a34e0fbc3db9755061e2ca29d536fe7a87155edd72",
+          "mode": "100644"
+        },
+        "test/startup_smoke_fixture_contract_test.dart": {
+          "sha256": "d810a906ab566f3bc4c751ec862c0a5f567651a36f6829b4315ac98b321d558e",
+          "mode": "100644"
+        },
+        "test/sticky_task_group_test.dart": {
+          "sha256": "6a13f1d61f86e38427d55eebbad198e46f3e7e176f3198b703e616f79e7507d8",
+          "mode": "100644"
+        },
+        "test/storage_test.dart": {
+          "sha256": "332f039dc3f7f3d00fec79859069c71cd9cb7981de92d4f2fbebb5df41fd0716",
+          "mode": "100644"
+        },
+        "test/support/agent_headless_probe.dart": {
+          "sha256": "6e9ed8977981ac436d475be52730740ce34e58be22e52816aed62cc68ba0b3da",
+          "mode": "100644"
+        },
+        "test/support/food_product_fields.dart": {
+          "sha256": "9c838939bd378d0da81a7c6df15dade99e1dc39970c1f87fbdad49325ab3c352",
+          "mode": "100644"
+        },
+        "test/support/frozen_complete_r2/README.md": {
+          "sha256": "a0a6533f2423b30217716c280a6e48618ea6c08e30b1848966ec51380462e94b",
+          "mode": "100644"
+        },
+        "test/support/frozen_complete_r2/current_operation.dart": {
+          "sha256": "1a520ef7100f6e0e571b040e7e319bb3bb52eacad39e019219d53124b94c19f0",
+          "mode": "100644"
+        },
+        "test/support/frozen_complete_r2/runtime_probe.dart.txt": {
+          "sha256": "8ef6e5d78fc0a86b9a5d9a646823e1af212842205a4970438e18b83dc496ac25",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/README.md": {
+          "sha256": "5e987d2ade462425f5c3c5c15c6ce5277a344c4a1f5cf4601df6a6d625d618e8",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/event.dart": {
+          "sha256": "16de7d402144fe86d5a6ea5e258cd071d526bada650303008a7e7632f636b498",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/event_chain.dart": {
+          "sha256": "5e4855d888354be7f35deb5f4dc27d602b878c6b15fe93b93671ec58cbdc51a5",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/event_clock.dart": {
+          "sha256": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/projection.dart": {
+          "sha256": "17648c797d6b0d9c344f1738f72a506c9547efb6c78867399d77252e85182bf4",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/provenance.json": {
+          "sha256": "4b0cf066a5f2dd90d5c7ee0cb2d0b83a50dc89bacac56b8f4eb90d6f01ba5356",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/schedule.dart": {
+          "sha256": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13",
+          "mode": "100644"
+        },
+        "test/support/frozen_stable_v3/wall_time.dart": {
+          "sha256": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0",
+          "mode": "100644"
+        },
+        "test/support/local_profile_database_child.dart": {
+          "sha256": "ac0992cfc612fed3bb5e8d5c4d581f1c97936a297acba26faece71856401b14d",
+          "mode": "100644"
+        },
+        "test/support/stable106_writer_cap_probe.dart": {
+          "sha256": "ecde436f443da70b8441af11c8e145cbf3c1dfa2b5bf1a1dfebeae7b5da7d880",
+          "mode": "100644"
+        },
+        "test/support/toolbar_button.dart": {
+          "sha256": "28cfacd3e218673abca39451691c2fb5fc9ca2efa0dd914a75eb4637753f1198",
+          "mode": "100644"
+        },
+        "test/support/utf8_size_guard_cases.dart": {
+          "sha256": "f7e7b66bb1cd5dc8b0544ec3b09ea6a80b06ca29f549f89b50f6b7d3fc67b283",
+          "mode": "100644"
+        },
+        "test/support/ux_capture.dart": {
+          "sha256": "5833b757f5ef77d8b2ad18a7db2cde2702331710c9b8c1a0c559c145b8c4920a",
+          "mode": "100644"
+        },
+        "test/tag_filter_picker_test.dart": {
+          "sha256": "341796e26f68d785de04278c2965f0ecbf9fd31c42742256b34e5ff066657bdf",
+          "mode": "100644"
+        },
+        "test/tag_input_geometry_test.dart": {
+          "sha256": "848301dca08bd25e6f4eb236ac7d9e2e5b17d74f10b3fb3de2399e275666cbf4",
+          "mode": "100644"
+        },
+        "test/tag_input_test.dart": {
+          "sha256": "849c67f54c6bd8dba8668865114ec3c90fa9a1d73671c2924045fc9a13557ec8",
+          "mode": "100644"
+        },
+        "test/task_cache_digest_test.dart": {
+          "sha256": "5f5bfc22d7ecc2b91fb01ac4c9e790d3ab794e82a2d9af2f92f00951aa7a1f51",
+          "mode": "100644"
+        },
+        "test/task_cache_rows_compare_test.dart": {
+          "sha256": "60c01227e6be0e2e26c609281471ce382704536324c7d92a1064efb3c39ba507",
+          "mode": "100644"
+        },
+        "test/task_chronology_host_test.dart": {
+          "sha256": "422f3462aad8d004c6e79f6e98f0b196e2296a3f7e461d5b3874d57058550d8d",
+          "mode": "100644"
+        },
+        "test/task_chronology_view_test.dart": {
+          "sha256": "178b1ee2e3eb770c7e8a4b200e3fb1091c26eb7fb5bb8e59ce96e1a155043332",
+          "mode": "100644"
+        },
+        "test/task_clock_test.dart": {
+          "sha256": "7b86673fee78643ca268ace883e76fdf92078de0c60006610aa9323d70760080",
+          "mode": "100644"
+        },
+        "test/task_completion_checkbox_test.dart": {
+          "sha256": "f2215da6f012c3d452303a04e5781491b7318d3229be163936dceb069dfa3667",
+          "mode": "100644"
+        },
+        "test/task_drop_geometry_test.dart": {
+          "sha256": "4a487ca680845edf74e7168759c51c4bda5fe80d95d7e91c9c4032790363d0bd",
+          "mode": "100644"
+        },
+        "test/task_editor_frozen_validation_test.dart": {
+          "sha256": "c5c2ef8809d518f09cc9328d2d723f81e549fa88c10cfb340c1fd8df14c3e485",
+          "mode": "100644"
+        },
+        "test/task_editor_header_test.dart": {
+          "sha256": "cdcb79ffa6ba76f4791d30c371802ac5faf401e9df41e8816847c809a8b23bb9",
+          "mode": "100644"
+        },
+        "test/task_editor_tags_test.dart": {
+          "sha256": "e25a4e9816e3bda7389c89bb53138ff6e8818160ae67e389504f6054ae188c19",
+          "mode": "100644"
+        },
+        "test/task_editor_test.dart": {
+          "sha256": "d4dfb8a0739656756e8b84135c02767b42ef9881ce989df306dac118bd78ea12",
+          "mode": "100644"
+        },
+        "test/task_entry_area_test.dart": {
+          "sha256": "321c8782b1f86186371be123bc34f0dbb95df1fc9042edeb273fbc5193a8337a",
+          "mode": "100644"
+        },
+        "test/task_field_error_layout_test.dart": {
+          "sha256": "760d5c53706b0b4d42bc1fa1135944ff9b0c7df757c716de8a39db4c5b864226",
+          "mode": "100644"
+        },
+        "test/task_input_carry_host_test.dart": {
+          "sha256": "c4ad9d35abddd5c742cf9ef8e56f496a7a2121524be30a839c687dda93bbe602",
+          "mode": "100644"
+        },
+        "test/task_latency_regression_test.dart": {
+          "sha256": "d9960c179dd5541c12cc63920d4da2f22f6717babfde8901b224ffda63062f5a",
+          "mode": "100644"
+        },
+        "test/task_metadata_test.dart": {
+          "sha256": "8bcca00f2655acc73672a54206e99375dcaebb1b1ebc8927f724b502a42975f6",
+          "mode": "100644"
+        },
+        "test/task_occurrence_prerequisite_test.dart": {
+          "sha256": "3dab2858ad3a3a984c15a2dcc3ad926ac8ac2ba73385bdbfe9d4f623b9aaa11b",
+          "mode": "100644"
+        },
+        "test/task_occurrence_row_test.dart": {
+          "sha256": "46ce7d29bb4759b607ce19548c0804177ef35da79a1c653fb933db20c214135b",
+          "mode": "100644"
+        },
+        "test/task_review_keyboard_layout_test.dart": {
+          "sha256": "16d7faf96f1f75d7b056b45b68ac153232bcff1645f1da7d514c930af17e04de",
+          "mode": "100644"
+        },
+        "test/task_snapshot_memo_test.dart": {
+          "sha256": "13fadd8fadbc8cc27cb92b808e0879f1dc15b814c2a6c2e0172d6cb93f0381f1",
+          "mode": "100644"
+        },
+        "test/task_text_session_test.dart": {
+          "sha256": "34ce66f17cf8b8e00c3684abf7f878d5c5fccbc2eb011f147f95723e40065e79",
+          "mode": "100644"
+        },
+        "test/task_toolbar_test.dart": {
+          "sha256": "fd257245501df090975b504d2d05f536b0bf59e68133298b1a67d79281dcd421",
+          "mode": "100644"
+        },
+        "test/task_undo_editor_cancel_host_test.dart": {
+          "sha256": "14ecd1ca0b0e3d1f888b29e3c4eb871d4c54c3f7af2fe237b5ae99c895ff6d0f",
+          "mode": "100644"
+        },
+        "test/task_view_test.dart": {
+          "sha256": "c45d97d432a4f9044fdb5659762804c28b81495824294ae15de7702044661aa7",
+          "mode": "100644"
+        },
+        "test/text_actor_registry_test.dart": {
+          "sha256": "facaa27a0bb671fac31366e04c65df7069a0a999fa6dbcc1230f41c320ed1f69",
+          "mode": "100644"
+        },
+        "test/text_cache_inheritance_test.dart": {
+          "sha256": "bbf64825055224b64fbfd7c70d8c1d196eba7a086c5cf81d87e46421c3f8dd33",
+          "mode": "100644"
+        },
+        "test/text_context_test.dart": {
+          "sha256": "5ac18be6da889bd7d13b2e690e5cce423d7a43bcee58eaa0242529f9f6856117",
+          "mode": "100644"
+        },
+        "test/text_event_test.dart": {
+          "sha256": "712dd36cb8601e84a3fff470f2041f0cb88aebad7abb3809357f50c15cc0d589",
+          "mode": "100644"
+        },
+        "test/text_inheritance_test.dart": {
+          "sha256": "ee6ad8979aa05244ddcddb73fb7b2163350e0f1e17dc4d985e9f22b5ae927ae8",
+          "mode": "100644"
+        },
+        "test/text_input_rollback_test.dart": {
+          "sha256": "15115184ed334b65d2056fd0c5bdc5947e590e1bcc33d6b9bd74b7b38b71d39c",
+          "mode": "100644"
+        },
+        "test/text_save_command_test.dart": {
+          "sha256": "1762f13a886a7a1115ee46ddd80b60807d43f4c5cd1547892b78d8c82608f422",
+          "mode": "100644"
+        },
+        "test/text_store_test.dart": {
+          "sha256": "1b21212ffd396832a0d164236d7bfa72832b28841dc829e3b8d1987cddb2e0ce",
+          "mode": "100644"
+        },
+        "test/text_undo_event_test.dart": {
+          "sha256": "a35cbbcf426083b384b6cbac631c07ccfb7958ebd172b1abd0e9cd8c1ba4f26f",
+          "mode": "100644"
+        },
+        "test/text_undo_release_host_test.dart": {
+          "sha256": "1cf73c0dee0061870bc92c273d651a9ca814f6ff05216d5583397e6732dfe96c",
+          "mode": "100644"
+        },
+        "test/timezone_compatibility_test.dart": {
+          "sha256": "9525836ec9d95b7d5fb58f72dfada4eb4187c1a54fa3097d1a5daa4202e6ca01",
+          "mode": "100644"
+        },
+        "test/toolbar_progress_paint_test.dart": {
+          "sha256": "884ff20df227ab37d97502ecad17610e1dbb290fa971b0166a7de1a36f80e0e4",
+          "mode": "100644"
+        },
+        "test/toolbar_undo_label_test.dart": {
+          "sha256": "e87533a4453e01460c55a1d5a6ccfc52f92527d06b10d690c597c72c0fc5591a",
+          "mode": "100644"
+        },
+        "test/unavailable_completion_test.dart": {
+          "sha256": "6b4840a4251b7d081dfddc4d2140f2edec5ab097b02607e29c104669bb25c78f",
+          "mode": "100644"
+        },
+        "test/undo_history_test.dart": {
+          "sha256": "fa1571e560067c953e0a0743f0eb6fd063fd0debcb801763872863fda7feb107",
+          "mode": "100644"
+        },
+        "test/undo_storage_test.dart": {
+          "sha256": "abb62ab11d8588e2e8b5b52b382f49030c496c5c6baa6bca5c7aaf105124d42d",
+          "mode": "100644"
+        },
+        "test/unified_conversion_test.dart": {
+          "sha256": "6e3b81602088c4313be8531624e5aa7112d6f44b3c0aa5b64edd40c001202cc2",
+          "mode": "100644"
+        },
+        "test/unified_decoded_cache_test.dart": {
+          "sha256": "3fbc6cf176c5db1ea77835d7ba10613b3143f2f328f6d61a3b72a819e0a70ace",
+          "mode": "100644"
+        },
+        "test/unified_enrollment_test.dart": {
+          "sha256": "9045bae6a453daefef1e65b6b390e64ff7a2421e4986f254aa240acd2a1fa535",
+          "mode": "100644"
+        },
+        "test/unified_history_test.dart": {
+          "sha256": "9923d105027ebffd0c7aa042152c166770bd6f4a93d69fc61d6316f052c4a72e",
+          "mode": "100644"
+        },
+        "test/unified_host_test.dart": {
+          "sha256": "6b48f7fb8d3772e9457d6d3ae530a7357e665ce34c9faf08938b40bd0b67dc53",
+          "mode": "100644"
+        },
+        "test/unified_projection_atomicity_test.dart": {
+          "sha256": "e983b977d0255a3dd2c3b5eb913dd06ee2dd98d29320115beb8141d81c9578a2",
+          "mode": "100644"
+        },
+        "test/unsaved_dialog_route_ownership_test.dart": {
+          "sha256": "4b3e08859f20ae91529b37ee6d75c50d3af8323fda3fd0491901f9c06941bbb3",
+          "mode": "100644"
+        },
+        "test/utf8_byte_limit_test.dart": {
+          "sha256": "6bf12ab50650b4ad713eb5ff8eff99db7a99d058d6cba98b65dbef6114c3c0df",
+          "mode": "100644"
+        },
+        "test/utf8_size_guard_callers_test.dart": {
+          "sha256": "c809654d52509abcd356a4f023d05df11019af6236b0b0ff4b5d465d7836b7b6",
+          "mode": "100644"
+        },
+        "test/ux_capture_theme_test.dart": {
+          "sha256": "22b1915bd8a052524bb324ac85a69d890fb792987600c0c5bf34047c02912cb4",
+          "mode": "100644"
+        },
+        "test/view_clock_test.dart": {
+          "sha256": "4373baab28f9b6b9b90ac8cbac98f542000a565aab48b1ac5f8df18dc7db106e",
+          "mode": "100644"
+        },
+        "test/view_time_source_test.dart": {
+          "sha256": "b11fec8d668755308d3f73add71b66cc4e45b0437a886e12565c0f5675b7ed56",
+          "mode": "100644"
+        },
+        "test/visible_task_move_test.dart": {
+          "sha256": "a883574d7673eea04900f802c867d942b8de118bd5845cff68743b5cc3463741",
+          "mode": "100644"
+        },
+        "test/wall_time_test.dart": {
+          "sha256": "ba2e962b28af14f4d7e1a97994085823e3fc93e7e66f83427e8676ed7e7b2ec7",
+          "mode": "100644"
+        },
+        "test/workspace_state_test.dart": {
+          "sha256": "88b4a5e35a5f0cd00942db28ebaffdb6ce8bd466d3deb4e25746498111fdd4e9",
+          "mode": "100644"
+        },
+        "test/workspace_upgrade_notice_keyboard_test.dart": {
+          "sha256": "32622b21d3058989597b8e7310e0d6f06ba856a5c25733cc6e59c2cd3adf0b31",
+          "mode": "100644"
+        },
+        "test/writer_count_test.dart": {
+          "sha256": "d92133b04b005a4c53403efc43461dd6a0faa36b2fee69bd497a61332936932e",
+          "mode": "100644"
+        },
+        "test/writer_identity_test.dart": {
+          "sha256": "38b3cac54beffd1ac8af35efa33db1a1fe9198024c00d02e140f6ea9c35b981c",
+          "mode": "100644"
+        },
+        "tool/android_recovery/CheckedReplacementCheck.kt": {
+          "sha256": "f44bdf43a05d9bc39711fd111fd8567947c92e650da564c85dc9d0a118879269",
+          "mode": "100644"
+        },
+        "tool/android_recovery/FolderGrantCheck.kt": {
+          "sha256": "f8f401f363f57df4f11da70e07fc54622f455a99b10334e8eaaa9dc3620cda6e",
+          "mode": "100644"
+        },
+        "tool/android_recovery/README.md": {
+          "sha256": "dd3e0335d01e049ea2af35381deaeae6391e2061867df0f79ad65e05444841d2",
+          "mode": "100644"
+        },
+        "tool/android_recovery/build_apk.py": {
+          "sha256": "54a08f573f91d5e53ac780bdde303a5a2d5b559fdc781e112a56bd8181e62909",
+          "mode": "100644"
+        },
+        "tool/android_recovery/harness.dart": {
+          "sha256": "76dbb7588fcd8f68391bcd20e9d7c5ef99aa89aaf45d6e2437a61554c949d2cd",
+          "mode": "100644"
+        },
+        "tool/android_recovery/main.dart": {
+          "sha256": "8a6018b322bd85737e9f909a5a61fe79ba126330434c86ccfea75fc633db703e",
+          "mode": "100644"
+        },
+        "tool/android_release.py": {
+          "sha256": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+          "mode": "100644"
+        },
+        "tool/app_version.py": {
+          "sha256": "03a321a8168d76aa915440e58a2720b9d941d95f510cff8c0448a81503b34ccd",
+          "mode": "100644"
+        },
+        "tool/attach_preview_assets.py": {
+          "sha256": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab",
+          "mode": "100644"
+        },
+        "tool/bootstrap_text_engine.py": {
+          "sha256": "b40a6f02f0c878e022b4fe8243e90f6ab5b4849af0084ff0e9b220822c01a672",
+          "mode": "100644"
+        },
+        "tool/build_agent_cli.py": {
+          "sha256": "ae812c78141dbe4529e533148e40378daa15c21186e6acbc4cf265d80acdcf61",
+          "mode": "100644"
+        },
+        "tool/build_android_release.sh": {
+          "sha256": "bc1522eed2e5758c22d0351d34de9041b1ef17a82bbdcbcc4e8d6a36d2ff32db",
+          "mode": "100644"
+        },
+        "tool/build_text_engine.py": {
+          "sha256": "e79e6d546182aca645730db26c08ba00d428b43d6a4859932ef286dffb7d1ad2",
+          "mode": "100644"
+        },
+        "tool/candidate_source.py": {
+          "sha256": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+          "mode": "100644"
+        },
+        "tool/checklist_qa_fixture.dart": {
+          "sha256": "ed6411e1d31456e7f08dc8e49372bd8fac7a3e8da91dd7752232e7267d4ea5c9",
+          "mode": "100644"
+        },
+        "tool/collect_linux_core_stacks.py": {
+          "sha256": "1e2cf7cab18be19696b0f9772b6d3cc78fecf96087b8b0f7171b5f36e3ff7fdb",
+          "mode": "100644"
+        },
+        "tool/dependency_smoke.py": {
+          "sha256": "58243a8b5bb484751ae90dc7b568cea9c5fc823ed4d7eacb19f0d3f8885db28c",
+          "mode": "100644"
+        },
+        "tool/diagnose_linux_close.py": {
+          "sha256": "8d106fa460d7e5153a748c51dcd94fd6c5396d3101898ee38cd068a5889dcc97",
+          "mode": "100644"
+        },
+        "tool/food_preview.dart": {
+          "sha256": "fd42da3f8656d0cf09d76758c65c4da1573f41425655c659bff6251e48ae5f23",
+          "mode": "100644"
+        },
+        "tool/gradle-repositories.init.gradle": {
+          "sha256": "bad7bedd6be38141ab6bcc3c70f134bdbb428643754585cb6d504bcd7bcf3650",
+          "mode": "100644"
+        },
+        "tool/gradle_repository_policy.py": {
+          "sha256": "08b36daa11a635d16efbf9e22ee5e2af0fbb9b115710158b87612036c706600b",
+          "mode": "100644"
+        },
+        "tool/initial_rank_qa_fixture.dart": {
+          "sha256": "247c1378899187cabd50639e63c70d8c493a4009b966650abc4202bc30ad39a1",
+          "mode": "100644"
+        },
+        "tool/initialize_synthetic_text_fixture.dart": {
+          "sha256": "2dcb1edbc8b29f9f61aca43bb188fe5f52434aaa9c1fea009018b32dc22ade12",
+          "mode": "100644"
+        },
+        "tool/linux_lifecycle_probe.c": {
+          "sha256": "851679ca8a7df035c23051e381062973342351a2cf3260e11c4bd260d3f1cfa5",
+          "mode": "100644"
+        },
+        "tool/measure_batches.dart": {
+          "sha256": "2a1439126ef212b0026b9d8dec0ad527a7bc8865d7a824c84e00e19b32174867",
+          "mode": "100644"
+        },
+        "tool/measure_startup.py": {
+          "sha256": "076034e02886f469db88efa77bf4d655162c2484de611fb3a0f90ed5087b00bb",
+          "mode": "100644"
+        },
+        "tool/minimal_startup.dart": {
+          "sha256": "6f484b05166631172a49b79fc48365c9c5b3f94dc2eb813121bcf292ecef67b4",
+          "mode": "100644"
+        },
+        "tool/native_build_gates.py": {
+          "sha256": "6b5296484b9dd98e48fe2eade8be388bdd2ab971589fa2cc876b405cfb203748",
+          "mode": "100644"
+        },
+        "tool/normalization/completion_instant.dart": {
+          "sha256": "67ab6e47914c22a94f485bb5d1c2e71eec2137a99541402ebfc6e5add5bf41c2",
+          "mode": "100644"
+        },
+        "tool/normalization/generate_completion_goldens.py": {
+          "sha256": "2cd43967f05a20f9ffa3535ff9a715daa6c74272050b5980382ac8fa9003bb03",
+          "mode": "100644"
+        },
+        "tool/package_storage_harness.py": {
+          "sha256": "444d6854722d5cf73e1481f3d76c77d498e9420b3c689c261865fdb45877695e",
+          "mode": "100644"
+        },
+        "tool/performance/benchmark.dart": {
+          "sha256": "8abf73ffd03050b622f7bd1cda41ea66730f0b30f5622aaec24ca49962b3c3d3",
+          "mode": "100644"
+        },
+        "tool/performance/borderline.py": {
+          "sha256": "654f16cac87a8e7e3767b83f586284285f5ca53d3fcd260b2f8fa9c4d2f1e04b",
+          "mode": "100644"
+        },
+        "tool/performance/cost_trace.dart": {
+          "sha256": "84c7e34f3bb42805b634c2e3237ac5e838ee836872b4022fd875922480d619ce",
+          "mode": "100644"
+        },
+        "tool/performance/coverage-v1.json": {
+          "sha256": "1ba8ce04682e4eb84a35c286faf34151b07e5c9eba82931c9bde5ac94e892220",
+          "mode": "100644"
+        },
+        "tool/performance/disk_stall.py": {
+          "sha256": "dcd9c19b9ec24f4cbc560f4281684e43b64b14b80f3ea41adddc0ca328ee985f",
+          "mode": "100644"
+        },
+        "tool/performance/food_tail_diagnostic.dart": {
+          "sha256": "d58428da1d124c91d4e3bb9d89ad7264bdc7233214dc415730ee53c93f06688f",
+          "mode": "100644"
+        },
+        "tool/performance/gate_policy.py": {
+          "sha256": "77c93de9b49f5aa002d3adf32e405ad16807d4a6310c2f6112791e02c4be6320",
+          "mode": "100644"
+        },
+        "tool/performance/limits-v1.json": {
+          "sha256": "335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb",
+          "mode": "100644"
+        },
+        "tool/performance/operation_diagnostics.dart": {
+          "sha256": "2b36007fe961d34cfd8fcaab2aece112892895f69212171f6f3248e3906c541a",
+          "mode": "100644"
+        },
+        "tool/performance/original-action-ids-v1.json": {
+          "sha256": "9983b285eef9d661f83c8c2df1fb7240f0dff83a30fe8ee4e554020b8a23e04e",
+          "mode": "100644"
+        },
+        "tool/performance/owner_override.py": {
+          "sha256": "d4461f450a6650690c03098df03d55bcaf1d9e6c71935714de55df8a0a7a5c6f",
+          "mode": "100644"
+        },
+        "tool/performance/reference-host-v1.json": {
+          "sha256": "abd2891bab4a4c99883d79491d2f612396815a2882857f3827c7bb8da09433dc",
+          "mode": "100644"
+        },
+        "tool/performance/reference_receipt.py": {
+          "sha256": "eea52e947627b72999c300ad3b81393322f499096c23cb580a2c23c4a5503dc4",
+          "mode": "100644"
+        },
+        "tool/performance/run_ci.sh": {
+          "sha256": "1037c78ddd0d5dff7c2c2e69d9d509fd5df2970641ecb148379baee1ddc2116d",
+          "mode": "100644"
+        },
+        "tool/performance/run_gate.py": {
+          "sha256": "b6d952805f9927f96207c8df84127874786ba800b0698f9e848311f0d884101a",
+          "mode": "100644"
+        },
+        "tool/performance/run_linux_action_probe.py": {
+          "sha256": "f0e5eb109366fedac8b156325fc0246c544e69e7a1a764fbae6efa32547fad77",
+          "mode": "100644"
+        },
+        "tool/performance/synthetic_fixture.dart": {
+          "sha256": "022694fbb35b3cc929798178bcc7347e69191f161e33cdc66b44855f8a2f8dd1",
+          "mode": "100644"
+        },
+        "tool/publish_gate.py": {
+          "sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+          "mode": "100644"
+        },
+        "tool/qa_projection_cache.dart": {
+          "sha256": "da81dc5402918bfd3908ade7395dfb4c4e3fd50366aadaf8b2cf6b28e5ef7cc6",
+          "mode": "100644"
+        },
+        "tool/release_assets.py": {
+          "sha256": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+          "mode": "100644"
+        },
+        "tool/start_candidate_wait.py": {
+          "sha256": "a367795f8bf867594558b48156b4afe2a716d6c6638336808c226c58523e4d31",
+          "mode": "100644"
+        },
+        "tool/synthetic_text_fixture.py": {
+          "sha256": "4fc233e688d18038c4e9f16c264cf8194daa9cf70b20a8c2a1218b8bf11efa79",
+          "mode": "100644"
+        },
+        "tool/test_action_cache_boundary.py": {
+          "sha256": "dfb1751974bcb427e714bf79fb6c5ccf9a8cf49ae50b373780bceb53f8ba678b",
+          "mode": "100644"
+        },
+        "tool/test_android_icon_paths.py": {
+          "sha256": "cb7902ed0ff8712c075db3078435c31243b5b855a39276caafb04fdb0d5162ec",
+          "mode": "100644"
+        },
+        "tool/test_android_native_hook.py": {
+          "sha256": "2f76f327a1bdeae47534f9fe4e45ab7b68c0b58ca19d2719399c13c3d085a4c6",
+          "mode": "100644"
+        },
+        "tool/test_borderline_performance.py": {
+          "sha256": "35761d18d356596148a7aa4848331f2b555583a363663b2b983ba809142de7ef",
+          "mode": "100644"
+        },
+        "tool/test_collect_linux_core_stacks.py": {
+          "sha256": "9849d643e50c52f176fabe025ce95d2f5b09b68f669736f363f276233eb3f23c",
+          "mode": "100644"
+        },
+        "tool/test_diagnose_linux_close.py": {
+          "sha256": "fc47a656d2078f25606d03f81d3931baaede79d9ec54d516423c0a4c13d945fa",
+          "mode": "100644"
+        },
+        "tool/test_disk_stall_resample.py": {
+          "sha256": "5d78102e90de09a42fd4ba8375714808f25796ebd09a876e6f6a7156e686aff5",
+          "mode": "100644"
+        },
+        "tool/test_draft_release.py": {
+          "sha256": "7494d0f1ad1ae3b5b8cce66008bec745427049f6b2e93fa681d96768bf63f59c",
+          "mode": "100644"
+        },
+        "tool/test_flatpak_tool_acquisition.py": {
+          "sha256": "9b3dc734fb802d56ac3e29d1f6113017ab95561924c7832dd80f5f2525c4c94c",
+          "mode": "100644"
+        },
+        "tool/test_food_fixture_checkout.py": {
+          "sha256": "37754ccead2392cbf4df84473ddb53de9ab482bff63621d96bf17a5df43076e5",
+          "mode": "100644"
+        },
+        "tool/test_gradle_repository_policy.py": {
+          "sha256": "e7b5b6e21550cdd7021b2f16d3e5eb313a7272c48aebfae9cd0b612c25fe19ca",
+          "mode": "100644"
+        },
+        "tool/test_installer_smoke.py": {
+          "sha256": "acda47143fe55874bce0d176edf75055956ca075c2eace41ab55fe5cd865b592",
+          "mode": "100644"
+        },
+        "tool/test_linux_action_probe.py": {
+          "sha256": "0ab642c06f1e6cdcf4c2d2bfe921fd1064cb1c768f63d5c463666f8fcda2e6a1",
+          "mode": "100644"
+        },
+        "tool/test_linux_flatpak_metadata.py": {
+          "sha256": "09e05cd8fa23720eb9ca8347822c6a39ab4af673307c8beaf4cdd431bb2397ea",
+          "mode": "100644"
+        },
+        "tool/test_linux_profile_discovery.py": {
+          "sha256": "b60e26fe1153d24040d02a83ef86d146bb3322111c13ebb92270f251ace7e618",
+          "mode": "100644"
+        },
+        "tool/test_native_alignment_gate.py": {
+          "sha256": "03883fe24b71e6b3852cb0ea531caca81af3309b096570add005818ab1828abe",
+          "mode": "100644"
+        },
+        "tool/test_native_build_gates.py": {
+          "sha256": "78ebe9f440f1a3e811a28b2e6d2e258e74ea1773d3b1a04d879f307c77ddd876",
+          "mode": "100644"
+        },
+        "tool/test_owner_override.py": {
+          "sha256": "b874d3a6e88de6f062a04ef393cd8f29ff64959d8436d21faee31e06a9c3e45c",
+          "mode": "100644"
+        },
+        "tool/test_performance_child_cleanup.py": {
+          "sha256": "8f5d1f3cea34533e63e5b9350740a1e08cca3c6a81f771821817cae97558b50a",
+          "mode": "100644"
+        },
+        "tool/test_performance_gate.py": {
+          "sha256": "7b1ce1f51deed60a97e560ddd78a6259dac4ed094eaaccbacf5ca918f58d015e",
+          "mode": "100644"
+        },
+        "tool/test_publish_inventory.py": {
+          "sha256": "962c4122d9480cef81a5706783c4978f1dcdfd58def78dd5950e918ada2d517d",
+          "mode": "100644"
+        },
+        "tool/test_reference_git_blobs.py": {
+          "sha256": "cda3f01ce5d993ce06772e37f60a93173b8a926a9c2d3dffd25bd36c4f0efc5a",
+          "mode": "100644"
+        },
+        "tool/test_reference_performance.py": {
+          "sha256": "9ce3c7e40ef05a3e8118f44aeff505d3e4205ac5fcf70b7fbbe9acfcc25a0e8e",
+          "mode": "100644"
+        },
+        "tool/test_release_gates.py": {
+          "sha256": "9433095e7d0912c5ba4b7c9934a9a11f13da95148e2d3ccb71923729bd05d6d7",
+          "mode": "100644"
+        },
+        "tool/test_resolved_text_capability.py": {
+          "sha256": "98105d59a6ee25116c809f89ffb2764170c5bb7f8527738a93b8c00a08b3196c",
+          "mode": "100644"
+        },
+        "tool/test_startup_diagnostics.py": {
+          "sha256": "63aeb48e14658e261384c857c3433f6065140d6a7b4ad60458d2e9352ee47a71",
+          "mode": "100644"
+        },
+        "tool/test_startup_fixture_guard.py": {
+          "sha256": "2a66c797c70bdfe14d0f80a8a7c21afeed649786e1ab47c12409bb22ee8ca238",
+          "mode": "100644"
+        },
+        "tool/test_synthetic_text_fixture.py": {
+          "sha256": "6d5e8c341d9e8c60952185277a87ea90ed35d598be028b58df03363d1430eec2",
+          "mode": "100644"
+        },
+        "tool/test_text_engine_packaging.py": {
+          "sha256": "3e1b0357d05afeab553e42f9e9153e20f80225b49700a3cb955df0e781924fda",
+          "mode": "100644"
+        },
+        "tool/test_vendored_yrs.py": {
+          "sha256": "62448b7ca90203c550a5fbd98ab71283b7f7f3fa5d48052e8441856474b19eef",
+          "mode": "100644"
+        },
+        "tool/test_verify_linux_disposal.py": {
+          "sha256": "b8f6e809d3c8db16d8d6dce6859479b47a5ac81827a9fcc280ecb6d8afbe8688",
+          "mode": "100644"
+        },
+        "tool/test_verify_test_shards.py": {
+          "sha256": "eae3ba10f070539925e2fe200b2ef7184664dd13650e538b3c9666f7905912ea",
+          "mode": "100644"
+        },
+        "tool/test_wait_signed_candidate.py": {
+          "sha256": "e6803b0bec6022cd0f575a5aa89981dbdc6bb6a8277b473f2255930641d90ed4",
+          "mode": "100644"
+        },
+        "tool/verify_linux_disposal.py": {
+          "sha256": "bb10a6cbf743a8af0a5e10321b43daf8c51df7827ded9fd28b1efc32ca99a788",
+          "mode": "100644"
+        },
+        "tool/verify_test_shards.py": {
+          "sha256": "bc639d182646ffa0d2c691357ed19456569565ee3e8e225cf51c68769bdd604c",
+          "mode": "100644"
+        },
+        "tool/wait_signed_candidate.py": {
+          "sha256": "b4beb864742a10e3db351ff7252dd9b4130ceac085157da238fc62b8c17b3f80",
+          "mode": "100644"
+        },
+        "tool/windows_widget_qa/package_qa.py": {
+          "sha256": "ad8c2a295a5636d5f268dab76c2a0b10b900dd0f23cae747e9704c5fc692823f",
+          "mode": "100644"
+        },
+        "tool/windows_widget_qa/probe_cost_trace.dart": {
+          "sha256": "c8a7b671127f35815fe6f7475bc6bc4836bad1d2d90bcc8609893b54bae87e6f",
+          "mode": "100644"
+        },
+        "tool/windows_widget_qa/test_child_environment.py": {
+          "sha256": "f3cefb4d1bbce54cf85c49bc4db2aa0024a1ef1bbf9ce2eb0ea210af36aef532",
+          "mode": "100644"
+        },
+        "tool/windows_widget_qa/test_controller_ownership.py": {
+          "sha256": "a44581e85e45079dad04d53c1258d8eda6558843a22be59009d9de233e5d577d",
+          "mode": "100644"
+        },
+        "tool/windows_widget_qa/test_public_fixture.py": {
+          "sha256": "e1addd36695c898da1dad5b110acdebc7b4cc4d4f0ee927c7a4b0d081422a591",
+          "mode": "100644"
+        },
+        "tool/windows_widget_qa/windows_widget_controller.ps1": {
+          "sha256": "eedba0daffe74c354a85c1e6623cd01b8f66b89086704dbedb651419280626e5",
+          "mode": "100644"
+        },
+        "tool/windows_widget_qa/windows_widget_controller.py": {
+          "sha256": "fdbf515fc49c3288b63cdddde12c7ab34e2c2587fc9805660e265efbed8e27e7",
+          "mode": "100644"
+        },
+        "windows/.gitignore": {
+          "sha256": "96345475f1a3c66bd32d28178fba151ab1506b35b1f7857b8f7651863093ea11",
+          "mode": "100644"
+        },
+        "windows/CMakeLists.txt": {
+          "sha256": "b5726bec45de8f0668df05db2056015a36012814ddac533f44832ae50d9ae6f9",
+          "mode": "100644"
+        },
+        "windows/flutter/CMakeLists.txt": {
+          "sha256": "1fe418971b6f41bb35ceb3d64113a835f3f6f171ecaa707bf232492b57a588d6",
+          "mode": "100644"
+        },
+        "windows/flutter/generated_plugin_registrant.cc": {
+          "sha256": "3b262051d01edd1f2635dff9236a7a25d8a1e80d644aa589637053b43c9fbd31",
+          "mode": "100644"
+        },
+        "windows/flutter/generated_plugin_registrant.h": {
+          "sha256": "dbc11635d7b1ba1887adf40df5b83d634e9c3ab0bee34510c71528bb4d73602a",
+          "mode": "100644"
+        },
+        "windows/flutter/generated_plugins.cmake": {
+          "sha256": "d7716f3bcafd6b18d7de8cac5c47184c06b9d2cba61cad5cd18eb1df55515f69",
+          "mode": "100644"
+        },
+        "windows/runner/CMakeLists.txt": {
+          "sha256": "34119ec122e36940235ef4bc245fcfb43b6960ed443e28af1a8d833a81209b9e",
+          "mode": "100644"
+        },
+        "windows/runner/Runner.rc": {
+          "sha256": "8121be8e09783285d4bb95b00f58ef0d19fa9dc46e14541d8a1a55a7a656e68c",
+          "mode": "100644"
+        },
+        "windows/runner/flutter_window.cpp": {
+          "sha256": "2c16f969ab4c3348c20a63a63187036ce03812ff6c9814c1516fcb6e4e990190",
+          "mode": "100644"
+        },
+        "windows/runner/flutter_window.h": {
+          "sha256": "72e35a2e3fbde9ca355997dbcbff677deda8bd7dfdf07808dbd00638a2f60563",
+          "mode": "100644"
+        },
+        "windows/runner/main.cpp": {
+          "sha256": "003efe74c5cf35c1367f5d436322dc6232a26546ac9ce54882eb09c163aae266",
+          "mode": "100644"
+        },
+        "windows/runner/resource.h": {
+          "sha256": "1fa98588b04561590ba1cf0521ab86a9db4a878312f21c9d5861d965ddd8d1ae",
+          "mode": "100644"
+        },
+        "windows/runner/resources/app_icon.ico": {
+          "sha256": "ef77310110dd30e5331a045c68b037f1f26ffc44d56af1d80bf39bb289918a08",
+          "mode": "100644"
+        },
+        "windows/runner/runner.exe.manifest": {
+          "sha256": "825d243e9fa1542619909c1b72d09b3ed7c1f3b225bb8367c125835e5dc3f8aa",
+          "mode": "100644"
+        },
+        "windows/runner/utils.cpp": {
+          "sha256": "6c2c87106b4b29d534c7edcafb3b7f7b9079caa3cdafa7e56671ad2adf5a2543",
+          "mode": "100644"
+        },
+        "windows/runner/utils.h": {
+          "sha256": "95a7f7dddb832997cefa937a96f89472332277e75734a5de553610760b744b03",
+          "mode": "100644"
+        },
+        "windows/runner/win32_window.cpp": {
+          "sha256": "9065f31ccf746cf8b390121f958f9e959033af864aed779597066625ed56bc36",
+          "mode": "100644"
+        },
+        "windows/runner/win32_window.h": {
+          "sha256": "7dd03746b19dcf3542829b2f6e8ed40a2714ce5f2cb3b0e23f0118a2fcf62d62",
+          "mode": "100644"
+        }
+      }
+    },
+    "hostProfileSHA256": "abd2891bab4a4c99883d79491d2f612396815a2882857f3827c7bb8da09433dc",
+    "controllerSHA256": "1780871bed8ff20438569f93b929ed6e0229af0f985579d3765e31bb9584f8a5",
+    "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-agentrc-20261029/controller/controller_r7.py"
+  },
+  "priorResultSHA256": "c09adb5a822b0fedc835d4f2eb9f8fdade86d73d83e801d13246219e6272bbdf",
+  "priorFinishedAtUTC": "2026-10-30T01:23:27.778461+00:00",
+  "priorFailures": [
+    "food-own-history:scaling:food.product.merge"
+  ],
+  "diagnostic": {
+    "schemaVersion": 1,
+    "kind": "reference-failure-diagnostic-v1",
+    "priorRequestId": "767260cc31a596057dc90c341f0ecb73",
+    "relevantSourceSHA256": "5b044e06df602302f6fc833281e28670661f66a4a3b683451d85f4453482c86f",
+    "recordedAtUTC": "2026-10-30T01:26:48.167662+00:00",
+    "reproduced": false,
+    "runs": [
+      {
+        "role": "diagnostic",
+        "qualifying": false,
+        "resultSHA256": "a1151a0a2973d53f47079a8673a1916be91e650736728ffca206bfe2113697b6",
+        "checkedFailures": [
+          "food-own-history:scaling:food.product.merge"
+        ],
+        "reproducedFailures": [],
+        "startedAtUTC": "2026-10-30T01:25:21Z",
+        "finishedAtUTC": "2026-10-30T01:26:24Z"
+      }
+    ]
+  }
+}

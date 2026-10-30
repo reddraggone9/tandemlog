@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "kind": "reference-failure-diagnostic-v1",
+  "priorRequestId": "767260cc31a596057dc90c341f0ecb73",
+  "relevantSourceSHA256": "5b044e06df602302f6fc833281e28670661f66a4a3b683451d85f4453482c86f",
+  "recordedAtUTC": "2026-10-30T01:26:48.167662+00:00",
+  "reproduced": false,
+  "runs": [
+    {
+      "role": "diagnostic",
+      "qualifying": false,
+      "resultSHA256": "a1151a0a2973d53f47079a8673a1916be91e650736728ffca206bfe2113697b6",
+      "checkedFailures": [
+        "food-own-history:scaling:food.product.merge"
+      ],
+      "reproducedFailures": [],
+      "startedAtUTC": "2026-10-30T01:25:21Z",
+      "finishedAtUTC": "2026-10-30T01:26:24Z"
+    }
+  ]
+}

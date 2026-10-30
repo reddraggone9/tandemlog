@@ -1,0 +1,39 @@
+{
+  "role": "diagnostic",
+  "qualifying": false,
+  "sourceRevision": "24f2927b0e20a9efc20910e6568722dcbb4bb491",
+  "priorRequestId": "767260cc31a596057dc90c341f0ecb73",
+  "checkedFailure": "food-own-history:scaling:food.product.merge",
+  "summaries": {
+    "dense-1": {
+      "allSamplesMs": [
+        5.06,
+        4.907,
+        4.271,
+        4.652,
+        4.439
+      ],
+      "medianMs": 4.652,
+      "maxMs": 5.06
+    },
+    "dense-food": {
+      "allSamplesMs": [
+        4.938,
+        5.224,
+        6.585,
+        6.701,
+        7.869
+      ],
+      "medianMs": 6.585,
+      "maxMs": 7.869
+    }
+  },
+  "medianBoundMs": 8.815000000000001,
+  "maximumBoundMs": 12.084,
+  "reproduced": false,
+  "logSHA256": {
+    "dense-1": "9577564108717e48d4b747dd9207fa5a541a91cd4dc2bb704c11d25e8969324a",
+    "dense-food": "e1e7eff8a3b8b01714df0ea5a7f2abe9dc7236c6a46bf1097063a0191753dd8a"
+  },
+  "priorMedianBoundMs": 8.52125
+}
