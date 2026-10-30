@@ -510,3 +510,40 @@ manifest and installation in the in-append input witness. This covers hidden
 purchase/provenance evidence and net-zero peer edits, not just visible projected
 values. Effect-based dry-run planning and both workspace opens remain; no
 state-only single-open token substitutes for the reviewed effect plan.
+
+### Planned commit: plan on a worker isolate (2026-10-30)
+
+Reference qualification of `24f2927` failed twice (see
+[evidence](../evidence/agent-interface-performance/README.md)): q1
+`food.product.merge` Food-growth median 8.532 ms against 8.52125 ms, then the
+one official rerun q2 dense-food `agent.write.purchaseImport2` median 747.336
+against 700 ms. The import miss is repeatable (q1 684, advisory 676, local
+diagnostic 699 ms median: always at the budget edge), so it was profiled and
+fixed; budgets are unchanged.
+
+Phase probe (dense-food, reference caps, separate diagnostic runs, not
+qualification): the planned commit ran the dry run's full open of the profile
+copy and the real workspace open interleaved on one isolate, about 496 ms
+together (one warm open is about 340 ms: decoded-cache verification 159,
+restore 22, record decode 45, effect validation 94), then the command 25 ms and
+the close-time cache seal about 111 ms. A pure-Dart SHA-256 rewrite was tried
+and was no faster than package:crypto.
+
+Fix: the planned commit's dry run (open of the profile copy, command, both
+observations, effect diff and plan hash) now runs on a worker isolate once the
+copy exists, while the real workspace opens on the calling isolate. Both full
+opens, the effect plan, the plan-hash check before the command and the
+in-append plan guard are unchanged; the worker receives only plain values (no
+lock, database or open file) and the caller keeps the identity lock
+throughout. A plain `--dry-run` still plans on the calling isolate. Diagnostic
+`agent-cli` family under reference caps, median/maximum ms:
+`agent.write.purchaseImport2` dense-food 699/714 → 576/586, dense-2 490/497,
+dense-1 318/323; the other agent labels did not change. Test: a planned commit
+opens only the real workspace on the calling isolate, and refusals raised in
+the worker keep their kinds (mutation-checked).
+
+The q1 merge-growth miss did not reproduce in either bounded diagnostic
+(dense-food median 6.585 and 6.194 ms; dense-1 4.599 ms; bound about 8.75 ms);
+q2 passed it (5.293 ≤ 9.120). Both refreshes in the merge take the unchanged
+fast path; the remaining 1–2 ms of Food growth is in the Food append and
+projection. It stays within its bound and is not changed in this release.
