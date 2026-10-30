@@ -34,6 +34,7 @@ void main() {
     env = {
       'HOME': root.path,
       'XDG_DATA_HOME': '${root.path}/data',
+      'APPDATA': '${root.path}/appdata',
       'TZ': 'America/Chicago',
     };
   });
