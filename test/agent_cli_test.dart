@@ -8,6 +8,7 @@ import 'package:tandemlog/agent/agent_workspace.dart';
 import 'package:tandemlog/agent/agent_profile.dart';
 import 'package:tandemlog/agent/cli.dart';
 import 'package:tandemlog/agent/command.dart';
+import 'package:tandemlog/agent/commands_read.dart' show taskRevSql;
 import 'package:tandemlog/agent/mcp_server.dart';
 import 'package:tandemlog/agent/registry.dart';
 import 'package:tandemlog/agent/render.dart' show revOf;
@@ -1522,6 +1523,32 @@ void main() {
         reseeded['rev'] as String,
       ]);
       expect(ok['error'], isNull, reason: '$ok');
+      // Revs are read per task and item: every lookup stays an index search
+      // (a type-index lookup would scan every checklist completion).
+      final ws = await AgentWorkspace.open(
+        AgentProfile.resolve(selection: 'default', environment: env),
+        readOnly: true,
+      );
+      try {
+        final store = ws.session.tasks;
+        final plan = [
+          for (final r in store.db.select(
+            'EXPLAIN QUERY PLAN '
+            '${taskRevSql(store.tables.events, store.tables.views)}',
+            [reseeded['id']],
+          ))
+            r['detail'] as String,
+        ];
+        expect(plan.where((d) => d.contains('_type_before')), isEmpty);
+        expect(
+          plan.where((d) => d.startsWith('SCAN') && !d.startsWith('SCAN item')),
+          isEmpty,
+          reason: plan.join('\n'),
+        );
+        expect(plan.where((d) => d.contains('_successor')), hasLength(3));
+      } finally {
+        await ws.close();
+      }
     },
   );
 

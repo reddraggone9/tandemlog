@@ -62,27 +62,32 @@ Map<String, dynamic>? taskRow(AgentCall call, String id) {
 /// from its predecessor's completion (as `hasDurableChecklistActivity`).
 /// A checklist item's rev also covers the completions that seeded it, so an
 /// inherited item re-seeded with other content after Undo + re-complete (same
-/// deterministic ID, no events of its own) gets a new rev.
+/// deterministic ID, no events of its own) gets a new rev. The unary `+` on
+/// the completion type keeps both completion lookups on the successor index
+/// instead of scanning every checklist completion through the type index.
 /// Any admitted change, including one that restores identical visible fields
 /// or only touches the checklist (which completion reads), changes it.
 String taskRev(AgentCall call, String id) {
   final store = call.ws.session.tasks;
-  final events = store.tables.events;
-  final views = store.tables.views;
   final ids = [
     for (final r in store.db.select(
-      "SELECT id FROM $events WHERE entity=?1 "
-      "OR json_extract(semantic,'\$.data.successor.id')=?1 "
-      "OR entity IN (SELECT entity FROM $events WHERE json_extract(semantic,'\$.type')='checklist.itemCreated' AND json_extract(semantic,'\$.data.parent')=?1) "
-      "OR entity IN (SELECT json_extract(item.value,'\$.id') FROM $events, json_each($events.semantic,'\$.data.checklist.items') AS item WHERE json_extract($events.semantic,'\$.data.successor.id')=?1 AND json_extract($events.semantic,'\$.type')='task.completedWithChecklist') "
-      "OR id IN (SELECT seed.id FROM $events AS seed WHERE json_extract(seed.semantic,'\$.data.successor.id')=(SELECT json_extract(raw,'\$.parent') FROM $views WHERE id=?1 AND json_extract(raw,'\$.kind')='checklistItem') AND json_extract(seed.semantic,'\$.type')='task.completedWithChecklist' AND EXISTS (SELECT 1 FROM json_each(seed.semantic,'\$.data.checklist.items') AS item WHERE json_extract(item.value,'\$.id')=?1)) "
-      "ORDER BY id",
+      taskRevSql(store.tables.events, store.tables.views),
       [id],
     ))
       r['id'] as String,
   ];
   return revOf(ids);
 }
+
+/// The [taskRev] query over a profile's [events] and [views] tables (`?1` is
+/// the task or item ID); every lookup is an index search.
+String taskRevSql(String events, String views) =>
+    "SELECT id FROM $events WHERE entity=?1 "
+    "OR json_extract(semantic,'\$.data.successor.id')=?1 "
+    "OR entity IN (SELECT entity FROM $events WHERE json_extract(semantic,'\$.type')='checklist.itemCreated' AND json_extract(semantic,'\$.data.parent')=?1) "
+    "OR entity IN (SELECT json_extract(item.value,'\$.id') FROM $events, json_each($events.semantic,'\$.data.checklist.items') AS item WHERE json_extract($events.semantic,'\$.data.successor.id')=?1 AND +json_extract($events.semantic,'\$.type')='task.completedWithChecklist') "
+    "OR id IN (SELECT seed.id FROM $events AS seed WHERE json_extract(seed.semantic,'\$.data.successor.id')=(SELECT json_extract(raw,'\$.parent') FROM $views WHERE id=?1 AND json_extract(raw,'\$.kind')='checklistItem') AND +json_extract(seed.semantic,'\$.type')='task.completedWithChecklist' AND EXISTS (SELECT 1 FROM json_each(seed.semantic,'\$.data.checklist.items') AS item WHERE json_extract(item.value,'\$.id')=?1)) "
+    "ORDER BY id";
 
 /// [names] is [people] when the caller already has it (one map per call).
 Map<String, Object?> taskJson(
