@@ -2,7 +2,12 @@
 
 Implements [ADR0033](decisions/0033-controlled-reference-performance.md). No
 hardware multiplier;`limits-v1.json` SHA256 remains
-`335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb`.
+`553896b3b7a474291785519d64fdcaf0bbe105a47b8713156f7b336f11fd6b89`.
+The next-release 257-label inventory adds only Activity derivation (15ms median,
+30ms maximum); all previous absolute and paired bounds remain unchanged.
+Controller re-registration 3ac194c97515ae4dda05279be7564b2a046bba21778e4f1295c9c019387d6708 changes only its
+hard-coded limits digest; private exact reverse-byte and AST review passed.
+No qualification is implied by this registration.
 The implementation is not qualified until host/controller registration,a fresh
 reference receipt and exact-source hosted CI all pass. Do not promote old samples.
 

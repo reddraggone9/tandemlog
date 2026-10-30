@@ -382,7 +382,7 @@ jobs:
           mkdir "$RUNNER_TEMP/performance-diagnostics"
           # Hosted correctness/bindings remain mandatory. The same absolute and
           # growth limits qualify separately on the controlled reference host.
-          limits_sha="335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb"
+          limits_sha="553896b3b7a474291785519d64fdcaf0bbe105a47b8713156f7b336f11fd6b89"
           mode=(--hosted-advisory)
           if [[ "${{ inputs.performance_calibration }}" == true ]]; then
             mode=(--measure-only)

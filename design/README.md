@@ -27,6 +27,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Activity log](activity-log.md): next-release design and local read-only implementation; recorded device attribution is available, but active user was never persisted. Not released.
+
 - [Food as products](food-products.md): settled design (Lee, 2026-10-27) for Product and Purchase records, implicit products for existing containers, merge-as-alias, keep-in-stock minimums, receipt import into the Inbox, Food arrow-key navigation and the wide-pane bulk editor. Released in stable2026.10.9 after accepted RC.1/RC.2 validation.
 
 - [Agent interface](agent-interface.md): accepted direction (Lee, 2026-10-28), released in stable 2026.10.10 after accepted 2026.10.10-rc.1.

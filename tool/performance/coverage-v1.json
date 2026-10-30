@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "storageApplicationActionIds": [
+    "activity.read.derive",
     "agent.dryRun.bulkEdit2",
     "agent.dryRun.purchaseImport2",
     "agent.read.coldOpenTasksList",
@@ -499,6 +500,12 @@
         "Concurrent agent and GUI installations on one workspace, lock waits and profile_in_use retries; correctness-covered by process tests, not timed.",
         "Commands without a timed label (context, search/show, history, verify, people/products/checklist writes, bulk commits with --expect-plan, merges, food move-some, whose store path is timed by food.moveSome); they share the timed open/close boundary and existing store-path labels."
       ]
+    },
+    {
+      "interaction": "Activity log open, lazy scroll, details, incoming published history",
+      "productionAPI": "activityEntries(UnifiedSnapshot)",
+      "actualUIPath": "main.dart identity menu; presentation/activity_log.dart",
+      "boundary": "AOT activity.read.derive times published-row derivation and sorting, asserts uniqueness/order/canonical immutability across all3 shapes. Native open-to-visible, scroll/details and incoming refresh remain required; no closed-log work. User identity was not recorded; installation labels are advisory."
     }
   ],
   "actualUITimingAccepted": false,

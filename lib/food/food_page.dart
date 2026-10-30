@@ -2008,7 +2008,12 @@ class _MoveSomeDialogState extends State<_MoveSomeDialog> {
 
     return AlertDialog(
       key: const ValueKey('food-move-some'),
-      title: Text('Move some ${details.name}'),
+      title: Text(
+        'Move some ${details.name}',
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      scrollable: true,
       content: SizedBox(
         width: 400,
         child: SingleChildScrollView(
@@ -2046,6 +2051,7 @@ class _MoveSomeDialogState extends State<_MoveSomeDialog> {
                 errorText: revealed ? locationError : null,
                 onChanged: edited,
                 onSelected: edited,
+                onSubmitted: (_) => unawaited(_move()),
               ),
               if (failure != null) ...[
                 const SizedBox(height: 12),

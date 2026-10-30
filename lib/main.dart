@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 import 'application/undo_history.dart';
+import 'presentation/activity_log.dart';
 import 'application/food_undo_history.dart';
 import 'application/task_text_session.dart';
 import 'application/text_save_command.dart';
@@ -976,9 +977,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
     return Column(
       children: [
-        if (workspaceState!.health.hasPendingFoodSave ||
-            hasPendingCommand ||
-            workspaceState!.health.foodPendingReferences > 0)
+        // Prepared receipts exist briefly during every healthy append. Recovery
+        // copy belongs to an unresolved outcome, not the in-flight command.
+        if (!busy &&
+            (workspaceState!.health.hasPendingFoodSave ||
+                hasPendingCommand ||
+                workspaceState!.health.foodPendingReferences > 0))
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -5295,7 +5299,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       tooltip: 'Active user: $name',
       enabled: !busy,
       onSelected: (value) async {
-        if (value == 'settings') {
+        if (value == 'activity') {
+          final history = store?.unified;
+          if (history != null) {
+            await showDialog<void>(
+              context: context,
+              builder: (_) => ActivityLogDialog(history: history),
+            );
+          }
+        } else if (value == 'settings') {
           _showSettings();
         } else {
           final origin = store, previousUser = user;
@@ -5333,6 +5345,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ),
         const PopupMenuItem(value: 'new', child: Text('Manage users')),
         const PopupMenuDivider(),
+        if (store?.unified != null)
+          const PopupMenuItem(value: 'activity', child: Text('Activity log')),
         const PopupMenuItem(value: 'settings', child: Text('Settings')),
       ],
       child: child,

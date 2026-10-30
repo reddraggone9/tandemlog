@@ -1037,6 +1037,10 @@
       "writer300.refresh.food.unchanged": {
         "medianMs": 10,
         "maxMs": 15
+      },
+      "activity.read.derive": {
+        "medianMs": 15,
+        "maxMs": 30
       }
     },
     "dense-2": {
@@ -2063,6 +2067,10 @@
       "writer300.refresh.food.unchanged": {
         "medianMs": 10,
         "maxMs": 15
+      },
+      "activity.read.derive": {
+        "medianMs": 15,
+        "maxMs": 30
       }
     },
     "dense-food": {
@@ -3089,6 +3097,10 @@
       "writer300.refresh.food.unchanged": {
         "medianMs": 10,
         "maxMs": 15
+      },
+      "activity.read.derive": {
+        "medianMs": 15,
+        "maxMs": 30
       }
     }
   },
@@ -4631,6 +4643,12 @@
         "maximumAdditiveMs": 5
       },
       "writer300.refresh.food.unchanged": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "activity.read.derive": {
         "maxMedianRatio": 1.25,
         "medianAdditiveMs": 3,
         "maxMaximumRatio": 1.4,
@@ -6179,6 +6197,12 @@
           "medianAdditiveMs": 3,
           "maxMaximumRatio": 1.4,
           "maximumAdditiveMs": 5
+        },
+        "activity.read.derive": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
         }
       },
       "growthKind": "food"
@@ -6213,5 +6237,10 @@
     "actions": 8,
     "basis": "Intended human-time responsiveness of one agent tool call, declared by the release owner before any agent.* measurement and identical on all3shapes: reads400ms median/600ms maximum; single writes and whole-action Undo500/750; dry runs and the two-line purchase import700/1000. Each label times a whole in-process CLI call, so every one contains a complete workspace open (profile lock/read copy, history proof, Task/Food attach, open-time migration) and close; all8 therefore use the existing startup class growth rule (2.25x+100ms median/2.5x+200ms maximum) on both pairs. The per-action store cost stays guarded by the existing ordinary-rule labels for the same store paths. No agent measurement used; previous calibrated bounds unchanged.",
     "qualificationPending": true
+  },
+  "prospectiveActivityBudgets": {
+    "declaredBeforeMeasurement": true,
+    "actions": 1,
+    "basis": "Read-only log derivation: 15ms median / 30ms max, before measurement. Opening must leave frame room; same existing ordinary paired growth bounds. First-visible, scroll, details and incoming refresh additionally need native UI evidence; no existing action bound is changed."
   }
 }

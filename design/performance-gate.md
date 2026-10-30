@@ -557,3 +557,16 @@ The q1 merge-growth miss did not reproduce in either bounded diagnostic
 q2 passed it (5.293 ≤ 9.120). Both refreshes in the merge take the unchanged
 fast path; the remaining 1–2 ms of Food growth is in the Food append and
 projection. It stays within its bound and is not changed in this release.
+
+
+### Next-release read-only Activity log
+
+Before first measurement, `activity.read.derive` adds a 15ms median / 30ms maximum
+readmodel budget on all three shapes and the unchanged ordinary paired-growth
+rules. It builds published rows and current installation labels once per revision,
+sorts by recorded logical occurrence clock, and checks count, uniqueness, order
+and canonical immutability. This adds a 257th label; all previous 256 absolute and
+growth bounds remain byte-value unchanged. It does not time first paint, scrolling,
+details or incoming-history visible refresh; native workflows must assess these.
+No work runs while the dialog is closed. No physical occurrence/skew correction
+or missing actor-user reconstruction is claimed.

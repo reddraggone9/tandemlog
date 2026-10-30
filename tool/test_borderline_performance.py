@@ -51,12 +51,13 @@ def historical_limits():
     def strip(value):
         if isinstance(value, dict):
             return {k: strip(v) for k, v in value.items()
-                    if not k.startswith(('food.product.', 'food.moveSome', 'agent.', 'writer300.'))}
+                    if not k.startswith(('food.product.', 'food.moveSome', 'agent.', 'writer300.', 'activity.'))}
         return value
     current = json.loads((TOOLS / 'limits-v1.json').read_text())
     current.pop('prospectiveFoodProductBudgets')
     current.pop('prospectiveFoodMoveSomeBudgets')
     current.pop('prospectiveAgentCliBudgets')
+    current.pop('prospectiveActivityBudgets')
     limits = strip(current)
     text = json.dumps(limits, indent=2) + '\n'
     limits['sha256'] = hashlib.sha256(text.encode()).hexdigest()
@@ -351,7 +352,7 @@ class BorderlineBundleTests(BorderlineBundleFixture):
         self.assertEqual(result['state'], borderline.STATE)
         self.assertEqual(result['borderlineMetrics'], [{
             'label': label, 'statistic': 'maximum',
-            'measuredMs': self.limits['actionsBySize'][self.spec['smallSize']][self.action]['maxMs'] * 1.04,
+            'measuredMs': round(self.limits['actionsBySize'][self.spec['smallSize']][self.action]['maxMs'] * 1.04 * 1000) / 1000,
             'boundMs': self.limits['actionsBySize'][self.spec['smallSize']][self.action]['maxMs'],
             'ratioOfBound': 1.04}])
         self.assertEqual(record['followUp'], {'status': 'queued', 'action': borderline.FOLLOW_UP, 'metrics': [label]})

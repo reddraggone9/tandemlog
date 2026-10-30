@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,104 @@ const _rice = FoodDetails(
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  for (final (width, scale) in [(1200.0, 1.0), (390.0, 2.0)]) {
+    testWidgets('Next release Activity and Move some $width $scale dark', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await _withWorkspace(tester, Size(width, 850), 'dark', (peer) async {
+        final prefix = 'next-${width.round()}-${scale.round()}x-dark';
+        Future<Map<String, String>> bytes() async => {
+          for (final entry in await peer.folder.list())
+            entry.name: base64Encode(await peer.folder.read(entry.name)),
+        };
+        final before = await bytes();
+        await pixels.tap(tester, find.byKey(const ValueKey('identity-menu')));
+        await tester.pumpAndSettle();
+        await pixels.tap(tester, find.text('Activity log'));
+        await tester.pumpAndSettle();
+        await captureNativeFixtureUi(tester, '$prefix-activity');
+        final list = find.byKey(const ValueKey('activity-list'));
+        expect(list, findsOneWidget);
+        final count = tester
+            .widget<ListView>(list)
+            .childrenDelegate
+            .estimatedChildCount!;
+        expect(await bytes(), before);
+        await tester.runAsync(
+          () => peer.unified!.renameDevice('Synthetic receipt agent'),
+        );
+        await _refreshFood(tester);
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<ListView>(list).childrenDelegate.estimatedChildCount,
+          count + 1,
+        );
+        expect(find.textContaining('Synthetic receipt agent'), findsWidgets);
+        await pixels.tap(
+          tester,
+          find.descendant(of: list, matching: find.byType(ListTile)).first,
+        );
+        await tester.pumpAndSettle();
+        await captureNativeFixtureUi(tester, '$prefix-activity-details');
+        expect(find.textContaining('User: Not recorded'), findsOneWidget);
+        await pixels.tap(tester, find.widgetWithText(TextButton, 'Close').last);
+        await tester.pumpAndSettle();
+        await pixels.tap(tester, find.widgetWithText(TextButton, 'Close'));
+        await tester.pumpAndSettle();
+        final page = tester.state<FoodInventoryPageState>(
+          find.byType(FoodInventoryPage),
+        );
+        expect(page.bulkSelected, isEmpty);
+        final row = find.text('Synthetic row beans').first;
+        await tester.longPress(row);
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        await pixels.tap(
+          tester,
+          find.byTooltip('Actions for Synthetic row beans').first,
+        );
+        await tester.pumpAndSettle();
+        await pixels.tap(tester, find.text('Move some…'));
+        await tester.pumpAndSettle();
+        final location = find.descendant(
+          of: find.byKey(const ValueKey('food-move-location')),
+          matching: find.byType(TextField),
+        );
+        if (scale == 2) {
+          tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+          addTearDown(tester.view.resetViewInsets);
+          await tester.pumpAndSettle();
+        }
+        await tester.ensureVisible(location);
+        await pixels.tap(tester, location);
+        await tester.enterText(location, 'New freezer');
+        await tester.pumpAndSettle();
+        await captureNativeFixtureUi(tester, '$prefix-move-keyboard');
+        expect(
+          find.widgetWithText(FilledButton, 'Move').hitTestable(),
+          findsOneWidget,
+        );
+        if (Platform.isLinux && scale == 1) {
+          await tester.runAsync(() async {
+            final key = await Process.run('xdotool', ['key', 'Return']);
+            expect(key.exitCode, 0);
+          });
+        } else {
+          await tester.testTextInput.receiveAction(TextInputAction.done);
+        }
+        await waitForUi(
+          tester,
+          () => find.byKey(const ValueKey('food-move-some')).evaluate().isEmpty,
+        );
+        await _idle(tester);
+        expect(find.text('New freezer'), findsWidgets);
+        await captureNativeFixtureUi(tester, '$prefix-moved');
+      });
+    });
+  }
   for (final (width, height) in [(1200.0, 850.0), (390.0, 844.0)]) {
     for (final appearance in ['dark', 'light']) {
       testWidgets(

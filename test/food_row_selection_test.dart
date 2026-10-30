@@ -60,13 +60,26 @@ class _Harness {
   FoodInventoryPageState get page =>
       tester.state<FoodInventoryPageState>(find.byType(FoodInventoryPage));
 
-  Future<void> pump({double width = 800}) async {
+  Future<void> pump({
+    double width = 800,
+    double height = 1000,
+    double textScale = 1,
+    double keyboard = 0,
+  }) async {
     tester.view.devicePixelRatio = 1;
-    tester.view.physicalSize = Size(width, 1000);
+    tester.view.physicalSize = Size(width, height);
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData.dark(),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(textScale),
+            viewInsets: EdgeInsets.only(bottom: keyboard),
+          ),
+          child: child!,
+        ),
         home: StatefulBuilder(
           builder: (context, setState) {
             update = setState;
@@ -269,6 +282,92 @@ void main() {
     expect(write.details.location, 'Freezer');
     expect(write.details.name, 'Synthetic beans');
     expect(write.details.expiry, '2026-11-01');
+  });
+
+  testWidgets('Move some Enter accepts an option then commits once', (
+    tester,
+  ) async {
+    final h = _Harness(tester);
+    await h.pump();
+    await h.openMenu('Synthetic beans');
+    await tester.tap(find.text('Move some…'));
+    await tester.pumpAndSettle();
+    final location = find.descendant(
+      of: find.byKey(const ValueKey('food-move-location')),
+      matching: find.byType(TextField),
+    );
+    // Free text has no autocomplete option and Enter runs Move.
+    await tester.enterText(location, 'New freezer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(h.writes, hasLength(1));
+    expect(h.writes.single.details.location, 'New freezer');
+    expect(find.byKey(const ValueKey('food-move-some')), findsNothing);
+  });
+
+  testWidgets('Move some at 200% text with keyboard keeps actions reachable', (
+    tester,
+  ) async {
+    final h = _Harness(tester);
+    await h.pump(width: 390, height: 844, textScale: 2, keyboard: 300);
+    await h.openMenu('Synthetic beans');
+    await tester.tap(find.text('Move some…'));
+    await tester.pumpAndSettle();
+    final location = find.descendant(
+      of: find.byKey(const ValueKey('food-move-location')),
+      matching: find.byType(TextField),
+    );
+    await tester.ensureVisible(location);
+    await tester.enterText(location, 'Freezer');
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    final move = find.widgetWithText(FilledButton, 'Move');
+    expect(move.hitTestable(), findsOneWidget);
+    expect(
+      find.widgetWithText(TextButton, 'Cancel').hitTestable(),
+      findsOneWidget,
+    );
+    await tester.tap(move);
+    await tester.pumpAndSettle();
+    expect(h.writes, hasLength(1));
+    expect(h.writes.single.details.location, 'Freezer');
+  });
+
+  testWidgets('Move some suggestion Enter does not also commit', (
+    tester,
+  ) async {
+    final h = _Harness(tester);
+    h.operations.add(
+      FoodOperation(
+        id: '$_writer:4',
+        order: 4,
+        action: FoodAction.edit,
+        targets: [_id(3)],
+        fields: const ['location'],
+        details: const FoodDetails(
+          name: 'Synthetic rice',
+          expiry: '2026-11-02',
+          location: 'Freezer',
+        ),
+      ),
+    );
+    await h.pump();
+    await h.openMenu('Synthetic beans');
+    await tester.tap(find.text('Move some…'));
+    await tester.pumpAndSettle();
+    final location = find.descendant(
+      of: find.byKey(const ValueKey('food-move-location')),
+      matching: find.byType(TextField),
+    );
+    await tester.enterText(location, 'Fre');
+    await tester.pumpAndSettle();
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(h.writes, isEmpty);
+    expect(tester.widget<TextField>(location).controller!.text, 'Freezer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(h.writes, hasLength(1));
   });
 
   testWidgets('Move some Cancel writes nothing', (tester) async {

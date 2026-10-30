@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'dart:async';
+import 'dart:typed_data';
+import 'package:tandemlog/presentation/activity_log.dart';
+import 'package:tandemlog/application/activity_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/main.dart';
@@ -8,6 +12,7 @@ import 'package:tandemlog/storage/unified_history.dart';
 import 'package:tandemlog/presentation/device_name_dialog.dart';
 import 'package:tandemlog/presentation/section_menu.dart';
 import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/inventory.dart';
 import 'section_navigation_host_test.dart' as host;
 import 'unified_history_test.dart' show FaultFolder;
 import 'package:tandemlog/storage/unified_record.dart';
@@ -34,6 +39,21 @@ unifiedFixture() async {
     );
   } finally {
     await p.close();
+  }
+}
+
+class _HeldFoodAppend extends host.FaultingFolder {
+  _HeldFoodAppend(super.delegate);
+  Completer<void>? gate;
+  bool entered = false, fail = false;
+  @override
+  Future<void> append(String name, Uint8List bytes) async {
+    if (gate != null) {
+      entered = true;
+      await gate!.future;
+      if (fail) throw const FileSystemException('Synthetic append refusal');
+    }
+    return super.append(name, bytes);
   }
 }
 
@@ -68,6 +88,150 @@ void main() {
     await tester.pumpAndSettle();
     await host.waitForHostShutdown(tester, resources);
   }
+
+  testWidgets(
+    'Activity log is read-only and follows published device changes',
+    (tester) async {
+      final data = (await tester.runAsync(unifiedFixture))!;
+      try {
+        await start(tester, data.profile);
+        final state = tester.state(find.byType(TasksPage)) as dynamic;
+        final history = state.store.unified as UnifiedHistory;
+        final before = await tester.runAsync(
+          () => host.canonical(data.trial.folder),
+        );
+        await tester.tap(find.byKey(const ValueKey('identity-menu')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Activity log'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ActivityLogDialog), findsOneWidget);
+        expect(find.byKey(const ValueKey('activity-list')), findsOneWidget);
+        expect(
+          await tester.runAsync(() => host.canonical(data.trial.folder)),
+          before,
+        );
+        final count = activityEntries(history.snapshot).length;
+        var renamed = false;
+        unawaited(
+          history
+              .renameDevice('Activity synthetic device')
+              .then((_) => renamed = true),
+        );
+        await host.ready(tester, () => renamed);
+        await tester.pumpAndSettle();
+        expect(activityEntries(history.snapshot), hasLength(count + 1));
+        expect(find.textContaining('Activity synthetic device'), findsWidgets);
+        final revision = history.snapshot.revision;
+        final beforeFailure = await tester.runAsync(
+          () => host.canonical(data.trial.folder),
+        );
+        history.reportQueueFailure(
+          StateError('Synthetic Activity refresh failure'),
+        );
+        await tester.pump();
+        expect(history.snapshot.revision, revision);
+        expect(
+          find.byKey(const ValueKey('activity-refresh-error')),
+          findsOneWidget,
+        );
+        var refreshed = false;
+        unawaited(history.refresh().then((_) => refreshed = true));
+        await host.ready(tester, () => refreshed);
+        expect(
+          find.byKey(const ValueKey('activity-refresh-error')),
+          findsNothing,
+        );
+        expect(history.snapshot.revision, revision);
+        expect(
+          await tester.runAsync(() => host.canonical(data.trial.folder)),
+          beforeFailure,
+        );
+
+        await tester.tap(find.byTooltip('About Activity log'));
+        await tester.pumpAndSettle();
+        expect(find.textContaining('Device clock skew'), findsOneWidget);
+        await tester.tap(find.widgetWithText(TextButton, 'Close').last);
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(TextButton, 'Close'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ActivityLogDialog), findsNothing);
+      } finally {
+        await stop(tester);
+        await tester.runAsync(() async {
+          await data.trial.close();
+          await data.trial.root.delete(recursive: true);
+        });
+      }
+    },
+  );
+
+  testWidgets(
+    'Food recovery banner skips in-flight save but retains failed retry',
+    (tester) async {
+      final data = (await tester.runAsync(unifiedFixture))!;
+      final folder = _HeldFoodAppend(data.trial.folder);
+      try {
+        await start(tester, data.profile, folder: folder);
+        final state = tester.state(find.byType(TasksPage)) as dynamic;
+        tester.widget<SectionMenu>(find.byType(SectionMenu)).onSelected!(true);
+        await host.ready(
+          tester,
+          () =>
+              find.byType(FoodInventoryPage).evaluate().isNotEmpty &&
+              !state.busy,
+        );
+        Future<void> addHeld({required bool fail}) async {
+          folder.gate = Completer<void>();
+          folder.entered = false;
+          folder.fail = fail;
+          Object? error;
+          var done = false;
+          final page = tester.widget<FoodInventoryPage>(
+            find.byType(FoodInventoryPage),
+          );
+          unawaited(
+            Future<void>.sync(
+                  () => page.onAdd(
+                    FoodDetails(
+                      name: fail ? 'Refused food' : 'Healthy food',
+                      expiry: '2027-03-01',
+                    ),
+                    1,
+                  ),
+                )
+                .catchError((Object e) {
+                  error = e;
+                })
+                .whenComplete(() => done = true),
+          );
+          await host.ready(tester, () => folder.entered, settle: false);
+          await tester.pump();
+          expect(state.busy, isTrue);
+          expect(find.byKey(const ValueKey('retry-food-save')), findsNothing);
+          folder.gate!.complete();
+          await host.ready(tester, () => done && !state.busy);
+          expect(error != null, fail);
+        }
+
+        await addHeld(fail: false);
+        expect(find.byKey(const ValueKey('retry-food-save')), findsNothing);
+        await addHeld(fail: true);
+        expect(find.byKey(const ValueKey('retry-food-save')), findsOneWidget);
+        expect(
+          state.pendingFoodCommand,
+          isNotNull,
+          reason: 'Failed save keeps its immutable receipt for recovery.',
+        );
+      } finally {
+        folder.gate = null;
+        await stop(tester);
+        await tester.runAsync(() async {
+          await data.trial.close();
+          await data.trial.root.delete(recursive: true);
+        });
+      }
+    },
+  );
 
   testWidgets(
     'host shares one history and Settings label survives clear/reopen without changing data effects',

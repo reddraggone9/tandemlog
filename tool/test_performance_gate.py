@@ -298,7 +298,10 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
         frozen=json.loads((PATH.parent/'original-action-ids-v1.json').read_text())['actions']
         self.assertEqual(len(frozen),146)
         self.assertTrue(set(frozen).issubset(coverage))
-        self.assertEqual(len(coverage),256)
+        self.assertEqual(len(coverage),257)
+        self.assertIn('activity.read.derive', coverage)
+        for values in limits['actionsBySize'].values():
+            self.assertEqual(values['activity.read.derive'], {'medianMs':15,'maxMs':30})
         products = {'food.product.' + name for name in (
             'edit','edit.undo','bulkEdit','bulkEdit.undo','merge','merge.undo',
             'addWithProduct','addWithProduct.undo','import.dryRun','import.commit',
@@ -531,7 +534,7 @@ class CalibratedInitialLimitTests(unittest.TestCase):
         opening=('startup.','agent.')
         for values in limits['actionsBySize'].values():
             ordinary={k:v for k,v in values.items() if not k.startswith(opening)}
-            self.assertEqual(len(ordinary),240)
+            self.assertEqual(len(ordinary),241)
             self.assertEqual(sum(k.startswith('startup.') for k in values),8)
             self.assertEqual(sum(k.startswith('agent.') for k in values),8)
             for bound in ordinary.values():

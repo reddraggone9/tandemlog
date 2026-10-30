@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 import 'package:tandemlog/agent/agent_workspace.dart' show agentTextEngine;
 import 'package:tandemlog/agent/cli.dart' show runCli;
 import 'package:tandemlog/application/food_undo_history.dart';
+import 'package:tandemlog/application/activity_log.dart';
 import 'package:tandemlog/application/workspace_session.dart';
 import 'package:tandemlog/application/task_text_session.dart';
 import 'package:tandemlog/application/text_save_command.dart';
@@ -1613,6 +1614,35 @@ Future<void> foodReadModels(
 }
 
 Future<void> readModels(Audit a) async {
+  final canonicalBefore = await a.inventory();
+  for (var rep = sampleStart; rep < sampleEnd; rep++) {
+    final entries = await a.measure(
+      'activity.read.derive',
+      rep,
+      () async => activityEntries(a.history.snapshot),
+      readOnly: true,
+    );
+    final published = a.history.snapshot.records
+        .where(
+          (r) => r.sequence <= (a.history.snapshot.published[r.writer] ?? 0),
+        )
+        .length;
+    require(entries.length == published, 'Activity published count differs');
+    require(
+      entries.map((e) => e.id).toSet().length == entries.length,
+      'Duplicate Activity identity',
+    );
+    for (var i = 1; i < entries.length; i++) {
+      require(
+        entries[i - 1].clock >= entries[i].clock,
+        'Activity time order differs',
+      );
+    }
+  }
+  require(
+    sameData(await a.inventory(), canonicalBefore),
+    'Activity derivation changed canonical history',
+  );
   final viewTime = ViewTime(
     instant: DateTime.utc(2026, 10, 22, 12),
     localZoneId: 'UTC',

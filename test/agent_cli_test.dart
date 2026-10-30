@@ -1,3 +1,6 @@
+@Timeout(Duration(minutes: 2))
+library;
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -21,6 +24,9 @@ import 'package:uuid/uuid.dart';
 /// In-process agent CLI against private synthetic workspaces; the packaged
 /// executable gets the same calls in the process smoke test.
 void main() {
+  // CLI tests repeatedly open/replay private profiles and spawn planning
+  // isolates. Hosted Windows has a thin 30s default margin; keep a finite
+  // integration-test allowance, independent of product performance budgets.
   late Directory root;
   late Map<String, String> env;
   setUpAll(() {

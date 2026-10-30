@@ -12,6 +12,7 @@ class FreeTextAutocomplete extends StatefulWidget {
     this.errorText,
     this.onChanged,
     this.onSelected,
+    this.onSubmitted,
     this.autofocus = false,
     this.matches,
   });
@@ -26,6 +27,9 @@ class FreeTextAutocomplete extends StatefulWidget {
   final ValueChanged<String>? onSelected;
   final bool autofocus;
 
+  /// Called on Enter only when no suggestion is being accepted.
+  final ValueChanged<String>? onSubmitted;
+
   /// Replaces the default case-insensitive containment match.
   final bool Function(String option, String text)? matches;
   @override
@@ -34,6 +38,7 @@ class FreeTextAutocomplete extends StatefulWidget {
 
 class _FreeTextAutocompleteState extends State<FreeTextAutocomplete> {
   final _focus = FocusNode();
+  bool _selectedOnSubmit = false;
   @override
   void dispose() {
     _focus.dispose();
@@ -44,7 +49,10 @@ class _FreeTextAutocompleteState extends State<FreeTextAutocomplete> {
   Widget build(BuildContext context) => Autocomplete<String>(
     textEditingController: widget.controller,
     focusNode: _focus,
-    onSelected: widget.onSelected,
+    onSelected: (value) {
+      _selectedOnSubmit = true;
+      widget.onSelected?.call(value);
+    },
     optionsBuilder: (value) =>
         !widget.enabled ||
             (value.composing.isValid && !value.composing.isCollapsed)
@@ -71,7 +79,17 @@ class _FreeTextAutocompleteState extends State<FreeTextAutocomplete> {
         errorMaxLines: 3,
       ),
       onChanged: widget.onChanged,
-      onSubmitted: (_) => submit(),
+      // A suggestion consumes Enter without completing the surrounding form.
+      // Keep keyboard/focus for its next Enter; successful form submission
+      // closes the dialog. Other autocomplete consumers retain default behavior.
+      onEditingComplete: widget.onSubmitted == null ? null : () {},
+      onSubmitted: (value) {
+        // RawAutocomplete owns Enter while an option is highlighted. Its
+        // onSelected callback must not also commit the surrounding dialog.
+        _selectedOnSubmit = false;
+        submit();
+        if (!_selectedOnSubmit) widget.onSubmitted?.call(value);
+      },
     ),
   );
 }

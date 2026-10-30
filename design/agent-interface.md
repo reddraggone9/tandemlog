@@ -245,7 +245,9 @@ must not be hidden by keeping an MCP session alive (section 9).
 The agent cannot undo another writer's actions (Food already enforces same-writer
 retraction; apply the same restriction to Tasks). The GUI's session toolbar Undo
 does not gain ownership of agent actions. People can edit them or ask the agent
-to undo them; browsable cross-writer audit/Undo remains outside this release.
+to undo them; browsable cross-writer audit was outside the agent-interface release.
+The separately commissioned read-only [Activity log](activity-log.md) supersedes
+that audit exclusion only; cross-writer Undo remains excluded.
 
 ## 7. Concurrency, versions, packaging
 
