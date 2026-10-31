@@ -5,8 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_editor.dart';
 import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/task_entry_area.dart';
+import 'package:tandemlog/presentation/sticky_task_group.dart';
+import 'package:tandemlog/presentation/tandemlog_theme.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 
 import '../integration_test/native_text_fixtures.dart';
@@ -20,6 +23,89 @@ void registerSelectionLayoutParityTests({
   Future<void> Function(WidgetTester, String)? capture,
 }) {
   host.nativeHostLibraryPath = Platform.environment['TANDEMLOG_TEXT_LIBRARY']!;
+  testWidgets(
+    'Food selection bar and Search stay pinned above scrolling rows',
+    (tester) async {
+      await mountFoodPane(tester, width: 390, state: _manyFoods());
+      final area = find.byKey(const ValueKey('food-entry-area'));
+      final list = find.byType(CustomScrollView);
+      final position = tester
+          .state<ScrollableState>(
+            find.descendant(of: list, matching: find.byType(Scrollable)).first,
+          )
+          .position;
+      final searching = tester.getRect(area);
+      position.jumpTo(500);
+      await tester.pump();
+      expect(tester.getRect(area), searching);
+      expect(find.byKey(const ValueKey('food-search')).hitTestable(), findsOne);
+      position.jumpTo(0);
+      await tester.pumpAndSettle();
+
+      await tester.longPress(find.text('Many beans 01').first);
+      await tester.pumpAndSettle();
+      expect(find.text('1 selected'), findsOneWidget);
+      final selected = tester.getRect(area);
+      final top = tester.getTopLeft(list).dy;
+      position.jumpTo(500);
+      await tester.pump();
+      expect(position.pixels, 500);
+      expect(tester.getRect(area), selected);
+      expect(selected.bottom, lessThanOrEqualTo(top));
+      expect(find.text('1 selected').hitTestable(), findsOneWidget);
+      expect(find.text('Edit').hitTestable(), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  for (final keyboard in [0.0, 340.0]) {
+    testWidgets(
+      'Food entry area and error fit at 200% text, keyboard $keyboard',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(390, 844);
+        tester.view.viewInsets = FakeViewPadding(bottom: keyboard);
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: tandemlogTheme(Brightness.dark),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(2)),
+              child: child!,
+            ),
+            home: FoodInventoryPage(
+              state: _manyFoods(),
+              workspaceIdentity: 'synthetic-pane-workspace',
+              error: List.filled(12, 'Food could not be saved.').join(' '),
+              now: () => DateTime(2026, 10, 15),
+              onAdd: (_, _) {},
+              onRemove: (_) {},
+              onRestore: (_) {},
+              onDetails: (_, _, _, _) {},
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('food-search')));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        final search = tester.getRect(
+          find.byKey(const ValueKey('food-search')),
+        );
+        final error = find.textContaining('Food could not be saved.');
+        expect(error.hitTestable(at: Alignment.topCenter), findsOneWidget);
+        final list = tester.getRect(find.byType(CustomScrollView));
+        expect(search.bottom, lessThanOrEqualTo(844 - keyboard));
+        expect(list.bottom, lessThanOrEqualTo(844 - keyboard));
+        expect(list.height, greaterThan(0));
+        expect(tester.getRect(error).top, greaterThanOrEqualTo(search.bottom));
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+
   for (final width in [390.0, 899.0, 900.0, 1400.0]) {
     final wide = width >= 900;
     for (final food in [false, true]) {
@@ -162,6 +248,23 @@ void registerSelectionLayoutParityTests({
           }
           await tester.pumpAndSettle();
           expect(compact(), !wide);
+          // Both sections keep the entry area outside the list's scroll view.
+          expect(
+            find.ancestor(
+              of: find.byType(TaskEntryArea),
+              matching: find.byType(CustomScrollView),
+            ),
+            findsNothing,
+          );
+          if (!food && width == 390) {
+            final heading = tester.widget<StickyTaskGroupHeading>(
+              find.byType(StickyTaskGroupHeading).first,
+            );
+            final box = tester.getRect(find.byKey(heading.headingKey!));
+            expect(box.left, 0);
+            expect(box.width, width);
+            expect(tester.getTopLeft(find.text(heading.title).first).dx, 16);
+          }
           if (wide) {
             expect(
               food ? find.byType(FoodEditor) : find.byType(TaskEditor),
@@ -541,3 +644,23 @@ void registerSelectionLayoutParityTests({
     await tester.pumpWidget(const SizedBox());
   });
 }
+
+FoodState _manyFoods() => projectFood([
+  for (var i = 1; i <= 40; i++)
+    FoodOperation(
+      id: '00000000-0000-4000-8000-000000000093:$i',
+      order: i,
+      action: FoodAction.add,
+      targets: ['00000000-0000-4000-8000-${i.toString().padLeft(12, '0')}'],
+      details: FoodDetails(
+        name: 'Many beans ${i.toString().padLeft(2, '0')}',
+        brand: 'Synthetic brand',
+        expiry: '2026-10-20',
+        size: '500 g',
+        location: 'Pantry',
+        estimated: true,
+      ),
+      contents: const Contents.fraction(1, 3),
+      createdAt: '2026-10-15T00:00:00Z',
+    ),
+]);

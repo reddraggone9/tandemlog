@@ -87,6 +87,98 @@ void main() {
     });
   }
 
+  Future<GlobalKey> pumpHeading(
+    WidgetTester tester, {
+    required String title,
+    required double width,
+    double inset = 0,
+    double scale = 1,
+  }) async {
+    final key = GlobalKey();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+          child: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: width,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverMainAxisGroup(
+                      slivers: [
+                        StickyTaskGroupHeading(
+                          title: title,
+                          headingKey: key,
+                          inset: inset,
+                        ),
+                        SliverList.list(
+                          children: const [SizedBox(height: 2000)],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    return key;
+  }
+
+  testWidgets('compact background spans the viewport; only the text is inset', (
+    tester,
+  ) async {
+    const title = 'Someday';
+    final key = await pumpHeading(tester, title: title, width: 390, inset: 16);
+    expect(tester.getRect(find.byKey(key)).left, 0);
+    expect(tester.getRect(find.byKey(key)).width, 390);
+    expect(tester.getTopLeft(find.text(title)).dx, 16);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('wide layouts keep their zero text inset', (tester) async {
+    const title = 'Someday';
+    final key = await pumpHeading(tester, title: title, width: 700);
+    expect(tester.getRect(find.byKey(key)).width, 700);
+    expect(tester.getTopLeft(find.text(title)).dx, 0);
+  });
+
+  testWidgets('a wrapped inset title keeps its measured extent', (
+    tester,
+  ) async {
+    const title = 'Wednesday · 2026-10-07';
+    await pumpHeading(tester, title: title, width: 780);
+    final painter = TextPainter(
+      text: TextSpan(
+        text: title,
+        style: Theme.of(tester.element(find.text(title))).textTheme.titleSmall,
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final singleLine = painter.height;
+    final natural = painter.width;
+    painter.dispose();
+    // Fits the full width but wraps once the inset narrows it: an extent
+    // measured over the full width would clip the second line.
+    final width = natural + 16;
+    final key = await pumpHeading(
+      tester,
+      title: title,
+      width: width,
+      inset: 16,
+    );
+    await tester.pump();
+    final text = tester.getSize(find.text(title));
+    expect(text.width, width - 32);
+    expect(text.height, greaterThan(singleLine));
+    expect(tester.getSize(find.byKey(key)).height, text.height + 20);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('heading wraps to its measured extent and has one header node', (
     tester,
   ) async {

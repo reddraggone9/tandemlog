@@ -5673,15 +5673,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         ),
                       ),
                     ),
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: compact ? 16 : 0),
-                    sliver: StickyTaskGroupHeading(
-                      headingKey: groupHeadingKeys.putIfAbsent(
-                        groupId(group),
-                        GlobalKey.new,
-                      ),
-                      title: groupTitle(group),
+                  StickyTaskGroupHeading(
+                    headingKey: groupHeadingKeys.putIfAbsent(
+                      groupId(group),
+                      GlobalKey.new,
                     ),
+                    title: groupTitle(group),
+                    inset: compact ? 16 : 0,
                   ),
                   SliverList.list(
                     children: [

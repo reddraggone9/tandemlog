@@ -41,8 +41,10 @@ only while the log is open and only when its admitted revision changes. Opening
 and scrolling need bounded visible-response review with realistic history growth;
 `activity.read.derive` is registered before measurement at 15ms median / 30ms
 maximum on all three matched-history shapes, using the unchanged ordinary
-paired-growth rules. No existing limit changes. Native first-visible, scrolling,
-details and incoming refresh must also be reviewed before acceptance.
+paired-growth rules. No existing limit changes. That label bounds derivation and
+sorting, which lazy rows don't. It doesn't bound what a person sees: native
+first-visible, scrolling, details and incoming refresh have no numeric budget and
+no timed gate, and must be reviewed natively before acceptance, on realistic history.
 
 ## Other next-release fixes
 

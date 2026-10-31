@@ -649,211 +649,217 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                 final rowInset = listConstraints.maxWidth < 600
                                     ? 0.0
                                     : 16.0;
-                                return CustomScrollView(
-                                  key: _inventoryKey,
-                                  controller: _scroll,
-                                  slivers: [
-                                    SliverToBoxAdapter(
-                                      child: Column(
-                                        children: [
-                                          TaskEntryArea(
-                                            selecting: selecting,
-                                            wideLayout: _wide,
-                                            editorOpen: _editorBuilder != null,
-                                            captureVisible: true,
-                                            selectionCount: selectedCount,
-                                            maximumSelectionCount:
-                                                visibleIds.length,
-                                            onClear: () =>
-                                                unawaited(_clearSelection()),
-                                            onEdit:
-                                                widget.busy ||
-                                                    pending ||
-                                                    selectedRows.isEmpty
-                                                ? null
-                                                : _editSelection,
-                                            capture: TextField(
-                                              key: const ValueKey(
-                                                'food-search',
-                                              ),
-                                              controller: search,
-                                              onChanged: _changeSearch,
-                                              decoration: InputDecoration(
-                                                labelText: 'Search food',
-                                                prefixIcon: const Icon(
-                                                  Icons.search,
+                                final actionError =
+                                    widget.error ?? _actionError;
+                                // Selection and Search stay above the list as
+                                // on Tasks; only the rows scroll under them.
+                                return Column(
+                                  children: [
+                                    TaskEntryArea(
+                                      key: const ValueKey('food-entry-area'),
+                                      selecting: selecting,
+                                      wideLayout: _wide,
+                                      editorOpen: _editorBuilder != null,
+                                      captureVisible: true,
+                                      selectionCount: selectedCount,
+                                      maximumSelectionCount: visibleIds.length,
+                                      onClear: () =>
+                                          unawaited(_clearSelection()),
+                                      onEdit:
+                                          widget.busy ||
+                                              pending ||
+                                              selectedRows.isEmpty
+                                          ? null
+                                          : _editSelection,
+                                      capture: TextField(
+                                        key: const ValueKey('food-search'),
+                                        controller: search,
+                                        onChanged: _changeSearch,
+                                        decoration: InputDecoration(
+                                          labelText: 'Search food',
+                                          prefixIcon: const Icon(Icons.search),
+                                          suffixIcon: search.text.isEmpty
+                                              ? null
+                                              : IconButton(
+                                                  tooltip: 'Clear food search',
+                                                  onPressed: _clearSearch,
+                                                  icon: const Icon(Icons.close),
                                                 ),
-                                                suffixIcon: search.text.isEmpty
-                                                    ? null
-                                                    : IconButton(
-                                                        tooltip:
-                                                            'Clear food search',
-                                                        onPressed: _clearSearch,
-                                                        icon: const Icon(
-                                                          Icons.close,
-                                                        ),
-                                                      ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (actionError != null)
+                                      // A long error at large text must not
+                                      // exhaust the space the list needs.
+                                      ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          maxHeight:
+                                              listConstraints.maxHeight / 3,
+                                        ),
+                                        child: SingleChildScrollView(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Text(
+                                              actionError,
+                                              style: TextStyle(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.error,
                                               ),
                                             ),
                                           ),
-                                          if (widget.error != null ||
-                                              _actionError != null)
-                                            Padding(
-                                              padding: const EdgeInsets.all(12),
-                                              child: Text(
-                                                widget.error ?? _actionError!,
-                                                style: TextStyle(
-                                                  color: Theme.of(
-                                                    context,
-                                                  ).colorScheme.error,
+                                        ),
+                                      ),
+                                    Expanded(
+                                      child: CustomScrollView(
+                                        key: _inventoryKey,
+                                        controller: _scroll,
+                                        slivers: [
+                                          if (runningLow.isNotEmpty) ...[
+                                            SliverPadding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: rowInset,
+                                              ),
+                                              sliver: SliverList.builder(
+                                                itemCount: runningLow.length,
+                                                itemBuilder: (_, index) =>
+                                                    _lowRow(
+                                                      runningLow[index],
+                                                      pending,
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                          if (inboxGroups.isNotEmpty) ...[
+                                            const SliverToBoxAdapter(
+                                              child: Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                  16,
+                                                  4,
+                                                  16,
+                                                  8,
                                                 ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Inbox',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 4),
+                                                    Text(
+                                                      'Add an expiration date to move food out of Inbox.',
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            SliverPadding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: rowInset,
+                                              ),
+                                              sliver: SliverList.builder(
+                                                itemCount: inboxGroups.length,
+                                                itemBuilder: (_, index) =>
+                                                    _group(inboxGroups[index]),
+                                              ),
+                                            ),
+                                          ],
+                                          if ((inboxGroups.isNotEmpty ||
+                                                  runningLow.isNotEmpty) &&
+                                              groups.isNotEmpty)
+                                            const SliverToBoxAdapter(
+                                              child: Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                  16,
+                                                  12,
+                                                  16,
+                                                  8,
+                                                ),
+                                                child: Text(
+                                                  'Stock',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          if (groups.isEmpty &&
+                                              runningLow.isEmpty &&
+                                              inboxGroups.isEmpty &&
+                                              deletedGroups.isEmpty)
+                                            SliverFillRemaining(
+                                              hasScrollBody: false,
+                                              child: Center(
+                                                child: Text(
+                                                  querying
+                                                      ? 'No matching food'
+                                                      : switch (view) {
+                                                          FoodView.inventory =>
+                                                            'No food in stock',
+                                                          FoodView.inbox =>
+                                                            'Everything has an expiration date',
+                                                          FoodView.retained =>
+                                                            'No retained food',
+                                                          FoodView.runningLow =>
+                                                            'No matching food',
+                                                          FoodView.deleted =>
+                                                            'No deleted containers',
+                                                        },
+                                                ),
+                                              ),
+                                            )
+                                          else if (groups.isNotEmpty)
+                                            SliverPadding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                rowInset,
+                                                0,
+                                                rowInset,
+                                                16,
+                                              ),
+                                              sliver: SliverList.builder(
+                                                itemCount: groups.length,
+                                                itemBuilder: (_, index) =>
+                                                    _group(groups[index]),
+                                              ),
+                                            ),
+                                          if (deletedGroups.isNotEmpty)
+                                            SliverPadding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                rowInset,
+                                                0,
+                                                rowInset,
+                                                16,
+                                              ),
+                                              sliver: SliverMainAxisGroup(
+                                                slivers: [
+                                                  StickyTaskGroupHeading(
+                                                    title: 'Deleted',
+                                                    headingKey: const ValueKey(
+                                                      'food-deleted-heading',
+                                                    ),
+                                                    inset: rowInset == 0
+                                                        ? 16
+                                                        : 0,
+                                                  ),
+                                                  SliverList.builder(
+                                                    itemCount:
+                                                        deletedGroups.length,
+                                                    itemBuilder: (_, index) =>
+                                                        _group(
+                                                          deletedGroups[index],
+                                                        ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                         ],
                                       ),
                                     ),
-                                    if (runningLow.isNotEmpty) ...[
-                                      SliverPadding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: rowInset,
-                                        ),
-                                        sliver: SliverList.builder(
-                                          itemCount: runningLow.length,
-                                          itemBuilder: (_, index) => _lowRow(
-                                            runningLow[index],
-                                            pending,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    if (inboxGroups.isNotEmpty) ...[
-                                      const SliverToBoxAdapter(
-                                        child: Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                            16,
-                                            4,
-                                            16,
-                                            8,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Inbox',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                'Add an expiration date to move food out of Inbox.',
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SliverPadding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: rowInset,
-                                        ),
-                                        sliver: SliverList.builder(
-                                          itemCount: inboxGroups.length,
-                                          itemBuilder: (_, index) =>
-                                              _group(inboxGroups[index]),
-                                        ),
-                                      ),
-                                    ],
-                                    if ((inboxGroups.isNotEmpty ||
-                                            runningLow.isNotEmpty) &&
-                                        groups.isNotEmpty)
-                                      const SliverToBoxAdapter(
-                                        child: Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                            16,
-                                            12,
-                                            16,
-                                            8,
-                                          ),
-                                          child: Text(
-                                            'Stock',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    if (groups.isEmpty &&
-                                        runningLow.isEmpty &&
-                                        inboxGroups.isEmpty &&
-                                        deletedGroups.isEmpty)
-                                      SliverFillRemaining(
-                                        hasScrollBody: false,
-                                        child: Center(
-                                          child: Text(
-                                            querying
-                                                ? 'No matching food'
-                                                : switch (view) {
-                                                    FoodView.inventory =>
-                                                      'No food in stock',
-                                                    FoodView.inbox =>
-                                                      'Everything has an expiration date',
-                                                    FoodView.retained =>
-                                                      'No retained food',
-                                                    FoodView.runningLow =>
-                                                      'No matching food',
-                                                    FoodView.deleted =>
-                                                      'No deleted containers',
-                                                  },
-                                          ),
-                                        ),
-                                      )
-                                    else if (groups.isNotEmpty)
-                                      SliverPadding(
-                                        padding: EdgeInsets.fromLTRB(
-                                          rowInset,
-                                          0,
-                                          rowInset,
-                                          16,
-                                        ),
-                                        sliver: SliverList.builder(
-                                          itemCount: groups.length,
-                                          itemBuilder: (_, index) =>
-                                              _group(groups[index]),
-                                        ),
-                                      ),
-                                    if (deletedGroups.isNotEmpty)
-                                      SliverPadding(
-                                        padding: EdgeInsets.fromLTRB(
-                                          rowInset,
-                                          0,
-                                          rowInset,
-                                          16,
-                                        ),
-                                        sliver: SliverMainAxisGroup(
-                                          slivers: [
-                                            SliverPadding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: rowInset == 0
-                                                    ? 16
-                                                    : 0,
-                                              ),
-                                              sliver:
-                                                  const StickyTaskGroupHeading(
-                                                    title: 'Deleted',
-                                                    headingKey: ValueKey(
-                                                      'food-deleted-heading',
-                                                    ),
-                                                  ),
-                                            ),
-                                            SliverList.builder(
-                                              itemCount: deletedGroups.length,
-                                              itemBuilder: (_, index) =>
-                                                  _group(deletedGroups[index]),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                   ],
                                 );
                               },

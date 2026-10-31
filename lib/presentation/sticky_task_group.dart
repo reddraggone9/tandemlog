@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// A single native pinned heading, scoped by its surrounding SliverMainAxisGroup.
@@ -8,10 +10,15 @@ class StickyTaskGroupHeading extends StatelessWidget {
     super.key,
     required this.title,
     this.headingKey,
+    this.inset = 0,
   });
 
   final String title;
   final Key? headingKey;
+
+  /// Horizontal inset of the text only. The opaque background always spans the
+  /// sliver, so edge-to-edge rows scrolling under it never show at its sides.
+  final double inset;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +27,14 @@ class StickyTaskGroupHeading extends StatelessWidget {
     final scaler = MediaQuery.textScalerOf(context);
     return SliverLayoutBuilder(
       builder: (context, constraints) {
-        final painter = TextPainter(
-          text: TextSpan(text: title, style: style),
-          textDirection: direction,
-          textScaler: scaler,
-        )..layout(maxWidth: constraints.crossAxisExtent);
+        final painter =
+            TextPainter(
+              text: TextSpan(text: title, style: style),
+              textDirection: direction,
+              textScaler: scaler,
+            )..layout(
+              maxWidth: math.max(0, constraints.crossAxisExtent - inset * 2),
+            );
         final extent = painter.height + 20;
         painter.dispose();
         return SliverPersistentHeader(
@@ -35,7 +45,7 @@ class StickyTaskGroupHeading extends StatelessWidget {
               key: headingKey,
               color: Theme.of(context).scaffoldBackgroundColor,
               child: Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 4),
+                padding: EdgeInsets.fromLTRB(inset, 16, inset, 4),
                 child: Semantics(
                   header: true,
                   child: Text(title, style: style),

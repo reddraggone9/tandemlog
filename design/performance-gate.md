@@ -570,3 +570,27 @@ growth bounds remain byte-value unchanged. It does not time first paint, scrolli
 details or incoming-history visible refresh; native workflows must assess these.
 No work runs while the dialog is closed. No physical occurrence/skew correction
 or missing actor-user reconstruction is claimed.
+
+### Next-release reference failure (request d8874dea, 2026-10-31)
+
+The first qualification of `de6636d` failed on timing alone: dense-food
+`agent.write.taskComplete` median 504.969 ms against 500, and Task-growth maxima
+`converted.task.bulkDelete.undo` 36.562 against 36.0954 and
+`food.product.bulkEdit.undo` 19.656 against 19.4984. Budgets are unchanged and the
+failure stands. None of the disk-stall resample, official rerun, borderline or
+noise-retry rules applies.
+
+No source cause was found, so no optimization was made. No code in the three failing
+paths changed since the last qualified source. The host was busy before and during
+this run: quiet admission recorded load 2.49 and CPU PSI avg10 1.46 where every earlier
+admission recorded avg10 0.00, and PSI over each attempt was 8–10× earlier runs, from a
+desktop session that the gate's sibling-service evidence can't see. Interleaved
+diagnostic runs afterwards (non-qualifying, same caps, q1 fixture, that load still
+present) put `agent.write.taskComplete` at 480–512 ms on the last qualified source and
+503–517 ms on this one, with no consistent source effect across the other agent labels,
+and neither growth miss reproduced (maxima about 21.6 and 12.5 ms). That the load caused
+the miss is likely but unproven, since the load was not removed and re-measured.
+
+Even on a quiet host the label has only about 5% headroom (475.6 ms at `e212575`). If a
+quiet-host qualification also misses it, treat that as a repeatable miss: the remaining
+cost is the shared warm open and close seal, not the command.
