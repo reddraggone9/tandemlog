@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "8993c1aaa0b86d74a92b80eb91f5b8df",
-  "issuedAtUTC": "2026-10-31T09:25:41.243578+00:00",
-  "sourceRevision": "22baa2c26b93c9519482080040a67cbfc245c57a",
+  "requestId": "eaab6c53cfdd16af1cb104dbdfe4634a",
+  "issuedAtUTC": "2026-10-31T21:14:01.312259+00:00",
+  "sourceRevision": "ccbac1eb282670a725615fc6f27ab2bf450ae2bf",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "597476b6aa2405e8da4ede3d3f529384b3a98cc76f9f6a085c2f77613da7f9cc",
+    "sha256": "59c446d59573c1639e4cc4deb65ef6cd318562e2c4bb3b8e2eab66a37a7bf97c",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -49,7 +49,7 @@
         "mode": "100644"
       },
       ".github/workflows/validate.yml": {
-        "sha256": "79bc0c0c272a4ba4a72b15486eae2ab819d93fde674d37b577d04c25be8e3f1e",
+        "sha256": "31b4bfcfd8045645ccf71fd87a959e7f32ec65790788ac564061f1d963b13a9b",
         "mode": "100644"
       },
       ".github/workflows/windows-widget-qa.yml": {
@@ -821,7 +821,7 @@
         "mode": "100644"
       },
       "integration_test/header_selection_test.dart": {
-        "sha256": "05bafd675b6034e954ed835fa5480f72b662a7056729d8d3520760f206f03473",
+        "sha256": "0db3648fd629041db5998c795b47145b3df6c617aa9e8e7ef191304ca41db413",
         "mode": "100644"
       },
       "integration_test/historical_checklist_recompletion_test.dart": {
@@ -1205,7 +1205,7 @@
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "6e5140ac5e85706b9e2dc64763c651b0a5b3837ed67cfa3a522b35b2750de080",
+        "sha256": "5b4ba3a972bda75d077493933fc7f439e7d83874f79caa2620a7663a08f4e909",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1321,7 +1321,7 @@
         "mode": "100644"
       },
       "lib/presentation/sticky_task_group.dart": {
-        "sha256": "10d05cfd033d160f461a48f44e4681cc436b50f5176d85a3e5a93ded66005e52",
+        "sha256": "b95af64bda5b0ef34a56b49620989dee1bd51e9de2a50f64b8f40dbe0dcef1d7",
         "mode": "100644"
       },
       "lib/presentation/tag_filter_picker.dart": {
@@ -2747,7 +2747,7 @@
         "mode": "100644"
       },
       "test/selection_layout_parity_test.dart": {
-        "sha256": "51953ebceca5ef0ff005014d624510d9b03b049f6c3bfd02f098f9adae34cd72",
+        "sha256": "eeb3e71e73a31f47cb424b4fc7ae50fc93e3131cfe5f255067dd1a6f8c52dd63",
         "mode": "100644"
       },
       "test/semantic_history_observation_test.dart": {
@@ -3043,7 +3043,7 @@
         "mode": "100644"
       },
       "test/unified_host_test.dart": {
-        "sha256": "62f7c32cf86851af626ad98328a39d9c069c213d512e691ffb29d1510b3897d2",
+        "sha256": "512c9eb6a8807e97cb2b1e5170c1c7fba2dbdffcf8ab43a62cca45e6be2118fa",
         "mode": "100644"
       },
       "test/unified_projection_atomicity_test.dart": {
@@ -3223,11 +3223,7 @@
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
-        "sha256": "abc514482820006fc4b4418e548b343ff61720c7fd724272460b97b48803d737",
-        "mode": "100644"
-      },
-      "tool/performance/borderline.py": {
-        "sha256": "654f16cac87a8e7e3767b83f586284285f5ca53d3fcd260b2f8fa9c4d2f1e04b",
+        "sha256": "3f7753fee0bdfda56d8ab7a690d291e4c2f7ff02a143b58aa7bfd1855c08add2",
         "mode": "100644"
       },
       "tool/performance/cost_trace.dart": {
@@ -3235,11 +3231,7 @@
         "mode": "100644"
       },
       "tool/performance/coverage-v1.json": {
-        "sha256": "08d5e5081d4907889b5904e9b2abc3d9bf4c999d996d34a840fc0a0ad2ed9852",
-        "mode": "100644"
-      },
-      "tool/performance/disk_stall.py": {
-        "sha256": "dcd9c19b9ec24f4cbc560f4281684e43b64b14b80f3ea41adddc0ca328ee985f",
+        "sha256": "410c9601f70d8a7b633b6d5d7fc7c196a3871d470a4d3dfaf1c553c22e1454c7",
         "mode": "100644"
       },
       "tool/performance/food_tail_diagnostic.dart": {
@@ -3247,11 +3239,11 @@
         "mode": "100644"
       },
       "tool/performance/gate_policy.py": {
-        "sha256": "77c93de9b49f5aa002d3adf32e405ad16807d4a6310c2f6112791e02c4be6320",
+        "sha256": "60a6da7a28a54f87cbb7c189aa37d2799dce04e333db6e06ae2c6220059c131e",
         "mode": "100644"
       },
       "tool/performance/limits-v1.json": {
-        "sha256": "553896b3b7a474291785519d64fdcaf0bbe105a47b8713156f7b336f11fd6b89",
+        "sha256": "142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8",
         "mode": "100644"
       },
       "tool/performance/operation_diagnostics.dart": {
@@ -3262,16 +3254,12 @@
         "sha256": "9983b285eef9d661f83c8c2df1fb7240f0dff83a30fe8ee4e554020b8a23e04e",
         "mode": "100644"
       },
-      "tool/performance/owner_override.py": {
-        "sha256": "d4461f450a6650690c03098df03d55bcaf1d9e6c71935714de55df8a0a7a5c6f",
-        "mode": "100644"
-      },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "072e558e9312a6ca3af84404df2ae02170e18c547426eb5ef45a7ac50b6df47d",
+        "sha256": "364c1e67d6eed627606b59dc608239a800f97f6f461586d0bd474739b91224bd",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
-        "sha256": "eea52e947627b72999c300ad3b81393322f499096c23cb580a2c23c4a5503dc4",
+        "sha256": "d9079023c476815b101ffb90e66a2023c6d312ba9f15e5de2b580c73820834b1",
         "mode": "100644"
       },
       "tool/performance/run_ci.sh": {
@@ -3279,7 +3267,7 @@
         "mode": "100644"
       },
       "tool/performance/run_gate.py": {
-        "sha256": "b6d952805f9927f96207c8df84127874786ba800b0698f9e848311f0d884101a",
+        "sha256": "ac415682f11b36d7087f12cb030d0dee246d0173ee1bc4cf6137504df4c29637",
         "mode": "100644"
       },
       "tool/performance/run_linux_action_probe.py": {
@@ -3322,20 +3310,12 @@
         "sha256": "2f76f327a1bdeae47534f9fe4e45ab7b68c0b58ca19d2719399c13c3d085a4c6",
         "mode": "100644"
       },
-      "tool/test_borderline_performance.py": {
-        "sha256": "d9c962386629d08b8441cf7426a81445201f49dc50549c237384166c8ddb8735",
-        "mode": "100644"
-      },
       "tool/test_collect_linux_core_stacks.py": {
         "sha256": "9849d643e50c52f176fabe025ce95d2f5b09b68f669736f363f276233eb3f23c",
         "mode": "100644"
       },
       "tool/test_diagnose_linux_close.py": {
         "sha256": "fc47a656d2078f25606d03f81d3931baaede79d9ec54d516423c0a4c13d945fa",
-        "mode": "100644"
-      },
-      "tool/test_disk_stall_resample.py": {
-        "sha256": "5d78102e90de09a42fd4ba8375714808f25796ebd09a876e6f6a7156e686aff5",
         "mode": "100644"
       },
       "tool/test_draft_release.py": {
@@ -3378,16 +3358,12 @@
         "sha256": "78ebe9f440f1a3e811a28b2e6d2e258e74ea1773d3b1a04d879f307c77ddd876",
         "mode": "100644"
       },
-      "tool/test_owner_override.py": {
-        "sha256": "b874d3a6e88de6f062a04ef393cd8f29ff64959d8436d21faee31e06a9c3e45c",
-        "mode": "100644"
-      },
       "tool/test_performance_child_cleanup.py": {
         "sha256": "8f5d1f3cea34533e63e5b9350740a1e08cca3c6a81f771821817cae97558b50a",
         "mode": "100644"
       },
       "tool/test_performance_gate.py": {
-        "sha256": "c9d0d0baf6b41066e1a35d63ec1291a58712e57b1a72496599ace28abada0457",
+        "sha256": "8562800d79f88f5775e4eef3b9d7cc42ce1bcff18bd25bfaf532f4aa0a823c7b",
         "mode": "100644"
       },
       "tool/test_publish_inventory.py": {
@@ -3398,8 +3374,12 @@
         "sha256": "cda3f01ce5d993ce06772e37f60a93173b8a926a9c2d3dffd25bd36c4f0efc5a",
         "mode": "100644"
       },
+      "tool/test_reference_history.py": {
+        "sha256": "e4aad071257075a8b8b72897dd452c5da190dbcbc07f8ece831985aecdd24cdc",
+        "mode": "100644"
+      },
       "tool/test_reference_performance.py": {
-        "sha256": "9ce3c7e40ef05a3e8118f44aeff505d3e4205ac5fcf70b7fbbe9acfcc25a0e8e",
+        "sha256": "3ace44ccec5b2c3f75a256b4ca1daecc0d834cd4c63015f9b3b733d7f3281d09",
         "mode": "100644"
       },
       "tool/test_release_gates.py": {
@@ -3408,6 +3388,10 @@
       },
       "tool/test_resolved_text_capability.py": {
         "sha256": "98105d59a6ee25116c809f89ffb2764170c5bb7f8527738a93b8c00a08b3196c",
+        "mode": "100644"
+      },
+      "tool/test_single_sample_gate.py": {
+        "sha256": "161fa7268b37ee5a3b0307fc14d1c5efa9d345c9c90793fb85f685995e184bdb",
         "mode": "100644"
       },
       "tool/test_startup_diagnostics.py": {
@@ -3556,7 +3540,7 @@
       }
     }
   },
-  "hostProfileSHA256": "072e558e9312a6ca3af84404df2ae02170e18c547426eb5ef45a7ac50b6df47d",
-  "controllerSHA256": "3ac194c97515ae4dda05279be7564b2a046bba21778e4f1295c9c019387d6708",
-  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-activity-20261030/controller/controller_r7.py"
+  "hostProfileSHA256": "364c1e67d6eed627606b59dc608239a800f97f6f461586d0bd474739b91224bd",
+  "controllerSHA256": "14bd4b690d9b3a7ce3b12f13b073234b448ffd53d8a665c4090cb0bfafa3f105",
+  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-gate-verifier-fix-20261031/controller/controller_r7.py"
 }

@@ -437,3 +437,11 @@ official rerun q5 `1055af47`, on maxima only (for example q5's effective
 `food.product.bulkEdit.undo` 23.869ms against 20ms; its median 11.278ms passed). Both remain failed
 and unsealed, with their causal diagnoses retained by the executor. Those results led to the gate
 rule; a later qualification of changed source under it does not relabel them.
+
+Source `ccbac1e` (identity `59c446d5`) is qualified by q6 request `eaab6c53cfdd16af1cb104dbdfe4634a`,
+the first qualification under `single-sample-confirm-v1`. Eight of 771 first-pass labels missed: `dense-2:writer300.refresh.tasks.unchanged`,
+`dense-food:agent.write.taskComplete` (504.287ms against 500) and six `food-own-history` growth labels on the
+dense-food large side. All eight cleared their one fresh-process rerun, so no label failed twice.
+`dense-food:agent.write.textEdit` passed first (495.931ms) and went over in a rerun (510.526ms); the rule records
+that and does not judge it. The dense-food agent writes have almost no margin against 500ms and a repeat could
+fail with no code change; the six growth misses remain unexplained. The earlier q3 bundle is kept as `retained-8993c1aa`.
