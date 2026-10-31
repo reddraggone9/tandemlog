@@ -2,7 +2,8 @@
 
 Status: **accepted by Lee2026-10-25; implementation/qualification in progress**.
 Supersedes ADR0032's gate placement only. Its budgets,action/history coverage,
-correctness,source/fixture seals and bounded noise-retry policy remain unchanged.
+correctness and source/fixture seals remain mandatory. New timing results use the
+[current gate rule](../performance-gate.md#the-gate-rule-lee-2026-10-31); the original retry policy below is historical.
 
 ## Context and decision
 
@@ -90,7 +91,7 @@ failure and diagnostics stay retained. Alternatives rejected: unlimited reruns
 (retry-until-green), and requiring a source change for every unreproducible spike
 (forces meaningless churn). Revisit if official reruns become frequent, which
 would indicate a host-control problem rather than isolated noise. Details:
-[operating protocol](../performance-reference-qualification.md#official-rerun-after-non-reproduction).
+[operating protocol](../performance-reference-qualification.md#results-under-earlier-rules).
 
 ## Amendment 2026-10-31 — single sample with automatic confirmation
 

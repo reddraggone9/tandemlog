@@ -28,6 +28,15 @@ def family_of(action):
     return 'family-' + action.split('.')[0]
 
 
+def first_pass_log_bytes(rows, contract):
+    completion = {'measurement': 'broad-all-pass', 'fixtureSchemaVersion': contract['schemaVersion'],
+                  **{key: contract.get(key) for key in run_gate.FIXTURE_KEYS},
+                  'families': len({row['family'] for row in rows}),
+                  'warmups': 0, 'samples': 1, 'costDiagnosticsEnabled': False}
+    return ''.join(json.dumps(event) + '\n' for event in
+                   [*[{'measurement': 'broad-action', **row} for row in rows], completion]).encode()
+
+
 class AdvisoryPolicyTests(unittest.TestCase):
     def test_only_timing_can_be_advisory(self):
         yes = gate_policy.Evaluation('passed', (), {})
@@ -174,7 +183,7 @@ class ReceiptFixture(unittest.TestCase):
             self.report['attempts'].append({'size': size, 'attempt': 0, 'execution': execution.copy(), 'binding': binding,
                                            'result': result, 'status': decision.status,
                                            'failures': list(decision.failures), 'summaries': decision.summaries})
-            (self.bundle / (size + '-attempt-0.log')).write_bytes(self.log)
+            self.write_first_pass_log(self.report['attempts'][-1])
         for name, spec in run_gate.scaling_specs(self.limits).items():
             decision = gate_policy.evaluate_scaling(summaries, spec, fixtures)
             self.assertEqual(decision.status, 'passed')
@@ -189,6 +198,12 @@ class ReceiptFixture(unittest.TestCase):
                         'completedAtUTC': '2026-10-25T00:00:03Z', 'deadlineUTC': '2026-10-25T00:25:00Z', 'errors': []}
         (self.bundle / 'compile.log').write_bytes(self.log)
         self.refresh()
+
+    def write_first_pass_log(self, attempt):
+        log = self.bundle / (attempt['size'] + '-attempt-0.log')
+        log.write_bytes(first_pass_log_bytes(attempt['result']['observations'],
+                                           self.report['fixtures'][attempt['size']]['contract']))
+        attempt['execution']['logSHA256'] = receipt.digest(log)
 
     def commit(self):
         subprocess.run(['git', '-C', str(self.repo), 'add', '.'], check=True)
@@ -303,6 +318,7 @@ class ReferenceReceiptTests(ReceiptFixture):
 
     def test_bad_absolute_or_growth_result_cannot_be_relabelled_passed(self):
         self.report['attempts'][0]['result']['observations'][-1]['microseconds'] = 10000000
+        self.write_first_pass_log(self.report['attempts'][0])
         self.refresh()
         with self.assertRaisesRegex(ValueError, 'Absolute'):
             self.verify()

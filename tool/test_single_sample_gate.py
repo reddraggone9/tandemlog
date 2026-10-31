@@ -176,6 +176,7 @@ class RunnerTests(unittest.TestCase):
                 patch('builtins.input', side_effect=AssertionError('The rule needs no manual step')), \
                 patch.object(run_gate, 'actual_resource_bounds', return_value=fixture.bounds):
             status = run_gate.main()
+        fixture.child_calls = calls
         reruns = [c for c in calls if c[1] == 'rerun-family']
         return status, json.loads((output / 'gate-result.json').read_text()), reruns, output, fixture
 
@@ -239,9 +240,11 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(report['confirmedFailures'], ['task-own-history:scaling:' + ACTION])
 
     def test_correctness_failure_is_terminal_with_no_rerun(self):
-        status, report, reruns, _, _ = self.run_gate(first={('dense-food', ACTION): SLOW}, child_failure='first-pass')
+        status, report, reruns, _, fixture = self.run_gate(first={('dense-food', ACTION): SLOW}, child_failure='first-pass')
         self.assertEqual(status, 1)
         self.assertEqual(reruns, [])
+        self.assertEqual(len(report['attempts']), 1)
+        self.assertEqual(sum(c[1] == 'run' for c in fixture.child_calls), 1)
         self.assertIn('terminal, no rerun', report['error'])
         self.assertNotIn('firstPassFailures', report)
 
@@ -309,10 +312,115 @@ class ReceiptTests(ReceiptFixture):
             decision = gate_policy.evaluate(item['result'], limits)
             item.update(status=decision.status, failures=list(decision.failures), summaries=decision.summaries)
             summaries[item['size']] = decision.summaries
+            self.write_first_pass_log(item)
         contracts = {s: v['contract'] for s, v in self.report['fixtures'].items()}
         for item in self.report['pairedScalingAttempts']:
             decision = gate_policy.evaluate_scaling(summaries, run_gate.scaling_specs(self.limits)[item['comparison']], contracts)
             item.update(status=decision.status, failures=list(decision.failures), comparisons=decision.summaries)
+
+    def test_valid_hashes_cannot_hide_first_pass_log_defects(self):
+        attempt = self.report['attempts'][0]
+        log = self.bundle / (attempt['size'] + '-attempt-0.log')
+        original = log.read_bytes()
+        events = [json.loads(line) for line in original.splitlines()]
+        changes = {
+            'empty': lambda e: [],
+            'absent': lambda e: e[-1:],
+            'partial': lambda e: e[1:],
+            'duplicate': lambda e: [e[0], *e],
+            'no-completion': lambda e: e[:-1],
+            'duplicate-completion': lambda e: [*e, e[-1]],
+            'completion-before-measurements': lambda e: [e[-1], *e[:-1]],
+            'timing': lambda e: [{**e[0], 'microseconds': SLOW}, *e[1:]],
+            'family': lambda e: [{**e[0], 'family': 'rewritten'}, *e[1:]],
+            'action': lambda e: [{**e[0], 'action': 'wrong'}, *e[1:]],
+            'index': lambda e: [{**e[0], 'index': 1}, *e[1:]],
+            'warmup': lambda e: [{**e[0], 'warmup': True}, *e[1:]],
+            'missing-sampling': lambda e: [*e[:-1], {k: v for k, v in e[-1].items() if k != 'samples'}],
+        }
+        for key, value in [('samples', 5), ('warmups', 2), ('rerunFamily', FAMILY),
+                           ('fixtureSchemaVersion', 99), ('baseHistoricalRecords', 999),
+                           ('actualPhysicalRecords', 999), ('growthKind', 'wrong'),
+                           ('families', 999), ('costDiagnosticsEnabled', True), ('samples', True)]:
+            changes['completion-' + key + str(value)] = lambda e, k=key, v=value: [*e[:-1], {**e[-1], k: v}]
+        for name, change in changes.items():
+            with self.subTest(name=name):
+                log.write_text(''.join(json.dumps(event) + '\n' for event in change(copy.deepcopy(events))))
+                attempt['execution']['logSHA256'] = receipt.digest(log)
+                self.refresh()  # All raw hashes AND the regenerated bundle inventory are valid.
+                with self.assertRaises(ValueError):
+                    self.verify()
+        log.write_bytes(original)
+        attempt['execution']['logSHA256'] = receipt.digest(log)
+        self.refresh()
+        self.assertTrue(self.verify()['referencePerformanceQualified'])
+
+    def test_every_first_pass_size_is_bound_to_its_log(self):
+        for attempt in self.report['attempts']:
+            with self.subTest(size=attempt['size']):
+                log = self.bundle / (attempt['size'] + '-attempt-0.log')
+                original = log.read_bytes()
+                events = [json.loads(line) for line in original.splitlines()]
+                events[0]['microseconds'] = SLOW
+                log.write_text(''.join(json.dumps(event) + '\n' for event in events))
+                attempt['execution']['logSHA256'] = receipt.digest(log)
+                self.refresh()
+                with self.assertRaisesRegex(ValueError, 'First-pass observations'):
+                    self.verify()
+                log.write_bytes(original)
+                attempt['execution']['logSHA256'] = receipt.digest(log)
+        self.refresh()
+
+    def test_report_family_rewrite_and_omitted_plan_cannot_hide_raw_miss(self):
+        self.miss('dense-food', ACTION)
+        for row in self.report['attempts'][-1]['result']['observations']:
+            if row['action'] == ACTION:
+                row.update(family='rewritten', microseconds=FAST)
+        # Copied absolute/growth decisions and plan are internally consistent,
+        # but their input is no longer the retained raw first pass.
+        logs = {p: p.read_bytes() for p in self.bundle.glob('*-attempt-0.log')}
+        hashes = [a['execution']['logSHA256'] for a in self.report['attempts']]
+        self.recompute({**self.limits, 'sha256': self.host['limitsSHA256']})
+        for p, data in logs.items():
+            p.write_bytes(data)
+        for a, h in zip(self.report['attempts'], hashes):
+            a['execution']['logSHA256'] = h
+        self.report.update(firstPassFailures=[], firstPassFailureCount=0, reruns=[],
+                           rerunJudgments=[], notJudgedOverBound=[], confirmedFailures=[])
+        self.refresh()
+        with self.assertRaisesRegex(ValueError, 'First-pass observations'):
+            self.verify()
+
+    def test_double_failure_to_pass_attack_is_rejected_before_export(self):
+        self.miss('dense-food', ACTION, rerun=SLOW)
+        with self.assertRaisesRegex(ValueError, 'Same label failed'):
+            self.verify()
+        logs = {p: p.read_bytes() for p in self.bundle.glob('*-attempt-0.log')}
+        hashes = [a['execution']['logSHA256'] for a in self.report['attempts']]
+        for a in self.report['attempts']:
+            for row in a['result']['observations']:
+                row['microseconds'] = FAST
+        self.recompute({**self.limits, 'sha256': self.host['limitsSHA256']})
+        for p, data in logs.items():
+            p.write_bytes(data)
+        for a, h in zip(self.report['attempts'], hashes):
+            a['execution']['logSHA256'] = h
+        for record in self.report['reruns']:
+            (self.bundle / run_gate.rerun_log_name(record['size'], record['family'])).unlink()
+        self.report.update(firstPassFailures=[], firstPassFailureCount=0, reruns=[],
+                           rerunJudgments=[], notJudgedOverBound=[], confirmedFailures=[])
+        self.refresh()
+        self.assertEqual(hashes, [receipt.digest(self.bundle / (a['size'] + '-attempt-0.log'))
+                                  for a in self.report['attempts']])
+        with self.assertRaisesRegex(ValueError, 'First-pass observations'):
+            self.verify()
+        output = self.repo / 'rejected-export'
+        command = ['reference_receipt.py', 'seal', '--repo', str(self.repo),
+                   '--request', str(self.bundle / 'request.json'), '--cleanup', str(self.bundle / 'cleanup.json'),
+                   '--run', str(self.bundle), '--output', str(output)]
+        with patch.object(sys, 'argv', command), self.assertRaisesRegex(ValueError, 'First-pass observations'):
+            receipt.main()
+        self.assertFalse(output.exists(), 'Invalid logs must be refused before any export')
 
     def test_miss_then_clean_rerun_qualifies_and_reports_the_first_pass(self):
         self.miss('dense-food', ACTION)

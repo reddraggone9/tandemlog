@@ -63,7 +63,7 @@ computed from the passing receipts' spread (one or two receipts give no usable
 spread; a wide one would loosen limits silently) and accepting any miss of
 passed source (retry-until-green). Revisit if borderline results recur on the
 same metric: that is a limit or scaling problem to fix, not noise. Details:
-[borderline result](../performance-reference-qualification.md#borderline-result-on-already-qualified-source).
+[borderline result](../performance-reference-qualification.md#results-under-earlier-rules).
 
 ## Amendment 2026-10-31 — single sample with automatic confirmation
 

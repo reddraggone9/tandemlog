@@ -287,8 +287,8 @@ a precedent. It accepts no native-visible,signing,candidate,release or live gate
 `verify` routes to the override only while `pubspec.yaml` is exactly that release;
 at any other version the directory is retained history and the ordinary verifier
 (plus any borderline bundle) runs. The override stays v1-identity bound. The
-borderline rule now covers this kind of case without an owner exception:under
-identity v2,q9's pass covers `dfb2260`,and q11 recomputes as borderline. A future override
+historical borderline rule covered this kind of case without an owner exception:under
+identity v2,q9's pass covers `dfb2260`,and q11 recomputed as borderline under that historical rule. A future override
 would need new code for the current result shape;`owner_override.py` left the tree with the
 rules it validated and remains in these releases' commits.
 

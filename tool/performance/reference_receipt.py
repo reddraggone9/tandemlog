@@ -335,9 +335,8 @@ def check_reference_toolchain(report, host):
     return normalized, rename
 
 
-def check_reruns(report, absolute, paired, limits, specs):
+def check_reruns(report, absolute, paired, limits, specs, results, log_root):
     """Recompute Lee's 2026-10-31 rule from the retained samples: plan, judgments and verdict."""
-    results = {a['size']: a['result'] for a in report['attempts']}
     labels = first_pass_failures(absolute, paired)
     need(report.get('firstPassFailures') == labels and report.get('firstPassFailureCount') == len(labels),
          'First-pass failures differ from the retained samples')
@@ -346,6 +345,7 @@ def check_reruns(report, absolute, paired, limits, specs):
     records = report.get('reruns')
     need(isinstance(records, list) and [(r.get('size'), r.get('family')) for r in records] == plan,
          'Reruns differ from the first-pass failures')
+    bound_rows = check_rerun_logs(Path(log_root), report)
     values = {}
     for record in records:
         size, family = record['size'], record['family']
@@ -354,9 +354,9 @@ def check_reruns(report, absolute, paired, limits, specs):
              execution.get('childGroupAbsent') is True, 'Incomplete rerun execution')
         need(record.get('fixtureManifestSHA256') == report['fixtures'][size]['manifestSHA256'],
              'Rerun ran on a different fixture')
-        need(valid_rerun_rows(record.get('observations'), family, [a for a, f in families[size].items() if f == family]),
+        need(valid_rerun_rows(bound_rows[(size, family)], family, [a for a, f in families[size].items() if f == family]),
              'Rerun samples differ from their family')
-        values.setdefault(size, {}).update({row['action']: row['microseconds'] / 1000 for row in record['observations']})
+        values.setdefault(size, {}).update({row['action']: row['microseconds'] / 1000 for row in bound_rows[(size, family)]})
     verdict = judge_reruns(absolute, paired, values, limits, specs)
     need(report.get('rerunJudgments') == verdict['judgments'] and
          report.get('notJudgedOverBound') == verdict['notJudgedOverBound'] and
@@ -365,9 +365,56 @@ def check_reruns(report, absolute, paired, limits, specs):
     return verdict
 
 
+def log_bound_first_pass(root, report, limits):
+    """Reconstruct first-pass inputs from raw logs, never from copied summaries.
+
+    Hashes bind retained bytes; equality below binds their meaning to the report.
+    Completion must occur exactly once, after all measurements, for the sealed
+    fixture and current sampling contract. Startup's untimed setup is retained
+    in the log but is not an action observation.
+    """
+    from run_gate import measurements, FIXTURE_KEYS
+    results = {}
+    for attempt in report['attempts']:
+        size = attempt['size']
+        log = Path(root) / (size + '-attempt-0.log')
+        need(digest(log) == attempt['execution']['logSHA256'], 'Missing/changed first-pass execution log')
+        rows, complete = measurements(log)
+        events = []
+        for line in log.read_text().splitlines():
+            try:
+                event = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(event, dict) and 'measurement' in event:
+                events.append(event)
+        completions = [event for event in events if event['measurement'] == 'broad-all-pass']
+        need(complete and len(completions) == 1 and events[-1] == completions[0],
+             'First-pass completion missing, repeated or not final')
+        completion = completions[0]
+        contract = report['fixtures'][size]['contract']
+        expected = {'fixtureSchemaVersion': contract['schemaVersion'],
+                    **{key: contract.get(key) for key in FIXTURE_KEYS},
+                    'warmups': limits['warmups'], 'samples': limits['samples'],
+                    'families': len({row['family'] for row in rows}), 'costDiagnosticsEnabled': False}
+        need(all(type(completion.get(key)) is type(value) and completion[key] == value
+                 for key, value in expected.items()) and completion.get('rerunFamily') is None,
+             'First-pass completion fixture/sampling/full-run contract differs')
+        result = {'size': size, 'correctnessPassed': True, 'limitsSHA256': limits['sha256'],
+                  'observations': rows}
+        need(result == attempt['result'], 'First-pass observations differ from retained log')
+        # Enforces absent/partial/duplicate measurements and exact sampling;
+        # family names are also required before they can determine a rerun plan.
+        need(evaluate(result, limits).status != 'correctness-failed', 'First-pass log coverage/sampling differs')
+        observation_families({size: result})
+        results[size] = result
+    return results
+
+
 def check_rerun_logs(root, report):
     """Bind each rerun's samples, family and fixture counts to its retained log."""
     from run_gate import measurements, completed_family_run, rerun_log_name, FIXTURE_KEYS
+    bound_rows = {}
     for record in report['reruns']:
         log = root / rerun_log_name(record['size'], record['family'])
         need(digest(log) == record['execution']['logSHA256'], 'Missing/changed rerun log')
@@ -376,6 +423,8 @@ def check_rerun_logs(root, report):
         need(complete and rows == record['observations'] and completed_family_run(log) ==
              {'family': record['family'], **{key: contract.get(key) for key in FIXTURE_KEYS}},
              'Rerun differs from its log')
+        bound_rows[(record['size'], record['family'])] = rows
+    return bound_rows
 
 
 def rerun_log_names(report):
@@ -383,7 +432,7 @@ def rerun_log_names(report):
     return [rerun_log_name(r['size'], r['family']) for r in report['reruns']]
 
 
-def validate_report(repo, report, request, host):
+def validate_report(repo, report, request, host, log_root):
     from run_gate import source_pins, scaling_specs, validate_project_imports
     repo = Path(repo).resolve()
     request_shape(request)
@@ -448,13 +497,14 @@ def validate_report(repo, report, request, host):
          all(type(p['attempt']) is int and p['attempt'] == 0 for p in report['pairedScalingAttempts']),
          'Missing/extra growth attempt')
     need({a['size'] for a in attempts} == set(contracts), 'Missing reference size')
+    results = log_bound_first_pass(log_root, report, limits)
     absolute, summaries = {}, {}
     for item in attempts:
         execution = item['execution']
         need(type(execution['exitCode']) is int and execution['exitCode'] == 0 and execution['childAbsent'] is True and execution.get('childGroupAbsent') is True,
              'Incomplete action execution')
         need(item['result'].get('size') == item['size'], 'Attempt size label differs')
-        decision = evaluate(item['result'], limits)
+        decision = evaluate(results[item['size']], limits)
         need(decision.status != 'correctness-failed' and decision.status == item['status'] and
              list(decision.failures) == item['failures'] and decision.summaries == item['summaries'],
              'Absolute correctness/coverage/summary differs')
@@ -470,7 +520,7 @@ def validate_report(repo, report, request, host):
              list(decision.failures) == item['failures'] and decision.summaries == item['comparisons'],
              'Growth correctness/rules/summary differs')
         paired[item['comparison']] = decision
-    verdict = check_reruns(report, absolute, paired, limits, specs)
+    verdict = check_reruns(report, absolute, paired, limits, specs, results, log_root)
     need(not verdict['confirmedFailures'], 'Same label failed its first pass and its rerun: ' +
          ', '.join(verdict['confirmedFailures']))
     bindings = [a['binding'] for a in attempts]
@@ -510,12 +560,11 @@ def verify_bundle(repo, directory):
         need(not path.is_absolute() and '..' not in path.parts and '\\' not in name and digest(root / path) == value,
              'Qualification member changed')
     report = read(root / 'gate-result.json')
-    result = validate_report(repo, report, request, host)
+    result = validate_report(repo, report, request, host, root)
     for label, item in [('compile', report['compile']),
                         *[(size + '-generate', value['generation']) for size, value in report['fixtures'].items()],
                         *[(a['size'] + '-attempt-' + str(a['attempt']), a['execution']) for a in report['attempts']]]:
         need(digest(root / (label + '.log')) == item['logSHA256'], 'Missing/changed execution log')
-    check_rerun_logs(root, report)
     for size, item in report['fixtures'].items():
         file = root / ('fixture-' + size) / 'fixture.json'
         need(digest(file) == item['manifestSHA256'] and read(file) == item['contract'], 'Fixture receipt changed')
@@ -577,7 +626,7 @@ def main():
         from run_gate import fixture_binding
         report = read(args.run / 'gate-result.json')
         request = read(args.request)
-        validate_report(args.repo, report, request, profile(args.repo))
+        validate_report(args.repo, report, request, profile(args.repo), args.run)
         need(digest(args.run / 'benchmark') == report['binarySHA256'] and os.access(args.run / 'benchmark', os.X_OK),
              'Compiled binary changed or is not executable before export')
         for size, value in report['fixtures'].items():
