@@ -58,12 +58,16 @@ void registerSelectionLayoutParityTests({
     },
   );
 
-  for (final keyboard in [0.0, 340.0]) {
+  for (final (height, width, keyboard) in [
+    (844.0, 390.0, 0.0),
+    (844.0, 390.0, 340.0),
+    (640.0, 320.0, 280.0),
+  ]) {
     testWidgets(
-      'Food entry area and error fit at 200% text, keyboard $keyboard',
+      'Food entry area and error fit at 200% text, ${width}x$height, keyboard $keyboard',
       (tester) async {
         tester.view.devicePixelRatio = 1;
-        tester.view.physicalSize = const Size(390, 844);
+        tester.view.physicalSize = Size(width, height);
         tester.view.viewInsets = FakeViewPadding(bottom: keyboard);
         addTearDown(tester.view.reset);
         await tester.pumpWidget(
@@ -97,9 +101,9 @@ void registerSelectionLayoutParityTests({
         final error = find.textContaining('Food could not be saved.');
         expect(error.hitTestable(at: Alignment.topCenter), findsOneWidget);
         final list = tester.getRect(find.byType(CustomScrollView));
-        expect(search.bottom, lessThanOrEqualTo(844 - keyboard));
-        expect(list.bottom, lessThanOrEqualTo(844 - keyboard));
-        expect(list.height, greaterThan(0));
+        expect(search.bottom, lessThanOrEqualTo(height - keyboard));
+        expect(list.bottom, lessThanOrEqualTo(height - keyboard));
+        expect(list.height, greaterThanOrEqualTo(48));
         expect(tester.getRect(error).top, greaterThanOrEqualTo(search.bottom));
         await tester.pumpWidget(const SizedBox());
       },

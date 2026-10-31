@@ -157,9 +157,10 @@ Future<void> verifyFoodViewReachability(
 
   await selectFoodView(tester, mode, input: input);
   await capture?.call('$prefix-initial');
+  // The list's own scroll view: an action error scrolls separately above it.
   final scrollable = find
       .descendant(
-        of: find.byType(FoodInventoryPage),
+        of: find.byType(CustomScrollView),
         matching: find.byWidgetPredicate(
           (widget) =>
               widget is Scrollable &&
@@ -177,7 +178,10 @@ Future<void> verifyFoodViewReachability(
     Finder target, {
     bool backwards = false,
     String? fragment,
+    Finder? within,
   }) async {
+    final surface = within ?? scrollable;
+    final visible = tester.getRect(surface);
     for (var attempt = 0; attempt < 60; attempt++) {
       if (target.evaluate().isNotEmpty) {
         var rect = tester.getRect(target);
@@ -207,15 +211,15 @@ Future<void> verifyFoodViewReachability(
               .reduce((a, b) => a.expandToInclude(b));
         }
         if ((fragment != null || target.hitTestable().evaluate().isNotEmpty) &&
-            rect.intersect(viewport).height >= rect.height - 0.5) {
+            rect.intersect(visible).height >= rect.height - 0.5) {
           return;
         }
       }
       // Use normal dragging within the actual viewport, not ensureVisible or
       // jumping a zero-height list to an off-screen widget.
       await tester.drag(
-        scrollable,
-        Offset(0, viewport.height * (backwards ? 0.2 : -0.2)),
+        surface,
+        Offset(0, visible.height * (backwards ? 0.2 : -0.2)),
       );
       await tester.pumpAndSettle();
     }
@@ -236,11 +240,18 @@ Future<void> verifyFoodViewReachability(
           .didExceedMaxLines,
       isFalse,
     );
-    await swipeTo(notice, fragment: text.substring(0, 20));
+    final surface = text == reachabilityError
+        ? find.ancestor(of: notice, matching: find.byType(Scrollable)).first
+        : null;
+    await swipeTo(notice, fragment: text.substring(0, 20), within: surface);
     await capture?.call(
       '$prefix-${text == inboxGuidance ? 'guidance' : 'notice'}-start-readable',
     );
-    await swipeTo(notice, fragment: text.substring(text.length - 20));
+    await swipeTo(
+      notice,
+      fragment: text.substring(text.length - 20),
+      within: surface,
+    );
     await capture?.call(
       '$prefix-${text == inboxGuidance ? 'guidance' : 'notice'}-end-readable',
     );
@@ -358,14 +369,10 @@ Future<void> verifyFoodViewReachability(
   expect(jsonEncode(state.containers.map((e) => e.toJson()).toList()), before);
   expect(tester.takeException(), isNull);
   if (mode == FoodView.inbox && textScale == 2 && !withError) {
+    // Search stays above the list, so the rows' scroll position can't hide it.
     final query = find.byKey(const ValueKey('food-search'));
-    await swipeTo(query, backwards: true);
-    await tester.ensureVisible(query);
-    await tester.pumpAndSettle();
     await tap(query);
     tester.view.viewInsets = const FakeViewPadding(bottom: 280);
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(query);
     await tester.pumpAndSettle();
     await capture?.call('$prefix-search-ime');
     expect(tester.takeException(), isNull);
@@ -376,10 +383,9 @@ Future<void> verifyFoodViewReachability(
     expect(tester.widget<EditableText>(editable).focusNode.hasFocus, isTrue);
     final available = tester.getRect(scrollable);
     final line = tester.getRect(editable);
-    expect(
-      line.intersect(available).height,
-      greaterThanOrEqualTo(line.height - 0.5),
-    );
+    expect(line.bottom, lessThanOrEqualTo(available.top));
+    expect(available.height, greaterThanOrEqualTo(48));
+    expect(available.bottom, lessThanOrEqualTo(640 - 280));
     await tester.enterText(query, 'Synthetic undated');
     await tester.pumpAndSettle();
     expect(

@@ -688,176 +688,228 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                         ),
                                       ),
                                     ),
-                                    if (actionError != null)
-                                      // A long error at large text must not
-                                      // exhaust the space the list needs.
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxHeight:
-                                              listConstraints.maxHeight / 3,
-                                        ),
-                                        child: SingleChildScrollView(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(12),
-                                            child: Text(
-                                              actionError,
-                                              style: TextStyle(
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.error,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
                                     Expanded(
-                                      child: CustomScrollView(
-                                        key: _inventoryKey,
-                                        controller: _scroll,
-                                        slivers: [
-                                          if (runningLow.isNotEmpty) ...[
-                                            SliverPadding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: rowInset,
-                                              ),
-                                              sliver: SliverList.builder(
-                                                itemCount: runningLow.length,
-                                                itemBuilder: (_, index) =>
-                                                    _lowRow(
-                                                      runningLow[index],
-                                                      pending,
-                                                    ),
-                                              ),
-                                            ),
-                                          ],
-                                          if (inboxGroups.isNotEmpty) ...[
-                                            const SliverToBoxAdapter(
-                                              child: Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  16,
-                                                  4,
-                                                  16,
-                                                  8,
+                                      child: LayoutBuilder(
+                                        builder: (context, below) => Column(
+                                          children: [
+                                            if (actionError != null)
+                                              // A long error at large text must
+                                              // leave the rows real space.
+                                              ConstrainedBox(
+                                                constraints: BoxConstraints(
+                                                  maxHeight:
+                                                      below.maxHeight / 3,
                                                 ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Inbox',
+                                                child: SingleChildScrollView(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          12,
+                                                        ),
+                                                    child: Text(
+                                                      actionError,
                                                       style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w700,
+                                                        color: Theme.of(
+                                                          context,
+                                                        ).colorScheme.error,
                                                       ),
                                                     ),
-                                                    SizedBox(height: 4),
-                                                    Text(
-                                                      'Add an expiration date to move food out of Inbox.',
+                                                  ),
+                                                ),
+                                              ),
+                                            Expanded(
+                                              child: CustomScrollView(
+                                                key: _inventoryKey,
+                                                controller: _scroll,
+                                                slivers: [
+                                                  if (runningLow
+                                                      .isNotEmpty) ...[
+                                                    SliverPadding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                rowInset,
+                                                          ),
+                                                      sliver: SliverList.builder(
+                                                        itemCount:
+                                                            runningLow.length,
+                                                        itemBuilder:
+                                                            (
+                                                              _,
+                                                              index,
+                                                            ) => _lowRow(
+                                                              runningLow[index],
+                                                              pending,
+                                                            ),
+                                                      ),
                                                     ),
                                                   ],
-                                                ),
-                                              ),
-                                            ),
-                                            SliverPadding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: rowInset,
-                                              ),
-                                              sliver: SliverList.builder(
-                                                itemCount: inboxGroups.length,
-                                                itemBuilder: (_, index) =>
-                                                    _group(inboxGroups[index]),
-                                              ),
-                                            ),
-                                          ],
-                                          if ((inboxGroups.isNotEmpty ||
-                                                  runningLow.isNotEmpty) &&
-                                              groups.isNotEmpty)
-                                            const SliverToBoxAdapter(
-                                              child: Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  16,
-                                                  12,
-                                                  16,
-                                                  8,
-                                                ),
-                                                child: Text(
-                                                  'Stock',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          if (groups.isEmpty &&
-                                              runningLow.isEmpty &&
-                                              inboxGroups.isEmpty &&
-                                              deletedGroups.isEmpty)
-                                            SliverFillRemaining(
-                                              hasScrollBody: false,
-                                              child: Center(
-                                                child: Text(
-                                                  querying
-                                                      ? 'No matching food'
-                                                      : switch (view) {
-                                                          FoodView.inventory =>
-                                                            'No food in stock',
-                                                          FoodView.inbox =>
-                                                            'Everything has an expiration date',
-                                                          FoodView.retained =>
-                                                            'No retained food',
-                                                          FoodView.runningLow =>
-                                                            'No matching food',
-                                                          FoodView.deleted =>
-                                                            'No deleted containers',
-                                                        },
-                                                ),
-                                              ),
-                                            )
-                                          else if (groups.isNotEmpty)
-                                            SliverPadding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                rowInset,
-                                                0,
-                                                rowInset,
-                                                16,
-                                              ),
-                                              sliver: SliverList.builder(
-                                                itemCount: groups.length,
-                                                itemBuilder: (_, index) =>
-                                                    _group(groups[index]),
-                                              ),
-                                            ),
-                                          if (deletedGroups.isNotEmpty)
-                                            SliverPadding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                rowInset,
-                                                0,
-                                                rowInset,
-                                                16,
-                                              ),
-                                              sliver: SliverMainAxisGroup(
-                                                slivers: [
-                                                  StickyTaskGroupHeading(
-                                                    title: 'Deleted',
-                                                    headingKey: const ValueKey(
-                                                      'food-deleted-heading',
-                                                    ),
-                                                    inset: rowInset == 0
-                                                        ? 16
-                                                        : 0,
-                                                  ),
-                                                  SliverList.builder(
-                                                    itemCount:
-                                                        deletedGroups.length,
-                                                    itemBuilder: (_, index) =>
-                                                        _group(
-                                                          deletedGroups[index],
+                                                  if (inboxGroups
+                                                      .isNotEmpty) ...[
+                                                    const SliverToBoxAdapter(
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                              16,
+                                                              4,
+                                                              16,
+                                                              8,
+                                                            ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Inbox',
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 4),
+                                                            Text(
+                                                              'Add an expiration date to move food out of Inbox.',
+                                                            ),
+                                                          ],
                                                         ),
-                                                  ),
+                                                      ),
+                                                    ),
+                                                    SliverPadding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                rowInset,
+                                                          ),
+                                                      sliver: SliverList.builder(
+                                                        itemCount:
+                                                            inboxGroups.length,
+                                                        itemBuilder:
+                                                            (
+                                                              _,
+                                                              index,
+                                                            ) => _group(
+                                                              inboxGroups[index],
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  if ((inboxGroups.isNotEmpty ||
+                                                          runningLow
+                                                              .isNotEmpty) &&
+                                                      groups.isNotEmpty)
+                                                    const SliverToBoxAdapter(
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                              16,
+                                                              12,
+                                                              16,
+                                                              8,
+                                                            ),
+                                                        child: Text(
+                                                          'Stock',
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  if (groups.isEmpty &&
+                                                      runningLow.isEmpty &&
+                                                      inboxGroups.isEmpty &&
+                                                      deletedGroups.isEmpty)
+                                                    SliverFillRemaining(
+                                                      hasScrollBody: false,
+                                                      child: Center(
+                                                        child: Text(
+                                                          querying
+                                                              ? 'No matching food'
+                                                              : switch (view) {
+                                                                  FoodView
+                                                                      .inventory =>
+                                                                    'No food in stock',
+                                                                  FoodView
+                                                                      .inbox =>
+                                                                    'Everything has an expiration date',
+                                                                  FoodView
+                                                                      .retained =>
+                                                                    'No retained food',
+                                                                  FoodView
+                                                                      .runningLow =>
+                                                                    'No matching food',
+                                                                  FoodView
+                                                                      .deleted =>
+                                                                    'No deleted containers',
+                                                                },
+                                                        ),
+                                                      ),
+                                                    )
+                                                  else if (groups.isNotEmpty)
+                                                    SliverPadding(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                            rowInset,
+                                                            0,
+                                                            rowInset,
+                                                            16,
+                                                          ),
+                                                      sliver:
+                                                          SliverList.builder(
+                                                            itemCount:
+                                                                groups.length,
+                                                            itemBuilder:
+                                                                (
+                                                                  _,
+                                                                  index,
+                                                                ) => _group(
+                                                                  groups[index],
+                                                                ),
+                                                          ),
+                                                    ),
+                                                  if (deletedGroups.isNotEmpty)
+                                                    SliverPadding(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                            rowInset,
+                                                            0,
+                                                            rowInset,
+                                                            16,
+                                                          ),
+                                                      sliver: SliverMainAxisGroup(
+                                                        slivers: [
+                                                          StickyTaskGroupHeading(
+                                                            title: 'Deleted',
+                                                            headingKey:
+                                                                const ValueKey(
+                                                                  'food-deleted-heading',
+                                                                ),
+                                                            inset: rowInset == 0
+                                                                ? 16
+                                                                : 0,
+                                                          ),
+                                                          SliverList.builder(
+                                                            itemCount:
+                                                                deletedGroups
+                                                                    .length,
+                                                            itemBuilder:
+                                                                (
+                                                                  _,
+                                                                  index,
+                                                                ) => _group(
+                                                                  deletedGroups[index],
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                 ],
                                               ),
                                             ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],

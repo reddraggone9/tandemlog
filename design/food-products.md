@@ -348,8 +348,8 @@ retention intent is recorded as an explicit question in
 
 Food's entry area sits above the list, outside its scroll view, as on Tasks (Lee,
 2026-10-31): Search and the narrow count/Clear/Edit bar stay put while rows scroll.
-An action error stays directly below it, scrolling within at most a third of the
-list's height so a long message at large text can't exhaust the rows' space.
+An action error stays directly below it, scrolling within at most a third of the space
+beneath it so a long message at large text can't exhaust the rows' space.
 
 A sticky group heading's opaque background spans the list's full width, with only
 its text inset on narrow layouts (Lee, 2026-10-31), so edge-to-edge rows scrolling
