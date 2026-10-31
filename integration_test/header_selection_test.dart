@@ -78,6 +78,36 @@ void registerHeaderSelectionTests() {
               if (e is File) e.path: base64Encode(await e.readAsBytes()),
           };
           final before = await contents();
+          final searchField = find.byKey(const ValueKey('task-search'));
+          await tester.tap(searchField);
+          await tester.pumpAndSettle();
+          final searchFocus = tester
+              .widget<EditableText>(
+                find.descendant(
+                  of: searchField,
+                  matching: find.byType(EditableText),
+                ),
+              )
+              .focusNode;
+          expect(searchFocus.hasFocus, isTrue);
+          await tester.drag(
+            find.byType(CustomScrollView).first,
+            const Offset(0, -100),
+          );
+          await tester.pumpAndSettle();
+          debugPrint('TASK_DRAG_SEARCH_FOCUS=${searchFocus.hasFocus}');
+          tester
+              .state<ScrollableState>(
+                find
+                    .descendant(
+                      of: find.byType(CustomScrollView).first,
+                      matching: find.byType(Scrollable),
+                    )
+                    .first,
+              )
+              .position
+              .jumpTo(0);
+          await tester.pumpAndSettle();
           await flows.openCaptureForTest(tester);
           final capture = find.widgetWithText(TextField, 'What needs doing?');
           await tester.enterText(
@@ -205,6 +235,10 @@ void registerHeaderSelectionTests() {
           expect(keyboardTarget.bottom, lessThanOrEqualTo(viewBefore.bottom));
           expect(keyboardTarget.left, greaterThanOrEqualTo(viewBefore.left));
           expect(keyboardTarget.right, lessThanOrEqualTo(viewBefore.right));
+          await captureNativeFixtureUi(
+            tester,
+            'task-keyboard-reveal-${variant.width.round()}-${variant.scale.round()}x',
+          );
           void expectStationarySelection(Rect row, double offset) {
             expect(tester.getRect(body(35)), row);
             expect(position.pixels, offset);

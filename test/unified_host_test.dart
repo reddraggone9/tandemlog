@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
+import '../integration_test/native_text_fixtures.dart'
+    show captureNativeFixtureUi;
 import 'package:tandemlog/presentation/activity_log.dart';
 import 'package:tandemlog/application/activity_log.dart';
 import 'package:flutter/material.dart';
@@ -165,73 +167,148 @@ void main() {
     },
   );
 
-  testWidgets(
-    'Food recovery banner skips in-flight save but retains failed retry',
-    (tester) async {
-      final data = (await tester.runAsync(unifiedFixture))!;
-      final folder = _HeldFoodAppend(data.trial.folder);
-      try {
-        await start(tester, data.profile, folder: folder);
-        final state = tester.state(find.byType(TasksPage)) as dynamic;
-        tester.widget<SectionMenu>(find.byType(SectionMenu)).onSelected!(true);
-        await host.ready(
-          tester,
-          () =>
-              find.byType(FoodInventoryPage).evaluate().isNotEmpty &&
-              !state.busy,
-        );
-        Future<void> addHeld({required bool fail}) async {
-          folder.gate = Completer<void>();
-          folder.entered = false;
-          folder.fail = fail;
-          Object? error;
-          var done = false;
-          final page = tester.widget<FoodInventoryPage>(
-            find.byType(FoodInventoryPage),
+  for (final (width, scale) in [(800.0, 1.0), (390.0, 2.0), (320.0, 2.0)]) {
+    testWidgets(
+      'Food recovery banner skips in-flight save but retains failed retry $width x$scale',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = Size(width, 850);
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final data = (await tester.runAsync(unifiedFixture))!;
+        final folder = _HeldFoodAppend(data.trial.folder);
+        try {
+          await start(tester, data.profile, folder: folder);
+          final state = tester.state(find.byType(TasksPage)) as dynamic;
+          tester.widget<SectionMenu>(find.byType(SectionMenu)).onSelected!(
+            true,
           );
-          unawaited(
-            Future<void>.sync(
-                  () => page.onAdd(
-                    FoodDetails(
-                      name: fail ? 'Refused food' : 'Healthy food',
-                      expiry: '2027-03-01',
+          await host.ready(
+            tester,
+            () =>
+                find.byType(FoodInventoryPage).evaluate().isNotEmpty &&
+                !state.busy,
+          );
+          Future<void> addHeld({required bool fail}) async {
+            folder.gate = Completer<void>();
+            folder.entered = false;
+            folder.fail = fail;
+            Object? error;
+            var done = false;
+            final page = tester.widget<FoodInventoryPage>(
+              find.byType(FoodInventoryPage),
+            );
+            unawaited(
+              Future<void>.sync(
+                    () => page.onAdd(
+                      FoodDetails(
+                        name: fail ? 'Refused food' : 'Healthy food',
+                        expiry: '2027-03-01',
+                      ),
+                      1,
                     ),
-                    1,
-                  ),
-                )
-                .catchError((Object e) {
-                  error = e;
-                })
-                .whenComplete(() => done = true),
-          );
-          await host.ready(tester, () => folder.entered, settle: false);
-          await tester.pump();
-          expect(state.busy, isTrue);
-          expect(find.byKey(const ValueKey('retry-food-save')), findsNothing);
-          folder.gate!.complete();
-          await host.ready(tester, () => done && !state.busy);
-          expect(error != null, fail);
-        }
+                  )
+                  .catchError((Object e) {
+                    error = e;
+                  })
+                  .whenComplete(() => done = true),
+            );
+            await host.ready(tester, () => folder.entered, settle: false);
+            await tester.pump();
+            expect(state.busy, isTrue);
+            expect(find.byKey(const ValueKey('retry-food-save')), findsNothing);
+            folder.gate!.complete();
+            await host.ready(tester, () => done && !state.busy);
+            expect(error != null, fail);
+          }
 
-        await addHeld(fail: false);
-        expect(find.byKey(const ValueKey('retry-food-save')), findsNothing);
-        await addHeld(fail: true);
-        expect(find.byKey(const ValueKey('retry-food-save')), findsOneWidget);
-        expect(
-          state.pendingFoodCommand,
-          isNotNull,
-          reason: 'Failed save keeps its immutable receipt for recovery.',
-        );
-      } finally {
-        folder.gate = null;
-        await stop(tester);
-        await tester.runAsync(() async {
-          await data.trial.close();
-          await data.trial.root.delete(recursive: true);
-        });
-      }
-    },
-  );
+          await addHeld(fail: false);
+          expect(find.byKey(const ValueKey('retry-food-save')), findsNothing);
+          await addHeld(fail: true);
+          expect(find.byKey(const ValueKey('retry-food-save')), findsOneWidget);
+          expect(
+            state.pendingFoodCommand,
+            isNotNull,
+            reason: 'Failed save keeps its immutable receipt for recovery.',
+          );
+          if (scale == 2) {
+            // Recover shared admission through the real UI; do not bypass its
+            // safety overlay or replay the unresolved immutable Food receipt.
+            folder.gate = null;
+            final pendingBytes = await tester.runAsync(
+              () => host.canonical(data.trial.folder),
+            );
+            await tester.tap(find.byKey(const ValueKey('retry-shared-read')));
+            await host.ready(
+              tester,
+              () => state.sharedSafetyError == null && !state.busy,
+            );
+            expect(
+              await tester.runAsync(() => host.canonical(data.trial.folder)),
+              pendingBytes,
+            );
+            final notice = find.byKey(const ValueKey('action-error-scroll'));
+            expect(notice, findsOneWidget);
+            final bar = find.ancestor(
+              of: notice,
+              matching: find.byType(Scrollbar),
+            );
+            expect(bar, findsOneWidget);
+            expect(tester.widget<Scrollbar>(bar).thumbVisibility, isTrue);
+            final scrollable = find.descendant(
+              of: notice,
+              matching: find.byType(Scrollable),
+            );
+            final position = tester.state<ScrollableState>(scrollable).position;
+            expect(position.maxScrollExtent, greaterThan(0));
+            final before = await tester.runAsync(
+              () => host.canonical(data.trial.folder),
+            );
+            await captureNativeFixtureUi(
+              tester,
+              'recovery-${width.round()}-200-start',
+            );
+            await tester.drag(notice, const Offset(0, -500));
+            await tester.pumpAndSettle();
+            expect(position.pixels, position.maxScrollExtent);
+            final copy = find.descendant(
+              of: notice,
+              matching: find.byType(Text),
+            );
+            expect(
+              tester.widget<Text>(copy).data,
+              contains('Retry to finish it.'),
+            );
+            expect(
+              tester.getRect(copy).bottom,
+              lessThanOrEqualTo(tester.getRect(notice).bottom + .1),
+            );
+            expect(
+              find.byKey(const ValueKey('retry-food-save')).hitTestable(),
+              findsOneWidget,
+            );
+            await captureNativeFixtureUi(
+              tester,
+              'recovery-${width.round()}-200-end',
+            );
+            expect(
+              await tester.runAsync(() => host.canonical(data.trial.folder)),
+              before,
+            );
+            expect(tester.takeException(), isNull);
+          }
+        } finally {
+          folder.gate = null;
+          await stop(tester);
+          await tester.runAsync(() async {
+            await data.trial.close();
+            await data.trial.root.delete(recursive: true);
+          });
+        }
+      },
+    );
+  }
 
   testWidgets(
     'host shares one history and Settings label survives clear/reopen without changing data effects',

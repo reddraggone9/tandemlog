@@ -210,6 +210,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       : (showCompleted ? taskView?.completed : taskView?.open) ?? [];
 
   final taskScroll = ScrollController();
+  final actionErrorScroll = ScrollController();
   final taskViewport = GlobalKey();
   Timer? dragScrollTimer;
   Offset? dragPointer;
@@ -2850,20 +2851,27 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             Expanded(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 120),
-                child: SingleChildScrollView(
-                  primary: false,
-                  key: const ValueKey('action-error-scroll'),
-                  child: Shortcuts(
-                    shortcuts: const {
-                      SingleActivator(LogicalKeyboardKey.arrowDown):
-                          ScrollIntent(direction: AxisDirection.down),
-                      SingleActivator(LogicalKeyboardKey.arrowUp): ScrollIntent(
-                        direction: AxisDirection.up,
+                child: Scrollbar(
+                  controller: actionErrorScroll,
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: actionErrorScroll,
+                    primary: false,
+                    key: const ValueKey('action-error-scroll'),
+                    child: Shortcuts(
+                      shortcuts: const {
+                        SingleActivator(LogicalKeyboardKey.arrowDown):
+                            ScrollIntent(direction: AxisDirection.down),
+                        SingleActivator(LogicalKeyboardKey.arrowUp):
+                            ScrollIntent(direction: AxisDirection.up),
+                      },
+                      child: Focus(
+                        key: const ValueKey('action-error-details'),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Text(error!),
+                        ),
                       ),
-                    },
-                    child: Focus(
-                      key: const ValueKey('action-error-details'),
-                      child: Text(error!),
                     ),
                   ),
                 ),
@@ -4437,6 +4445,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     requestedSection = null;
     _stopDragScroll();
     taskScroll.dispose();
+    actionErrorScroll.dispose();
     dragScrollTick.dispose();
     taskMenuRevision.dispose();
     importer?.dispose();

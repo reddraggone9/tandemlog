@@ -184,3 +184,7 @@ unchanged, and no new benchmark label is needed.
 ### Completion and stale selection (Lee 2026-10-30)
 
 A successfully completed Task leaves the selection, like a deleted Task; other selected rows remain. The last completion ends selection mode. An undisplayed selection editor is released first, so its completed-task snapshot cannot become a modal when selection ends. A subsequent selection gesture drops any hidden IDs before applying the gesture, even if an editor retained a snapshot. Existing post-editor visibility guards still refuse changed or invisible bulk targets. Food already intersects new gestures with its current visible row keys.
+
+Keyboard Up/Down reveal the complete target row, including at 320dp and 200%
+text. Full-width pinned heading paint must not distort row reveal coordinates;
+Tasks and the matching Deleted section in Food Search share this requirement.

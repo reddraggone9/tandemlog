@@ -25,36 +25,44 @@ class StickyTaskGroupHeading extends StatelessWidget {
     final style = Theme.of(context).textTheme.titleSmall!;
     final direction = Directionality.of(context);
     final scaler = MediaQuery.textScalerOf(context);
-    return SliverLayoutBuilder(
-      builder: (context, constraints) {
-        final painter =
-            TextPainter(
-              text: TextSpan(text: title, style: style),
-              textDirection: direction,
-              textScaler: scaler,
-            )..layout(
-              maxWidth: math.max(0, constraints.crossAxisExtent - inset * 2),
-            );
-        final extent = painter.height + 20;
-        painter.dispose();
-        return SliverPersistentHeader(
-          pinned: true,
-          delegate: _HeadingDelegate(
-            extent: extent,
-            child: ColoredBox(
-              key: headingKey,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(inset, 16, inset, 4),
-                child: Semantics(
-                  header: true,
-                  child: Text(title, style: style),
+    // Keep the pinned heading's paint extent local to this sliver. Flutter's
+    // SliverMainAxisGroup subtracts a direct pinned child's obstruction from
+    // later rows' reveal offsets; that leaves their trailing edge off-screen.
+    // A zero-inset sliver padding preserves the previous reveal coordinates
+    // without narrowing the opaque background or its text measurement.
+    return SliverPadding(
+      padding: EdgeInsets.zero,
+      sliver: SliverLayoutBuilder(
+        builder: (context, constraints) {
+          final painter =
+              TextPainter(
+                text: TextSpan(text: title, style: style),
+                textDirection: direction,
+                textScaler: scaler,
+              )..layout(
+                maxWidth: math.max(0, constraints.crossAxisExtent - inset * 2),
+              );
+          final extent = painter.height + 20;
+          painter.dispose();
+          return SliverPersistentHeader(
+            pinned: true,
+            delegate: _HeadingDelegate(
+              extent: extent,
+              child: ColoredBox(
+                key: headingKey,
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(inset, 16, inset, 4),
+                  child: Semantics(
+                    header: true,
+                    child: Text(title, style: style),
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

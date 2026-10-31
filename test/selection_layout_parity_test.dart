@@ -8,6 +8,7 @@ import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/task_entry_area.dart';
+import 'package:tandemlog/presentation/list_row_surface.dart';
 import 'package:tandemlog/presentation/sticky_task_group.dart';
 import 'package:tandemlog/presentation/tandemlog_theme.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
@@ -105,6 +106,102 @@ void registerSelectionLayoutParityTests({
         expect(list.bottom, lessThanOrEqualTo(height - keyboard));
         expect(list.height, greaterThanOrEqualTo(48));
         expect(tester.getRect(error).top, greaterThanOrEqualTo(search.bottom));
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+
+  for (final deleted in [false, true]) {
+    testWidgets(
+      'Food ${deleted ? 'Deleted ' : ''}keyboard range reveals the whole next row at 320dp 200%',
+      (tester) async {
+        await mountFoodPane(
+          tester,
+          width: 320,
+          height: 820,
+          scale: 2,
+          state: _manyFoods(deleted: deleted),
+        );
+        if (deleted) {
+          await tester.enterText(
+            find.byKey(const ValueKey('food-search')),
+            'Many beans',
+          );
+          await tester.pumpAndSettle();
+          expect(
+            find.byKey(const ValueKey('food-deleted-heading')),
+            findsOneWidget,
+          );
+        }
+        final list = find.byType(CustomScrollView);
+        final position = tester
+            .state<ScrollableState>(
+              find
+                  .descendant(of: list, matching: find.byType(Scrollable))
+                  .first,
+            )
+            .position;
+        final searchField = find.byKey(const ValueKey('food-search'));
+        await tester.tap(searchField);
+        await tester.pumpAndSettle();
+        final searchFocus = tester
+            .widget<EditableText>(
+              find.descendant(
+                of: searchField,
+                matching: find.byType(EditableText),
+              ),
+            )
+            .focusNode;
+        expect(searchFocus.hasFocus, isTrue);
+        await tester.drag(list, const Offset(0, -100));
+        await tester.pumpAndSettle();
+        debugPrint('FOOD_DRAG_SEARCH_FOCUS=${searchFocus.hasFocus}');
+        position.jumpTo(0);
+        await tester.pumpAndSettle();
+        final current = find.text('Many beans 20');
+        for (var step = 0; current.evaluate().isEmpty && step < 80; step++) {
+          position.jumpTo(
+            (position.pixels + position.viewportDimension / 2).clamp(
+              position.minScrollExtent,
+              position.maxScrollExtent,
+            ),
+          );
+          await tester.pumpAndSettle();
+        }
+        expect(current, findsOneWidget);
+        await Scrollable.ensureVisible(tester.element(current), alignment: .5);
+        await tester.pumpAndSettle();
+        await tester.longPress(current);
+        await tester.pumpAndSettle();
+        Focus.of(tester.element(current)).requestFocus();
+        await tester.pumpAndSettle();
+        final row = find
+            .ancestor(of: current, matching: find.byType(ListRowSurface))
+            .first;
+        final viewport = tester.getRect(list);
+        position.jumpTo(
+          position.pixels + tester.getRect(row).bottom - viewport.bottom + 20,
+        );
+        await tester.pumpAndSettle();
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+        await tester.pumpAndSettle();
+        expect(find.text('2 selected'), findsOneWidget);
+        final target = find
+            .ancestor(
+              of: find.text('Many beans 21').first,
+              matching: find.byType(InkWell),
+            )
+            .first;
+        final rect = tester.getRect(target);
+        expect(rect.top, greaterThanOrEqualTo(viewport.top));
+        expect(rect.bottom, lessThanOrEqualTo(viewport.bottom));
+        expect(tester.takeException(), isNull);
+        await captureNativeFixtureUi(
+          tester,
+          'food-${deleted ? 'deleted-' : ''}keyboard-reveal-320-200',
+        );
         await tester.pumpWidget(const SizedBox());
       },
     );
@@ -683,7 +780,7 @@ void registerSelectionLayoutParityTests({
   });
 }
 
-FoodState _manyFoods() => projectFood([
+FoodState _manyFoods({bool deleted = false}) => projectFood([
   for (var i = 1; i <= 40; i++)
     FoodOperation(
       id: '00000000-0000-4000-8000-000000000093:$i',
@@ -700,5 +797,15 @@ FoodState _manyFoods() => projectFood([
       ),
       contents: const Contents.fraction(1, 3),
       createdAt: '2026-10-15T00:00:00Z',
+    ),
+  if (deleted)
+    FoodOperation(
+      id: '00000000-0000-4000-8000-000000000093:41',
+      order: 41,
+      action: FoodAction.remove,
+      targets: [
+        for (var i = 1; i <= 40; i++)
+          '00000000-0000-4000-8000-${i.toString().padLeft(12, '0')}',
+      ],
     ),
 ]);
