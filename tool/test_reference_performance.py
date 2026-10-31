@@ -23,6 +23,11 @@ def write(path, value):
     path.write_text(json.dumps(value, indent=2) + '\n')
 
 
+def family_of(action):
+    """Synthetic family name; real families come from the benchmark's log lines."""
+    return 'family-' + action.split('.')[0]
+
+
 class AdvisoryPolicyTests(unittest.TestCase):
     def test_only_timing_can_be_advisory(self):
         yes = gate_policy.Evaluation('passed', (), {})
@@ -153,14 +158,16 @@ class ReceiptFixture(unittest.TestCase):
                        'compiledFileSeals': {n: {'originalSHA256': v, 'compiledSHA256': v, 'change': 'none'}
                                              for n, v in originals.items()},
                        'projectImportClosure': ['/repo/tool/performance/benchmark.dart', '/stage/lib/a.dart'],
-                       'packageContractSHA256': self.host['packageContractSHA256'], 'rerunsUsed': 0,
+                       'packageContractSHA256': self.host['packageContractSHA256'], 'gateRule': gate_policy.GATE_RULE,
+                       'firstPassFailures': [], 'firstPassFailureCount': 0, 'reruns': [], 'rerunJudgments': [],
+                       'notJudgedOverBound': [], 'confirmedFailures': [],
                        'compile': execution.copy(), 'binaryMode': '0o700', 'binarySHA256': binding['binary'],
                        'fixtures': fixture_items, 'attempts': [], 'pairedScalingAttempts': []}
         effective = {**self.limits, 'sha256': self.host['limitsSHA256']}
         summaries = {}
         for size in fixtures:
-            rows = [{'action': a, 'index': i, 'warmup': i < 2, 'microseconds': 1000}
-                    for a in self.limits['actionsBySize'][size] for i in range(7)]
+            rows = [{'action': a, 'family': family_of(a), 'index': 0, 'warmup': False, 'microseconds': 1000}
+                    for a in self.limits['actionsBySize'][size]]
             result = {'size': size, 'correctnessPassed': True, 'limitsSHA256': effective['sha256'], 'observations': rows}
             decision = gate_policy.evaluate(result, effective)
             summaries[size] = decision.summaries
@@ -298,17 +305,6 @@ class ReferenceReceiptTests(ReceiptFixture):
         self.report['attempts'][0]['result']['observations'][-1]['microseconds'] = 10000000
         self.refresh()
         with self.assertRaisesRegex(ValueError, 'Absolute'):
-            self.verify()
-
-    def test_retry_without_external_noise_is_rejected(self):
-        self.report['rerunsUsed'] = 1
-        for key in ('attempts', 'pairedScalingAttempts'):
-            second = copy.deepcopy(self.report[key])
-            for item in second:
-                item['attempt'] = 1
-            self.report[key].extend(second)
-        self.refresh()
-        with self.assertRaisesRegex(ValueError, 'retry lacks'):
             self.verify()
 
     def test_cleanup_is_required_and_false_or_boolean_counters_fail(self):
@@ -524,140 +520,11 @@ class RelevantSourceIdentityTests(ReceiptFixture):
         self.assertEqual(set(value), receipt.REQUEST_FIELDS)
         self.assertEqual(value['relevantSource'], self.identity)
 
-
-class OfficialRerunTests(ReceiptFixture):
-    """Lee's 2026-10-26 rule: one rerun of unchanged source after a non-reproducing diagnostic."""
-    def setUp(self):
-        super().setUp()
-        self.prior_request = {**copy.deepcopy(self.request), 'requestId': '3' * 32, 'issuedAtUTC': '2026-10-24T00:00:00Z'}
-        failed = copy.deepcopy(self.report)
-        failed.update(timingLimitsPassed=False, releaseGateAccepted=False, correctnessAccepted=False,
-                      error=receipt.TIMING_FAILURE, startedAtUTC='2026-10-24T00:00:01Z', finishedAtUTC='2026-10-24T00:10:00Z')
-        failed['referenceBinding'].update(requestId=self.prior_request['requestId'],
-                                          requestSHA256=receipt.canonical_digest(self.prior_request))
-        failed['attempts'][1].update(status='timing-failed', failures=['task.title.save'])
-        failed['pairedScalingAttempts'][0].update(status='timing-failed', failures=['scaling:task.title.save'])
-        self.prior_report = failed
-        self.failures = sorted([failed['attempts'][1]['size'] + ':task.title.save',
-                                failed['pairedScalingAttempts'][0]['comparison'] + ':scaling:task.title.save'])
-        self.diagnostic = {'schemaVersion': 1, 'kind': 'reference-failure-diagnostic-v1',
-                           'priorRequestId': self.prior_request['requestId'],
-                           'relevantSourceSHA256': self.identity['sha256'], 'reproduced': False,
-                           'recordedAtUTC': '2026-10-24T02:00:00Z',
-                           'runs': [{'role': 'diagnostic', 'qualifying': False, 'resultSHA256': 'd' * 64,
-                                     'startedAtUTC': '2026-10-24T01:00:00Z', 'finishedAtUTC': '2026-10-24T01:30:00Z',
-                                     'checkedFailures': list(self.failures), 'reproducedFailures': []}]}
-        self.prior_path = self.repo / 'evidence/synthetic-prior/gate-result.json'
-        write(self.prior_path, self.prior_report)
-        self.authorize()
-
-    def authorize(self, prior_request=None, diagnostic=None):
-        write(self.prior_path, self.prior_report)
-        self.authorization = receipt.official_rerun(
-            self.repo, self.request, prior_request or self.prior_request, self.prior_report,
-            receipt.digest(self.prior_path), diagnostic or self.diagnostic)
-        write(self.bundle / receipt.AUTHORIZATION, self.authorization)
-        (self.bundle / receipt.PRIOR_RESULT).write_bytes(self.prior_path.read_bytes())
-        self.refresh()
-
-    def test_rerun_after_nonreproducing_diagnostic_qualifies_with_unchanged_budgets(self):
-        self.assertEqual(self.authorization['priorFailures'], self.failures)
-        self.assertEqual(set(self.request), receipt.REQUEST_FIELDS)
-        self.assertTrue(self.verify()['referencePerformanceQualified'])
-        self.assertEqual(receipt.digest(self.tools / 'limits-v1.json'), self.host['limitsSHA256'])
-
-    def test_diagnostic_must_exist_cover_every_failure_and_not_reproduce(self):
-        changes = [lambda d: d.update(runs=[]), lambda d: d.update(reproduced=True),
-                   lambda d: d['runs'][0].update(reproducedFailures=[self.failures[0]]),
-                   lambda d: d['runs'][0].update(checkedFailures=self.failures[:1]),
-                   lambda d: d['runs'][0].update(role='qualification'),
-                   lambda d: d['runs'][0].update(qualifying=True),
-                   lambda d: d['runs'][0].update(resultSHA256='not-a-hash'),
-                   lambda d: d.update(priorRequestId='4' * 32),
-                   lambda d: d['runs'][0].update(startedAtUTC='2026-10-24T00:05:00Z'),
-                   lambda d: d.update(recordedAtUTC='2026-10-25T00:00:01Z'),
-                   lambda d: d.pop('runs')]
-        for number, change in enumerate(changes):
-            diagnostic = copy.deepcopy(self.diagnostic); change(diagnostic)
-            with self.subTest(change=number), self.assertRaises(ValueError):
-                self.authorize(diagnostic=diagnostic)
-
-    def test_rerun_needs_a_different_prior_request_and_unchanged_source(self):
-        self.prior_report['referenceBinding'].update(requestId=self.request['requestId'],
-                                                     requestSHA256=receipt.canonical_digest(self.request))
-        with self.assertRaisesRegex(ValueError, 'unchanged relevant source'):
-            self.authorize(prior_request=copy.deepcopy(self.request))
-        self.prior_report['referenceBinding'].update(requestId=self.prior_request['requestId'],
-                                                     requestSHA256=receipt.canonical_digest(self.prior_request))
-        (self.repo / 'lib/a.dart').write_text('const a = 2;\n')
-        self.commit()
-        with self.assertRaisesRegex(ValueError, 'fresh request'):
-            self.authorize()
-
-    def test_correctness_execution_or_passing_priors_are_not_rerunnable(self):
-        original = copy.deepcopy(self.prior_report)
-        for change in [lambda r: r.update(error='Correctness/coverage failed; retry prohibited'),
-                       lambda r: r['attempts'][0].update(status='correctness-failed'),
-                       lambda r: r['attempts'][0]['execution'].update(exitCode=1),
-                       lambda r: r.update(timingRole='measure-only', measureOnly=True),
-                       lambda r: r.update(timingLimitsPassed=True),
-                       lambda r: r['referenceBinding'].update(requestId='5' * 32)]:
-            self.prior_report = copy.deepcopy(original); change(self.prior_report)
-            with self.assertRaises(ValueError):
-                self.authorize()
-
-    def test_bundle_must_carry_unchanged_prior_result_and_bound_authorization(self):
-        (self.bundle / receipt.PRIOR_RESULT).write_text('{}\n')
-        self.refresh()
-        with self.assertRaisesRegex(ValueError, 'prior failed result'):
-            self.verify()
-        (self.bundle / receipt.PRIOR_RESULT).unlink()
-        self.refresh()
-        with self.assertRaisesRegex(ValueError, 'prior failed result'):
-            self.verify()
-        self.authorize()
-        write(self.bundle / receipt.AUTHORIZATION, {**self.authorization, 'requestId': '6' * 32})
-        self.refresh()
-        with self.assertRaisesRegex(ValueError, 'not bound to this request'):
-            self.verify()
-
-    def test_first_qualification_cannot_carry_a_prior_result(self):
-        (self.bundle / receipt.AUTHORIZATION).unlink()
-        self.refresh()
-        with self.assertRaisesRegex(ValueError, 'Unexpected prior result'):
-            self.verify()
-
     def test_request_keeps_the_registered_controller_field_set(self):
-        self.request['officialRerun'] = {}
+        self.request['extra'] = {}
         self.refresh()
         with self.assertRaisesRegex(ValueError, 'registered controller contract'):
             self.verify()
-
-    def test_authorize_cli_writes_beside_request_and_refuses_a_second_rerun(self):
-        prior = self.repo / 'evidence/synthetic-prior'
-        write(prior / 'request.json', self.prior_request)
-        write(prior / 'diagnostic.json', self.diagnostic)
-        write(prior / 'rerun-request.json', self.request)
-        base = ['reference_receipt.py', 'authorize-rerun', '--repo', str(self.repo),
-                '--request', str(prior / 'rerun-request.json'), '--rerun-of-request', str(prior / 'request.json'),
-                '--rerun-of-result', str(self.prior_path), '--diagnostic', str(prior / 'diagnostic.json')]
-        with patch.object(sys, 'argv', base[:6]):
-            with self.assertRaisesRegex(ValueError, 'needs the fresh request'):
-                receipt.main()
-        with patch.object(sys, 'argv', base):
-            receipt.main()
-        value = receipt.read(prior / ('rerun-request.json' + receipt.AUTHORIZATION_SUFFIX))
-        self.assertEqual(value['ordinal'], 2)
-        self.assertEqual(value['priorFailures'], self.failures)
-        # A failure of that rerun is repeatable: its authorization marks it, so no third run.
-        write(prior / 'third-request.json', {**self.request, 'requestId': '7' * 32})
-        third = base[:4] + ['--request', str(prior / 'third-request.json'),
-                            '--rerun-of-request', str(prior / 'rerun-request.json'),
-                            '--rerun-of-result', str(self.prior_path), '--diagnostic', str(prior / 'diagnostic.json')]
-        with patch.object(sys, 'argv', third):
-            with self.assertRaisesRegex(ValueError, 'limit exceeded'):
-                receipt.main()
-        self.assertFalse((prior / ('third-request.json' + receipt.AUTHORIZATION_SUFFIX)).exists())
 
 
 class ReferenceReceiptAliasTests(unittest.TestCase):
@@ -754,7 +621,8 @@ class HostedRunnerTests(unittest.TestCase):
                 self.assertFalse(report['timingLimitsPassed'])
                 self.assertFalse(report['releaseGateAccepted'])
                 self.assertEqual(report['timingRole'], 'hosted-advisory')
-                self.assertEqual(report['rerunsUsed'], 0)
+                self.assertEqual(report['reruns'], [])
+                self.assertGreater(report['firstPassFailureCount'], 0)
                 self.assertTrue(any(a['failures'] for a in report['attempts']) or
                                 any(p['failures'] for p in report['pairedScalingAttempts']))
 

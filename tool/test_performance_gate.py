@@ -42,63 +42,49 @@ class PerformanceGateTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError,'diagnostic action costs'):
                     run_gate.validate_cost_measurements(log)
     def setUp(self):
-        self.limits={'sha256':'sealed','warmups':2,'samples':5,'actionsBySize':{'dense-1':{'save':{'medianMs':100,'maxMs':150}}}}
-        self.result={'correctnessPassed':True,'limitsSHA256':'sealed','size':'dense-1','observations':[{'action':'save','index':i,'warmup':i<2,'microseconds':100000} for i in range(7)]}
-        self.noise={'kind':'observed-external-cpu-load','sampleWindowCovered':True,'windowSeconds':2,'cpuSomeStallMicrosecondsDelta':600000,'otherCpuMicrosecondsDelta':1100000,'ownWorkExcluded':True}
-        self.binding={'source':'one','fixture':'two','limits':'three'}
+        self.limits={'sha256':'sealed','gateRule':policy.GATE_RULE,'warmups':0,'samples':1,'actionsBySize':{'dense-1':{'save':{'medianMs':100,'maxMs':150}}}}
+        self.result={'correctnessPassed':True,'limitsSHA256':'sealed','size':'dense-1','observations':[{'action':'save','family':'task','index':0,'warmup':False,'microseconds':100000}]}
     def evaluate(self):return policy.evaluate(self.result,self.limits)
     def test_boundary_is_inclusive(self):self.assertEqual(self.evaluate().status,'passed')
-    def test_warmup_retained_but_excluded(self):
-        self.result['observations'][0]['microseconds']=99999999
-        self.assertEqual(self.evaluate().status,'passed');self.assertEqual(len(self.evaluate().summaries['save']['warmupSamplesMs']),2)
     def test_timing_excess_fails(self):
-        for s in self.result['observations']:s['microseconds']=151000
+        self.result['observations'][0]['microseconds']=100001
         self.assertEqual(self.evaluate().status,'timing-failed')
-    def test_single_maximum_excess_fails(self):
-        self.result['observations'][-1]['microseconds']=150001;self.assertEqual(self.evaluate().status,'timing-failed')
+        self.assertEqual(self.evaluate().summaries['save']['sampleMs'],100.001)
+    def test_maximum_limit_no_longer_decides(self):
+        self.limits['actionsBySize']['dense-1']['save']['maxMs']=1
+        self.assertEqual(self.evaluate().status,'passed')
+        self.limits['actionsBySize']['dense-1']['save']['maxMs']=1000
+        self.result['observations'][0]['microseconds']=100001
+        self.assertEqual(self.evaluate().status,'timing-failed')
+    def test_one_sample_and_no_warmup_are_enforced(self):
+        original=dict(self.result['observations'][0])
+        for rows in ([{**original,'warmup':True}],[{**original,'index':1}],
+                     [original,{**original,'index':1}],[{**original,'warmup':True},{**original,'index':1}]):
+            self.result['observations']=rows
+            self.assertEqual(self.evaluate().status,'correctness-failed')
+            self.assertEqual(self.evaluate().failures,('sample-count-or-order',))
+        self.result['observations']=[original]
+        for key,value in (('warmups',2),('samples',5),('gateRule','older')):
+            changed={**self.limits,key:value}
+            self.assertEqual(policy.evaluate(self.result,changed).failures,('sample-policy',))
     def test_missing_and_unknown_coverage_fail(self):
         self.result['observations']=[];self.assertEqual(self.evaluate().status,'correctness-failed')
         self.result['observations']=[{'action':'unknown','microseconds':0}];self.assertEqual(self.evaluate().status,'correctness-failed')
     def test_invalid_values_fail(self):
         for value in [-1,True,float('nan')]:
             self.result['observations'][0]['microseconds']=value;self.assertEqual(self.evaluate().status,'correctness-failed')
-    def test_count_and_order_fail(self):
-        self.result['observations'][-1]['index']=0;self.assertEqual(self.evaluate().status,'correctness-failed')
     def test_limits_binding_and_unknown_size_fail(self):
         self.result['limitsSHA256']='changed';self.assertEqual(self.evaluate().status,'correctness-failed')
         self.result['limitsSHA256']='sealed';self.result['size']='unknown';self.assertEqual(self.evaluate().status,'correctness-failed')
-    def test_correctness_never_reruns(self):
-        self.result['correctnessPassed']=False
-        self.assertFalse(policy.may_rerun(self.evaluate(),0,self.noise,self.binding,self.binding))
-    def test_extra_unclassified_sample_fails(self):
-        self.result['observations'].append({'action':'save','index':7,'warmup':None,'microseconds':0})
-        self.assertEqual(self.evaluate().status,'correctness-failed')
-    def test_duplicate_sample_or_missing_warmup_fails(self):
-        self.result['observations'][0]['warmup']=False
-        self.assertEqual(self.evaluate().status,'correctness-failed')
-    def test_warmups_cannot_be_swapped_with_measured_samples(self):
-        self.result['observations'][0]['warmup']=False
-        self.result['observations'][2]['warmup']=True
-        self.assertEqual(self.evaluate().status,'correctness-failed')
-    def test_reordered_or_boolean_indices_fail(self):
-        self.result['observations'][0],self.result['observations'][1]=self.result['observations'][1],self.result['observations'][0]
-        self.assertEqual(self.evaluate().status,'correctness-failed')
-        self.result['observations'].sort(key=lambda x:x['index'])
+    def test_boolean_index_or_unclassified_sample_fails(self):
         self.result['observations'][0]['index']=False
+        self.assertEqual(self.evaluate().status,'correctness-failed')
+        self.result['observations'][0].update(index=0,warmup=None)
         self.assertEqual(self.evaluate().status,'correctness-failed')
     def test_nonfinite_or_nonpositive_limits_fail(self):
         for value in [float('nan'),float('inf'),-1,0,True]:
             self.limits['actionsBySize']['dense-1']['save']['medianMs']=value
             self.assertEqual(self.evaluate().status,'correctness-failed')
-    def timing_failure(self):return policy.Evaluation('timing-failed',('save',),{})
-    def test_one_noisy_timing_rerun(self):
-        self.assertTrue(policy.may_rerun(self.timing_failure(),0,self.noise,self.binding,self.binding))
-        self.assertFalse(policy.may_rerun(self.timing_failure(),1,self.noise,self.binding,self.binding))
-    def test_changed_binding_never_reruns(self):
-        self.assertFalse(policy.may_rerun(self.timing_failure(),0,self.noise,self.binding,{**self.binding,'source':'changed'}))
-    def test_own_throttling_or_missing_noise_insufficient(self):
-        for noise in [{},{'ownCpuThrottled':True},{**self.noise,'otherCpuMicrosecondsDelta':0},{**self.noise,'sampleWindowCovered':False}]:
-            self.assertFalse(policy.may_rerun(self.timing_failure(),0,noise,self.binding,self.binding))
 
 class RegisteredCoveragePreflightTests(unittest.TestCase):
     def setUp(self):
@@ -159,7 +145,7 @@ class RegisteredCoveragePreflightTests(unittest.TestCase):
     def test_stale_registry_fails_measure_only_before_source_fork_or_compiler(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=pathlib.Path(tmp);tools=root/'tools';tools.mkdir()
-            for name in ['run_gate.py','gate_policy.py','disk_stall.py','reference_receipt.py','limits-v1.json']:
+            for name in ['run_gate.py','gate_policy.py','reference_receipt.py','limits-v1.json']:
                 (tools/name).write_bytes((PATH.parent/name).read_bytes())
             self.coverage['storageApplicationActionIds'].append('unbudgeted.future.action')
             (tools/'coverage-v1.json').write_text(json.dumps(self.coverage))
@@ -178,13 +164,14 @@ class RunnerReceiptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             p=pathlib.Path(tmp)/'log'
             p.write_text('\n'.join(json.dumps(x) for x in [
-                {'measurement':'broad-action','action':'save','index':0,'warmup':True,'microseconds':12},
+                {'measurement':'broad-action','family':'task','action':'save','index':0,'warmup':True,'microseconds':12},
                 {'measurement':'broad-startup','index':-1,'freshProfile':True},
-                {'measurement':'broad-startup','index':2,'warmup':False,'freshProfile':False,'totalUs':10,'historyUs':8,'taskAttachUs':1,'proofUs':2,'cacheRestoreUs':3},
+                {'measurement':'broad-startup','family':'startup','index':2,'warmup':False,'freshProfile':False,'totalUs':10,'historyUs':8,'taskAttachUs':1,'proofUs':2,'cacheRestoreUs':3},
                 {'measurement':'broad-all-pass'}]))
             rows,complete=run_gate.measurements(p)
             self.assertTrue(complete);self.assertEqual(len(rows),6)
             self.assertTrue(rows[0]['warmup']);self.assertIn('startup.warm.proof',[x['action'] for x in rows])
+            self.assertEqual({x['family'] for x in rows},{'task','startup'})
     @unittest.skipUnless(sys.platform.startswith('linux'), 'Linux runner preflight')
     def test_unbound_limits_fail_before_compiler_or_fixture_execution(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -236,19 +223,20 @@ class PairedScalingTests(unittest.TestCase):
         self.rules={'smallSize':'one','largeSize':'two','rules':{'save':{'maxMedianRatio':2,'medianAdditiveMs':10,'maxMaximumRatio':2.5,'maximumAdditiveMs':20}}}
         base={'syntheticOnly':True,'currentStateSHA256':'a'*64,'taskRows':10,'foodContainers':5,'initialPrefixSHA256':{str(i):'b'*64 for i in range(3)},'initialHistoricalRecords':1320,'growthHistoricalRecords':0,'actualPhysicalRecords':1325,'baseHistoricalRecords':1320,'growthKind':'none','initialTaskEffects':1000,'initialFoodEffects':320,'growthTaskEffects':0,'growthFoodEffects':0,'taskEffects':1005,'foodEffects':320}
         self.contracts={'one':base,'two':{**base,'growthHistoricalRecords':1320,'actualPhysicalRecords':2645,'baseHistoricalRecords':2640,'growthKind':'task','growthTaskEffects':1320,'taskEffects':2325}}
-        self.summaries={'one':{'save':{'medianMs':100,'maxMs':120}},'two':{'save':{'medianMs':210,'maxMs':320}}}
+        self.summaries={'one':{'save':{'sampleMs':100}},'two':{'save':{'sampleMs':210}}}
     def test_invalid_scaling_limits_fail_closed(self):
         for value in [float('nan'),float('inf'),-1,True]:
             self.rules['rules']['save']['maxMedianRatio']=value
             self.assertEqual(policy.evaluate_scaling(self.summaries,self.rules,self.contracts).status,'correctness-failed')
     def test_ratio_plus_additive_boundary_passes(self):
         result=policy.evaluate_scaling(self.summaries,self.rules,self.contracts)
-        self.assertEqual(result.status,'passed');self.assertEqual(result.summaries['save']['medianBoundMs'],210)
-    def test_median_or_maximum_superlinear_growth_fails(self):
-        for field,value in [('medianMs',211),('maxMs',321)]:
-            original=self.summaries['two']['save'][field];self.summaries['two']['save'][field]=value
-            self.assertEqual(policy.evaluate_scaling(self.summaries,self.rules,self.contracts).status,'timing-failed')
-            self.summaries['two']['save'][field]=original
+        self.assertEqual(result.status,'passed');self.assertEqual(result.summaries['save'],{'smallSampleMs':100,'largeSampleMs':210,'boundMs':210})
+    def test_superlinear_growth_fails_and_maximum_rule_no_longer_decides(self):
+        self.summaries['two']['save']['sampleMs']=211
+        self.assertEqual(policy.evaluate_scaling(self.summaries,self.rules,self.contracts).status,'timing-failed')
+        self.summaries['two']['save']['sampleMs']=210
+        self.rules['rules']['save'].update(maxMaximumRatio=0,maximumAdditiveMs=0)
+        self.assertEqual(policy.evaluate_scaling(self.summaries,self.rules,self.contracts).status,'passed')
     def test_current_state_growth_is_not_history_only_scaling(self):
         for field,value in [('taskRows',11),('foodContainers',6),('currentStateSHA256','changed')]:
             original=self.contracts['two'][field];self.contracts['two'][field]=value
@@ -370,27 +358,6 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
         self.assertEqual(specs['food-own-history']['rules'],specs['task-own-history']['rules'])
         del limits['additionalPairedScaling']
         with self.assertRaises(RuntimeError):run_gate.scaling_specs(limits)
-    def test_each_pair_large_size_needs_noise_and_no_second_retry(self):
-        clean={'kind':'observed-external-cpu-load','sampleWindowCovered':True,
-               'windowSeconds':2,'cpuSomeStallMicrosecondsDelta':600000,
-               'otherCpuMicrosecondsDelta':1100000,'ownWorkExcluded':True}
-        passed=policy.Evaluation('passed',(),{})
-        failed=policy.Evaluation('timing-failed',('save',),{})
-        decisions={n:passed for n in ('small','task','food')}
-        pairs=[({'largeSize':'task'},failed),({'largeSize':'food'},failed)]
-        executions={n:{'noise':dict(clean)} for n in decisions}
-        binding={'all3fixtures':'sealed'}
-        self.assertTrue(run_gate.may_rerun_all(decisions,pairs,0,executions,binding,binding))
-        executions['food']['noise']={}
-        self.assertFalse(run_gate.may_rerun_all(decisions,pairs,0,executions,binding,binding))
-        executions['food']['noise']=dict(clean)
-        decisions['small']=failed;executions['small']['noise']={}
-        self.assertFalse(run_gate.may_rerun_all(decisions,pairs,0,executions,binding,binding))
-        decisions['small']=passed
-        self.assertFalse(run_gate.may_rerun_all(decisions,pairs,1,executions,binding,binding))
-        self.assertFalse(run_gate.may_rerun_all(decisions,pairs,0,executions,binding,{'changed':True}))
-        decisions['food']=policy.Evaluation('correctness-failed',('coverage',),{})
-        self.assertFalse(run_gate.may_rerun_all(decisions,pairs,0,executions,binding,binding))
     def test_bad_pair_size_or_module_cannot_drop_food_comparison(self):
         limits=json.loads((PATH.parent/'limits-v1.json').read_text())
         for field,value in [('largeSize','dense-2'),('growthKind','task')]:
@@ -439,8 +406,8 @@ class SourceBindingTests(unittest.TestCase):
     def test_host_noise_subtracts_own_cpu(self):
         before={'pressure':0,'hostBusyTicks':100,'ticksPerSecond':100,'ownCpuMicroseconds':0}
         after={'pressure':300000,'hostBusyTicks':200,'ticksPerSecond':100,'ownCpuMicroseconds':400000}
-        evidence=run_gate.noise_evidence(before,after,1);self.assertEqual(evidence['otherCpuMicrosecondsDelta'],600000);self.assertTrue(policy.external_noise_overlapped(evidence))
-        after['ownCpuMicroseconds']=1000000;self.assertFalse(policy.external_noise_overlapped(run_gate.noise_evidence(before,after,1)))
+        evidence=run_gate.noise_evidence(before,after,1);self.assertEqual(evidence['otherCpuMicrosecondsDelta'],600000)
+        after['ownCpuMicroseconds']=1000000;self.assertEqual(run_gate.noise_evidence(before,after,1)['otherCpuMicrosecondsDelta'],0)
 
 @unittest.skipUnless(sys.platform.startswith('linux'), 'Linux CI wrapper')
 class CIWrapperTests(unittest.TestCase):
@@ -519,6 +486,14 @@ sys.exit(98)
 
 
 class CalibratedInitialLimitTests(unittest.TestCase):
+    def test_budget_numbers_are_unchanged_by_the_single_sample_rule(self):
+        import hashlib
+        limits=json.loads((PATH.parent/'limits-v1.json').read_text())
+        budgets={k:limits[k] for k in ('actionsBySize','pairedScaling','additionalPairedScaling','historySizes')}
+        digest=hashlib.sha256(json.dumps(budgets,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        # The same value at limits 553896b3, the last file under the old rule. Loosening needs Lee.
+        self.assertEqual(digest,'9b82975c770648bf8c82f7d40009b173bfb2e76f830b0e974f20b5c26d313b68')
+        self.assertEqual((limits['gateRule'],limits['warmups'],limits['samples']),(policy.GATE_RULE,0,1))
     def test_initial_policy_is_bound_to_workflow_and_keeps_ui_separate(self):
         import hashlib
         path=PATH.parent/'limits-v1.json'

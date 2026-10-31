@@ -2,8 +2,10 @@
   "schemaVersion": 1,
   "version": "calibrated-initial-1",
   "releaseReady": true,
-  "warmups": 2,
-  "samples": 5,
+  "gateRule": "single-sample-confirm-v1",
+  "gateRuleSource": "Lee 2026-10-31. One sample per action per shape, judged against medianMs and the maxMedianRatio/medianAdditiveMs growth rule. maxMs and the maximum growth fields no longer decide the gate; they stay unchanged as the record of the calibrated bounds.",
+  "warmups": 0,
+  "samples": 1,
   "historySizes": {
     "dense-1": 1320,
     "dense-2": 2640,

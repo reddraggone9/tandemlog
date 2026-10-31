@@ -91,3 +91,10 @@ failure and diagnostics stay retained. Alternatives rejected: unlimited reruns
 (forces meaningless churn). Revisit if official reruns become frequent, which
 would indicate a host-control problem rather than isolated noise. Details:
 [operating protocol](../performance-reference-qualification.md#official-rerun-after-non-reproduction).
+
+## Amendment 2026-10-31 — single sample with automatic confirmation
+
+The controlled host's qualification now follows
+[the gate rule](../performance-gate.md#the-gate-rule-lee-2026-10-31). Host roles, caps, the
+fail-closed verifier and hosted advisory timing are unchanged. The official-rerun amendment above
+applies only to results sealed before this date.

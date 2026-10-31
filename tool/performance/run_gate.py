@@ -19,8 +19,7 @@ import sys
 import time
 import shutil
 import urllib.parse
-from gate_policy import evaluate, evaluate_scaling, may_rerun, Evaluation, validate_registered_coverage, may_complete_with_advisory_timing
-import disk_stall
+from gate_policy import evaluate, evaluate_scaling, validate_registered_coverage, may_complete_with_advisory_timing, first_pass_failures, observation_families, rerun_plan, valid_rerun_rows, judge_reruns, GATE_RULE
 from reference_receipt import request_context, package_contract, read as read_reference_json, utc, check_reference_toolchain, profile as reference_profile
 
 def digest(path):
@@ -196,7 +195,7 @@ def noise_evidence(before, after, seconds):
         busy=max(0,after['hostBusyTicks']-before['hostBusyTicks'])*1_000_000/before['ticksPerSecond']
         own=max(0,after['ownCpuMicroseconds']-before['ownCpuMicroseconds'])
         other=max(0,int(busy-own));basis='Host non-idle CPU minus measured own process and all waited child CPU'
-    else:other=0;basis='Unavailable; retry ineligible'
+    else:other=0;basis='Unavailable'
     return {'kind':'observed-external-cpu-load','sampleWindowCovered':pressure and (siblings or host),
             'windowSeconds':seconds,'cpuSomeStallMicrosecondsDelta':max(0,after.get('pressure',0)-before.get('pressure',0)),
             'otherCpuMicrosecondsDelta':other,'ownWorkExcluded':siblings or host,'basis':basis,
@@ -330,14 +329,29 @@ def measurements(log):
         if not isinstance(item,dict):continue
         if item.get('measurement')=='broad-all-pass':complete=True
         if item.get('measurement')=='broad-action':
-            rows.append({'action':item['action'],'index':item['index'],'warmup':item['warmup'],'microseconds':item['microseconds']})
+            rows.append({'action':item['action'],'family':item.get('family'),'index':item['index'],'warmup':item['warmup'],'microseconds':item['microseconds']})
         if item.get('measurement')=='broad-startup' and item.get('index',-1)>=0:
             cold=item['freshProfile'];prefix='startup.cold' if cold else 'startup.warm'
             fields={'total':'totalUs','history':'historyUs','taskAttach':'taskAttachUs'}
             if not cold:fields.update(proof='proofUs',cacheRestore='cacheRestoreUs')
             for suffix,key in fields.items():
-                rows.append({'action':prefix+'.'+suffix,'index':item['index'],'warmup':item['warmup'],'microseconds':item[key]})
+                rows.append({'action':prefix+'.'+suffix,'family':item.get('family'),'index':item['index'],'warmup':item['warmup'],'microseconds':item[key]})
     return rows,complete
+
+FIXTURE_KEYS=('baseHistoricalRecords','actualPhysicalRecords','growthKind')
+
+def completed_family_run(log):
+    """Family and fixture counts a rerun log reports at completion; ties it to its label and shape."""
+    found=None
+    for line in pathlib.Path(log).read_text().splitlines():
+        try:item=json.loads(line)
+        except ValueError:continue
+        if isinstance(item,dict) and item.get('measurement')=='broad-all-pass':
+            found={'family':item.get('rerunFamily'),**{key:item.get(key) for key in FIXTURE_KEYS}}
+    return found
+
+def rerun_log_name(size,family):
+    return 'rerun-'+size+'-'+family+'.log'
 
 def validate_cost_measurements(log):
     observed=0
@@ -385,19 +399,6 @@ def scaling_specs(limits):
     if used != set(limits['historySizes']) or used != set(limits['actionsBySize']):
         raise RuntimeError('Unpaired fixture or missing size coverage')
     return specs
-
-def may_rerun_all(decisions, paired, attempt, executions, original, current):
-    """Every implicated size, across BOTH pairs, needs independent noise."""
-    evaluations = list(decisions.values()) + [decision for _, decision in paired]
-    if any(d.status == 'correctness-failed' for d in evaluations):
-        return False
-    implicated = {size for size, d in decisions.items() if d.status == 'timing-failed'}
-    implicated.update(spec['largeSize'] for spec, d in paired if d.status == 'timing-failed')
-    failure = Evaluation('timing-failed', ('absolute-or-paired',), {})
-    return bool(implicated) and all(
-        may_rerun(failure, attempt, executions[size]['noise'], original, current)
-        for size in implicated
-    )
 
 def main():
     parser=argparse.ArgumentParser()
@@ -447,9 +448,8 @@ def main():
         if args.reference_request and (digest(args.reference_request)!=request_digest or request_context(args.repo.resolve(),args.reference_request,root,actual_resource_bounds())!=reference):
             raise RuntimeError('Reference request/source/environment changed')
     env=os.environ.copy();env.update(LD_PRELOAD=str(args.sqlite_library.resolve()),TANDEMLOG_TEXT_LIBRARY=str(args.native_library.resolve()),DART_SUPPRESS_ANALYTICS='true',CI='true')
-    report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'correctnessAccepted':False,'timingRole':'hosted-advisory' if args.hosted_advisory else 'measure-only' if args.measure_only else 'enforcing','measureOnly':args.measure_only,'costDiagnosticsEnabled':args.diagnose_costs,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'rerunsUsed':0}
+    report={'environment':runtime_environment(),'resourceBounds':bounds,'schemaVersion':1,'scope':'AOT storage/application/readmodel; actual UI gate separate','releaseGateAccepted':False,'correctnessAccepted':False,'timingRole':'hosted-advisory' if args.hosted_advisory else 'measure-only' if args.measure_only else 'enforcing','measureOnly':args.measure_only,'costDiagnosticsEnabled':args.diagnose_costs,'sourcePins':pins,'toolPins':toolpins,'compiledSourceAndDependencyPins':compiled_pins,'compiledFileSeals':compiled_seals,'projectImportClosure':imports,'sourceRewrites':[],'shimAllowlist':[],'attempts':[],'gateRule':GATE_RULE}
     report['startedAtUTC']=utc()
-    if reference is not None:report['diskStallResamples']=[]
     report['packageContractSHA256']=package_contract_sha
     if reference is not None:report['referenceBinding']=reference
     try:
@@ -479,64 +479,47 @@ def main():
             check_pins()
             return {'source':hashlib.sha256(json.dumps(pins,sort_keys=True).encode()).hexdigest(),'fixtures':fixture_binding(fixtures),'limits':limits['sha256'],'binary':digest(binary)}
         original=binding();report['pairedScalingAttempts']=[]
-        resampled_labels=[]
-        def resample(attempt,originals,planned):
-            """Lee's disk-stall rule: one fresh-process resample per attributed label; budgets unchanged."""
-            record={'attempt':attempt,'policy':disk_stall.POLICY,'resamples':planned,'executions':[],'replacements':[],'fixtures':[]}
-            report['diskStallResamples'].append(record)
-            for ordinal,item in enumerate(planned):
-                label='disk-stall-resample-'+str(attempt)+'-'+str(ordinal);log=root/(label+'.log')
+        decisions={};summaries={};results={}
+        for size,fixture in fixtures.items():
+            output=root/(size+'-attempt-0');log=root/(size+'-attempt-0.log')
+            require_binding(original,binding())
+            execution=run_child([str(binary),'diagnose' if args.diagnose_costs else 'run',str(output),str(args.native_library.resolve()),str(fixture['manifest'])],log,env,600)
+            require_binding(original,binding())
+            if args.diagnose_costs and execution['exitCode']==0:
+                validate_cost_measurements(log)
+            rows,complete=measurements(log);result={'size':size,'correctnessPassed':execution['exitCode']==0 and complete and execution['childAbsent'] and execution['childGroupAbsent'],'limitsSHA256':limits['sha256'],'observations':rows}
+            decision=evaluate(result,limits);item={'size':size,'attempt':0,'execution':execution,'binding':original,'result':result,'status':decision.status,'failures':decision.failures,'summaries':decision.summaries};report['attempts'].append(item);write_new(root/(size+'-attempt-0-result.json'),item)
+            decisions[size]=decision;summaries[size]=decision.summaries;results[size]=result
+            if decision.status=='correctness-failed':raise RuntimeError('Correctness/coverage failed; terminal, no rerun')
+        contracts={size:f['receipt'] for size,f in fixtures.items()};paired={}
+        for name,spec in comparisons.items():
+            decision=evaluate_scaling(summaries,spec,contracts);paired[name]=decision
+            report['pairedScalingAttempts'].append({'attempt':0,'comparison':name,'smallSize':spec['smallSize'],'largeSize':spec['largeSize'],'status':decision.status,'failures':decision.failures,'comparisons':decision.summaries})
+            if decision.status=='correctness-failed':raise RuntimeError('Paired fixture shape/coverage failed; terminal, no rerun')
+        if not may_complete_with_advisory_timing([*decisions.values(),*paired.values()]):
+            raise RuntimeError('Correctness/structure cannot be advisory')
+        failures=first_pass_failures(decisions,paired)
+        report.update(firstPassFailures=failures,firstPassFailureCount=len(failures),reruns=[],rerunJudgments=[],notJudgedOverBound=[],confirmedFailures=[])
+        if failures and not (args.measure_only or args.hosted_advisory):
+            # Lee 2026-10-31: every first-pass miss reruns once here, with no agent or manual step.
+            families=observation_families(results);values={}
+            for size,family in rerun_plan(decisions,paired,comparisons,families):
+                log=root/rerun_log_name(size,family);actions=[a for a,f in families[size].items() if f==family]
+                record={'size':size,'family':family,'fixtureManifestSHA256':digest(fixtures[size]['manifest']),'observations':[]}
+                report['reruns'].append(record)
                 require_binding(original,binding())
-                execution=run_child([str(binary),'resample',str(root/label),str(args.native_library.resolve()),str(fixtures[item['size']]['manifest']),item['family']],log,env,600)
+                record['execution']=run_child([str(binary),'rerun-family',str(root/('rerun-'+size+'-'+family)),str(args.native_library.resolve()),str(fixtures[size]['manifest']),family],log,env,600)
                 require_binding(original,binding())
-                rows,complete=measurements(log);record['executions'].append(execution);record['fixtures'].append(digest(fixtures[item['size']]['manifest']))
-                if execution['exitCode']!=0 or not complete or not execution['childAbsent'] or not execution['childGroupAbsent']:
-                    raise RuntimeError('Disk-stall resample correctness/cleanup failed; retry prohibited')
-                record['replacements'].append([row for row in rows if row['action']==item['action']])
-                resampled_labels.append([item['size'],item['action']])
-            effective=disk_stall.apply(originals,planned,record['replacements'],limits)
-            absolute,pairs=disk_stall.evaluate_all(effective,limits,comparisons,{size:f['receipt'] for size,f in fixtures.items()})
-            record['absolute']={size:{'status':d.status,'failures':list(d.failures),'summaries':d.summaries} for size,d in absolute.items()}
-            record['paired']={name:{'status':d.status,'failures':list(d.failures),'comparisons':d.summaries} for name,d in pairs.items()}
-            if any(d.status=='correctness-failed' for d in [*absolute.values(),*pairs.values()]):
-                raise RuntimeError('Disk-stall resample correctness/coverage failed; retry prohibited')
-            return absolute,[(comparisons[name],d) for name,d in pairs.items()]
-        for attempt in range(2):
-            decisions={};executions={};summaries={}
-            for size,fixture in fixtures.items():
-                output=root/(size+'-attempt-'+str(attempt));log=root/(size+'-attempt-'+str(attempt)+'.log')
-                require_binding(original,binding())
-                execution=run_child([str(binary),'diagnose' if args.diagnose_costs else 'run',str(output),str(args.native_library.resolve()),str(fixture['manifest'])],log,env,600)
-                require_binding(original,binding())
-                if args.diagnose_costs and execution['exitCode']==0:
-                    validate_cost_measurements(log)
-                rows,complete=measurements(log);result={'size':size,'correctnessPassed':execution['exitCode']==0 and complete and execution['childAbsent'] and execution['childGroupAbsent'],'limitsSHA256':limits['sha256'],'observations':rows}
-                decision=evaluate(result,limits);item={'size':size,'attempt':attempt,'execution':execution,'binding':original,'result':result,'status':decision.status,'failures':decision.failures,'summaries':decision.summaries};report['attempts'].append(item);write_new(root/(size+'-attempt-'+str(attempt)+'-result.json'),item)
-                decisions[size]=decision;executions[size]=execution;summaries[size]=decision.summaries
-                if decision.status=='correctness-failed':raise RuntimeError('Correctness/coverage failed; retry prohibited')
-            paired=[]
-            for name,spec in comparisons.items():
-                decision=evaluate_scaling(summaries,spec,{size:f['receipt'] for size,f in fixtures.items()})
-                paired.append((spec,decision))
-                report['pairedScalingAttempts'].append({'attempt':attempt,'comparison':name,'smallSize':spec['smallSize'],'largeSize':spec['largeSize'],'status':decision.status,'failures':decision.failures,'comparisons':decision.summaries})
-                if decision.status=='correctness-failed':raise RuntimeError('Paired fixture shape/coverage failed; retry prohibited')
-            failures=[failure for d in decisions.values() for failure in d.failures]+[failure for _,d in paired for failure in d.failures]
-            if not may_complete_with_advisory_timing([*decisions.values(),*(decision for _,decision in paired)]):
-                raise RuntimeError('Correctness/structure cannot be advisory')
-            if failures and reference is not None:
-                originals={item['size']:item['result'] for item in report['attempts'] if item['attempt']==attempt}
-                diagnostics={size:disk_stall.action_diagnostics(root/(size+'-attempt-'+str(attempt)+'.log')) for size in originals}
-                planned,_=disk_stall.plan(originals,diagnostics,limits,comparisons,{size:f['receipt'] for size,f in fixtures.items()},resampled_labels)
-                if planned:
-                    # A resampled label that misses again is an ordinary failure under the existing rules.
-                    decisions,paired=resample(attempt,originals,planned)
-                    failures=[failure for d in decisions.values() for failure in d.failures]+[failure for _,d in paired for failure in d.failures]
-            if not failures:break
-            if args.measure_only or args.hosted_advisory:
-                break
-            if may_rerun_all(decisions,paired,attempt,executions,original,binding()):
-                report['rerunsUsed']=1;continue
-            raise RuntimeError('Absolute or paired timing limit exceeded; no eligible further rerun')
+                rows,complete=measurements(log);record['observations']=rows
+                if (record['execution']['exitCode']!=0 or not complete or not record['execution']['childAbsent'] or not record['execution']['childGroupAbsent'] or
+                        completed_family_run(log)!={'family':family,**{key:fixtures[size]['receipt'].get(key) for key in FIXTURE_KEYS}} or
+                        not valid_rerun_rows(rows,family,actions)):
+                    raise RuntimeError('Rerun correctness/coverage failed; terminal: '+size+':'+family)
+                values.setdefault(size,{}).update({row['action']:row['microseconds']/1000 for row in rows})
+            verdict=judge_reruns(decisions,paired,values,limits,comparisons)
+            report.update(rerunJudgments=verdict['judgments'],notJudgedOverBound=verdict['notJudgedOverBound'],confirmedFailures=verdict['confirmedFailures'])
+            failures=verdict['confirmedFailures']
+            if failures:raise RuntimeError('Same label failed its first pass and its rerun: '+', '.join(failures))
         require_binding(original,binding());report['allPinsMatch']=True;report['measurementCompleted']=True;report['correctnessAccepted']=True;report['timingLimitsPassed']=not failures;report['releaseGateAccepted']=not (args.measure_only or args.hosted_advisory)
         return 0
     except BaseException as error:

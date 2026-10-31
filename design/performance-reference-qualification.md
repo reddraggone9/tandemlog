@@ -1,12 +1,17 @@
 # Controlled reference qualification — operating protocol
 
 Implements [ADR0033](decisions/0033-controlled-reference-performance.md). No
-hardware multiplier;`limits-v1.json` SHA256 remains
-`553896b3b7a474291785519d64fdcaf0bbe105a47b8713156f7b336f11fd6b89`.
-The next-release 257-label inventory adds only Activity derivation (15ms median,
-30ms maximum); all previous absolute and paired bounds remain unchanged.
-Controller re-registration 3ac194c97515ae4dda05279be7564b2a046bba21778e4f1295c9c019387d6708 changes only its
-hard-coded limits digest; private exact reverse-byte and AST review passed.
+hardware multiplier. `limits-v1.json` SHA256 is
+`142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8`, which differs
+from `553896b3…` only in the [gate rule](performance-gate.md#the-gate-rule-lee-2026-10-31)
+fields (`gateRule`, `gateRuleSource`, `warmups: 0`, `samples: 1`); every budget number is
+unchanged. The next-release 257-label inventory added only Activity derivation (15ms median,
+30ms maximum) to the previous bounds.
+Controller re-registration `327a1712ac00dedc8a1c528292150894dde032151c90a7579ab4df994c7cee53`
+changes only its hard-coded limits digest from `3ac194c9…`; the controller reads no sample
+count and has no rerun logic of its own. It is staged privately beside its unchanged pressure
+module, with a launcher changed only in its controller path and hash. Independent review of
+that staging is required before any request.
 No qualification is implied by this registration.
 The implementation is not qualified until host/controller registration,a fresh
 reference receipt and exact-source hosted CI all pass. Do not promote old samples.
@@ -14,16 +19,15 @@ reference receipt and exact-source hosted CI all pass. Do not promote old sample
 ## Required roles
 
 - Hosted Linux/Windows/Android correctness/build/native checks remain required.
-  Hosted AOT uses `--hosted-advisory`,strict physical caps and all254metrics across
+  Hosted AOT uses `--hosted-advisory`,strict physical caps and all257metrics across
   all3shapes. Correctness,replay,integrity,coverage,source/tool/fixture drift,
   invalid growth contracts and incomplete child cleanup remain fatal. Only timing
-  comparisons become advisory;every raw miss/log remains. No timing retry.
+  comparisons become advisory;every raw miss/log remains. No timing rerun.
 - Controlled Farnsworth runs the **same** uninstrumented enforcing harness,without
-  measure-only/advisory/diagnostic flags. Both absolute and both growth-rule sets
-  must pass with existing2warmups/5samples. The original at-most-one externally
-  justified full-suite timing retry is preserved,never retry-until-pass.
-  Separately,a failed qualification may receive the single
-  [official rerun](#official-rerun-after-non-reproduction) below.
+  measure-only/advisory/diagnostic flags. Absolute and both growth-rule sets decide
+  under the [gate rule](performance-gate.md#the-gate-rule-lee-2026-10-31): one sample,
+  no warmups, one automatic rerun of first-pass misses inside the invocation, and a
+  run fails only when the same label misses twice. Never retry-until-pass.
 - Hosted `reference-performance` independently verifies the committed bundle.
   Missing or stale data fails;passing hosted timing never substitutes for it.
   `releaseGateAccepted` in the standalone result means only its AOT scope,not
@@ -78,8 +82,9 @@ The per-request manager adaptation must preserve:
 | Concurrency | no emulator,app,other benchmark or build/test load;never kill unrelated work |
 | Cleanup | unconditional exact-unit stop/query,MainPID0,owned processes absent;preserve timeout/errors |
 
-The invocation may contain the existing eligible full-suite noise retry within
-that25minute bound. If it cannot finish,the result fails and is retained. Future
+The invocation contains any automatic family reruns within that25minute bound;a full
+pass took about 3.4 minutes under these caps (earlier receipts' seven repetitions took about
+12),so even rerunning every family fits. If it cannot finish,the result fails and is retained. Future
 execution is coordinated through parent after tooling/registration review;these
 commands do not launch anything on their own. No foreground window is needed.
 
@@ -207,149 +212,42 @@ recorded;old receipts are never reinterpreted.
   bytes at the request's own revision. Actual history:RC.5 `be93df2`,stable
   `d494d9b` and `dfb2260` have three v1 identities and one v2 identity.
 
-An official rerun must use the failed request's scheme,because the identities must
-be equal.
+## Results under earlier rules
 
-## Official rerun after non-reproduction
+Before 2026-10-31 each result took two warmups and five samples, and medians and maxima both
+decided. Three routes around a timing failure existed; the
+[gate rule](performance-gate.md#the-gate-rule-lee-2026-10-31) replaced all of them for new
+qualifications, and their code was removed from the tree at that point:
 
-Lee approved this rule on2026-10-26. A repeatable failure is a real performance
-problem:profile it in separate diagnostic runs,fix the cause and qualify the
-changed source with a fresh request. An isolated failure that diagnostics cannot
-reproduce may instead receive **exactly one** official rerun of the unchanged
-relevant source. Budgets,limits,coverage and the in-invocation noise retry are
-unchanged. A failed rerun counts as repeatable;there is no third qualification
-of that identity,except that a [borderline result](#borderline-result-on-already-qualified-source)
-of an identity that already passed is not a regression. Never rerun unchanged
-source merely to obtain a green result.
+- **Noise retry** (ADR0032): at most one full-suite rerun inside the invocation with recorded
+  external CPU pressure overlapping every failing process.
+- **Official rerun** (Lee, 2026-10-26): exactly one fresh qualification of unchanged source after
+  a recorded diagnostic failed to reproduce any failing label; a failed rerun counted as
+  repeatable. Bundles carry `official-rerun.json` and `prior-gate-result.json`.
+- **Borderline** (Lee, 2026-10-27; absolute misses 2026-10-28): a miss within 5% of its bound on
+  an identity that already held a passing qualification. q9/q10/q11 measured the same
+  `sync.peerTask.whileFood.storageAdmission` growth at 99.8%/96.3%/101.6% of its bound on
+  identical product code. No borderline bundle was ever sealed.
+- **Disk-stall resample** (Lee, 2026-10-28): one label resample when durable-append time
+  accounted for the overrun and CPU time fit the bound (RC.2 q1:
+  `dense-food:food.product.merge.undo` 25.494ms against 20ms, 17.573ms of it append).
 
-Eligibility is enforced by `reference_receipt.py`,not by an ad-hoc exception:
-
-- The prior result must be an enforcing,uninstrumented qualification bound to its
-  request and the same relevant source identity,which failed only on timing
-  limits (`error` is the timing-limit refusal;every attempt completed with exit0
-  and only `passed`/`timing-failed` statuses). Correctness,coverage,execution,
-  binding,measure-only,advisory or diagnostic results are not rerunnable.
-- A prior request that is itself an official rerun is refused (limit1).
-- A recorded diagnostic (`reference-failure-diagnostic-v1`) must name the prior
-  request and source identity,contain at least one `role: diagnostic`,
-  `qualifying: false` run with its result hash,check **every** prior failing
-  label (absolute `size:action` and growth `comparison:scaling:action`) and
-  reproduce none. Runs must start after the failed qualification finished;the
-  record must precede the rerun request. Profiling and tracing belong only there.
-
-Issue an ordinary fresh request first,then authorize it beside the request:
+Every sealed result keeps its original meaning and verifies with the tooling of its own commit,
+because the relevant-source identity includes `tool/performance/`: a newer verifier could never
+accept an old bundle as current anyway, and the bytes that define its meaning are the bytes in
+its commit. At a commit carrying the bundle:
 
 ```bash
-python3 tool/performance/reference_receipt.py authorize-rerun \
-  --repo "$qualification_source" --request "$rerun_request" \
-  --rerun-of-request "$failed_request" --rerun-of-result "$failed_run/gate-result.json" \
-  --diagnostic "$diagnostic_record"
+git worktree add --detach "$dir" "$commit" && python3 "$dir/tool/performance/reference_receipt.py" verify --repo "$dir"
 ```
 
-The request keeps exactly the nine fields the registered controller accepts;an
-earlier draft embedded the authorization inside the request and the controller
-correctly refused it before admission. `authorize-rerun` writes
-`$rerun_request.official-rerun.json`,binding the rerun request hash,the prior
-request,prior result hash,prior failing labels and the diagnostic record
-(ordinal2). It refuses when the failed request already has such a file:that
-failure was itself the official rerun and is repeatable. Seal with
-`--rerun-authorization "$rerun_request.official-rerun.json" --prior-result
-"$failed_run/gate-result.json"`;the bundle carries `official-rerun.json` and
-`prior-gate-result.json`,and the verifier recomputes eligibility. A first
-qualification bundle cannot carry a prior result. The local executor remains the
-trust boundary for presenting the failure:the original failed run,its logs and
-the diagnostic outputs stay retained.
+Verified on 2026-10-31 with that exact command: `v2026.10.7` (owner override, q11), `v2026.10.9-rc.1`
+(owner override, q5), `v2026.10.8` (`9b29fa84`), `v2026.10.9` (`df710a4c`), `v2026.10.10`
+(`50a8ca56`) and `436a689` (official rerun `8993c1aa`). `tool/test_reference_history.py` repeats this
+where history is available. The retained directories under `evidence/reference-performance/` stay
+in the tree as records; at this source, `verify` reads only `current/`.
 
-## Disk-stall resample
-
-Lee approved this rule on2026-10-28 21:37 CDT as a standing rule. Farnsworth's
-durable appends occasionally stall for tens of milliseconds off-CPU (RC.2 q1:
-`dense-food:food.product.merge.undo` 25.494ms against 20ms,17.573ms of it
-append,7.483ms CPU). Such a miss measures the disk,not the action.
-
-`run_gate.py` applies it inside the enforcing reference invocation only
-(`--reference-request`);hosted,measure-only and diagnostic runs never resample.
-After an attempt's three sizes and both comparisons are evaluated, it reads the
-per-sample `appendMicroseconds` and `cgroup.usage_usec` the benchmark already
-logs,and when every missed label is attributed (see
-[the rule](performance-gate.md)) runs `benchmark resample OUTPUT NATIVE MANIFEST
-FAMILY` once per attributed label,under the same binary,fixture,limits and
-binding checks and the same 600s child bound. The resample log
-`disk-stall-resample-ATTEMPT-ORDINAL.log` is sealed in the bundle beside the
-attempt logs. The extra child fits within the controller's original deadline; no
-controller,request or budget changes.
-
-A resample that misses again is an ordinary failure: the result keeps the usual
-timing refusal,its failing labels are the post-resample labels,and the existing
-[official rerun](#official-rerun-after-non-reproduction) and borderline rules
-apply to it as to any other failure. A label never gets a second resample,
-including in an in-invocation noise retry.
-
-`verify`/`seal` recompute attribution from the recorded numbers,check those
-numbers against the attempt log,check the replacement samples against the
-resample log,and recompute every decision from original plus replacement samples.
-Each resample records the hash of the fixture manifest it ran on,which must be
-its label's sealed fixture,and its log's completion counts must match that
-fixture's contract. Borderline classification,official-rerun labels and owner
-overrides all judge the post-resample decision,never the replaced samples,and
-borderline bundles carry the resample logs.
-
-## Borderline result on already qualified source
-
-Lee approved this rule on2026-10-27 14:56 CDT and extended it to absolute misses
-on2026-10-28. When IDENTICAL relevant source
-(same relevant-source identity,under the scheme its requests recorded) already
-passed a qualifying check,a timing failure within normal run-to-run variation is
-a borderline limit,not a regression:it does not block the release and is queued
-for a look at the limit or the scaling behind it. For exactly this case it
-replaces the "failed rerun is repeatable" conclusion;the official-rerun rule
-above stays for every other failure. Budgets,limits and coverage are unchanged.
-
-`tool/performance/borderline.py` encodes it;`gate_policy.classify_borderline`
-is the verdict. `borderline-accepted` requires ALL of:
-
-- `evidence/reference-performance/current/` verifies as an ordinary passing
-  qualification of the current relevant source (missing/stale fails);
-- the failed request is a different request with the identical recorded
-  `relevantSource`,current host profile,an ancestor revision,and was issued
-  after that passing result finished;
-- the failed result is the original enforcing timing-limit refusal with no
-  in-invocation retry,and every pin,seal,import closure,toolchain,fixture
-  contract,absolute/growth evaluation,binding,log and failed-workload cleanup
-  recomputes from retained bytes (the same checks as the owner override). Any
-  correctness,coverage,replay/integrity or execution failure refuses;
-- every timing miss,absolute or history-growth,has its median and/or maximum
-  at most `BORDERLINE_VARIATION_BAND` (5%) over its unchanged bound. Absolute
-  misses use the size-specific action budget;growth misses use the paired
-  large-size bound. This includes mixed absolute/growth misses:one miss beyond
-  the band makes the whole result an ordinary failure. No timing budget changes.
-
-The band is a declared constant,not a computed tolerance. The q9/q10/q11 runs
-measured the same `sync.peerTask.whileFood.storageAdmission` growth at
-99.8%/96.3%/101.6% of its bound on identical product code,a5.3-point spread.
-Recomputed under this rule,q11 is borderline (101.6%) and q10 is an ordinary
-failure (`explicitTask.title.undo` maximum at145.5% of bound). Changing the band
-requires Lee's approval,like any limit change.
-
-Seal the failed run with the passing qualification already committed:
-
-```bash
-python3 tool/performance/borderline.py seal --repo "$checkout" \
-  --request "$failed_request" --run "$failed_run" --cleanup "$failed_cleanup" \
-  --output "$checkout/evidence/reference-performance/borderline"
-```
-
-An official rerun adds `--rerun-authorization`/`--prior-result`,which are verified
-as above. Seal refuses (and leaves no bundle) unless the verdict is
-`borderline-accepted`. `borderline.json` records the verdict,both request/result
-hashes,unchanged limits,the band,each borderline metric (label,statistic,
-measured,bound,ratio) and `followUp:{status:queued,...}`. When the directory
-exists,`reference_receipt.py verify` checks it together with the passing
-qualification,reports `QUALIFIED_WITH_BORDERLINE_FOLLOW_UP_QUEUED` and emits a CI
-warning naming each metric;a borderline bundle that does not verify fails the
-check. Queue the follow-up in the release work list. When `current/` is replaced
-by a qualification of other source,remove the old borderline bundle in the same
-commit.
+The last full text of these rules is `design/performance-reference-qualification.md` at `9b06f97`.
 
 ## Release-owner override — stable 2026.10.7+101 only
 
@@ -363,8 +261,8 @@ the rerun limit are unchanged,and nothing is relabelled passed.
 
 `evidence/reference-performance/owner-override-stable101/` retains the q11
 request,official-rerun authorization,q10 prior result,raw q11 result,logs,
-fixture manifests and failed-workload cleanup,plus `override.json`. When that
-directory exists,`reference_receipt.py verify` runs `owner_override.py`
+fixture manifests and failed-workload cleanup,plus `override.json`. At that
+release's own commit,`reference_receipt.py verify` runs its `owner_override.py`
 instead of the qualification verifier and reports
 `OWNER_OVERRIDE_ACCEPTED_NOT_QUALIFIED` with `referencePerformanceQualified:false`
 and a CI warning. It refuses unless:
@@ -390,7 +288,9 @@ a precedent. It accepts no native-visible,signing,candidate,release or live gate
 at any other version the directory is retained history and the ordinary verifier
 (plus any borderline bundle) runs. The override stays v1-identity bound. The
 borderline rule now covers this kind of case without an owner exception:under
-identity v2,q9's pass covers `dfb2260`,and q11 recomputes as borderline.
+identity v2,q9's pass covers `dfb2260`,and q11 recomputes as borderline. A future override
+would need new code for the current result shape;`owner_override.py` left the tree with the
+rules it validated and remains in these releases' commits.
 
 ## Release-owner override — prerelease 2026.10.9-rc.1+104 only
 
@@ -430,16 +330,16 @@ using its curated environment and the actual Dart SDK binary:
 /usr/bin/python3 "$qualification_source/tool/performance/run_gate.py" \
   --repo "$qualification_source" --dart "$reviewed_dart" \
   --native-library "$reviewed_native" --sqlite-library "$reviewed_sqlite" \
-  --expected-limits-sha256 335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb \
+  --expected-limits-sha256 142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8 \
   --reference-request "$qualification_request" --output "$qualification_run"
 ```
 
 No `--measure-only`,`--hosted-advisory` or `--diagnose-costs`. Do not set SQLite
 LD_PRELOAD on the manager/shell;the driver applies it to actual Dart/AOT children.
 The fresh output must not exist. All3shapes retain identical current state and
-initial prefixes,their module-specific history growth,all254labels,2warmups/5samples,
-first-use fixtures and complete replay/prefix/native-owner assertions. Failures
-remain raw data. No per-action rerun or discarded outlier.
+initial prefixes,their module-specific history growth,all257labels,one sample and no
+warmups,first-use fixtures and complete replay/prefix/native-owner assertions. Failures
+remain raw data. Reruns follow the gate rule;nothing is discarded as an outlier.
 
 ## Cleanup adapter and export
 
@@ -479,7 +379,7 @@ python3 "$qualification_source/tool/performance/reference_receipt.py" seal \
 
 The exporter rechecks the executable hash/execute bit and all actual generated
 canonical fixture bytes,then retains the request,complete report,compile/generation/
-attempt logs,fixture manifests,cleanup and exact member hashes. It does not export
+attempt and rerun logs,fixture manifests,cleanup and exact member hashes. It does not export
 personal data or the executable/canonical workspaces. Original raw run output stays
 with the local executor. Partial/failed export remains evidence,not qualification.
 
@@ -500,7 +400,7 @@ python3 tool/performance/reference_receipt.py verify --repo "$checkout"
 The required read-only job verifies request/commit ancestry/current identity,
 host/controller/SDK/dependencies/package roots/seals/import closure,caps,all input
 and log hashes,each registered sample/order/summary,both growth contracts/limits,
-any retry's original noise eligibility,and complete cleanup. Historical,
+the rerun plan and judgments recomputed from retained samples,and complete cleanup. Historical,
 advisory,instrumented,missing,mismatched,incomplete or over-budget results fail.
 Documentation changes cannot rewrite original failed statuses.
 
@@ -531,3 +431,9 @@ same-family `food.details.1` maximum was 9.387 ms, below the unchanged bound.
 These isolated observations are retained, not relabelled as reproduced causes;
 q2 remains failed. q1, q2, q3 and diagnostic originals remain retained by the
 executor. No further qualification of this unchanged identity is authorized.
+
+Source `9b06f97` (identity `9f7ccc24`) failed both tries under those rules: q4 `15e16069` and its
+official rerun q5 `1055af47`, on maxima only (for example q5's effective
+`food.product.bulkEdit.undo` 23.869ms against 20ms; its median 11.278ms passed). Both remain failed
+and unsealed, with their causal diagnoses retained by the executor. Those results led to the gate
+rule; a later qualification of changed source under it does not relabel them.

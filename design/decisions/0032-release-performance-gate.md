@@ -64,3 +64,12 @@ spread; a wide one would loosen limits silently) and accepting any miss of
 passed source (retry-until-green). Revisit if borderline results recur on the
 same metric: that is a limit or scaling problem to fix, not noise. Details:
 [borderline result](../performance-reference-qualification.md#borderline-result-on-already-qualified-source).
+
+## Amendment 2026-10-31 — single sample with automatic confirmation
+
+Lee replaced the sampling and retry rules for new qualifications: one sample per action per
+shape with no warmups, judged against the existing median limits, and each first-pass miss rerun
+once automatically in the same invocation; a run fails only when the same label misses twice.
+Budgets are unchanged, and maxima no longer decide. This supersedes the noise retry above and the
+official-rerun and borderline amendments for new results; sealed results keep their meaning and
+verify at their own commits. See [the gate rule](../performance-gate.md#the-gate-rule-lee-2026-10-31).

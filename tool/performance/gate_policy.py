@@ -1,9 +1,13 @@
 """Deterministic policy for the standalone AOT performance gate.
-Timing reruns never waive correctness and never change versioned limits.
+
+Lee 2026-10-31: one sample per action per shape, no warmups, judged against the median
+limits. First-pass misses rerun once, automatically, in the same invocation; a run fails
+only when the same label misses both times. Correctness never reruns and limits never change.
 """
 from dataclasses import dataclass
-import statistics
 import math
+
+GATE_RULE = 'single-sample-confirm-v1'
 
 @dataclass(frozen=True)
 class Evaluation:
@@ -63,141 +67,22 @@ def evaluate(result, limits):
         groups.setdefault(action, []).append(sample)
     if set(groups) != set(expected):
         return Evaluation("correctness-failed", ("coverage",), {})
+    if limits.get("gateRule") != GATE_RULE or limits.get("warmups") != 0 or limits.get("samples") != 1:
+        return Evaluation("correctness-failed", ("sample-policy",), {})
     summaries, failures = {}, []
     for action, samples in groups.items():
-        warm = [s for s in samples if s.get("warmup") is True]
-        measured = [s for s in samples if s.get("warmup") is False]
-        if (len(samples) != limits["warmups"]+limits["samples"] or len(warm) != limits["warmups"] or
-                len(measured) != limits["samples"] or
-                any(type(s.get("index")) is not int for s in samples) or
-                [s.get("index", -1) for s in samples] != list(range(len(samples))) or
-                any(s["warmup"] != (s["index"] < limits["warmups"]) for s in samples)):
+        if len(samples) != 1 or type(samples[0].get("index")) is not int or samples[0]["index"] != 0 or samples[0]["warmup"]:
             return Evaluation("correctness-failed", ("sample-count-or-order",), {})
-        values = [s["microseconds"] / 1000 for s in measured]
-        summary = {"allSamplesMs": values, "medianMs": statistics.median(values),
-                   "maxMs": max(values), "warmupSamplesMs": [s["microseconds"]/1000 for s in warm]}
-        summaries[action] = summary
-        bound = expected[action]
-        if any(type(bound.get(k)) not in (int, float) or not math.isfinite(bound[k]) or bound[k] <= 0
-               for k in ("medianMs", "maxMs")):
+        bound = expected[action].get("medianMs")
+        if type(bound) not in (int, float) or not math.isfinite(bound) or bound <= 0:
             return Evaluation("correctness-failed", ("invalid-limit",), {})
-        if (summary["medianMs"] > bound["medianMs"] or
-                summary["maxMs"] > bound["maxMs"]):
+        summaries[action] = {"sampleMs": samples[0]["microseconds"] / 1000}
+        if summaries[action]["sampleMs"] > bound:
             failures.append(action)
     return Evaluation("timing-failed" if failures else "passed", tuple(failures), summaries)
 
-def external_noise_overlapped(evidence):
-    """Both CPU pressure and independent unrelated work are required.
-    Own CPU quota throttling, a slow sample, or a caller's assertion is insufficient.
-    """
-    try:
-        duration = evidence["windowSeconds"]
-        return (evidence["kind"] == "observed-external-cpu-load" and
-                evidence["sampleWindowCovered"] is True and duration > 0 and
-                evidence["cpuSomeStallMicrosecondsDelta"] / (duration*1_000_000) >= .25 and
-                evidence["otherCpuMicrosecondsDelta"] / (duration*1_000_000) >= .5 and
-                evidence["ownWorkExcluded"] is True)
-    except (KeyError, TypeError, ZeroDivisionError):
-        return False
-
-def may_rerun(evaluation, attempt, noise, original_binding, current_binding):
-    return (attempt == 0 and evaluation.status == "timing-failed" and
-            original_binding == current_binding and external_noise_overlapped(noise))
-
-
-OFFICIAL_RERUN_LIMIT = 1
-
-def diagnostic_did_not_reproduce(diagnostic, prior_request_id, source_sha256, prior_failures):
-    """A recorded, non-qualifying diagnostic must cover every prior failure and reproduce none.
-
-    This is the only basis for the single official rerun of an unchanged source identity
-    after an enforcing timing-only qualification failure. Budgets are never consulted or
-    changed here; a run that skipped a failing label or reproduced one is not eligible.
-    """
-    try:
-        runs = diagnostic["runs"]
-        failures = set(prior_failures)
-        return (diagnostic["schemaVersion"] == 1 and
-                diagnostic["kind"] == "reference-failure-diagnostic-v1" and
-                diagnostic["priorRequestId"] == prior_request_id and
-                diagnostic["relevantSourceSHA256"] == source_sha256 and
-                diagnostic["reproduced"] is False and
-                bool(failures) and isinstance(runs, list) and bool(runs) and
-                all(run["role"] == "diagnostic" and run["qualifying"] is False and
-                    isinstance(run["resultSHA256"], str) and len(run["resultSHA256"]) == 64 and
-                    set(run["resultSHA256"]) <= set("0123456789abcdef") and
-                    failures <= set(run["checkedFailures"]) and run["reproducedFailures"] == []
-                    for run in runs))
-    except (KeyError, TypeError):
-        return False
-
-
-# Lee 2026-10-27: on identical relevant source that already passed, a timing miss within normal
-# run-to-run variation is a borderline limit, not a regression. The band is a fraction of the
-# exceeded bound: q9/q10/q11 measured the same storageAdmission growth at 99.8%/96.3%/101.6%
-# of its bound on identical product code, a 5.3-point spread; 5% covers that and nothing like
-# q10's 145.5% explicitTask.title.undo maximum. Budgets themselves are never changed here.
-BORDERLINE_VARIATION_BAND = 0.05
-BORDERLINE_ACCEPTED = 'borderline-accepted'
-
-def classify_borderline(prior_passed_identity, identity, absolute, paired, band=BORDERLINE_VARIATION_BAND, *, limits=None):
-    """Verdict for a recomputed enforcing result: passed, borderline-accepted or failed.
-
-    prior_passed_identity is the relevant-source SHA-256 of an already verified passing
-    qualification (None when there is none). Absolute and history-growth misses can be
-    borderline; correctness/coverage failures or any miss beyond the band fail. Absolute
-    misses require the same verified limits used to recompute their evaluations; keep the
-    retained summary schema unchanged so earlier qualification receipts still recompute.
-    """
-    def failed(reason):
-        return {'verdict': 'failed', 'reason': reason, 'borderlineMetrics': []}
-    if not prior_passed_identity:
-        return failed('no prior passing qualification of this relevant source')
-    if prior_passed_identity != identity:
-        return failed('prior pass is for a different relevant-source identity')
-    if not absolute or not paired:
-        return failed('incomplete absolute or growth evaluation')
-    for name, decision in [*absolute.items(), *paired.items()]:
-        if decision.status not in ('passed', 'timing-failed') or \
-                (decision.status == 'timing-failed') != bool(decision.failures):
-            return failed('correctness/coverage failure: ' + name + ' ' + ','.join(decision.failures))
-    metrics = []
-    for decisions, is_growth in ((absolute, False), (paired, True)):
-        for name, decision in sorted(decisions.items()):
-            for failure in decision.failures:
-                action = failure.removeprefix('scaling:') if is_growth else failure
-                summary = decision.summaries.get(action)
-                label = name + ':' + failure
-                if not isinstance(summary, dict) or (is_growth and not failure.startswith('scaling:')):
-                    return failed('correctness/coverage failure: ' + label)
-                if is_growth:
-                    metric_keys = (('median', 'largeMedianMs', 'medianBoundMs'),
-                                  ('maximum', 'largeMaximumMs', 'maximumBoundMs'))
-                    bounds = summary
-                else:
-                    metric_keys = (('median', 'medianMs', 'medianMs'), ('maximum', 'maxMs', 'maxMs'))
-                    bounds = (limits or {}).get('actionsBySize', {}).get(name, {}).get(action, {})
-                exceeded = False
-                for statistic, measured_key, bound_key in metric_keys:
-                    measured, bound = summary.get(measured_key), bounds.get(bound_key)
-                    if (type(measured) not in (int, float) or not math.isfinite(measured) or measured < 0 or
-                            type(bound) not in (int, float) or not math.isfinite(bound) or bound <= 0):
-                        return failed('invalid timing summary or bound: ' + label)
-                    if measured <= bound:
-                        continue
-                    exceeded = True
-                    if measured > bound * (1 + band):
-                        return failed('%s %s %.4gms is outside the %g%% variation band of its %.4gms bound'
-                                      % (label, statistic, measured, band * 100, bound))
-                    metrics.append({'label': label, 'statistic': statistic, 'measuredMs': measured,
-                                    'boundMs': bound, 'ratioOfBound': round(measured / bound, 6)})
-                if not exceeded:
-                    return failed('correctness/coverage failure: ' + label + ' reported without a miss')
-    if not metrics:
-        return {'verdict': 'passed', 'reason': 'all limits passed', 'borderlineMetrics': []}
-    return {'verdict': BORDERLINE_ACCEPTED, 'borderlineMetrics': metrics,
-            'reason': 'timing misses within the %g%% variation band on identical, already passed source'
-                      % (band * 100)}
+def growth_bound(small_ms, rule):
+    return small_ms*rule['maxMedianRatio']+rule['medianAdditiveMs']
 
 
 def evaluate_scaling(summaries_by_size, scaling, contracts):
@@ -240,15 +125,93 @@ def evaluate_scaling(summaries_by_size, scaling, contracts):
         for action, rule in rules.items():
             left, right = summaries_by_size[small][action], summaries_by_size[large][action]
             if any(type(rule.get(k)) not in (int, float) or not math.isfinite(rule[k]) or rule[k] < 0
-                   for k in ('maxMedianRatio', 'medianAdditiveMs', 'maxMaximumRatio', 'maximumAdditiveMs')):
+                   for k in ('maxMedianRatio', 'medianAdditiveMs')):
                 return Evaluation('correctness-failed', ('invalid-scaling-limit',), {})
-            median_bound = left['medianMs']*rule['maxMedianRatio']+rule['medianAdditiveMs']
-            max_bound = left['maxMs']*rule['maxMaximumRatio']+rule['maximumAdditiveMs']
-            result[action] = {'smallMedianMs':left['medianMs'],'largeMedianMs':right['medianMs'],
-                              'medianBoundMs':median_bound,'smallMaximumMs':left['maxMs'],
-                              'largeMaximumMs':right['maxMs'],'maximumBoundMs':max_bound}
-            if right['medianMs'] > median_bound or right['maxMs'] > max_bound:
+            bound = growth_bound(left['sampleMs'], rule)
+            result[action] = {'smallSampleMs': left['sampleMs'], 'largeSampleMs': right['sampleMs'], 'boundMs': bound}
+            if right['sampleMs'] > bound:
                 failures.append('scaling:'+action)
         return Evaluation('timing-failed' if failures else 'passed',tuple(failures),result)
     except (KeyError,TypeError):
         return Evaluation('correctness-failed',('paired-shape-or-coverage',),{})
+
+
+def first_pass_failures(absolute, paired):
+    """Every first-pass miss as a label: SIZE:ACTION or COMPARISON:scaling:ACTION."""
+    return sorted({size+':'+f for size, d in absolute.items() for f in d.failures} |
+                  {name+':'+f for name, d in paired.items() for f in d.failures})
+
+
+def observation_families(results):
+    """{size: {action: family}} from first-pass rows; each family must be a plain name."""
+    found = {}
+    for size, result in results.items():
+        for row in result['observations']:
+            family = row.get('family')
+            if not isinstance(family, str) or not family.replace('-', '').isalnum():
+                raise ValueError('Observation has no valid family: '+size+':'+str(row.get('action')))
+            found.setdefault(size, {})[row['action']] = family
+    return found
+
+
+def rerun_plan(absolute, paired, specs, families):
+    """Sorted (size, family) units. Actions chain within a family, so a whole family reruns.
+
+    A growth miss reruns both sides of its pair; one process serves every label it covers.
+    """
+    units = {(size, families[size][action]) for size, d in absolute.items() for action in d.failures}
+    for name, decision in paired.items():
+        for failure in decision.failures:
+            action = failure.removeprefix('scaling:')
+            units.update((size, families[size][action]) for size in (specs[name]['smallSize'], specs[name]['largeSize']))
+    return sorted(units)
+
+
+def valid_rerun_rows(rows, family, actions):
+    """One unwarmed sample for exactly the family's first-pass actions; nothing else counts."""
+    return (isinstance(rows, list) and sorted(r.get('action', '') for r in rows) == sorted(actions) and
+            all(r.get('family') == family and type(r.get('index')) is int and r['index'] == 0 and
+                r.get('warmup') is False and type(r.get('microseconds')) is int and r['microseconds'] >= 0
+                for r in rows))
+
+
+def judge_reruns(absolute, paired, reruns, limits, specs):
+    """Judge first-pass misses from rerun values only. reruns: {size: {action: ms}}.
+
+    A growth pair is judged from the rerun values of BOTH sides. Other labels over their bound
+    in a rerun are recorded for a person but not judged.
+    """
+    judgments, other = [], []
+    judged = set()
+    for size, decision in absolute.items():
+        for action in decision.failures:
+            bound = limits['actionsBySize'][size][action]['medianMs']
+            value = reruns[size][action]
+            judged.add(size+':'+action)
+            judgments.append({'label': size+':'+action, 'kind': 'absolute', 'firstPassMs': decision.summaries[action]['sampleMs'],
+                              'rerunMs': value, 'boundMs': bound, 'failedAgain': value > bound})
+    for name, decision in paired.items():
+        spec = specs[name]
+        for failure in decision.failures:
+            action = failure.removeprefix('scaling:')
+            small, large = reruns[spec['smallSize']][action], reruns[spec['largeSize']][action]
+            bound = growth_bound(small, spec['rules'][action])
+            judged.add(name+':'+failure)
+            judgments.append({'label': name+':'+failure, 'kind': 'growth', 'firstPass': decision.summaries[action],
+                              'rerun': {'smallSampleMs': small, 'largeSampleMs': large, 'boundMs': bound},
+                              'failedAgain': large > bound})
+    for size, values in reruns.items():
+        for action, value in values.items():
+            if size+':'+action not in judged and value > limits['actionsBySize'][size][action]['medianMs']:
+                other.append({'label': size+':'+action, 'rerunMs': value, 'boundMs': limits['actionsBySize'][size][action]['medianMs']})
+    for name, spec in specs.items():
+        for action in set(reruns.get(spec['smallSize'], {})) & set(reruns.get(spec['largeSize'], {})):
+            label = name+':scaling:'+action
+            small, large = reruns[spec['smallSize']][action], reruns[spec['largeSize']][action]
+            bound = growth_bound(small, spec['rules'][action])
+            if label not in judged and large > bound:
+                other.append({'label': label, 'rerun': {'smallSampleMs': small, 'largeSampleMs': large, 'boundMs': bound}})
+    judgments.sort(key=lambda item: item['label'])
+    other.sort(key=lambda item: item['label'])
+    return {'judgments': judgments, 'notJudgedOverBound': other,
+            'confirmedFailures': [item['label'] for item in judgments if item['failedAgain']]}

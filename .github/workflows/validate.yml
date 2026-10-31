@@ -380,9 +380,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir "$RUNNER_TEMP/performance-diagnostics"
-          # Hosted correctness/bindings remain mandatory. The same absolute and
-          # growth limits qualify separately on the controlled reference host.
-          limits_sha="553896b3b7a474291785519d64fdcaf0bbe105a47b8713156f7b336f11fd6b89"
+          # Hosted correctness/bindings remain mandatory; timing stays advisory with no
+          # rerun. The same limits qualify separately on the controlled reference host.
+          limits_sha="142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8"
           mode=(--hosted-advisory)
           if [[ "${{ inputs.performance_calibration }}" == true ]]; then
             mode=(--measure-only)
@@ -390,7 +390,7 @@ jobs:
           bash tool/performance/run_ci.sh "$limits_sha" "${mode[@]}" \
             > "$RUNNER_TEMP/performance-diagnostics/runner.stdout.log" \
             2> "$RUNNER_TEMP/performance-diagnostics/runner.stderr.log"
-      - name: Retain every performance attempt and preflight diagnostic
+      - name: Retain every performance result and preflight diagnostic
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:

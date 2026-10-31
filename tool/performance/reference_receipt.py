@@ -12,22 +12,12 @@ import shutil
 import subprocess
 import sys
 
-from gate_policy import (evaluate, evaluate_scaling, validate_registered_coverage,
-                         diagnostic_did_not_reproduce, OFFICIAL_RERUN_LIMIT)
-import disk_stall
+from gate_policy import (evaluate, evaluate_scaling, validate_registered_coverage, first_pass_failures,
+                         observation_families, rerun_plan, valid_rerun_rows, judge_reruns, GATE_RULE)
 
 PROFILE = 'tool/performance/reference-host-v1.json'
 QUALIFICATION = 'evidence/reference-performance/current'
-# Release-owner acceptance of a retained failure for one exact release; see owner_override.py.
-OWNER_OVERRIDE = 'evidence/reference-performance/owner-override-stable101'
-OWNER_OVERRIDES = (OWNER_OVERRIDE, 'evidence/reference-performance/owner-override-food-rc1')
-# A verified borderline failure of the qualified identity, with its queued follow-up; see borderline.py.
-BORDERLINE = 'evidence/reference-performance/borderline'
 EXCLUDED = ('evidence/', 'design/')
-PRIOR_RESULT = 'prior-gate-result.json'
-AUTHORIZATION = 'official-rerun.json'
-AUTHORIZATION_SUFFIX = '.official-rerun.json'
-TIMING_FAILURE = 'Absolute or paired timing limit exceeded; no eligible further rerun'
 
 
 def need(condition, message):
@@ -274,86 +264,6 @@ def request_shape(value):
     need(re.fullmatch('[0-9a-f]{32}', value.get('requestId', '')) is not None, 'Fresh request nonce required')
     instant(value['issuedAtUTC'])
 
-def failed_qualification_failures(prior_request, report):
-    """Failing labels of an enforcing, complete, timing-only reference failure; else refuse."""
-    request_shape(prior_request)
-    binding = report.get('referenceBinding', {})
-    need(binding.get('requestId') == prior_request['requestId'] and
-         binding.get('requestSHA256') == canonical_digest(prior_request) and
-         binding.get('relevantSourceSHA256') == prior_request['relevantSource']['sha256'],
-         'Prior result is not bound to the prior qualification request')
-    need(report.get('timingRole') == 'enforcing' and report.get('measureOnly') is False and
-         report.get('costDiagnosticsEnabled') is False and report.get('releaseGateAccepted') is not True and
-         report.get('timingLimitsPassed') is not True and report.get('error') == TIMING_FAILURE,
-         'Only an enforcing timing-limit failure can be officially rerun')
-    attempts, pairs = report.get('attempts', []), report.get('pairedScalingAttempts', [])
-    need(bool(attempts) and all(a['status'] in ('passed', 'timing-failed') and a['execution']['exitCode'] == 0 and
-                                a['execution']['childAbsent'] is True for a in attempts) and
-         all(p['status'] in ('passed', 'timing-failed') for p in pairs),
-         'Correctness, coverage or execution failures are terminal and cannot be rerun')
-    last = max(a['attempt'] for a in attempts)
-    resampled = [r for r in report.get('diskStallResamples', []) if r['attempt'] == last]
-    if resampled:
-        # A resampled label that missed again is an ordinary failure; its effective labels are the failures.
-        need(len(resampled) == 1, 'Repeated disk-stall resample record')
-        failures = sorted({size + ':' + f for size, value in resampled[0]['absolute'].items() for f in value['failures']} |
-                          {name + ':' + f for name, value in resampled[0]['paired'].items() for f in value['failures']})
-    else:
-        failures = sorted({a['size'] + ':' + f for a in attempts if a['attempt'] == last for f in a['failures']} |
-                          {p['comparison'] + ':' + f for p in pairs if p['attempt'] == last for f in p['failures']})
-    need(bool(failures), 'Prior result has no timing failure to rerun')
-    instant(report['finishedAtUTC'])
-    return failures
-
-
-def check_authorization_shape(value, request):
-    """Request-bound authorization for the single official rerun; the request itself stays standard."""
-    need(isinstance(value, dict) and value.get('schemaVersion') == 1 and
-         value.get('kind') == 'official-rerun-authorization-v1' and
-         value.get('ordinal') == 1 + OFFICIAL_RERUN_LIMIT and
-         value.get('requestId') == request['requestId'] and
-         value.get('requestSHA256') == canonical_digest(request) and isinstance(value.get('priorRequest'), dict),
-         'Official rerun limit exceeded or authorization not bound to this request')
-    prior = value['priorRequest']
-    request_shape(prior)
-    need(prior['requestId'] != request['requestId'] and
-         prior['relevantSource']['sha256'] == request['relevantSource']['sha256'],
-         'Official rerun must repeat the failed request\'s unchanged relevant source')
-    diagnostic = value.get('diagnostic', {})
-    need(diagnostic_did_not_reproduce(diagnostic, prior['requestId'], prior['relevantSource']['sha256'],
-                                      value.get('priorFailures', [])),
-         'Official rerun lacks a recorded diagnostic that failed to reproduce every prior failure')
-    need(instant(diagnostic['recordedAtUTC']) <= instant(request['issuedAtUTC']) and
-         all(instant(value['priorFinishedAtUTC']) <= instant(r['startedAtUTC']) <= instant(r['finishedAtUTC'])
-             <= instant(diagnostic['recordedAtUTC']) for r in diagnostic['runs']),
-         'Diagnostic must follow the failed qualification and precede the rerun request')
-
-
-def official_rerun(repo, request, prior_request, prior_report, prior_report_sha256, diagnostic):
-    """The single approved rerun of unchanged source; budgets and limits are untouched."""
-    request_shape(request)
-    need(prior_request['relevantSource'] == request['relevantSource'] ==
-         recorded_identity(repo, request['relevantSource'])[0],
-         'Changed source needs a fresh request, not a rerun')
-    value = {'schemaVersion': 1, 'kind': 'official-rerun-authorization-v1', 'ordinal': 1 + OFFICIAL_RERUN_LIMIT,
-             'requestId': request['requestId'], 'requestSHA256': canonical_digest(request),
-             'priorRequest': prior_request, 'priorResultSHA256': prior_report_sha256,
-             'priorFinishedAtUTC': prior_report['finishedAtUTC'],
-             'priorFailures': failed_qualification_failures(prior_request, prior_report),
-             'diagnostic': diagnostic}
-    check_authorization_shape(value, request)
-    return value
-
-
-def check_official_rerun(repo, request, authorization, prior_report_path):
-    check_authorization_shape(authorization, request)
-    need(prior_report_path.is_file() and digest(prior_report_path) == authorization.get('priorResultSHA256'),
-         'Official rerun prior failed result is missing or changed')
-    expected = official_rerun(repo, request, authorization.get('priorRequest', {}), read(prior_report_path),
-                              authorization['priorResultSHA256'], authorization.get('diagnostic', {}))
-    need(expected == authorization, 'Official rerun authorization differs from the prior failed result')
-
-
 
 def request_context(repo, request_path, output, bounds):
     value = read(request_path)
@@ -425,67 +335,52 @@ def check_reference_toolchain(report, host):
     return normalized, rename
 
 
-def check_resample_records(report):
-    records = report.get('diskStallResamples', [])
-    fields = {'attempt', 'policy', 'resamples', 'executions', 'replacements', 'fixtures', 'absolute', 'paired'}
-    need(isinstance(records, list) and all(isinstance(r, dict) and fields <= set(r) and type(r['attempt']) is int and
-                                           0 <= r['attempt'] <= report['rerunsUsed'] for r in records) and
-         len({r['attempt'] for r in records}) == len(records), 'Missing/extra disk-stall resample record')
-    return records
+def check_reruns(report, absolute, paired, limits, specs):
+    """Recompute Lee's 2026-10-31 rule from the retained samples: plan, judgments and verdict."""
+    results = {a['size']: a['result'] for a in report['attempts']}
+    labels = first_pass_failures(absolute, paired)
+    need(report.get('firstPassFailures') == labels and report.get('firstPassFailureCount') == len(labels),
+         'First-pass failures differ from the retained samples')
+    families = observation_families(results)
+    plan = rerun_plan(absolute, paired, specs, families)
+    records = report.get('reruns')
+    need(isinstance(records, list) and [(r.get('size'), r.get('family')) for r in records] == plan,
+         'Reruns differ from the first-pass failures')
+    values = {}
+    for record in records:
+        size, family = record['size'], record['family']
+        execution = record.get('execution', {})
+        need(type(execution.get('exitCode')) is int and execution['exitCode'] == 0 and execution.get('childAbsent') is True and
+             execution.get('childGroupAbsent') is True, 'Incomplete rerun execution')
+        need(record.get('fixtureManifestSHA256') == report['fixtures'][size]['manifestSHA256'],
+             'Rerun ran on a different fixture')
+        need(valid_rerun_rows(record.get('observations'), family, [a for a, f in families[size].items() if f == family]),
+             'Rerun samples differ from their family')
+        values.setdefault(size, {}).update({row['action']: row['microseconds'] / 1000 for row in record['observations']})
+    verdict = judge_reruns(absolute, paired, values, limits, specs)
+    need(report.get('rerunJudgments') == verdict['judgments'] and
+         report.get('notJudgedOverBound') == verdict['notJudgedOverBound'] and
+         report.get('confirmedFailures') == verdict['confirmedFailures'],
+         'Rerun judgments differ from the retained samples')
+    return verdict
 
 
-def resampled_decisions(report, number, originals, limits, specs, contracts, used):
-    """Lee's disk-stall rule (disk_stall.py) for one attempt: None, or its post-resample decisions.
-
-    Attribution is recomputed from the original samples and the recorded append/CPU numbers
-    (bound to the attempt log by check_resample_logs); `used` carries labels already resampled.
-    """
-    record = next((r for r in check_resample_records(report) if r['attempt'] == number), None)
-    if record is None:
-        return None
-    planned, unattributed = disk_stall.plan(originals, disk_stall.recorded_diagnostics(record['resamples']),
-                                            limits, specs, contracts, used)
-    need(record.get('policy') == disk_stall.POLICY and planned and not unattributed and
-         planned == record['resamples'], 'Disk-stall resample is not attributed under the rule')
-    need(len(record['executions']) == len(planned) == len(record['replacements']) == len(record['fixtures']) and
-         all(type(e['exitCode']) is int and e['exitCode'] == 0 and e['childAbsent'] is True and
-             e.get('childGroupAbsent') is True for e in record['executions']), 'Incomplete disk-stall resample')
-    need(all(sha == report['fixtures'][item['size']]['manifestSHA256'] for item, sha in zip(planned, record['fixtures'])),
-         'Disk-stall resample ran on a different fixture')
-    used += [[item['size'], item['action']] for item in planned]
-    effective = disk_stall.apply(originals, planned, record['replacements'], limits)
-    absolute, pairs = disk_stall.evaluate_all(effective, limits, specs, contracts)
-    need(all(d.status != 'correctness-failed' for d in [*absolute.values(), *pairs.values()]) and
-         record['absolute'] == {s: {'status': d.status, 'failures': list(d.failures), 'summaries': d.summaries}
-                                for s, d in absolute.items()} and
-         record['paired'] == {n: {'status': d.status, 'failures': list(d.failures), 'comparisons': d.summaries}
-                              for n, d in pairs.items()}, 'Disk-stall resample decision differs')
-    return absolute, pairs
+def check_rerun_logs(root, report):
+    """Bind each rerun's samples, family and fixture counts to its retained log."""
+    from run_gate import measurements, completed_family_run, rerun_log_name, FIXTURE_KEYS
+    for record in report['reruns']:
+        log = root / rerun_log_name(record['size'], record['family'])
+        need(digest(log) == record['execution']['logSHA256'], 'Missing/changed rerun log')
+        rows, complete = measurements(log)
+        contract = report['fixtures'][record['size']]['contract']
+        need(complete and rows == record['observations'] and completed_family_run(log) ==
+             {'family': record['family'], **{key: contract.get(key) for key in FIXTURE_KEYS}},
+             'Rerun differs from its log')
 
 
-def check_resample_logs(root, report):
-    """Bind each resample's attribution numbers, fixture and replacement samples to retained logs."""
-    from run_gate import measurements
-    for record in check_resample_records(report):
-        for ordinal, (item, execution) in enumerate(zip(record['resamples'], record['executions'])):
-            label = 'disk-stall-resample-' + str(record['attempt']) + '-' + str(ordinal)
-            log = root / (label + '.log')
-            need(digest(log) == execution['logSHA256'], 'Missing/changed disk-stall resample log')
-            logged = disk_stall.action_diagnostics(root / (item['size'] + '-attempt-' + str(record['attempt']) + '.log'))
-            need(all(logged.get((item['action'], s['index'])) ==
-                     disk_stall.recorded_diagnostics([item])[item['size']][item['action'], s['index']]
-                     for s in item['samples']), 'Disk-stall attribution differs from the attempt log')
-            rows, complete = measurements(log)
-            contract = report['fixtures'][item['size']]['contract']
-            need(complete and record['replacements'][ordinal] == [r for r in rows if r['action'] == item['action']] and
-                 {v['family'] for v in disk_stall.action_diagnostics(log).values()} == {item['family']} and
-                 disk_stall.completed_fixture(log) == {k: contract.get(k) for k in disk_stall.FIXTURE_KEYS},
-                 'Disk-stall resample differs from its log')
-
-
-def resample_log_names(report):
-    return ['disk-stall-resample-' + str(r['attempt']) + '-' + str(i) + '.log'
-            for r in report.get('diskStallResamples', []) for i in range(len(r['executions']))]
+def rerun_log_names(report):
+    from run_gate import rerun_log_name
+    return [rerun_log_name(r['size'], r['family']) for r in report['reruns']]
 
 
 def validate_report(repo, report, request, host):
@@ -537,9 +432,10 @@ def validate_report(repo, report, request, host):
     limits = read(repo / 'tool/performance/limits-v1.json')
     limits['sha256'] = digest(repo / 'tool/performance/limits-v1.json')
     validate_registered_coverage(read(repo / 'tool/performance/coverage-v1.json'), limits, scaling_specs(limits))
+    need(report.get('gateRule') == GATE_RULE and limits.get('gateRule') == GATE_RULE,
+         'Result was not produced under the current gate rule')
     attempts = report['attempts']
-    retries = report['rerunsUsed']
-    need(type(retries) is int and retries in (0, 1) and len(attempts) == 3 * (retries + 1),
+    need(len(attempts) == 3 and all(type(a['attempt']) is int and a['attempt'] == 0 for a in attempts),
          'Missing/extra/repeated reference attempt')
     need(type(report['compile']['exitCode']) is int and report['compile']['exitCode'] == 0 and
          report['compile']['childAbsent'] is True and report['compile'].get('childGroupAbsent') is True and report.get('binaryMode') == '0o700', 'Incomplete compile')
@@ -547,53 +443,36 @@ def validate_report(repo, report, request, host):
     need(set(contracts) == set(limits['historySizes']), 'Fixture inventory differs')
     need(all(type(v['generation']['exitCode']) is int and v['generation']['exitCode'] == 0 and
              v['generation']['childAbsent'] is True and v['generation'].get('childGroupAbsent') is True for v in report['fixtures'].values()), 'Incomplete fixture generation')
-    need(all(type(a['attempt']) is int and 0 <= a['attempt'] <= retries for a in attempts), 'Invalid attempt ordinal')
-    need(len(report['pairedScalingAttempts']) == (retries + 1) * len(scaling_specs(limits)) and
-         all(type(p['attempt']) is int and 0 <= p['attempt'] <= retries for p in report['pairedScalingAttempts']),
+    specs = scaling_specs(limits)
+    need(len(report['pairedScalingAttempts']) == len(specs) and
+         all(type(p['attempt']) is int and p['attempt'] == 0 for p in report['pairedScalingAttempts']),
          'Missing/extra growth attempt')
-    decisions, effective_paired, used = {}, {}, []
-    check_resample_records(report)
-    for number in range(retries + 1):
-        batch = [a for a in attempts if a['attempt'] == number]
-        need(len(batch) == 3 and {a['size'] for a in batch} == set(contracts), 'Missing reference size')
-        summaries = {}
-        for item in batch:
-            execution = item['execution']
-            need(type(execution['exitCode']) is int and execution['exitCode'] == 0 and execution['childAbsent'] is True and execution.get('childGroupAbsent') is True,
-                 'Incomplete action execution')
-            decision = evaluate(item['result'], limits)
-            need(decision.status != 'correctness-failed' and decision.status == item['status'] and
-                 list(decision.failures) == item['failures'] and decision.summaries == item['summaries'],
-                 'Absolute correctness/coverage/summary differs')
-            summaries[item['size']] = decision.summaries
-            decisions[number, item['size']] = decision
-        pairs = [p for p in report['pairedScalingAttempts'] if p['attempt'] == number]
-        specs = scaling_specs(limits)
-        need(len(pairs) == len(specs) and {p['comparison'] for p in pairs} == set(specs), 'Missing/extra growth pair')
-        for item in pairs:
-            rule = specs[item['comparison']]
-            need(item['smallSize'] == rule['smallSize'] and item['largeSize'] == rule['largeSize'], 'Growth size labels differ')
-            decision = evaluate_scaling(summaries, specs[item['comparison']], contracts)
-            need(decision.status != 'correctness-failed' and decision.status == item['status'] and
-                 list(decision.failures) == item['failures'] and decision.summaries == item['comparisons'],
-                 'Growth correctness/rules/summary differs')
-            effective_paired[number, item['comparison']] = decision
-        resampled = resampled_decisions(report, number, {item['size']: item['result'] for item in batch},
-                                        limits, specs, contracts, used)
-        if resampled is not None:
-            decisions.update({(number, size): d for size, d in resampled[0].items()})
-            effective_paired.update({(number, name): d for name, d in resampled[1].items()})
-        if number == retries:
-            need(all(effective_paired[number, name].status == 'passed' for name in specs), 'Reference history-growth limit failed')
-            need(all(decisions[number, size].status == 'passed' for size in contracts), 'Reference absolute limit failed')
-    if retries:
-        from run_gate import may_rerun_all
-        first = {a['size']: a for a in attempts if a['attempt'] == 0}
-        paired = [(scaling_specs(limits)[name], effective_paired[0, name]) for name in scaling_specs(limits)]
-        need(may_rerun_all({s: decisions[0, s] for s in first}, paired, 0,
-                          {s: first[s]['execution'] for s in first},
-                          first[next(iter(first))]['binding'], first[next(iter(first))]['binding']),
-             'Reference retry lacks existing external-noise eligibility')
+    need({a['size'] for a in attempts} == set(contracts), 'Missing reference size')
+    absolute, summaries = {}, {}
+    for item in attempts:
+        execution = item['execution']
+        need(type(execution['exitCode']) is int and execution['exitCode'] == 0 and execution['childAbsent'] is True and execution.get('childGroupAbsent') is True,
+             'Incomplete action execution')
+        need(item['result'].get('size') == item['size'], 'Attempt size label differs')
+        decision = evaluate(item['result'], limits)
+        need(decision.status != 'correctness-failed' and decision.status == item['status'] and
+             list(decision.failures) == item['failures'] and decision.summaries == item['summaries'],
+             'Absolute correctness/coverage/summary differs')
+        summaries[item['size']] = decision.summaries
+        absolute[item['size']] = decision
+    need({p['comparison'] for p in report['pairedScalingAttempts']} == set(specs), 'Missing/extra growth pair')
+    paired = {}
+    for item in report['pairedScalingAttempts']:
+        rule = specs[item['comparison']]
+        need(item['smallSize'] == rule['smallSize'] and item['largeSize'] == rule['largeSize'], 'Growth size labels differ')
+        decision = evaluate_scaling(summaries, rule, contracts)
+        need(decision.status != 'correctness-failed' and decision.status == item['status'] and
+             list(decision.failures) == item['failures'] and decision.summaries == item['comparisons'],
+             'Growth correctness/rules/summary differs')
+        paired[item['comparison']] = decision
+    verdict = check_reruns(report, absolute, paired, limits, specs)
+    need(not verdict['confirmedFailures'], 'Same label failed its first pass and its rerun: ' +
+         ', '.join(verdict['confirmedFailures']))
     bindings = [a['binding'] for a in attempts]
     need(all(b == bindings[0] for b in bindings) and bindings[0]['binary'] == report['binarySHA256'] and
          bindings[0]['limits'] == limits['sha256'] and
@@ -602,7 +481,9 @@ def validate_report(repo, report, request, host):
          'Binary/source/fixture/limits binding changed')
     return {'referencePerformanceQualified': True, 'absoluteAndBothGrowthBudgetsPassed': True,
             'relevantSourceSHA256': request['relevantSource']['sha256'], 'requestId': request['requestId'],
-            'releaseOrNativeUIAccepted': False}
+            'gateRule': GATE_RULE, 'firstPassFailureCount': report['firstPassFailureCount'],
+            'firstPassFailures': report['firstPassFailures'], 'rerunJudgments': report['rerunJudgments'],
+            'notJudgedOverBound': report['notJudgedOverBound'], 'releaseOrNativeUIAccepted': False}
 
 
 def verify_bundle(repo, directory):
@@ -628,17 +509,13 @@ def verify_bundle(repo, directory):
         path = Path(name)
         need(not path.is_absolute() and '..' not in path.parts and '\\' not in name and digest(root / path) == value,
              'Qualification member changed')
-    if AUTHORIZATION in members:
-        check_official_rerun(repo, request, read(root / AUTHORIZATION), root / PRIOR_RESULT)
-    else:
-        need(PRIOR_RESULT not in members, 'Unexpected prior result in a first qualification')
     report = read(root / 'gate-result.json')
     result = validate_report(repo, report, request, host)
     for label, item in [('compile', report['compile']),
                         *[(size + '-generate', value['generation']) for size, value in report['fixtures'].items()],
                         *[(a['size'] + '-attempt-' + str(a['attempt']), a['execution']) for a in report['attempts']]]:
         need(digest(root / (label + '.log')) == item['logSHA256'], 'Missing/changed execution log')
-    check_resample_logs(root, report)
+    check_rerun_logs(root, report)
     for size, item in report['fixtures'].items():
         file = root / ('fixture-' + size) / 'fixture.json'
         need(digest(file) == item['manifestSHA256'] and read(file) == item['contract'], 'Fixture receipt changed')
@@ -665,23 +542,14 @@ def verify_bundle(repo, directory):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=('fingerprint', 'request', 'authorize-rerun', 'seal', 'verify'))
+    parser.add_argument('mode', choices=('fingerprint', 'request', 'seal', 'verify'))
     parser.add_argument('--repo', type=Path, required=True)
     parser.add_argument('--output', type=Path)
     parser.add_argument('--request', type=Path)
     parser.add_argument('--run', type=Path)
     parser.add_argument('--cleanup', type=Path)
     parser.add_argument('--controller', type=Path)
-    parser.add_argument('--rerun-of-request', type=Path, help='Failed qualification request (official rerun only)')
-    parser.add_argument('--rerun-of-result', type=Path, help='Its original failed gate-result.json')
-    parser.add_argument('--diagnostic', type=Path, help='Recorded non-reproducing diagnostic (official rerun only)')
-    parser.add_argument('--prior-result', type=Path, help='Seal: the official rerun\'s prior failed gate-result.json')
-    parser.add_argument('--rerun-authorization', type=Path, help='Seal: REQUEST.official-rerun.json')
     args = parser.parse_args()
-    rerun_inputs = (args.rerun_of_request, args.rerun_of_result, args.diagnostic)
-    need(args.mode == 'authorize-rerun' or rerun_inputs == (None, None, None), 'Rerun inputs only apply to authorize-rerun')
-    need(args.mode == 'seal' or (args.prior_result, args.rerun_authorization) == (None, None),
-         'Prior result/authorization only apply to seal')
     if args.mode == 'fingerprint':
         need(args.output is not None, 'Existing output-parent path required')
         print(json.dumps(fingerprint(args.output), indent=2))
@@ -696,41 +564,13 @@ def main():
                  'controllerSHA256': host['controllerSHA256'], 'controllerPath': str(args.controller.resolve())}
         with args.output.open('x') as stream:
             json.dump(value, stream, indent=2); stream.write('\n')
-    elif args.mode == 'authorize-rerun':
-        need(args.request is not None and all(v is not None for v in rerun_inputs),
-             'Official rerun needs the fresh request, prior request, prior result and diagnostic')
-        output = Path(str(args.request) + AUTHORIZATION_SUFFIX)
-        need(args.output in (None, output), 'Authorization must sit beside its request')
-        need(not Path(str(args.rerun_of_request) + AUTHORIZATION_SUFFIX).exists(),
-             'Official rerun limit exceeded: the failed run was itself an official rerun')
-        value = official_rerun(args.repo, read(args.request), read(args.rerun_of_request), read(args.rerun_of_result),
-                               digest(args.rerun_of_result), read(args.diagnostic))
-        with output.open('x') as stream:
-            json.dump(value, stream, indent=2); stream.write('\n')
     elif args.mode == 'verify':
-        if args.output is None and any((args.repo / p).exists() for p in OWNER_OVERRIDES):
-            import owner_override
-            for path in OWNER_OVERRIDES:
-                policy = getattr(owner_override, owner_override.OVERRIDES[path])
-                # Each override is scoped to one release; at any other version it is retained history only.
-                if (args.repo / path).exists() and owner_override.release_version(args.repo) == policy['release']:
-                    # Not a qualification: the failure stays retained and the result says so.
-                    result = owner_override.verify_override(args.repo, args.repo / path, policy)
-                    print('::warning title=Reference performance NOT qualified::' + result['state'] + ' for ' +
-                          result['release'] + '; owner accepted ' + ', '.join(result['ownerAcceptedFailures']),
-                          file=sys.stderr)
-                    print(json.dumps(result, indent=2))
-                    return
-        if args.output is None and (args.repo / BORDERLINE).exists():
-            # Requires the passing qualification too; a rejected borderline bundle fails the check.
-            from borderline import verify_borderline
-            result = verify_borderline(args.repo, args.repo / BORDERLINE)
-            print('::warning title=Reference performance borderline, follow-up queued::' +
-                  ', '.join(m['label'] + ' ' + m['statistic'] + ' ' + format(m['ratioOfBound'], '.2%') + ' of bound'
-                            for m in result['borderlineMetrics']), file=sys.stderr)
-            print(json.dumps(result, indent=2))
-            return
-        print(json.dumps(verify_bundle(args.repo, args.output or args.repo / QUALIFICATION), indent=2))
+        result = verify_bundle(args.repo, args.output or args.repo / QUALIFICATION)
+        if result['firstPassFailureCount']:
+            # Accepted by the rule, but never quiet: a person reading CI sees every first-pass miss.
+            print('::warning title=Reference first-pass misses that passed their rerun::' +
+                  ', '.join(result['firstPassFailures']), file=sys.stderr)
+        print(json.dumps(result, indent=2))
     else:
         need(all(v is not None for v in (args.output, args.request, args.run, args.cleanup)), 'Seal requires request/run/cleanup/output')
         need(not args.output.exists(), 'Fresh qualification bundle required')
@@ -738,10 +578,6 @@ def main():
         report = read(args.run / 'gate-result.json')
         request = read(args.request)
         validate_report(args.repo, report, request, profile(args.repo))
-        need((args.rerun_authorization is None) == (args.prior_result is None),
-             'An official rerun bundle needs both its authorization and its prior failed result')
-        if args.prior_result is not None:
-            check_official_rerun(args.repo, request, read(args.rerun_authorization), args.prior_result)
         need(digest(args.run / 'benchmark') == report['binarySHA256'] and os.access(args.run / 'benchmark', os.X_OK),
              'Compiled binary changed or is not executable before export')
         for size, value in report['fixtures'].items():
@@ -752,13 +588,10 @@ def main():
         args.output.mkdir()
         shutil.copyfile(args.request, args.output / 'request.json')
         shutil.copyfile(args.cleanup, args.output / 'cleanup.json')
-        if args.prior_result is not None:
-            shutil.copyfile(args.prior_result, args.output / PRIOR_RESULT)
-            shutil.copyfile(args.rerun_authorization, args.output / AUTHORIZATION)
         for name in ['gate-result.json', 'compile.log',
                      *[size + '-generate.log' for size in report['fixtures']],
                      *[a['size'] + '-attempt-' + str(a['attempt']) + '.log' for a in report['attempts']],
-                     *resample_log_names(report),
+                     *rerun_log_names(report),
                      *['fixture-' + size + '/fixture.json' for size in report['fixtures']]]:
             target = args.output / name
             target.parent.mkdir(exist_ok=True)

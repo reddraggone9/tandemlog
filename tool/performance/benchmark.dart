@@ -41,7 +41,8 @@ final durabilityDiagnostics = BenchmarkDurabilityDiagnostics(
   LocalDurability.shared,
 );
 
-const benchmarkWarmups = 2, benchmarkSamples = 5;
+// Lee 2026-10-31: one sample per action per shape, no warmups; see run_gate.py.
+const benchmarkWarmups = 0, benchmarkSamples = 1;
 int sampleStart = 0, sampleEnd = benchmarkWarmups + benchmarkSamples;
 
 void require(bool value, String reason) {
@@ -609,7 +610,8 @@ Map<String, Object?> convertedBeforeState(Audit a, Object value) {
     },
     'cache':
         'fresh profile per family; native owner retained across repetitions',
-    'sequence': 'two warmups then five measured samples; no timing retry',
+    'sequence':
+        'one sample per action, no warmups; timing reruns belong to run_gate',
   };
 }
 
@@ -1833,8 +1835,8 @@ Future<void> coldStartup(Audit a) async {
 
 Future<void> main(List<String> args) async {
   require(
-    args.length == 4 || (args.length == 5 && args[0] == 'resample'),
-    'Usage: benchmark generate OUTPUT_ROOT NATIVE_LIBRARY BASE_RECORDS | benchmark run OUTPUT_ROOT NATIVE_LIBRARY FIXTURE_MANIFEST | benchmark resample OUTPUT_ROOT NATIVE_LIBRARY FIXTURE_MANIFEST FAMILY',
+    args.length == 4 || (args.length == 5 && args[0] == 'rerun-family'),
+    'Usage: benchmark generate OUTPUT_ROOT NATIVE_LIBRARY BASE_RECORDS | benchmark run OUTPUT_ROOT NATIVE_LIBRARY FIXTURE_MANIFEST | benchmark rerun-family OUTPUT_ROOT NATIVE_LIBRARY FIXTURE_MANIFEST FAMILY',
   );
   final root = Directory(args[1]);
   require(
@@ -1865,7 +1867,7 @@ Future<void> main(List<String> args) async {
     return;
   }
   require(
-    {'run', 'diagnose', 'resample'}.contains(args[0]),
+    {'run', 'diagnose', 'rerun-family'}.contains(args[0]),
     'Unknown benchmark mode',
   );
   final fixture = Map<String, dynamic>.from(
@@ -1919,9 +1921,9 @@ Future<void> main(List<String> args) async {
     'agent-cli': agentCli,
     'writer300-refresh': writer300Refresh,
   };
-  // Disk-stall resample: one family, all warmups and samples, fresh process.
-  final only = args[0] == 'resample' ? args[4] : null;
-  require(only == null || all.containsKey(only), 'Unknown resample family');
+  // Timing rerun: one whole family in a fresh process and fresh sealed workspace.
+  final only = args[0] == 'rerun-family' ? args[4] : null;
+  require(only == null || all.containsKey(only), 'Unknown rerun family');
   for (final entry in all.entries) {
     if (only != null && entry.key != only) continue;
     if (entry.key == 'food-products' ||
@@ -1949,7 +1951,7 @@ Future<void> main(List<String> args) async {
     jsonEncode({
       'measurement': 'broad-all-pass',
       'families': only == null ? all.length : 1,
-      'resampleFamily': ?only,
+      'rerunFamily': ?only,
       'fixtureSchemaVersion': fixtureSchemaVersion,
       'baseHistoricalRecords': count,
       'actualPhysicalRecords': fixture['actualPhysicalRecords'],

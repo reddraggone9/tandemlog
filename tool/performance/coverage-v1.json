@@ -521,7 +521,7 @@
     "Checklist draft cancellation/capture release occurs outside the timed checklist labels; it has no standalone cancel metric.",
     "Section preference timing does not measure actual Tasks/Food navigation or workspace publication.",
     "Storage startup does not include main occurrence maintenance, workspace binding/publication or first useful visible rows.",
-    "The fixed inherited task.title/notes/titleAndNotes targets are warmed before reported samples. Fresh-per-repetition derivedSuccessor.titleAndNotes.save and copiedChecklist.titleAndNotes.save already cover their stated first-touch boundaries. First copied-item Save before any parent activity is covered by oversized-descriptor correctness, without a separate timing distribution."
+    "The fixed inherited task.title/notes/titleAndNotes targets take their single unwarmed sample, which is that target's first activity in its family (Lee 2026-10-31; earlier receipts warmed them first). Fresh-per-sample derivedSuccessor.titleAndNotes.save and copiedChecklist.titleAndNotes.save already cover their stated first-touch boundaries. First copied-item Save before any parent activity is covered by oversized-descriptor correctness, without a separate timing distribution."
   ],
   "noPrivateFixtureInputs": true,
   "convertedTargetContract": {
@@ -573,7 +573,7 @@
       "firstDerived.mixed.save",
       "firstDerived.mixed.undo"
     ],
-    "repetitions": "Each case and each of2warmups+5samples starts from a separate fresh sealed fixture copy, creates a recurring parent+item+single completion, requires no prior child/item own activity.",
+    "repetitions": "Each case's single sample (no warmups) starts from a separate fresh sealed fixture copy, creates a recurring parent+item+single completion, requires no prior child/item own activity.",
     "invariants": "Exact actual selected order/native context, ready graph, zero full-readiness on accepted ordinary action+Undo, full semantic/readiness oracle after each, exact row Undo, prefixes/peers and fresh replay.",
     "baseline": "Retained external153 old149 baseline deliberately asserts positive actual full-readiness before optimization; new metrics do not silently substitute protected post-text edits.",
     "gaps": "Separate timing distributions for first schedule/assignee/delete/move, arbitrary mixed fields, and large selected groups are not claimed."
@@ -622,7 +622,7 @@
       "food.product.import.retry",
       "food.product.import.undo"
     ],
-    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
+    "repetitions": "The single sample (no warmups) starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
     "boundary": "Production changeDetails with FoodProductChange (implicit first edit; mixed bulk two roots; rename-to-existing merge), add matching renamed product (three revision2 linked containers), dryRunPurchaseImport and commitPurchaseImport (two lines: existing product matched hand entry plus new product/three Inbox containers); exact confirmation and FoodUndoHistory in timed writes/Undo.",
     "correctness": "Full containers/catalog/products/aliases/purchases including voided state; exact purchase values/links and counts; read-only dry-run and idempotent retry; Undo to full prior state; active-state reopen before each inverse; fresh-profile canonical replay of still-active explicit product seed; Tasks unchanged, original prefixes and peers retained.",
     "budgets": "Prospective15ms median/20ms maximum, all3shapes, comparable existing Food details/add/Undo; both ordinary growth pairs unchanged1.25x+3ms /1.4x+5ms. No measurements used to choose budgets.",
@@ -645,7 +645,7 @@
       "agent.dryRun.purchaseImport2",
       "agent.write.purchaseImport2"
     ],
-    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, joined outside timers by `init` with a fresh agent profile (new writer, distinct from the fixture writers); the audit installation stays closed during agent calls.",
+    "repetitions": "The single sample (no warmups) starts from a separate fresh sealed fixture copy, joined outside timers by `init` with a fresh agent profile (new writer, distinct from the fixture writers); the audit installation stays closed during agent calls.",
     "targets": "Imported scalar Tasks3/6/9/18 (Task3 complete, Task6 title edit/Undo, Task9+18 bulk-edit dry run); imported Food1000 product for the matched receipt line (small60 functional-only Food4).",
     "boundary": "In-process runCli with --profile <path> --tz America/Chicago --format json: argument parsing, AgentProfile lock (reads: disposable profile copy), LocalProfileDatabase open, WorkspaceSession.open (read-only folder for reads; write mode with occurrence migration otherwise), the registry command, close and JSON rendering. Bulk dry run uses dryRunWrite (profile copy, real-location binding, OverlayLogFolder copy-on-write); purchase import dry run uses the same disposable profile/overlay path; commit passes --expect-plan.",
     "correctness": "Reads: listed Task IDs belong to the fixture, rows/totals present, workspace and agent profile byte-identical. Complete: one action, returned rev equals shown rev; whole-action undo restores the shown task. Text edit applied; timed undo appends one inverse and restores the shown task. Bulk dry run: two changed schedule effects on the two targets, planHash, workspace and agent profile byte-identical. Import dry run: ready, plan hash equals the plan file, one matched hand entry and three new Inbox containers, canonical bytes unchanged; commit: one action, both lines recorded. Afterwards the audit installation replays the agent history with Tasks unchanged and exactly three new purchase-linked containers; family replay/original-prefix checks unchanged.",
@@ -664,7 +664,7 @@
       "food.moveSome",
       "food.moveSome.undo"
     ],
-    "repetitions": "Each of2warmups+5samples starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
+    "repetitions": "The single sample (no warmups) starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
     "boundary": "Untimed Add of two containers matching the imported container's row; timed production changeDetails Location move of the row's first two current containers with exact confirmation and FoodUndoHistory record; timed undoOperations.",
     "correctness": "Exactly two containers leave the row into their own row; one Undo action; active-state reopen before the inverse; Undo restores full containers/catalog/products and the three-container row; Tasks unchanged.",
     "budgets": "Prospective15ms median/20ms maximum, all3shapes, equal to existing Food details/Undo and food.product.bulkEdit; both ordinary growth pairs1.25x+3ms /1.4x+5ms. No measurements used to choose budgets.",

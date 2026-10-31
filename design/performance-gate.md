@@ -12,60 +12,76 @@ Missing or stale reference qualification fails the separate required verifier.
 Old failures and measure-only passes retain their original status;implementation
 is not qualified until reviewed registration,a fresh enforcing receipt and CI pass.
 
-A failed reference qualification of unchanged source may receive exactly one
-official rerun,and only after a recorded non-qualifying diagnostic covered every
-failing label without reproducing any (Lee,2026-10-26). A second failure is
-repeatable and must be profiled and fixed. Budgets are unchanged. See
-[official rerun](performance-reference-qualification.md#official-rerun-after-non-reproduction).
+## The gate rule (Lee, 2026-10-31)
 
-Borderline rule (Lee,2026-10-27;absolute misses added2026-10-28):when IDENTICAL
-relevant source (same relevant-source identity) already holds a verified passing qualification,a
-later timing failure within normal run-to-run variation is a borderline limit,
-not a regression. It does not block the release and queues a look at the limit
-or the scaling behind it. For exactly this case it replaces "a failed rerun is
-repeatable";the official-rerun rule stays for every other failure. Tooling
-verdict `borderline-accepted` needs ALL of:a verified passing qualification of
-the same identity issued before the failed request;an enforcing,complete
-result whose correctness,coverage,replay/integrity and execution all passed;
-every timing miss,absolute or history-growth,at most 5% over its unchanged bound
-(`BORDERLINE_VARIATION_BAND`,from q9–q11 identical-code storageAdmission at
-99.8%/96.3%/101.6%). Anything else is an ordinary failure. Budgets are unchanged.
-See [borderline result](performance-reference-qualification.md#borderline-result-on-already-qualified-source).
+Goal: much faster qualification runs and far fewer false failures and investigations,
+with no significant added risk of missing a real, user-facing slowdown.
 
-Disk-stall resample rule (Lee,2026-10-28 21:37;standing,no per-release approval):
-in a reference qualification,a timing miss gets ONE resample of its label when the
-failing sample's durable append (write+fsync) accounts for the overrun and its CPU
-time is within the bound:for every measured sample over the missed bound,the
-sample minus its append time is within that bound and its CPU time (cgroup
-`usage_usec` over the action) is within it too. Growth misses use their computed
-bound;a label missing two bounds must satisfy the tighter one. Budgets are
-unchanged. The resample re-measures the label: the label's whole family
-(warmups and samples) runs once more in a fresh process on the same sealed
-fixture and binary, and the label's seven observations replace the original
-ones; every absolute and growth limit is then evaluated again. Resamples are
-taken only when they can decide the attempt (every missed label attributed). A
-resampled label that misses again is an ordinary failure under the existing
-rules and is never resampled again. A miss that is not attributed (CPU over the
-bound,append too small to account for it,missing diagnostics,or any other
-unattributed miss in the attempt) follows the existing rules unchanged. The
-receipt keeps the original samples and failures and adds `diskStallResamples`
-with the attribution numbers (wall,append,CPU,throttled,wall minus append),the
-resample's execution and log hash,its replacement observations and the
-recomputed decisions;the verifier recomputes attribution from the attempt log and
-the decisions from the samples. Code:`tool/performance/disk_stall.py`;tests:
-`tool/test_disk_stall_resample.py`. This replaces an owner override for this case.
-See [disk-stall resample](performance-reference-qualification.md#disk-stall-resample).
+1. Each action gets ONE sample per shape (dense-1, dense-2, dense-food), with no warmups.
+2. That sample is judged against the existing median limits: absolute `medianMs`, and
+   growth `maxMedianRatio` × small sample + `medianAdditiveMs`. No budget number changed.
+   `maxMs` and the maximum-growth fields no longer decide the gate. They stay in
+   `limits-v1.json`, unchanged and marked non-deciding, because keeping them is the smallest
+   honest change: the file's diff shows no budget moved, and restoring them needs no
+   reconstruction. Only Lee may change these numbers.
+3. `run_gate.py` collects every first-pass miss, then, in the same invocation with no agent
+   or manual step, reruns each one once. Actions chain within a family, so the whole family
+   reruns in a fresh process with a fresh copy of the sealed workspace
+   (`benchmark rerun-family`), under the same binary, fixture and limit bindings. A growth
+   miss reruns both sides of its pair and judges the pair from the rerun values. One process
+   serves every label in its family and shape. Only labels that missed the first pass are
+   judged; a different label over its bound in a rerun is recorded in `notJudgedOverBound`
+   and decides nothing.
+4. The run fails only when the same label misses both times. That double failure is simply a
+   real failure for a person to look at; there is no further automatic or official route.
+   The result keeps every first-pass and rerun value, `firstPassFailures`,
+   `firstPassFailureCount`, `reruns`, `rerunJudgments` and `confirmedFailures`, and
+   `reference_receipt.py verify` reports first-pass misses in its output and as a CI warning.
+5. Correctness, coverage, execution and binding checks are unchanged and terminal: a failing
+   first pass or a failing rerun process stops the run with no rerun. Quiet admission, bounds
+   and cleanup are unchanged. Hosted and measure-only runs take no rerun; their timing stays
+   advisory or calibration-only.
+
+The verifier recomputes the rerun plan and every judgment from the retained samples, binds
+rerun samples to their logs and fixtures, and refuses a result that was produced under another
+gate rule. Code: `gate_policy.py`, `run_gate.py`, `reference_receipt.py`; tests:
+`tool/test_single_sample_gate.py`.
+
+This replaces the in-invocation noise retry, the official rerun, the borderline band and the
+disk-stall resample for new qualifications. Results sealed under those rules keep their
+original meaning; see [results under earlier rules](performance-reference-qualification.md#results-under-earlier-rules).
+
+What it gives up, knowingly: a single sample cannot see a slowdown that only appears in some
+repetitions unless it lands on both passes, and a slow small-side sample widens its growth bound
+for that pass. Replay of retained q2–q5 (2 warmups + 5 samples each, so every repetition position
+stands in for a single sample) found about 2.3 first-pass misses per run and no double failure
+across runs, and an estimated 3–6% chance per run that a label double-fails by noise alone,
+assuming independent passes. The eight `startup.*` labels showed no single-sample miss at all.
+The most exposed labels are `sync.peerTask.whileFood.storageAdmission` and
+`recurring.recomplete.nativeChecklist` growth, each about a 10–14% single-sample miss.
+
+Quiet admission matters more now. Under the reference caps, a whole single-sample pass took
+about 3.4 minutes against about 12 for seven repetitions. Two such non-qualifying runs on this
+host without admission, overlapping other work, had 46 and 47 first-pass misses with no label in
+common, against about 2 expected. A third, loaded by unrelated analyzer runs, double-failed
+`dense-food:agent.write.taskComplete` at 508.7 and 502.1 ms against 500; that label ranged
+458.7–492.1 ms over all 28 repetitions of the admitted q2–q5. Its roughly 5% headroom makes it the
+likeliest real double failure.
+
+The rule came from the first two qualifications of `9b06f97` (requests `15e16069` and
+`1055af47`, both retained and failed), which missed only maxima and took two causal diagnoses
+that established no fix.
 
 
 The standalone Dart executable measures production storage, application commands and readmodel queries in AOT release mode. It uses only generated public synthetic workspaces. There is no argument for a user workspace, mapping, profile, title or fixture import. Native text and SQLite libraries, compiler, package configuration, source and fixture bytes are sealed in the result.
 
-The three versioned shapes share the SAME first 1,320 historical physical records, three writers, entity IDs and current Task/Food values. The dense-1 baseline and dense-2 Task-growth shape retain their integer specifications and three physical owners. Prospective fixture schema v2 (exact completion instants) gives Task-growth edits a separate normalized logical namespace, attributed to those same owners, so the continuing writer retains identical next logical IDs and completion order across shapes. Previously sealed v1 canonical bytes and evidence remain immutable; v2 is freshly generated and sealed, not a rewrite of accepted fixtures. An additive dense-food shape uses {baseRecords: 2640, growthKind: food}, normalized to the closed CLI food:2640. Dense-2 adds 1,320 bounded Task Notes edits alternating with exact restores; dense-food instead adds 1,320 Food brand edits alternating with exact restores on existing containers, each carrying its actual observed creation reference. Neither Food contents nor deletion state changes. All three then receive production native-text initialization and the same native checklist/recurring operations. Enforce equal initial-prefix hashes, full current-state digest, Task rows and Food container counts before treating this as history-only scaling. Actual record, effect and row counts are recorded. Both pairs must prove their growth module: Task effects grow only in dense-2, Food effects grow only in dense-food, and the other module's effect count stays equal to the baseline. Missing, unknown or mismatched growth claims fail correctness. The additional pair closes Food-own-history coverage; it does not test a growing number of recurring descriptors. Scalar synthetic IDs and strings are deterministic; production native actor allocation may vary between fixture generations. Generate each fixture once, seal its actual bytes, and reuse exactly those bytes for a timing retry. Profiles and workload copies are always fresh; existing output is refused.
+The three versioned shapes share the SAME first 1,320 historical physical records, three writers, entity IDs and current Task/Food values. The dense-1 baseline and dense-2 Task-growth shape retain their integer specifications and three physical owners. Prospective fixture schema v2 (exact completion instants) gives Task-growth edits a separate normalized logical namespace, attributed to those same owners, so the continuing writer retains identical next logical IDs and completion order across shapes. Previously sealed v1 canonical bytes and evidence remain immutable; v2 is freshly generated and sealed, not a rewrite of accepted fixtures. An additive dense-food shape uses {baseRecords: 2640, growthKind: food}, normalized to the closed CLI food:2640. Dense-2 adds 1,320 bounded Task Notes edits alternating with exact restores; dense-food instead adds 1,320 Food brand edits alternating with exact restores on existing containers, each carrying its actual observed creation reference. Neither Food contents nor deletion state changes. All three then receive production native-text initialization and the same native checklist/recurring operations. Enforce equal initial-prefix hashes, full current-state digest, Task rows and Food container counts before treating this as history-only scaling. Actual record, effect and row counts are recorded. Both pairs must prove their growth module: Task effects grow only in dense-2, Food effects grow only in dense-food, and the other module's effect count stays equal to the baseline. Missing, unknown or mismatched growth claims fail correctness. The additional pair closes Food-own-history coverage; it does not test a growing number of recurring descriptors. Scalar synthetic IDs and strings are deterministic; production native actor allocation may vary between fixture generations. Generate each fixture once, seal its actual bytes, and reuse exactly those bytes for a timing rerun. Profiles and workload copies are always fresh; existing output is refused.
 
-Each action retains two warmups and five measured observations. Limits check both the median and maximum; no observations disappear as outliers. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 256 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food,6 first-point cases,12 Food-product cases,2 Food Move some cases 8 agent CLI calls and2 writer300 refreshes). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check both median and maximum against small-size time multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bounds. A paired shape/coverage failure is correctness failure.
+Each action takes one measured observation per shape with no warmups (Lee, 2026-10-31; earlier receipts have two warmups and five samples), and nothing is discarded as an outlier. Each recurring repetition starts a separate fresh workspace/profile copied from the same sealed fixture and creates equivalent new parent inputs. Actions within that repetition accumulate canonical descriptors and native owners; later repetitions do not retain the previous repetition's history or owners. Newly allocated IDs and actors can vary. Cold startup means a fresh profile, not a flushed operating-system cache. Warm startup separately reports canonical/cache proof, cache restore and Task attachment. All three shapes must report the same 256 expected actions (the original146,45 converted-existing,33 Food-cardinality,2 confirmation-inclusive Food,6 first-point cases,12 Food-product cases,2 Food Move some cases 8 agent CLI calls and2 writer300 refreshes). Both comparisons (dense-1 to dense-2, and dense-1 to dense-food) retain their own per-action bounds and results. Versioned per-action paired rules check the large-size sample against the small-size sample multiplied by a fixed ratio plus a fixed additive allowance; report both sides and the computed bound. A paired shape/coverage failure is correctness failure.
 
-`limits-v1.json` contains the initial calibrated AOT storage/application/readmodel regression bounds, pinned by literal SHA in the workflow. The initial calibration combines current-source local and hosted Ubuntu observations, two warmups and five measured samples on each of the three shapes. Ordinary per-action median/maximum ceilings retain roughly 50% observed headroom, rounded to 5 ms with small-operation floors, and every ordinary maximum was additionally capped at 100 ms during calibration (a historical calibration cap, not a responsiveness target; see [What sets acceptable latency](#what-sets-acceptable-latency-lee-2026-10-27)). Both history-growth pairs enforce 1.25× + 3 ms median and 1.40× + 5 ms maximum for all 238 ordinary labels. The eight startup labels have separately calibrated size-specific absolute ceilings. Their existing paired guards remain unchanged at 2.25× + 100 ms median and 2.50× + 200 ms maximum: loose historical proof-growth bounds, without a history-independence claim. Startup remains history-scaled; these limits do not excuse avoidable work. Finite calibration is not a percentile guarantee. Actual native UI paint/interaction acceptance is separate and remains unresolved. Loosening an activated limit requires Lee's explicit approval; tooling has no automatic baseline-update switch.
+`limits-v1.json` contains the initial calibrated AOT storage/application/readmodel regression bounds, pinned by literal SHA in the workflow. The initial calibration combines current-source local and hosted Ubuntu observations, two warmups and five measured samples on each of the three shapes. Ordinary per-action median/maximum ceilings retain roughly 50% observed headroom, rounded to 5 ms with small-operation floors, and every ordinary maximum was additionally capped at 100 ms during calibration (a historical calibration cap, not a responsiveness target; see [What sets acceptable latency](#what-sets-acceptable-latency-lee-2026-10-27)). Both history-growth pairs enforce 1.25× + 3 ms for the ordinary labels; their 1.40× + 5 ms maximum rule is retained but no longer decides. The eight startup labels have separately calibrated size-specific absolute ceilings. Their existing paired guards remain unchanged at 2.25× + 100 ms (and the non-deciding 2.50× + 200 ms maximum): loose historical proof-growth bounds, without a history-independence claim. Startup remains history-scaled; these limits do not excuse avoidable work. Finite calibration is not a percentile guarantee. Actual native UI paint/interaction acceptance is separate and remains unresolved. Loosening an activated limit requires Lee's explicit approval; tooling has no automatic baseline-update switch.
 
-A correctness, coverage, source, tool or fixture failure is terminal. A timing-only failure can receive at most one additional fresh-process run across the entire gate, with unchanged source, fixture, binary and limit seals, when separately observed CPU pressure and unrelated CPU work (sibling services excluding this service, or host busy CPU minus measured own/child CPU) overlap EVERY absolute-failing history-size process. Every failed pair requires qualifying evidence from that pair's larger-size process; if both pairs fail, both larger processes must qualify independently. Own quota throttling or slowness alone is insufficient. Aggregate pressure indicates suspected external noise, not proof about every individual sample. Preserve both attempts. A failed second attempt fails the gate; never retry until green.
+A correctness, coverage, source, tool or fixture failure is terminal. Timing follows [the gate rule](#the-gate-rule-lee-2026-10-31); never retry until green.
 
 This executable does not measure editor mounting, sidebar response, widget paint, keyboard input or first visible rows. Section preferences and projections are labelled storage/readmodel measurements. The actual release GUI needs a separate isolated GTK/Xvfb job with owned-window input, visible-pixel acknowledgments, finite cleanup and explicit capture overhead. Windows offscreen input probes are not substituted for that job.
 
@@ -74,9 +90,7 @@ Run `python3 tool/test_performance_gate.py` for gate policy and receipt regressi
 
 The runner accepts no caller package configuration, source override or alternate limits file. It reads the repository package configuration, rejects a `tandemlog` root that resolves outside that checkout, creates its own fresh source fork, and changes only that package root URI and normalizes its already-validated effective library URI to lib/. Every copied file retains identical original and compiled SHA-256 values. The standalone storage closure needs no Flutter notifier/platform shim: the rewrite and shim allowlists are empty. Reachable Flutter UI imports, missing/escaping project imports, source extraction changes, changed dependency files or changed SDK kernel inputs fail closed. Production `LocalLogFolder` and `LocalDurability` implementations remain byte-exact, including append/flush semantics. A release invocation must execute tooling from the same checkout and supply the workflow's expected SHA-256 for the fixed versioned limits file.
 
-One eligible timing rerun repeats ALL THREE original sealed shapes and BOTH comparisons in fresh processes/workload profiles, using the original sealed fixtures and all original bindings. It never regenerates different native actor bytes, cherry-picks action samples or repeats only until a ratio passes. The disk-stall resample above is the one per-label exception: it re-measures a whole label once, only when durable-append time accounts for the miss, and records both measurements.
-
-The shared validation workflow has a separate required Linux performance job; it is also required by signed-candidate checks. Its 65-minute whole-job bound includes native setup; the gate runs as the existing runner UID in a transient system-manager service with 55-minute runtime, 6 GiB physical-memory cap, no swap, 2 CPU quota and 128-task cap, plus bounded compile/generation/workload children. An outer timeout and exit/signal trap stop that exact service; actual cgroup bounds are recorded and required before release measurement. It retains preflight stderr/stdout, compile/generation logs, every timing attempt, paired comparisons, source/tool/fixture seals and per-size fixture contracts, including failures. Synthetic workspace payloads and local SQLite profiles are excluded from uploaded artifact paths. The committed initial calibrated limits are active and the workflow pins their exact SHA. Fresh exact-source enforcement is required after tooling or application changes; measure-only observations do not satisfy it. Food editor/controller construction/cancel/paint is explicitly a native-UI coverage gap; no storage-only number substitutes for it.
+The shared validation workflow has a separate required Linux performance job; it is also required by signed-candidate checks. Its 65-minute whole-job bound includes native setup; the gate runs as the existing runner UID in a transient system-manager service with 55-minute runtime, 6 GiB physical-memory cap, no swap, 2 CPU quota and 128-task cap, plus bounded compile/generation/workload children. An outer timeout and exit/signal trap stop that exact service; actual cgroup bounds are recorded and required before release measurement. It retains preflight stderr/stdout, compile/generation logs, the timing result, paired comparisons, source/tool/fixture seals and per-size fixture contracts, including failures. Synthetic workspace payloads and local SQLite profiles are excluded from uploaded artifact paths. The committed initial calibrated limits are active and the workflow pins their exact SHA. Fresh exact-source enforcement is required after tooling or application changes; measure-only observations do not satisfy it. Food editor/controller construction/cancel/paint is explicitly a native-UI coverage gap; no storage-only number substitutes for it.
 
 The initial calibration showed that the pre-existing task.title/notes/titleAndNotes and task.editorOpenCancel labels select the fixture's inherited recurring successor with a copied checklist, rather than an explicit Task birth. Those labels and observations are retained and their target is now asserted. Separate explicitTask.* cases add native-born ordinary Task title/Notes/both Save, Undo, editor preparation and complete native cancellation; they do not replace the inherited cases or excuse their scaling failures.
 
@@ -154,8 +168,7 @@ budgets and both growth-rule sets. Runtime evaluation also rejects missing or
 unknown observed cases, invalid values and incomplete sample sequences. A stale
 registered ID therefore cannot be silently skipped by a workload. These checks
 complement the human inventory review; they do not replace it. Correctness and
-coverage failures are terminal, and only the documented single externally
-justified timing rerun is permitted.
+coverage failures are terminal; timing follows [the gate rule](#the-gate-rule-lee-2026-10-31).
 
 ## Cost accounting
 
@@ -199,9 +212,10 @@ actual widget/input/paint coverage; no existing metric or accepted limit is
 renamed, removed or relaxed by these additions.
 
 
-The fixture-selection audit distinguishes fixed-target warm edits from first
-durable activity on a newly derived entity. The inherited task.title family
-warms the same target. The recurring family instead creates a fresh parent,
+The fixture-selection audit distinguishes fixed-target edits from first durable
+activity on a newly derived entity. The inherited task.title family reuses one
+target, so its single sample is now that target's first activity in the family
+(earlier receipts warmed it first). The recurring family instead creates a fresh parent,
 successor and copied items for every repetition: derivedSuccessor.titleAndNotes.save
 measures the successor's first durable activity in every reported sample.
 copiedChecklist.titleAndNotes.save measures the item's first durable activity
