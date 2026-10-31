@@ -45,6 +45,7 @@ void main() {
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
       await _withWorkspace(tester, Size(width, 850), 'dark', (peer) async {
         final prefix = 'next-${width.round()}-${scale.round()}x-dark';
+        if (width == 1200) await pixels.startRecording(tester);
         Future<Map<String, String>> bytes() async => {
           for (final entry in await peer.folder.list())
             entry.name: base64Encode(await peer.folder.read(entry.name)),

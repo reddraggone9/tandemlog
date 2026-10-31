@@ -2525,9 +2525,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }) async {
     final id = task['id'] as String;
     final before = Set<String>.of(selectedTasks);
+    final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
+    // A retained editor snapshot may outlive a row. New gestures operate only
+    // on the current visible list, never on that captured hidden selection.
+    final visibleSelection = before.intersection(visible);
     final range = gesture == SelectionGesture.range;
     final result = nextListSelection<String>(
-      selected: before,
+      selected: visibleSelection,
       selecting: selecting,
       anchor: selectionAnchor,
       target: id,
@@ -2539,21 +2543,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (setEquals(before, next) && result.selecting == selecting) return true;
     var nextIntent = result.selecting;
     var anchor = result.anchor;
-    if (wideLayout && before.length >= 2 && next.length == 1) {
+    if (wideLayout && visibleSelection.length >= 2 && next.length == 1) {
       nextIntent = false;
     }
     if (next.isEmpty) nextIntent = false;
-    final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
-    if (!next.every(visible.contains)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Some selected tasks are no longer visible. Clear the selection and review the list.',
-          ),
-        ),
-      );
-      return false;
-    }
     final origin = store;
     final plannedOrder = visibleEntries
         .map((entry) => entry.task['id'])
@@ -4079,8 +4072,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _complete(Map<String, dynamic> task) async {
     final origin = store!;
-    await _act(
-      () => _recordAction(
+    await _act(() async {
+      final completed = await _recordAction(
         origin,
         'completing',
         (prepared) => ChecklistCompletionCommand(origin).complete(
@@ -4147,8 +4140,25 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           onPrepared: prepared,
         ),
         notice: true,
-      ),
-    );
+      );
+      if (completed != null && mounted && identical(store, origin)) {
+        final id = task['id'] as String;
+        // Compact selection captures an editor without displaying it. Release
+        // that stale capture before ending selection, otherwise the completed
+        // task's editor becomes a modal as soon as selecting turns false.
+        if (selectedTasks.contains(id) &&
+            editorKey.currentState == null &&
+            bulkEditorKey.currentState == null) {
+          await _closeEditor();
+          if (!mounted || !identical(store, origin)) return;
+        }
+        setState(() {
+          selectedTasks.remove(id);
+          if (selectedTasks.isEmpty) selecting = false;
+          if (selectionAnchor == id) selectionAnchor = null;
+        });
+      }
+    });
   }
 
   Future<bool> _closeChecklistEditor() =>

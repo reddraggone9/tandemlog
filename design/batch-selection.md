@@ -180,3 +180,7 @@ location and retention per container. Bulk Remove/Restore reuse the existing
 remove and restore-batch commands. The `food.details.3` benchmark now measures
 and asserts the full five-field edit the editor can send; its limits are
 unchanged, and no new benchmark label is needed.
+
+### Completion and stale selection (Lee 2026-10-30)
+
+A successfully completed Task leaves the selection, like a deleted Task; other selected rows remain. The last completion ends selection mode. An undisplayed selection editor is released first, so its completed-task snapshot cannot become a modal when selection ends. A subsequent selection gesture drops any hidden IDs before applying the gesture, even if an editor retained a snapshot. Existing post-editor visibility guards still refuse changed or invisible bulk targets. Food already intersects new gestures with its current visible row keys.
