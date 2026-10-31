@@ -150,6 +150,9 @@ class TasksPage extends StatefulWidget {
   State<TasksPage> createState() => _TasksPageState();
 }
 
+/// Fits the capped recovery notice, the Food toolbar, Search and one row at 200%.
+const foodRecoveryRegionHeight = 400.0;
+
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
   FoodStore? foodStore;
@@ -211,6 +214,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   final taskScroll = ScrollController();
   final actionErrorScroll = ScrollController();
+  final foodRecoveryScroll = ScrollController();
   final taskViewport = GlobalKey();
   Timer? dragScrollTimer;
   Offset? dragPointer;
@@ -976,91 +980,115 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       },
       verb: 'restoring',
     );
-    return Column(
-      children: [
-        // Prepared receipts exist briefly during every healthy append. Recovery
-        // copy belongs to an unresolved outcome, not the in-flight command.
-        if (!busy &&
-            (workspaceState!.health.hasPendingFoodSave ||
+    // Prepared receipts exist briefly during every healthy append. Recovery
+    // copy belongs to an unresolved outcome, not the in-flight command.
+    final recoveryCopy =
+        busy ||
+            !(workspaceState!.health.hasPendingFoodSave ||
                 hasPendingCommand ||
-                workspaceState!.health.foodPendingReferences > 0))
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
+                workspaceState!.health.foodPendingReferences > 0)
+        ? null
+        : workspaceState!.health.hasPendingFoodSave || hasPendingCommand
+        ? 'An earlier food save needs confirmation. Retry to finish it.'
+        : 'Waiting for related food changes from folder sync.';
+    final page = Expanded(
+      child: FoodInventoryPage(
+        key: foodPageKey,
+        onCloseReadinessChanged: _wakeSectionRequests,
+        state: workspaceState!.current.food!.state,
+        workspaceIdentity: origin,
+        progress: toolbarProgress(
+          busy: busy && !awaitingCompletionConfirmation,
+        ),
+        sectionMenu: _sectionMenu,
+        userName: name,
+        identityMenu: (child) => _identityMenu(users, child: child),
+        busy: busy,
+        error: foodError,
+        savePending:
+            workspaceState!.health.hasPendingFoodSave ||
+            pendingFoodCommand != null,
+        hasPendingSave: () =>
+            workspaceState!.health.hasPendingFoodSave ||
+            pendingFoodCommand != null,
+        onAdd: (details, count) => _foodCommand(
+          origin,
+          'add:$count:${details.groupKey}',
+          (store) async {
+            await store.add(details, count);
+          },
+          verb: 'adding',
+        ),
+        onRemove: (ids) =>
+            _foodCommand(origin, 'remove:${ids.join(',')}', (store) async {
+              await store.remove(ids);
+            }, verb: 'removing'),
+        onRestore: (item) => restoreItems([item]),
+        onRestoreBatch: restoreItems,
+        onDetails: (items, details, fields, products) => _foodCommand(
+          origin,
+          'details:${items.map((e) => e.id).join(',')}:${details.groupKey}:${fields.join(',')}:${jsonEncode([products.roots, products.changes])}',
+          (store) async {
+            await store.changeDetails(
+              items.map((e) => e.id).toList(),
+              details,
+              fields,
+              products: products,
+            );
+          },
+          verb: 'editing',
+        ),
+        undoLabel: undo == null ? 'Undo' : 'Undo ${undo.label}',
+        onUndo:
+            undo == null ||
+                workspaceState!.health.hasPendingFoodSave ||
+                hasPendingCommand
+            ? null
+            : () => _undoFoodLatest(origin),
+      ),
+    );
+    if (recoveryCopy == null) return Column(children: [page]);
+    return LayoutBuilder(
+      builder: (context, box) {
+        // Recovery guidance is what gets squeezed out here, so it keeps rows
+        // and focused Search usable by scrolling the region when it is short.
+        final height = box.maxHeight < foodRecoveryRegionHeight
+            ? foodRecoveryRegionHeight
+            : box.maxHeight;
+        return SingleChildScrollView(
+          key: const ValueKey('food-recovery-region'),
+          primary: false,
+          child: SizedBox(
+            height: height,
+            child: Column(
               children: [
-                Expanded(
-                  child: Text(
-                    workspaceState!.health.hasPendingFoodSave ||
-                            hasPendingCommand
-                        ? 'An earlier food save needs confirmation. Retry to finish it.'
-                        : 'Waiting for related food changes from folder sync.',
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _scrollableNoticeCopy(
+                          controller: foodRecoveryScroll,
+                          maxHeight: height / 3 - 24,
+                          scrollKey: const ValueKey('food-recovery-scroll'),
+                          detailsKey: const ValueKey('food-recovery-details'),
+                          text: recoveryCopy,
+                        ),
+                      ),
+                      TextButton(
+                        key: const ValueKey('retry-food-save'),
+                        onPressed: busy ? null : () => _recoverFood(origin),
+                        child: const Text('Retry'),
+                      ),
+                    ],
                   ),
                 ),
-                TextButton(
-                  key: const ValueKey('retry-food-save'),
-                  onPressed: busy ? null : () => _recoverFood(origin),
-                  child: const Text('Retry'),
-                ),
+                page,
               ],
             ),
           ),
-        Expanded(
-          child: FoodInventoryPage(
-            key: foodPageKey,
-            onCloseReadinessChanged: _wakeSectionRequests,
-            state: workspaceState!.current.food!.state,
-            workspaceIdentity: origin,
-            progress: toolbarProgress(
-              busy: busy && !awaitingCompletionConfirmation,
-            ),
-            sectionMenu: _sectionMenu,
-            userName: name,
-            identityMenu: (child) => _identityMenu(users, child: child),
-            busy: busy,
-            error: foodError,
-            savePending:
-                workspaceState!.health.hasPendingFoodSave ||
-                pendingFoodCommand != null,
-            hasPendingSave: () =>
-                workspaceState!.health.hasPendingFoodSave ||
-                pendingFoodCommand != null,
-            onAdd: (details, count) => _foodCommand(
-              origin,
-              'add:$count:${details.groupKey}',
-              (store) async {
-                await store.add(details, count);
-              },
-              verb: 'adding',
-            ),
-            onRemove: (ids) =>
-                _foodCommand(origin, 'remove:${ids.join(',')}', (store) async {
-                  await store.remove(ids);
-                }, verb: 'removing'),
-            onRestore: (item) => restoreItems([item]),
-            onRestoreBatch: restoreItems,
-            onDetails: (items, details, fields, products) => _foodCommand(
-              origin,
-              'details:${items.map((e) => e.id).join(',')}:${details.groupKey}:${fields.join(',')}:${jsonEncode([products.roots, products.changes])}',
-              (store) async {
-                await store.changeDetails(
-                  items.map((e) => e.id).toList(),
-                  details,
-                  fields,
-                  products: products,
-                );
-              },
-              verb: 'editing',
-            ),
-            undoLabel: undo == null ? 'Undo' : 'Undo ${undo.label}',
-            onUndo:
-                undo == null ||
-                    workspaceState!.health.hasPendingFoodSave ||
-                    hasPendingCommand
-                ? null
-                : () => _undoFoodLatest(origin),
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -2836,6 +2864,43 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               (editorKey.currentState != null ||
                   bulkEditorKey.currentState != null)));
 
+  /// Long notice copy scrolls inside a bound, with a thumb showing there is more.
+  Widget _scrollableNoticeCopy({
+    required ScrollController controller,
+    required double maxHeight,
+    required Key scrollKey,
+    required Key detailsKey,
+    required String text,
+  }) => ConstrainedBox(
+    constraints: BoxConstraints(maxHeight: maxHeight),
+    child: Scrollbar(
+      controller: controller,
+      thumbVisibility: true,
+      child: SingleChildScrollView(
+        controller: controller,
+        primary: false,
+        key: scrollKey,
+        child: Shortcuts(
+          shortcuts: const {
+            SingleActivator(LogicalKeyboardKey.arrowDown): ScrollIntent(
+              direction: AxisDirection.down,
+            ),
+            SingleActivator(LogicalKeyboardKey.arrowUp): ScrollIntent(
+              direction: AxisDirection.up,
+            ),
+          },
+          child: Focus(
+            key: detailsKey,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(text),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
   Widget _actionErrorNotice() => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
     child: Material(
@@ -2849,32 +2914,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             const Icon(Icons.error_outline),
             const SizedBox(width: 12),
             Expanded(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 120),
-                child: Scrollbar(
-                  controller: actionErrorScroll,
-                  thumbVisibility: true,
-                  child: SingleChildScrollView(
-                    controller: actionErrorScroll,
-                    primary: false,
-                    key: const ValueKey('action-error-scroll'),
-                    child: Shortcuts(
-                      shortcuts: const {
-                        SingleActivator(LogicalKeyboardKey.arrowDown):
-                            ScrollIntent(direction: AxisDirection.down),
-                        SingleActivator(LogicalKeyboardKey.arrowUp):
-                            ScrollIntent(direction: AxisDirection.up),
-                      },
-                      child: Focus(
-                        key: const ValueKey('action-error-details'),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: Text(error!),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              child: _scrollableNoticeCopy(
+                controller: actionErrorScroll,
+                // Stays readable (two lines at 200%) without taking a short
+                // window from the page beneath it, including above a keyboard.
+                maxHeight:
+                    ((MediaQuery.sizeOf(context).height -
+                                MediaQuery.viewInsetsOf(context).bottom) /
+                            5)
+                        .clamp(88.0, 120.0),
+                scrollKey: const ValueKey('action-error-scroll'),
+                detailsKey: const ValueKey('action-error-details'),
+                text: error!,
               ),
             ),
             if (errorFromRefresh && store != null)
@@ -4446,6 +4497,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _stopDragScroll();
     taskScroll.dispose();
     actionErrorScroll.dispose();
+    foodRecoveryScroll.dispose();
     dragScrollTick.dispose();
     taskMenuRevision.dispose();
     importer?.dispose();

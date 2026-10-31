@@ -269,7 +269,10 @@ void main() {
               tester,
               'recovery-${width.round()}-200-start',
             );
-            await tester.drag(notice, const Offset(0, -500));
+            await tester.drag(
+              notice,
+              Offset(0, -(position.maxScrollExtent + 50)),
+            );
             await tester.pumpAndSettle();
             expect(position.pixels, position.maxScrollExtent);
             final copy = find.descendant(
@@ -297,6 +300,84 @@ void main() {
               before,
             );
             expect(tester.takeException(), isNull);
+            // The notices leave Search and the rows usable on short screens,
+            // including above a keyboard, and Retry stays reachable.
+            await tester.enterText(
+              find.byKey(const ValueKey('food-search')),
+              'Healthy',
+            );
+            await tester.pump();
+            final region = find.byKey(const ValueKey('food-recovery-region'));
+            final list = find.descendant(
+              of: find.byType(FoodInventoryPage),
+              matching: find.byType(CustomScrollView),
+            );
+            for (final (w, h, keyboard) in [
+              (360.0, 800.0, 300.0),
+              (320.0, 568.0, 260.0),
+              (844.0, 390.0, 0.0),
+              (844.0, 390.0, 180.0),
+              (width, 480.0, 0.0),
+            ]) {
+              tester.view.physicalSize = Size(w, h);
+              tester.view.viewInsets = FakeViewPadding(bottom: keyboard);
+              await tester.pump();
+              await tester.pump(const Duration(milliseconds: 300));
+              expect(
+                tester.takeException(),
+                isNull,
+                reason: '$w x$h $keyboard',
+              );
+              expect(
+                tester.getRect(list).height,
+                greaterThan(0),
+                reason: 'Food rows keep real space at $w x$h $keyboard',
+              );
+              final search = find.byKey(const ValueKey('food-search'));
+              await tester.ensureVisible(search);
+              await tester.pump();
+              expect(search.hitTestable(), findsOneWidget);
+              final retry = find.byKey(const ValueKey('retry-food-save'));
+              await tester.ensureVisible(retry);
+              await tester.pump();
+              expect(retry.hitTestable(), findsOneWidget);
+              expect(region, findsOneWidget);
+              await captureNativeFixtureUi(
+                tester,
+                'recovery-short-${w.round()}x${h.round()}-kb${keyboard.round()}',
+              );
+            }
+            tester.view.viewInsets = const FakeViewPadding();
+            tester.view.physicalSize = Size(width, 850);
+            await tester.pump();
+            await tester.pump(const Duration(milliseconds: 300));
+            expect(tester.takeException(), isNull);
+            // Search survives the recovery region appearing and clearing.
+            expect(
+              tester
+                  .widget<TextField>(find.byKey(const ValueKey('food-search')))
+                  .controller!
+                  .text,
+              'Healthy',
+            );
+            await tester.tap(find.byKey(const ValueKey('retry-food-save')));
+            await host.ready(
+              tester,
+              () =>
+                  !state.busy &&
+                  find
+                      .byKey(const ValueKey('retry-food-save'))
+                      .evaluate()
+                      .isEmpty,
+            );
+            expect(region, findsNothing);
+            expect(
+              tester
+                  .widget<TextField>(find.byKey(const ValueKey('food-search')))
+                  .controller!
+                  .text,
+              'Healthy',
+            );
           }
         } finally {
           folder.gate = null;

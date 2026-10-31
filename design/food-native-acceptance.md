@@ -188,6 +188,11 @@ recovery notice retains its existing coverage, outside this page viewport change
 Exact candidate artifacts, full hosted gates and parent native acceptance
 passed. Simulated GTK insets are not actual Gboard evidence.
 
+While a save-recovery notice is shown, the Food region keeps a 400 dp minimum and
+scrolls below it, and the notice copy scrolls within a third of the region. Search
+and rows stay usable at 200% text on short screens and above a keyboard, and Retry
+is reachable by scrolling.
+
 [Source-bound build60 evidence](../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
 records40 final widget cases,149 earlier qualified Food regressions, final native
 40-case scrolling matrix plus production Save/restart/Restore in4:08, eight
