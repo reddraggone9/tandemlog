@@ -7,6 +7,7 @@ import 'package:flutter/semantics.dart' show CustomSemanticsAction;
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../presentation/failure_message.dart';
 import '../presentation/tag_input.dart';
 import '../presentation/sticky_task_group.dart';
 import '../presentation/task_toolbar.dart';
@@ -398,6 +399,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       _clearBulkSelection();
       _focusedGroup = null;
     }
+    // An action refused for a pending save no longer applies once it finished.
+    if (oldWidget.savePending && !widget.savePending) _actionError = null;
   }
 
   _FoodGrouping? _groupingMemo;
@@ -492,7 +495,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       await action();
       if (mounted) setState(() => _actionError = null);
     } catch (e) {
-      if (mounted) setState(() => _actionError = e.toString());
+      if (mounted) setState(() => _actionError = failureMessage(e));
     }
   }
 

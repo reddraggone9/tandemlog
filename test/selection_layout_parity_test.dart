@@ -110,6 +110,40 @@ void registerSelectionLayoutParityTests({
     );
   }
 
+  testWidgets(
+    'Food action errors read plainly and clear after the pending save',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(390, 844);
+      addTearDown(tester.view.reset);
+      Widget page({required bool pending}) => MaterialApp(
+        theme: tandemlogTheme(Brightness.dark),
+        home: FoodInventoryPage(
+          state: _manyFoods(),
+          workspaceIdentity: 'synthetic-pane-workspace',
+          savePending: pending,
+          now: () => DateTime(2026, 10, 15),
+          onAdd: (_, _) {},
+          onRemove: (_) => throw StateError('Retry the earlier save.'),
+          onRestore: (_) {},
+          onDetails: (_, _, _, _) {},
+        ),
+      );
+      await tester.pumpWidget(page(pending: false));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Remove one Many beans 01 container'));
+      await tester.pumpAndSettle();
+      expect(find.text('Retry the earlier save.'), findsOneWidget);
+      expect(find.textContaining('Bad state:'), findsNothing);
+      await tester.pumpWidget(page(pending: true));
+      await tester.pumpAndSettle();
+      expect(find.text('Retry the earlier save.'), findsOneWidget);
+      await tester.pumpWidget(page(pending: false));
+      await tester.pumpAndSettle();
+      expect(find.text('Retry the earlier save.'), findsNothing);
+    },
+  );
+
   for (final width in [390.0, 899.0, 900.0, 1400.0]) {
     final wide = width >= 900;
     for (final food in [false, true]) {
