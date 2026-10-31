@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "50a8ca56db6f36a140e1af8ee5ef1dd7",
-  "issuedAtUTC": "2026-10-30T05:19:52.171897+00:00",
-  "sourceRevision": "e2125752a7585a67204240bfa33ae867f0f63a1d",
+  "requestId": "8993c1aaa0b86d74a92b80eb91f5b8df",
+  "issuedAtUTC": "2026-10-31T09:25:41.243578+00:00",
+  "sourceRevision": "22baa2c26b93c9519482080040a67cbfc245c57a",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "12a2167cf6a7e80f70bf72253860a1fe93619ffa78e433cb6eaddb9735684bf4",
+    "sha256": "597476b6aa2405e8da4ede3d3f529384b3a98cc76f9f6a085c2f77613da7f9cc",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -49,7 +49,7 @@
         "mode": "100644"
       },
       ".github/workflows/validate.yml": {
-        "sha256": "6172ad2ed39871f7261dae316acc6c0584d3bd21edb9afaf7e94ce08664d3005",
+        "sha256": "79bc0c0c272a4ba4a72b15486eae2ab819d93fde674d37b577d04c25be8e3f1e",
         "mode": "100644"
       },
       ".github/workflows/windows-widget-qa.yml": {
@@ -797,7 +797,7 @@
         "mode": "100644"
       },
       "integration_test/food_row_selection_workflow_test.dart": {
-        "sha256": "36fe7001185c0b170bd2ad69a8bc80fbc55ccca59a86b03221989f0ec02a4c8d",
+        "sha256": "cb7e35b34fecd04a73ea260503f880678ddb0a0e1ff285022ef036ec32ec3603",
         "mode": "100644"
       },
       "integration_test/food_selection_retention_workflow_test.dart": {
@@ -878,6 +878,10 @@
       },
       "integration_test/section_navigation_workflow_test.dart": {
         "sha256": "5e7e884a741b3266b5064b16aae0cc73d8f241153d4b8bc54a0bbb684f384a5c",
+        "mode": "100644"
+      },
+      "integration_test/selected_recurring_completion_workflow_test.dart": {
+        "sha256": "e422057acd10913ff91637f542beabdae9955ba8344094465f3b2b3c2c7921df",
         "mode": "100644"
       },
       "integration_test/selection_layout_parity_workflow_test.dart": {
@@ -998,6 +1002,10 @@
       },
       "lib/agent/windows_zone.dart": {
         "sha256": "1677b9a776fdd18cbb12e1df22a884494856288171fbb6cb984ee0351a6ce530",
+        "mode": "100644"
+      },
+      "lib/application/activity_log.dart": {
+        "sha256": "553702997af8f633e28aa1b116a3f261128a0a7898e7df8b57b215d293a09a2f",
         "mode": "100644"
       },
       "lib/application/checklist_completion_command.dart": {
@@ -1169,7 +1177,7 @@
         "mode": "100644"
       },
       "lib/food/food_page.dart": {
-        "sha256": "c331ad1b00afb99e6283414d3888f28867ddb92e52142566be84a233abcb567e",
+        "sha256": "5962368db6b76253f0598c52819be303e872d5b129341a8fd13ebf17a1517c09",
         "mode": "100644"
       },
       "lib/food/food_products.dart": {
@@ -1197,7 +1205,7 @@
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "2caffb2c75d3c6260bf42a730f8e3b6348bdf0f34a1905c35b5a2aee22dc2acb",
+        "sha256": "6e5140ac5e85706b9e2dc64763c651b0a5b3837ed67cfa3a522b35b2750de080",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1222,6 +1230,10 @@
       },
       "lib/platform/view_time_source.dart": {
         "sha256": "d328e31c43c6ea3c1a8730a595892ab3bedfbc5e997f043f1d1a367174cce826",
+        "mode": "100644"
+      },
+      "lib/presentation/activity_log.dart": {
+        "sha256": "8c3ceac1f5ff13ed375151ad3e9d521055b030345e9d97b1fb34bba0ebc9b4ca",
         "mode": "100644"
       },
       "lib/presentation/bulk_apply.dart": {
@@ -1277,7 +1289,7 @@
         "mode": "100644"
       },
       "lib/presentation/free_text_autocomplete.dart": {
-        "sha256": "b852daf14df32e8af2111858193c691d27fec045693f6c0da4d6686ce5aa902b",
+        "sha256": "a9a30a878bbcd233f7b1a58309327ceffc93a4cd47bc364393dace4724680afd",
         "mode": "100644"
       },
       "lib/presentation/list_row_surface.dart": {
@@ -1309,7 +1321,7 @@
         "mode": "100644"
       },
       "lib/presentation/sticky_task_group.dart": {
-        "sha256": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77",
+        "sha256": "10d05cfd033d160f461a48f44e4681cc436b50f5176d85a3e5a93ded66005e52",
         "mode": "100644"
       },
       "lib/presentation/tag_filter_picker.dart": {
@@ -1886,12 +1898,16 @@
         "sha256": "f1b2b6e6aa460f735a32e8a64b712c73e3358523cb76ec20d98695a7298faf72",
         "mode": "100644"
       },
+      "test/activity_log_test.dart": {
+        "sha256": "881478c5ad5326d79246bcd1a576d18eedd9b40b4ac6c7231828d97788b43395",
+        "mode": "100644"
+      },
       "test/adaptive_text_read_test.dart": {
         "sha256": "a7d9fc26bf22653b33127b422b10f6cd5ad97cda373b4ed3e2a851273b67a180",
         "mode": "100644"
       },
       "test/agent_cli_test.dart": {
-        "sha256": "63a09581e679bc87dc1db68b3799cc985f545a99a091921aaa19cd83935d7468",
+        "sha256": "e0046e7d6489eec6d9c2c4915d71b634f14fd9df56d1ca78938a3257dd9d00a6",
         "mode": "100644"
       },
       "test/agent_overlay_folder_test.dart": {
@@ -2511,7 +2527,7 @@
         "mode": "100644"
       },
       "test/food_row_selection_test.dart": {
-        "sha256": "6dcddb9b4698a9ef5e51aa591d55fc72cbaedc0fa6f0555d34ab1a2fd1245a31",
+        "sha256": "543ae56c0e311b659c7d791eaab2dfc86c3014b6a198ff9c7350480802f62c1a",
         "mode": "100644"
       },
       "test/food_section_width_test.dart": {
@@ -2547,7 +2563,7 @@
         "mode": "100644"
       },
       "test/food_view_reachability_test.dart": {
-        "sha256": "fb63ec15e6d9bbb11d9a520b03a2bc071c8d7f319f61a1a2debb157956e572f6",
+        "sha256": "e4b2f4f3de7672f7698f74fdf63532c5df63e5b06e014c134ecb5724ec1366d6",
         "mode": "100644"
       },
       "test/foreground_importer_test.dart": {
@@ -2726,8 +2742,12 @@
         "sha256": "9a52d0610b693bb99910a04e7222409fc1d96d76dc475a048d54e30e41f66afb",
         "mode": "100644"
       },
+      "test/selected_recurring_completion_host_test.dart": {
+        "sha256": "dbe511581204b839803493c3695538a3dc401fc2c05cd7c6e45374a720e356f5",
+        "mode": "100644"
+      },
       "test/selection_layout_parity_test.dart": {
-        "sha256": "b66fd6d8493ec593fe4aa07cb9d12fa21d055ed0e366c6890038a6da8854bcb7",
+        "sha256": "51953ebceca5ef0ff005014d624510d9b03b049f6c3bfd02f098f9adae34cd72",
         "mode": "100644"
       },
       "test/semantic_history_observation_test.dart": {
@@ -2755,7 +2775,7 @@
         "mode": "100644"
       },
       "test/sticky_task_group_test.dart": {
-        "sha256": "6a13f1d61f86e38427d55eebbad198e46f3e7e176f3198b703e616f79e7507d8",
+        "sha256": "1dc18ae26552d4011c39e7838ec456ba15060074fd51b572c4652b0c5c2ef452",
         "mode": "100644"
       },
       "test/storage_test.dart": {
@@ -3023,7 +3043,7 @@
         "mode": "100644"
       },
       "test/unified_host_test.dart": {
-        "sha256": "6b48f7fb8d3772e9457d6d3ae530a7357e665ce34c9faf08938b40bd0b67dc53",
+        "sha256": "62f7c32cf86851af626ad98328a39d9c069c213d512e691ffb29d1510b3897d2",
         "mode": "100644"
       },
       "test/unified_projection_atomicity_test.dart": {
@@ -3203,7 +3223,7 @@
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
-        "sha256": "8abf73ffd03050b622f7bd1cda41ea66730f0b30f5622aaec24ca49962b3c3d3",
+        "sha256": "abc514482820006fc4b4418e548b343ff61720c7fd724272460b97b48803d737",
         "mode": "100644"
       },
       "tool/performance/borderline.py": {
@@ -3215,7 +3235,7 @@
         "mode": "100644"
       },
       "tool/performance/coverage-v1.json": {
-        "sha256": "1ba8ce04682e4eb84a35c286faf34151b07e5c9eba82931c9bde5ac94e892220",
+        "sha256": "08d5e5081d4907889b5904e9b2abc3d9bf4c999d996d34a840fc0a0ad2ed9852",
         "mode": "100644"
       },
       "tool/performance/disk_stall.py": {
@@ -3231,7 +3251,7 @@
         "mode": "100644"
       },
       "tool/performance/limits-v1.json": {
-        "sha256": "335cdc9493243d3d3712fbf5301bc30e702449764055a1b17d1e9ea2c8a5befb",
+        "sha256": "553896b3b7a474291785519d64fdcaf0bbe105a47b8713156f7b336f11fd6b89",
         "mode": "100644"
       },
       "tool/performance/operation_diagnostics.dart": {
@@ -3247,7 +3267,7 @@
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "abd2891bab4a4c99883d79491d2f612396815a2882857f3827c7bb8da09433dc",
+        "sha256": "072e558e9312a6ca3af84404df2ae02170e18c547426eb5ef45a7ac50b6df47d",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
@@ -3303,7 +3323,7 @@
         "mode": "100644"
       },
       "tool/test_borderline_performance.py": {
-        "sha256": "35761d18d356596148a7aa4848331f2b555583a363663b2b983ba809142de7ef",
+        "sha256": "d9c962386629d08b8441cf7426a81445201f49dc50549c237384166c8ddb8735",
         "mode": "100644"
       },
       "tool/test_collect_linux_core_stacks.py": {
@@ -3367,7 +3387,7 @@
         "mode": "100644"
       },
       "tool/test_performance_gate.py": {
-        "sha256": "7b1ce1f51deed60a97e560ddd78a6259dac4ed094eaaccbacf5ca918f58d015e",
+        "sha256": "c9d0d0baf6b41066e1a35d63ec1291a58712e57b1a72496599ace28abada0457",
         "mode": "100644"
       },
       "tool/test_publish_inventory.py": {
@@ -3536,7 +3556,7 @@
       }
     }
   },
-  "hostProfileSHA256": "abd2891bab4a4c99883d79491d2f612396815a2882857f3827c7bb8da09433dc",
-  "controllerSHA256": "1780871bed8ff20438569f93b929ed6e0229af0f985579d3765e31bb9584f8a5",
-  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-agentrc-20261029/controller/controller_r7.py"
+  "hostProfileSHA256": "072e558e9312a6ca3af84404df2ae02170e18c547426eb5ef45a7ac50b6df47d",
+  "controllerSHA256": "3ac194c97515ae4dda05279be7564b2a046bba21778e4f1295c9c019387d6708",
+  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-activity-20261030/controller/controller_r7.py"
 }

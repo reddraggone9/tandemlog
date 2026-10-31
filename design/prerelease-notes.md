@@ -4,3 +4,4 @@
 - Food saves no longer flash a recovery message during a normal save.
 - Move some fits better with large text and the keyboard open. Enter in New location now submits the move after accepting any suggestion.
 - Completing a selected repeating task now clears that task from the selection, so selecting another task keeps working.
+- Food selection controls stay pinned while scrolling, and sticky headings now cover rows across the full width.

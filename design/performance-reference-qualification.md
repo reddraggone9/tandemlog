@@ -517,3 +517,17 @@ Oct26 13:00UTC;explicit ownership handoff is separate. Foreground/native-visible
 physical-device,signing/candidate/editorial/release/live-cutover gates remain open
 under their existing qualifications. The policy transition authorizes none of
 those operations or new persistent infrastructure.
+
+## Activity release qualification outcomes — 2026-10-31
+
+Relevant source `597476b6` (source `22baa2c`) is qualified by q3 request
+`8993c1aaa0b86d74a92b80eb91f5b8df`, the single authorized official rerun
+of q2 `fc5bfcbc`. q2's `food-own-history:scaling:food.details.1` miss was
+13.66 ms unexplained on-CPU; eight diagnostic attempts (40 measured samples)
+did not reproduce it. The diagnostic b7 separately observed an unattributed
+`food.restore.1.undo` 14.8 ms sample. Disk stalls occurred in three of eight quiet
+diagnostic attempts. q3 passed all 257 labels and both growth-rule sets; its
+same-family `food.details.1` maximum was 9.387 ms, below the unchanged bound.
+These isolated observations are retained, not relabelled as reproduced causes;
+q2 remains failed. q1, q2, q3 and diagnostic originals remain retained by the
+executor. No further qualification of this unchanged identity is authorized.
