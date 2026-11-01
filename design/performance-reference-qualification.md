@@ -445,3 +445,9 @@ dense-food large side. All eight cleared their one fresh-process rerun, so no la
 `dense-food:agent.write.textEdit` passed first (495.931ms) and went over in a rerun (510.526ms); the rule records
 that and does not judge it. The dense-food agent writes have almost no margin against 500ms and a repeat could
 fail with no code change; the six growth misses remain unexplained. The earlier q3 bundle is kept as `retained-8993c1aa`.
+
+Follow-on profiling (2026-10-31, diagnostic only, not qualification) measured about 340ms of a dense-food agent
+write in history open and 120ms in close. Verifying the decode cache was 161ms, hashing and parsing serially in one
+isolate, so they now overlap. Alternating control/change, nine fresh processes each on the reference path's
+filesystem: `agent.write.taskComplete` 496.5 to 451.2ms, `textEdit` 492.1 to 442.9ms, `textEditUndo` 494.3 to
+439.6ms, `coldOpenTasksList` 377.4 to 331.1ms. Budgets are unchanged and this source has no qualification yet.
