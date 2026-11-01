@@ -5,6 +5,9 @@ from android_release import version
 from app_version import release_components
 
 
+PORTABLE = 'tandemlog-windows-x64-unsigned-portable.zip'
+
+
 def public_asset_names(release_version):
     release_components(release_version)
     return {
@@ -18,6 +21,10 @@ def stage_public_assets(release_version, source, destination):
     names = public_asset_names(release_version)
     if any(not (source / name).is_file() for name in names):
         raise ValueError('Missing verified installer')
+    # Immutable releases reject later uploads, so the original portable ZIP joins
+    # the first upload. publish_gate.py has verified its evidence when present.
+    if (source / PORTABLE).is_file():
+        names[PORTABLE] = f'tandemlog-{release_version}-windows-x64-portable.zip'
     destination.mkdir()  # A fresh directory prevents stale/unexpected uploads.
     for original, public in names.items():
         shutil.copyfile(source / original, destination / public)

@@ -4,7 +4,6 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tandemlog/domain/bulk_task_edit.dart';
 import 'package:tandemlog/domain/current_operation.dart';
 import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/storage/log_folder.dart';

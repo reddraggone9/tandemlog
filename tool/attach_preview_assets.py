@@ -39,11 +39,11 @@ if __name__ == '__main__':
     validate_draft(meta,release_id,os.environ['CANDIDATE'],os.environ['CANDIDATE_SHA'])
     root=Path('public-assets')
     expected={p.name:{'size':p.stat().st_size,'digest':'sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()} for p in root.iterdir()}
-    if len(expected)!=3:raise ValueError('Expected three already-gated installers')
+    if len(expected) not in (3,4):raise ValueError('Expected the already-gated installers')
     missing=missing_assets(meta.get('assets',[]),expected)
     if missing:
         subprocess.run(['gh','release','upload',os.environ['CANDIDATE'],*[str(root/name) for name in missing],'--repo',repo],check=True)
     meta=json.loads(subprocess.check_output(['gh','api',endpoint]))
     validate_draft(meta,release_id,os.environ['CANDIDATE'],os.environ['CANDIDATE_SHA'])
     if missing_assets(meta.get('assets',[]),expected):raise ValueError('Draft uploads incomplete')
-    print('Three exact installer digests verified; release remains private draft for authorized finalization.')
+    print(f'{len(expected)} exact installer digests verified; release remains private draft for authorized finalization.')
