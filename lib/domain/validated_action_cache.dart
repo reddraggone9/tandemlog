@@ -77,6 +77,11 @@ final class ValidatedActionCache {
     String expectedDigest,
     String expectedBinding,
   ) {
+    _requireDigest(payload, expectedDigest);
+    return _decode(payload, expectedBinding);
+  }
+
+  static void _requireDigest(String payload, String expectedDigest) {
     if (payload.length > maximumBytes) {
       throw const FormatException('Disposable action-cache exceeds bound.');
     }
@@ -84,6 +89,12 @@ final class ValidatedActionCache {
     if (bytes.length > maximumBytes ||
         sha256.convert(bytes).toString() != expectedDigest) {
       throw const FormatException('Disposable action-cache digest differs.');
+    }
+  }
+
+  static ValidatedActionCache _decode(String payload, String expectedBinding) {
+    if (payload.length > maximumBytes) {
+      throw const FormatException('Disposable action-cache exceeds bound.');
     }
     final envelope = jsonDecode(payload) as Map<String, dynamic>;
     if (envelope.length != 3 ||
@@ -176,12 +187,23 @@ Object? _freeze(Object? value) {
   return value;
 }
 
-// Separate lexical scope: the worker must not capture the in-flight Future.
+// Separate lexical scope: the workers must not capture the in-flight Future.
+// Hashing and parsing share nothing and were about 60 ms of a 6 MB verification,
+// so they overlap. Waiting for both means no receipt exists unless the digest
+// matched, and neither worker outlives this call.
 Future<ValidatedActionCache> _verifyInIsolate(
   String payload,
   String digest,
   String binding,
-) => Isolate.run(
-  () => ValidatedActionCache.verify(payload, digest, binding),
-  debugName: 'tandemlog-cache-verify',
-);
+) async {
+  final checked = Isolate.run(
+    () => ValidatedActionCache._requireDigest(payload, digest),
+    debugName: 'tandemlog-cache-digest',
+  );
+  final decoded = Isolate.run(
+    () => ValidatedActionCache._decode(payload, binding),
+    debugName: 'tandemlog-cache-verify',
+  );
+  await Future.wait([checked, decoded]);
+  return decoded;
+}
