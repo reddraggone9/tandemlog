@@ -2100,7 +2100,7 @@ final class UnifiedHistory {
       if (e.task != null) {
         if (reserve &&
             isTaskCompletion(e.task!.type) &&
-            e.task!.operationRevision != 3) {
+            !{3, 4}.contains(e.task!.operationRevision)) {
           throw FormatFailure(
             'New completions require an exact completion instant.',
           );

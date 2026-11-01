@@ -2114,7 +2114,10 @@ class _MoveSomeDialogState extends State<_MoveSomeDialog> {
                 controller: location,
                 enabled: !saving,
                 label: 'New location',
-                values: widget.locations(),
+                values: widget
+                    .locations()
+                    .where((value) => value.trim() != details.location.trim())
+                    .toList(),
                 errorText: revealed ? locationError : null,
                 onChanged: edited,
                 onSelected: edited,

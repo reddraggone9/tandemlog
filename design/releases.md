@@ -419,3 +419,12 @@ Historical cause and local/live read-only evidence:
 ## Published experimental 2026.10.11-rc.1/build109 — 2026-10-31
 
 [RC.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.11-rc.1), release 430241634, published 2026-10-31T23:12:13Z, immutable prerelease/not-Latest, from `cea8576` (relevant source `59c446d5`, q6 `eaab6c53`, first qualification under `single-sample-confirm-v1`), notes from `498f6f0`. Adds the Activity log and fixes Food recovery notices, Move some with large text, repeating-task selection, pinned Food controls and full-width sticky headings. CI 41245345912 and signed candidate 41245367111 passed on the first attempt. Exact Flatpak and APK upgraded retained synthetic 108 labs in place with log prefixes, identity and Android folder grant preserved; acceptance covered Activity read-only and live cross-writer refresh, Move some with a real IME at 200%, selected repeating completion, bulk edit and its Undo on GTK, cold reopen and integrity. Windows has installer and portable inventory checks only, with no GUI run here. Known and deferred: a wide bulk editor keeps a stale count after completing one of its selected tasks; Save refuses without writing and the next selection gesture recovers. Stable 2026.10.10 stays Latest.
+
+## Post-RC109 update-channel development
+
+[Channel preparation and outstanding gates](../packaging/update-channels.md)
+cover the authorized signed Flatpak Pages and public Scoop ZIP direction. These
+channels are not enabled. Public channel advancement is allowed only after the
+accepted stable release becomes GitHub Latest; prerelease publication never
+advances them. Preserve exact accepted artifacts/OSTree commit and the existing
+new-signing-credential/native/closed-inventory requirements.

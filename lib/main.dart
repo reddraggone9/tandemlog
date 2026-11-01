@@ -69,9 +69,21 @@ import 'food/inventory.dart' show FoodContainer;
 
 void main() {
   debugPrint('TANDEMLOG_MAIN');
-  WidgetsFlutterBinding.ensureInitialized();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  binding.deferFirstFrame();
+  var held = true;
   registerNativeTextLicenses();
-  runApp(const TandemlogApp());
+  runApp(
+    TandemlogApp(
+      onAppearanceReady: () {
+        if (!held) return;
+        held = false;
+        // The saved theme rebuild must finish before its first delivered frame.
+        binding.addPostFrameCallback((_) => binding.allowFirstFrame());
+        binding.ensureVisualUpdate();
+      },
+    ),
+  );
 }
 
 class TandemlogApp extends StatefulWidget {
@@ -83,6 +95,7 @@ class TandemlogApp extends StatefulWidget {
     this.folderFactory,
     this.sectionNavigation,
     this.textEngineFactory,
+    this.onAppearanceReady,
   });
   final LogFolder Function(String)? folderFactory;
   final String? profilePath;
@@ -90,6 +103,7 @@ class TandemlogApp extends StatefulWidget {
   final ViewTimeSource Function(void Function())? timeSourceFactory;
   final AndroidSectionNavigation? sectionNavigation;
   final NativeTextEngine Function()? textEngineFactory;
+  final VoidCallback? onAppearanceReady;
   @override
   State<TandemlogApp> createState() => _TandemlogAppState();
 }
@@ -108,6 +122,7 @@ class _TandemlogAppState extends State<TandemlogApp> {
     builder: (_, value, _) => MaterialApp(
       title: 'Tandemlog',
       debugShowCheckedModeBanner: false,
+      themeAnimationDuration: Duration.zero,
       theme: tandemlogTheme(Brightness.light),
       darkTheme: tandemlogTheme(Brightness.dark),
       themeMode: switch (value) {
@@ -123,6 +138,7 @@ class _TandemlogAppState extends State<TandemlogApp> {
         folderFactory: widget.folderFactory,
         sectionNavigation: widget.sectionNavigation,
         textEngineFactory: widget.textEngineFactory,
+        onAppearanceReady: widget.onAppearanceReady,
       ),
     ),
   );
@@ -138,6 +154,7 @@ class TasksPage extends StatefulWidget {
     this.folderFactory,
     this.sectionNavigation,
     this.textEngineFactory,
+    this.onAppearanceReady,
   });
   final LogFolder Function(String)? folderFactory;
   final String? profilePath;
@@ -146,6 +163,7 @@ class TasksPage extends StatefulWidget {
   final ViewTimeSource Function(void Function())? timeSourceFactory;
   final AndroidSectionNavigation? sectionNavigation;
   final NativeTextEngine Function()? textEngineFactory;
+  final VoidCallback? onAppearanceReady;
   @override
   State<TasksPage> createState() => _TasksPageState();
 }
@@ -241,7 +259,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<AppExitResponse>? _exitRequest;
   bool _exitQuiescing = false, _shutdownFailureReported = false;
   Completer<void>? activeActionDone;
-  bool settingsLoaded = false;
+  bool settingsLoaded = false, initialAppearanceReady = false;
+
+  void _appearanceReady() {
+    if (initialAppearanceReady) return;
+    initialAppearanceReady = true;
+    widget.onAppearanceReady?.call();
+  }
+
   final firstName = TextEditingController();
   final firstNameFocus = FocusNode();
   late final setupValidation = FormValidation(
@@ -498,6 +523,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               ..addAll(selection.selected);
             selecting = selection.selecting;
             selectionAnchor = selection.anchor;
+            if (!busy) _reconcileBulkEditor();
             viewRevision++;
           });
           if (taskMenuOpen) taskMenuRevision.value++;
@@ -529,6 +555,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       settingsLoaded = true;
       if (!mounted) return;
       widget.appearance.value = settings!.appearance;
+      _appearanceReady();
       user = settings!.user;
       if (sectionRevision == 0) {
         requestedSection = (
@@ -541,6 +568,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     } catch (e) {
       error = failureMessage(e);
     }
+    _appearanceReady();
     if (!mounted) return;
     setState(() => busy = false);
     _configureImporter();
@@ -1578,6 +1606,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     setState(() => _lastTextFocus = textHasFocus);
   }
 
+  // Reads the persisted successor, which may have been edited independently;
+  // the rule is never recomputed here. Hidden or undated rows add nothing.
+  String _successorDateNotice(TaskStore origin, String id) {
+    final schedule = origin.visibleTaskRow(id)?['schedule'];
+    if (schedule is! Map) return '';
+    final due = schedule['dueDate'], start = schedule['startDate'];
+    if (due is String) return ', due $due';
+    return start is String ? ', starting $start' : '';
+  }
+
   Future<T> _recordAction<T>(
     TaskStore origin,
     String verb,
@@ -1631,13 +1669,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 .map((id) => latest.entities[id])
                 .toSet()
                 .length;
-            final successor = prepared.any(
-              (r) => origin.hasEntity(const Uuid().v5(r.entity, 'successor')),
-            );
+            final successors = prepared
+                .map((r) => const Uuid().v5(r.entity, 'successor'))
+                .where(origin.hasEntity)
+                .toSet();
+            final successor = successors.isEmpty
+                ? ''
+                : ' Next occurrence kept${n == 1 && successors.length == 1 ? _successorDateNotice(origin, successors.single) : ''}.';
             messenger.showSnackBar(
               SnackBar(
                 content: Text(
-                  '${failed ? 'Confirmed ' : ''}${past[verb] ?? verb} $n $noun${n == 1 ? '' : 's'}.${successor ? ' Next occurrence kept.' : ''}',
+                  '${failed ? 'Confirmed ' : ''}${past[verb] ?? verb} $n $noun${n == 1 ? '' : 's'}.$successor',
                 ),
                 duration: const Duration(seconds: 10),
                 persist: false,
@@ -2430,6 +2472,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         setState(() {
           editingTask = null;
           editingBulk = null;
+          bulkConflict = false;
           editorStore = null;
           editingText = null;
           textSaveCommand = null;
@@ -2734,6 +2777,58 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     };
   }
 
+  // A global snapshot is the final command token, not a reason to discard a
+  // draft because an unrelated task changed. Never rebase changed targets.
+  void _reconcileBulkEditor() {
+    final origin = editorStore;
+    if (editingBulk == null ||
+        origin == null ||
+        bulkSnapshot == null ||
+        bulkConflict) {
+      return;
+    }
+    if (!identical(store, origin) ||
+        !setEquals(selectedTasks, bulkPending.toSet())) {
+      bulkConflict = true;
+      return;
+    }
+    final current = origin.taskSnapshot;
+    if (current == bulkSnapshot) return;
+    Map<String, String> targets(String snapshot) => {
+      for (final row in jsonDecode(snapshot) as List)
+        if (bulkPending.contains(row['id']))
+          row['id'] as String: jsonEncode(row),
+    };
+    if (mapEquals(targets(bulkSnapshot!), targets(current))) {
+      bulkSnapshot = current;
+    } else {
+      bulkConflict = true;
+    }
+  }
+
+  Future<void> _reviewBulkSelection() async {
+    if (!await _closeEditor() || !mounted || selectedTasks.isEmpty) return;
+    final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
+    final surviving = selectedTasks.where(visible.contains).toSet();
+    if (surviving.isEmpty) {
+      setState(_clearSelection);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('The selected tasks are no longer in this view.'),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      selectedTasks
+        ..clear()
+        ..addAll(surviving);
+      if (!surviving.contains(selectionAnchor)) selectionAnchor = null;
+      mobileEditorOpen = true;
+    });
+    await _openSelectionSession();
+  }
+
   Future<void> _saveBulk(BulkTaskEdit edit) => _recordAction(
     editorStore!,
     'editing',
@@ -2755,6 +2850,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     await syncing;
     _requireCommandSafety(origin);
+    await origin.refresh();
+    _reconcileBulkEditor();
+    if (bulkConflict) {
+      throw StateError(
+        'Selected tasks changed. Close this editor and review the selection.',
+      );
+    }
     try {
       final result = await origin.bulkEdit(
         ids,
@@ -3103,6 +3205,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   ? _actionErrorNotice()
                   : null,
               tasks: editingBulk!,
+              staleSelection: bulkConflict,
+              onReviewSelection: _reviewBulkSelection,
               tagInventory: _tagInventory(),
               users: users,
               panel: panel,
@@ -3117,6 +3221,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 final origin = editorStore!;
                 final ids = List<String>.of(bulkPending);
                 if (ids.isEmpty) return;
+                await origin.refresh();
+                _reconcileBulkEditor();
                 if (bulkConflict) {
                   throw StateError(
                     'These tasks changed. Close and reopen the selection to review before deleting.',
@@ -4921,69 +5027,81 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _welcome() => Center(
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'A little less to remember.',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+  Widget _welcome() => busy
+      ? Center(
+          child: Semantics(
+            liveRegion: true,
+            child: const Text(
+              'Opening Tandemlog…',
+              key: ValueKey('workspace-opening'),
+            ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            settings?.folder != null
-                ? 'Your saved data folder needs attention. Retry it or choose a different folder in Settings.'
-                : widget.folderActions.requiresPicker
-                ? 'Keep household tasks together, even offline. Choose or create a Tandemlog folder so your sync app can access it.'
-                : 'Keep household tasks together, even offline. We’ll create a data folder for you.',
-          ),
-          const SizedBox(height: 24),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              FilledButton(
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size(64, 48),
-                  visualDensity: VisualDensity.standard,
-                  textStyle: Theme.of(context).textTheme.labelLarge,
+        )
+      : Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'A little less to remember.',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                 ),
-                onPressed: busy || choosingFolder || !settingsLoaded
-                    ? null
-                    : settings!.folder != null
-                    ? () => _act(() async {
-                        await _open(settings!.folder!);
-                      })
-                    : widget.folderActions.requiresPicker
-                    ? _chooseFolder
-                    : _startDefault,
-                child: Text(settings?.folder != null ? 'Try again' : 'Start'),
-              ),
-              if (!widget.folderActions.requiresPicker &&
-                  settings?.folder == null)
-                TextButton(
-                  style: TextButton.styleFrom(
-                    minimumSize: const Size(64, 48),
-                    visualDensity: VisualDensity.standard,
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  onPressed: busy || choosingFolder || !settingsLoaded
-                      ? null
-                      : _chooseFolder,
-                  child: const Text('Choose an existing folder'),
+                const SizedBox(height: 16),
+                Text(
+                  settings?.folder != null
+                      ? 'Your saved data folder needs attention. Retry it or choose a different folder in Settings.'
+                      : widget.folderActions.requiresPicker
+                      ? 'Keep household tasks together, even offline. Choose or create a Tandemlog folder so your sync app can access it.'
+                      : 'Keep household tasks together, even offline. We’ll create a data folder for you.',
                 ),
-            ],
+                const SizedBox(height: 24),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    FilledButton(
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(64, 48),
+                        visualDensity: VisualDensity.standard,
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      onPressed: busy || choosingFolder || !settingsLoaded
+                          ? null
+                          : settings!.folder != null
+                          ? () => _act(() async {
+                              await _open(settings!.folder!);
+                            })
+                          : widget.folderActions.requiresPicker
+                          ? _chooseFolder
+                          : _startDefault,
+                      child: Text(
+                        settings?.folder != null ? 'Try again' : 'Start',
+                      ),
+                    ),
+                    if (!widget.folderActions.requiresPicker &&
+                        settings?.folder == null)
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          minimumSize: const Size(64, 48),
+                          visualDensity: VisualDensity.standard,
+                          textStyle: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        onPressed: busy || choosingFolder || !settingsLoaded
+                            ? null
+                            : _chooseFolder,
+                        child: const Text('Choose an existing folder'),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text('Set up folder sync whenever you’re ready.'),
+              ],
+            ),
           ),
-          const SizedBox(height: 16),
-          const Text('Set up folder sync whenever you’re ready.'),
-        ],
-      ),
-    ),
-  );
+        );
   Widget _users(List<Map<String, dynamic>> users) =>
       users.isEmpty || pendingUserId != null
       ? Align(
@@ -5375,7 +5493,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           if (history != null) {
             await showDialog<void>(
               context: context,
-              builder: (_) => ActivityLogDialog(history: history),
+              builder: (_) => ActivityLogDialog(
+                history: history,
+                targetLabel: (id) {
+                  final task = rows.where((row) => row['id'] == id).firstOrNull;
+                  if (task != null) {
+                    return (task['title'] ?? task['name']) as String?;
+                  }
+                  final food = foodStore?.state.containers
+                      .where((item) => item.id == id)
+                      .firstOrNull;
+                  return food?.details.name;
+                },
+              ),
             );
           }
         } else if (value == 'settings') {

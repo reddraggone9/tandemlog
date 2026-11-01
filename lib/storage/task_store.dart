@@ -2979,8 +2979,27 @@ class TaskStore {
         !_hasNativeTextRoot(entity, _entityEvents(entity))) {
       throw FormatFailure(textWriteBlocked!);
     }
+    String? retainedRule;
+    if (type == 'task.completedKeepingSuccessor') {
+      final schedule = _projectEntity(entity)?['schedule'];
+      if (schedule is Map) retainedRule = schedule['recurrence'] as String?;
+    }
     final e = _recurringTextMemo.decodeCanonical(
-      LogEvent(space, writer, seq, clock, entity, type, data).encode(
+      LogEvent(
+        space,
+        writer,
+        seq,
+        clock,
+        entity,
+        type,
+        data,
+        // Retaining an already-created successor has no schedule payload,
+        // but still depends on the parent's expanded recurrence semantics.
+        operationRevision:
+            retainedRule != null && recurrenceRequiresRevision4(retainedRule)
+            ? 4
+            : null,
+      ).encode(
         previousHash:
             previousHash ??
             (throw StateError('A common reservation is required.')),

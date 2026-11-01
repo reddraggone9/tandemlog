@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'event_chain.dart';
 import 'completion_instant.dart';
+import 'schedule.dart' show recurrenceRequiresRevision4;
 import 'utf8_byte_limit.dart';
 
 const currentOperationFormat = 1;
@@ -15,6 +16,17 @@ bool operationUsesAdditionalZone(Object? value) {
     return value.values.any(operationUsesAdditionalZone);
   }
   return value is List && value.any(operationUsesAdditionalZone);
+}
+
+bool operationUsesExtendedRecurrence(Object? value) {
+  if (value is Map) {
+    final recurrence = value['recurrence'];
+    if (recurrence is String && recurrenceRequiresRevision4(recurrence)) {
+      return true;
+    }
+    return value.values.any(operationUsesExtendedRecurrence);
+  }
+  return value is List && value.any(operationUsesExtendedRecurrence);
 }
 
 /// One current wire representation. Semantic reference identity is independent
@@ -116,6 +128,9 @@ class CurrentOperation {
     final revision = operation['revision'] as int;
     final value = j['value'] as Map<String, dynamic>;
     if (revision != 1 &&
+        !(revision == 4 &&
+            module == 'tasks' &&
+            _zoneFamilies.contains(family)) &&
         !(revision == 3 && module == 'tasks' && family == 'task.complete') &&
         !(revision == 2 && module == 'food' && family == 'container.add') &&
         !(revision == 2 &&
@@ -128,7 +143,7 @@ class CurrentOperation {
     if (family == 'task.complete') {
       final values = value['values'];
       if (values is! Map ||
-          revision == 3 &&
+          revision >= 3 &&
               (values.containsKey('completedAt') ||
                   values.containsKey('completionTimeZone')) ||
           revision < 3 && values.containsKey('completedInstant')) {
@@ -136,7 +151,15 @@ class CurrentOperation {
           'Completion fields do not match required revision.',
         );
       }
-      if (revision == 3) decodeCompletionInstant(values['completedInstant']);
+      if (revision >= 3) decodeCompletionInstant(values['completedInstant']);
+    }
+    if (operationUsesExtendedRecurrence(value) &&
+        (revision != 4 ||
+            module != 'tasks' ||
+            !_zoneFamilies.contains(family))) {
+      throw const FormatException(
+        'Expanded recurrence requires its operation revision. Update the app; history was preserved.',
+      );
     }
     if (operationUsesAdditionalZone(value) &&
         (revision < 2 || !_zoneFamilies.contains(family))) {

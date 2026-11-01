@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<String?> askUnsavedDraft(BuildContext context) {
+Future<String?> askUnsavedDraft(BuildContext context, {bool allowSave = true}) {
   var answered = false;
   return showDialog<String>(
     context: context,
@@ -20,7 +20,11 @@ Future<String?> askUnsavedDraft(BuildContext context) {
       return AlertDialog(
         scrollable: true,
         title: const Text('Unsaved changes'),
-        content: const Text('Save your draft before continuing?'),
+        content: Text(
+          allowSave
+              ? 'Save your draft before continuing?'
+              : 'The selection changed. Discard this unsaved draft to review the current selection?',
+        ),
         actions: [
           TextButton(
             onPressed: () => answer('cancel'),
@@ -30,10 +34,11 @@ Future<String?> askUnsavedDraft(BuildContext context) {
             onPressed: () => answer('discard'),
             child: const Text('Discard'),
           ),
-          FilledButton(
-            onPressed: () => answer('save'),
-            child: const Text('Save'),
-          ),
+          if (allowSave)
+            FilledButton(
+              onPressed: () => answer('save'),
+              child: const Text('Save'),
+            ),
         ],
       );
     },

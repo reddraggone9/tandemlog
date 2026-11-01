@@ -3,8 +3,9 @@ import '../application/activity_log.dart';
 import '../storage/unified_history.dart';
 
 class ActivityLogDialog extends StatefulWidget {
-  const ActivityLogDialog({super.key, required this.history});
+  const ActivityLogDialog({super.key, required this.history, this.targetLabel});
   final UnifiedHistory history;
+  final String? Function(String id)? targetLabel;
   @override
   State<ActivityLogDialog> createState() => _ActivityLogDialogState();
 }
@@ -77,14 +78,14 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
         child: SelectableText(
           [
             e.summary,
-            'Operation: ${e.types.join(', ')}',
-            'Recorded: ${e.recordedAt.toLocal().toIso8601String()}',
+            'Recorded: ${activityTime(e.recordedAt)}',
             'User: Not recorded',
             'Device: ${e.device}',
             'Device ID: ${e.writer}',
             'Action: ${e.id}',
             if (e.historical) 'Imported historical record',
-            if (e.targets.isNotEmpty) 'Affected IDs:\n${e.targets.join('\n')}',
+            if (e.targets.isNotEmpty)
+              'Affected records (current names):\n${e.targets.map((id) => '${widget.targetLabel?.call(id) ?? 'Unknown record'} · $id').join('\n')}',
           ].join('\n\n'),
         ),
       ),
@@ -113,6 +114,10 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       height: 480,
       child: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Text('Recorded by device; active user not recorded.'),
+          ),
           if (failed)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
@@ -130,17 +135,21 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
                     itemCount: entries.length,
                     itemBuilder: (context, i) {
                       final e = entries[i];
-                      final time = e.recordedAt.toLocal();
                       return ListTile(
                         key: ValueKey(e.id),
                         title: Text(
-                          e.summary,
+                          [
+                            e.summary,
+                            ...e.targets
+                                .take(2)
+                                .map((id) => widget.targetLabel?.call(id))
+                                .whereType<String>(),
+                          ].join(' · '),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Text(
-                          '${time.toIso8601String().replaceFirst('T', ' ')}\n'
-                          '${e.device} · User not recorded',
+                          '${activityTime(e.recordedAt)}\n${e.device}',
                         ),
                         isThreeLine: true,
                         onTap: () => _details(e),
@@ -158,4 +167,16 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       ),
     ],
   );
+}
+
+/// Readable local civil time with an explicit numeric zone; never microseconds
+/// or an ambiguous zone abbreviation alone. Canonical clock remains untouched.
+String activityTime(DateTime instant) {
+  final time = instant.toLocal();
+  String two(int value) => value.toString().padLeft(2, '0');
+  final offset = time.timeZoneOffset.inMinutes;
+  final zone =
+      '${offset < 0 ? '-' : '+'}${two(offset.abs() ~/ 60)}:${two(offset.abs() % 60)}';
+  return '${time.year}-${two(time.month)}-${two(time.day)} '
+      '${two(time.hour)}:${two(time.minute)}:${two(time.second)} UTC$zone';
 }

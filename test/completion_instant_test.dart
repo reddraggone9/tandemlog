@@ -108,7 +108,7 @@ void main() {
           },
         ),
         (1, {'completedInstant': op.value['values']['completedInstant']}),
-        (4, {'completedInstant': op.value['values']['completedInstant']}),
+        (5, {'completedInstant': op.value['values']['completedInstant']}),
       ]) {
         final invalid = CurrentOperation(
           module: op.module,

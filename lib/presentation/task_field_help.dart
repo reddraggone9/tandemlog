@@ -34,7 +34,12 @@ Future<void> showTaskFieldHelp(
               'Create the next task when you complete this one. Repeat advances '
                   'from Due, otherwise This occurrence, otherwise Start. Add '
                   '“when done” to calculate from the completion day instead. '
-                  'Start and Due keep their gap in calendar days and their times.',
+                  'Start and Due keep their gap in calendar days and their times. '
+                  'Month rules can use the 1st, 2nd, 3rd, 4th or last weekday, '
+                  'or a month list and day. A constrained rule can first match '
+                  'later in the same month: every 3 months on the 1st Friday '
+                  'from November 1 first advances to November 6, not February. '
+                  'A day past the end of a month uses its last day.',
             ),
             _HelpTopic(
               'This occurrence',

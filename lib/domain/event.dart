@@ -118,7 +118,9 @@ class LogEvent {
       family: payload.family,
       revision:
           operationRevision ??
-          (isTaskCompletion(type) && data.containsKey('completedInstant')
+          (operationUsesExtendedRecurrence(payload.value)
+              ? 4
+              : isTaskCompletion(type) && data.containsKey('completedInstant')
               ? 3
               : operationUsesAdditionalZone(payload.value)
               ? 2
