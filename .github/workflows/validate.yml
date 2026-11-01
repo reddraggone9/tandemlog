@@ -129,6 +129,26 @@ jobs:
             ${{ runner.temp }}/tandemlog-flatpak-qa/installer-diagnostics/*
           retention-days: 5
           if-no-files-found: warn
+      # Off until Lee approves a Flatpak signing identity. An unsigned repository
+      # is refused later by tool/flatpak_channel.py site. Kept outside dist so the
+      # candidate's closed inventory and its public installers do not change.
+      - name: Preserve the exact candidate OSTree repository for the update channel
+        if: vars.TANDEMLOG_FLATPAK_CHANNEL == 'enabled'
+        run: |
+          sudo apt-get install -y ostree
+          python3 tool/flatpak_channel.py pack \
+            --repo "$RUNNER_TEMP/tandemlog-flatpak-repo" \
+            --bundle dist/tandemlog-linux-x64.flatpak \
+            --source-revision "$GITHUB_SHA" \
+            --output "$RUNNER_TEMP/flatpak-channel"
+      - name: Upload the candidate OSTree repository
+        if: vars.TANDEMLOG_FLATPAK_CHANNEL == 'enabled'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: linux-flatpak-repo
+          path: ${{ runner.temp }}/flatpak-channel/*
+          retention-days: 30
+          if-no-files-found: error
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: linux

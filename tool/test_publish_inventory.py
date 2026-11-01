@@ -60,13 +60,16 @@ class PublishInventory(unittest.TestCase):
     def test_legacy_exact_inventory_still_passes(self):
         verify_candidate_inventory(self.dist, SOURCE)
 
-    def test_current_complete_portable_evidence_passes_without_public_extras(self):
+    def test_current_complete_portable_evidence_stages_only_the_original_zip(self):
         self.portable()
         before = {p.name: p.read_bytes() for p in self.dist.iterdir()}
         verify_candidate_inventory(self.dist, SOURCE)
         stage_public_assets('2026.10.2-rc.4', self.dist, self.root / 'public')
+        zip_name = 'tandemlog-2026.10.2-rc.4-windows-x64-portable.zip'
         self.assertEqual({p.name for p in (self.root / 'public').iterdir()},
-                         set(public_asset_names('2026.10.2-rc.4').values()))
+                         set(public_asset_names('2026.10.2-rc.4').values()) | {zip_name})
+        self.assertEqual((self.root / 'public' / zip_name).read_bytes(),
+                         before['tandemlog-windows-x64-unsigned-portable.zip'])
         self.assertEqual({p.name: p.read_bytes() for p in self.dist.iterdir()}, before)
 
     def test_actual_portable_producer_is_compatible(self):
