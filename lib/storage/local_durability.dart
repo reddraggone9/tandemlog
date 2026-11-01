@@ -36,6 +36,7 @@ class LocalDurability {
   static const _closeOnExec = 0x80000;
   static const _interrupted = 4;
   static const _exists = 17;
+  static const _accessDenied = 13;
 
   Future<Directory> ensureDirectoryDurable(Directory directory) async {
     if (!_linux) return directory.create(recursive: true);
@@ -46,12 +47,20 @@ class LocalDurability {
     }
     final parent = absolute.parent;
     if (parent.path != absolute.path) {
-      // A visible directory may come from an earlier process interrupted after
-      // mkdir but before its parent barrier. Confirm ancestry once per process,
-      // including existing ancestors; routine later calls skip these barriers.
+      // Keep first-use barriers for visible entries left by an interrupted
+      // mkdir. Pre-existing ancestors may be traversable but not readable
+      // (e.g. a shared workspace): their open EACCES is not our failed write.
+      // Entries created by this process retain a mandatory barrier on retry.
       await ensureDirectoryDurable(parent);
-      if (!await absolute.exists()) await absolute.create();
-      await syncParentAfterCreate(absolute);
+      if (!await absolute.exists()) {
+        _pendingDirectoryEntries.add(absolute.path);
+        await absolute.create();
+      }
+      _syncDirectory(
+        parent.path,
+        allowInaccessible: !_pendingDirectoryEntries.contains(absolute.path),
+      );
+      _pendingDirectoryEntries.remove(absolute.path);
     }
     _ensuredDirectories.add(absolute.path);
     return directory;
@@ -133,8 +142,12 @@ class LocalDurability {
     return descriptor;
   }
 
-  void _syncDirectory(String path) {
-    final descriptor = _open(path, _directory | _closeOnExec);
+  void _syncDirectory(String path, {bool allowInaccessible = false}) {
+    final descriptor = _openRaw(path, _directory | _closeOnExec);
+    if (descriptor < 0) {
+      if (allowInaccessible && _native.errno == _accessDenied) return;
+      throw _failure('open', path);
+    }
     Object? failure;
     try {
       _sync(descriptor, path, 'directory fsync');

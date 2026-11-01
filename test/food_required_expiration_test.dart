@@ -204,7 +204,8 @@ void registerFoodRequiredExpirationTests() {
         },
       );
       expect(find.text('Inbox'), findsOneWidget);
-      expect(find.text('Needs expiration'), findsOneWidget);
+      expect(find.text('Needs expiration'), findsNothing);
+      expect(find.bySemanticsLabel(RegExp('Needs expiration')), findsOneWidget);
       await openFoodGroupEditor(tester, 'Synthetic beans');
       await _tap(tester, find.widgetWithText(TextButton, 'Cancel'));
       expect(writes, 0);

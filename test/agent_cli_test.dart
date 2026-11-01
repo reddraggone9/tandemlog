@@ -180,6 +180,11 @@ void main() {
       expect(added['actions'], i == 0 ? hasLength(1) : isEmpty);
     }
     expect(((await json(['food', 'list']))['rows'] as List).single['count'], 2);
+    expect(
+      ((await json(['food', 'search', 'Beans']))['rows'] as List)
+          .single['section'],
+      'inbox',
+    );
   });
 
   test('dry run appends nothing and reports a stable plan', () async {

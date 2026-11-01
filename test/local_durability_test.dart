@@ -268,6 +268,31 @@ void main() {
   );
 
   test(
+    'existing ancestry EACCES is optional; created entries stay strict',
+    () async {
+      final calls = _Calls()..failDirectoryOpen = true;
+      final durability = LocalDurability(linux: true, linuxCalls: calls);
+      await durability.ensureDirectoryDurable(root);
+      final created = Directory('${root.path}/new');
+      await expectLater(
+        durability.ensureDirectoryDurable(created),
+        throwsA(_failure('open', 13)),
+      );
+      expect(await created.exists(), isTrue);
+      // A failed mkdir barrier must not become optional just because mkdir won.
+      await expectLater(
+        durability.ensureDirectoryDurable(created),
+        throwsA(_failure('open', 13)),
+      );
+      calls.failDirectoryOpen = false;
+      await durability.ensureDirectoryDurable(created);
+      calls.operations.clear();
+      await durability.ensureDirectoryDurable(created);
+      expect(calls.operations, isEmpty);
+    },
+  );
+
+  test(
     'failed mkdir barrier retries even though the directory now exists',
     () async {
       final calls = _Calls();

@@ -1342,6 +1342,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         restoreBatchCommand = widget.onRestoreBatch,
         detailsCommand = widget.onDetails;
     final details = group.details, deleted = group.containers.first.deleted;
+    final inInboxSection =
+        search.text.trim().isEmpty &&
+        !deleted &&
+        details.expiry == null &&
+        details.retention.isEmpty;
     final key = _rowKey(group);
     final identity = _groupMenuIdentity(group);
     final countLabel =
@@ -1547,29 +1552,31 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             spacing: 8,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              Text(
-                                details.expiry ?? 'Needs expiration',
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: deleted
-                                          ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurfaceVariant
-                                          : foodExpiryColor(
-                                              details.expiry,
-                                              _expirationClock.today,
-                                              Theme.of(context).colorScheme,
-                                            ),
-                                    ),
-                              ),
-                              for (final value in [
+                              if (!inInboxSection)
+                                Text(
+                                  details.expiry ?? 'Needs expiration',
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: deleted
+                                            ? Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant
+                                            : foodExpiryColor(
+                                                details.expiry,
+                                                _expirationClock.today,
+                                                Theme.of(context).colorScheme,
+                                              ),
+                                      ),
+                                ),
+                              if ([
                                 details.location,
                                 details.retention,
-                              ].where((value) => value.isNotEmpty)) ...[
-                                const Text('·'),
+                              ].any((value) => value.isNotEmpty))
                                 Text(
-                                  value,
+                                  [details.location, details.retention]
+                                      .where((value) => value.isNotEmpty)
+                                      .join(' · '),
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(
                                         color: Theme.of(
@@ -1577,7 +1584,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                         ).colorScheme.onSurfaceVariant,
                                       ),
                                 ),
-                              ],
                             ],
                           ),
                           if (metadata.isNotEmpty)
