@@ -360,6 +360,87 @@ void main() {
     });
   });
 
+  testWidgets(
+    'retained completion names the independently edited successor date',
+    (tester) async {
+      final data = (await tester.runAsync(host.fixture))!;
+      final repeat = const Uuid().v4();
+      final child = const Uuid().v5(repeat, 'successor');
+      await tester.runAsync(() async {
+        final seed = await openNativeFixtureStore(
+          data.folder,
+          '${data.root.path}/seed-retained',
+          nativeLibraryPath: host.nativeHostLibraryPath,
+        );
+        try {
+          await seed.createNativeFixtureTask(repeat, {
+            'title': 'Retained repeat',
+            'description': '',
+            'assignee': data.user,
+            'schedule': {
+              'dueDate': '2026-10-02',
+              'recurrence': 'every 3 months on the 1st friday',
+            },
+          });
+          final first = await seed.complete(
+            repeat,
+            completionInstant: DateTime.utc(2026, 10, 2, 12),
+            localZoneId: 'UTC',
+          );
+          // The edited date differs from anything the rule would compute.
+          await seed.command(child, 'task.edited', {
+            'schedule': {
+              'dueDate': '2027-02-17',
+              'recurrence': 'every 3 months on the 1st friday',
+            },
+          });
+          await seed.reopen(repeat, [first.id]);
+        } finally {
+          await seed.close();
+        }
+      });
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1400, 1000);
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: data.profile,
+          textEngineFactory: host.createHostTextEngine,
+          timeSourceFactory: host.createHostTimeSource,
+        ),
+      );
+      await host.ready(
+        tester,
+        () => find.text('Retained repeat').evaluate().isNotEmpty,
+      );
+      final resources = host.hostResources(tester);
+      try {
+        final check = find.descendant(
+          of: find.byTooltip('Complete Retained repeat'),
+          matching: find.byType(Checkbox),
+        );
+        // Parent and successor share a title; the reopened parent sorts first.
+        await tester.tap(check.first);
+        await host.ready(
+          tester,
+          () =>
+              find.textContaining('Next occurrence kept').evaluate().isNotEmpty,
+          settle: false,
+        );
+        expect(
+          find.text('Completed 1 task. Next occurrence kept, due 2027-02-17.'),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      } finally {
+        await tester.pumpWidget(const SizedBox());
+        await host.waitForHostShutdown(tester, resources);
+        await tester.runAsync(() => data.root.delete(recursive: true));
+      }
+    },
+  );
+
   testWidgets('recurring completion names the persisted successor date', (
     tester,
   ) async {
