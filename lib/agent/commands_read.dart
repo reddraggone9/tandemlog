@@ -254,7 +254,16 @@ Future<AgentResult> _food(AgentCall call, {String? query}) async {
   final tagged = [
     for (final g in rows.inbox) ('inbox', g),
     for (final g in rows.groups)
-      (view.name == 'inventory' ? 'stock' : view.name, g),
+      (
+        !g.containers.first.deleted &&
+                g.details.expiry == null &&
+                g.details.retention.isEmpty
+            ? 'inbox'
+            : view.name == 'inventory'
+            ? 'stock'
+            : view.name,
+        g,
+      ),
     for (final g in rows.deletedGroups) ('deleted', g),
   ];
   final heading = query != null

@@ -340,7 +340,7 @@ Future<void> verifyFoodViewReachability(
       of: card,
       matching: find.text('Needs expiration'),
     );
-    await swipeTo(needsExpiration);
+    expect(needsExpiration, findsNothing);
     expect(
       tester.getRect(savedName).intersect(viewport).height,
       greaterThanOrEqualTo(tester.getRect(savedName).height - 0.5),
