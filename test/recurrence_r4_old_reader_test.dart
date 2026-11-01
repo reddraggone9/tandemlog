@@ -272,9 +272,16 @@ const _modes = {
 };
 
 void main() {
+  final skip = Platform.isWindows
+      ? 'Linux CI proves the wire behavior; the harness uses POSIX tooling.'
+      : _library == null
+      ? 'Requires the production text engine.'
+      : false;
   _Reader? reader;
   Directory? root;
+  // setUpAll still runs when every test in the file is skipped.
   setUpAll(() async {
+    if (skip != false) return;
     root = await Directory.systemTemp.createTemp('r4-old-reader-');
     reader = await _startReader(root!.path);
     expect(
@@ -286,12 +293,6 @@ void main() {
     reader?.process.kill();
     await root?.delete(recursive: true);
   });
-
-  final skip = Platform.isWindows
-      ? 'Linux CI proves the wire behavior; the harness uses POSIX tooling.'
-      : _library == null
-      ? 'Requires the production text engine.'
-      : false;
 
   for (final action in _modes.keys) {
     test(

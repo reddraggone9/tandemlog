@@ -190,7 +190,9 @@ void registerBulkFailureVisibilityTests() {
         final afterFirstSave = position.pixels;
         final focus = FocusManager.instance.primaryFocus;
         expect(controller.value, draft);
-        expect(find.text('Edit 2 tasks'), findsOneWidget);
+        // A changed target leaves this draft nothing to save against.
+        expect(find.text('Review selection'), findsOneWidget);
+        expect(find.text('Edit 2 tasks'), findsNothing);
         expect(find.text('Cancel').hitTestable(), findsOneWidget);
         expect(find.text('Save changes').hitTestable(), findsOneWidget);
         if (!tester.widget<BulkTaskEditor>(editor).panel) {
@@ -217,7 +219,7 @@ void registerBulkFailureVisibilityTests() {
             find.descendant(of: warning, matching: find.byType(RichText)).last,
           );
           final message = tester.widget<Text>(warning).data!;
-          final tail = message.lastIndexOf('try again.');
+          final tail = message.lastIndexOf('review the selection.');
           expect(tail, greaterThanOrEqualTo(0));
           final visible = tester.getRect(notice);
           final origin = paragraph.localToGlobal(Offset.zero);
