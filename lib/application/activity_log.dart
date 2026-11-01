@@ -20,7 +20,12 @@ class ActivityEntry {
   final List<String> types, targets;
   final bool historical;
 
-  String get summary => types.map(activityLabel).toSet().join(', ');
+  String get summary {
+    final labels = types.map(activityLabel).toSet();
+    // Capture's positioning effect is not a second user action.
+    if (labels.contains('Task added')) labels.remove('Task reordered');
+    return labels.join(', ');
+  }
 
   DateTime get recordedAt => DateTime.fromMicrosecondsSinceEpoch(
     (clock.value ~/ BigInt.from(1000)).toInt(),
@@ -55,7 +60,13 @@ List<ActivityEntry> activityEntries(UnifiedSnapshot snapshot) {
     for (final e in r.effects) {
       types.add(
         e.task?.type ??
-            (e.food != null ? 'food.${e.food!.operation.action.name}' : e.kind),
+            (e.food != null
+                ? e.food!.operation.action.name == 'edit' &&
+                          e.food!.operation.fields.length == 1 &&
+                          e.food!.operation.fields.single == 'location'
+                      ? 'food.location'
+                      : 'food.${e.food!.operation.action.name}'
+                : e.kind),
       );
       if (e.task != null) targets.add(e.task!.entity);
       if (e.food != null) targets.addAll(e.food!.operation.targets);
@@ -109,6 +120,7 @@ String activityLabel(String type) => switch (type) {
   'text.baselineInitialized' => 'Shared text initialized',
   'food.add' => 'Food added',
   'food.edit' => 'Food edited',
+  'food.location' => 'Food location changed',
   'food.remove' => 'Food removed',
   'food.restore' => 'Food restored',
   'food.undo' => 'Food change undone',

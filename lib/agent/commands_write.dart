@@ -443,7 +443,7 @@ List<AgentCommand> writeCommands() => [
       AgentArg(
         'repeat',
         'string',
-        'Repeat rule as stored by the app, or "none".',
+        'Repeat rule, or "none". $supportedRecurrenceGrammar',
       ),
       AgentArg('for', 'string', 'New assignee name or ID.'),
       AgentArg('tag', 'string', 'Add a tag.', repeated: true),

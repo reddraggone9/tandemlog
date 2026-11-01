@@ -87,6 +87,8 @@ class BulkTaskEditor extends StatefulWidget {
     this.onClose,
     this.onCloseReadinessChanged,
     this.contextNotice,
+    this.staleSelection = false,
+    this.onReviewSelection,
     this.users = const [],
     this.tagInventory = const [],
     this.panel = false,
@@ -97,6 +99,8 @@ class BulkTaskEditor extends StatefulWidget {
   final Future<void> Function()? onDelete;
   final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
+  final bool staleSelection;
+  final VoidCallback? onReviewSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
   final TimeZoneNamePolicy timeZonePolicy;
@@ -121,6 +125,8 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     onClose: widget.onClose,
     onCloseReadinessChanged: widget.onCloseReadinessChanged,
     contextNotice: widget.contextNotice,
+    staleSelection: widget.staleSelection,
+    onReviewSelection: widget.onReviewSelection,
     onDelete: widget.onDelete,
     saveBulk: widget.onSave,
   );
@@ -137,6 +143,8 @@ class _EditorBody extends StatefulWidget {
     this.onClose,
     this.onCloseReadinessChanged,
     this.contextNotice,
+    this.staleSelection = false,
+    this.onReviewSelection,
     this.onDelete,
     this.saveSingle,
     this.saveBulk,
@@ -153,6 +161,8 @@ class _EditorBody extends StatefulWidget {
   final List<String> tagInventory;
   final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
+  final bool staleSelection;
+  final VoidCallback? onReviewSelection;
   final Future<void> Function()? onDelete;
   final Future<void> Function(Map<String, dynamic>, List<String>, List<String>)?
   saveSingle;
@@ -168,6 +178,7 @@ class _EditorBodyState extends State<_EditorBody> {
   final tagSelections = <String, Set<String>>{};
   final touched = <String>{}, applied = <String>{}, mixed = <String>{};
   final scroll = ScrollController();
+  final repeatMenu = GlobalKey<PopupMenuButtonState<String>>();
   // Centered on open; actions stay put while validation text changes.
   final _placement = SettledDialogPlacement();
   bool busy = false, attempted = false, showOverride = false, allowPop = false;
@@ -767,10 +778,15 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<bool> askClose() async {
-    final choice = await askUnsavedDraft(context);
+    final choice = await askUnsavedDraft(
+      context,
+      allowSave: !widget.staleSelection,
+    );
     if (!mounted) return false;
     if (choice == 'discard') return true;
-    if (choice == 'save') return commit(closeAfter: false);
+    if (choice == 'save' && !widget.staleSelection) {
+      return commit(closeAfter: false);
+    }
     return false;
   }
 
@@ -788,6 +804,7 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<void> submit() async {
+    if (widget.staleSelection) return;
     await commit(closeAfter: true);
   }
 
@@ -797,6 +814,7 @@ class _EditorBodyState extends State<_EditorBody> {
     setState(() => attempted = true);
     final submissionRevision = formValidation.submissionRevision;
     if (!retry && !await formValidation.reviewAndReveal()) return false;
+    if (widget.staleSelection) return false;
     if (!retry && submissionRevision != formValidation.submissionRevision) {
       return false;
     }
@@ -1041,6 +1059,9 @@ class _EditorBodyState extends State<_EditorBody> {
                     {'title', 'description'}.contains(key)) &&
                 !(widget.textSession?.frozen == true &&
                     {'title', 'description'}.contains(key)),
+            onTap: key == 'recurrence' && !editingFrozen
+                ? () => repeatMenu.currentState?.showButtonMenu()
+                : null,
             minLines: key == 'description' ? 3 : 1,
             maxLines: key == 'description' ? null : lines,
             inputFormatters: key == 'title' ? [TitleLineFormatter()] : null,
@@ -1084,12 +1105,13 @@ class _EditorBodyState extends State<_EditorBody> {
                     )
                   : key == 'recurrence'
                   ? PopupMenuButton<String>(
+                      key: repeatMenu,
                       tooltip: 'Repeat examples',
                       enabled: !editingFrozen,
                       icon: const Icon(Icons.expand_more),
                       onSelected: (rule) => controllers[key]!.text = rule,
                       itemBuilder: (_) => [
-                        for (final rule in observedRecurrences)
+                        for (final rule in recurrenceExamples)
                           PopupMenuItem(value: rule, child: Text(rule)),
                       ],
                     )
@@ -1329,7 +1351,7 @@ class _EditorBodyState extends State<_EditorBody> {
           const SizedBox(height: 12),
           dateTimeRow('start', 'Start'),
           dateTimeRow('due', 'Due'),
-          field('recurrence', 'Repeat', hint: 'every week when done'),
+          field('recurrence', 'Repeat', hint: 'e.g. every week when done'),
           if (migrationConflicts.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
@@ -1456,7 +1478,7 @@ class _EditorBodyState extends State<_EditorBody> {
     final deleteAction = widget.onDelete == null
         ? null
         : TextButton(
-            onPressed: editingFrozen ? null : delete,
+            onPressed: editingFrozen || widget.staleSelection ? null : delete,
             child: const Text('Delete'),
           );
     final cancelAction = TextButton(
@@ -1466,7 +1488,8 @@ class _EditorBodyState extends State<_EditorBody> {
     final saveAction = ValidationActionButton(
       key: const ValueKey('task-save-action'),
       validation: formValidation,
-      enabled: ModalRoute.isCurrentOf(context) ?? true,
+      enabled:
+          !widget.staleSelection && (ModalRoute.isCurrentOf(context) ?? true),
       label: 'Save changes',
       busy: busy,
       retry: widget.textSession?.hasPendingReceipt == true,
@@ -1546,7 +1569,11 @@ class _EditorBodyState extends State<_EditorBody> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(
-              bulk ? 'Edit ${originals.length} tasks' : 'Edit task',
+              widget.staleSelection
+                  ? 'Review selection'
+                  : bulk
+                  ? 'Edit ${originals.length} tasks'
+                  : 'Edit task',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             IconButton(
@@ -1557,6 +1584,15 @@ class _EditorBodyState extends State<_EditorBody> {
             ),
           ],
         ),
+        if (widget.staleSelection) ...[
+          const Text(
+            'Selected tasks changed. Close this editor and review the current selection; this draft has not been saved.',
+          ),
+          TextButton(
+            onPressed: editingFrozen ? null : widget.onReviewSelection,
+            child: const Text('Review current selection'),
+          ),
+        ],
         if (widget.contextNotice != null) widget.contextNotice!,
       ],
     );

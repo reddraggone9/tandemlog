@@ -17,6 +17,7 @@ import 'package:tandemlog/agent/registry.dart';
 import 'package:tandemlog/agent/render.dart' show revOf;
 import 'package:tandemlog/food/food_store.dart' show StaleFoodState;
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/domain/event.dart' show LogEvent;
 import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:uuid/uuid.dart';
@@ -92,6 +93,13 @@ void main() {
     expect(code, 0, reason: out);
   }
 
+  /// The advertised Undo command of a write result, as argv.
+  List<String> undoArgv(Map result) {
+    final hint = result['undo'] as String?;
+    expect(hint, isNotNull, reason: '$result');
+    return hint!.split(' ').sublist(1);
+  }
+
   test('init, capture, list and show; reads change no bytes', () async {
     await setUpAgent();
     expect((await cli(['people', 'add', 'Lee'])).$1, 0);
@@ -115,6 +123,78 @@ void main() {
     expect((await cli(['verify'])).$1, 0);
     expect(await bytes(), before);
   });
+
+  test(
+    'expanded recurrence through CLI keeps revision4, successor and Undo',
+    () async {
+      await setUpAgent();
+      await cli(['people', 'add', 'Lee']);
+      final added = await json([
+        'tasks',
+        'add',
+        'General monthly task',
+        '--for',
+        'Lee',
+      ]);
+      final task = (added['affected'] as List).single as Map;
+      final id = task['id'] as String;
+      final edited = await json([
+        'tasks',
+        'edit',
+        id,
+        '--if-rev',
+        task['rev'] as String,
+        '--due',
+        '2030-05-01',
+        '--repeat',
+        'every 2 months on the 2nd Tuesday',
+      ]);
+      expect(edited['error'], isNull, reason: '$edited');
+      final current = await json(['tasks', 'show', id]);
+      final completed = await json([
+        'tasks',
+        'complete',
+        id,
+        '--if-rev',
+        current['rev'] as String,
+      ]);
+      expect(completed['error'], isNull, reason: '$completed');
+      final actions = <UnifiedRecord>[];
+      await for (final file in Directory('${root.path}/ws').list()) {
+        if (file is File && file.path.endsWith('.applog')) {
+          for (final line in await file.readAsLines()) {
+            if (line.isNotEmpty) actions.add(UnifiedRecord.decode(line));
+          }
+        }
+      }
+      final events = actions
+          .expand((r) => r.effects)
+          .map((e) => e.task)
+          .whereType<LogEvent>()
+          .toList();
+      expect(
+        events
+            .where(
+              (e) => e.type == 'task.textEdited' || e.type == 'task.edited',
+            )
+            .last
+            .operationRevision,
+        4,
+      );
+      final completion = events.lastWhere(
+        (e) => e.type.toString().startsWith('task.completed'),
+      );
+      expect(completion.operationRevision, 4);
+      expect(completion.data['successor']['schedule']['dueDate'], '2030-05-14');
+      final undone = await json(undoArgv(completed));
+      expect(undone['error'], isNull, reason: '$undone');
+      final reopened = await json(['tasks', 'show', id]);
+      expect(
+        reopened['schedule']['recurrence'],
+        'every 2 months on the 2nd Tuesday',
+      );
+    },
+  );
 
   test('every existing-item write requires a current rev', () async {
     await setUpAgent();
@@ -618,13 +698,6 @@ void main() {
     );
     expect((call!['result'] as Map)['isError'], false);
   });
-
-  /// The advertised Undo command of a write result, as argv.
-  List<String> undoArgv(Map result) {
-    final hint = result['undo'] as String?;
-    expect(hint, isNotNull, reason: '$result');
-    return hint!.split(' ').sublist(1);
-  }
 
   Future<Map<String, dynamic>> planned(List<String> args) async {
     final dry = await json([...args, '--dry-run']);

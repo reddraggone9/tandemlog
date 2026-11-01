@@ -423,3 +423,12 @@ Historical cause and local/live read-only evidence:
 ## Published stable 2026.10.11/build110 — 2026-11-02
 
 [Stable 2026.10.11](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.11), release 432283432, is immutable Latest, published 2026-11-03T04:38:18Z from `d52a81d47ff1b0400526eb9ce5bc03d1b795527e`. Lee accepted RC.1 at 22:00 CST on 2026-11-02. Version/documentation-only promotion reuses qualified reference q6 `eaab6c53` / identity `59c446d5` without an override or fresh reference run. Signed candidate 41575738097 passed on attempt 1. Automatic push CI 41575733635 failed only `verify_linux_disposal.py` with the known intermittent Linux quit-time abort (`FlutterEngineRemoveView` kInvalidArguments, `g_mutex_clear`); the candidate's Linux job on the same source passed, and it was not rerun. Exact-asset Android and GTK RC 109→110 in-place upgrades pass on the retained synthetic labs. Three installers and the portable ZIP were verified in draft before publication, with no rebuild. Anonymous public verification checks all 4 assets, the owner APK signer, exact notes/tag/source/Latest and all 47 previous releases/tags unchanged. [Receipts and platform limits](../evidence/stable-2026.10.11/README.md).
+
+## Post-RC109 update-channel development
+
+[Channel preparation and outstanding gates](../packaging/update-channels.md)
+cover the authorized signed Flatpak Pages and public Scoop ZIP direction. These
+channels are not enabled. Public channel advancement is allowed only after the
+accepted stable release becomes GitHub Latest; prerelease publication never
+advances them. Preserve exact accepted artifacts/OSTree commit and the existing
+new-signing-credential/native/closed-inventory requirements.
