@@ -112,52 +112,57 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
     content: SizedBox(
       width: 640,
       height: 480,
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8),
-            child: Text('Recorded by device; active user not recorded.'),
-          ),
-          if (failed)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                'Activity could not refresh. Showing last admitted history.',
-                key: const ValueKey('activity-refresh-error'),
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            ),
-          Expanded(
-            child: entries.isEmpty
-                ? const Center(child: Text('No activity yet.'))
-                : ListView.builder(
-                    key: const ValueKey('activity-list'),
-                    itemCount: entries.length,
-                    itemBuilder: (context, i) {
-                      final e = entries[i];
-                      return ListTile(
-                        key: ValueKey(e.id),
-                        title: Text(
-                          [
-                            e.summary,
-                            ...e.targets
-                                .take(2)
-                                .map((id) => widget.targetLabel?.call(id))
-                                .whereType<String>(),
-                          ].join(' · '),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          '${activityTime(e.recordedAt)}\n${e.device}',
-                        ),
-                        isThreeLine: true,
-                        onTap: () => _details(e),
-                      );
-                    },
+      // Attribution and refresh failures share the rows' scroll viewport.
+      // Fixed copy above an Expanded list can consume all available height at
+      // large text sizes, leaving admitted history present but unreachable.
+      child: ListView.builder(
+        key: const ValueKey('activity-list'),
+        itemCount: entries.length + 1 + (entries.isEmpty ? 1 : 0),
+        itemBuilder: (context, i) {
+          if (i == 0) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: Text('Recorded by device; active user not recorded.'),
+                ),
+                if (failed)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      'Activity could not refresh. Showing last admitted history.',
+                      key: const ValueKey('activity-refresh-error'),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                   ),
-          ),
-        ],
+              ],
+            );
+          }
+          if (entries.isEmpty) {
+            return const Center(child: Text('No activity yet.'));
+          }
+          final e = entries[i - 1];
+          return ListTile(
+            key: ValueKey(e.id),
+            title: Text(
+              [
+                e.summary,
+                ...e.targets
+                    .take(2)
+                    .map((id) => widget.targetLabel?.call(id))
+                    .whereType<String>(),
+              ].join(' · '),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text('${activityTime(e.recordedAt)}\n${e.device}'),
+            isThreeLine: true,
+            onTap: () => _details(e),
+          );
+        },
       ),
     ),
     actions: [

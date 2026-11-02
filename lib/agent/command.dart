@@ -231,7 +231,7 @@ class AgentCommand {
           throw AgentFailure('validation', 'Unknown option --$name for $name.');
         }
         if (arg.type == 'boolean' && !arg.repeated) {
-          out[name] = value == null ? true : value == 'true';
+          _store(out, arg, value ?? 'true');
           continue;
         }
         if (value == null) {
@@ -261,7 +261,13 @@ class AgentCommand {
               '--${arg.name} must be a whole number.',
               details: {'field': arg.name, 'error': 'integer'},
             )),
-      'boolean' => raw == 'true',
+      'boolean' =>
+        bool.tryParse(raw) ??
+            (throw AgentFailure(
+              'validation',
+              '--${arg.name} must be true or false.',
+              details: {'field': arg.name, 'error': 'boolean'},
+            )),
       _ => raw,
     };
     if (arg.repeated) {
