@@ -267,6 +267,87 @@ void main() {
     );
   });
 
+  for (final literal in ['True', 'TRUE', 'yes', '1', '', 'typo']) {
+    test(
+      'invalid dry-run literal "$literal" refuses without opening or writing',
+      () async {
+        final argv = [
+          'tasks',
+          'add',
+          'Synthetic preview only',
+          '--for',
+          'Probe',
+          '--dry-run=$literal',
+        ];
+        await setUpAgent();
+        expect((await cli(['people', 'add', 'Probe'])).$1, 0);
+        final before = await bytes();
+        final refused = await json(argv);
+        // Check bytes before asserting the error so a regression proves no writes.
+        expect(
+          await bytes(),
+          before,
+          reason: 'Invalid boolean must never commit',
+        );
+        expect(refused['error']['kind'], 'validation', reason: '$refused');
+        expect((await json(['tasks', 'list']))['total'], 0);
+        // An uninitialized profile must not be created or opened on bad input.
+        final empty = await bytes();
+        final unopened = await json(argv, profile: 'unopened');
+        expect(await bytes(), empty);
+        expect(unopened['error']['kind'], 'validation', reason: '$unopened');
+        expect(unopened['error']['details']['field'], 'dry-run');
+      },
+    );
+  }
+
+  test(
+    'explicit true previews, false commits; MCP booleans stay typed',
+    () async {
+      await setUpAgent();
+      await cli(['people', 'add', 'Probe']);
+      final args = ['tasks', 'add', 'Synthetic preview only', '--for', 'Probe'];
+      final before = await bytes();
+      expect((await json([...args, '--dry-run=true']))['dryRun'], true);
+      expect(await bytes(), before);
+      final server = McpServer(
+        environment: env,
+        profile: 'default',
+        timeZone: 'America/Chicago',
+      );
+      Future<Map> mcp(Object value) async {
+        final reply = await server.handle(
+          jsonEncode({
+            'jsonrpc': '2.0',
+            'id': 1,
+            'method': 'tools/call',
+            'params': {
+              'name': 'tasks_add',
+              'arguments': {
+                'title': ['Synthetic MCP'],
+                'for': 'Probe',
+                'dry-run': value,
+              },
+            },
+          }),
+        );
+        return reply!['result'] as Map;
+      }
+
+      final preview = await mcp(true);
+      expect(preview['isError'], isNot(true), reason: '$preview');
+      expect(await bytes(), before);
+      expect((await mcp('true'))['isError'], true);
+      expect(await bytes(), before);
+      expect((await mcp(false))['isError'], isNot(true));
+      expect(
+        (await json([...args, '--dry-run=false']))['actions'],
+        hasLength(1),
+      );
+      expect((await json(['tasks', 'list']))['total'], 2);
+    },
+  );
+
   test('dry run appends nothing and reports a stable plan', () async {
     await setUpAgent();
     await cli(['people', 'add', 'Lee']);

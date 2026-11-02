@@ -177,7 +177,9 @@ or before Due"}`), matching the app's beside-the-field errors.
 **Dry run and preconditions.**
 - Every write accepts `--dry-run`. A dry run prints the exact typed effects
   (entities, fields before→after, merges, counts) and a `planHash`, and appends
-  nothing.
+  nothing. CLI boolean flags accept a bare `--flag` (true) or explicit
+  lowercase `--flag=true` / `--flag=false`. Other text, including empty values,
+  is rejected before opening a workspace; MCP still requires JSON booleans.
 - `--expect-plan <hash>` is **required for bulk actions, merges and imports** in
   both CLI and MCP commit calls. Dry runs can discover targets and supply the
   required revision map/plan hash without committing. Recompute under the write

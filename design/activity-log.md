@@ -36,7 +36,10 @@ order. Never silently clamp, rewrite clocks, or claim exact real-world ordering.
 Activity log is reached from the existing toolbar menu alongside Settings;
 read-only, lazy rows, details on demand, narrow/wide layouts and large text.
 No replay or canonical writes just to browse; refresh uses admitted snapshot
-notifications. Empty/loading/error states remain explicit. Build derived rows
+notifications. Empty/loading/error states remain explicit. Attribution and
+refresh-error copy scroll with the lazy history rows, so large text and short
+windows cannot collapse the retained history viewport; no error copy or
+attribution is removed to make rows fit. Build derived rows
 only while the log is open and only when its admitted revision changes. Opening
 and scrolling need bounded visible-response review with realistic history growth;
 `activity.read.derive` is registered before measurement at 15ms median / 30ms
