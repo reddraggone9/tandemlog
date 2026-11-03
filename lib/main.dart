@@ -2667,6 +2667,100 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     return true;
   }
 
+  /// Filters (all people, completed, upcoming) that show task [id] with no
+  /// search or tags: the current ones when they already do. Null for a
+  /// missing, deleted or never-shown task.
+  ({bool all, bool completed, bool upcoming})? _activityTaskFilters(String id) {
+    final origin = store;
+    if (origin == null || !timeSource.ready) return null;
+    final task = rows
+        .where((row) => row['id'] == id && row['kind'] == 'task')
+        .firstOrNull;
+    if (task == null || task['deleted'] == true) return null;
+    final now = timeSource.readTime();
+    bool shows(bool all, bool completed, bool upcoming) {
+      final view = projectTaskView(
+        origin.rows,
+        now,
+        assignee: all ? null : user,
+        includeUpcoming: upcoming,
+        tags: const {},
+      ).value;
+      return (completed ? view.completed : view.open).any(
+        (entry) => entry.task['id'] == id,
+      );
+    }
+
+    if (shows(all, showCompleted, showUpcoming)) {
+      return (all: all, completed: showCompleted, upcoming: showUpcoming);
+    }
+    for (final completed in [false, true]) {
+      for (final upcoming in [false, true]) {
+        for (final everyone in [false, true]) {
+          if (shows(everyone, completed, upcoming)) {
+            return (all: everyone, completed: completed, upcoming: upcoming);
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  /// Activity log Open: shows the item's section, clears search and the
+  /// filters that would hide it, and opens it as a tap would.
+  Future<void> _openFromActivity(String id) async {
+    if (_activityTaskFilters(id) == null) {
+      if (!foodVisible) await _switchModule(true);
+      if (!mounted || !foodVisible) return;
+      // A just-shown Food page mounts on the next frame.
+      if (foodPageKey.currentState == null) {
+        await WidgetsBinding.instance.endOfFrame;
+        if (!mounted || !foodVisible) return;
+      }
+      final opened = await foodPageKey.currentState?.openContainer(id) ?? false;
+      if (!opened && mounted) _activityOpenFailed();
+      return;
+    }
+    if (foodVisible) await _switchModule(false);
+    if (!mounted || foodVisible || !await _closeEditor() || !mounted) return;
+    final filters = _activityTaskFilters(id);
+    if (filters == null || busy) return _activityOpenFailed();
+    if (!captureMode && search.text.isNotEmpty) {
+      search.clear();
+      lastSearchText = '';
+    }
+    setState(() {
+      _clearSelection();
+      all = filters.all;
+      showCompleted = filters.completed;
+      showUpcoming = filters.upcoming;
+      selectedTags.clear();
+    });
+    _invalidateView();
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) return;
+    final entry = visibleEntries
+        .where((entry) => entry.task['id'] == id)
+        .firstOrNull;
+    if (entry == null) return _activityOpenFailed();
+    final row = dropKeys[id]?.currentContext;
+    if (row != null && row.mounted) {
+      await Scrollable.ensureVisible(
+        row,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+      if (!mounted) return;
+    }
+    await _selectTask(entry.task);
+  }
+
+  void _activityOpenFailed() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('That item can\'t be opened right now.')),
+    );
+  }
+
   Future<void> _editSelected() async {
     if (selectedTasks.isEmpty || !await _closeEditor() || !mounted) return;
     final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
@@ -5491,11 +5585,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (value == 'activity') {
           final history = store?.unified;
           if (history != null) {
-            await showDialog<void>(
+            final open = await showDialog<String>(
               context: context,
               builder: (_) => ActivityLogDialog(
                 history: history,
                 textAt: store?.textFieldsAt,
+                canOpen: (id) =>
+                    _activityTaskFilters(id) != null ||
+                    (foodStore != null &&
+                        foodViewOf(foodStore!.state, id) != null),
                 targetLabel: (id) {
                   final task = rows.where((row) => row['id'] == id).firstOrNull;
                   if (task != null) {
@@ -5513,6 +5611,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 },
               ),
             );
+            if (open != null && mounted) await _openFromActivity(open);
           }
         } else if (value == 'settings') {
           _showSettings();

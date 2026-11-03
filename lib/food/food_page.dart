@@ -24,6 +24,29 @@ import 'expiration_presentation.dart';
 import 'inventory.dart';
 
 /// The host owns commands/durability. The page only captures observed targets.
+/// The view (Stock, Retained or Deleted) whose unfiltered rows hold
+/// [container], or null when no view shows it.
+FoodView? foodViewOf(FoodState state, String container) {
+  for (final candidate in const [
+    FoodView.inventory,
+    FoodView.retained,
+    FoodView.deleted,
+  ]) {
+    final rows = FoodRows(
+      state: state,
+      view: candidate,
+      query: '',
+      reasons: const {},
+      brands: const {},
+      locations: const {},
+    ).rows;
+    if (rows.any((g) => g.containers.any((c) => c.id == container))) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
 class FoodInventoryPage extends StatefulWidget {
   const FoodInventoryPage({
     super.key,
@@ -332,6 +355,46 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       _lastSearchText = '';
       _clearBulkSelection();
     });
+  }
+
+  /// Opens the row holding [container] as a tap would (Activity log Open):
+  /// resolves any open editor, clears search, filters and selection, and
+  /// shows the view that holds it. False when it can't be shown now.
+  Future<bool> openContainer(String container) async {
+    bool pending() => widget.hasPendingSave?.call() ?? widget.savePending;
+    if (widget.busy || pending()) return false;
+    if (_editorBuilder != null) {
+      if (!await requestCloseEditor()) return false;
+      await editorDone;
+      if (!mounted) return false;
+    }
+    final target = foodViewOf(widget.state, container);
+    if (target == null || widget.busy || pending()) return false;
+    setState(() {
+      _clearBulkSelection();
+      search.clear();
+      _lastSearchText = '';
+      reasons = {};
+      brands = {};
+      locations = {};
+      view = target;
+    });
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) return false;
+    final group = _grouping.rows
+        .where((g) => g.containers.any((c) => c.id == container))
+        .firstOrNull;
+    if (group == null) return false;
+    final row = _rowFocus[_rowKey(group)]?.context;
+    if (row != null && row.mounted) {
+      await Scrollable.ensureVisible(
+        row,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+      if (!mounted) return false;
+    }
+    unawaited(_edit(group: group, detailsCommand: widget.onDetails));
+    return true;
   }
 
   /// Clear Selection also closes a wide selection's bulk pane.

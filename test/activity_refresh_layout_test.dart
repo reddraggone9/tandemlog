@@ -153,7 +153,18 @@ void activityRefreshLayoutTests({
           await capture(tester, '$name-row');
           await tester.tap(find.textContaining('Device renamed'));
           await tester.pumpAndSettle();
-          expect(find.text('Activity details'), findsOneWidget);
+          final details = find.byKey(const ValueKey('activity-details'));
+          expect(details, findsOneWidget);
+          expect(find.text('Activity details'), findsNothing);
+          expect(
+            find.descendant(of: details, matching: find.text('Name')),
+            findsOneWidget,
+          );
+          // Renames have no single item to open.
+          expect(
+            find.descendant(of: details, matching: find.text('Open')),
+            findsNothing,
+          );
           await capture(tester, '$name-details');
           expect(tester.takeException(), isNull);
           expect(await tester.runAsync(canonicalBytes), before);

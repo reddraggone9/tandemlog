@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../application/activity_log.dart';
@@ -10,9 +12,18 @@ class ActivityLogDialog extends StatefulWidget {
     required this.history,
     this.targetLabel,
     this.textAt,
+    this.canOpen,
+    this.now = DateTime.now,
   });
   final UnifiedHistory history;
   final String? Function(String id)? targetLabel;
+
+  /// Whether the item still exists and can be opened. The dialog then pops
+  /// with that item's ID so the caller can open it.
+  final bool Function(String id)? canOpen;
+
+  /// Local clock for day headings and the device's current UTC offset.
+  final DateTime Function() now;
 
   /// Resolves native title/notes text for the details view.
   final ActivityTextAt? textAt;
@@ -22,6 +33,9 @@ class ActivityLogDialog extends StatefulWidget {
 
 class _ActivityLogDialogState extends State<ActivityLogDialog> {
   late List<ActivityEntry> entries;
+
+  /// List items: a day heading (String) or an index into [entries].
+  late List<Object> items;
   late ActivityValues values;
   late String revision;
   // Visible rows with native title/notes edits, resolved one per frame so a
@@ -40,11 +54,24 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
   void _read() {
     final snapshot = widget.history.snapshot;
     entries = activityEntries(snapshot);
+    items = _withDayHeadings();
     // Values are derived per visible row and per opened details, not here.
     values = ActivityValues(snapshot, textAt: widget.textAt);
     _pendingText.clear();
     revision = snapshot.revision;
     failed = widget.history.safetyFailure != null;
+  }
+
+  List<Object> _withDayHeadings() {
+    final now = widget.now();
+    final result = <Object>[];
+    String? day;
+    for (var i = 0; i < entries.length; i++) {
+      final heading = activityDay(entries[i].recordedAt, now);
+      if (heading != day) result.add(day = heading);
+      result.add(i);
+    }
+    return result;
   }
 
   void _changed() {
@@ -128,34 +155,71 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
         '${names.length > 2 ? ' and ${names.length - 2} more' : ''}';
   }
 
-  Future<void> _details(ActivityEntry e) {
+  String _headline(ActivityEntry e, ActivityDescription d) =>
+      [e.summary, ?_subject(e, d)].join(': ');
+
+  String _meta(ActivityEntry e, {bool date = false}) {
+    final offset = widget.now().timeZoneOffset;
+    return '${date ? activityTime(e.recordedAt, currentOffset: offset) : activityClock(e.recordedAt, currentOffset: offset)}'
+        ' · ${e.device}';
+  }
+
+  /// The one item this activity changed, when it can still be opened.
+  String? _openable(ActivityEntry e) {
+    final open = widget.canOpen;
+    if (open == null || e.targets.length != 1) return null;
+    return open(e.targets.single) ? e.targets.single : null;
+  }
+
+  Future<void> _details(ActivityEntry e) async {
     final d = values.describe(e, text: true);
-    final subject = _subject(e, d);
     final current = e.targets.length == 1
         ? widget.targetLabel?.call(e.targets.single)
         : null;
-    return showDialog<void>(
+    final target = _openable(e);
+    // The row meta line's style (ListTile subtitle).
+    final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    );
+    final open = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Activity details'),
-        content: SingleChildScrollView(
-          child: SelectableText(
-            [
-              [e.summary, ?subject].join(': '),
-              if (d.changes.isNotEmpty)
-                d.changes.map((change) => change.line).join('\n'),
-              if (current != null && d.subject != null && current != d.subject)
-                'Now named: $current',
-              'Recorded: ${activityTime(e.recordedAt)}',
-              if (e.deviceNamed)
-                'Device: ${e.device}'
-              else
-                'Device: Unnamed device\nDevice ID: ${e.writer}',
-              if (e.historical) 'Imported historical record',
-            ].join('\n\n'),
+        key: const ValueKey('activity-details'),
+        insetPadding: activityDialogInsets(context),
+        title: Text(
+          _headline(e, d),
+          maxLines: 4,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        content: SizedBox(
+          width: activityDetailsWidth(context),
+          child: SingleChildScrollView(
+            child: SelectionArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (d.changes.isNotEmpty) ...[
+                    ActivityChangeList(d.changes),
+                    const SizedBox(height: 16),
+                  ],
+                  Text(_meta(e, date: true), style: muted),
+                  if (current != null &&
+                      d.subject != null &&
+                      current != d.subject)
+                    Text('Now named $current', style: muted),
+                ],
+              ),
+            ),
           ),
         ),
         actions: [
+          if (target != null)
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Open'),
+            ),
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Close'),
@@ -163,10 +227,14 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
         ],
       ),
     );
+    if (open == true && mounted && target != null) {
+      Navigator.pop(context, target);
+    }
   }
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+    insetPadding: activityDialogInsets(context),
     title: Row(
       children: [
         const Expanded(child: Text('Activity log')),
@@ -185,7 +253,7 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       // large text sizes, leaving admitted history present but unreachable.
       child: ListView.builder(
         key: const ValueKey('activity-list'),
-        itemCount: entries.length + 1 + (entries.isEmpty ? 1 : 0),
+        itemCount: items.length + 1 + (entries.isEmpty ? 1 : 0),
         itemBuilder: (context, i) {
           if (i == 0) {
             return Column(
@@ -208,24 +276,46 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
           if (entries.isEmpty) {
             return const Center(child: Text('No activity yet.'));
           }
-          final e = entries[i - 1];
+          final item = items[i - 1];
+          if (item is String) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+              child: Semantics(
+                header: true,
+                child: Text(
+                  item,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+            );
+          }
+          final e = entries[item as int];
           final d = _row(e);
-          final subject = _subject(e, d);
+          final theme = Theme.of(context);
           return ListTile(
             key: ValueKey(e.id),
+            // One even gap between rows, whatever their line count.
+            minTileHeight: 0,
+            minVerticalPadding: 8,
             title: Text(
-              [e.summary, ?subject].join(': '),
-              maxLines: 2,
+              _headline(e, d),
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: Text(
-              [
-                ...d.changes.take(3).map((change) => change.line),
-                if (d.changes.length > 3) '${d.changes.length - 3} more…',
-                '${activityTime(e.recordedAt)} · ${e.device}',
-              ].join('\n'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final change in d.changes.take(3))
+                  Text.rich(
+                    activityChangeSpan(change),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: theme.colorScheme.onSurface),
+                  ),
+                if (d.changes.length > 3) Text('+${d.changes.length - 3} more'),
+                Text(_meta(e)),
+              ],
             ),
-            isThreeLine: d.changes.isNotEmpty,
             onTap: () => _details(e),
           );
         },
@@ -240,14 +330,154 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
   );
 }
 
-/// Readable local civil time with an explicit numeric zone; never microseconds
-/// or an ambiguous zone abbreviation alone. Canonical clock remains untouched.
-String activityTime(DateTime instant) {
+String _two(int value) => value.toString().padLeft(2, '0');
+
+String _zone(Duration offset) {
+  final minutes = offset.inMinutes;
+  return 'UTC${minutes < 0 ? '-' : '+'}${_two(minutes.abs() ~/ 60)}:${_two(minutes.abs() % 60)}';
+}
+
+/// Local time to the second. The numeric UTC offset is shown only when it
+/// differs from [currentOffset], the device's offset now (DST, travel).
+/// Canonical clocks remain untouched.
+String activityClock(DateTime instant, {required Duration currentOffset}) {
   final time = instant.toLocal();
-  String two(int value) => value.toString().padLeft(2, '0');
-  final offset = time.timeZoneOffset.inMinutes;
-  final zone =
-      '${offset < 0 ? '-' : '+'}${two(offset.abs() ~/ 60)}:${two(offset.abs() % 60)}';
-  return '${time.year}-${two(time.month)}-${two(time.day)} '
-      '${two(time.hour)}:${two(time.minute)}:${two(time.second)} UTC$zone';
+  final clock = '${_two(time.hour)}:${_two(time.minute)}:${_two(time.second)}';
+  return time.timeZoneOffset == currentOffset
+      ? clock
+      : '$clock ${_zone(time.timeZoneOffset)}';
+}
+
+/// Full local date and time, for details where no day heading is shown.
+String activityTime(DateTime instant, {required Duration currentOffset}) {
+  final time = instant.toLocal();
+  return '${time.year}-${_two(time.month)}-${_two(time.day)} '
+      '${activityClock(instant, currentOffset: currentOffset)}';
+}
+
+/// Day heading: Today, Yesterday, else the Tasks heading `Monday · 2026-10-26`.
+String activityDay(DateTime instant, DateTime now) {
+  final time = instant.toLocal();
+  final local = now.toLocal();
+  final days = DateTime.utc(
+    local.year,
+    local.month,
+    local.day,
+  ).difference(DateTime.utc(time.year, time.month, time.day)).inDays;
+  if (days == 0) return 'Today';
+  if (days == 1) return 'Yesterday';
+  const weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  return '${weekdays[time.weekday - 1]} · '
+      '${time.year}-${_two(time.month)}-${_two(time.day)}';
+}
+
+/// Phone-width Activity dialogs keep 16px margins instead of 40, so rows and
+/// change values get the width instead of the margins.
+EdgeInsets activityDialogInsets(BuildContext context) =>
+    MediaQuery.sizeOf(context).width < 600
+    ? const EdgeInsets.symmetric(horizontal: 16, vertical: 24)
+    : const EdgeInsets.symmetric(horizontal: 40, vertical: 24);
+
+/// The details dialog's content width: at most 560, inside the dialog's
+/// insets and content padding (24 each side).
+double activityDetailsWidth(BuildContext context) => math.max(
+  0,
+  math.min(
+    560,
+    MediaQuery.sizeOf(context).width -
+        activityDialogInsets(context).horizontal -
+        48,
+  ),
+);
+
+/// `Label: old → new`, label in medium weight.
+TextSpan activityChangeSpan(ActivityChange change) => TextSpan(
+  children: [
+    TextSpan(
+      text: '${change.label}: ',
+      style: const TextStyle(fontWeight: FontWeight.w500),
+    ),
+    TextSpan(text: change.value),
+  ],
+);
+
+/// Every change, one per line: a label column, then `old → new`, so long
+/// values wrap under their own value. Narrow or large-text layouts that would
+/// squeeze the values stack each value under its label instead.
+class ActivityChangeList extends StatelessWidget {
+  const ActivityChangeList(this.changes, {super.key});
+  final List<ActivityChange> changes;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final base = theme.textTheme.bodyMedium!.copyWith(
+      color: theme.colorScheme.onSurface,
+    );
+    final label = base.copyWith(fontWeight: FontWeight.w500);
+    // Measured against the dialog's fixed content width: AlertDialog sizes
+    // by intrinsic width, which a LayoutBuilder can't report.
+    final width = activityDetailsWidth(context);
+    return Builder(
+      builder: (context) {
+        // One rule for every dialog at a given width and text size: measure
+        // a typical label, not this dialog's own, so food and task details
+        // never lay out differently side by side.
+        final painter = TextPainter(
+          text: TextSpan(text: 'Expiration', style: label),
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout();
+        final widest = painter.width;
+        painter.dispose();
+        if (widest + 12 > width * 0.4) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final change in changes)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(change.label, style: label),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Text(change.value, style: base),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          );
+        }
+        return Table(
+          columnWidths: const {0: IntrinsicColumnWidth(), 1: FlexColumnWidth()},
+          children: [
+            for (final change in changes)
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12, bottom: 4),
+                    child: Text(change.label, style: label),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Text(change.value, style: base),
+                  ),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
 }

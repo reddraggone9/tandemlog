@@ -40,6 +40,53 @@ row or opened details, never during list derivation):
 - Measured on a private copy of real history (1,990 records): row values for all
   records 10 ms in total, text replay 3–32 ms per action.
 
+## UX brief: list, details and Open (Lee 11-02 23:20–23:31)
+
+Checked against [ux-principles.md](ux-principles.md).
+
+**List.** Answers "what changed lately, on which device, and to what?"
+- Day headings: Today, Yesterday, then `Monday · 2026-10-26` (the Tasks
+  heading format). Rows don't repeat the date.
+- Row: line 1 is the event and its item (`Food edited: Oat milk (Dairy Co)`).
+  Then up to 3 change lines (`Location: Pantry → Fridge`, field label medium
+  weight), then `+N more`. Last is a muted meta line: `23:09:27 · Kitchen tablet`.
+  A UTC offset appears only when the entry's offset differs from the device's
+  current one (DST, travel). An unnamed device shows `Unnamed device · 1a2b3c4d`.
+- Device renamed reads like any other edit: `Name: Old name → New name`.
+- Left out: full dates on rows, user line, IDs, action codes, shared-text
+  setup records (bookkeeping, not an action), filtering and search (deferred
+  until real logs prove too long to scan).
+- A deleted task keeps its name: the title as of the deletion, replayed when
+  only native text holds it.
+- Next action: tap a row for details.
+
+**Details dialog.** Answers "what exactly did this do, and where is that item now?"
+- Title: the row's line 1. No generic "Activity details" title, no repeated
+  first line.
+- Changes: every change, one per line, label column then `old → new`; long
+  values wrap under their own value column.
+- Footer: one muted line in the row's meta format with the full date,
+  `2026-11-02 23:09:27 · Kitchen tablet`; a second muted line `Now named X`
+  only when the item has since been renamed.
+- Spacing: tight within a group, one even gap between title, changes and footer.
+- Left out: "Imported historical record" (help covers imported history), IDs.
+- Phone widths (<600) use 16px dialog margins instead of 40. Changes use a
+  label column unless a typical label ("Expiration") would take over 40% of the
+  width, then each value stacks under its label; the rule is the same for every
+  dialog at a given width and text size.
+
+Independent screenshot review (2026-11-03, 30 native GTK captures, dark/light,
+1000/390 px, 1x/2x) found first device naming without an old value, the
+shared-text setup row, a smaller footer than the row meta, an oversized title,
+food and task dialogs laying out changes differently at 390 px 2x, wide margins
+at phone width, and an unnamed deleted task; all fixed. Not changed here:
+Material shrinks dialog padding at large text app-wide, and icons don't scale
+with text (both app-wide); the editors' Title field and buttons at 2x are
+pre-existing and queued separately.
+- Next action: **Open** jumps to the food or task (its editor, clearing search
+  and filters that would hide it). Hidden when the event has no single item or
+  the item no longer exists (a removed food still exists, in Deleted). Close.
+
 ## Ordering and clock skew
 
 Newest recorded occurrence first, based on the existing wall-time-informed

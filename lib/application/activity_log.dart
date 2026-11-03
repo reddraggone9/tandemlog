@@ -75,6 +75,8 @@ List<ActivityEntry> activityEntries(UnifiedSnapshot snapshot) {
       if (e.task != null) targets.add(e.task!.entity);
       if (e.food != null) targets.addAll(e.food!.operation.targets);
     }
+    // Shared-text setup is bookkeeping, not something a person did.
+    if (types.every((type) => type == 'text.baselineInitialized')) continue;
     result.add(
       ActivityEntry(
         id: r.recordId,

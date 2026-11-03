@@ -79,7 +79,6 @@ void main() {
     );
     final rows = describeAll(tasks);
     expect(rows, [
-      'Shared text initialized',
       'User added\nSynthetic Lee',
       'Task added\nBuy milk\nAssignee: Synthetic Lee',
       // Rows do not replay shared text; details do.
@@ -90,7 +89,7 @@ void main() {
           'Location: Fridge → Freezer',
     ]);
     expect(
-      describeAll(tasks, text: true)[3],
+      describeAll(tasks, text: true)[2],
       'Task edited\nTitle: Buy milk → Buy oat milk',
     );
     // Long notes show the changed part with context, not two equal prefixes.
@@ -112,6 +111,23 @@ void main() {
       '… [ ] synthetic item four ↵ - [ ] syn…',
     );
     expect(last[2], startsWith('Task edited\nNotes: none → - [ ] synthetic'));
+  });
+
+  test('device renames show old name → new name', () async {
+    final (tasks, _) = await open('${root.path}/data', 'a');
+    final history = tasks.unified!;
+    await history.renameDevice('Synthetic tablet');
+    await history.renameDevice('Synthetic kitchen tablet');
+    final snapshot = history.snapshot;
+    final values = ActivityValues(snapshot);
+    final renames = [
+      for (final e in activityEntries(snapshot).reversed)
+        if (e.types.contains('writer.named')) _lines(values.describe(e)),
+    ];
+    expect(renames, [
+      'Name: Unnamed device → Synthetic tablet',
+      'Name: Synthetic tablet → Synthetic kitchen tablet',
+    ]);
   });
 
   test(

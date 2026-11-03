@@ -15,8 +15,10 @@ class ActivityChange {
   const ActivityChange(this.label, this.after, [this.before]);
   final String label, after;
   final String? before;
-  String get line =>
-      before == null ? '$label: $after' : '$label: $before → $after';
+
+  /// `old → new`, or just the new value when the old one is not certain.
+  String get value => before == null ? after : '$before → $after';
+  String get line => '$label: $value';
 }
 
 class ActivityDescription {
@@ -293,6 +295,15 @@ class ActivityValues {
     _index();
     final record = _records[entry.id];
     if (record == null) return const ActivityDescription(null, []);
+    if (record.effects.length == 1 && record.effect.kind == 'writer.named') {
+      return _described[cacheKey] = ActivityDescription(null, [
+        ActivityChange(
+          'Name',
+          record.effect.name ?? 'Unnamed device',
+          _previousName(record),
+        ),
+      ]);
+    }
     final changes = <String, List<ActivityChange?>>{};
     final subjects = <String>[];
     var position = 0;
@@ -308,6 +319,21 @@ class ActivityValues {
           subjects.add(_text(task.data['name']));
         }
         final creating = task.type.startsWith('task.created');
+        if (!creating && task.type.startsWith('task.')) {
+          // The title as of this action; else the caller's current name.
+          // A deleted task has no current name, so its title is replayed.
+          final deleted = task.type == 'task.deleted';
+          var title = _valueAt(record, position, '${task.entity}|title');
+          if (title == null && deleted && text) {
+            final fields = _textAt(task.entity, record);
+            title = fields?['title'];
+          }
+          if (title != null) {
+            subjects.add(_text(title));
+          } else if (deleted && !text) {
+            needsText = textAt != null;
+          }
+        }
         for (final (field, value) in _taskWrites(task)) {
           if (creating && field != 'assignee' && field != 'schedule') continue;
           if (creating && field == 'schedule' && value == 'none') continue;
@@ -392,6 +418,22 @@ class ActivityValues {
     ], needsText: needsText);
     _described[cacheKey] = result;
     return result;
+  }
+
+  /// The device's name before [record]. A device names only itself, so its
+  /// own sequence order is its history: no earlier name means unnamed.
+  String _previousName(UnifiedRecord record) {
+    UnifiedRecord? previous;
+    for (final r in _records.values) {
+      if (r.writer == record.writer &&
+          r.sequence < record.sequence &&
+          r.effects.length == 1 &&
+          r.effect.kind == 'writer.named' &&
+          (previous == null || r.sequence > previous.sequence)) {
+        previous = r;
+      }
+    }
+    return previous?.effect.name ?? 'Unnamed device';
   }
 
   /// One line per field label across a bulk action's targets.
@@ -491,6 +533,22 @@ class ActivityValues {
     }
 
     return ActivityChange(label, excerpt(after), excerpt(before));
+  }
+
+  /// Native text fields of [entity] just after [record], or null.
+  Map<String, String>? _textAt(String entity, UnifiedRecord record) {
+    final read = textAt;
+    if (read == null) return null;
+    final through = <LogEvent>[
+      for (final r in _records.values)
+        if (identical(r, record) || _before(r, record))
+          for (final e in r.effects) ?e.task,
+    ];
+    try {
+      return read(entity, through);
+    } catch (_) {
+      return null;
+    }
   }
 
   ({bool same, ActivityChange? change}) _textChange(
