@@ -13,7 +13,7 @@ Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 202
 3. [Onboarding and everyday UI rationale](decisions/0002-onboarding-and-everyday-interface.md), [approved stack decision](decisions/0001-client-and-storage.md) and [stack](tech-stack.md)
 4. [Architecture](architecture.md)
 5. [Storage design](storage-and-sync.md), [implemented schema](schema.md), [recovery](recovery.md)
-6. [Runtime/visual QA](runtime-qa.md) and [current task-based UX audit](ux-audit-rc4.md) ([rc3 history](ux-audit-rc3.md), [rc2 history](ux-audit-rc2.md))
+6. [UX principles](ux-principles.md) (Lee's UI preferences; checked by every UX brief and screenshot review), [Runtime/visual QA](runtime-qa.md) and [current task-based UX audit](ux-audit-rc4.md) ([rc3 history](ux-audit-rc3.md), [rc2 history](ux-audit-rc2.md))
 7. [Deferred modules](future-modules.md)
 8. [Repository rules](../AGENTS.md)
 

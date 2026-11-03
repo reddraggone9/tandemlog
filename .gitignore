@@ -1,6 +1,8 @@
 # Miscellaneous
 *.class
 *.log
+# Sealed reference receipts verify their logs; never drop them from a commit.
+!evidence/**/*.log
 *.pyc
 *.swp
 .DS_Store
