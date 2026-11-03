@@ -4904,7 +4904,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         ),
                       if (!foodVisible || store == null)
                         toolbarProgress(
-                          busy: busy && !awaitingCompletionConfirmation,
+                          // Opening shows its own bar (StartupLoading).
+                          busy:
+                              busy &&
+                              !awaitingCompletionConfirmation &&
+                              store != null,
                         ),
                       if (error != null &&
                           (sharedSafetyError == null || keepSetupInputs) &&
