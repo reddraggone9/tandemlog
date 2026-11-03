@@ -482,3 +482,16 @@ clean (no swap or OOM, within deadline). The ADB server used no CPU during the r
 The previous current evidence is retained as `retained-eaab6c53`. An earlier
 request for this release, `60ce0150…`, was set aside unclaimed when the
 controller's kernel pin refused its plan.
+
+The 2026-11-03 qualification above was superseded before publication by the
+Activity log changes. Request `72e2e805…` (source `ba0fe52`) stopped on a benchmark
+correctness check: the benchmark still expected one Activity row per published
+record after shared-text setup records lost their row. The benchmark was
+corrected in `3a8a4e3` and the release requalified fresh: request
+`95200e0522640002436a40a8a7646c15`, source `3a8a4e3a825f35e964ef23f3f34feff18961626d`,
+relevant identity `a9e52ca92f2615973f9601077a98fe3c6608bd30be691ff9cda6dcfc2084ce9e`,
+controller r8 with the owned ADB server running and idle. Five first-pass misses
+each passed their automatic rerun; absolute and both growth budgets passed and
+cleanup was clean. The `af39a18a…` evidence is retained as `retained-af39a18a`.
+Its logs were left out of `05e49ee` because `*.log` was ignored; `b079b58` tracked
+them and now keeps `evidence/**/*.log` tracked.

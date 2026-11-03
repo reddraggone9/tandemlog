@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "af39a18aaffb70002083cac38be29cc1",
-  "issuedAtUTC": "2026-11-03T05:29:11.311086+00:00",
-  "sourceRevision": "1a1512fbb526670b82b9594ee4d02fa4e2d5a6d7",
+  "requestId": "95200e0522640002436a40a8a7646c15",
+  "issuedAtUTC": "2026-11-03T08:47:46.391129+00:00",
+  "sourceRevision": "3a8a4e3a825f35e964ef23f3f34feff18961626d",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "fd2ce0680af2bb6fc53a17dfecfa4301a16f135b7a098097e60f7519e3033de4",
+    "sha256": "a9e52ca92f2615973f9601077a98fe3c6608bd30be691ff9cda6dcfc2084ce9e",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -65,7 +65,7 @@
         "mode": "100644"
       },
       ".gitignore": {
-        "sha256": "b6318852b63ac37f8b5e22d5775942e1063bc03bdac804a94639f493fcd3bff2",
+        "sha256": "46045f4e5f91f46cb166c1678caf022cbecf5814d1ab3f7774917ddb2f9e2143",
         "mode": "100644"
       },
       ".metadata": {
@@ -657,7 +657,7 @@
         "mode": "100644"
       },
       "integration_test/activity_values_workflow_test.dart": {
-        "sha256": "fbc5949e2913c9ac573a34d7e80e82031b4251a35aa7d443ddc39644e07cb2b4",
+        "sha256": "c43a554441e21453d179fba67040b4b0f6d4a27a36087c91717da1285f90e0e2",
         "mode": "100644"
       },
       "integration_test/bulk_apply_semantics_test.dart": {
@@ -809,7 +809,7 @@
         "mode": "100644"
       },
       "integration_test/food_row_selection_workflow_test.dart": {
-        "sha256": "ea9a9b394ae0a854875ba7ece74336aee4cd00653d6808c67faddf564a8d03c7",
+        "sha256": "08feba98b1689f67fdeb8b8888de7b08be9e80a0d5c6a04d931a9b0728cf661d",
         "mode": "100644"
       },
       "integration_test/food_selection_retention_workflow_test.dart": {
@@ -1021,11 +1021,11 @@
         "mode": "100644"
       },
       "lib/application/activity_log.dart": {
-        "sha256": "de3966c26100b3d65606608eb4a88a27b863efa28877bab1e56f7c3d560662f4",
+        "sha256": "cc145a45d90321dcf508e57a7a3f37e2975577515716fe59f7cf32a39191a9da",
         "mode": "100644"
       },
       "lib/application/activity_values.dart": {
-        "sha256": "2adfe1d2c9f244997793a59dd739809b2f50d37c0c88939f6d6907ae0bb6122c",
+        "sha256": "c7fa964d201441f47a890087c7ca860248dc871435d071ab37374dc36e8ae4cc",
         "mode": "100644"
       },
       "lib/application/checklist_completion_command.dart": {
@@ -1197,7 +1197,7 @@
         "mode": "100644"
       },
       "lib/food/food_page.dart": {
-        "sha256": "24de923d6d7e7fd4dd010d28276b8c9ddc009f161d0cf60151193b4364dbac86",
+        "sha256": "31bae645cc95c105630d684fffa6cc7ff02e715044ac21ecaf3c013d15a0800a",
         "mode": "100644"
       },
       "lib/food/food_products.dart": {
@@ -1225,7 +1225,7 @@
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "ef73b2d9a68f29ec8d448ad211555e6da696c86cc4cb14975f76209156bc736b",
+        "sha256": "bc4a62f4bfeff2aa49a7d1a5b5309aff62cfbb5ceac3444753cffd4408af9536",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1253,7 +1253,7 @@
         "mode": "100644"
       },
       "lib/presentation/activity_log.dart": {
-        "sha256": "6f1b85c501f1ea9ddf201504451cb35e877ecb878c912b883a420aa0e840d353",
+        "sha256": "7340e4d8521871f5b4b84b277e6fc31d32619d0c7ca5db6d7f044a6f55d5a38f",
         "mode": "100644"
       },
       "lib/presentation/bulk_apply.dart": {
@@ -1927,11 +1927,15 @@
         "mode": "100644"
       },
       "test/activity_refresh_layout_test.dart": {
-        "sha256": "59b316a07085a94b8d234889b98c13acc98a4145805368ba136947a0cebd4449",
+        "sha256": "1b259806e5c22eca8874727e2e3f765a407111f2fb762e328c85ff7132e4b06f",
+        "mode": "100644"
+      },
+      "test/activity_time_test.dart": {
+        "sha256": "076758fdfb533983b54cfa1a0eaea93f346af61f2d6c156641cf6d72f9a59956",
         "mode": "100644"
       },
       "test/activity_values_test.dart": {
-        "sha256": "dc8649752b63568368059507aac54b7e361549de7add48462130228294a5cd12",
+        "sha256": "06d02c3f467fddd653cd873d12036647da4fe48422a4348868b3d08bf20c8073",
         "mode": "100644"
       },
       "test/adaptive_text_read_test.dart": {
@@ -3299,7 +3303,7 @@
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
-        "sha256": "3f7753fee0bdfda56d8ab7a690d291e4c2f7ff02a143b58aa7bfd1855c08add2",
+        "sha256": "5c684fba84ee332f0ad3890247f0e359486a53c0031a757d6ae2173d305a7da5",
         "mode": "100644"
       },
       "tool/performance/cost_trace.dart": {
@@ -3307,7 +3311,7 @@
         "mode": "100644"
       },
       "tool/performance/coverage-v1.json": {
-        "sha256": "410c9601f70d8a7b633b6d5d7fc7c196a3871d470a4d3dfaf1c553c22e1454c7",
+        "sha256": "c8aff26690686cc28f8956c09ec710f476f946cfc864c3b7a78384ce9f088cb7",
         "mode": "100644"
       },
       "tool/performance/food_tail_diagnostic.dart": {

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "requestId": "af39a18aaffb70002083cac38be29cc1",
+  "binarySHA256VerifiedAtExport": "2aadda6f8e744b09f950cb9b4607f3d7794f47d4b0c5bca935e0ab9b84ea27a1",
+  "fixtureBytesVerifiedAtExport": true,
+  "files": {
+    "dense-2-attempt-0.log": "58f2e37619f8facdae0f7e363a445e8ba6e19170b572a979b0df12852e2b170e",
+    "dense-2-generate.log": "2d52d1ecfdbf9533bd74dcfbd2b9d3760eb5d70ec287fddc2b37b365842f546d",
+    "gate-result.json": "51ffe919d77f4acc709ec6320e1b7c6540eda8565b894df4f5e22d97f186a3dc",
+    "request.json": "e07e2fa6d72433b136c9c8e6b2314ff5462d90090c893427a391e477d2a48c5f",
+    "dense-food-attempt-0.log": "d4b14b5d50bf86c99045a52f3ee1069b71809869f90655af6c44660c9b960f4b",
+    "dense-food-generate.log": "8accb628a60dbd27b8012b1855934a6860bdb30ca07c4cf8bfa935cfc22572b4",
+    "compile.log": "5dc2b724c0fd7cf142b0f2ff7c6bf44b86fb70d22da641a7e028829f659d00bb",
+    "dense-1-attempt-0.log": "9db4339edce92382f578ae234eed98dee0815ac920921a12629fb7901c8ac92b",
+    "dense-1-generate.log": "9b4c8a25fcaee600afb38cada0f7bea4d4fcc8aa85b371d7161882494d91f287",
+    "cleanup.json": "a66d0f54b1ce1b472d064701f24ea2bfb72b22b1317fa9196d6b1edca1daf9b9",
+    "fixture-dense-2/fixture.json": "299025293f60643c823a92e48a2f8a60b9a8dec101fda9e87a3044d670baaa07",
+    "fixture-dense-1/fixture.json": "de631ab7f9360bbca80e68f0a1ad93556d91f0a65473366aa40f118283bc6f31",
+    "fixture-dense-food/fixture.json": "764bd9d0754fe148365b7a235c6c1d812b194f6614bb7406ec45c7446600a34f"
+  }
+}
