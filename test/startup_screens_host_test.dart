@@ -37,8 +37,7 @@ void main() {
     await tester.pumpWidget(
       TandemlogApp(
         profilePath: data.profile,
-        folderFactory: (_) =>
-            _FailingFolder(data.folder as LocalLogFolder, failure),
+        folderFactory: (_) => _FailingFolder(data.folder, failure),
         textEngineFactory: host.createHostTextEngine,
         timeSourceFactory: host.createHostTimeSource,
       ),
