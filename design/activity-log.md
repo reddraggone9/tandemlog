@@ -10,14 +10,35 @@ excluded. Bulk-editor Cancel continues to exit selection.
 Use published UnifiedSnapshot records (sequence at or below the per-writer
 published frontier; dependency-blocked validated records are omitted), not directory modification times, receipt
 arrival or a new log. One atomic record is one activity; historical envelopes
-retain their original semantic writer and clock. Show action types, affected
-entities, recorded timestamp and installation label/UUID. Names are advisory,
-not authenticated identities. Canonical history records the writing installation,
-not the active GUI person; assignees are not actors. Therefore display user as
-“Not recorded” where no actor was persisted; never infer that Hester performed
-an action because a task is assigned to her or a device name contains her name.
-No format change or retrospective identity invention. A trustworthy active-user
-history would require a separate owner decision about new persisted attribution.
+retain their original semantic writer and clock. Canonical history records the
+writing installation, not the active person, and the app does not start
+recording one (Lee 11-02): rows show the device only, with no repeated
+"user not recorded" line. Names are advisory, not authenticated identities;
+assignees are not actors.
+
+## Values (Lee 11-02)
+
+Goal: the log says what changed in plain terms. Rows and details name the item
+as the action recorded it (food name and brand, task title, person name) and
+list each changed field as `Field: old → new`. Details show no UUIDs; an
+unnamed device keeps its installation ID, the only way to tell it apart.
+
+Method (`lib/application/activity_values.dart`, derived on demand per visible
+row or opened details, never during list derivation):
+- Old value = the field's value in the action's causal past: writes it observed
+  through its record's `observed` frontier. Imported historical records have no
+  frontier; their app replayed in clock order, so that order is their history.
+- Only the new value is shown when the prior value is not single and certain:
+  another device wrote the same field concurrently, the observed latest writes
+  disagree, or an Undo/completion changed it without a readable value. A write
+  that keeps the observed value is not listed.
+- Native title/notes edits replay shared text for the causal prefix with a
+  disposable resolver over already admitted events (`RecurringTextInput
+  .fromAdmitted`; no memo, receipt or write). Visible rows resolve one per frame
+  after first paint; details resolve on open. Long or multi-line text shows the
+  changed part with context.
+- Measured on a private copy of real history (1,990 records): row values for all
+  records 10 ms in total, text replay 3–32 ms per action.
 
 ## Ordering and clock skew
 

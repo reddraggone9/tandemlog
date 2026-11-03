@@ -5495,6 +5495,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               context: context,
               builder: (_) => ActivityLogDialog(
                 history: history,
+                textAt: store?.textFieldsAt,
                 targetLabel: (id) {
                   final task = rows.where((row) => row['id'] == id).firstOrNull;
                   if (task != null) {
@@ -5503,7 +5504,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   final food = foodStore?.state.containers
                       .where((item) => item.id == id)
                       .firstOrNull;
-                  return food?.details.name;
+                  if (food == null) return null;
+                  final brand = food.details.brand.trim();
+                  // Matches the Activity subject, so renames are detectable.
+                  return brand.isEmpty
+                      ? food.details.name
+                      : '${food.details.name} ($brand)';
                 },
               ),
             );

@@ -3879,6 +3879,20 @@ class TaskStore {
     );
   }
 
+  /// Read-only Activity values: [entity]'s title and notes after exactly
+  /// [history], a causal prefix of admitted events. A disposable resolver with
+  /// no memo, so browsing never changes admission state or writes.
+  Map<String, String>? textFieldsAt(String entity, List<LogEvent> history) {
+    final engine = textEngine;
+    if (engine == null) return null;
+    final resolved = RecurringTextResolver.fromInput(
+      engine,
+      RecurringTextInput.fromAdmitted(history),
+      legacyRoots: _legacyTextRoots,
+    ).resolve(entity);
+    return {for (final e in resolved.entries) e.key: e.value.text};
+  }
+
   Map<String, TextFieldSeed>? _legacyTextRoots(
     String entity,
     List<LogEvent> observed,

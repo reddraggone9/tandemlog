@@ -79,7 +79,9 @@ void main() {
         );
         await tester.pumpAndSettle();
         await captureNativeFixtureUi(tester, '$prefix-activity-details');
-        expect(find.textContaining('User: Not recorded'), findsOneWidget);
+        expect(find.textContaining('Recorded: '), findsOneWidget);
+        expect(find.textContaining('User:'), findsNothing);
+        expect(find.textContaining('Action:'), findsNothing);
         await pixels.tap(tester, find.widgetWithText(TextButton, 'Close').last);
         await tester.pumpAndSettle();
         await pixels.tap(tester, find.widgetWithText(TextButton, 'Close'));

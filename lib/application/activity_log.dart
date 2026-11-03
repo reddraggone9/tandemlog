@@ -13,8 +13,12 @@ class ActivityEntry {
     required this.types,
     required this.targets,
     required this.historical,
+    this.deviceNamed = true,
   });
   final String id, writer, device, stream;
+
+  /// Unnamed devices are identified only by their installation ID.
+  final bool deviceNamed;
   final EventClock clock;
   final int sequence;
   final List<String> types, targets;
@@ -77,6 +81,7 @@ List<ActivityEntry> activityEntries(UnifiedSnapshot snapshot) {
         writer: writer,
         stream: historical ? data.single.writer : r.writer,
         device: names[writer] ?? 'Unnamed device · ${writer.substring(0, 8)}',
+        deviceNamed: names.containsKey(writer),
         clock: historical ? data.single.clock : r.clock,
         sequence: historical ? data.single.sequence : r.sequence,
         types: List.unmodifiable(types),

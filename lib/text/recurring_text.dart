@@ -719,6 +719,26 @@ final class RecurringTextInput {
     final ordered = records.values.toList()..sort(compareEvents);
     return RecurringTextInput._fromEvents(List.unmodifiable(ordered));
   }
+
+  /// Already admitted, decoded events (for example a causal prefix shown by a
+  /// read-only view). Skips re-decoding; identity conflicts still refuse.
+  factory RecurringTextInput.fromAdmitted(Iterable<LogEvent> history) {
+    final records = <String, LogEvent>{};
+    for (final event in history) {
+      if (event.canonicalRaw == null) {
+        throw FormatFailure(
+          'Text lineage requires admitted canonical records.',
+        );
+      }
+      final previous = records[event.id];
+      if (previous != null && previous.canonicalRaw != event.canonicalRaw) {
+        throw FormatFailure('Conflicting text lineage records.');
+      }
+      records[event.id] = _freezeEvent(event);
+    }
+    final ordered = records.values.toList()..sort(compareEvents);
+    return RecurringTextInput._fromEvents(List.unmodifiable(ordered));
+  }
   factory RecurringTextInput._fromEvents(List<LogEvent> events) {
     final records = <String, LogEvent>{}, heads = <String, int>{};
     var cost = 0;

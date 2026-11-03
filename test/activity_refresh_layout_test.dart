@@ -117,10 +117,8 @@ void activityRefreshLayoutTests({
             greaterThan(40),
             reason: 'History needs a usable scroll viewport',
           );
-          expect(
-            find.text('Recorded by device; active user not recorded.'),
-            findsOneWidget,
-          );
+          // The active person is not stored; no row repeats that.
+          expect(find.textContaining('not recorded'), findsNothing);
           if (failed) {
             final error = find.byKey(const ValueKey('activity-refresh-error'));
             expect(error, findsOneWidget);
