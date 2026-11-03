@@ -79,6 +79,13 @@ void main() {
     expect(find.textContaining('folder sync whenever'), findsNothing);
     expect(find.text('Update Tandemlog'), findsNothing);
     expect(find.widgetWithText(FilledButton, 'Try again'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Settings'), findsOneWidget);
+    // The error sits in the body, not in a separate banner.
+    expect(
+      find.textContaining('App history record is damaged.'),
+      findsOneWidget,
+    );
+    expect(find.text('Undo'), findsNothing);
     await tester.pumpWidget(const SizedBox());
   });
 }

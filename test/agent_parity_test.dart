@@ -63,6 +63,7 @@ const excluded = {
   'initializeSharedText',
   'migrateOccurrenceDates',
   'renameDevice',
+  'sealWarmCaches',
 };
 
 void main() {

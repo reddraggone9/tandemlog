@@ -4882,22 +4882,25 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           identityMenu: (child) =>
                               _identityMenu(users, child: child),
                           undo: const SizedBox.shrink(),
-                          undoAction: (compact) => toolbarAction(
-                            compact: compact,
-                            label: 'Undo',
-                            iconSize: 24,
-                            key: const ValueKey('undo-task-action'),
-                            tooltip: undoHistory.latest == null
-                                ? 'Undo'
-                                : 'Undo ${undoHistory.latest!.label}',
-                            onPressed:
-                                busy ||
-                                    closingEditor ||
-                                    undoHistory.latest == null
-                                ? null
-                                : _undoLatest,
-                            icon: const Icon(Icons.undo),
-                          ),
+                          // Nothing to undo before a workspace is open.
+                          undoAction: store == null
+                              ? null
+                              : (compact) => toolbarAction(
+                                  compact: compact,
+                                  label: 'Undo',
+                                  iconSize: 24,
+                                  key: const ValueKey('undo-task-action'),
+                                  tooltip: undoHistory.latest == null
+                                      ? 'Undo'
+                                      : 'Undo ${undoHistory.latest!.label}',
+                                  onPressed:
+                                      busy ||
+                                          closingEditor ||
+                                          undoHistory.latest == null
+                                      ? null
+                                      : _undoLatest,
+                                  icon: const Icon(Icons.undo),
+                                ),
                           inputModeAction: store != null && user != null
                               ? _taskInputModeControl
                               : null,
@@ -4913,7 +4916,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       if (error != null &&
                           (sharedSafetyError == null || keepSetupInputs) &&
                           !_taskModalOpen &&
-                          !_needsUpdate)
+                          !_openFailed)
                         _actionErrorNotice(),
                       if (!foodVisible && occurrenceMigrationError != null)
                         Padding(
@@ -5187,6 +5190,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       settings?.folder != null &&
       needsAppUpdate(error);
 
+  /// The saved folder didn't open: the failure screen shows the error itself.
+  bool get _openFailed =>
+      !busy && store == null && settings?.folder != null && error != null;
+
   Widget _welcome() => busy
       ? const StartupLoading()
       : _needsUpdate
@@ -5212,7 +5219,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 const SizedBox(height: 16),
                 Text(
                   settings?.folder != null
-                      ? 'Your data wasn’t changed. Try again, or choose a different folder in Settings.'
+                      ? 'Your data wasn’t changed. Try again, or choose a different folder in Settings.${error == null ? '' : '\n\n$error'}'
                       : widget.folderActions.requiresPicker
                       ? 'Keep household tasks together, even offline. Choose or create a Tandemlog folder so your sync app can access it.'
                       : 'Keep household tasks together, even offline. We’ll create a data folder for you.',
@@ -5242,6 +5249,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         settings?.folder != null ? 'Try again' : 'Start',
                       ),
                     ),
+                    if (settings?.folder != null)
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          minimumSize: const Size(64, 48),
+                          visualDensity: VisualDensity.standard,
+                          textStyle: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        onPressed: busy || choosingFolder
+                            ? null
+                            : _showSettings,
+                        child: const Text('Settings'),
+                      ),
                     if (!widget.folderActions.requiresPicker &&
                         settings?.folder == null)
                       TextButton(

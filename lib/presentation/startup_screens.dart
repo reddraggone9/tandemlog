@@ -91,30 +91,37 @@ class UpdateAppScreen extends StatelessWidget {
               Theme(
                 // A plain disclosure, without the tile's divider lines.
                 data: theme.copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
-                  key: const ValueKey('update-app-details'),
-                  tilePadding: EdgeInsets.zero,
-                  childrenPadding: EdgeInsets.zero,
-                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                  title: Text(
-                    'Technical details',
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  children: [
-                    SelectableText(
-                      details,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                // Its own Material: the stopped-workspace panel paints a
+                // ColoredBox that would hide the tile's ink.
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: ExpansionTile(
+                    key: const ValueKey('update-app-details'),
+                    tilePadding: EdgeInsets.zero,
+                    childrenPadding: EdgeInsets.zero,
+                    expandedAlignment: Alignment.centerLeft,
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    title: Text(
+                      'Technical details',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    children: [
+                      SelectableText(
+                        details,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                    TextButton.icon(
-                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: () =>
-                          Clipboard.setData(ClipboardData(text: details)),
-                      icon: const Icon(Icons.copy, size: 18),
-                      label: const Text('Copy'),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      TextButton.icon(
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        onPressed: () =>
+                            Clipboard.setData(ClipboardData(text: details)),
+                        icon: const Icon(Icons.copy, size: 18),
+                        label: const Text('Copy'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

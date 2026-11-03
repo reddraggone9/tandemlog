@@ -613,3 +613,57 @@ the miss is likely but unproven, since the load was not removed and re-measured.
 Even on a quiet host the label has only about 5% headroom (475.6 ms at `e212575`). If a
 quiet-host qualification also misses it, treat that as a repeatable miss: the remaining
 cost is the shared warm open and close seal, not the command.
+
+## Native cold start to first list (Lee 2026-11-03)
+
+**Goal.** Tapping the app shows the task list in about 1 s on Lee's phone when
+nothing changed since the last run. Lee's recording of 2026.10.11 on the S24
+Ultra (157 open tasks): splash 0.25 s, then ~2.5 s of a startup screen whose
+progress bar froze, list at ~3.5 s.
+
+**Case `native.coldStart.firstList`.** Boundary: process start to the first
+frame that shows the task list, read from the app's own log line
+`TANDEMLOG_FIRST_LIST at=<wall time> ms=<since app state start>
+process_ms=<since process start> phases={settings, folderList, history, tasks,
+food, migration, bound}`. Shape: a warm profile (the previous run was
+backgrounded, so its warm proofs are sealed, then the process was stopped) and
+unchanged history of real size (about 2,000 records, 200 open tasks). A
+strict-path start (first open on a device, or after a crash) is reported
+alongside and isn't budgeted.
+
+**Budget (proposed): 1,000 ms median**, from human time (launching should feel
+immediate; Lee's goal). Not activated: current source misses it on every
+platform measured, and a looser interim limit needs Lee's approval (open
+question in the release checkpoint; nothing decided here).
+
+**Measured on a private copy of real history (2,004 records, 210 open tasks),
+Farnsworth GTK release bundle under Xvfb, 2026-11-03:**
+- Before the fix, any start after the process was stopped without a clean
+  close (how Android ends a backgrounded app) took the strict path: decode
+  ~530 ms, semantic validation ~900 ms, Task projection rebuild ~430 ms; first
+  list 2.7–3.1 s. Warm proofs were sealed only at a clean close.
+- `TaskStore.sealWarmCaches` now seals them when the app is backgrounded; a
+  later write makes them stale and the next open rebuilds strictly, as before.
+  Warm first list: 2.0–2.4 s (process 2.4–2.8 s).
+- What's left in the warm 2 s: three profile commits of ~120–260 ms each (the
+  proof-consume delete, the observed-heads update and the observe transaction;
+  ZFS fsync here, cheaper on phone flash), decoded-cache verification ~250 ms,
+  semantic validation ~150 ms, and ~600 ms of file reads that are slow only
+  while the first frames render (the same reads take ~10 ms in isolation and
+  ~80 ms in a later in-process refresh): likely Linux software rendering on
+  the merged platform/UI thread, so not representative of the phone.
+- The startup bar still stops for ~0.4 s during the warm open (UI isolate busy
+  in validation and the commits).
+- Android lab (API 30 x86_64 emulator, synthetic lab data, 40 records):
+  2026.11.0 first list ~0.6 s after process start. A real-history lab run is
+  still pending (the emulator's folder picker didn't accept the folder choice
+  under automation).
+
+**Next steps to reach the budget** (not done in this change): skip the
+proof-consume and observed-heads commits when nothing changed (keep the
+consume-before-expose safety by writing a "consumed" marker in the same
+transaction as the next real write, or by binding the proof to a one-time
+open nonce); move history decoding, semantic validation and the Task
+projection restore to a worker isolate so the UI isolate only adopts results;
+measure on the phone (Lee's OK first) and the Android lab with real-size
+history.
