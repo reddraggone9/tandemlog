@@ -305,7 +305,9 @@ class ActivityValues {
       ]);
     }
     final changes = <String, List<ActivityChange?>>{};
-    final subjects = <String>[];
+    // One name per item: a record can touch an item in several effects (a
+    // capture creates a task and positions it), which is still one item.
+    final subjects = <String, String>{};
     var position = 0;
     for (final e in record.effects) {
       position++;
@@ -313,10 +315,10 @@ class ActivityValues {
       if (task != null) {
         if (task.type.startsWith('task.created') &&
             task.data['title'] is String) {
-          subjects.add(_text(task.data['title']));
+          subjects.putIfAbsent(task.entity, () => _text(task.data['title']));
         }
         if (task.type == 'user.created' && task.data['name'] is String) {
-          subjects.add(_text(task.data['name']));
+          subjects.putIfAbsent(task.entity, () => _text(task.data['name']));
         }
         final creating = task.type.startsWith('task.created');
         if (!creating && task.type.startsWith('task.')) {
@@ -329,7 +331,7 @@ class ActivityValues {
             title = fields?['title'];
           }
           if (title != null) {
-            subjects.add(_text(title));
+            subjects.putIfAbsent(task.entity, () => _text(title!));
           } else if (deleted && !text) {
             needsText = textAt != null;
           }
@@ -381,15 +383,17 @@ class ActivityValues {
       final op = food.operation;
       final details = op.details;
       if (op.action == FoodAction.add && details != null) {
-        subjects.add(_foodName(details.name, details.brand));
+        subjects['$position'] = _foodName(details.name, details.brand);
         continue;
       }
       if (!op.action.productLevel) {
         for (final target in op.targets) {
           final name = _valueAt(record, position, '$target|name');
           if (name != null) {
-            subjects.add(
-              _foodName(name, _valueAt(record, position, '$target|brand')),
+            subjects.putIfAbsent(
+              target,
+              () =>
+                  _foodName(name, _valueAt(record, position, '$target|brand')),
             );
           }
         }
@@ -413,7 +417,7 @@ class ActivityValues {
         if (!change.same) (changes[label] ??= []).add(change.change);
       }
     }
-    final result = ActivityDescription(_summarize(subjects), [
+    final result = ActivityDescription(_summarize([...subjects.values]), [
       for (final entry in changes.entries) ?_merge(entry.key, entry.value),
     ], needsText: needsText);
     _described[cacheKey] = result;

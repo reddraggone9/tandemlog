@@ -113,6 +113,28 @@ void main() {
     expect(last[2], startsWith('Task edited\nNotes: none → - [ ] synthetic'));
   });
 
+  test(
+    'a captured task is named once; a deleted task keeps its name',
+    () async {
+      final (tasks, _) = await open('${root.path}/data', 'a');
+      final person = const Uuid().v4();
+      await tasks.command(person, 'user.created', {'name': 'Synthetic Lee'});
+      // Capture positions a task among existing ones with a second effect.
+      await tasks.createTasks({const Uuid().v4(): 'Synthetic first'}, person);
+      final id = const Uuid().v4();
+      final result = await tasks.createTasks({
+        id: 'Synthetic captured',
+      }, person);
+      expect(result.succeeded, isTrue);
+      await tasks.command(id, 'task.deleted', {});
+      final rows = describeAll(tasks, text: true);
+      // That positioning effect is not a second item.
+      expect(rows, contains(startsWith('Task added\nSynthetic captured')));
+      expect(rows.where((r) => r.contains('×')), isEmpty);
+      expect(rows.last, 'Task deleted\nSynthetic captured');
+    },
+  );
+
   test('device renames show old name → new name', () async {
     final (tasks, _) = await open('${root.path}/data', 'a');
     final history = tasks.unified!;
