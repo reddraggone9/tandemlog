@@ -472,3 +472,13 @@ same hardware (kernel 7.2.11 → 7.2.14, Python 3.14.8 → 3.14.9). The controll
 ARC-accounting kernel pin moves with it after review: the ZFS module version,
 `arc_os.c` source hash and `zfs_arc_pc_percent` are unchanged. It does not
 reuse any earlier qualification; the next release is qualified fresh.
+
+Next release 2026.11.0-rc.1 qualified on 2026-11-03 under `single-sample-confirm-v1`
+with controller r8 and the owned ADB server running throughout: request
+`af39a18aaffb70002083cac38be29cc1`, source `1a1512fbb526670b82b9594ee4d02fa4e2d5a6d7`,
+relevant identity `fd2ce0680af2bb6fc53a17dfecfa4301a16f135b7a098097e60f7519e3033de4`.
+Zero first-pass misses, no reruns, absolute and both growth budgets passed, cleanup
+clean (no swap or OOM, within deadline). The ADB server used no CPU during the run.
+The previous current evidence is retained as `retained-eaab6c53`. An earlier
+request for this release, `60ce0150…`, was set aside unclaimed when the
+controller's kernel pin refused its plan.
