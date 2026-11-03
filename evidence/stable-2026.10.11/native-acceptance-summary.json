@@ -1,0 +1,41 @@
+{
+  "source": "d52a81d47ff1b0400526eb9ce5bc03d1b795527e",
+  "candidateRun": 41575738097,
+  "android": {
+    "lab": "retained synthetic RC109 API30 x86_64 emulator (same lab as RC acceptance)",
+    "apkSHA256": "d559d55ba0aaa944abb9b09d87f874b134615aac20116494be35d626e8b67de2",
+    "upgrade": "109 (2026.10.11-rc.1) -> 110 (2026.10.11) in place",
+    "firstInstallTimeKept": "2026-10-27 11:38:52",
+    "canonicalUnchangedByInstall": true,
+    "writerUserFolderBindingKept": true,
+    "safGrantKept": "persisted rw (mode 0x3) on the synthetic tree URI, identical before/after",
+    "retained": "10 open tasks, same installation id",
+    "integrity": "PASS 2 logs, 36 records, 65963 bytes",
+    "write": "one task completion, +1421 bytes appended to own log; other log and space manifest unchanged",
+    "coldReopen": "9 open after force-stop and relaunch",
+    "cleanup": "emulator and ports gone, errors []",
+    "rawReceipts": {
+      "prefix110.json": "6829b0d1e7200f1803234309dd141328fd960cf84a34036228123d7c82b02e70"
+    }
+  },
+  "gtk": {
+    "lab": "retained synthetic GTK Flatpak lab (same lab as RC acceptance), private Xvfb",
+    "flatpakSHA256": "493f19ff5931494da778a9d9f155a010c365e4ce31c1cb94e4736713be0c3b99",
+    "upgrade": "2026.10.11-rc.1 (commit f70c6ebc) -> 2026.10.11 (commit c6fccabb) in place, flatpak install exit 0",
+    "canonicalAndProfileUnchangedByInstall": true,
+    "retained": "2 open tasks, GTK Stable Tester, same installation id",
+    "settingsVersion": "2026.10.11",
+    "integrity": "PASS 1 log, 23 records, 40756 bytes",
+    "write": "one task completion, +1298 bytes appended, space manifest unchanged",
+    "normalCloseExit": [
+      0,
+      0
+    ],
+    "coldReopen": "1 open after normal close and relaunch",
+    "cleanup": "app exit 0, children reaped, display gone, errors []",
+    "rawReceipts": {
+      "prefix110.json": "a5bdcef3974227116a84ddbed318afb0106966295c11733c983c7291ed6cd86d"
+    }
+  },
+  "limits": "Synthetic emulator and native Linux GTK only; no physical device, Windows GUI, owner device or live data in this acceptance."
+}

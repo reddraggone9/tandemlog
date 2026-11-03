@@ -1,5 +1,9 @@
 # Development status
 
+## Stable 2026.10.11/build110 published — 2026-11-02
+
+[Stable 2026.10.11](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.11) is immutable Latest, published 2026-11-03T04:38:18Z (11-02 22:38 CST) from exact `d52a81d`. Lee accepted 2026.10.11-rc.1 at 22:00 CST. Version metadata and documentation changed only; reference q6 `eaab6c53` stays valid, with no performance rerun or override. Candidate 41575738097 passed on attempt 1; push CI 41575733635 failed only the diagnostic Linux disposal step with the known intermittent quit-time abort and was not rerun. Android and GTK RC 109→110 in-place upgrades pass on the retained synthetic labs; anonymous public verification passes. [Receipts, deviation and limits](../evidence/stable-2026.10.11/README.md).
+
 ## Stable 2026.10.10/build108 published — 2026-10-30
 
 [Stable 2026.10.10](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.10) is immutable Latest, published 19:10:10Z (14:10 CDT) from exact `12b9f03`. Lee accepted 2026.10.10-rc.1 at 13:21 CDT. Version metadata and documentation changed only; reference `50a8ca56` stays valid, with no performance rerun or override. CI 41106541492 and candidate 41106539516 passed on attempt 1. Android 106→108, Android RC 107→108 and GTK 106→108 upgrades pass on synthetic labs; anonymous public verification passes. [Receipts and limits](../evidence/stable-2026.10.10/README.md).

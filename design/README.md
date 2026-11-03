@@ -1,6 +1,6 @@
 # Design map
 
-Current stable 2026.10.10/build108 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.10), promoting accepted 2026.10.10-rc.1. See [release receipts](../evidence/stable-2026.10.10/README.md) and [release policy](releases.md).
+Current stable 2026.10.11/build110 is [published Latest](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.11), promoting accepted 2026.10.11-rc.1. See [release receipts](../evidence/stable-2026.10.11/README.md) and [release policy](releases.md).
 
 ## Current source of truth
 
