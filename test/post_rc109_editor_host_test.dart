@@ -424,8 +424,7 @@ void main() {
         await tester.tap(check.first);
         await host.ready(
           tester,
-          () =>
-              find.textContaining('Next due').evaluate().isNotEmpty,
+          () => find.textContaining('Next due').evaluate().isNotEmpty,
           settle: false,
         );
         expect(

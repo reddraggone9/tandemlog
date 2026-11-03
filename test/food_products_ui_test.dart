@@ -581,7 +581,10 @@ void registerFoodProductsUiTests({
         expect(find.text('Great Value · 1 gal'), findsOneWidget);
         expect(find.text('2026-11-01'), findsNothing);
         expect(find.text('Beans'), findsNothing);
-        expect(find.byTooltip('Open example.com link for Milk'), findsOneWidget);
+        expect(
+          find.byTooltip('Open example.com link for Milk'),
+          findsOneWidget,
+        );
         if (sample.$3 == 1) {
           expect(
             tester.getCenter(find.text('Milk')).dy,
