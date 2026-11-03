@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart' show FormatFailure;
 import 'package:tandemlog/main.dart';
-import 'package:tandemlog/storage/log_folder.dart';
 
 import '../integration_test/profile_fixture.dart';
 import 'section_navigation_host_test.dart' as host;
