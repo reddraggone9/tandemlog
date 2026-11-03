@@ -512,3 +512,12 @@ request `cb7d62b797686801d6ae3e134ee29970`, source
 `bb13fac9d30404c7792515434a30337679f2fef20279c4a4bb1d9957abee3182`, zero
 first-pass misses, clean cleanup, owned ADB server idle. The `c25d3570…`
 evidence is retained as `retained-c25d3570`.
+Candidate 41617981312 for that source failed one native workflow twice on
+hosted runners (also in push CI 41607225122): when the bulk editor noticed a
+peer change before Save, Save was disabled with its reason scrolled out of
+view. The fix (`c1e1b6f`) was qualified fresh: request
+`9d82e5c2f25c7821adf94be3d5cdf88f`, source `c1e1b6fe47d2a1fd80a6224c5dde2430272cea72`,
+relevant identity `a579f22937c2b31332db9243f9f8ebf4b80afa9e7c4f955e727bf4908380a897`.
+Three first-pass misses each passed their automatic rerun; budgets passed,
+cleanup clean, owned ADB server idle. The `cb7d62b7…` evidence is retained as
+`retained-cb7d62b7`.
