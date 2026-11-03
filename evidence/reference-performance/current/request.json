@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "95200e0522640002436a40a8a7646c15",
-  "issuedAtUTC": "2026-11-03T08:47:46.391129+00:00",
-  "sourceRevision": "3a8a4e3a825f35e964ef23f3f34feff18961626d",
+  "requestId": "c25d35706deba19dac4f5c2e5d5674ef",
+  "issuedAtUTC": "2026-11-03T09:44:45.386216+00:00",
+  "sourceRevision": "a2fc34c416def733a1a47a59742478967c9c9f6f",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "a9e52ca92f2615973f9601077a98fe3c6608bd30be691ff9cda6dcfc2084ce9e",
+    "sha256": "575e58dbe602a0e4f6864b4ac14081ca7eecc48796a7dada5d9ba093f004350d",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -1025,7 +1025,7 @@
         "mode": "100644"
       },
       "lib/application/activity_values.dart": {
-        "sha256": "c7fa964d201441f47a890087c7ca860248dc871435d071ab37374dc36e8ae4cc",
+        "sha256": "9ce3723b436e259c8404788486c2313ef91418efc4d1774525d4caa33f364f9a",
         "mode": "100644"
       },
       "lib/application/checklist_completion_command.dart": {
@@ -1197,7 +1197,7 @@
         "mode": "100644"
       },
       "lib/food/food_page.dart": {
-        "sha256": "31bae645cc95c105630d684fffa6cc7ff02e715044ac21ecaf3c013d15a0800a",
+        "sha256": "258bfd48818018eb3405f2368e5e7282cd3239e104ee44515a172aae5d59e8b3",
         "mode": "100644"
       },
       "lib/food/food_products.dart": {
@@ -1935,7 +1935,7 @@
         "mode": "100644"
       },
       "test/activity_values_test.dart": {
-        "sha256": "06d02c3f467fddd653cd873d12036647da4fe48422a4348868b3d08bf20c8073",
+        "sha256": "4b002bbf132a52a23664b9a62c788861be696b4678067c7075a0c83c0c5784cf",
         "mode": "100644"
       },
       "test/adaptive_text_read_test.dart": {

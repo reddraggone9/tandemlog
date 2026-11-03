@@ -495,3 +495,13 @@ each passed their automatic rerun; absolute and both growth budgets passed and
 cleanup was clean. The `af39a18a…` evidence is retained as `retained-af39a18a`.
 Its logs were left out of `05e49ee` because `*.log` was ignored; `b079b58` tracked
 them and now keeps `evidence/**/*.log` tracked.
+
+Before publication, the Android upgrade lab showed captured tasks named twice
+("×2") in the Activity log, so candidate 41607232219 (build 111, source
+`b58c83e`) was set aside unpublished. The naming fix and a restored Food row
+separator moved the release to build 112, qualified fresh: request
+`c25d35706deba19dac4f5c2e5d5674ef`, source `a2fc34c416def733a1a47a59742478967c9c9f6f`,
+relevant identity `575e58dbe602a0e4f6864b4ac14081ca7eecc48796a7dada5d9ba093f004350d`,
+controller r8 with the owned ADB server running and idle. Zero first-pass misses,
+no reruns; absolute and both growth budgets passed and cleanup was clean. The
+`95200e05…` evidence is retained as `retained-95200e05`.
