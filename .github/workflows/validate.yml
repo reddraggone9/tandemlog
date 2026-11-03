@@ -98,8 +98,28 @@ jobs:
           if-no-files-found: warn
       - name: Require normal-exit GTK and Flutter disposal
         id: linux-disposal
-        timeout-minutes: 3
-        run: xvfb-run -a dbus-run-session -- python3 tool/verify_linux_disposal.py --output linux-disposal-diagnostics
+        timeout-minutes: 4
+        # The intermittent quit-time abort (FlutterEngineRemoveView, then
+        # g_mutex_clear on a locked mutex) needs its native stack. Keep the
+        # original process's core and read it with gdb afterwards; the app is
+        # never rerun and raw cores are never uploaded.
+        run: |
+          mkdir "$RUNNER_TEMP/disposal-cores"
+          original_pattern="$(cat /proc/sys/kernel/core_pattern)"
+          trap 'printf "%s\n" "$original_pattern" | sudo tee /proc/sys/kernel/core_pattern > /dev/null' EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+          printf '%s\n' "$RUNNER_TEMP/disposal-cores/core.%p" | sudo tee /proc/sys/kernel/core_pattern > /dev/null
+          ulimit -c 524288
+          set +e
+          xvfb-run -a dbus-run-session -- python3 tool/verify_linux_disposal.py --output linux-disposal-diagnostics
+          original_status=$?
+          set -e
+          if [ -n "$(ls -A "$RUNNER_TEMP/disposal-cores")" ]; then
+            command -v gdb > /dev/null || sudo apt-get install -y --no-install-recommends gdb > /dev/null
+            python3 tool/collect_linux_core_stacks.py --source "$GITHUB_WORKSPACE" --cores "$RUNNER_TEMP/disposal-cores" --output linux-disposal-diagnostics/postmortem || true
+          fi
+          exit "$original_status"
       - name: Preserve native disposal evidence
         if: always() && steps.linux-disposal.outcome != 'skipped'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
@@ -109,6 +129,8 @@ jobs:
             linux-disposal-diagnostics/*.json
             linux-disposal-diagnostics/*.log
             linux-disposal-diagnostics/*.so
+            linux-disposal-diagnostics/postmortem/*.json
+            linux-disposal-diagnostics/postmortem/*.txt
           retention-days: 5
           if-no-files-found: error
       - run: |
