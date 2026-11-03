@@ -224,15 +224,11 @@ class TextCache {
         final applied = checkpoint?.applied ?? <String>{};
         final candidate =
             checkpoint?.document ??
-            engine.createDocument(
-              actorClientId: 2,
-              limits: limits,
-              seed: resolved.seed,
-            );
+            _materializer(seed: resolved.seed, limits: limits);
         try {
           for (final operation in ordered) {
             if (applied.add(operation.event.id)) {
-              candidate.applyRemote(operation.update);
+              candidate.apply(operation.update);
             }
           }
           final state = candidate.fullState.bytes;
@@ -270,7 +266,7 @@ class TextCache {
           if (checkpoint == null) rethrow;
           checkpoint = null;
         } finally {
-          candidate.dispose();
+          candidate.close();
         }
       }
     }
@@ -328,10 +324,9 @@ class TextCache {
         continue;
       }
       try {
-        final document = engine.restoreDocument(
-          actorClientId: 2,
+        final document = engine.createMaterializer(
+          seed: NativeTextState.fromBytes(bytes),
           limits: limits,
-          checkpoint: NativeTextCheckpoint(NativeTextState.fromBytes(bytes)),
         );
         return _ResolvedCheckpoint(document, frontier.cast<String>().toSet());
       } on NativeTextException {
@@ -342,6 +337,18 @@ class TextCache {
     }
     return null;
   }
+
+  /// Cache reconstruction never edits text, so it claims no actor. The native
+  /// engine is shared by every isolate of the process, and a planned commit
+  /// rebuilds its profile copy's cache on a worker isolate while the real
+  /// workspace opens: two fixed-actor documents collided there.
+  NativeTextMaterializer _materializer({
+    required NativeTextUpdate seed,
+    required NativeTextLimits limits,
+  }) => engine.createMaterializer(
+    seed: NativeTextState.parse(seed.encoded),
+    limits: limits,
+  );
 
   void materialize(
     Map<String, dynamic> view,
@@ -369,17 +376,16 @@ class TextCache {
           );
         }
         final field = row['field'] as String;
-        final candidate = engine.restoreDocument(
-          actorClientId: 2,
+        final candidate = engine.createMaterializer(
+          seed: NativeTextState.fromBytes(bytes),
           limits: NativeTextLimits(
             visibleUtf16: field == 'title' ? 500 : 10000,
           ),
-          checkpoint: NativeTextCheckpoint(NativeTextState.fromBytes(bytes)),
         );
         try {
           view[field] = candidate.read().text;
         } finally {
-          candidate.dispose();
+          candidate.close();
         }
       }
       return;
@@ -425,13 +431,9 @@ class TextCache {
       visibleUtf16: field == 'title' ? 500 : 10000,
     );
     final applied = <String>{};
-    NativeTextDocument candidate;
+    NativeTextMaterializer candidate;
     if (cached.isEmpty) {
-      candidate = engine.createDocument(
-        actorClientId: 2,
-        limits: limits,
-        seed: seed,
-      );
+      candidate = _materializer(seed: seed, limits: limits);
     } else {
       final row = cached.single;
       final bytes = row['state'];
@@ -462,33 +464,20 @@ class TextCache {
           !validFrontier ||
           sha256.convert(bytes).toString() != row['state_hash']) {
         // Invalid disposable state is rebuilt from exact canonical operations.
-        candidate = engine.createDocument(
-          actorClientId: 2,
-          limits: limits,
-          seed: seed,
-        );
+        candidate = _materializer(seed: seed, limits: limits);
       } else {
         applied.addAll(frontier.cast<String>());
         try {
-          candidate = engine.restoreDocument(
-            actorClientId: 2,
+          candidate = engine.createMaterializer(
+            seed: NativeTextState.fromBytes(bytes),
             limits: limits,
-            checkpoint: NativeTextCheckpoint(NativeTextState.fromBytes(bytes)),
           );
         } on NativeTextException {
           applied.clear();
-          candidate = engine.createDocument(
-            actorClientId: 2,
-            limits: limits,
-            seed: seed,
-          );
+          candidate = _materializer(seed: seed, limits: limits);
         } on FormatException {
           applied.clear();
-          candidate = engine.createDocument(
-            actorClientId: 2,
-            limits: limits,
-            seed: seed,
-          );
+          candidate = _materializer(seed: seed, limits: limits);
         }
       }
     }
@@ -525,7 +514,7 @@ class TextCache {
         if (!applied.contains(event.id)) {
           final update = NativeTextUpdate.parse(change['update']);
           registry.validateStructActors(claim, engine.inspect(update));
-          candidate.applyRemote(update);
+          candidate.apply(update);
           applied.add(event.id);
         }
         db.execute(
@@ -552,13 +541,13 @@ class TextCache {
       );
       view[field] = snapshot.text;
     } finally {
-      candidate.dispose();
+      candidate.close();
     }
   }
 }
 
 class _ResolvedCheckpoint {
   _ResolvedCheckpoint(this.document, this.applied);
-  final NativeTextDocument document;
+  final NativeTextMaterializer document;
   final Set<String> applied;
 }

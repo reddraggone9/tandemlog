@@ -289,16 +289,18 @@ class NativeTextEngine {
       _checkpointPending[key] = remembered;
       return remembered;
     }
-    final document = restoreDocument(
-      actorClientId: 2,
+    // A materializer claims no actor. The native engine is shared by every
+    // isolate of the process, so a fixed document actor collided whenever
+    // two isolates checked readiness at once (planned agent commits).
+    final materializer = createMaterializer(
+      seed: checkpoint.state,
       limits: limits,
-      checkpoint: checkpoint,
     );
     final bool pending;
     try {
-      pending = document.read().pending;
+      pending = materializer.read().pending;
     } finally {
-      document.dispose();
+      materializer.close();
     }
     final cost = key.length * 2;
     const budget = 4 * 1024 * 1024;
