@@ -457,7 +457,7 @@ filesystem: `agent.write.taskComplete` 496.5 to 451.2ms, `textEdit` 492.1 to 442
 Earlier qualifications stopped the household's `vex-adb.service` because the
 controller refused any `adb` process; stopping it drops device connections other
 work relies on, so it is no longer stopped. Controller r8 (SHA256
-`6e0c8544410285168a0fb60c0f2608a57c391d5e10e7772bfda33b00ce1090dd`) differs from
+`f5e6262ee5c4665e1a5cf3b30728165f21651471b33eea79150c8090d78a8645`) differs from
 r7 only in `busy_processes`: it admits exactly the uid-1000 `adb` server in the
 `vex-adb.service` cgroup while it uses at most 5% of a CPU between preflight
 checks, plus that unit's once-a-minute idle probe client. Any other `adb`
@@ -468,5 +468,7 @@ and limits are unchanged; the launcher changes only its controller path and hash
 Independent review READY-WITH-CHANGES, all P2 findings applied.
 
 The host registration refresh at the same time records routine OS updates on the
-same hardware (kernel 7.2.11 → 7.2.14, Python 3.14.8 → 3.14.9). It does not
+same hardware (kernel 7.2.11 → 7.2.14, Python 3.14.8 → 3.14.9). The controller's
+ARC-accounting kernel pin moves with it after review: the ZFS module version,
+`arc_os.c` source hash and `zfs_arc_pc_percent` are unchanged. It does not
 reuse any earlier qualification; the next release is qualified fresh.
