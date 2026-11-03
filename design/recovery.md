@@ -17,3 +17,27 @@ The coordinated cutover deliberately retains simple settings and resets other pr
 A separate process-scoped TANDEMLOG_PROFILE selects separate Tandemlog app data, not a new Windows user. Moving just SQLite does not isolate settings, writer identity, native caches, WAL/SHM and instance ownership. Confirm actual native/Flatpak roots rather than assuming they share data.
 
 No automated backup/repair UI, encryption, compaction or universal provider guarantee is claimed. A process crash typically leaves an incomplete suffix; power/storage failure can also damage a complete record. Integrity checks must preserve that evidence. Deliberate loss of the entire private profile also loses its older trusted-head baseline.
+
+## UX brief: startup, open failure and "Update Tandemlog" (Lee 11-03)
+
+Checked against [ux-principles.md](ux-principles.md). Each state answers one
+question and says nothing it doesn't know yet.
+
+- **Opening** ("is it working?"): the app name and an indeterminate progress
+  bar, nothing else. No onboarding or error copy while the workspace opens;
+  opening runs in bounded slices so the bar keeps moving.
+- **No folder set** ("what is this, what do I do?"): the existing onboarding
+  (headline, one line, Start / Choose an existing folder). Only here.
+- **Open failed** ("what broke, what can I do?"): title "Can't open your data
+  folder", one line that the data wasn't changed, the error, then Try again and
+  Settings. No onboarding headline.
+- **Newer data** ("why did it stop, what do I do?"): another device saved data
+  this version can't read. Title "Update Tandemlog"; body "Another device saved
+  changes with a newer version of Tandemlog. Update this device to keep going;
+  nothing was lost."; a filled **Update** button that opens the platform's
+  update (the releases page; the Flatpak and Scoop channels when they exist);
+  a collapsed **Technical details** with the exact message and a copy button.
+  Shown at startup and when a sync brings such data in; the real corruption
+  screen (integrity failure, Retry and Settings) stays separate. The required
+  version isn't named: records don't carry the writer's app version.
+- Left out: stack traces, internal record numbers outside Technical details.

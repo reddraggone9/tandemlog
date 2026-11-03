@@ -50,6 +50,7 @@ import 'presentation/checklist_disclosure_ink_border.dart';
 import 'presentation/task_actions_menu.dart';
 import 'presentation/checklist_item_editor.dart';
 import 'presentation/failure_message.dart';
+import 'presentation/startup_screens.dart';
 import 'presentation/release_version_tile.dart';
 import 'platform/view_time_source.dart';
 import 'platform/log_folder.dart';
@@ -4903,7 +4904,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         ),
                       if (error != null &&
                           (sharedSafetyError == null || keepSetupInputs) &&
-                          !_taskModalOpen)
+                          !_taskModalOpen &&
+                          !_needsUpdate)
                         _actionErrorNotice(),
                       if (!foodVisible && occurrenceMigrationError != null)
                         Padding(
@@ -5038,98 +5040,121 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                               Positioned.fill(
                                 child: ColoredBox(
                                   color: Theme.of(context).colorScheme.surface,
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        child: SingleChildScrollView(
-                                          key: const ValueKey(
-                                            'shared-recovery-error-scroll',
-                                          ),
-                                          primary: false,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(24),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Text(
-                                                  'Workspace requires recovery',
+                                  child: needsAppUpdate(sharedSafetyError)
+                                      ? UpdateAppScreen(
+                                          details: sharedSafetyError!,
+                                        )
+                                      : Column(
+                                          children: [
+                                            Expanded(
+                                              child: SingleChildScrollView(
+                                                key: const ValueKey(
+                                                  'shared-recovery-error-scroll',
                                                 ),
-                                                const SizedBox(height: 12),
-                                                Shortcuts(
-                                                  shortcuts: const {
-                                                    SingleActivator(
-                                                      LogicalKeyboardKey
-                                                          .arrowDown,
-                                                    ): ScrollIntent(
-                                                      direction:
-                                                          AxisDirection.down,
-                                                    ),
-                                                    SingleActivator(
-                                                      LogicalKeyboardKey
-                                                          .arrowUp,
-                                                    ): ScrollIntent(
-                                                      direction:
-                                                          AxisDirection.up,
-                                                    ),
-                                                  },
-                                                  child: Focus(
-                                                    key: const ValueKey(
-                                                      'shared-recovery-error-details',
-                                                    ),
-                                                    child: Text(
-                                                      sharedSafetyError!,
-                                                    ),
+                                                primary: false,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                    24,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      const Text(
+                                                        'Workspace requires recovery',
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
+                                                      Shortcuts(
+                                                        shortcuts: const {
+                                                          SingleActivator(
+                                                            LogicalKeyboardKey
+                                                                .arrowDown,
+                                                          ): ScrollIntent(
+                                                            direction:
+                                                                AxisDirection
+                                                                    .down,
+                                                          ),
+                                                          SingleActivator(
+                                                            LogicalKeyboardKey
+                                                                .arrowUp,
+                                                          ): ScrollIntent(
+                                                            direction:
+                                                                AxisDirection
+                                                                    .up,
+                                                          ),
+                                                        },
+                                                        child: Focus(
+                                                          key: const ValueKey(
+                                                            'shared-recovery-error-details',
+                                                          ),
+                                                          child: Text(
+                                                            sharedSafetyError!,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
+                                                      const Text(
+                                                        'Preserve the profile and data folder. Retry after restoring their integrity.',
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 12),
-                                                const Text(
-                                                  'Preserve the profile and data folder. Retry after restoring their integrity.',
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(12),
-                                        child: Wrap(
-                                          spacing: 12,
-                                          runSpacing: 8,
-                                          alignment: WrapAlignment.center,
-                                          children: [
-                                            TextButton(
-                                              key: const ValueKey(
-                                                'retry-shared-read',
+                                            Padding(
+                                              padding: const EdgeInsets.all(12),
+                                              child: Wrap(
+                                                spacing: 12,
+                                                runSpacing: 8,
+                                                alignment: WrapAlignment.center,
+                                                children: [
+                                                  TextButton(
+                                                    key: const ValueKey(
+                                                      'retry-shared-read',
+                                                    ),
+                                                    style: TextButton.styleFrom(
+                                                      minimumSize: const Size(
+                                                        64,
+                                                        48,
+                                                      ),
+                                                      visualDensity:
+                                                          VisualDensity
+                                                              .standard,
+                                                    ),
+                                                    onPressed: busy
+                                                        ? null
+                                                        : _retrySharedRead,
+                                                    child: const Text('Retry'),
+                                                  ),
+                                                  TextButton(
+                                                    key: const ValueKey(
+                                                      'shared-recovery-settings',
+                                                    ),
+                                                    style: TextButton.styleFrom(
+                                                      minimumSize: const Size(
+                                                        64,
+                                                        48,
+                                                      ),
+                                                      visualDensity:
+                                                          VisualDensity
+                                                              .standard,
+                                                    ),
+                                                    onPressed: busy
+                                                        ? null
+                                                        : _showSettings,
+                                                    child: const Text(
+                                                      'Settings',
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              style: TextButton.styleFrom(
-                                                minimumSize: const Size(64, 48),
-                                                visualDensity:
-                                                    VisualDensity.standard,
-                                              ),
-                                              onPressed: busy
-                                                  ? null
-                                                  : _retrySharedRead,
-                                              child: const Text('Retry'),
-                                            ),
-                                            TextButton(
-                                              key: const ValueKey(
-                                                'shared-recovery-settings',
-                                              ),
-                                              style: TextButton.styleFrom(
-                                                minimumSize: const Size(64, 48),
-                                                visualDensity:
-                                                    VisualDensity.standard,
-                                              ),
-                                              onPressed: busy
-                                                  ? null
-                                                  : _showSettings,
-                                              child: const Text('Settings'),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
                               ),
                           ],
@@ -5146,16 +5171,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
+  /// Opening failed because another device wrote data this version can't
+  /// read: a plain Update screen instead of the folder failure.
+  bool get _needsUpdate =>
+      !busy &&
+      store == null &&
+      settings?.folder != null &&
+      needsAppUpdate(error);
+
   Widget _welcome() => busy
-      ? Center(
-          child: Semantics(
-            liveRegion: true,
-            child: const Text(
-              'Opening Tandemlog…',
-              key: ValueKey('workspace-opening'),
-            ),
-          ),
-        )
+      ? const StartupLoading()
+      : _needsUpdate
+      ? UpdateAppScreen(details: error!)
       : Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(32),
@@ -5163,14 +5190,21 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'A little less to remember.',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+                // Onboarding only without a folder; a folder that didn't open
+                // gets a failure title instead.
+                Text(
+                  settings?.folder != null
+                      ? 'Can’t open your data folder'
+                      : 'A little less to remember.',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   settings?.folder != null
-                      ? 'Your saved data folder needs attention. Retry it or choose a different folder in Settings.'
+                      ? 'Your data wasn’t changed. Try again, or choose a different folder in Settings.'
                       : widget.folderActions.requiresPicker
                       ? 'Keep household tasks together, even offline. Choose or create a Tandemlog folder so your sync app can access it.'
                       : 'Keep household tasks together, even offline. We’ll create a data folder for you.',
@@ -5215,8 +5249,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                const Text('Set up folder sync whenever you’re ready.'),
+                if (settings?.folder == null) ...[
+                  const SizedBox(height: 16),
+                  const Text('Set up folder sync whenever you’re ready.'),
+                ],
               ],
             ),
           ),
