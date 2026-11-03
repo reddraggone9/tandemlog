@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "c25d35706deba19dac4f5c2e5d5674ef",
-  "issuedAtUTC": "2026-11-03T09:44:45.386216+00:00",
-  "sourceRevision": "a2fc34c416def733a1a47a59742478967c9c9f6f",
+  "requestId": "cb7d62b797686801d6ae3e134ee29970",
+  "issuedAtUTC": "2026-11-03T10:07:38.222816+00:00",
+  "sourceRevision": "3e5dd7b711af69ed83c14c80fda64bd8f968eefd",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "575e58dbe602a0e4f6864b4ac14081ca7eecc48796a7dada5d9ba093f004350d",
+    "sha256": "bb13fac9d30404c7792515434a30337679f2fef20279c4a4bb1d9957abee3182",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -1197,7 +1197,7 @@
         "mode": "100644"
       },
       "lib/food/food_page.dart": {
-        "sha256": "258bfd48818018eb3405f2368e5e7282cd3239e104ee44515a172aae5d59e8b3",
+        "sha256": "a84acfe2333c789ce974c0a2d67ea0192561ba44de670ad18a5dfbb7b563a861",
         "mode": "100644"
       },
       "lib/food/food_products.dart": {

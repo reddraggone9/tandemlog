@@ -505,3 +505,10 @@ relevant identity `575e58dbe602a0e4f6864b4ac14081ca7eecc48796a7dada5d9ba093f0043
 controller r8 with the owned ADB server running and idle. Zero first-pass misses,
 no reruns; absolute and both growth budgets passed and cleanup was clean. The
 `95200e05…` evidence is retained as `retained-95200e05`.
+Candidate 41614823156 for that source stopped at the hosted format gate (the
+separator change was unformatted), so the formatted source was qualified again:
+request `cb7d62b797686801d6ae3e134ee29970`, source
+`3e5dd7b711af69ed83c14c80fda64bd8f968eefd`, relevant identity
+`bb13fac9d30404c7792515434a30337679f2fef20279c4a4bb1d9957abee3182`, zero
+first-pass misses, clean cleanup, owned ADB server idle. The `c25d3570…`
+evidence is retained as `retained-c25d3570`.
