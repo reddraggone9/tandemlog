@@ -4929,6 +4929,29 @@ class TaskStore {
     onPrepared: onPrepared,
   );
 
+  /// Seals the warm-start proofs (decoded history and Task projection) at a
+  /// quiescent point without closing, so a process the OS later stops
+  /// without a clean close (Android) still opens warm. A later write makes
+  /// them stale: the next open verifies, rejects and rebuilds strictly, as
+  /// after a crash. Optional, so failures are ignored.
+  Future<void> sealWarmCaches() async {
+    final history = unified;
+    if (_closed || profileDatabase == null || history == null) return;
+    try {
+      await _serialize(() async {
+        if (_closed ||
+            history.safetyFailure != null ||
+            history.hasPending ||
+            history.snapshot.pendingEffects) {
+          return;
+        }
+        await history.sealTaskProjectionCache(this);
+      });
+    } catch (_) {
+      // The next open rebuilds strictly; nothing else depends on the seal.
+    }
+  }
+
   /// [sealCache] false skips re-sealing the warm Task cache proof; for
   /// sessions whose profile is a disposable copy (agent reads and dry runs),
   /// where the seal would be written and deleted unused.

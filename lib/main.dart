@@ -57,6 +57,7 @@ import 'platform/folder_actions.dart';
 import 'platform/foreground_importer.dart';
 import 'platform/android_section_navigation.dart';
 import 'storage/local_settings.dart';
+import 'diagnostics/startup_trace.dart';
 import 'storage/local_durability.dart';
 import 'storage/local_profile_database.dart';
 import 'storage/task_store.dart';
@@ -373,6 +374,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   String? pendingUserName;
   Future<void>? syncing;
   final startup = Stopwatch()..start();
+  late final startupTrace = StartupTrace(startup);
   final viewElapsed = Stopwatch()..start();
   late final ViewTimeSource timeSource;
   late final ViewClock<TaskView> viewClock;
@@ -419,6 +421,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       debugPrint(
         '$marker=${startup.elapsedMilliseconds} FILES_READ=${store?.readFiles ?? 0}',
       );
+      // Timestamped first list render, for cold-start measurement.
+      if (marker == 'TANDEMLOG_READY_MS') {
+        debugPrint(startupTrace.line('TANDEMLOG_FIRST_LIST'));
+      }
     });
   }
 
@@ -553,6 +559,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       settings = LocalSettings(privateRoot!, profileDatabase: profileDatabase);
       await settings!.load();
       settingsLoaded = true;
+      startupTrace.mark('settings');
       if (!mounted) return;
       widget.appearance.value = settings!.appearance;
       _appearanceReady();
@@ -603,6 +610,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       writer: settings!.writer,
       textEngine: engine,
       alive: () => mounted,
+      onPhase: startupTrace.mark,
     );
     if (session == null) return false;
     final opened = session.tasks;
@@ -625,6 +633,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     foodError = null;
     expandedChecklists = expanded;
     _bindWorkspaceState();
+    startupTrace.mark('bound');
     if (_hasPendingOperation(store!)) {
       error =
           'An earlier saved operation needs confirmation. Retry to finish it.';
@@ -2097,6 +2106,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       taskDrag = null;
       timeSource.stop();
       viewClock.stop();
+    }
+    // A backgrounded app may be stopped without a clean close; keep the next
+    // cold start warm.
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      unawaited(store?.sealWarmCaches());
     }
     _configureImporter();
     if (state == AppLifecycleState.resumed) {

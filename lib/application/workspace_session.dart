@@ -72,12 +72,15 @@ class WorkspaceSession {
     required NativeTextEngine textEngine,
     bool readOnly = false,
     bool Function()? alive,
+    void Function(String phase)? onPhase,
   }) async {
     bool live() => alive?.call() ?? true;
+    void phase(String name) => onPhase?.call(name);
     UnifiedHistory? unified;
     TaskStore? tasks;
     try {
       final names = await folder.list();
+      phase('folderList');
       if (names.isEmpty && readOnly) {
         throw const ReadOnlyWorkspaceWrite(
           'The workspace folder is empty. Initialize it first.',
@@ -96,7 +99,9 @@ class WorkspaceSession {
               writer: writer,
               textEngine: textEngine,
             );
+      phase('history');
       tasks = await TaskStore.openUnified(unified);
+      phase('tasks');
       if (!readOnly &&
           !tasks.sharedTextInitialized &&
           unified.snapshot.tasks.isEmpty) {
@@ -120,6 +125,7 @@ class WorkspaceSession {
         );
       }
       food = await FoodStore.openUnified(unified);
+      phase('food');
       if (!live()) {
         await food.close();
         await tasks.close();
@@ -130,6 +136,7 @@ class WorkspaceSession {
       if (!readOnly) {
         final migration = await tasks.migrateOccurrenceDates(canCommit: live);
         migrationError = migration.error;
+        phase('migration');
         if (!live()) {
           await food.close();
           await tasks.close();
