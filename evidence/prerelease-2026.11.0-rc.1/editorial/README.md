@@ -17,3 +17,8 @@ Activity media recaptured against stable. Re-review found no notes in the
 Markdown, a missing date/location separator on Food rows (introduced in
 `6f354de`; fix deferred to the next candidate, so the Inbox image was dropped),
 and a too-narrow bulk-edit bullet; all addressed.
+
+The release moved to build 112 (`a2fc34c`) after these captures: an Activity
+naming fix for captured tasks (create plus position in one record) and a
+restored separator on Food rows. Neither affects what images 01–03 show: the
+Activity fixture has no captured tasks and the images show no Food rows.
