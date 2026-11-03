@@ -74,7 +74,7 @@ void main() {
     await open(tester, FormatFailure('App history record is damaged.'));
     expect(find.text('Can’t open your data folder'), findsOneWidget);
     // Nothing is open, so there is no count to show.
-    expect(find.textContaining(' open'), findsNothing);
+    expect(find.textContaining(RegExp(r'^\d+ open')), findsNothing);
     expect(find.textContaining('A little less to remember'), findsNothing);
     expect(find.textContaining('folder sync whenever'), findsNothing);
     expect(find.text('Update Tandemlog'), findsNothing);
