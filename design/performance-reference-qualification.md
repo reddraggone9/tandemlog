@@ -451,3 +451,22 @@ write in history open and 120ms in close. Verifying the decode cache was 161ms, 
 isolate, so they now overlap. Alternating control/change, nine fresh processes each on the reference path's
 filesystem: `agent.write.taskComplete` 496.5 to 451.2ms, `textEdit` 492.1 to 442.9ms, `textEditUndo` 494.3 to
 439.6ms, `coldOpenTasksList` 377.4 to 331.1ms. Budgets are unchanged and this source has no qualification yet.
+
+## Controller r8: the owned ADB server stays up (2026-11-02)
+
+Earlier qualifications stopped the household's `vex-adb.service` because the
+controller refused any `adb` process; stopping it drops device connections other
+work relies on, so it is no longer stopped. Controller r8 (SHA256
+`6e0c8544410285168a0fb60c0f2608a57c391d5e10e7772bfda33b00ce1090dd`) differs from
+r7 only in `busy_processes`: it admits exactly the uid-1000 `adb` server in the
+`vex-adb.service` cgroup while it uses at most 5% of a CPU between preflight
+checks, plus that unit's once-a-minute idle probe client. Any other `adb`
+process, a restarted server or a busy one still refuses. The private run
+coordinator also records the server's CPU across the whole run and refuses to
+seal if it averaged above the same threshold. Budgets, caps, lifetime, cleanup
+and limits are unchanged; the launcher changes only its controller path and hash.
+Independent review READY-WITH-CHANGES, all P2 findings applied.
+
+The host registration refresh at the same time records routine OS updates on the
+same hardware (kernel 7.2.11 → 7.2.14, Python 3.14.8 → 3.14.9). It does not
+reuse any earlier qualification; the next release is qualified fresh.

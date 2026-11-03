@@ -1,7 +1,12 @@
 ## What’s new
 
-- **Activity log:** browse changes from all devices in one read-only timeline, with device names and action details. Open it from the user menu. Entries follow recorded device time; clock skew can affect their order. History does not record the active user.
-- Food saves no longer flash a recovery message during a normal save. When a recovery message is needed, it now scrolls on small screens and with large text, leaving more room for Search and the list.
-- Move some fits better with large text and the keyboard open. In New location, the first Enter accepts a highlighted suggestion; a later Enter submits the move.
-- Completing a selected repeating task now clears that task from the selection, so selecting another task keeps working.
-- Food Search and selection controls stay pinned while scrolling, and sticky headings now cover rows across the full width.
+- **Activity log:** each entry now names what changed, such as a food's name and brand or a task's title.
+- **Activity log:** edits list each changed field as old → new. When two devices changed the same field at once, only the new value is shown.
+- **Activity log:** details no longer show internal IDs or a "user not recorded" line. An unnamed device still shows its ID.
+- **Repeat:** new monthly rules, such as "every 2 months on the 2nd Tuesday", "every month on the 15th" or "every February, June and November on the 20th". Each also works with "when done". Older app versions stop with "Update the app" on a task that uses one, so update every device before using them.
+- **Repeat:** the Repeat field shows examples, and completing a repeating task shows the next occurrence's date.
+- **Editing several tasks:** if another device changes them while the editor is open, Save asks you to review the selection instead of overwriting.
+- Opening the app shows a neutral screen in your theme until it is ready, instead of a flash of the light theme.
+- Move some no longer suggests the food's current location.
+- Inbox rows no longer repeat "Needs expiration" under the Inbox heading.
+- Opening and saving are faster with large histories.
