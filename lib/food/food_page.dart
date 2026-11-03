@@ -775,9 +775,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                                     child: Text(
                                                       actionError,
                                                       style: TextStyle(
-                                                        color: Theme.of(
-                                                          context,
-                                                        ).colorScheme.error,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .error,
                                                       ),
                                                     ),
                                                   ),
@@ -1052,9 +1052,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                           product.brand,
                           product.size,
                         ].where((v) => v.isNotEmpty).join(' · '),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall
+                            ?.copyWith(color: colors.onSurfaceVariant),
                       ),
                   ],
                 ),
@@ -1590,9 +1589,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                 style: Theme.of(context).textTheme.titleMedium
                                     ?.copyWith(
                                       color: deleted
-                                          ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurfaceVariant
+                                          ? Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant
                                           : null,
                                       decoration: deleted
                                           ? TextDecoration.lineThrough
@@ -1604,9 +1603,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                   countLabel,
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
                                       ),
                                 ),
                             ],
@@ -1622,9 +1621,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                       ?.copyWith(
                                         fontWeight: FontWeight.w600,
                                         color: deleted
-                                            ? Theme.of(
-                                                context,
-                                              ).colorScheme.onSurfaceVariant
+                                            ? Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurfaceVariant
                                             : foodExpiryColor(
                                                 details.expiry,
                                                 _expirationClock.today,
@@ -1632,6 +1631,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                               ),
                                       ),
                                 ),
+                              // The date and place stay visibly separate,
+                              // as before the Inbox label change.
+                              if (!inInboxSection &&
+                                  [
+                                    details.location,
+                                    details.retention,
+                                  ].any((value) => value.isNotEmpty))
+                                const Text('·'),
                               if ([
                                 details.location,
                                 details.retention,
@@ -1642,9 +1649,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                       .join(' · '),
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
                                       ),
                                 ),
                             ],
@@ -1654,9 +1661,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                               metadata.join(' · '),
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurfaceVariant,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                   ),
                             ),
                         ],
