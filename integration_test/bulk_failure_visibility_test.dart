@@ -171,7 +171,39 @@ void registerBulkFailureVisibilityTests() {
           'description': 'Updated elsewhere',
         });
         await tester.pumpAndSettle();
+        // The editor may notice the peer change before Save (it turns into
+        // Review selection with Save disabled) or only when Save re-checks.
+        // Hosted runners hit both orders; narrow-dark always takes the first.
+        if (variant.name == 'narrow-dark') {
+          await flows.waitForUi(
+            tester,
+            () => find.text('Review selection').evaluate().isNotEmpty,
+          );
+          await tester.pumpAndSettle();
+        }
         final before = await canonicalHashes(folder);
+        if (find.text('Review selection').evaluate().isNotEmpty) {
+          // The reason Save is disabled is on screen, though the person was
+          // scrolled down to the field they were editing.
+          final stale = find.textContaining('review the current selection');
+          expect(
+            stale.hitTestable(at: const Alignment(0, -.99)),
+            findsOneWidget,
+          );
+          expect(controller.value, draft);
+          await captureNativeFixtureUi(
+            tester,
+            'bulk-failure-${variant.name}-noticed',
+          );
+          await tester.tap(find.text('Cancel'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Discard'));
+          await tester.pumpAndSettle();
+          expect(find.byType(BulkTaskEditor), findsNothing);
+          expect(await canonicalHashes(folder), before);
+          expect(tester.takeException(), isNull);
+          return;
+        }
         await media.pointAndPause(tester, find.text('Save changes'), recording);
         await tester.tap(find.text('Save changes'));
         await flows.waitForUi(

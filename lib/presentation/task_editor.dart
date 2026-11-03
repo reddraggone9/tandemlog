@@ -508,7 +508,19 @@ class _EditorBodyState extends State<_EditorBody> {
       formValidation.draftDependenciesChanged();
       formValidation.changed('timeZone');
     }
+    // Save is now disabled; the heading and its reason must be on screen even
+    // when the person was scrolled down to the field they were editing.
+    if (!oldWidget.staleSelection && widget.staleSelection) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final notice = _heading.currentContext;
+        if (mounted && notice != null && notice.mounted) {
+          Scrollable.ensureVisible(notice);
+        }
+      });
+    }
   }
+
+  final _heading = GlobalKey();
 
   @override
   void dispose() {
@@ -1561,6 +1573,7 @@ class _EditorBodyState extends State<_EditorBody> {
       child: SingleChildScrollView(child: failureNotice(message)),
     );
     final heading = Column(
+      key: _heading,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(
@@ -1585,8 +1598,9 @@ class _EditorBodyState extends State<_EditorBody> {
           ],
         ),
         if (widget.staleSelection) ...[
-          const Text(
+          Text(
             'Selected tasks changed. Close this editor and review the current selection; this draft has not been saved.',
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           TextButton(
             onPressed: editingFrozen ? null : widget.onReviewSelection,
