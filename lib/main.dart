@@ -1612,12 +1612,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   // Reads the persisted successor, which may have been edited independently;
   // the rule is never recomputed here. Hidden or undated rows add nothing.
+  // Plain status wording: `Next due 2026-11-10.`, not internal terms.
   String _successorDateNotice(TaskStore origin, String id) {
     final schedule = origin.visibleTaskRow(id)?['schedule'];
-    if (schedule is! Map) return '';
-    final due = schedule['dueDate'], start = schedule['startDate'];
-    if (due is String) return ', due $due';
-    return start is String ? ', starting $start' : '';
+    final due = schedule is Map ? schedule['dueDate'] : null;
+    final start = schedule is Map ? schedule['startDate'] : null;
+    if (due is String) return ' Next due $due.';
+    if (start is String) return ' Next starts $start.';
+    return ' Next occurrence scheduled.';
   }
 
   Future<T> _recordAction<T>(
@@ -1679,7 +1681,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 .toSet();
             final successor = successors.isEmpty
                 ? ''
-                : ' Next occurrence kept${n == 1 && successors.length == 1 ? _successorDateNotice(origin, successors.single) : ''}.';
+                : n == 1 && successors.length == 1
+                ? _successorDateNotice(origin, successors.single)
+                : successors.length == 1
+                ? ' Next occurrence scheduled.'
+                : ' Next occurrences scheduled.';
             messenger.showSnackBar(
               SnackBar(
                 content: Text(

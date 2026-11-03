@@ -2,8 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../application/activity_log.dart';
 import '../application/activity_values.dart';
+import '../food/food_products.dart' show storeLinkLabel;
 import '../storage/unified_history.dart';
 
 class ActivityLogDialog extends StatefulWidget {
@@ -34,8 +36,12 @@ class ActivityLogDialog extends StatefulWidget {
 class _ActivityLogDialogState extends State<ActivityLogDialog> {
   late List<ActivityEntry> entries;
 
-  /// List items: a day heading (String) or an index into [entries].
+  /// List items: a day heading (String), an index into [entries], or one part
+  /// of an expanded batched entry.
   late List<Object> items;
+
+  /// Batched entries (record IDs) expanded inline.
+  final _expanded = <String>{};
   late ActivityValues values;
   late String revision;
   // Visible rows with native title/notes edits, resolved one per frame so a
@@ -54,9 +60,9 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
   void _read() {
     final snapshot = widget.history.snapshot;
     entries = activityEntries(snapshot);
-    items = _withDayHeadings();
     // Values are derived per visible row and per opened details, not here.
     values = ActivityValues(snapshot, textAt: widget.textAt);
+    items = _withDayHeadings();
     _pendingText.clear();
     revision = snapshot.revision;
     failed = widget.history.safetyFailure != null;
@@ -70,9 +76,19 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       final heading = activityDay(entries[i].recordedAt, now);
       if (heading != day) result.add(day = heading);
       result.add(i);
+      if (_expanded.contains(entries[i].id)) {
+        for (final part in values.parts(entries[i])) {
+          result.add(_Part(part));
+        }
+      }
     }
     return result;
   }
+
+  void _toggle(ActivityEntry e) => setState(() {
+    if (!_expanded.remove(e.id)) _expanded.add(e.id);
+    items = _withDayHeadings();
+  });
 
   void _changed() {
     if (!mounted) return;
@@ -130,8 +146,10 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
           'had before the change. When devices changed the same field at the '
           'same time, or an earlier change was undone, only the new value is '
           'shown.\n\n'
-          'One row is one recorded action, including bulk actions. Imported '
-          'history uses the original recorded time and writing device.',
+          'One row is one recorded action. An action that changed several '
+          'items, like a receipt import, expands into one row per item. '
+          'Imported history uses the original recorded time and writing '
+          'device.',
         ),
       ),
       actions: [
@@ -232,6 +250,76 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
     }
   }
 
+  /// One change: a single-change record, or one part of a batched record.
+  /// Parts are indented and leave out the parent's time and device.
+  Widget _changeRow(ActivityEntry e, {bool part = false}) {
+    final d = _row(e);
+    final theme = Theme.of(context);
+    return ListTile(
+      key: ValueKey(e.key),
+      // One even gap between rows, whatever their line count.
+      minTileHeight: 0,
+      minVerticalPadding: 8,
+      contentPadding: part ? const EdgeInsets.only(left: 40, right: 16) : null,
+      title: Text(
+        _headline(e, d),
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final change in d.changes.take(3))
+            Text.rich(
+              activityChangeSpan(change),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: theme.colorScheme.onSurface),
+            ),
+          if (d.changes.length > 3) Text('+${d.changes.length - 3} more'),
+          if (!part) Text(_meta(e)),
+        ],
+      ),
+      onTap: () => _details(e),
+    );
+  }
+
+  /// A record that changed several items: a summary that expands inline.
+  Widget _batchRow(ActivityEntry e) {
+    final summary = values.batchSummary(e);
+    final expanded = _expanded.contains(e.id);
+    return Semantics(
+      expanded: expanded,
+      child: ListTile(
+        key: ValueKey(e.id),
+        minTileHeight: 0,
+        minVerticalPadding: 8,
+        title: Text(
+          summary.title,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (summary.items != null)
+              Text(
+                summary.items!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            Text(_meta(e)),
+          ],
+        ),
+        trailing: Icon(expanded ? Icons.expand_less : Icons.expand_more),
+        onTap: () => _toggle(e),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => AlertDialog(
     insetPadding: activityDialogInsets(context),
@@ -245,9 +333,11 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
         ),
       ],
     ),
+    // The window's height (dialog insets only), at most 640 wide: no fixed
+    // box leaving empty space around a long log.
     content: SizedBox(
       width: 640,
-      height: 480,
+      height: double.infinity,
       // Attribution and refresh failures share the rows' scroll viewport.
       // Fixed copy above an Expanded list can consume all available height at
       // large text sizes, leaving admitted history present but unreachable.
@@ -277,6 +367,7 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
             return const Center(child: Text('No activity yet.'));
           }
           final item = items[i - 1];
+          if (item is _Part) return _changeRow(item.entry, part: true);
           if (item is String) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
@@ -290,34 +381,7 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
             );
           }
           final e = entries[item as int];
-          final d = _row(e);
-          final theme = Theme.of(context);
-          return ListTile(
-            key: ValueKey(e.id),
-            // One even gap between rows, whatever their line count.
-            minTileHeight: 0,
-            minVerticalPadding: 8,
-            title: Text(
-              _headline(e, d),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final change in d.changes.take(3))
-                  Text.rich(
-                    activityChangeSpan(change),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: theme.colorScheme.onSurface),
-                  ),
-                if (d.changes.length > 3) Text('+${d.changes.length - 3} more'),
-                Text(_meta(e)),
-              ],
-            ),
-            onTap: () => _details(e),
-          );
+          return values.parts(e).isEmpty ? _changeRow(e) : _batchRow(e);
         },
       ),
     ),
@@ -451,7 +515,7 @@ class ActivityChangeList extends StatelessWidget {
                       Text(change.label, style: label),
                       Padding(
                         padding: const EdgeInsets.only(left: 16),
-                        child: Text(change.value, style: base),
+                        child: _ChangeValue(change, style: base),
                       ),
                     ],
                   ),
@@ -471,13 +535,54 @@ class ActivityChangeList extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
-                    child: Text(change.value, style: base),
+                    child: _ChangeValue(change, style: base),
                   ),
                 ],
               ),
           ],
         );
       },
+    );
+  }
+}
+
+class _Part {
+  const _Part(this.entry);
+  final ActivityEntry entry;
+}
+
+/// `old → new`; store links in the new value open the store, labelled by its
+/// name rather than the URL.
+class _ChangeValue extends StatelessWidget {
+  const _ChangeValue(this.change, {required this.style});
+  final ActivityChange change;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final links = change.links;
+    if (links == null || links.isEmpty) return Text(change.value, style: style);
+    final link = style.copyWith(
+      color: Theme.of(context).colorScheme.primary,
+      decoration: TextDecoration.underline,
+    );
+    return Wrap(
+      children: [
+        if (change.before != null) Text('${change.before} → ', style: style),
+        for (final (i, url) in links.indexed) ...[
+          if (i > 0) Text(', ', style: style),
+          Semantics(
+            link: true,
+            child: InkWell(
+              onTap: () => launchUrl(
+                Uri.parse(url),
+                mode: LaunchMode.externalApplication,
+              ),
+              child: Text(storeLinkLabel(url), style: link),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

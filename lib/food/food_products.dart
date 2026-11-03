@@ -222,6 +222,33 @@ bool isFoodStoreLink(Object? value) {
       uri.host.isNotEmpty;
 }
 
+const _storeNames = {
+  'walmart.com': 'Walmart',
+  'kroger.com': 'Kroger',
+  'target.com': 'Target',
+  'amazon.com': 'Amazon',
+  'costco.com': 'Costco',
+  'samsclub.com': "Sam's Club",
+  'aldi.us': 'ALDI',
+  'heb.com': 'H-E-B',
+  'instacart.com': 'Instacart',
+  'traderjoes.com': "Trader Joe's",
+  'wholefoodsmarket.com': 'Whole Foods',
+  'publix.com': 'Publix',
+  'samsungfood.com': 'Samsung Food',
+};
+
+/// A store link's readable name: the store for known domains, else the host
+/// without `www.`. Never the full URL.
+String storeLinkLabel(String link) {
+  final host = Uri.tryParse(link)?.host.toLowerCase() ?? '';
+  if (host.isEmpty) return link;
+  for (final MapEntry(:key, :value) in _storeNames.entries) {
+    if (host == key || host.endsWith('.$key')) return value;
+  }
+  return host.startsWith('www.') ? host.substring(4) : host;
+}
+
 void validateFoodProductValues(Map<String, Object?> values) {
   if (values.isEmpty ||
       values.keys.any((k) => !productFieldNames.contains(k))) {

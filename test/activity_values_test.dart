@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/application/activity_log.dart';
 import 'package:tandemlog/application/activity_values.dart';
+import 'package:tandemlog/food/food_purchase_import.dart';
 import 'package:tandemlog/food/food_store.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/log_folder.dart';
@@ -216,4 +217,136 @@ void main() {
       );
     },
   );
+
+  group('batched records', () {
+    FoodPurchaseLine line(String key, String name, int quantity, String link) =>
+        FoodPurchaseLine(
+          sourceKind: 'ynab',
+          sourceKey: key,
+          date: '2026-11-02',
+          store: 'Walmart',
+          amount: 300,
+          quantity: quantity,
+          name: name,
+          link: link,
+        );
+
+    test('a receipt import expands into one food per line', () async {
+      final (tasks, food) = await open('${root.path}/data', 'a');
+      await food.commitPurchaseImport(
+        FoodPurchaseImportPlan(
+          space: food.space,
+          importId: '11111111-1111-4111-8111-111111111111',
+          sourceSha256: 'a' * 64,
+          lines: [
+            line('t#1', 'Synthetic milk', 2, 'https://www.walmart.com/ip/1'),
+            line('t#2', 'Synthetic beans', 1, 'https://www.walmart.com/ip/2'),
+            line('t#3', 'Synthetic rice', 1, 'https://www.kroger.com/p/3'),
+          ],
+        ),
+      );
+      final snapshot = tasks.unified!.snapshot;
+      final values = ActivityValues(snapshot);
+      final entry = activityEntries(
+        snapshot,
+      ).firstWhere((e) => e.types.contains('food.add'));
+      final parts = values.parts(entry);
+      expect(parts, hasLength(3));
+      expect(
+        values.batchSummary(entry).title,
+        '3 foods added from a Walmart purchase',
+      );
+      // Parts follow the record's order, which the import plan chooses.
+      expect(values.batchSummary(entry).items, endsWith(' and 1 more'));
+      // Each part reads like a single food add: one item, its store link by
+      // name, no product bookkeeping repeating the food's description.
+      final read = {
+        for (final p in parts)
+          _lines(values.describe(p)): (p.summary, p.targets.length),
+      };
+      expect(read, {
+        'Synthetic milk ×2\nStore link: Walmart': ('Food added', 2),
+        'Synthetic beans\nStore link: Walmart': ('Food added', 1),
+        'Synthetic rice\nStore link: Kroger': ('Food added', 1),
+      });
+      final milk = parts.firstWhere((p) => p.targets.length == 2);
+      expect(values.describe(milk).changes.single.links, [
+        'https://www.walmart.com/ip/1',
+      ]);
+      expect({for (final p in parts) p.key}, hasLength(3));
+    });
+
+    test(
+      'one food add, a capture and a same-value bulk edit stay single',
+      () async {
+        final (tasks, food) = await open('${root.path}/data', 'a');
+        final person = const Uuid().v4();
+        await tasks.command(person, 'user.created', {'name': 'Synthetic Lee'});
+        await tasks.createTasks({const Uuid().v4(): 'Synthetic first'}, person);
+        await tasks.createTasks({
+          const Uuid().v4(): 'Synthetic second',
+        }, person);
+        await food.add(_milk, 3);
+        final ids = [for (final c in food.state.containers) c.id];
+        await food.changeDetails(
+          ids,
+          const FoodDetails(
+            name: 'Synthetic milk',
+            brand: 'Synthetic dairy',
+            location: 'Freezer',
+            expiry: '2027-01-10',
+            estimated: null,
+          ),
+          ['location'],
+        );
+        final snapshot = tasks.unified!.snapshot;
+        final values = ActivityValues(snapshot);
+        for (final e in activityEntries(snapshot)) {
+          expect(values.parts(e), isEmpty, reason: e.summary);
+        }
+        expect(
+          describeAll(tasks).last,
+          'Food location changed\n'
+          'Synthetic milk (Synthetic dairy) ×3\nLocation: Fridge → Freezer',
+        );
+      },
+    );
+
+    test('a bulk edit over different values splits per container', () async {
+      final (tasks, food) = await open('${root.path}/data', 'a');
+      await food.add(_milk, 1);
+      await food.add(
+        const FoodDetails(
+          name: 'Synthetic beans',
+          location: 'Pantry',
+          expiry: '2027-03-01',
+          estimated: null,
+        ),
+        1,
+      );
+      final ids = [for (final c in food.state.containers) c.id];
+      await food.changeDetails(
+        ids,
+        const FoodDetails(
+          name: 'ignored',
+          location: 'Basement',
+          expiry: '2027-01-10',
+          estimated: null,
+        ),
+        ['location'],
+      );
+      final snapshot = tasks.unified!.snapshot;
+      final values = ActivityValues(snapshot);
+      final entry = activityEntries(snapshot).first;
+      final parts = values.parts(entry);
+      expect(values.batchSummary(entry).title, '2 foods moved');
+      expect([for (final p in parts) _lines(values.describe(p))]..sort(), [
+        'Synthetic beans\nLocation: Pantry → Basement',
+        'Synthetic milk (Synthetic dairy)\nLocation: Fridge → Basement',
+      ]);
+      for (final p in parts) {
+        expect(p.targets, hasLength(1));
+      }
+    });
+  });
 }

@@ -87,6 +87,44 @@ pre-existing and queued separately.
   and filters that would hide it). Hidden when the event has no single item or
   the item no longer exists (a removed food still exists, in Deleted). Close.
 
+## UX brief: dialog height, batched entries, store links (Lee 11-03)
+
+Checked against [ux-principles.md](ux-principles.md).
+
+**Height.** The log uses the window's height (dialog insets only), keeping its
+640 px maximum width; no fixed 480 px box with empty space around it.
+
+**Batched entries.** Answers "what did that import (or bulk edit) do, item by
+item?" One record can hold several separate changes: a receipt import adds a
+food per line, a bulk edit changes several foods.
+- What counts as one change: the effects for one item. A task's add and its
+  positioning are one change; a product or purchase that exists only for a food
+  add (or link) belongs to that food. A food operation over several containers
+  stays one change (`Beans ×3`) when every container got the same values, and
+  splits per container when their values differ (different old locations).
+- A record with one change looks exactly as before.
+- A record with several: line 1 is a summary by the dominant change, counted
+  in the rows it expands to: `6 foods added from a Walmart purchase` (store
+  only when the record's purchases share one), `3 foods edited`, then
+  `, 2 other changes` when kinds are mixed. Below it the first item names
+  (`Oat milk, Beans and 4 more`) and the usual meta line. A trailing chevron
+  shows it expands.
+- Tap (or Enter) expands it inline; the parts appear indented under it, each a
+  normal row built by the same row/details code as a single-change record.
+  Parts leave out the meta line: time and device are the parent's (a heading
+  states what's shared). Tapping a part opens the ordinary details dialog for
+  just that change, with Open. Tap the parent again to collapse.
+- Left out: a special batch dialog, per-part times, purchase bookkeeping lines.
+- Product name/brand/size lines that only repeat a new food's own description
+  are left out of a food add; store link and Keep at least stay.
+
+**Store links.** Show the store's name as the link text (`Walmart`), not the
+URL: Activity change lines, and the Running low and row menu actions
+(`Open Walmart link`). Known stores by domain; else the domain without `www.`.
+
+**Completion notice.** `Completed 1 task. Next due 2026-11-10.` (or `Next
+starts …`; `Next occurrence scheduled.` without a date or for several).
+
 ## Ordering and clock skew
 
 Newest recorded occurrence first, based on the existing wall-time-informed

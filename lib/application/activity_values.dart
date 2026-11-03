@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import '../agent/render.dart' show taskScheduleText;
 import '../domain/event.dart';
 import '../food/inventory.dart';
@@ -12,9 +14,12 @@ typedef ActivityTextAt =
 
 /// One changed field. [before] is null when no single prior value is known.
 class ActivityChange {
-  const ActivityChange(this.label, this.after, [this.before]);
+  const ActivityChange(this.label, this.after, [this.before, this.links]);
   final String label, after;
   final String? before;
+
+  /// Store links the new value names, in order, for details to open.
+  final List<String>? links;
 
   /// `old → new`, or just the new value when the old one is not certain.
   String get value => before == null ? after : '$before → $after';
@@ -67,7 +72,7 @@ const _productLabels = {
   'name': 'Product name',
   'brand': 'Brand',
   'size': 'Size',
-  'links': 'Store links',
+  'links': 'Store link',
   'minimum': 'Keep at least',
 };
 const _undoTypes = {
@@ -225,7 +230,13 @@ class ActivityValues {
           for (final target in op.targets)
             for (final entry in (op.product ?? const {}).entries)
               if (_productLabels.containsKey(entry.key))
-                (target, 'product.${entry.key}', _productValue(entry.value)),
+                (
+                  target,
+                  'product.${entry.key}',
+                  entry.key == 'links'
+                      ? _linksValue(entry.value)
+                      : _productValue(entry.value),
+                ),
         ];
       default:
         return const [];
@@ -236,6 +247,11 @@ class ActivityValues {
     if (field == 'expiry' && value == null) return 'none';
     return _text(value);
   }
+
+  /// Store names, not URLs: `Walmart, Kroger`.
+  static String _linksValue(Object? value) => value is List && value.isNotEmpty
+      ? value.map((link) => storeLinkLabel('$link')).join(', ')
+      : 'none';
 
   static String _productValue(Object? value) => value is List
       ? (value.isEmpty ? 'none' : value.map(_text).join(', '))
@@ -283,12 +299,12 @@ class ActivityValues {
 
   /// The text-resolved description, if already computed.
   ActivityDescription? withText(ActivityEntry entry) =>
-      _described['${entry.id}|true'];
+      _described['${entry.key}|true'];
 
   /// [text] resolves native title/notes edits, which replays shared text and
   /// is meant for the details view, not for every visible row.
   ActivityDescription describe(ActivityEntry entry, {bool text = false}) {
-    final cacheKey = '${entry.id}|$text';
+    final cacheKey = '${entry.key}|$text';
     final cached = _described[cacheKey];
     if (cached != null) return cached;
     var needsText = false;
@@ -308,9 +324,19 @@ class ActivityValues {
     // One name per item: a record can touch an item in several effects (a
     // capture creates a task and positions it), which is still one item.
     final subjects = <String, String>{};
+    final scope = entry.positions, containers = entry.containers;
+    bool inScope(int position) => scope == null || scope.contains(position);
+    bool keep(String target) =>
+        containers == null || containers.contains(target);
+    // A new food's product repeats its description; only its own fields
+    // (store link, Keep at least) are worth a line.
     var position = 0;
+    final addsFood = record.effects.indexed.any(
+      (e) => inScope(e.$1 + 1) && e.$2.food?.operation.action == FoodAction.add,
+    );
     for (final e in record.effects) {
       position++;
+      if (!inScope(position)) continue;
       final task = e.task;
       if (task != null) {
         if (task.type.startsWith('task.created') &&
@@ -383,11 +409,14 @@ class ActivityValues {
       final op = food.operation;
       final details = op.details;
       if (op.action == FoodAction.add && details != null) {
-        subjects['$position'] = _foodName(details.name, details.brand);
+        final count = op.targets.where(keep).length;
+        subjects['$position'] =
+            '${_foodName(details.name, details.brand)}'
+            '${count > 1 ? ' ×$count' : ''}';
         continue;
       }
       if (!op.action.productLevel) {
-        for (final target in op.targets) {
+        for (final target in op.targets.where(keep)) {
           final name = _valueAt(record, position, '$target|name');
           if (name != null) {
             subjects.putIfAbsent(
@@ -400,6 +429,15 @@ class ActivityValues {
       }
       if (op.action == FoodAction.undo) continue;
       for (final (target, field, _) in _foodWrites(op)) {
+        if (!op.action.productLevel && !keep(target)) continue;
+        if (addsFood &&
+            const {
+              'product.name',
+              'product.brand',
+              'product.size',
+            }.contains(field)) {
+          continue;
+        }
         final key = '$target|$field';
         final own = _writes[key]!.firstWhere(
           (w) => identical(w.record, record) && w.position == position,
@@ -414,7 +452,19 @@ class ActivityValues {
             change.change?.after == 'none') {
           continue;
         }
-        if (!change.same) (changes[label] ??= []).add(change.change);
+        final links = op.product?['links'];
+        if (!change.same) {
+          (changes[label] ??= []).add(
+            field == 'product.links' && change.change != null && links is List
+                ? ActivityChange(
+                    label,
+                    change.change!.after,
+                    change.change!.before,
+                    [for (final link in links) '$link'],
+                  )
+                : change.change,
+          );
+        }
       }
     }
     final result = ActivityDescription(_summarize([...subjects.values]), [
@@ -422,6 +472,145 @@ class ActivityValues {
     ], needsText: needsText);
     _described[cacheKey] = result;
     return result;
+  }
+
+  final _parts = <String, List<ActivityEntry>>{};
+
+  /// The separate changes in a batched record, in record order, each built
+  /// like a single-change record. Empty when the record is one change.
+  /// One change = the effects for one item: a task's add and positioning, a
+  /// food add or link with the product and purchase it records. A food
+  /// operation over several containers splits per container only when their
+  /// values differ.
+  List<ActivityEntry> parts(ActivityEntry entry) {
+    if (entry.positions != null || entry.historical) return const [];
+    final cached = _parts[entry.id];
+    if (cached != null) return cached;
+    final record = _records[entry.id];
+    if (record == null) return _parts[entry.id] = const [];
+    final effects = record.effects;
+    final groups = <String, Set<int>>{};
+    final owner = <String, String>{};
+    for (final (i, e) in effects.indexed) {
+      final op = e.food?.operation;
+      if (op != null && op.action.productLevel) continue;
+      final key = e.task != null
+          ? 'task:${e.task!.entity}'
+          : op != null
+          ? 'food:${op.targets.join(',')}'
+          : '${e.kind}:$i';
+      (groups[key] ??= {}).add(i + 1);
+      for (final id in [op?.link?['product'], op?.link?['purchase']]) {
+        if (id is String) owner.putIfAbsent(id, () => key);
+      }
+    }
+    // A purchase names its product; both belong to the food recording them.
+    for (final e in effects) {
+      final op = e.food?.operation;
+      if (op?.action != FoodAction.purchase) continue;
+      final product = op!.purchase?['product'];
+      final key = owner[op.targets.first];
+      if (key != null && product is String) {
+        owner.putIfAbsent(product, () => key);
+      }
+    }
+    for (final (i, e) in effects.indexed) {
+      final op = e.food?.operation;
+      if (op == null || !op.action.productLevel) continue;
+      final key =
+          op.targets.map((t) => owner[t]).nonNulls.firstOrNull ??
+          'product:${op.targets.join(',')}';
+      (groups[key] ??= {}).add(i + 1);
+    }
+    final ordered = groups.values.toList()
+      ..sort((a, b) => a.reduce(math.min).compareTo(b.reduce(math.min)));
+    ActivityEntry make(Set<int> positions, [Set<String>? containers]) {
+      final scoped = [for (final p in positions) effects[p - 1]];
+      return entry.part(
+        positions: positions,
+        containers: containers,
+        types: [for (final e in scoped) activityEffectType(e)],
+        targets: activityTargets(scoped, containers: containers),
+      );
+    }
+
+    final result = <ActivityEntry>[];
+    for (final positions in ordered) {
+      if (positions.every(
+        (p) => effects[p - 1].task?.type == 'text.baselineInitialized',
+      )) {
+        continue;
+      }
+      final whole = make(positions);
+      final split = _splitContainers(whole, effects, make);
+      result.addAll(split ?? [whole]);
+    }
+    return _parts[entry.id] = result.length > 1
+        ? List.unmodifiable(result)
+        : const [];
+  }
+
+  /// Per-container parts when one container operation gave its containers
+  /// different values; null when they read the same.
+  List<ActivityEntry>? _splitContainers(
+    ActivityEntry whole,
+    List<UnifiedEffect> effects,
+    ActivityEntry Function(Set<int>, [Set<String>?]) make,
+  ) {
+    final ops = [
+      for (final p in whole.positions!)
+        if (effects[p - 1].food?.operation case final op?
+            when !op.action.productLevel)
+          (p, op),
+    ];
+    if (ops.length != 1 || ops.single.$2.targets.length < 2) return null;
+    final (position, op) = ops.single;
+    final singles = [
+      for (final target in op.targets) make(whole.positions!, {target}),
+    ];
+    String reads(ActivityEntry e) =>
+        describe(e).changes.map((c) => c.line).join('\n');
+    final first = reads(singles.first);
+    if (singles.every((e) => reads(e) == first)) return null;
+    // The product and purchase lines stay with the first container.
+    return [
+      for (final (i, target) in op.targets.indexed)
+        make(i == 0 ? whole.positions! : {position}, {target}),
+    ];
+  }
+
+  /// A batched record's line 1 by its dominant change, counted in parts:
+  /// `6 foods added from a Walmart purchase`, `3 foods edited, 1 other change`.
+  /// [items] names the first parts' items.
+  ({String title, String? items}) batchSummary(ActivityEntry entry) {
+    final parts = this.parts(entry);
+    final counts = <String, int>{};
+    for (final p in parts) {
+      counts.update(p.summary, (n) => n + 1, ifAbsent: () => 1);
+    }
+    final dominant = counts.entries.reduce((a, b) => b.value > a.value ? b : a);
+    final others = parts.length - dominant.value;
+    var title = dominant.value == 1
+        ? '${parts.length} changes'
+        : activityCount(dominant.key, dominant.value);
+    final record = _records[entry.id];
+    final stores = {
+      for (final e in record?.effects ?? const <UnifiedEffect>[])
+        if (e.food?.operation case final op?
+            when op.action == FoodAction.purchase &&
+                op.purchase?['store'] is String)
+          op.purchase!['store'] as String,
+    };
+    if (dominant.value > 1 &&
+        stores.length == 1 &&
+        dominant.key.startsWith('Food')) {
+      title += ' from a ${stores.single} purchase';
+    }
+    if (dominant.value > 1 && others > 0) {
+      title += ', $others other change${others == 1 ? '' : 's'}';
+    }
+    final names = [for (final p in parts) ?describe(p).subject];
+    return (title: title, items: _summarize(names.toSet().toList()));
   }
 
   /// The device's name before [record]. A device names only itself, so its
@@ -455,6 +644,7 @@ class ActivityValues {
       before.length == 1 && known.length == changes.length
           ? before.single
           : null,
+      known.first.links,
     );
   }
 

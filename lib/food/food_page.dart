@@ -1021,6 +1021,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         child: Row(
           children: [
             Expanded(
+              flex: 2,
               child: Semantics(
                 label:
                     '$description, ${product.onHand} of ${product.minimum} on hand',
@@ -1061,13 +1062,27 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               ),
             ),
             if (link != null)
-              IconButton(
-                tooltip: 'Open store link for ${product.name}',
-                onPressed: () => launchUrl(
-                  Uri.parse(link),
-                  mode: LaunchMode.externalApplication,
+              // The store's name, ellipsized before it squeezes the product.
+              Flexible(
+                child: Tooltip(
+                  message:
+                      'Open ${storeLinkLabel(link)} link for ${product.name}',
+                  excludeFromSemantics: true,
+                  child: TextButton.icon(
+                    onPressed: () => launchUrl(
+                      Uri.parse(link),
+                      mode: LaunchMode.externalApplication,
+                    ),
+                    icon: const Icon(Icons.open_in_new, size: 18),
+                    label: Text(
+                      storeLinkLabel(link),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      semanticsLabel:
+                          'Open ${storeLinkLabel(link)} link for ${product.name}',
+                    ),
+                  ),
                 ),
-                icon: const Icon(Icons.open_in_new),
               ),
             IconButton(
               tooltip: 'Add another ${product.name}',
@@ -1334,15 +1349,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       (_editingGroup != null && _rowKey(_editingGroup!) == _rowKey(group));
 
   List<PopupMenuEntry<String>> _groupMenuItems(FoodGroup group) => [
-    if (widget
-            .state
-            .products[group.containers.first.product]
-            ?.links
-            .isNotEmpty ??
-        false)
-      const PopupMenuItem<String>(
+    if (widget.state.products[group.containers.first.product]?.links.firstOrNull
+        case final link?)
+      PopupMenuItem<String>(
         value: 'open-store-link',
-        child: Text('Open store link'),
+        child: Text('Open ${storeLinkLabel(link)} link'),
       ),
     PopupMenuItem<String>(
       enabled: !(widget.hasPendingSave?.call() ?? widget.savePending),

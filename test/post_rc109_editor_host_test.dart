@@ -425,11 +425,11 @@ void main() {
         await host.ready(
           tester,
           () =>
-              find.textContaining('Next occurrence kept').evaluate().isNotEmpty,
+              find.textContaining('Next due').evaluate().isNotEmpty,
           settle: false,
         );
         expect(
-          find.text('Completed 1 task. Next occurrence kept, due 2027-02-17.'),
+          find.text('Completed 1 task. Next due 2027-02-17.'),
           findsOneWidget,
         );
         expect(tester.takeException(), isNull);
@@ -490,11 +490,11 @@ void main() {
       await tester.tap(check);
       await host.ready(
         tester,
-        () => find.textContaining('Next occurrence kept').evaluate().isNotEmpty,
+        () => find.textContaining('Next due').evaluate().isNotEmpty,
         settle: false,
       );
       expect(
-        find.text('Completed 1 task. Next occurrence kept, due 2027-01-01.'),
+        find.text('Completed 1 task. Next due 2027-01-01.'),
         findsOneWidget,
       );
       expect(tester.takeException(), isNull);

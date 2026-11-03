@@ -394,7 +394,7 @@ void registerFoodProductsUiTests({
     await tester.pumpAndSettle();
     expect(find.text('1 of 3'), findsOneWidget);
     expect(find.text('Milk'), findsNothing);
-    expect(find.byTooltip('Open store link for Beans'), findsOneWidget);
+    expect(find.byTooltip('Open example.com link for Beans'), findsOneWidget);
     await capture?.call(tester, 'products-running-low');
     await tester.tap(find.byTooltip('Add another Beans'));
     await tester.pumpAndSettle();
@@ -551,18 +551,18 @@ void registerFoodProductsUiTests({
         );
         expect(find.text('2 of 3'), findsNothing);
         expect(
-          find.byTooltip('Open store link for Milk'),
+          find.byTooltip('Open example.com link for Milk'),
           findsNothing,
           reason: 'Regular rows have no extra button.',
         );
         await tester.tap(find.byTooltip('Actions for Milk').first);
         await tester.pumpAndSettle();
-        expect(find.text('Open store link'), findsOneWidget);
+        expect(find.text('Open example.com link'), findsOneWidget);
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
         await tester.pumpAndSettle();
         await tester.tap(find.byTooltip('Actions for Beans'));
         await tester.pumpAndSettle();
-        expect(find.text('Open store link'), findsNothing);
+        expect(find.text('Open example.com link'), findsNothing);
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('food-filter')));
@@ -581,7 +581,7 @@ void registerFoodProductsUiTests({
         expect(find.text('Great Value · 1 gal'), findsOneWidget);
         expect(find.text('2026-11-01'), findsNothing);
         expect(find.text('Beans'), findsNothing);
-        expect(find.byTooltip('Open store link for Milk'), findsOneWidget);
+        expect(find.byTooltip('Open example.com link for Milk'), findsOneWidget);
         if (sample.$3 == 1) {
           expect(
             tester.getCenter(find.text('Milk')).dy,

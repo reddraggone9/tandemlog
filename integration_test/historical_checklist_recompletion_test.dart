@@ -256,7 +256,10 @@ void registerHistoricalChecklistRecompletionTests() {
         expect(jsonEncode(peer.currentTextRow(child)), before);
         await flows.filterChoice(tester, 'Open');
         await completeParent();
-        expect(find.textContaining('Next occurrence kept'), findsWidgets);
+        expect(
+          find.textContaining(RegExp(r'Next (due|starts|occurrence)')),
+          findsWidgets,
+        );
         await expandChecklist(child);
         await flows.waitForUi(
           tester,
