@@ -4868,11 +4868,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                       .where((entry) => entry['id'] == user)
                                       .firstOrNull?['name']
                                   as String?,
-                          count: taskView == null || user == null
+                          // No count before any workspace is open: an empty
+                          // projection isn't "0 open".
+                          count:
+                              store == null || taskView == null || user == null
                               ? null
                               : _taskCount(showCompleted),
                           countLabels: [_taskCount(false), _taskCount(true)],
-                          filter: taskView == null || user == null
+                          filter:
+                              store == null || taskView == null || user == null
                               ? null
                               : _taskFilter,
                           identityMenu: (child) =>
