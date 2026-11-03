@@ -502,10 +502,10 @@
       ]
     },
     {
-      "interaction": "Activity log open, lazy scroll, details, incoming published history",
+      "interaction": "Activity log open, lazy scroll, details, details Open, incoming published history",
       "productionAPI": "activityEntries(UnifiedSnapshot)",
       "actualUIPath": "main.dart identity menu; presentation/activity_log.dart",
-      "boundary": "AOT activity.read.derive times published-row derivation and sorting, asserts uniqueness/order/canonical immutability across all3 shapes. Native open-to-visible, scroll/details and incoming refresh remain required; no closed-log work. User identity was not recorded; installation labels are advisory."
+      "boundary": "AOT activity.read.derive times published-row derivation and sorting, asserts uniqueness/order/canonical immutability across all3 shapes. Native open-to-visible, scroll/details and incoming refresh remain required; no closed-log work. Details Open checks one item on opening details (task: one projection under current filters, at most 8 more when they hide it; food: at most 3 unfiltered row compositions) and then reuses the timed row-tap paths. User identity was not recorded; installation labels are advisory."
     }
   ],
   "actualUITimingAccepted": false,
