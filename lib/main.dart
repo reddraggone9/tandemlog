@@ -1185,7 +1185,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     if (!mounted) return;
 
+    final changed = user != selected;
     user = selected;
+    // The cached projection filters by assignee; without this the list keeps
+    // the previous user's tasks until something else invalidates it.
+    if (changed) _invalidateView();
     if (destinationRevision != null) {
       if (requestedSection != null &&
           requestedSection!.revision <= destinationRevision) {

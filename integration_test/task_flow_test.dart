@@ -34,6 +34,7 @@ import 'checklist_disclosure_layout_test.dart'
 import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
 import 'start_hints_test.dart' show registerStartHintTests;
 import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
+import 'user_switch_refresh_test.dart' show registerUserSwitchRefreshTests;
 import 'completion_actions_test.dart' show registerCompletionActionTests;
 import 'completion_focus_test.dart' show registerCompletionFocusTests;
 import 'completion_confirmation_progress_test.dart'
@@ -336,6 +337,7 @@ void main() {
   registerStickyTaskGroupTests();
   registerStartHintTests();
   registerSaveAcknowledgementTests();
+  registerUserSwitchRefreshTests();
   registerCompletionActionTests();
   registerCompletionFocusTests();
   registerCompletionConfirmationProgressTests();
