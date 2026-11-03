@@ -154,8 +154,12 @@ void registerActivityBatchWorkflowTests({
         expect(beans, findsOneWidget);
         expect(inList('Store link: Walmart'), findsWidgets);
         expect(find.textContaining('https://'), findsNothing);
+        // Capture from the top, with the parent row in view.
+        tester.state<ScrollableState>(scrollable).position.jumpTo(0);
+        await tester.pumpAndSettle();
         await captureNativeFixtureUi(tester, '$prefix-expanded');
         // A part opens the ordinary details for just that food.
+        await reveal(beans);
         await tester.tap(beans);
         await tester.pumpAndSettle();
         final details = find.byKey(const ValueKey('activity-details'));

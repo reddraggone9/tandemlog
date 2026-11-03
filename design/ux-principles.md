@@ -24,13 +24,19 @@ contradicting it.
 14. A single-line field stays one line at narrow widths and large text: ellipsize, never wrap a hint taller than a filled value (10-27).
 15. Bound long content on rows (e.g. 3 change lines, then "+N more"); details show everything (11-02).
 
+16. Dialogs use the space they have: a list dialog fills the window height (insets only) instead of a fixed box (11-03).
+17. Grouped changes can be expanded: one action that changed several things shows a readable summary that opens inline into ordinary rows, not a special dialog (11-03).
+
 ## Actions and discovery
-16. Offer the next action the person will want from where they are: open the item, the store link, Undo (10-28, 11-02).
-17. Hide an action or entry when it can't apply (deleted item, empty filter) instead of showing it disabled (10-28, 11-02).
-18. Secondary states live where they belong (a filter entry with its count), not as banners above the list (10-28).
-19. An indicator must be explained where it leads: a warning dot on a button needs a matching mark on the entry inside (10-28).
-20. Selection, search and editing stay usable together; one mode shouldn't silently hide or clear another (10-28).
+18. Offer the next action the person will want from where they are: open the item, the store link, Undo (10-28, 11-02).
+19. Hide an action or entry when it can't apply (deleted item, empty filter) instead of showing it disabled (10-28, 11-02).
+20. Secondary states live where they belong (a filter entry with its count), not as banners above the list (10-28).
+21. An indicator must be explained where it leads: a warning dot on a button needs a matching mark on the entry inside (10-28).
+22. Selection, search and editing stay usable together; one mode shouldn't silently hide or clear another (10-28).
+
+23. Links show readable labels: the store's name (`Walmart`), never the raw URL (11-03).
+24. Plain status wording over internal terms: `Next due 2026-11-10`, not `Next occurrence kept` (11-03).
 
 ## Evidence for Lee
-21. Review captures: dark theme, real native build, cropped Before | After; label widget or synthetic captures as such (10-26).
-22. Release notes: user-visible changes only, one change per bullet (10-27).
+25. Review captures: dark theme, real native build, cropped Before | After; label widget or synthetic captures as such (10-26).
+26. Release notes: user-visible changes only, one change per bullet (10-27).

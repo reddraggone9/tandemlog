@@ -259,7 +259,8 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       key: ValueKey(e.key),
       // One even gap between rows, whatever their line count.
       minTileHeight: 0,
-      minVerticalPadding: 8,
+      // Parts sit tight together; the group keeps the usual gap around it.
+      minVerticalPadding: part ? 4 : 8,
       contentPadding: part ? const EdgeInsets.only(left: 40, right: 16) : null,
       title: Text(
         _headline(e, d),
@@ -272,7 +273,7 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
           for (final change in d.changes.take(3))
             Text.rich(
               activityChangeSpan(change),
-              maxLines: 2,
+              maxLines: 4,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
@@ -294,10 +295,19 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
         key: ValueKey(e.id),
         minTileHeight: 0,
         minVerticalPadding: 8,
-        title: Text(
-          summary.title,
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
+        // The chevron shares line 1, so the row keeps the full width.
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                summary.title,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Icon(expanded ? Icons.expand_less : Icons.expand_more),
+          ],
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,8 +315,6 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
             if (summary.items != null)
               Text(
                 summary.items!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -314,7 +322,6 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
             Text(_meta(e)),
           ],
         ),
-        trailing: Icon(expanded ? Icons.expand_less : Icons.expand_more),
         onTap: () => _toggle(e),
       ),
     );

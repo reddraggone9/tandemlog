@@ -609,8 +609,16 @@ class ActivityValues {
     if (dominant.value > 1 && others > 0) {
       title += ', $others other change${others == 1 ? '' : 's'}';
     }
-    final names = [for (final p in parts) ?describe(p).subject];
-    return (title: title, items: _summarize(names.toSet().toList()));
+    final names = {for (final p in parts) ?describe(p).subject}.toList();
+    // Every name when there are three or fewer: `and 1 more` saves nothing.
+    return (
+      title: title,
+      items: names.isEmpty
+          ? null
+          : names.length <= 3
+          ? names.join(', ')
+          : '${names.take(2).join(', ')} and ${names.length - 2} more',
+    );
   }
 
   /// The device's name before [record]. A device names only itself, so its

@@ -257,7 +257,11 @@ void main() {
         '3 foods added from a Walmart purchase',
       );
       // Parts follow the record's order, which the import plan chooses.
-      expect(values.batchSummary(entry).items, endsWith(' and 1 more'));
+      expect(values.batchSummary(entry).items!.split(', ').toSet(), {
+        'Synthetic milk ×2',
+        'Synthetic beans',
+        'Synthetic rice',
+      });
       // Each part reads like a single food add: one item, its store link by
       // name, no product bookkeeping repeating the food's description.
       final read = {
