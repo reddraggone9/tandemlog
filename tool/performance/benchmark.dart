@@ -1624,9 +1624,14 @@ Future<void> readModels(Audit a) async {
       () async => activityEntries(a.history.snapshot),
       readOnly: true,
     );
+    // Shared-text setup records are bookkeeping and have no Activity row.
     final published = a.history.snapshot.records
         .where(
-          (r) => r.sequence <= (a.history.snapshot.published[r.writer] ?? 0),
+          (r) =>
+              r.sequence <= (a.history.snapshot.published[r.writer] ?? 0) &&
+              !r.effects.every(
+                (e) => e.task?.type == 'text.baselineInitialized',
+              ),
         )
         .length;
     require(entries.length == published, 'Activity published count differs');
