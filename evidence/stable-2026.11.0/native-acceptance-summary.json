@@ -1,0 +1,48 @@
+{
+  "source": "b363a13fadca08b72eb020ee0abc0a29a84563d8",
+  "candidateRun": 41639486016,
+  "android": {
+    "lab": "retained synthetic RC112 API30 x86_64 emulator (same lab as RC acceptance)",
+    "apkSHA256": "13964afa32e6d3247299bd159528aaa3a154ffbe6ce7a841b6facb540fe89571",
+    "upgrade": "112 (2026.11.0-rc.1) -> 113 (2026.11.0) in place",
+    "firstInstallTimeKept": "2026-10-27 11:38:52",
+    "canonicalAndLocalDatabaseUnchangedByInstall": true,
+    "writerUserFolderBindingKept": true,
+    "safGrantKept": "persisted grant lines on the synthetic tree URI identical before/after",
+    "retained": "7 open tasks, same installation id",
+    "settingsVersion": "2026.11.0",
+    "integrity": "PASS 2 logs, 39 records, 70226 bytes",
+    "activity": "Today/Yesterday/Saturday headings, UTC-05:00 offset only on DST-differing rows, details titled by the change, Open jumps to the task editor (cancelled)",
+    "write": "one task completion, +1421 bytes appended to own log; other log and space manifest unchanged",
+    "coldReopen": "6 open after force-stop and relaunch",
+    "cleanup": "emulator and ports gone, errors []",
+    "rawReceipts": {
+      "prefix113.json": "6b518973338026227c832f308d095f29ac95da4643d7e55f884009292f182933"
+    }
+  },
+  "gtk": {
+    "lab": "retained synthetic GTK Flatpak lab (same lab as RC acceptance), private Xvfb",
+    "flatpakSHA256": "7b65ef430eaac8c3e56d87487128af8574c0f5b5aee8b5c361b3984075320d77",
+    "upgrade": "2026.11.0-rc.1 (commit 46488c5c) -> 2026.11.0 (commit 3c9f825b) in place, flatpak install exit 0",
+    "canonicalAndProfileUnchangedByInstall": "True: installed snapshot byte-identical to the RC run's final snapshot (after112); no launch in between",
+    "retained": "0 open tasks (as left by RC acceptance), GTK Stable Tester, same installation id",
+    "settingsVersion": "2026.11.0",
+    "integrity": "PASS 1 log, 25 records, 43352 bytes",
+    "activity": "Today/Yesterday/Saturday headings, values and UTC-05:00 offsets",
+    "write": "one synthetic task added (+2308 bytes) then completed (+1298 bytes), prefixes kept, space manifest unchanged",
+    "normalCloseExit": [
+      0,
+      0
+    ],
+    "coldReopen": "0 open after normal close and relaunch (the completed task stays completed)",
+    "cleanup": "app exit 0, children reaped, display gone, errors []",
+    "rawReceipts": {
+      "prefix113.json": "31c59923d8a450a5aa7ea7bd648936d7c6252320e05f28c3a4967b2ea50c4783"
+    }
+  },
+  "deviations": [
+    "GTK pre-install snapshot first ran unprivileged and read nothing; the RC run's final snapshot (after112) stands in as the before state, and the privileged installed113 snapshot is byte-identical to it.",
+    "GTK lab had no open task, so one synthetic task was added before the completion check."
+  ],
+  "limits": "Synthetic emulator and native Linux GTK only; no physical device, Windows GUI, owner device or live data in this acceptance."
+}
