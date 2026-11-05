@@ -655,9 +655,9 @@ gate this run has no quiet-host controller; samples are taken as they come
 (the load is recorded with each result).
 Tests: `tool/test_native_cold_start.py`.
 
-**Current result (2026-11-05, source `bc3b3df`, Farnsworth ext4, 1-minute
-load ~3.5 from other work): warm median 610 ms (560–740), strict first launch
-1,700 ms. PASSES.** Warm phases: engine start to app state ~140 ms, settings
+**Current result (2026-11-05, source `112f610`, Farnsworth ext4, 1-minute
+load ~2.3 from other work): warm median 560 ms (550–580), strict first launch
+1,750 ms. PASSES.** (`bc3b3df` earlier: 610 ms, 560–740, load ~3.5.) Warm phases: engine start to app state ~140 ms, settings
 ~30 ms, history open ~300–400 ms, Task attach, Food and binding ~40 ms.
 The same source on Farnsworth's ZFS (`/home`) measured 1,290 ms (1,180–1,570):
 each of the open's three profile commits pays a ZFS fsync of 120–260 ms there,

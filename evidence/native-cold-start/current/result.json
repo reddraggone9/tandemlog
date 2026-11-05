@@ -6,10 +6,10 @@
     "tasks": 2000,
     "warmStarts": 5
   },
-  "sourceRevision": "bc3b3df1ebec7f108bbfffcf6b2c228a19fc050e",
+  "sourceRevision": "112f61065103bd1a7ec1550ad086c87bdea2dd79",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "bddb486a856d4fcf2340e6406c45d9ab83d1c2d206a5c7ff54144a137d83a6f9",
+    "sha256": "726051ca3b573c394fc1081714a6ff6e32bd32cfad5d6be0d34d5b185a6680bd",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -3290,7 +3290,7 @@
         "mode": "100644"
       },
       "tool/measure_startup.py": {
-        "sha256": "076034e02886f469db88efa77bf4d655162c2484de611fb3a0f90ed5087b00bb",
+        "sha256": "5216dd0c879f8406533dfdd9919366ca05d9e53a749852b543a86538c7acd652",
         "mode": "100644"
       },
       "tool/minimal_startup.dart": {
@@ -3659,73 +3659,73 @@
     "synthetic": true,
     "initialized": true,
     "format": "app-action-v5",
-    "baseline": "cc305769-e0c7-4e80-854f-348ba91418b3:2002",
-    "writer": "cc305769-e0c7-4e80-854f-348ba91418b3",
-    "user": "cd92aa6d-15eb-4046-8792-2550ff66a3b2",
+    "baseline": "c8db7724-fca8-4161-98c0-73ff0aae3132:2002",
+    "writer": "c8db7724-fca8-4161-98c0-73ff0aae3132",
+    "user": "55df6d94-b396-4ad6-b6cb-8369783a946e",
     "rows": 2001,
-    "settings_sha256": "0dd60af60ff0b3f3832427b3d16d4e19628ba5b5a89c19f44f70cafd81153799",
+    "settings_sha256": "ad6b5ae18c520f0b8615ae8a40ed068d2beaf61fc78e9f5634c07f8f4d9dfd39",
     "native_sha256": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2"
   },
   "loadAverage1m": {
-    "before": 3.49169921875,
-    "after": 3.5703125
+    "before": 2.322265625,
+    "after": 2.2568359375
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 1700,
-    "appMs": 1372,
-    "externalMs": 1700,
+    "processMs": 1750,
+    "appMs": 1294,
+    "externalMs": 1757,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 660,
-      "appMs": 520,
-      "externalMs": 655,
+      "processMs": 560,
+      "appMs": 438,
+      "externalMs": 567,
       "cleanWitnessVerified": true
     },
     {
       "run": 3,
-      "processMs": 590,
-      "appMs": 444,
-      "externalMs": 589,
+      "processMs": 560,
+      "appMs": 428,
+      "externalMs": 559,
       "cleanWitnessVerified": true
     },
     {
       "run": 4,
-      "processMs": 740,
-      "appMs": 572,
-      "externalMs": 739,
+      "processMs": 580,
+      "appMs": 440,
+      "externalMs": 572,
       "cleanWitnessVerified": true
     },
     {
       "run": 5,
-      "processMs": 610,
-      "appMs": 472,
-      "externalMs": 606,
+      "processMs": 550,
+      "appMs": 422,
+      "externalMs": 550,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
       "processMs": 560,
-      "appMs": 427,
-      "externalMs": 564,
+      "appMs": 431,
+      "externalMs": 562,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 610,
+    "medianMs": 560,
     "budgetMs": 1000,
     "passed": true,
     "samplesMs": [
-      660,
-      590,
-      740,
-      610,
+      560,
+      560,
+      580,
+      550,
       560
     ],
-    "strictFirstLaunchMs": 1700
+    "strictFirstLaunchMs": 1750
   }
 }
