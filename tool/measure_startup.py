@@ -131,7 +131,17 @@ def request_owned_window_close(proc, xdotool):
         if result.returncode:
             raise RuntimeError(f'Owned window close command failed: {args[0]}')
         return result.stdout.strip()
-    windows = command('search', '--onlyvisible', '--pid', str(proc.pid)).splitlines()
+    # On a slow runner the ready marker can precede the window's map: xdotool
+    # search then finds nothing (exit 1). Wait for the map, never longer than 5 s.
+    deadline = time.perf_counter() + 5
+    while True:
+        try:
+            windows = command('search', '--onlyvisible', '--pid', str(proc.pid)).splitlines()
+            break
+        except RuntimeError:
+            if time.perf_counter() > deadline or proc.poll() is not None:
+                raise
+            time.sleep(.2)
     if len(windows) != 1 or not windows[0].isdigit() or not 0 < int(windows[0]) < 2**32:
         raise RuntimeError('Normal close requires exactly one owned visible window')
     window = windows[0]
