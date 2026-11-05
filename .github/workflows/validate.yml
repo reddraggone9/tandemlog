@@ -438,3 +438,8 @@ jobs:
           fetch-depth: 0
       - name: Require fresh source-bound controlled-reference qualification
         run: python3 tool/performance/reference_receipt.py verify --repo "$GITHUB_WORKSPACE"
+      # Lee 2026-11-03: 1.0 s median to the first task list, measured on the
+      # reference host's GTK release bundle. Reported even when the step above fails.
+      - name: Require the native cold-start budget (native.coldStart.firstList)
+        if: success() || failure()
+        run: python3 tool/performance/native_cold_start.py verify --repo "$GITHUB_WORKSPACE"

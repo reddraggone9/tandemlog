@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "case": "native.coldStart.firstList",
+  "medianMs": 1000,
+  "source": "Lee 2026-11-03: add the 1.0 s median to the gate now; it fails until the workspace open moves off the UI thread. Only Lee may change this number.",
+  "boundary": "Process start to the first frame that shows the task list: process_ms of the app's TANDEMLOG_FIRST_LIST line.",
+  "shape": {
+    "tasks": 2000,
+    "warmStarts": 5
+  },
+  "platform": "Linux x86_64 GTK release bundle under Xvfb on the registered reference host (Farnsworth); synthetic fixture; each warm start follows a verified normal close that sealed the warm proofs; OS page cache not flushed."
+}
