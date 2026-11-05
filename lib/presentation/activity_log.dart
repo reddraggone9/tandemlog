@@ -77,8 +77,9 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       if (heading != day) result.add(day = heading);
       result.add(i);
       if (_expanded.contains(entries[i].id)) {
-        for (final part in values.parts(entries[i])) {
-          result.add(_Part(part, entries[i]));
+        final parts = values.parts(entries[i]);
+        for (final (j, part) in parts.indexed) {
+          result.add(_Part(part, entries[i], last: j == parts.length - 1));
         }
       }
     }
@@ -176,6 +177,20 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
   String _headline(ActivityEntry e, ActivityDescription d) =>
       [e.summary, ?_subject(e, d)].join(': ');
 
+  /// A part's line 1 inside [batch]: just the item when the summary already
+  /// states the change (`3 foods added` over `Oat milk`), else the usual line.
+  String _partHeadline(
+    ActivityEntry e,
+    ActivityDescription d,
+    ActivityEntry batch,
+  ) {
+    final subject = _subject(e, d);
+    if (subject != null && e.summary == values.summaryKind(batch)) {
+      return subject;
+    }
+    return _headline(e, d);
+  }
+
   String _meta(ActivityEntry e, {bool date = false}) {
     final offset = widget.now().timeZoneOffset;
     return '${date ? activityTime(e.recordedAt, currentOffset: offset) : activityClock(e.recordedAt, currentOffset: offset)}'
@@ -253,7 +268,12 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
   /// One change: a single-change record, or one part of a batched record.
   /// Parts are indented and leave out the parent's time and device.
   /// [batch] is set for a part shown inside its expanded batch.
-  Widget _changeRow(ActivityEntry e, {ActivityEntry? batch}) {
+  /// [last] marks the group's last part, which keeps a wider gap below.
+  Widget _changeRow(
+    ActivityEntry e, {
+    ActivityEntry? batch,
+    bool last = false,
+  }) {
     final d = _row(e);
     final part = batch != null;
     final changes = part ? values.partChanges(batch, d.changes) : d.changes;
@@ -264,9 +284,12 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       minTileHeight: 0,
       // Parts sit tight together; the group keeps the usual gap around it.
       minVerticalPadding: part ? 4 : 8,
-      contentPadding: part ? const EdgeInsets.only(left: 40, right: 16) : null,
+      // Bare item names would run into the next entry without a wider gap.
+      contentPadding: part
+          ? EdgeInsets.only(left: 40, right: 16, bottom: last ? 12 : 0)
+          : null,
       title: Text(
-        _headline(e, d),
+        part ? _partHeadline(e, d, batch) : _headline(e, d),
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
       ),
@@ -315,7 +338,8 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (summary.items != null)
+            // Expanded, the parts below name the items themselves.
+            if (summary.items != null && !expanded)
               Text(
                 summary.items!,
                 style: TextStyle(
@@ -377,7 +401,9 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
             return const Center(child: Text('No activity yet.'));
           }
           final item = items[i - 1];
-          if (item is _Part) return _changeRow(item.entry, batch: item.batch);
+          if (item is _Part) {
+            return _changeRow(item.entry, batch: item.batch, last: item.last);
+          }
           if (item is String) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
@@ -557,9 +583,10 @@ class ActivityChangeList extends StatelessWidget {
 }
 
 class _Part {
-  const _Part(this.entry, this.batch);
+  const _Part(this.entry, this.batch, {required this.last});
   final ActivityEntry entry;
   final ActivityEntry batch;
+  final bool last;
 }
 
 /// `old → new`; store links in the new value open the store, labelled by its

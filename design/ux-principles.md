@@ -10,7 +10,7 @@ contradicting it.
 2. Show the actual values and what changed (`Field: old → new`), not metadata about the change (11-02).
 3. No internal IDs, UUIDs, action codes or storage jargon. Show an ID only when it's the only way to tell things apart, e.g. an unnamed device (11-02).
 4. Don't show a line that is always the same or always unknown ("User not recorded") (11-02).
-5. A heading states what's shared; rows don't repeat it. Group by relative day (Today, Yesterday, weekday + date) instead of a full date on every row (10-26, 11-02).
+5. A heading states what's shared; rows don't repeat it. Group by relative day (Today, Yesterday, weekday + date) instead of a full date on every row. An expanded group's summary is its heading: parts don't repeat its action (`Oat milk`, not `Food added: Oat milk`), and it drops its own item-names line while the parts show (10-26, 11-02, 11-05).
 6. Precision matches use: times to the second at most; show a UTC offset only when it differs from the device's current one (11-02).
 7. Name things the way the person knows them: food name and brand, task title, device name (11-02).
 8. Lines that don't apply disappear entirely instead of showing blanks or placeholders (10-28).

@@ -256,6 +256,9 @@ void main() {
         values.batchSummary(entry).title,
         '3 foods added from a Walmart purchase',
       );
+      // Parts of the counted kind leave it out of their line 1.
+      expect(values.summaryKind(entry), 'Food added');
+      expect(parts.every((p) => p.summary == 'Food added'), isTrue);
       // Parts follow the record's order, which the import plan chooses.
       expect(values.batchSummary(entry).items!.split(', ').toSet(), {
         'Synthetic milk ×2',
@@ -376,6 +379,7 @@ void main() {
       final entry = activityEntries(snapshot).first;
       final parts = values.parts(entry);
       expect(values.batchSummary(entry).title, '2 foods moved');
+      expect(values.summaryKind(entry), 'Food location changed');
       expect([for (final p in parts) _lines(values.describe(p))]..sort(), [
         'Synthetic beans\nLocation: Pantry → Basement',
         'Synthetic milk (Synthetic dairy)\nLocation: Fridge → Basement',

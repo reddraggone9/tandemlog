@@ -606,6 +606,17 @@ class ActivityValues {
     );
   }
 
+  /// The kind a batch's summary counts (`Food added` for `3 foods added`),
+  /// or null when it counts none (`2 changes`). Parts of that kind leave it
+  /// out of their line 1: the summary already says it.
+  String? summaryKind(ActivityEntry entry) {
+    final parts = this.parts(entry);
+    if (parts.isEmpty) return null;
+    final dominant = _dominant(parts);
+    if (dominant.value < 2 || dominant.key.contains(', ')) return null;
+    return dominant.key;
+  }
+
   MapEntry<String, int> _dominant(List<ActivityEntry> parts) {
     final counts = <String, int>{};
     for (final p in parts) {

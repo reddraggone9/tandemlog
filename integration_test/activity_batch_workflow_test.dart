@@ -128,6 +128,11 @@ void registerActivityBatchWorkflowTests({
         expect(summary, findsOneWidget);
         await captureNativeFixtureUi(tester, '$prefix-list');
         expect(find.text('Synthetic beans'), findsNothing);
+        const names = 'Synthetic rice, Synthetic beans, Synthetic milk ×2';
+        expect(
+          find.descendant(of: list, matching: find.text(names)),
+          findsOneWidget,
+        );
         await tester.tap(summary);
         await tester.pumpAndSettle();
         // Rows build lazily; at large text the parts start below the fold.
@@ -145,19 +150,46 @@ void registerActivityBatchWorkflowTests({
 
         Finder inList(String text) =>
             find.descendant(of: list, matching: find.textContaining(text));
+        Finder part(String name) =>
+            find.descendant(of: list, matching: find.text(name));
+        // Expanded, the parts name the items: the summary drops its names
+        // line, and the parts don't repeat the summary's "Food added".
         for (final name in ['Synthetic rice', 'Synthetic milk ×2']) {
-          await reveal(inList('Food added: $name'));
-          expect(inList('Food added: $name'), findsOneWidget);
+          await reveal(part(name));
+          expect(part(name), findsOneWidget);
         }
-        final beans = inList('Food added: Synthetic beans');
+        final beans = part('Synthetic beans');
         await reveal(beans);
         expect(beans, findsOneWidget);
+        expect(inList(names), findsNothing);
+        expect(inList('Food added'), findsNothing);
         // The summary names Walmart, so its parts don't repeat the link.
         expect(inList('Store link'), findsNothing);
         expect(find.textContaining('https://'), findsNothing);
         // Capture from the top, with the parent row in view.
         tester.state<ScrollableState>(scrollable).position.jumpTo(0);
         await tester.pumpAndSettle();
+        if (scale == 1) {
+          // The group's end shows: a wider gap after its last part than
+          // between parts, so the next entry doesn't read as another part.
+          final tops = [
+            for (final name in [
+              'Synthetic rice',
+              'Synthetic beans',
+              'Synthetic milk ×2',
+            ])
+              tester.getTopLeft(part(name)).dy,
+          ]..sort();
+          final next = tester
+              .getTopLeft(
+                find.descendant(
+                  of: list,
+                  matching: find.text('Device renamed'),
+                ),
+              )
+              .dy;
+          expect(next - tops.last, greaterThan(tops[1] - tops[0] + 8));
+        }
         await captureNativeFixtureUi(tester, '$prefix-expanded');
         // A part opens the ordinary details for just that food.
         await reveal(beans);
@@ -182,7 +214,8 @@ void registerActivityBatchWorkflowTests({
         await reveal(summary);
         await tester.tap(summary);
         await tester.pumpAndSettle();
-        expect(find.text('Food added: Synthetic beans'), findsNothing);
+        expect(part('Synthetic beans'), findsNothing);
+        expect(inList(names), findsOneWidget);
         await tester.tap(find.text('Close').last);
         await tester.pumpAndSettle();
         // Completion notice names the next due date plainly.
