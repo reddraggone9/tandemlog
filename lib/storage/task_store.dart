@@ -4373,6 +4373,18 @@ class TaskStore {
     () => _migrateOccurrenceDatesInProfileQueue(canCommit: canCommit),
   );
 
+  /// Open-only maintenance of the already loaded projection. The application
+  /// must schedule a normal catch-up refresh after its first usable frame.
+  /// Each loaded candidate still refreshes and passes the normal writer gates.
+  Future<OccurrenceDueMigrationResult> migrateLoadedOccurrenceDates({
+    bool Function()? canCommit,
+  }) => _serialize(
+    () => _migrateOccurrenceDatesInProfileQueue(
+      canCommit: canCommit,
+      initialChanged: false,
+    ),
+  );
+
   Future<OccurrenceDueMigrationResult> refreshForWorkspace({
     bool migrateOccurrenceDates = false,
     bool Function()? canCommit,

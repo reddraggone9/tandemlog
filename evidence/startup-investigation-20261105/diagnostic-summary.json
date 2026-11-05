@@ -1,0 +1,88 @@
+{
+  "diagnosticOnly": true,
+  "performanceAcceptance": false,
+  "fixture": {
+    "workload": "mixed-v2",
+    "rows": 2001,
+    "records": 3667,
+    "effectFamilies": {
+      "container.add": 564,
+      "container.edit": 104,
+      "container.remove": 92,
+      "product.edit": 183,
+      "purchase.record": 34,
+      "task.completed": 560,
+      "task.created": 2000,
+      "task.edited": 220,
+      "text.baselineInitialized": 1,
+      "user.created": 1,
+      "writer.joined": 3
+    },
+    "food": {
+      "activeContainers": 522,
+      "groups": 483,
+      "products": 551,
+      "purchases": 34
+    },
+    "files": 4,
+    "historyBytes": 6419277
+  },
+  "series": {
+    "ab-before": {
+      "warmProcessMs": [
+        750,
+        580,
+        630,
+        660,
+        590
+      ],
+      "medianMs": 630,
+      "historyWallMs": 293,
+      "tailCheckWallMs": 44.93,
+      "migrationWallMs": 32,
+      "boundToPostFrameMs": 89
+    },
+    "ab-after": {
+      "warmProcessMs": [
+        510,
+        480,
+        520,
+        520,
+        540
+      ],
+      "medianMs": 520,
+      "historyWallMs": 237,
+      "tailCheckWallMs": 8.857,
+      "migrationWallMs": 0,
+      "boundToPostFrameMs": 79
+    },
+    "ab-before2": {
+      "warmProcessMs": [
+        590,
+        530,
+        540,
+        550,
+        540
+      ],
+      "medianMs": 540,
+      "historyWallMs": 254,
+      "tailCheckWallMs": 42.36,
+      "migrationWallMs": 23,
+      "boundToPostFrameMs": 77
+    },
+    "ab-after2": {
+      "warmProcessMs": [
+        470,
+        500,
+        510,
+        540,
+        520
+      ],
+      "medianMs": 510,
+      "historyWallMs": 246,
+      "tailCheckWallMs": 8.341,
+      "migrationWallMs": 0,
+      "boundToPostFrameMs": 72
+    }
+  }
+}

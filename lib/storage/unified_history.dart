@@ -424,30 +424,47 @@ final class UnifiedHistory {
       }
       // Fast check for every writer first; decode rows only if all pass.
       final tails = <String, Uint8List>{};
-      for (final MapEntry(key: owner, value: seal) in seals.entries) {
-        if (seal.sequence == 0) continue;
-        final name = unifiedLogName(owner);
-        final info = byName[name];
-        final size = info?.size;
-        if (info == null || size != null && size < seal.end) return null;
-        await _checkRegularFile(name);
-        final lastRaw = _store.rawAt(owner, seal.sequence);
-        if (lastRaw == null) return null;
-        final last = utf8.encode(lastRaw);
-        if (seal.end - seal.lastStart != last.length + 1) return null;
-        final tail = await range.readFromBounded(
-          name,
-          seal.lastStart,
-          maximumFileBytes - seal.lastStart,
+      // Bound provider pressure even for workspaces with many writers. Wait for
+      // every probe in a batch (including failures) before strict fallback can
+      // begin; publish results in seal order, never provider completion order.
+      final entries = seals.entries
+          .where((e) => e.value.sequence != 0)
+          .toList();
+      const probeConcurrency = 4;
+      for (var start = 0; start < entries.length; start += probeConcurrency) {
+        final batch = entries.skip(start).take(probeConcurrency).toList();
+        final checked = await Future.wait(
+          batch.map((entry) async {
+            final MapEntry(key: owner, value: seal) = entry;
+            final name = unifiedLogName(owner);
+            final info = byName[name];
+            final size = info?.size;
+            if (info == null || size != null && size < seal.end) return null;
+            await _checkRegularFile(name);
+            final lastRaw = _store.rawAt(owner, seal.sequence);
+            if (lastRaw == null) return null;
+            final last = utf8.encode(lastRaw);
+            if (seal.end - seal.lastStart != last.length + 1) return null;
+            final tail = await range.readFromBounded(
+              name,
+              seal.lastStart,
+              maximumFileBytes - seal.lastStart,
+            );
+            readFiles++;
+            if (tail == null ||
+                tail.length <= last.length ||
+                tail[last.length] != 10 ||
+                !_samePrefix(tail, last, last.length)) {
+              return null;
+            }
+            return tail;
+          }),
+          eagerError: false,
         );
-        readFiles++;
-        if (tail == null ||
-            tail.length <= last.length ||
-            tail[last.length] != 10 ||
-            !_samePrefix(tail, last, last.length)) {
-          return null;
+        if (checked.any((tail) => tail == null)) return null;
+        for (var i = 0; i < batch.length; i++) {
+          tails[batch[i].key] = checked[i]!;
         }
-        tails[owner] = tail;
       }
       final result =
           <

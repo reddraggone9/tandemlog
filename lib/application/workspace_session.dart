@@ -149,10 +149,15 @@ class WorkspaceSession {
         return null;
       }
       Object? migrationError;
-      // The migration refreshes first; while peers are still to be applied
-      // it waits for the caller's catch-up refresh, which migrates too.
+      // A deferred app open already admitted this projection; discover any
+      // later peer candidates in the caller's mandatory catch-up refresh.
+      // Loaded candidates still refresh before each migration write. Ordinary
+      // non-deferred/CLI opens retain the full discovery refresh.
+      // While known peers remain pending, skip migration until catch-up.
       if (!readOnly && !unified.catchUpPending) {
-        final migration = await tasks.migrateOccurrenceDates(canCommit: live);
+        final migration = deferPeerCatchUp
+            ? await tasks.migrateLoadedOccurrenceDates(canCommit: live)
+            : await tasks.migrateOccurrenceDates(canCommit: live);
         migrationError = migration.error;
         phase('migration');
         if (!live()) {

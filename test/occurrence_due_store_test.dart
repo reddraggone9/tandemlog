@@ -200,4 +200,84 @@ void main() {
       expect((await a.migrateOccurrenceDates()).changed, isFalse);
     },
   );
+  test(
+    'loaded-only migration leaves late candidates for mandatory catch-up',
+    () async {
+      final a = await open('a');
+      await a.command(user, 'user.created', {'name': 'Synthetic'});
+      final b = await open('b');
+      await seed(b, 12, {
+        'scheduledDate': '2030-10-05',
+        'recurrence': 'every week',
+      });
+      final local = File('${folder.path}/${a.writer}.applog');
+      final peer = File('${folder.path}/${b.writer}.applog');
+      final localBefore = await local.readAsBytes();
+      final peerBefore = await peer.readAsBytes();
+      final result = await a.migrateLoadedOccurrenceDates();
+      expect(result.migrated, 0);
+      expect(result.changed, isFalse);
+      expect(await local.readAsBytes(), localBefore);
+      expect(await peer.readAsBytes(), peerBefore);
+      final caughtUp = await a.refreshForWorkspace(
+        migrateOccurrenceDates: true,
+      );
+      expect(caughtUp.migrated, 1);
+      expect((row(a, id(12))['schedule'] as Map)['dueDate'], '2030-10-05');
+      expect(await peer.readAsBytes(), peerBefore);
+    },
+  );
+
+  test(
+    'loaded-only migration refreshes each candidate and preserves peer Due',
+    () async {
+      final a = await open('a');
+      await a.command(user, 'user.created', {'name': 'Synthetic'});
+      await seed(a, 13, {
+        'scheduledDate': '2030-10-05',
+        'recurrence': 'every week',
+      });
+      final b = await open('b');
+      await b.edit(
+        id(13),
+        {
+          'schedule': {
+            'scheduledDate': '2030-10-05',
+            'dueDate': '2030-10-12',
+            'recurrence': 'every week',
+          },
+        },
+        tags: ['synthetic'],
+        observedTagRefs: Map<String, String>.from(
+          row(b, id(13))['tagRefs'] as Map,
+        ),
+      );
+      final local = File('${folder.path}/${a.writer}.applog');
+      final before = await local.readAsBytes();
+      expect((await a.migrateLoadedOccurrenceDates()).migrated, 0);
+      expect((row(a, id(13))['schedule'] as Map)['dueDate'], '2030-10-12');
+      expect(await local.readAsBytes(), before);
+    },
+  );
+
+  test(
+    'loaded-only migration still honors revoked admission before append',
+    () async {
+      final a = await open('a');
+      await a.command(user, 'user.created', {'name': 'Synthetic'});
+      await seed(a, 14, {
+        'scheduledDate': '2030-10-05',
+        'recurrence': 'every week',
+      });
+      final local = File('${folder.path}/${a.writer}.applog');
+      final before = await local.readAsBytes();
+      var checks = 0;
+      final result = await a.migrateLoadedOccurrenceDates(
+        canCommit: () => ++checks == 1,
+      );
+      expect(result.migrated, 0);
+      expect(checks, greaterThanOrEqualTo(2));
+      expect(await local.readAsBytes(), before);
+    },
+  );
 }

@@ -1199,3 +1199,17 @@ requires engine finalization before renderer finalization. The original runner
 fails this native invariant; the repair passes 30 fresh/warm closes. Independent
 ownership and integrated-observer reviews pass; hosted candidate acceptance is
 still required. No rendering backend or engine revision changed.
+
+## Mixed Task/Food native startup coverage correction (11-05)
+
+The previous 420 ms native first-list gate used Tasks only. The corrected case
+seeds production Task and Food histories from four synthetic writers, audits
+planned action counts/current inventory, and checks actual Food counts after
+each first-list marker. The 1,000 ms budget is unchanged. Process-cold/warm-cache
+and uncached first launches are separate; the marker ends at the UI post-frame
+callback, before raster/presentation. See [boundaries, paired diagnostics and
+safety evidence](performance-gate.md#native-cold-process-start-to-first-usable-list-lee-2026-11-03-coverage-correction-11-05).
+Loaded diagnostic runs are not qualification. Candidate 42111287310 and its
+113→114 labs remain historical; changed source requires fresh qualification and
+exact signed-candidate lab acceptance. No live data, phone, release draft or
+publication is involved in this follow-up.

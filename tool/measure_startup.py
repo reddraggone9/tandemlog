@@ -24,7 +24,10 @@ from synthetic_text_fixture import initialize_fixture
 STARTUP_DEADLINE_SECONDS = 45
 
 
-def seed_fixture(root, tasks, library):
+def seed_fixture(root, tasks, library, history=None):
+    """Task-only (version 1), or with `history` the mixed Task and Food
+    workload (version 2), written by `history['peers']` peer devices plus the
+    measured installation. See tool/initialize_synthetic_text_fixture.dart."""
     root.mkdir(exist_ok=True)
     folder, profile = root/'shared', root/'profile'
     folder.mkdir(exist_ok=True)
@@ -32,12 +35,20 @@ def seed_fixture(root, tasks, library):
     if any(profile.iterdir()) or any(folder.iterdir()):
         raise RuntimeError('Benchmark requires fresh empty profile/shared directories; existing state retained')
     writer, user = (str(uuid.uuid4()) for _ in range(2))
-    (root/'synthetic-workload.json').write_text(json.dumps({
+    spec = {
         'synthetic': True, 'version': 1, 'writer': writer, 'user': user,
         'userName': 'Benchmark user', 'profile': str(profile.resolve()),
         'tasks': [{'id': str(uuid.uuid4()), 'title': f'Task {n:04d}',
-                   'description': 'Synthetic startup workload'} for n in range(1, tasks+1)]}))
-    receipt = initialize_fixture(folder, root, library)
+                   'description': 'Synthetic startup workload'} for n in range(1, tasks+1)]}
+    if history is not None:
+        history = dict(history)
+        spec.update(version=2, peers=[str(uuid.uuid4()) for _ in range(history.pop('peers'))],
+                    history=history)
+    (root/'synthetic-workload.json').write_text(json.dumps(spec))
+    receipt = initialize_fixture(folder, root, library, timeout=None if history is None else 1800)
+    if history is not None and (receipt.get('workload') != 'mixed-v2' or receipt.get('rows') != tasks + 1 or
+                                not all(receipt['food'][k] > 0 for k in ('activeContainers', 'groups', 'products', 'purchases'))):
+        raise RuntimeError('Mixed workload receipt lacks its Tasks or Food')
     return folder, profile, receipt
 
 

@@ -614,90 +614,111 @@ Even on a quiet host the label has only about 5% headroom (475.6 ms at `e212575`
 quiet-host qualification also misses it, treat that as a repeatable miss: the remaining
 cost is the shared warm open and close seal, not the command.
 
-## Native cold start to first list (Lee 2026-11-03)
+## Native cold process start to first usable list (Lee 2026-11-03, coverage correction 11-05)
 
-**Goal.** Tapping the app shows the task list in about 1 s on Lee's phone when
-nothing changed since the last run. Lee's recording of 2026.10.11 on the S24
-Ultra (157 open tasks): splash 0.25 s, then ~2.5 s of a startup screen whose
-progress bar froze, list at ~3.5 s.
+**Goal:** show a usable Task list promptly while opening the shared Task + Food
+workspace. **Budget remains 1,000 ms median**; only Lee may change it.
 
-**Case `native.coldStart.firstList`.** Boundary: process start to the first
-frame that shows the task list, read from the app's own log line
-`TANDEMLOG_FIRST_LIST at=<wall time> ms=<since app state start>
-process_ms=<since process start> phases={settings, folderList, history, tasks,
-food, migration, bound}`. Shape: a warm profile (the previous run was
-backgrounded, so its warm proofs are sealed, then the process was stopped) and
-unchanged history of real size (about 2,000 records, 200 open tasks). A
-strict-path start (first open on a device, or after a crash) is reported
-alongside and isn't budgeted.
+### Workload and correctness
 
-**Budget: 1,000 ms median, active (Lee 2026-11-03: "add it to the gate now",
-expecting it to fail until the open got faster; on the reference ext4 path it
-already passes, see below).** From human time: launching should feel
-immediate. Only Lee may change the number.
+`tool/performance/native-cold-start-v1.json` specifies 2,000 synthetic Tasks,
+220 Task edits and 560 completions, plus 530 Food add actions (17 multi-adds),
+104 container edits, 92 removals, 148 product edits and eight purchase imports
+with 34 lines. Four writers use the production Task/Food APIs, one action per
+record. The synthetic reference shape contains **3,667 records / 6,419,277 bytes
+in four files**, 522 active containers in 483 Food rows, 551 products and 34
+purchases. Random fixture identities can change byte lengths slightly; every
+measurement retains its own authoritative receipt. The seeded Task projection
+contains 2,000 Tasks plus one person (560 completed Tasks remain in that
+projection).
 
-**How it's gated.** [`native-cold-start-v1.json`](../tool/performance/native-cold-start-v1.json)
-holds the budget and shape: 2,000 synthetic tasks, one strict first launch
-(reported, not budgeted), then five warm starts, each after a verified normal
-close that sealed the warm proofs (the run refuses a warm start that didn't
-reuse them). `tool/performance/native_cold_start.py measure` builds the Linux
-GTK release bundle from a clean checkout, runs it under Xvfb on the registered
-reference host (Farnsworth; its environment, including the ext4 measurement
-filesystem, must match `reference-host-v1.json`) and writes a result bound to
-the relevant-source identity and host registration; it is committed at
-`evidence/native-cold-start/current/result.json`. The required
-`reference-performance` job runs `native_cold_start.py verify`: it recomputes
-the median from the samples and fails when the result is missing, for other
-source or another host registration, measured under another budget or shape,
-or over budget. As with the reference qualification, the samples rest on the
-trusted executor. Unlike the AOT
-gate this run has no quiet-host controller; samples are taken as they come
-(the load is recorded with each result).
-Tests: `tool/test_native_cold_start.py`.
+The seeder independently checks planned action-family counts, expected active
+inventory, purchases and writer count through a read-only production reopen and
+full integrity audit. The native run verifies the complete Task cache and actual
+warm-proof reuse. It also requires `TANDEMLOG_FOOD` counts to exactly match the
+nonzero receipt on every strict and warm launch. Food counts are emitted **after**
+the first-list marker, outside the timer; Food admission itself remains inside
+workspace opening. Food attachment under 1 ms is not total Food startup cost.
+A Task-only fixture or missing/mismatched Food evidence cannot satisfy this case.
 
-**Current result (2026-11-05, source `112f610`, Farnsworth ext4, 1-minute
-load ~2.3 from other work): warm median 560 ms (550–580), strict first launch
-1,750 ms. PASSES.** (`bc3b3df` earlier: 610 ms, 560–740, load ~3.5.) Warm phases: engine start to app state ~140 ms, settings
-~30 ms, history open ~300–400 ms, Task attach, Food and binding ~40 ms.
-The same source on Farnsworth's ZFS (`/home`) measured 1,290 ms (1,180–1,570):
-each of the open's three profile commits pays a ZFS fsync of 120–260 ms there,
-which is why the earlier real-copy numbers above were 2.0–2.4 s. So the gate
-holds the registered ext4 path; the phone (flash, real history) is still the
-number that matters and is measured once a release-signed build is on it.
-Real history on ext4 hasn't been measured.
+### Timing boundaries and source binding
 
-**Measured on a private copy of real history (2,004 records, 210 open tasks),
-Farnsworth GTK release bundle under Xvfb, 2026-11-03:**
-- Before the fix, any start after the process was stopped without a clean
-  close (how Android ends a backgrounded app) took the strict path: decode
-  ~530 ms, semantic validation ~900 ms, Task projection rebuild ~430 ms; first
-  list 2.7–3.1 s. Warm proofs were sealed only at a clean close.
-- `TaskStore.sealWarmCaches` now seals them when the app is backgrounded; a
-  later write makes them stale and the next open rebuilds strictly, as before.
-  Warm first list: 2.0–2.4 s (process 2.4–2.8 s).
-- What's left in the warm 2 s: three profile commits of ~120–260 ms each (the
-  proof-consume delete, the observed-heads update and the observe transaction;
-  ZFS fsync here, cheaper on phone flash), decoded-cache verification ~250 ms,
-  semantic validation ~150 ms, and ~600 ms of file reads that are slow only
-  while the first frames render (the same reads take ~10 ms in isolation and
-  ~80 ms in a later in-process refresh): likely Linux software rendering on
-  the merged platform/UI thread, so not representative of the phone.
-- The startup bar still stops for ~0.4 s during the warm open (UI isolate busy
-  in validation and the commits).
-- Android lab (API 30 x86_64 emulator, synthetic lab data, 40 records):
-  2026.11.0 first list ~0.6 s after process start. A real-history lab run is
-  still pending (the emulator's folder picker didn't accept the folder choice
-  under automation).
+`TANDEMLOG_FIRST_LIST process_ms` ends at the UI-thread post-frame callback for
+the first usable Task list. It includes process/engine startup, workspace open,
+Task view setup and UI build/layout/paint submission. **It does not establish
+raster completion, GPU presentation or physical screen visibility.** `ms` starts
+later, at app-state creation. Logged `settings/folderList/history/tasks/food/
+migration/bound` values are cumulative wall checkpoints, not CPU attribution.
+Subtract adjacent checkpoints for their intervals; do not sum them.
 
-**Next steps to reach the budget** (not done in this change): skip the
-proof-consume and observed-heads commits when nothing changed (keep the
-consume-before-expose safety by writing a "consumed" marker in the same
-transaction as the next real write, or by binding the proof to a one-time
-open nonce); move history decoding, semantic validation and the Task
-projection restore to a worker isolate so the UI isolate only adopts results;
-measure on the phone (Lee's OK first) and the Android lab with real-size
-history. Not in the 2026.11 next release (judged 2026-11-05): the open builds the
-SQLite-backed stores, the Food store and, on Android, the SAF folder (platform
-channels) on the UI isolate, and none of those objects can cross isolates, so
-moving it is a multi-day change to safety-critical opening code, not a
-contained one.
+Each series starts one new **uncached/strict** process (reported, not budgeted),
+then five new **cold processes with warm persisted caches**, following verified
+normal close and seal reuse. OS page cache is not flushed. Thus "cold process"
+is not "uncached history" and neither is a phone measurement.
+`native_cold_start.py measure` builds a clean, source-bound GTK release under
+Xvfb on the registered Farnsworth/ext4 environment. The result retains the
+fixture receipt, samples and load. `verify` checks the exact relevant source,
+host, unchanged budget/shape, Food correctness, reuse and recomputed median.
+The native case has no automatic quiet-host controller; loaded-host exploratory
+runs below are **not** the controlled AOT qualification. A separate source-bound
+reference qualification and exact signed-candidate acceptance are still required.
+
+### Investigation and bounded improvements (11-05)
+
+[Diagnostic samples](../evidence/startup-investigation-20261105/diagnostic-summary.json)
+are same-pristine-workspace A/B runs on a loaded host (about 5–7 load), not gate
+acceptance. Warm medians were **630→520 ms** and **540→510 ms** in two paired
+series. Independent per-writer tail checks fell from ~42–45 ms to ~8–9 ms;
+open-time migration's candidate-discovery refresh fell from ~23–32 ms to <1 ms.
+Do not add these component medians to explain the entire process-median change:
+noise, scheduling and other work vary between samples.
+
+History opening includes SQL/store restore, asynchronous provider operations,
+isolate decoding, rebuilding bytes, semantic validation and projection commits.
+In the first paired series, stored-row SQL was ~12–16 ms, isolate decode ~51–56 ms,
+byte rebuilding ~23–28 ms and validation ~105–107 ms. Task semantic validation
+(~49–51 ms) and Food admission (~18–20 ms) are **inside** that validation interval,
+not additional terms. Nested restore laps likewise cannot be added again to
+outer open intervals. These are wall measurements, not CPU samples.
+
+Food admission is directly measured; the Food share of shared SQL/decode/rebuild
+is not separately attributed. The synthetic logs contain 882 Food-bearing records
+(24.1%) and 1,837,099 Food-bearing bytes (28.6%). Those proportions are measured
+counts, **not an assertion of equal CPU-cost shares**. An earlier private estimate
+of ~40% shared Food cost was unsupported and is superseded by this distinction.
+
+The two contained changes preserve the trust boundary:
+
+- Tail checks run in batches of at most four and settle all started operations
+  before strict fallback, preserving deterministic seal order and every check.
+- Only the deferred app-open migration uses already-loaded candidate discovery.
+  Each candidate still refreshes before planning, commands recheck snapshots and
+  unified writes recheck canonical revisions/admission. Ordinary/CLI migration
+  and workspace refresh retain their discovery refresh. Newly arrived candidates
+  absent from the loaded projection are handled by the app's mandatory importer
+  reconcile (`ForegroundImporter.start` requests one immediately, plus watcher
+  hints and fallback); no stale migration is permitted to overwrite peer Due.
+
+Bound→post-frame was ~61–89 ms. A bounded Task-only control at 150 versus 2,000
+Tasks measured ~54–60 ms for the first full UI build/layout/paint, while Task
+projection was ~0.2–0.9 ms versus ~2–3 ms. The lazy list does not build every row.
+This supports leaving the already-fast list logic alone; it is not a CPU profile
+of every widget. Corresponding raster durations (~7–18 ms) occur beyond the
+marker. FrameTiming's vsync overhead may overlap history opening and must not be
+added wholesale to the bound→post-frame interval.
+
+### Current acceptance and limitations
+
+The former **420 ms result and candidate 42111287310 describe the Task-only
+shape**, not the corrected mixed case. They remain historical evidence, not
+current mixed-workload acceptance. Fresh mixed native evidence, controlled AOT
+qualification and candidate/labs are required after these source changes.
+See the committed current receipts for the final source and results.
+
+Off-UI-isolate opening remains deferred: SQLite/store ownership and Android SAF
+channels make that a larger safety-critical change. Decoding already uses worker
+isolates; validation/commits and the first full frame still occupy the UI thread.
+The bounded findings do not justify a broad rewrite or claim perfectly smooth
+startup. Phone after-history-store timing remains unmeasured (keyguard blocked
+an earlier attempt); no phone was accessed during this follow-up. Desktop
+software-rendered figures cannot be promoted to phone numbers.

@@ -22,7 +22,9 @@ def resolve_dart():
     return dart.resolve()
 
 
-def initialize_fixture(folder, workspace, native_library):
+def initialize_fixture(folder, workspace, native_library, timeout=None):
+    """`timeout` defaults to 120 s; the mixed workload writes thousands of
+    single-action records through the stores and needs longer."""
     workspace = Path(workspace)
     private = workspace / 'text-seed-private'
     if private.exists():
@@ -35,7 +37,7 @@ def initialize_fixture(folder, workspace, native_library):
         result = subprocess.run(
             [str(resolve_dart()), 'run', str(repo / 'tool/initialize_synthetic_text_fixture.dart'),
              str(Path(folder).resolve()), str(private.resolve()), str(library)],
-            cwd=repo, capture_output=True, text=True, timeout=120)
+            cwd=repo, capture_output=True, text=True, timeout=timeout or 120)
     except subprocess.TimeoutExpired as error:
         for name, content in (('stdout', error.stdout), ('stderr', error.stderr)):
             data = content or b''

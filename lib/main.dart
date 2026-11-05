@@ -425,6 +425,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       // Timestamped first list render, for cold-start measurement.
       if (marker == 'TANDEMLOG_READY_MS') {
         debugPrint(startupTrace.line('TANDEMLOG_FIRST_LIST'));
+        // What the same open loaded for Food, after the measured frame, so a
+        // benchmark can check its workload without timing this summary.
+        final food = foodStore?.state;
+        if (food != null) {
+          debugPrint(
+            'TANDEMLOG_FOOD ${jsonEncode({'activeContainers': food.active.length, 'groups': food.groups.length, 'products': food.products.length, 'purchases': food.catalog.purchases.length})}',
+          );
+        }
       }
       // Lists came from the stored state; apply other devices' newer records
       // now (Lee 11-05: usable during catch-up).

@@ -3,10 +3,23 @@
   "case": "native.coldStart.firstList",
   "medianMs": 1000,
   "source": "Lee 2026-11-03: add the 1.0 s median to the gate now; it fails until the workspace open moves off the UI thread. Only Lee may change this number.",
-  "boundary": "Process start to the first frame that shows the task list: process_ms of the app's TANDEMLOG_FIRST_LIST line.",
+  "boundary": "Process start to the UI-thread post-frame callback for the first usable Task list (TANDEMLOG_FIRST_LIST process_ms); excludes subsequent raster/GPU presentation. All four Food counts are checked after this marker.",
   "shape": {
     "tasks": 2000,
-    "warmStarts": 5
+    "warmStarts": 5,
+    "history": {
+      "peers": 3,
+      "taskEdits": 220,
+      "taskCompletions": 560,
+      "foodAdds": 530,
+      "foodMultiAdds": 17,
+      "foodRemovals": 92,
+      "foodEdits": 104,
+      "productEdits": 148,
+      "purchaseImports": 8,
+      "purchaseLines": 34
+    }
   },
-  "platform": "Linux x86_64 GTK release bundle built from a clean checkout, under Xvfb on the registered reference host (Farnsworth, ext4 measurement filesystem); synthetic fixture; each warm start follows a verified normal close that sealed the warm proofs; OS page cache not flushed."
+  "platform": "Linux x86_64 GTK release bundle built from a clean checkout, under Xvfb on the registered reference host (Farnsworth, ext4 measurement filesystem); synthetic fixture; each warm start follows a verified normal close that sealed the warm proofs; OS page cache not flushed.",
+  "workload": "Synthetic mixed-v2: 2,000 Tasks plus Task edits/completions, Food additions/edits/removals, product changes and purchase imports, written through production stores one action per record by the measured installation and three peers. Only Lee may change the 1,000 ms budget; synthetic history may become more representative."
 }

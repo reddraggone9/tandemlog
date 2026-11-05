@@ -1,8 +1,10 @@
 """Native cold start to first list: the `native.coldStart.firstList` gate case.
 
 `measure` builds the Linux release bundle from a clean checkout of the bound
-source and runs it under the caller's X display on a fresh synthetic workspace,
-on the registered reference host (its environment must match the registration): one strict first launch (reported, not budgeted), then warm
+source and runs it under the caller's X display on a fresh synthetic workspace
+(mixed Task and Food history from several devices; each start must load exactly
+the fixture's Food, checked from the app's TANDEMLOG_FOOD line, which is printed
+after the measured frame), on the registered reference host (its environment must match the registration): one strict first launch (reported, not budgeted), then warm
 repeat starts, each after a verified normal close that sealed the warm proofs.
 A sample is `process_ms` from the app's own `TANDEMLOG_FIRST_LIST` line: process
 start to the first frame that shows the task list. The result binds the relevant
@@ -33,6 +35,8 @@ BUDGET = 'tool/performance/native-cold-start-v1.json'
 RESULT = 'evidence/native-cold-start/current/result.json'
 CASE = 'native.coldStart.firstList'
 FIRST_LIST = re.compile(r'^TANDEMLOG_FIRST_LIST at=\S+ ms=(\d+) process_ms=(\d+) ', re.M)
+FOOD = re.compile(r'^TANDEMLOG_FOOD (\{.*\})$', re.M)
+FOOD_COUNTS = ('activeContainers', 'groups', 'products', 'purchases')
 
 
 class GateError(Exception):
@@ -51,6 +55,12 @@ def read_budget(repo):
     shape = budget.get('shape', {})
     need(type(shape.get('tasks')) is int and type(shape.get('warmStarts')) is int and shape['warmStarts'] >= 3,
          'Native cold-start shape is malformed')
+    # The workload is mixed Task and Food history from several devices: a
+    # Task-only fixture would leave Food's share of the open unmeasured.
+    history = shape.get('history')
+    need(isinstance(history, dict) and history and all(type(v) is int and v >= 0 for v in history.values()) and
+         history.get('peers', 0) >= 1 and history.get('foodAdds', 0) > 0,
+         'Native cold-start shape needs its mixed Task and Food history')
     return budget
 
 
@@ -61,6 +71,15 @@ def first_list(log_text):
     return int(found[0][0]), int(found[0][1])
 
 
+def food_loaded(log_text):
+    """The Food counts the measured process loaded, printed after its first list."""
+    found = FOOD.findall(log_text)
+    need(len(found) == 1, 'Run output needs exactly one TANDEMLOG_FOOD line')
+    food = json.loads(found[0])
+    need(isinstance(food, dict) and all(type(food.get(k)) is int for k in FOOD_COUNTS), 'Malformed TANDEMLOG_FOOD line')
+    return {k: food[k] for k in FOOD_COUNTS}
+
+
 def judge(budget, result):
     """Recompute the decision from the retained samples; never trust `passed`."""
     need(result.get('case') == CASE, 'Result is for another case')
@@ -68,6 +87,12 @@ def judge(budget, result):
          'Result was measured under another budget or shape')
     warm = result.get('warmStarts')
     need(isinstance(warm, list) and len(warm) == budget['shape']['warmStarts'], 'Warm start count differs')
+    expected = (result.get('fixture') or {}).get('food') or {}
+    need(result['fixture'].get('workload') == 'mixed-v2' and all(type(expected.get(k)) is int and expected[k] > 0
+                                                                  for k in FOOD_COUNTS),
+         'Result fixture has no Food workload')
+    for run in [result.get('strictFirstLaunch') or {}, *warm]:
+        need(run.get('food') == expected, 'A measured start did not load the fixture\'s Food')
     for run in warm:
         need(type(run.get('processMs')) is int and run['processMs'] > 0, 'Warm sample is missing')
         need(run.get('cleanWitnessVerified') is True, 'A warm start did not reuse the sealed warm proofs')
@@ -122,7 +147,7 @@ def measure(repo, workspace, output, xdotool):
     diagnostics = root / 'diagnostics'
     diagnostics.mkdir(parents=True, exist_ok=True)
     library = str(Path(binary).resolve().parent / 'lib/libtandemlog_text.so')
-    folder, profile_dir, receipt = seed_fixture(root, tasks, library)
+    folder, profile_dir, receipt = seed_fixture(root, tasks, library, budget['shape']['history'])
     load_before = os.getloadavg()
     runs, previous = [], None
     for i in range(warm_starts + 1):
@@ -133,7 +158,9 @@ def measure(repo, workspace, output, xdotool):
         verify_loaded(profile_dir, folder, tasks, status, i > 0)
         log = (diagnostics / f'run-{i + 1}.stdout-stderr.log').read_text(errors='replace')
         app_ms, process_ms = first_list(log)
-        runs.append({'run': i + 1, 'processMs': process_ms, 'appMs': app_ms,
+        food = food_loaded(log)
+        need(food == receipt['food'], f'Run {i + 1} loaded other Food than the fixture: {food}')
+        runs.append({'run': i + 1, 'processMs': process_ms, 'appMs': app_ms, 'food': food,
                      'externalMs': status.get('external_ms'),
                      'cleanWitnessVerified': status.get('cleanWitnessVerified', False)})
         previous = status
