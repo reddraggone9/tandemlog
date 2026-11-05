@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "c592d2cafd07ff9a6731f5dd6838a9c2",
-  "issuedAtUTC": "2026-11-05T18:00:29.041345+00:00",
-  "sourceRevision": "6159798eed2298d41a3183cba8a321f1617bb413",
+  "requestId": "08e1623dfb12583650a64cbda4fdff3f",
+  "issuedAtUTC": "2026-11-05T20:01:00.709489+00:00",
+  "sourceRevision": "0b9aaf18851458dbb8086c9d86e46bc71b25a8ff",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "77f5ce3639aea388b7aff81573300fc2d52296ecb94232a9f23223d034c8d8d0",
+    "sha256": "b33da461fc94189b9282a79be4b8433d3124c31aca872edd837a320033eb7926",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -1549,7 +1549,7 @@
         "mode": "100644"
       },
       "linux/runner/my_application.cc": {
-        "sha256": "1f1603e4950906aec47d09d6c35c8224d6902a60f2aeb0788288e3a0b8ef142b",
+        "sha256": "c082766f85671eb9f8447d6d76ba38e65f9627fec6a726d2282dfa2307abf78e",
         "mode": "100644"
       },
       "linux/runner/my_application.h": {
@@ -3283,7 +3283,7 @@
         "mode": "100644"
       },
       "tool/linux_lifecycle_probe.c": {
-        "sha256": "851679ca8a7df035c23051e381062973342351a2cf3260e11c4bd260d3f1cfa5",
+        "sha256": "eecde2b5990b23618e5894dd16b0f08401b26bbaba7d98066d81d1e7f90fa492",
         "mode": "100644"
       },
       "tool/measure_batches.dart": {
@@ -3519,7 +3519,7 @@
         "mode": "100644"
       },
       "tool/test_verify_linux_disposal.py": {
-        "sha256": "b8f6e809d3c8db16d8d6dce6859479b47a5ac81827a9fcc280ecb6d8afbe8688",
+        "sha256": "1362939f98c7646742d050e2794728cfe9a27ecafd6f2d534a2279c6ad85ee75",
         "mode": "100644"
       },
       "tool/test_verify_test_shards.py": {
@@ -3531,7 +3531,7 @@
         "mode": "100644"
       },
       "tool/verify_linux_disposal.py": {
-        "sha256": "bb10a6cbf743a8af0a5e10321b43daf8c51df7827ded9fd28b1efc32ca99a788",
+        "sha256": "09584fb948031a347498be96c194073c9a6551ce0697d33f8a1e8aef03e20aaa",
         "mode": "100644"
       },
       "tool/verify_test_shards.py": {

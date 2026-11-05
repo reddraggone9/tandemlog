@@ -521,3 +521,13 @@ relevant identity `a579f22937c2b31332db9243f9f8ebf4b80afa9e7c4f955e727bf4908380a
 Three first-pass misses each passed their automatic rerun; budgets passed,
 cleanup clean, owned ADB server idle. The `cb7d62b7…` evidence is retained as
 `retained-cb7d62b7`.
+The history-store release (build 114) qualified on request
+`c592d2cafd07ff9a6731f5dd6838a9c2` (source `6159798`); the `9d82e5c2…` evidence
+is retained as `retained-9d82e5c2`. Its candidate 42090789708 failed hosted
+Linux close checks (a renderer finalized while the engine still had raster
+work), so the native runner repair `0b9aaf1` was qualified fresh: request
+`08e1623dfb12583650a64cbda4fdff3f`, source `0b9aaf18851458dbb8086c9d86e46bc71b25a8ff`,
+relevant identity `b33da461fc94189b9282a79be4b8433d3124c31aca872edd837a320033eb7926`,
+controller r8 with the owned ADB server running and idle. Four first-pass misses
+each passed their automatic rerun; absolute and both growth budgets passed and
+cleanup was clean. The `c592d2ca…` evidence is retained as `retained-c592d2ca`.
