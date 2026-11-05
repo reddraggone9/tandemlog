@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "9d82e5c2f25c7821adf94be3d5cdf88f",
-  "issuedAtUTC": "2026-11-03T11:36:11.137861+00:00",
-  "sourceRevision": "c1e1b6fe47d2a1fd80a6224c5dde2430272cea72",
+  "requestId": "c592d2cafd07ff9a6731f5dd6838a9c2",
+  "issuedAtUTC": "2026-11-05T18:00:29.041345+00:00",
+  "sourceRevision": "6159798eed2298d41a3183cba8a321f1617bb413",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "a579f22937c2b31332db9243f9f8ebf4b80afa9e7c4f955e727bf4908380a897",
+    "sha256": "77f5ce3639aea388b7aff81573300fc2d52296ecb94232a9f23223d034c8d8d0",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -48,12 +48,8 @@
         "sha256": "14239fcec7d46de351f366b60651e7c9bf6e8880c074a9182e6daf4c2e23a8aa",
         "mode": "100644"
       },
-      ".github/workflows/update-channels.yml": {
-        "sha256": "e724ed03a0db5842ee1cd25e41bfe40b0ad923719f5bf75bf962af524034cd1c",
-        "mode": "100644"
-      },
       ".github/workflows/validate.yml": {
-        "sha256": "6b978cb5c67b3a38dd8cf233e49200dc3e82ff11d411cee97fc369d7dbe411bf",
+        "sha256": "ee4375bc23f181818238aa28d4cab42af1ed8a87f2ef3a5f40bbd14453767bd3",
         "mode": "100644"
       },
       ".github/workflows/windows-widget-qa.yml": {
@@ -652,6 +648,10 @@
         "sha256": "f42c1216e970aab6034b1afab91a72f70e2ee5946c149399804d25f3d443948f",
         "mode": "100644"
       },
+      "integration_test/activity_batch_workflow_test.dart": {
+        "sha256": "9cc50308074ea95c831aa95b23ac3eab335634d36cfbcd3f637ebc9e31463186",
+        "mode": "100644"
+      },
       "integration_test/activity_refresh_layout_test.dart": {
         "sha256": "6c571a527182072b7e8c3b431f213634feeaa85243d65287ff316dc3aed16148",
         "mode": "100644"
@@ -837,7 +837,7 @@
         "mode": "100644"
       },
       "integration_test/historical_checklist_recompletion_test.dart": {
-        "sha256": "1ce5cf5a0d3fa5592f1ce872aa6cf8fb547c4004cebf956fd506d54f473f5dc0",
+        "sha256": "d90af0eb967a82e8fa992e64a5ae582170cefd5ee9bd787c008794487cd0fd66",
         "mode": "100644"
       },
       "integration_test/inbox_flow_test.dart": {
@@ -929,7 +929,7 @@
         "mode": "100644"
       },
       "integration_test/task_flow_test.dart": {
-        "sha256": "abf7d8761e1d13fe36060d30035ef3dcb2c16cd627330de7895b65fd6b49c564",
+        "sha256": "1168aef6b6728002c4ea93c00e4073e6466c8f62a6705217179088f8a0c8c93d",
         "mode": "100644"
       },
       "integration_test/task_input_mode_retry_test.dart": {
@@ -954,6 +954,10 @@
       },
       "integration_test/unified_history_workflow_test.dart": {
         "sha256": "46fa494384d74820b4264bb98498cda8d57198e8b9f00fd3860b57d24d1735b5",
+        "mode": "100644"
+      },
+      "integration_test/user_switch_refresh_test.dart": {
+        "sha256": "e30b0d4e3de7b4a6e12ddb3ccdc400cfb1257b7a0ba7c28e5bc22009b8b9232f",
         "mode": "100644"
       },
       "integration_test/ux_feedback_workflow_test.dart": {
@@ -1021,11 +1025,11 @@
         "mode": "100644"
       },
       "lib/application/activity_log.dart": {
-        "sha256": "cc145a45d90321dcf508e57a7a3f37e2975577515716fe59f7cf32a39191a9da",
+        "sha256": "50602fab920d4ba92a71bae6d4d3d03716005b3cd285bd0d6c9877ee19171923",
         "mode": "100644"
       },
       "lib/application/activity_values.dart": {
-        "sha256": "9ce3723b436e259c8404788486c2313ef91418efc4d1774525d4caa33f364f9a",
+        "sha256": "f00980ecaf0847ab0d47ab6efdf529ad9249d06dbe785dac226ebd7a396de572",
         "mode": "100644"
       },
       "lib/application/checklist_completion_command.dart": {
@@ -1053,11 +1057,15 @@
         "mode": "100644"
       },
       "lib/application/workspace_session.dart": {
-        "sha256": "3a2fca66a65b212086b8cbef49c3a45c04ec2b8bcdc0e77fc683a76633daea29",
+        "sha256": "17bbcd63d92826710560dac986737d6c924b8fd667a0ec2d31f0b03455892b27",
         "mode": "100644"
       },
       "lib/diagnostics/operation_observer.dart": {
         "sha256": "05d0e5050a8d85a59b1ad5bf49b9d659311b8b447270216277c2314ec021fc14",
+        "mode": "100644"
+      },
+      "lib/diagnostics/startup_trace.dart": {
+        "sha256": "14e4afdad73aa7c53792761cb346b6623d452574207e7ea57f40d6f2117d11b6",
         "mode": "100644"
       },
       "lib/domain/bulk_task_edit.dart": {
@@ -1165,7 +1173,7 @@
         "mode": "100644"
       },
       "lib/domain/validated_action_cache.dart": {
-        "sha256": "60079452d35f8ad540b0edcb9884aa3e8406955511d11dcf6a2bd2edd22c2954",
+        "sha256": "34467a5872a13bf4abc69181bba699305c90575367c9a97e810b04e53c955746",
         "mode": "100644"
       },
       "lib/domain/visible_task_move.dart": {
@@ -1197,11 +1205,11 @@
         "mode": "100644"
       },
       "lib/food/food_page.dart": {
-        "sha256": "a84acfe2333c789ce974c0a2d67ea0192561ba44de670ad18a5dfbb7b563a861",
+        "sha256": "d3ae9cd35fdcc6d0f0dba7510b40688586dadcc5a3c0b5bbd9b474b8721d11d0",
         "mode": "100644"
       },
       "lib/food/food_products.dart": {
-        "sha256": "fbc7692fb05245a087747574cfc75f00f483fb0de9c825c077381a17ad3cbaef",
+        "sha256": "632672b708dcb42d174d2d580ae59758c92876c5b54c1014fa5ddc097bced769",
         "mode": "100644"
       },
       "lib/food/food_purchase_import.dart": {
@@ -1225,7 +1233,7 @@
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "bc4a62f4bfeff2aa49a7d1a5b5309aff62cfbb5ceac3444753cffd4408af9536",
+        "sha256": "3b22a0bac47643af9f99ea6797504ce176fb97b486edc1f3a4440dd677f4cf6e",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1253,7 +1261,7 @@
         "mode": "100644"
       },
       "lib/presentation/activity_log.dart": {
-        "sha256": "7340e4d8521871f5b4b84b277e6fc31d32619d0c7ca5db6d7f044a6f55d5a38f",
+        "sha256": "491c56daa662b09417e1cbaa38acb7e2393cc2146b715fbee82f6d50ad28a11b",
         "mode": "100644"
       },
       "lib/presentation/bulk_apply.dart": {
@@ -1340,6 +1348,10 @@
         "sha256": "8447f1259a10c9d31934d75361b5af0d2ba59177b3ac91f70dc8b159617ebc46",
         "mode": "100644"
       },
+      "lib/presentation/startup_screens.dart": {
+        "sha256": "4b0a6c45ecdb01fb7df515f050bef8520d80dc7fcc52216a5672e8589d494fd7",
+        "mode": "100644"
+      },
       "lib/presentation/sticky_task_group.dart": {
         "sha256": "b95af64bda5b0ef34a56b49620989dee1bd51e9de2a50f64b8f40dbe0dcef1d7",
         "mode": "100644"
@@ -1424,6 +1436,10 @@
         "sha256": "566e37df4ad4a212c4b645e8ae432faefe38ea5d1075e46d9f2336f6b8db3587",
         "mode": "100644"
       },
+      "lib/storage/history_store.dart": {
+        "sha256": "ec5334e00f00791d07c80eb1f092c14e22db775c412eadfd60e2468f374813c4",
+        "mode": "100644"
+      },
       "lib/storage/local_durability.dart": {
         "sha256": "df08c5f7424f38adfcd5b28358aed6faa6044eadfb1ee60579ae55ebdf7924a1",
         "mode": "100644"
@@ -1445,7 +1461,7 @@
         "mode": "100644"
       },
       "lib/storage/task_store.dart": {
-        "sha256": "f2ee48bedd976088ed3050b9dca89d8258529d2e278c1c8a81cf101d6e762c3f",
+        "sha256": "2b760c16bb46bad4802cf00d354e1fdcc329b3b539789f4e2c865a760a4c4836",
         "mode": "100644"
       },
       "lib/storage/task_tables.dart": {
@@ -1457,7 +1473,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "ff268eec97ec863d5b1ef950894532a9add61474e8a56b94a45b382ee13deb22",
+        "sha256": "5fbfcd6615cdd7f1d22243ad9227663c224311bce076c8933032dfd04ea891f0",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -1465,7 +1481,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_record.dart": {
-        "sha256": "a8a2c7b169c2da3bbb48eae4acec98e982b8274b8b046f29170ad5a017109304",
+        "sha256": "e2166f9c94d0ecf903744a6db5c7819319ebc3a47f82263219fd2587be495ad1",
         "mode": "100644"
       },
       "lib/storage/workspace_state.dart": {
@@ -1849,7 +1865,7 @@
         "mode": "100644"
       },
       "packaging/linux/build-flatpak.sh": {
-        "sha256": "3318334623f44b2311488d6224d9a0da28caf58b04fb7e9f732461250e4b6e01",
+        "sha256": "d70ba0ee666f3e2060caccb44741080a56493900c0390515e1a9cb972bff0960",
         "mode": "100755"
       },
       "packaging/linux/com.reddraggone9.tandemlog.desktop": {
@@ -1889,10 +1905,6 @@
         "sha256": "d465c37adad7b4da8e46ddc36c3d86bec78dc7366198888d2a20505b4faead14",
         "mode": "100644"
       },
-      "packaging/update-channels.md": {
-        "sha256": "48950039ba6442bef112f522b4745f2207d54b6542cb113f24969d61b6520cca",
-        "mode": "100644"
-      },
       "packaging/windows/build-and-smoke.ps1": {
         "sha256": "b6c86a726c26bc91761a64e89f38530ea44cf003c04d82ce0f41363893cb48a4",
         "mode": "100644"
@@ -1914,10 +1926,6 @@
         "mode": "100644",
         "normalized": "pubspec-version-v1"
       },
-      "test/action_cache_flight_test.dart": {
-        "sha256": "c9e3ec73393deeabe111fa431f703042c5769353b60abbb8822f53350aa70bfd",
-        "mode": "100644"
-      },
       "test/action_history_test.dart": {
         "sha256": "f1b2b6e6aa460f735a32e8a64b712c73e3358523cb76ec20d98695a7298faf72",
         "mode": "100644"
@@ -1935,7 +1943,7 @@
         "mode": "100644"
       },
       "test/activity_values_test.dart": {
-        "sha256": "4b002bbf132a52a23664b9a62c788861be696b4678067c7075a0c83c0c5784cf",
+        "sha256": "de7e189cb5cd0ad76abd86b4014a7d3ad993d96852c04ac088249a0db623cc07",
         "mode": "100644"
       },
       "test/adaptive_text_read_test.dart": {
@@ -1943,7 +1951,7 @@
         "mode": "100644"
       },
       "test/agent_cli_test.dart": {
-        "sha256": "bfe46ca22b687338b76de699c77c748c56fc869b4caa664c10a3d745abf46204",
+        "sha256": "95d231587c2c6671d9f1d78b039d8385a91ab8ed68124a3ebc06b6f1f280a169",
         "mode": "100644"
       },
       "test/agent_overlay_folder_test.dart": {
@@ -1951,7 +1959,7 @@
         "mode": "100644"
       },
       "test/agent_parity_test.dart": {
-        "sha256": "06fbbd1dd004cc33b331d734db46511cd1839bf75efd15218c4ff43fd7cf4436",
+        "sha256": "37445c5f48a0579509fd289ca48b8cd74779589492fb524a094f1a3a68ebd1c9",
         "mode": "100644"
       },
       "test/agent_planned_commit_text_cache_test.dart": {
@@ -2531,7 +2539,7 @@
         "mode": "100644"
       },
       "test/food_products_ui_test.dart": {
-        "sha256": "e8a50d83bc40e407585bbc281941df1d684acf1b331f0b04675728ff7fc1fd70",
+        "sha256": "69d3ee14a7eb4d457302500dec967332ec346c768defe6841844fdd0ee6516ac",
         "mode": "100644"
       },
       "test/food_profile_upgrade_test.dart": {
@@ -2638,6 +2646,10 @@
         "sha256": "85ae34d233d999130e7a6d1d4f3c6431322f4a98907542934dc04dc74e062e5a",
         "mode": "100644"
       },
+      "test/history_store_test.dart": {
+        "sha256": "6a0b4cdf7a244da33762d1e45b8244bf5a79049b597252fd3a0a7fc5b30af5da",
+        "mode": "100644"
+      },
       "test/history_verification_report_test.dart": {
         "sha256": "62dc6d921e84b1f22939fbbc32e452681c5f043dbbbfd6bc980c515aeed42f6c",
         "mode": "100644"
@@ -2691,7 +2703,7 @@
         "mode": "100644"
       },
       "test/native_exit_host_test.dart": {
-        "sha256": "adeee4838282c10cc808b8f5f983fa2d42e1ce592bd5443e97c761bb472ef2a7",
+        "sha256": "58dfcb053904f872407296d31f21cfd30d43c6533ef4b2f80a6ccc7856c19467",
         "mode": "100644"
       },
       "test/native_text_engine_test.dart": {
@@ -2723,7 +2735,7 @@
         "mode": "100644"
       },
       "test/post_rc109_editor_host_test.dart": {
-        "sha256": "ea798134dac0884e6ca61e8ef0348ca5ef3412b9a7cf7b43096b09b4aa1bfbf0",
+        "sha256": "5ba9eca37f26ad77ec5736790233c0e9c759fc5b68a72bed31b8f253da7ca9b4",
         "mode": "100644"
       },
       "test/probe_cost_trace_test.dart": {
@@ -2828,6 +2840,10 @@
       },
       "test/shared_text_storage_test.dart": {
         "sha256": "fa239688f07127f3440936a34e0fbc3db9755061e2ca29d536fe7a87155edd72",
+        "mode": "100644"
+      },
+      "test/startup_screens_host_test.dart": {
+        "sha256": "a26c2593af478a63665d56ab12715b9a578f1d1a5bea8a8c1c4f8ab489fc5cd5",
         "mode": "100644"
       },
       "test/startup_smoke_fixture_contract_test.dart": {
@@ -2939,7 +2955,7 @@
         "mode": "100644"
       },
       "test/task_cache_digest_test.dart": {
-        "sha256": "5f5bfc22d7ecc2b91fb01ac4c9e790d3ab794e82a2d9af2f92f00951aa7a1f51",
+        "sha256": "f09b35d48fe71a9c4fbd0a5f73895a4f47337c04335983a78cfd69cc4ad569a3",
         "mode": "100644"
       },
       "test/task_cache_rows_compare_test.dart": {
@@ -3103,7 +3119,7 @@
         "mode": "100644"
       },
       "test/unified_decoded_cache_test.dart": {
-        "sha256": "3fbc6cf176c5db1ea77835d7ba10613b3143f2f328f6d61a3b72a819e0a70ace",
+        "sha256": "8b3415ab6403e92040fe0f9f7ad625beab42ce06eeb1c086742cc405a8e152c5",
         "mode": "100644"
       },
       "test/unified_enrollment_test.dart": {
@@ -3152,6 +3168,10 @@
       },
       "test/wall_time_test.dart": {
         "sha256": "ba2e962b28af14f4d7e1a97994085823e3fc93e7e66f83427e8676ed7e7b2ec7",
+        "mode": "100644"
+      },
+      "test/warm_reseal_test.dart": {
+        "sha256": "280df64f03710ed79531f600b6573e30cae3f081dcdb969fee7c26ce910c5f43",
         "mode": "100644"
       },
       "test/workspace_state_test.dart": {
@@ -3242,10 +3262,6 @@
         "sha256": "8d106fa460d7e5153a748c51dcd94fd6c5396d3101898ee38cd068a5889dcc97",
         "mode": "100644"
       },
-      "tool/flatpak_channel.py": {
-        "sha256": "d5118432e2708bdbecabe57f42308abca4885e07f4190554637f944007a9c0c1",
-        "mode": "100644"
-      },
       "tool/food_preview.dart": {
         "sha256": "fd42da3f8656d0cf09d76758c65c4da1573f41425655c659bff6251e48ae5f23",
         "mode": "100644"
@@ -3256,10 +3272,6 @@
       },
       "tool/gradle_repository_policy.py": {
         "sha256": "08b36daa11a635d16efbf9e22ee5e2af0fbb9b115710158b87612036c706600b",
-        "mode": "100644"
-      },
-      "tool/household_update_policy.py": {
-        "sha256": "0319d595f3e11ebd2c8988c2a150b187bde3c5e77f272644966c34722836279f",
         "mode": "100644"
       },
       "tool/initial_rank_qa_fixture.dart": {
@@ -3279,7 +3291,7 @@
         "mode": "100644"
       },
       "tool/measure_startup.py": {
-        "sha256": "076034e02886f469db88efa77bf4d655162c2484de611fb3a0f90ed5087b00bb",
+        "sha256": "fac466547a09a61a7804e5f242aeb8c40c2c1c441a9a26a7dc818fd65433a332",
         "mode": "100644"
       },
       "tool/minimal_startup.dart": {
@@ -3324,6 +3336,14 @@
       },
       "tool/performance/limits-v1.json": {
         "sha256": "142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8",
+        "mode": "100644"
+      },
+      "tool/performance/native-cold-start-v1.json": {
+        "sha256": "8a4250880ddcdda82e3df5f5896d7667a0d6af4c557b83b2ae41d681347078ef",
+        "mode": "100644"
+      },
+      "tool/performance/native_cold_start.py": {
+        "sha256": "e25b1b913103e46341f640d9f16c1018a81562f716b6f5f0969ee2ba8502a77f",
         "mode": "100644"
       },
       "tool/performance/operation_diagnostics.dart": {
@@ -3402,10 +3422,6 @@
         "sha256": "7494d0f1ad1ae3b5b8cce66008bec745427049f6b2e93fa681d96768bf63f59c",
         "mode": "100644"
       },
-      "tool/test_flatpak_channel.py": {
-        "sha256": "8566e992fd4550dd6ad0e016bf7ba6ec7efe295c827af095ffc9395269a89cbc",
-        "mode": "100644"
-      },
       "tool/test_flatpak_tool_acquisition.py": {
         "sha256": "9b3dc734fb802d56ac3e29d1f6113017ab95561924c7832dd80f5f2525c4c94c",
         "mode": "100644"
@@ -3416,10 +3432,6 @@
       },
       "tool/test_gradle_repository_policy.py": {
         "sha256": "e7b5b6e21550cdd7021b2f16d3e5eb313a7272c48aebfae9cd0b612c25fe19ca",
-        "mode": "100644"
-      },
-      "tool/test_household_update_policy.py": {
-        "sha256": "49111adf2e9490213c5491fc2033d344fd60872a2437d90773e411aaf17a496a",
         "mode": "100644"
       },
       "tool/test_installer_smoke.py": {
@@ -3444,6 +3456,10 @@
       },
       "tool/test_native_build_gates.py": {
         "sha256": "78ebe9f440f1a3e811a28b2e6d2e258e74ea1773d3b1a04d879f307c77ddd876",
+        "mode": "100644"
+      },
+      "tool/test_native_cold_start.py": {
+        "sha256": "a84cc1d51d74ece88f89b0f991d031c557f77327139588ff77636c769f06d60a",
         "mode": "100644"
       },
       "tool/test_performance_child_cleanup.py": {
@@ -3483,7 +3499,7 @@
         "mode": "100644"
       },
       "tool/test_startup_diagnostics.py": {
-        "sha256": "63aeb48e14658e261384c857c3433f6065140d6a7b4ad60458d2e9352ee47a71",
+        "sha256": "c7b9a59d74c343fc9683d9f24402550f409e26578d9ba354f5b5746a9f5d1486",
         "mode": "100644"
       },
       "tool/test_startup_fixture_guard.py": {
@@ -3496,10 +3512,6 @@
       },
       "tool/test_text_engine_packaging.py": {
         "sha256": "3e1b0357d05afeab553e42f9e9153e20f80225b49700a3cb955df0e781924fda",
-        "mode": "100644"
-      },
-      "tool/test_update_channels.py": {
-        "sha256": "cf045b2fea16ebe1d534823edc522fc18ed626da6b16c91a30363fcdb2bd2857",
         "mode": "100644"
       },
       "tool/test_vendored_yrs.py": {
@@ -3516,10 +3528,6 @@
       },
       "tool/test_wait_signed_candidate.py": {
         "sha256": "e6803b0bec6022cd0f575a5aa89981dbdc6bb6a8277b473f2255930641d90ed4",
-        "mode": "100644"
-      },
-      "tool/update_channels.py": {
-        "sha256": "49c9709e48604f83dc8fd190131568c132dd44220466c950e1dfa07c7711e7ad",
         "mode": "100644"
       },
       "tool/verify_linux_disposal.py": {
