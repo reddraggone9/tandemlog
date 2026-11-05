@@ -631,10 +631,31 @@ unchanged history of real size (about 2,000 records, 200 open tasks). A
 strict-path start (first open on a device, or after a crash) is reported
 alongside and isn't budgeted.
 
-**Budget (proposed): 1,000 ms median**, from human time (launching should feel
-immediate; Lee's goal). Not activated: current source misses it on every
-platform measured, and a looser interim limit needs Lee's approval (open
-question in the release checkpoint; nothing decided here).
+**Budget: 1,000 ms median, active (Lee 2026-11-03: "add it to the gate now";
+it fails until the open gets faster).** From human time: launching should feel
+immediate. Only Lee may change the number.
+
+**How it's gated.** [`native-cold-start-v1.json`](../tool/performance/native-cold-start-v1.json)
+holds the budget and shape: 2,000 synthetic tasks, one strict first launch
+(reported, not budgeted), then five warm starts, each after a verified normal
+close that sealed the warm proofs (the run refuses a warm start that didn't
+reuse them). `tool/performance/native_cold_start.py measure` runs the Linux GTK
+release bundle under Xvfb on the reference host (Farnsworth) and writes a
+result bound to the relevant-source identity; it is committed at
+`evidence/native-cold-start/current/result.json`. The required
+`reference-performance` job runs `native_cold_start.py verify`: it recomputes
+the median from the samples and fails when the result is missing, for other
+source, measured under another budget or shape, or over budget. Unlike the AOT
+gate this run has no quiet-host controller; samples are taken as they come
+(the first failing result is 290 ms over, far outside any noise).
+Tests: `tool/test_native_cold_start.py`.
+
+**First result (2026-11-05, source `1c3b6e1`, Farnsworth, host load ~3–4 from
+other work): warm median 1,290 ms (1,180–1,570), strict first launch 2,490 ms.
+FAILS.** Warm phases: engine start to app state ~130 ms, settings ~150 ms, then
+history open ~800–1,100 ms; Task attach, Food and binding add ~60 ms. So the
+history open is what has to shrink: moving it off the UI isolate keeps the bar
+moving but doesn't by itself shorten it (see Next steps).
 
 **Measured on a private copy of real history (2,004 records, 210 open tasks),
 Farnsworth GTK release bundle under Xvfb, 2026-11-03:**
@@ -666,4 +687,8 @@ transaction as the next real write, or by binding the proof to a one-time
 open nonce); move history decoding, semantic validation and the Task
 projection restore to a worker isolate so the UI isolate only adopts results;
 measure on the phone (Lee's OK first) and the Android lab with real-size
-history.
+history. Not in the 2026.11 next release (judged 2026-11-05): the open builds the
+SQLite-backed stores, the Food store and, on Android, the SAF folder (platform
+channels) on the UI isolate, and none of those objects can cross isolates, so
+moving it is a multi-day change to safety-critical opening code, not a
+contained one.
