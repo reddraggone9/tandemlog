@@ -17,6 +17,7 @@ be within the committed budget. Missing, stale or over budget fails.
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import statistics
@@ -122,6 +123,7 @@ def measure(repo, workspace, output, xdotool):
     diagnostics.mkdir(parents=True, exist_ok=True)
     library = str(Path(binary).resolve().parent / 'lib/libtandemlog_text.so')
     folder, profile, receipt = seed_fixture(root, tasks, library)
+    load_before = os.getloadavg()
     runs, previous = [], None
     for i in range(warm_starts + 1):
         before = inspect_stopped_witness(profile, folder)
@@ -141,6 +143,8 @@ def measure(repo, workspace, output, xdotool):
               'appSHA256': digest(binary.parent / 'lib/libapp.so'),
               'hostProfileSHA256': digest(repo / PROFILE), 'host': host,
               'platform': budget['platform'], 'fixture': receipt,
+              # No quiet-host controller here: the 1-minute load is recorded, not judged.
+              'loadAverage1m': {'before': load_before[0], 'after': os.getloadavg()[0]},
               'strictFirstLaunch': runs[0], 'warmStarts': runs[1:]}
     result['decision'] = judge(budget, result)
     Path(output).parent.mkdir(parents=True, exist_ok=True)
