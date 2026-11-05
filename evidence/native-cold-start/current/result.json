@@ -6,10 +6,10 @@
     "tasks": 2000,
     "warmStarts": 5
   },
-  "sourceRevision": "1c3b6e10c2518b17a069c2cd12ef1bc57c34b075",
+  "sourceRevision": "bc3b3df1ebec7f108bbfffcf6b2c228a19fc050e",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "3aa4bd451956b0511ad366aa55f2b25a2b175e4b13a06312d0ce4fc2342b80f1",
+    "sha256": "bddb486a856d4fcf2340e6406c45d9ab83d1c2d206a5c7ff54144a137d83a6f9",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -52,7 +52,7 @@
         "mode": "100644"
       },
       ".github/workflows/validate.yml": {
-        "sha256": "69ad495044e62ed6cf07876597895ff54debf1162278f6c530ba8795027c6f0a",
+        "sha256": "ee4375bc23f181818238aa28d4cab42af1ed8a87f2ef3a5f40bbd14453767bd3",
         "mode": "100644"
       },
       ".github/workflows/windows-widget-qa.yml": {
@@ -1032,7 +1032,7 @@
         "mode": "100644"
       },
       "lib/application/activity_values.dart": {
-        "sha256": "b5570f6a7fb9d5f1e63a1cd5292f539989446887d84e183178b1eef67cbe5b93",
+        "sha256": "a41087f78b27ab088d1021c16ee5388e5747f58a8e9f457035cc02013105301e",
         "mode": "100644"
       },
       "lib/application/checklist_completion_command.dart": {
@@ -1236,7 +1236,7 @@
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "cca7e21817a6972eb9a03f0787243e79b43d7ecc90240529fd153407ecbfbafa",
+        "sha256": "810a46e4af290b102f1e9cbefc70bcfeb22effcf47656cb6e08eb5f7a7ddae11",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1352,7 +1352,7 @@
         "mode": "100644"
       },
       "lib/presentation/startup_screens.dart": {
-        "sha256": "10db8b025594dc76f91eb27c66495f484af3f142e2e76811b4417d15abfa65f3",
+        "sha256": "4b0a6c45ecdb01fb7df515f050bef8520d80dc7fcc52216a5672e8589d494fd7",
         "mode": "100644"
       },
       "lib/presentation/sticky_task_group.dart": {
@@ -1946,7 +1946,7 @@
         "mode": "100644"
       },
       "test/activity_values_test.dart": {
-        "sha256": "cb39aeeb0b9cb6628deed010cf2669a098e3c7c0db87c92a60806053f83845d9",
+        "sha256": "21f3bada54f355fb285fc5c9305add3fc36b57b11327a7f2a72ea86e9686c20e",
         "mode": "100644"
       },
       "test/adaptive_text_read_test.dart": {
@@ -2842,7 +2842,7 @@
         "mode": "100644"
       },
       "test/startup_screens_host_test.dart": {
-        "sha256": "24271c64df884a4bc10af601646bcab57176f9be94749b889bd8b5a1d04a7340",
+        "sha256": "a26c2593af478a63665d56ab12715b9a578f1d1a5bea8a8c1c4f8ab489fc5cd5",
         "mode": "100644"
       },
       "test/startup_smoke_fixture_contract_test.dart": {
@@ -3338,11 +3338,11 @@
         "mode": "100644"
       },
       "tool/performance/native-cold-start-v1.json": {
-        "sha256": "3d61a0d6d7cbdca891adf52e45d0e095ce38d0d013a8a7bfd351589ebc91260a",
+        "sha256": "8a4250880ddcdda82e3df5f5896d7667a0d6af4c557b83b2ae41d681347078ef",
         "mode": "100644"
       },
       "tool/performance/native_cold_start.py": {
-        "sha256": "f4b0262a716a740e9b40c623d769390737acfa3ea2400d7597fc1f99ac55178b",
+        "sha256": "e25b1b913103e46341f640d9f16c1018a81562f716b6f5f0969ee2ba8502a77f",
         "mode": "100644"
       },
       "tool/performance/operation_diagnostics.dart": {
@@ -3458,7 +3458,7 @@
         "mode": "100644"
       },
       "tool/test_native_cold_start.py": {
-        "sha256": "76c3006e9f693631e198e40425fb31e311fcbbd2a2962c858b0a035ddd113fb6",
+        "sha256": "a84cc1d51d74ece88f89b0f991d031c557f77327139588ff77636c769f06d60a",
         "mode": "100644"
       },
       "tool/test_performance_child_cleanup.py": {
@@ -3644,74 +3644,88 @@
     }
   },
   "binarySHA256": "fa063f092b58f2b6bf9d740c76bb09ca24eeb1b9253b204cc14d3ab8355c24f6",
-  "platform": "Linux x86_64 GTK release bundle under Xvfb on the registered reference host (Farnsworth); synthetic fixture; each warm start follows a verified normal close that sealed the warm proofs; OS page cache not flushed.",
+  "appSHA256": "2a8d68bbf37d8f7ec3f115498a8fe3dbf0c3ddf609bb6336721c59902cfdd341",
+  "hostProfileSHA256": "80fab54aa863db2546cf143f9971b8943fe8dec5d82b807a89a5835fde329876",
+  "host": {
+    "architecture": "x86_64",
+    "kernel": "7.2.14-arch1-1",
+    "python": "3.14.9",
+    "logicalCPUs": 16,
+    "cpuModel": "12th Gen Intel(R) Core(TM) i5-12600KF",
+    "filesystemType": "ext4"
+  },
+  "platform": "Linux x86_64 GTK release bundle built from a clean checkout, under Xvfb on the registered reference host (Farnsworth, ext4 measurement filesystem); synthetic fixture; each warm start follows a verified normal close that sealed the warm proofs; OS page cache not flushed.",
   "fixture": {
     "synthetic": true,
     "initialized": true,
     "format": "app-action-v5",
-    "baseline": "a0390c34-2c86-4cfc-a50f-401fcc8c06f1:2002",
-    "writer": "a0390c34-2c86-4cfc-a50f-401fcc8c06f1",
-    "user": "3e0705c2-34d6-4372-913c-92dff88a872e",
+    "baseline": "cc305769-e0c7-4e80-854f-348ba91418b3:2002",
+    "writer": "cc305769-e0c7-4e80-854f-348ba91418b3",
+    "user": "cd92aa6d-15eb-4046-8792-2550ff66a3b2",
     "rows": 2001,
-    "settings_sha256": "278ad893540fb244d12a322bf0525f31c106ce2491a2a329e590f4a8af1818f5",
+    "settings_sha256": "0dd60af60ff0b3f3832427b3d16d4e19628ba5b5a89c19f44f70cafd81153799",
     "native_sha256": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2"
+  },
+  "loadAverage1m": {
+    "before": 3.49169921875,
+    "after": 3.5703125
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 2490,
-    "appMs": 2150,
-    "externalMs": 2490,
+    "processMs": 1700,
+    "appMs": 1372,
+    "externalMs": 1700,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 1290,
-      "appMs": 1169,
-      "externalMs": 1297,
+      "processMs": 660,
+      "appMs": 520,
+      "externalMs": 655,
       "cleanWitnessVerified": true
     },
     {
       "run": 3,
-      "processMs": 1570,
-      "appMs": 1440,
-      "externalMs": 1569,
+      "processMs": 590,
+      "appMs": 444,
+      "externalMs": 589,
       "cleanWitnessVerified": true
     },
     {
       "run": 4,
-      "processMs": 1180,
-      "appMs": 1049,
-      "externalMs": 1179,
+      "processMs": 740,
+      "appMs": 572,
+      "externalMs": 739,
       "cleanWitnessVerified": true
     },
     {
       "run": 5,
-      "processMs": 1260,
-      "appMs": 1127,
-      "externalMs": 1256,
+      "processMs": 610,
+      "appMs": 472,
+      "externalMs": 606,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
-      "processMs": 1330,
-      "appMs": 1203,
-      "externalMs": 1330,
+      "processMs": 560,
+      "appMs": 427,
+      "externalMs": 564,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 1290,
+    "medianMs": 610,
     "budgetMs": 1000,
-    "passed": false,
+    "passed": true,
     "samplesMs": [
-      1290,
-      1570,
-      1180,
-      1260,
-      1330
+      660,
+      590,
+      740,
+      610,
+      560
     ],
-    "strictFirstLaunchMs": 2490
+    "strictFirstLaunchMs": 1700
   }
 }

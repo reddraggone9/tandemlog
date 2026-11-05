@@ -654,12 +654,16 @@ gate this run has no quiet-host controller; samples are taken as they come
 (the first failing result is 290 ms over, far outside any noise).
 Tests: `tool/test_native_cold_start.py`.
 
-**First result (2026-11-05, source `1c3b6e1`, Farnsworth, host load ~3–4 from
-other work): warm median 1,290 ms (1,180–1,570), strict first launch 2,490 ms.
-FAILS.** Warm phases: engine start to app state ~130 ms, settings ~150 ms, then
-history open ~800–1,100 ms; Task attach, Food and binding add ~60 ms. So the
-history open is what has to shrink: moving it off the UI isolate keeps the bar
-moving but doesn't by itself shorten it (see Next steps).
+**Current result (2026-11-05, source `bc3b3df`, Farnsworth ext4, 1-minute
+load ~3.5 from other work): warm median 610 ms (560–740), strict first launch
+1,700 ms. PASSES.** Warm phases: engine start to app state ~140 ms, settings
+~30 ms, history open ~300–400 ms, Task attach, Food and binding ~40 ms.
+The same source on Farnsworth's ZFS (`/home`) measured 1,290 ms (1,180–1,570):
+each of the open's three profile commits pays a ZFS fsync of 120–260 ms there,
+which is why the earlier real-copy numbers above were 2.0–2.4 s. So the gate
+holds the registered ext4 path; the phone (flash, real history) is still the
+number that matters and is measured once a release-signed build is on it.
+Real history on ext4 hasn't been measured.
 
 **Measured on a private copy of real history (2,004 records, 210 open tasks),
 Farnsworth GTK release bundle under Xvfb, 2026-11-03:**
