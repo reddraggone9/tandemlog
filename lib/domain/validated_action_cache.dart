@@ -32,7 +32,10 @@ final class ValidatedCachedAction {
 final class ValidatedActionCache {
   const ValidatedActionCache._(this.records);
   static const layout = 3;
-  static const maximumBytes = 16 * 1024 * 1024;
+  // Sized for years of household history (about 30 records and 100 KB a
+  // day); a bound only stops a damaged cache from exhausting memory.
+  static const maximumBytes = 64 * 1024 * 1024;
+  static const maximumRecords = 16384;
   final List<ValidatedCachedAction> records;
 
   // At most one in-flight verification. Two independently opened profiles can
@@ -104,7 +107,7 @@ final class ValidatedActionCache {
       throw const FormatException('Disposable action-cache scope differs.');
     }
     final rows = _freeze(envelope['records']) as List;
-    if (rows.length > 4096) {
+    if (rows.length > maximumRecords) {
       throw const FormatException(
         'Disposable action-cache count exceeds bound.',
       );

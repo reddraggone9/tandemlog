@@ -277,8 +277,11 @@ final class UnifiedHistory {
   // Reuse decoding only for identical canonical source strings. File bytes,
   // trusted prefixes, manifest policy, chains and admission are still checked.
   // Bound retained strings independently of the workspace/file byte limits.
+  // Same bounds as the sealed decode cache, so a restored cache is never
+  // evicted back into strict decoding.
   final _decodedRecords = <String, UnifiedRecord>{};
   int _decodedRecordBytes = 0;
+  static const _decodedRecordBudget = UnifiedDecodedCache.maximumBytes;
   int decodedRecords = 0;
   int semanticValidationRuns = 0;
   int incrementalFoodAdmissionRuns = 0, fullFoodAdmissionRuns = 0;
@@ -420,16 +423,18 @@ final class UnifiedHistory {
         current.incomplete ||
         current.pendingEffects ||
         !current.allVisibleTasksReady ||
-        current.records.length > 4096 ||
+        current.records.length > UnifiedDecodedCache.maximumRecords ||
         current.records.any(
           (record) => record.sequence > (current.published[record.writer] ?? 0),
         ) ||
         _acceptedHeads != _protectedHeads(manifest)) {
       return Future.value(null);
     }
+    // The payload holds every canonical record, so their bytes are a lower
+    // bound; the worker checks the exact encoded size.
     var estimate = 0;
     for (final record in current.records) {
-      estimate += utf8.encode(record.encode()).length * 4;
+      estimate += utf8.encode(record.encode()).length;
       if (estimate > UnifiedDecodedCache.maximumBytes) {
         return Future.value(null);
       }
@@ -490,10 +495,10 @@ final class UnifiedHistory {
       for (final record in records) {
         final raw = record.encode();
         final cost = raw.length * 4;
-        if (cost > 16 * 1024 * 1024) continue;
+        if (cost > _decodedRecordBudget) continue;
         while (_decodedRecords.isNotEmpty &&
-            (_decodedRecords.length >= 4096 ||
-                _decodedRecordBytes + cost > 16 * 1024 * 1024)) {
+            (_decodedRecords.length >= UnifiedDecodedCache.maximumRecords ||
+                _decodedRecordBytes + cost > _decodedRecordBudget)) {
           final oldest = _decodedRecords.keys.first;
           _decodedRecords.remove(oldest);
           _decodedRecordBytes -= oldest.length * 4;
@@ -523,11 +528,10 @@ final class UnifiedHistory {
     final record = UnifiedRecord.decode(raw);
     decodedRecords++;
     final cost = raw.length * 4;
-    const budget = 16 * 1024 * 1024;
-    if (cost <= budget) {
+    if (cost <= _decodedRecordBudget) {
       while (_decodedRecords.isNotEmpty &&
-          (_decodedRecords.length >= 4096 ||
-              _decodedRecordBytes + cost > budget)) {
+          (_decodedRecords.length >= UnifiedDecodedCache.maximumRecords ||
+              _decodedRecordBytes + cost > _decodedRecordBudget)) {
         final oldest = _decodedRecords.keys.first;
         _decodedRecords.remove(oldest);
         _decodedRecordBytes -= oldest.length * 4;

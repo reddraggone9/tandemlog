@@ -94,4 +94,65 @@ void main() {
     await stale.close(sealCache: false);
     await store.close();
   });
+
+  // Lee's history passed 4 MB in November 2026; the decode cache's old
+  // size estimate (4x the history against 16 MiB) then skipped it silently.
+  test('a history over 4 MB still reopens warm after a seal', () async {
+    final data = await Directory('${root.path}/data').create();
+    final folder = LocalLogFolder(data.path);
+    final person = const Uuid().v4();
+    final store = await openNativeFixtureStore(
+      folder,
+      '${root.path}/profile',
+      nativeLibraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
+    );
+    await store.command(person, 'user.created', {'name': 'Synthetic Lee'});
+    var bytes = 0;
+    for (var i = 0; bytes <= 4300 * 1024; i++) {
+      await store.createNativeFixtureTask(const Uuid().v4(), {
+        'title': 'Synthetic chore $i',
+        'description': List.generate(
+          300,
+          (j) => 'step ${i * 300 + j} of a checklist',
+        ).join('\n'),
+        'assignee': person,
+      });
+      if (i % 25 == 24) {
+        bytes = 0;
+        await for (final file in data.list()) {
+          if (file is File) bytes += await file.length();
+        }
+      }
+    }
+    final records = store.unified!.snapshot.records.length;
+    final rows = jsonEncode(store.rows);
+
+    await store.sealWarmCaches();
+    final sealed = await reopen(
+      folder,
+      await killedCopy('${root.path}/profile', 'sealed'),
+    );
+    expect(jsonEncode(sealed.rows), rows);
+    expect(sealed.warmProjectionReuses, 1);
+    expect(sealed.unified!.decodedCacheReuses, records);
+    expect(sealed.unified!.decodedRecords, 0);
+    await sealed.close(sealCache: false);
+
+    await store.createNativeFixtureTask(const Uuid().v4(), {
+      'title': 'Synthetic after the seal',
+      'description': '',
+      'assignee': person,
+    });
+    final after = jsonEncode(store.rows);
+    final stale = await reopen(
+      folder,
+      await killedCopy('${root.path}/profile', 'stale'),
+    );
+    expect(jsonEncode(stale.rows), after);
+    expect(stale.warmProjectionReuses, 0);
+    expect(stale.unified!.decodedCacheReuses, 0);
+    expect(stale.unified!.decodedRecords, greaterThan(records));
+    await stale.close(sealCache: false);
+    await store.close();
+  }, timeout: const Timeout(Duration(minutes: 3)));
 }

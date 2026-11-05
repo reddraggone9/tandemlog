@@ -340,6 +340,7 @@ class UnifiedDecodedCache {
   // Bump the receipt layout for closed validation/normalization changes.
   static const generation = ValidatedActionCache.layout;
   static const maximumBytes = ValidatedActionCache.maximumBytes;
+  static const maximumRecords = ValidatedActionCache.maximumRecords;
 
   static String encode(List<UnifiedRecord> records, String binding) =>
       jsonEncode(_payload(records, binding));
