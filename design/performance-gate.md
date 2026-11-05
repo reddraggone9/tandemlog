@@ -631,8 +631,9 @@ unchanged history of real size (about 2,000 records, 200 open tasks). A
 strict-path start (first open on a device, or after a crash) is reported
 alongside and isn't budgeted.
 
-**Budget: 1,000 ms median, active (Lee 2026-11-03: "add it to the gate now";
-it fails until the open gets faster).** From human time: launching should feel
+**Budget: 1,000 ms median, active (Lee 2026-11-03: "add it to the gate now",
+expecting it to fail until the open got faster; on the reference ext4 path it
+already passes, see below).** From human time: launching should feel
 immediate. Only Lee may change the number.
 
 **How it's gated.** [`native-cold-start-v1.json`](../tool/performance/native-cold-start-v1.json)
@@ -651,7 +652,7 @@ source or another host registration, measured under another budget or shape,
 or over budget. As with the reference qualification, the samples rest on the
 trusted executor. Unlike the AOT
 gate this run has no quiet-host controller; samples are taken as they come
-(the first failing result is 290 ms over, far outside any noise).
+(the load is recorded with each result).
 Tests: `tool/test_native_cold_start.py`.
 
 **Current result (2026-11-05, source `bc3b3df`, Farnsworth ext4, 1-minute
