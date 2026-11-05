@@ -43,8 +43,17 @@ class StartupLoading extends StatelessWidget {
 /// Data from a newer version: plain words, one Update action, the exact
 /// message behind Technical details.
 class UpdateAppScreen extends StatelessWidget {
-  const UpdateAppScreen({super.key, required this.details, this.onUpdate});
+  const UpdateAppScreen({
+    super.key,
+    required this.details,
+    this.onUpdate,
+    this.actions = const [],
+  });
   final String details;
+
+  /// Secondary actions beside Update (Retry, Settings): someone who can't
+  /// update yet still needs to check again or reach Settings.
+  final List<Widget> actions;
 
   /// Defaults to opening [appUpdateUri].
   final VoidCallback? onUpdate;
@@ -74,18 +83,26 @@ class UpdateAppScreen extends StatelessWidget {
                 'Tandemlog. Update this device to keep going; nothing was lost.',
               ),
               const SizedBox(height: 24),
-              FilledButton(
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size(64, 48),
-                  visualDensity: VisualDensity.standard,
-                ),
-                onPressed:
-                    onUpdate ??
-                    () => launchUrl(
-                      appUpdateUri,
-                      mode: LaunchMode.externalApplication,
+              Wrap(
+                spacing: 12,
+                runSpacing: 8,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  FilledButton(
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size(64, 48),
+                      visualDensity: VisualDensity.standard,
                     ),
-                child: const Text('Update'),
+                    onPressed:
+                        onUpdate ??
+                        () => launchUrl(
+                          appUpdateUri,
+                          mode: LaunchMode.externalApplication,
+                        ),
+                    child: const Text('Update'),
+                  ),
+                  ...actions,
+                ],
               ),
               const SizedBox(height: 16),
               Theme(

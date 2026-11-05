@@ -5054,6 +5054,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   child: needsAppUpdate(sharedSafetyError)
                                       ? UpdateAppScreen(
                                           details: sharedSafetyError!,
+                                          actions: [
+                                            _recoveryAction(
+                                              key: const ValueKey(
+                                                'retry-shared-read',
+                                              ),
+                                              label: 'Retry',
+                                              onPressed: _retrySharedRead,
+                                            ),
+                                            _recoveryAction(
+                                              key: const ValueKey(
+                                                'shared-recovery-settings',
+                                              ),
+                                              label: 'Settings',
+                                              onPressed: _showSettings,
+                                            ),
+                                          ],
                                         )
                                       : Column(
                                           children: [
@@ -5182,6 +5198,21 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
+  /// A secondary action on the Update screen; disabled while busy.
+  Widget _recoveryAction({
+    Key? key,
+    required String label,
+    required VoidCallback? onPressed,
+  }) => TextButton(
+    key: key,
+    style: TextButton.styleFrom(
+      minimumSize: const Size(64, 48),
+      visualDensity: VisualDensity.standard,
+    ),
+    onPressed: busy ? null : onPressed,
+    child: Text(label),
+  );
+
   /// Opening failed because another device wrote data this version can't
   /// read: a plain Update screen instead of the folder failure.
   bool get _needsUpdate =>
@@ -5197,7 +5228,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Widget _welcome() => busy
       ? const StartupLoading()
       : _needsUpdate
-      ? UpdateAppScreen(details: error!)
+      ? UpdateAppScreen(
+          details: error!,
+          actions: [
+            _recoveryAction(
+              label: 'Try again',
+              onPressed: choosingFolder
+                  ? null
+                  : () => _act(() async {
+                      await _open(settings!.folder!);
+                    }),
+            ),
+            _recoveryAction(
+              label: 'Settings',
+              onPressed: choosingFolder ? null : _showSettings,
+            ),
+          ],
+        )
       : Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(32),

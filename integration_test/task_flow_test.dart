@@ -1567,6 +1567,10 @@ void main() {
       await bad.writeAsString('{"v":99}\n');
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
+      // Plain Update screen; the exact refusal stays in Technical details.
+      expect(find.text('Update Tandemlog'), findsOneWidget);
+      await tester.tap(find.text('Technical details'));
+      await tester.pumpAndSettle();
       expect(
         find.textContaining('Unknown app history version'),
         findsOneWidget,
