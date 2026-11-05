@@ -6,10 +6,10 @@
     "tasks": 2000,
     "warmStarts": 5
   },
-  "sourceRevision": "112f61065103bd1a7ec1550ad086c87bdea2dd79",
+  "sourceRevision": "6159798eed2298d41a3183cba8a321f1617bb413",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "726051ca3b573c394fc1081714a6ff6e32bd32cfad5d6be0d34d5b185a6680bd",
+    "sha256": "77f5ce3639aea388b7aff81573300fc2d52296ecb94232a9f23223d034c8d8d0",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -652,7 +652,7 @@
         "mode": "100644"
       },
       "integration_test/activity_batch_workflow_test.dart": {
-        "sha256": "38396b325ca5d37c66208a90e91d55a26a7329e94dcb5eda630ff8cdf7f6e4fa",
+        "sha256": "9cc50308074ea95c831aa95b23ac3eab335634d36cfbcd3f637ebc9e31463186",
         "mode": "100644"
       },
       "integration_test/activity_refresh_layout_test.dart": {
@@ -1032,7 +1032,7 @@
         "mode": "100644"
       },
       "lib/application/activity_values.dart": {
-        "sha256": "a41087f78b27ab088d1021c16ee5388e5747f58a8e9f457035cc02013105301e",
+        "sha256": "f00980ecaf0847ab0d47ab6efdf529ad9249d06dbe785dac226ebd7a396de572",
         "mode": "100644"
       },
       "lib/application/checklist_completion_command.dart": {
@@ -1060,7 +1060,7 @@
         "mode": "100644"
       },
       "lib/application/workspace_session.dart": {
-        "sha256": "f5b84856b8a9af44a0d72c070d299ef0ce255db12dc045548b25b5e84bb08957",
+        "sha256": "17bbcd63d92826710560dac986737d6c924b8fd667a0ec2d31f0b03455892b27",
         "mode": "100644"
       },
       "lib/diagnostics/operation_observer.dart": {
@@ -1176,7 +1176,7 @@
         "mode": "100644"
       },
       "lib/domain/validated_action_cache.dart": {
-        "sha256": "60079452d35f8ad540b0edcb9884aa3e8406955511d11dcf6a2bd2edd22c2954",
+        "sha256": "34467a5872a13bf4abc69181bba699305c90575367c9a97e810b04e53c955746",
         "mode": "100644"
       },
       "lib/domain/visible_task_move.dart": {
@@ -1236,7 +1236,7 @@
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "810a46e4af290b102f1e9cbefc70bcfeb22effcf47656cb6e08eb5f7a7ddae11",
+        "sha256": "3b22a0bac47643af9f99ea6797504ce176fb97b486edc1f3a4440dd677f4cf6e",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1264,7 +1264,7 @@
         "mode": "100644"
       },
       "lib/presentation/activity_log.dart": {
-        "sha256": "405c6916ad40293d84f399f2bbe9d427a19e30b1a21f9fa6d81933211c3466b4",
+        "sha256": "491c56daa662b09417e1cbaa38acb7e2393cc2146b715fbee82f6d50ad28a11b",
         "mode": "100644"
       },
       "lib/presentation/bulk_apply.dart": {
@@ -1439,6 +1439,10 @@
         "sha256": "566e37df4ad4a212c4b645e8ae432faefe38ea5d1075e46d9f2336f6b8db3587",
         "mode": "100644"
       },
+      "lib/storage/history_store.dart": {
+        "sha256": "ec5334e00f00791d07c80eb1f092c14e22db775c412eadfd60e2468f374813c4",
+        "mode": "100644"
+      },
       "lib/storage/local_durability.dart": {
         "sha256": "df08c5f7424f38adfcd5b28358aed6faa6044eadfb1ee60579ae55ebdf7924a1",
         "mode": "100644"
@@ -1460,7 +1464,7 @@
         "mode": "100644"
       },
       "lib/storage/task_store.dart": {
-        "sha256": "799f0af5eb62047650d0242090477406f4f78e59c677e53907026f72ea82f4f5",
+        "sha256": "2b760c16bb46bad4802cf00d354e1fdcc329b3b539789f4e2c865a760a4c4836",
         "mode": "100644"
       },
       "lib/storage/task_tables.dart": {
@@ -1472,7 +1476,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "ff268eec97ec863d5b1ef950894532a9add61474e8a56b94a45b382ee13deb22",
+        "sha256": "5fbfcd6615cdd7f1d22243ad9227663c224311bce076c8933032dfd04ea891f0",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -1480,7 +1484,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_record.dart": {
-        "sha256": "a8a2c7b169c2da3bbb48eae4acec98e982b8274b8b046f29170ad5a017109304",
+        "sha256": "e2166f9c94d0ecf903744a6db5c7819319ebc3a47f82263219fd2587be495ad1",
         "mode": "100644"
       },
       "lib/storage/workspace_state.dart": {
@@ -1925,10 +1929,6 @@
         "mode": "100644",
         "normalized": "pubspec-version-v1"
       },
-      "test/action_cache_flight_test.dart": {
-        "sha256": "c9e3ec73393deeabe111fa431f703042c5769353b60abbb8822f53350aa70bfd",
-        "mode": "100644"
-      },
       "test/action_history_test.dart": {
         "sha256": "f1b2b6e6aa460f735a32e8a64b712c73e3358523cb76ec20d98695a7298faf72",
         "mode": "100644"
@@ -1946,7 +1946,7 @@
         "mode": "100644"
       },
       "test/activity_values_test.dart": {
-        "sha256": "21f3bada54f355fb285fc5c9305add3fc36b57b11327a7f2a72ea86e9686c20e",
+        "sha256": "de7e189cb5cd0ad76abd86b4014a7d3ad993d96852c04ac088249a0db623cc07",
         "mode": "100644"
       },
       "test/adaptive_text_read_test.dart": {
@@ -1954,7 +1954,7 @@
         "mode": "100644"
       },
       "test/agent_cli_test.dart": {
-        "sha256": "bfe46ca22b687338b76de699c77c748c56fc869b4caa664c10a3d745abf46204",
+        "sha256": "95d231587c2c6671d9f1d78b039d8385a91ab8ed68124a3ebc06b6f1f280a169",
         "mode": "100644"
       },
       "test/agent_overlay_folder_test.dart": {
@@ -2649,6 +2649,10 @@
         "sha256": "85ae34d233d999130e7a6d1d4f3c6431322f4a98907542934dc04dc74e062e5a",
         "mode": "100644"
       },
+      "test/history_store_test.dart": {
+        "sha256": "6a0b4cdf7a244da33762d1e45b8244bf5a79049b597252fd3a0a7fc5b30af5da",
+        "mode": "100644"
+      },
       "test/history_verification_report_test.dart": {
         "sha256": "62dc6d921e84b1f22939fbbc32e452681c5f043dbbbfd6bc980c515aeed42f6c",
         "mode": "100644"
@@ -2702,7 +2706,7 @@
         "mode": "100644"
       },
       "test/native_exit_host_test.dart": {
-        "sha256": "adeee4838282c10cc808b8f5f983fa2d42e1ce592bd5443e97c761bb472ef2a7",
+        "sha256": "58dfcb053904f872407296d31f21cfd30d43c6533ef4b2f80a6ccc7856c19467",
         "mode": "100644"
       },
       "test/native_text_engine_test.dart": {
@@ -2954,7 +2958,7 @@
         "mode": "100644"
       },
       "test/task_cache_digest_test.dart": {
-        "sha256": "5f5bfc22d7ecc2b91fb01ac4c9e790d3ab794e82a2d9af2f92f00951aa7a1f51",
+        "sha256": "f09b35d48fe71a9c4fbd0a5f73895a4f47337c04335983a78cfd69cc4ad569a3",
         "mode": "100644"
       },
       "test/task_cache_rows_compare_test.dart": {
@@ -3118,7 +3122,7 @@
         "mode": "100644"
       },
       "test/unified_decoded_cache_test.dart": {
-        "sha256": "3fbc6cf176c5db1ea77835d7ba10613b3143f2f328f6d61a3b72a819e0a70ace",
+        "sha256": "8b3415ab6403e92040fe0f9f7ad625beab42ce06eeb1c086742cc405a8e152c5",
         "mode": "100644"
       },
       "test/unified_enrollment_test.dart": {
@@ -3170,7 +3174,7 @@
         "mode": "100644"
       },
       "test/warm_reseal_test.dart": {
-        "sha256": "578cd1437e5845d54a8ee5081fb3a4eb714d42333d12fcdb62e0a8445a50ced3",
+        "sha256": "280df64f03710ed79531f600b6573e30cae3f081dcdb969fee7c26ce910c5f43",
         "mode": "100644"
       },
       "test/workspace_state_test.dart": {
@@ -3290,7 +3294,7 @@
         "mode": "100644"
       },
       "tool/measure_startup.py": {
-        "sha256": "5216dd0c879f8406533dfdd9919366ca05d9e53a749852b543a86538c7acd652",
+        "sha256": "fac466547a09a61a7804e5f242aeb8c40c2c1c441a9a26a7dc818fd65433a332",
         "mode": "100644"
       },
       "tool/minimal_startup.dart": {
@@ -3498,7 +3502,7 @@
         "mode": "100644"
       },
       "tool/test_startup_diagnostics.py": {
-        "sha256": "63aeb48e14658e261384c857c3433f6065140d6a7b4ad60458d2e9352ee47a71",
+        "sha256": "c7b9a59d74c343fc9683d9f24402550f409e26578d9ba354f5b5746a9f5d1486",
         "mode": "100644"
       },
       "tool/test_startup_fixture_guard.py": {
@@ -3644,7 +3648,7 @@
     }
   },
   "binarySHA256": "fa063f092b58f2b6bf9d740c76bb09ca24eeb1b9253b204cc14d3ab8355c24f6",
-  "appSHA256": "2a8d68bbf37d8f7ec3f115498a8fe3dbf0c3ddf609bb6336721c59902cfdd341",
+  "appSHA256": "4f001b42d9ebb3959d66b4ffbacfff71b82ed434f7d60bd50eba7ace4ccc3601",
   "hostProfileSHA256": "80fab54aa863db2546cf143f9971b8943fe8dec5d82b807a89a5835fde329876",
   "host": {
     "architecture": "x86_64",
@@ -3659,73 +3663,73 @@
     "synthetic": true,
     "initialized": true,
     "format": "app-action-v5",
-    "baseline": "c8db7724-fca8-4161-98c0-73ff0aae3132:2002",
-    "writer": "c8db7724-fca8-4161-98c0-73ff0aae3132",
-    "user": "55df6d94-b396-4ad6-b6cb-8369783a946e",
+    "baseline": "f790b331-b8f9-4375-98af-0d73e73cb4bd:2002",
+    "writer": "f790b331-b8f9-4375-98af-0d73e73cb4bd",
+    "user": "222ca3fd-20c0-4c24-a2d4-ccc4851da303",
     "rows": 2001,
-    "settings_sha256": "ad6b5ae18c520f0b8615ae8a40ed068d2beaf61fc78e9f5634c07f8f4d9dfd39",
+    "settings_sha256": "83f9715f1c340c79361f708827e58abbab1b0b4754e7c129e7bd24b6afd78a1d",
     "native_sha256": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2"
   },
   "loadAverage1m": {
-    "before": 2.322265625,
-    "after": 2.2568359375
+    "before": 7.68701171875,
+    "after": 6.8857421875
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 1750,
-    "appMs": 1294,
-    "externalMs": 1757,
+    "processMs": 1580,
+    "appMs": 1215,
+    "externalMs": 1576,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 560,
-      "appMs": 438,
-      "externalMs": 567,
+      "processMs": 420,
+      "appMs": 294,
+      "externalMs": 420,
       "cleanWitnessVerified": true
     },
     {
       "run": 3,
-      "processMs": 560,
-      "appMs": 428,
-      "externalMs": 559,
+      "processMs": 420,
+      "appMs": 291,
+      "externalMs": 418,
       "cleanWitnessVerified": true
     },
     {
       "run": 4,
-      "processMs": 580,
-      "appMs": 440,
-      "externalMs": 572,
+      "processMs": 420,
+      "appMs": 291,
+      "externalMs": 420,
       "cleanWitnessVerified": true
     },
     {
       "run": 5,
-      "processMs": 550,
-      "appMs": 422,
-      "externalMs": 550,
+      "processMs": 420,
+      "appMs": 296,
+      "externalMs": 420,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
-      "processMs": 560,
-      "appMs": 431,
-      "externalMs": 562,
+      "processMs": 420,
+      "appMs": 289,
+      "externalMs": 424,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 560,
+    "medianMs": 420,
     "budgetMs": 1000,
     "passed": true,
     "samplesMs": [
-      560,
-      560,
-      580,
-      550,
-      560
+      420,
+      420,
+      420,
+      420,
+      420
     ],
-    "strictFirstLaunchMs": 1750
+    "strictFirstLaunchMs": 1580
   }
 }
