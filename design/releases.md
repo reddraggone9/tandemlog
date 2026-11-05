@@ -432,11 +432,10 @@ Historical cause and local/live read-only evidence:
 
 [Stable 2026.11.0](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.0), release 432735389, is immutable Latest, published 2026-11-03T13:29:56Z from `b363a13fadca08b72eb020ee0abc0a29a84563d8`. Lee accepted RC.1 at 06:51 CST on 2026-11-03. Version/documentation-only promotion reuses qualified reference q12 `9d82e5c2` / identity `a579f229` without an override or fresh reference run. Signed candidate 41639486016 and automatic push CI 41639469591 passed on attempt 1 with no reruns. Exact-asset Android and GTK RC 112→113 in-place upgrades pass on the retained synthetic labs. Three installers and the portable ZIP were verified in draft before publication, with no rebuild. Anonymous public verification checks all 4 assets, the owner APK signer, exact notes and images/tag/source/Latest and all 49 previous releases/tags unchanged. [Receipts and platform limits](../evidence/stable-2026.11.0/README.md).
 
-## Post-RC109 update-channel development
+## Update channels — dropped (Lee 2026-11-03)
 
-[Channel preparation and outstanding gates](../packaging/update-channels.md)
-cover the authorized signed Flatpak Pages and public Scoop ZIP direction. These
-channels are not enabled. Public channel advancement is allowed only after the
-accepted stable release becomes GitHub Latest; prerelease publication never
-advances them. Preserve exact accepted artifacts/OSTree commit and the existing
-new-signing-credential/native/closed-inventory requirements.
+Publish-time installs already reach every household device, so the signed
+Flatpak Pages repository, Scoop/winget channel and post-stable device rollout
+were dropped. Their unused tooling (`flatpak_channel.py`, `update_channels.py`,
+`household_update_policy.py`, the Advance stable update channels workflow and
+the build's signing options) was removed; it never ran and no key was created.

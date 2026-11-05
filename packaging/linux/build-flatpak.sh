@@ -5,21 +5,6 @@ runtime_version=50
 build="$RUNNER_TEMP/tandemlog-flatpak-build"
 repo="$RUNNER_TEMP/tandemlog-flatpak-repo"
 qa_repo="$RUNNER_TEMP/tandemlog-flatpak-qa-repo"
-# Explicit opt-in while the new signing identity/channel still awaits provisioning.
-# Never create credentials in a build or silently advertise an unsigned origin.
-sign_options=()
-bundle_options=()
-if [[ -n "${TANDEMLOG_FLATPAK_REPO_URL:-}${TANDEMLOG_FLATPAK_SIGNING_KEY:-}${TANDEMLOG_FLATPAK_GPG_HOME:-}${TANDEMLOG_FLATPAK_PUBLIC_KEY:-}" ]]; then
-  : "${TANDEMLOG_FLATPAK_REPO_URL:?channel URL required}"
-  : "${TANDEMLOG_FLATPAK_SIGNING_KEY:?existing approved signing key required}"
-  : "${TANDEMLOG_FLATPAK_GPG_HOME:?private signing home required}"
-  : "${TANDEMLOG_FLATPAK_PUBLIC_KEY:?reviewed public key required}"
-  [[ "$TANDEMLOG_FLATPAK_REPO_URL" == 'https://reddraggone9.github.io/tandemlog/flatpak' ]]
-  [[ "$TANDEMLOG_FLATPAK_SIGNING_KEY" =~ ^[0-9A-Fa-f]{40}$ ]]
-  test -s "$TANDEMLOG_FLATPAK_PUBLIC_KEY"
-  sign_options=(--gpg-sign="$TANDEMLOG_FLATPAK_SIGNING_KEY" --gpg-homedir="$TANDEMLOG_FLATPAK_GPG_HOME")
-  bundle_options=(--repo-url="$TANDEMLOG_FLATPAK_REPO_URL" --gpg-keys="$TANDEMLOG_FLATPAK_PUBLIC_KEY")
-fi
 flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --user --noninteractive flathub "org.gnome.Platform//$runtime_version" "org.gnome.Sdk//$runtime_version"
 flatpak build-init "$build" "$app" org.gnome.Sdk org.gnome.Platform "$runtime_version"
@@ -41,9 +26,9 @@ appstreamcli compose --no-net --prefix=/ --origin="$app" \
   --icons-dir="$build/files/share/app-info/icons/flatpak" --components="$app" "$build/files"
 python3 packaging/linux/verify_flatpak.py catalog "$build/files"
 flatpak build-finish "$build" --command=tandemlog --socket=wayland --socket=fallback-x11 --share=ipc --device=dri
-flatpak build-export "${sign_options[@]}" "$repo" "$build" master
-flatpak build-update-repo "${sign_options[@]}" "$repo"
-flatpak build-bundle "${bundle_options[@]}" --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
+flatpak build-export "$repo" "$build" master
+flatpak build-update-repo "$repo"
+flatpak build-bundle --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
   "$repo" dist/tandemlog-linux-x64.flatpak "$app" master
 (cd dist && sha256sum tandemlog-linux-x64.flatpak > linux-SHA256SUMS.txt)
 
