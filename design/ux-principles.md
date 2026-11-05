@@ -25,7 +25,7 @@ contradicting it.
 15. Bound long content on rows (e.g. 3 change lines, then "+N more"); details show everything (11-02).
 
 16. Dialogs use the space they have: a list dialog fills the window height (insets only) instead of a fixed box (11-03).
-17. Grouped changes can be expanded: one action that changed several things shows a readable summary that opens inline into ordinary rows, not a special dialog (11-03).
+17. Grouped changes can be expanded: one action that changed several things shows a readable summary that opens inline into ordinary rows, not a special dialog (11-03) The rows inside read as its contents (smaller text) and show they can be tapped; the expand chevron never splits the summary's words (11-05).
 
 ## Actions and discovery
 18. Offer the next action the person will want from where they are: open the item, the store link, Undo (10-28, 11-02).

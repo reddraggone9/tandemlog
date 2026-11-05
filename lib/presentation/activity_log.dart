@@ -288,10 +288,17 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       contentPadding: part
           ? EdgeInsets.only(left: 40, right: 16, bottom: last ? 12 : 0)
           : null,
+      // Parts read as the group's contents: the collapsed names line's size,
+      // not the row title's.
       title: Text(
         part ? _partHeadline(e, d, batch) : _headline(e, d),
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
+        style: part
+            ? theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface,
+              )
+            : null,
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,6 +314,16 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
           if (!part) Text(_meta(e)),
         ],
       ),
+      // Parts open their own details; the chevron says so. It scales with
+      // the text, like the summary's chevron.
+      trailing: part
+          ? Icon(
+              Icons.chevron_right,
+              key: const ValueKey('activity-part-opens'),
+              size: MediaQuery.textScalerOf(context).scale(20),
+              color: theme.colorScheme.onSurfaceVariant,
+            )
+          : null,
       onTap: () => _details(e),
     );
   }
@@ -321,19 +338,20 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
         key: ValueKey(e.id),
         minTileHeight: 0,
         minVerticalPadding: 8,
-        // The chevron shares line 1, so the row keeps the full width.
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                summary.title,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+        // The chevron follows the summary's last word: the row keeps the full
+        // width, and a wrapped summary isn't split by it. The summary is a
+        // short count, so it isn't cut (that would cut the chevron too).
+        title: Text.rich(
+          TextSpan(
+            // No-break space: the chevron wraps with the last word.
+            text: '${summary.title}\u00a0',
+            children: [
+              WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: Icon(expanded ? Icons.expand_less : Icons.expand_more),
               ),
-            ),
-            Icon(expanded ? Icons.expand_less : Icons.expand_more),
-          ],
+            ],
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

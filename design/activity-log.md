@@ -107,17 +107,21 @@ food per line, a bulk edit changes several foods.
   in the rows it expands to: `6 foods added from a Walmart purchase` (store
   only when the record's purchases share one), `3 foods edited`, then
   `, 2 other changes` when kinds are mixed. Below it the first item names
-  (`Oat milk, Beans and 4 more`) and the usual meta line. A trailing chevron
-  shows it expands. Expanded, the names line goes: the parts name the items
-  (Lee 2026-11-05).
+  (`Oat milk, Beans and 4 more`) and the usual meta line. A chevron right
+  after the summary's last word shows it expands: it wraps with that word, so
+  a two-line summary at 390 px isn't split by it (Lee 2026-11-05). Expanded,
+  the names line goes: the parts name the items (Lee 2026-11-05).
 - Tap (or Enter) expands it inline; the parts appear indented under it, each a
   normal row built by the same row/details code as a single-change record.
   Parts leave out the meta line: time and device are the parent's (a heading
   states what's shared). For the same reason a part of the kind the summary
   counts leaves out that kind: `Oat milk`, not `Food added: Oat milk` under
   `3 foods added` (it also wrapped after `Food added:` at 2x, Lee 2026-11-05);
-  other parts (`, 2 other changes`) and the part's details keep the full line. Tapping a part opens the ordinary details dialog for
-  just that change, with Open. Tap the parent again to collapse.
+  other parts (`, 2 other changes`) and the part's details keep the full line.
+  Parts are in the names line's smaller text (they're the group's contents,
+  not entries of their own), and each ends in a small `›` chevron: tapping a
+  part opens the ordinary details dialog for just that change, with Open
+  (Lee 2026-11-05). Tap the parent again to collapse.
 - Left out: a special batch dialog, per-part times, purchase bookkeeping lines.
 - Product name/brand/size lines that only repeat a new food's own description
   are left out of a food add; store link and Keep at least stay.

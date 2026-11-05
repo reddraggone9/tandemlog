@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/food/food_purchase_import.dart';
@@ -121,9 +122,10 @@ void registerActivityBatchWorkflowTests({
         final list = find.byKey(const ValueKey('activity-list'));
         // The log uses the window's height, not a fixed box.
         expect(tester.getSize(list).height, greaterThan(height * 0.6));
+        const title = '3 foods added from a Walmart purchase';
         final summary = find.descendant(
           of: list,
-          matching: find.text('3 foods added from a Walmart purchase'),
+          matching: find.textContaining(title),
         );
         expect(summary, findsOneWidget);
         await captureNativeFixtureUi(tester, '$prefix-list');
@@ -190,6 +192,41 @@ void registerActivityBatchWorkflowTests({
               .dy;
           expect(next - tops.last, greaterThan(tops[1] - tops[0] + 8));
         }
+        // Parts read as the group's contents, in the names line's smaller
+        // text, and a chevron on each says it opens.
+        double fontSize(Finder text) =>
+            tester.renderObject<RenderParagraph>(text).text.style!.fontSize!;
+        expect(fontSize(beans), lessThan(fontSize(summary)));
+        final opens = find.descendant(
+          of: list,
+          matching: find.byKey(const ValueKey('activity-part-opens')),
+        );
+        expect(opens, findsNWidgets(3));
+        // The hint scales with the text (a fixed icon nearly vanished at 2x).
+        expect(
+          tester.getSize(opens.first).height,
+          greaterThanOrEqualTo(fontSize(beans) * scale),
+        );
+        // The expand chevron follows the summary's last word on its line,
+        // never between two of its words.
+        final paragraph = tester.renderObject<RenderParagraph>(summary);
+        final last = MatrixUtils.transformRect(
+          paragraph.getTransformTo(null),
+          paragraph
+              .getBoxesForSelection(
+                TextSelection(
+                  baseOffset: title.length - 'purchase'.length,
+                  extentOffset: title.length,
+                ),
+              )
+              .single
+              .toRect(),
+        );
+        final chevron = tester.getRect(
+          find.descendant(of: list, matching: find.byIcon(Icons.expand_less)),
+        );
+        expect(chevron.left, greaterThanOrEqualTo(last.right - 1));
+        expect(chevron.center.dy, inInclusiveRange(last.top, last.bottom));
         await captureNativeFixtureUi(tester, '$prefix-expanded');
         // A part opens the ordinary details for just that food.
         await reveal(beans);
@@ -216,6 +253,7 @@ void registerActivityBatchWorkflowTests({
         await tester.pumpAndSettle();
         expect(part('Synthetic beans'), findsNothing);
         expect(inList(names), findsOneWidget);
+        expect(find.byIcon(Icons.chevron_right), findsNothing);
         await tester.tap(find.text('Close').last);
         await tester.pumpAndSettle();
         // Completion notice names the next due date plainly.
