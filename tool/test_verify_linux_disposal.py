@@ -8,27 +8,35 @@ def event(kind, name, **fields):
 
 
 def complete_trace():
-    rows = [event('watch', n) for n in ('window', 'view', 'engine')]
+    rows = [event('watch', n) for n in ('window', 'view', 'engine', 'renderer')]
     rows += [event('detach', 'window'), event('destroyed', 'window'),
-             event('destroyed', 'view'), event('finalized', 'view'),
-             event('finalized', 'window'), event('finalized', 'engine')]
+             event('destroyed', 'view'), event('destroyed', 'renderer'),
+             event('finalized', 'engine'), event('finalized', 'renderer'),
+             event('finalized', 'view'), event('finalized', 'window')]
     rows += [event('run-return', n, watched=1, destroyed=int(n != 'engine'), finalized=1)
-             for n in ('window', 'view', 'engine')]
+             for n in ('window', 'view', 'engine', 'renderer')]
     return rows
 
 
 class LinuxDisposalEvidence(unittest.TestCase):
     def test_complete_same_thread_disposal_precedes_loop_return(self):
         result = validate_trace('\n'.join(complete_trace()), 42)
-        self.assertEqual(result['objectsFinalizedBeforeLoopReturn'], ['engine', 'view', 'window'])
+        self.assertEqual(result['objectsFinalizedBeforeLoopReturn'], ['engine', 'renderer', 'view', 'window'])
         self.assertTrue(result['sameOwningThread'])
 
     def test_clean_exit_without_real_engine_finalization_is_rejected(self):
         rows = [r for r in complete_trace() if 'event=finalized object=engine' not in r]
-        with self.assertRaisesRegex(RuntimeError, 'remains live'):
+        with self.assertRaisesRegex(RuntimeError, 'shutdown completed|remains live'):
             validate_trace('\n'.join(rows), 42)
         with self.assertRaises(RuntimeError):
             validate_trace('', 42)
+
+    def test_renderer_release_before_raster_shutdown_is_rejected(self):
+        rows = complete_trace()
+        rows.remove(event('finalized', 'engine'))
+        rows.insert(rows.index(event('finalized', 'window')), event('finalized', 'engine'))
+        with self.assertRaisesRegex(RuntimeError, 'Renderer finalized before engine'):
+            validate_trace('\n'.join(rows), 42)
 
     def test_late_foreign_duplicate_and_false_state_are_rejected(self):
         base = complete_trace()

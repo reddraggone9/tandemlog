@@ -14,7 +14,7 @@ from measure_startup import (inspect_stopped_witness, launch, seed_fixture,
                              verify_loaded)
 
 PREFIX = 'TANDEMLOG_LIFECYCLE_PROBE '
-OBJECTS = {'window', 'view', 'engine'}
+OBJECTS = {'window', 'view', 'engine', 'renderer'}
 
 
 def digest(path):
@@ -47,6 +47,8 @@ def validate_trace(text, pid):
             if name == 'engine' or not detached or 'watch' not in history or 'destroyed' in history or 'finalized' in history:
                 raise RuntimeError('Invalid widget destruction order')
         elif event == 'finalized':
+            if name == 'renderer' and 'finalized' not in seen['engine']:
+                raise RuntimeError('Renderer finalized before engine/raster shutdown completed')
             if 'watch' not in history or 'finalized' in history or (name != 'engine' and 'destroyed' not in history):
                 raise RuntimeError('Invalid finalization order')
         elif event == 'run-return':

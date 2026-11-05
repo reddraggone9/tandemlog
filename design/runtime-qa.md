@@ -1186,3 +1186,16 @@ recovery and Android96 canonical evidence retain their own exact source coverage
 ### Preappend checklist recovery follow-up
 
 The e73440f Android debug APK passed actual SAF onboarding, native peer delivery while Food remained active, and current/non-owner partial-tail handling. Fresh raw readbacks verified all six original emulator settings before shutdown; the worker, controller, helper processes and fifteen private ports were independently checked absent/closed. Complete invalid input correctly fenced the checklist modal, but Save remained fenced after the exact synthetic fault was removed. This is a confirmed preappend recovery defect, separate from the earlier prepared-receipt retry path, and that native case remains failed. The focused repair permits explicit modal Save to revalidate shared history without durable intent, restart retry or automatic append. New create/edit host regressions and existing receipt controls pass; a new exact-source artifact must verify the repaired flow. These observations do not replace outstanding GTK/manual, hosted native-suite or current demo gates.
+
+## RC114 Linux renderer lifetime repair
+
+A candidate normal-close trial reproduced a native compositor mutex abort. GTK
+could dispose/finalize the renderer while its engine still had raster work. The
+runner now retains the widget tree from creation through ordinary engine shutdown,
+then releases the renderers on the GTK thread. It never forcibly disposes the
+engine or treats an incomplete shutdown as success. The native observer delegates
+actual GObject type finalizers (weak notifications alone observe disposal), and
+requires engine finalization before renderer finalization. The original runner
+fails this native invariant; the repair passes 30 fresh/warm closes. Independent
+ownership and integrated-observer reviews pass; hosted candidate acceptance is
+still required. No rendering backend or engine revision changed.

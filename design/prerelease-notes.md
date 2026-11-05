@@ -26,3 +26,5 @@
 ![Update screen, before and after. After: Update Tandemlog, Update and Try again buttons, Settings on the gear, and collapsed Technical details.](media/next114/5-update.png)
 
 - Starting the app is faster, especially on Android after it was closed in the background.
+
+- **Linux:** fixed an occasional crash when closing the app.

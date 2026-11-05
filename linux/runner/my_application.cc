@@ -17,6 +17,7 @@ struct _MyApplication {
   GtkApplication parent_instance;
   char** dart_entrypoint_arguments;
   GPtrArray* window_refs;
+  GPtrArray* retained_widgets;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -37,6 +38,17 @@ gboolean my_application_shutdown_complete(MyApplication* self) {
     }
   }
   return TRUE;
+}
+
+// Keep the renderers alive across recursive GtkWidget disposal. Their engine
+// references are released by dispose(), but compositors are released by
+// finalize(). Raster threads must stop before those compositors can finalize.
+static void retain_shutdown_widget(GtkWidget* widget, gpointer data) {
+  auto* retained = static_cast<GPtrArray*>(data);
+  g_ptr_array_add(retained, g_object_ref(widget));
+  if (GTK_IS_CONTAINER(widget)) {
+    gtk_container_forall(GTK_CONTAINER(widget), retain_shutdown_widget, retained);
+  }
 }
 
 // Called when first Flutter frame received.
@@ -106,6 +118,10 @@ static void my_application_activate(GApplication* application) {
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
   register_time_observer(view);
 
+  // Flutter can drop GtkApplication ownership before our shutdown callback.
+  // Capture descendants now, while the complete renderer tree is available.
+  retain_shutdown_widget(GTK_WIDGET(window), self->retained_widgets);
+
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
@@ -166,7 +182,13 @@ static void my_application_shutdown(GApplication* application) {
     g_main_context_iteration(nullptr, FALSE);
   }
   if (!my_application_shutdown_complete(self)) {
+    // Never drop the last renderer reference while its engine may still use
+    // the compositor. main() reports this incomplete shutdown as a failure.
+    // Leave these bounded references for process cleanup on that failure path.
+    (void)g_steal_pointer(&self->retained_widgets);
     g_warning("Flutter engines did not complete normal shutdown");
+  } else {
+    g_clear_pointer(&self->retained_widgets, g_ptr_array_unref);
   }
 
   G_APPLICATION_CLASS(my_application_parent_class)->shutdown(application);
@@ -177,6 +199,7 @@ static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
   g_clear_pointer(&self->window_refs, g_ptr_array_unref);
+  g_clear_pointer(&self->retained_widgets, g_ptr_array_unref);
   G_OBJECT_CLASS(my_application_parent_class)->dispose(object);
 }
 
@@ -191,6 +214,7 @@ static void my_application_class_init(MyApplicationClass* klass) {
 
 static void my_application_init(MyApplication* self) {
   self->window_refs = g_ptr_array_new_with_free_func(free_window_ref);
+  self->retained_widgets = g_ptr_array_new_with_free_func(g_object_unref);
 }
 
 MyApplication* my_application_new() {
