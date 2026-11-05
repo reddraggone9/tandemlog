@@ -35,8 +35,12 @@ question and says nothing it doesn't know yet.
   this version can't read. Title "Update Tandemlog"; body "Another device saved
   changes with a newer version of Tandemlog. Update this device to keep going;
   nothing was lost."; a filled **Update** button that opens the platform's
-  update (the releases page; the Flatpak and Scoop channels when they exist);
-  a collapsed **Technical details** with the exact message and a copy button.
+  update (the releases page); beside it **Try again** at startup, or **Retry**
+  and **Settings** in session, because someone who can't update right away
+  still needs to check again once the other device's data is fixed, or reach
+  Settings to pick another folder (at startup the toolbar gear is visible, so
+  no second Settings button); a collapsed **Technical details** with the exact
+  message and a copy button.
   Shown at startup and when a sync brings such data in; the real corruption
   screen (integrity failure, Retry and Settings) stays separate. The required
   version isn't named: records don't carry the writer's app version.

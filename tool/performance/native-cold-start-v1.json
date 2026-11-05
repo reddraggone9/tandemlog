@@ -8,5 +8,5 @@
     "tasks": 2000,
     "warmStarts": 5
   },
-  "platform": "Linux x86_64 GTK release bundle under Xvfb on the registered reference host (Farnsworth); synthetic fixture; each warm start follows a verified normal close that sealed the warm proofs; OS page cache not flushed."
+  "platform": "Linux x86_64 GTK release bundle built from a clean checkout, under Xvfb on the registered reference host (Farnsworth, ext4 measurement filesystem); synthetic fixture; each warm start follows a verified normal close that sealed the warm proofs; OS page cache not flushed."
 }

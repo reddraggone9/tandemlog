@@ -630,8 +630,10 @@ class ActivityValues {
     return stores.length == 1 ? stores.single : null;
   }
 
-  /// A part's lines inside [batch]: a store link to the store the summary
+  /// A part's lines inside [batch]: a new store link to the store the summary
   /// already names would repeat on every part, so it stays in details only.
+  /// Matched by the link's readable name, so an unknown store's domain
+  /// (`aldi.us` for `Aldi`) still shows; a changed link keeps its old value.
   List<ActivityChange> partChanges(
     ActivityEntry batch,
     List<ActivityChange> changes,
@@ -641,6 +643,7 @@ class ActivityValues {
     return [
       for (final c in changes)
         if (!(c.label == _productLabels['links'] &&
+            c.before == null &&
             (c.links?.isNotEmpty ?? false) &&
             c.links!.every((l) => storeLinkLabel(l).toLowerCase() == store)))
           c,

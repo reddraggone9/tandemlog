@@ -1,11 +1,14 @@
 """Native cold start to first list: the `native.coldStart.firstList` gate case.
 
-`measure` runs the Linux release bundle under the caller's X display on a fresh
-synthetic workspace: one strict first launch (reported, not budgeted), then warm
+`measure` builds the Linux release bundle from a clean checkout of the bound
+source and runs it under the caller's X display on a fresh synthetic workspace,
+on the registered reference host (its environment must match the registration): one strict first launch (reported, not budgeted), then warm
 repeat starts, each after a verified normal close that sealed the warm proofs.
 A sample is `process_ms` from the app's own `TANDEMLOG_FIRST_LIST` line: process
 start to the first frame that shows the task list. The result binds the relevant
-source identity, so a source change needs a fresh measurement.
+source identity and the host registration, so a source or host change needs a
+fresh measurement. Like the reference qualification, the samples rest on the
+trusted executor; the hashes bind what was measured, they don't prove it ran.
 
 `verify` is the required check: the committed result must match the current
 relevant source, its median is recomputed from the samples, and that median must
@@ -22,7 +25,8 @@ import sys
 TOOL = Path(__file__).resolve().parent
 sys.path[:0] = [str(TOOL), str(TOOL.parent)]
 
-from reference_receipt import recorded_identity, source_identity  # noqa: E402
+from reference_receipt import (PROFILE, fingerprint, profile, recorded_identity,  # noqa: E402
+                               source_identity)
 
 BUDGET = 'tool/performance/native-cold-start-v1.json'
 RESULT = 'evidence/native-cold-start/current/result.json'
@@ -70,7 +74,7 @@ def judge(budget, result):
     return {'case': CASE, 'medianMs': median, 'budgetMs': budget['medianMs'],
             'passed': median <= budget['medianMs'],
             'samplesMs': [run['processMs'] for run in warm],
-            'strictFirstLaunchMs': result.get('strictFirstLaunch', {}).get('processMs')}
+            'strictFirstLaunchMs': (result.get('strictFirstLaunch') or {}).get('processMs')}
 
 
 def verify(repo, path=None):
@@ -83,6 +87,9 @@ def verify(repo, path=None):
     current, committed = recorded_identity(repo, result.get('relevantSource'), result.get('sourceRevision'))
     need(result.get('relevantSource') == current == committed,
          'Native cold-start result is for other source; measure this source')
+    need(result.get('hostProfileSHA256') == digest(repo / PROFILE) and
+         result.get('host') == profile(repo)['environment'],
+         'Native cold-start result is not from the registered reference host')
     decision = judge(read_budget(repo), result)
     need(decision['passed'], f"{CASE}: median {decision['medianMs']} ms over the {decision['budgetMs']} ms budget "
                              f"(samples {decision['samplesMs']})")
@@ -93,11 +100,23 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def measure(repo, binary, workspace, output, xdotool):
+def measure(repo, workspace, output, xdotool):
     import subprocess
     from measure_startup import inspect_stopped_witness, launch, seed_fixture, verify_loaded
     repo, root = Path(repo).resolve(), Path(workspace).resolve()
     budget = read_budget(repo)
+    host = fingerprint(root.parent)
+    need(host == profile(repo)['environment'],
+         f'Not the registered reference host/filesystem: {host}')
+    dirty = subprocess.check_output(['git', '-C', str(repo), 'status', '--porcelain', '--untracked-files=no'],
+                                    text=True).splitlines()
+    need(not [line for line in dirty if not line[3:].startswith(('evidence/', 'design/'))],
+         'measure needs a clean checkout: the bundle must come from the bound source')
+    root.mkdir(parents=True)
+    with (root / 'build.log').open('w') as log:
+        need(subprocess.run(['flutter', 'build', 'linux', '--release'], cwd=repo, stdout=log,
+                            stderr=subprocess.STDOUT).returncode == 0, 'Release build failed; see build.log')
+    binary = repo / 'build/linux/x64/release/bundle/tandemlog'
     tasks, warm_starts = budget['shape']['tasks'], budget['shape']['warmStarts']
     diagnostics = root / 'diagnostics'
     diagnostics.mkdir(parents=True, exist_ok=True)
@@ -119,6 +138,8 @@ def measure(repo, binary, workspace, output, xdotool):
     result = {'schemaVersion': 1, 'case': CASE, 'budgetMs': budget['medianMs'], 'shape': budget['shape'],
               'sourceRevision': subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip(),
               'relevantSource': source_identity(repo), 'binarySHA256': digest(binary),
+              'appSHA256': digest(binary.parent / 'lib/libapp.so'),
+              'hostProfileSHA256': digest(repo / PROFILE), 'host': host,
               'platform': budget['platform'], 'fixture': receipt,
               'strictFirstLaunch': runs[0], 'warmStarts': runs[1:]}
     result['decision'] = judge(budget, result)
@@ -131,7 +152,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('mode', choices=('measure', 'verify'))
     parser.add_argument('--repo', type=Path, required=True)
-    parser.add_argument('--binary', type=Path, help='measure: the release bundle executable')
     parser.add_argument('--workspace', type=Path, help='measure: fresh disposable directory; never a real profile')
     parser.add_argument('--output', type=Path, help='measure: result file to write')
     parser.add_argument('--result', type=Path, help='verify: result file (default: the committed evidence)')
@@ -139,9 +159,9 @@ def main():
     args = parser.parse_args()
     try:
         if args.mode == 'measure':
-            need(args.binary and args.workspace and args.output, 'measure needs --binary, --workspace and --output')
+            need(args.workspace and args.output, 'measure needs --workspace and --output')
             need(not args.workspace.exists(), 'measure needs a fresh workspace')
-            decision = measure(args.repo, args.binary, args.workspace, args.output, args.xdotool)
+            decision = measure(args.repo, args.workspace, args.output, args.xdotool)
         else:
             decision = verify(args.repo, args.result)
     except (GateError, ValueError) as error:

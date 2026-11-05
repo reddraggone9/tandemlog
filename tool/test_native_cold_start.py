@@ -64,6 +64,17 @@ class NativeColdStartTest(unittest.TestCase):
             with self.assertRaises(gate.GateError):
                 gate.verify(REPO, file)
 
+    def test_verify_refuses_a_result_for_other_source(self):
+        committed = json.loads((REPO / gate.RESULT).read_text())
+        files = committed['relevantSource']['files']
+        name = sorted(files)[0]
+        committed['relevantSource']['files'] = {**files, name: '0' * 64}
+        with tempfile.TemporaryDirectory() as tmp:
+            file = Path(tmp) / 'result.json'
+            file.write_text(json.dumps(committed))
+            with self.assertRaises((gate.GateError, ValueError)):
+                gate.verify(REPO, file)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -57,9 +57,10 @@ void main() {
     await open(tester, FormatFailure(message));
     expect(find.text('Update Tandemlog'), findsOneWidget);
     expect(find.widgetWithText(FilledButton, 'Update'), findsOneWidget);
-    // Someone who can't update yet can still check again or reach Settings.
+    // Someone who can't update yet can still check again; Settings is the
+    // toolbar gear, not a second button.
     expect(find.widgetWithText(TextButton, 'Try again'), findsOneWidget);
-    expect(find.widgetWithText(TextButton, 'Settings'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Settings'), findsNothing);
     // Plain words first; the exact message only behind Technical details.
     expect(find.text(message), findsNothing);
     expect(find.textContaining('A little less to remember'), findsNothing);

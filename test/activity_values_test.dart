@@ -291,6 +291,20 @@ void main() {
           'Synthetic rice\nStore link: Kroger',
         },
       );
+      // Case doesn't matter; a changed link keeps its line and old value.
+      expect(
+        values
+            .partChanges(entry, const [
+              ActivityChange('Store link', 'Walmart', null, [
+                'https://WWW.WALMART.COM/ip/9',
+              ]),
+              ActivityChange('Store link', 'Walmart', 'Kroger', [
+                'https://www.walmart.com/ip/9',
+              ]),
+            ])
+            .map((c) => c.before),
+        ['Kroger'],
+      );
       final milk = parts.firstWhere((p) => p.targets.length == 2);
       expect(values.describe(milk).changes.single.links, [
         'https://www.walmart.com/ip/1',

@@ -5230,6 +5230,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       : _needsUpdate
       ? UpdateAppScreen(
           details: error!,
+          // Settings stays on the toolbar gear, which is visible here.
           actions: [
             _recoveryAction(
               label: 'Try again',
@@ -5238,10 +5239,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   : () => _act(() async {
                       await _open(settings!.folder!);
                     }),
-            ),
-            _recoveryAction(
-              label: 'Settings',
-              onPressed: choosingFolder ? null : _showSettings,
             ),
           ],
         )

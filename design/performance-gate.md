@@ -639,13 +639,17 @@ immediate. Only Lee may change the number.
 holds the budget and shape: 2,000 synthetic tasks, one strict first launch
 (reported, not budgeted), then five warm starts, each after a verified normal
 close that sealed the warm proofs (the run refuses a warm start that didn't
-reuse them). `tool/performance/native_cold_start.py measure` runs the Linux GTK
-release bundle under Xvfb on the reference host (Farnsworth) and writes a
-result bound to the relevant-source identity; it is committed at
+reuse them). `tool/performance/native_cold_start.py measure` builds the Linux
+GTK release bundle from a clean checkout, runs it under Xvfb on the registered
+reference host (Farnsworth; its environment, including the ext4 measurement
+filesystem, must match `reference-host-v1.json`) and writes a result bound to
+the relevant-source identity and host registration; it is committed at
 `evidence/native-cold-start/current/result.json`. The required
 `reference-performance` job runs `native_cold_start.py verify`: it recomputes
 the median from the samples and fails when the result is missing, for other
-source, measured under another budget or shape, or over budget. Unlike the AOT
+source or another host registration, measured under another budget or shape,
+or over budget. As with the reference qualification, the samples rest on the
+trusted executor. Unlike the AOT
 gate this run has no quiet-host controller; samples are taken as they come
 (the first failing result is 290 ms over, far outside any noise).
 Tests: `tool/test_native_cold_start.py`.

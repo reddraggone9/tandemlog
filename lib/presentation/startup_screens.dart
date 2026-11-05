@@ -40,8 +40,8 @@ class StartupLoading extends StatelessWidget {
   );
 }
 
-/// Data from a newer version: plain words, one Update action, the exact
-/// message behind Technical details.
+/// Data from a newer version: plain words, Update first, then [actions];
+/// the exact message behind Technical details.
 class UpdateAppScreen extends StatelessWidget {
   const UpdateAppScreen({
     super.key,
