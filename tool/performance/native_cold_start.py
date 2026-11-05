@@ -122,15 +122,15 @@ def measure(repo, workspace, output, xdotool):
     diagnostics = root / 'diagnostics'
     diagnostics.mkdir(parents=True, exist_ok=True)
     library = str(Path(binary).resolve().parent / 'lib/libtandemlog_text.so')
-    folder, profile, receipt = seed_fixture(root, tasks, library)
+    folder, profile_dir, receipt = seed_fixture(root, tasks, library)
     load_before = os.getloadavg()
     runs, previous = [], None
     for i in range(warm_starts + 1):
-        before = inspect_stopped_witness(profile, folder)
-        status = launch(binary, profile, diagnostics, i + 1, xdotool=xdotool)
+        before = inspect_stopped_witness(profile_dir, folder)
+        status = launch(binary, profile_dir, diagnostics, i + 1, xdotool=xdotool)
         status['witnessBeforeLaunch'] = before
         status['previousNormalExitVerified'] = bool(previous and previous['shutdown']['normalExitVerified'])
-        verify_loaded(profile, folder, tasks, status, i > 0)
+        verify_loaded(profile_dir, folder, tasks, status, i > 0)
         log = (diagnostics / f'run-{i + 1}.stdout-stderr.log').read_text(errors='replace')
         app_ms, process_ms = first_list(log)
         runs.append({'run': i + 1, 'processMs': process_ms, 'appMs': app_ms,
