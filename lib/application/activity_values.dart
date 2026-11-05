@@ -584,28 +584,13 @@ class ActivityValues {
   /// [items] names the first parts' items.
   ({String title, String? items}) batchSummary(ActivityEntry entry) {
     final parts = this.parts(entry);
-    final counts = <String, int>{};
-    for (final p in parts) {
-      counts.update(p.summary, (n) => n + 1, ifAbsent: () => 1);
-    }
-    final dominant = counts.entries.reduce((a, b) => b.value > a.value ? b : a);
+    final dominant = _dominant(parts);
     final others = parts.length - dominant.value;
     var title = dominant.value == 1
         ? '${parts.length} changes'
         : activityCount(dominant.key, dominant.value);
-    final record = _records[entry.id];
-    final stores = {
-      for (final e in record?.effects ?? const <UnifiedEffect>[])
-        if (e.food?.operation case final op?
-            when op.action == FoodAction.purchase &&
-                op.purchase?['store'] is String)
-          op.purchase!['store'] as String,
-    };
-    if (dominant.value > 1 &&
-        stores.length == 1 &&
-        dominant.key.startsWith('Food')) {
-      title += ' from a ${stores.single} purchase';
-    }
+    final store = summaryStore(entry);
+    if (store != null) title += ' from a $store purchase';
     if (dominant.value > 1 && others > 0) {
       title += ', $others other change${others == 1 ? '' : 's'}';
     }
@@ -619,6 +604,47 @@ class ActivityValues {
           ? names.join(', ')
           : '${names.take(2).join(', ')} and ${names.length - 2} more',
     );
+  }
+
+  MapEntry<String, int> _dominant(List<ActivityEntry> parts) {
+    final counts = <String, int>{};
+    for (final p in parts) {
+      counts.update(p.summary, (n) => n + 1, ifAbsent: () => 1);
+    }
+    return counts.entries.reduce((a, b) => b.value > a.value ? b : a);
+  }
+
+  /// The store a batch's summary names (`from a Walmart purchase`), or null.
+  String? summaryStore(ActivityEntry entry) {
+    final parts = this.parts(entry);
+    if (parts.isEmpty) return null;
+    final dominant = _dominant(parts);
+    if (dominant.value < 2 || !dominant.key.startsWith('Food')) return null;
+    final stores = {
+      for (final e in _records[entry.id]?.effects ?? const <UnifiedEffect>[])
+        if (e.food?.operation case final op?
+            when op.action == FoodAction.purchase &&
+                op.purchase?['store'] is String)
+          op.purchase!['store'] as String,
+    };
+    return stores.length == 1 ? stores.single : null;
+  }
+
+  /// A part's lines inside [batch]: a store link to the store the summary
+  /// already names would repeat on every part, so it stays in details only.
+  List<ActivityChange> partChanges(
+    ActivityEntry batch,
+    List<ActivityChange> changes,
+  ) {
+    final store = summaryStore(batch)?.toLowerCase();
+    if (store == null) return changes;
+    return [
+      for (final c in changes)
+        if (!(c.label == _productLabels['links'] &&
+            (c.links?.isNotEmpty ?? false) &&
+            c.links!.every((l) => storeLinkLabel(l).toLowerCase() == store)))
+          c,
+    ];
   }
 
   /// The device's name before [record]. A device names only itself, so its

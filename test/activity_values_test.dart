@@ -273,6 +273,24 @@ void main() {
         'Synthetic beans\nStore link: Walmart': ('Food added', 1),
         'Synthetic rice\nStore link: Kroger': ('Food added', 1),
       });
+      // Inside the batch, only the link to another store stays on its part.
+      expect(values.summaryStore(entry), 'Walmart');
+      expect(
+        {
+          for (final p in parts)
+            [
+              ?values.describe(p).subject,
+              ...values
+                  .partChanges(entry, values.describe(p).changes)
+                  .map((c) => c.line),
+            ].join('\n'),
+        },
+        {
+          'Synthetic milk ×2',
+          'Synthetic beans',
+          'Synthetic rice\nStore link: Kroger',
+        },
+      );
       final milk = parts.firstWhere((p) => p.targets.length == 2);
       expect(values.describe(milk).changes.single.links, [
         'https://www.walmart.com/ip/1',

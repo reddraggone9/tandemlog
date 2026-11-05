@@ -121,14 +121,18 @@ food per line, a bulk edit changes several foods.
 **Store links.** Show the store's name as the link text (`Walmart`), not the
 URL: Activity change lines, and the Running low and row menu actions
 (`Open Walmart link`). Known stores by domain; else the domain without `www.`.
+Inside an expanded batch whose summary already names the store (`from a
+Walmart purchase`), a part leaves out a store link to that same store; a link
+to another store stays, and the part's details still show the link to open
+(Lee 2026-11-03).
 
 Independent screenshot review (2026-11-03, 24 native GTK captures, dark/light,
 1000/390 px, 1x/2x): fixed the item-names line losing its count at 2x (now
 every name when three or fewer, and it wraps), change lines cut at 390 px 2x,
 the chevron squeezing the summary (it now shares line 1) and even spacing inside
-an expanded group (parts sit tighter). Judgment calls left for Lee: "Store link:
-Walmart" on every part of a Walmart purchase, the pale notice bar in light theme
-(app-wide), title and icon sizing at 2x (app-wide).
+an expanded group (parts sit tighter). Judgment calls left for Lee: the pale notice bar in light theme (app-wide),
+title and icon sizing at 2x (app-wide). The completion wording below is
+Lee's choice (2026-11-03).
 
 **Completion notice.** `Completed 1 task. Next due 2026-11-10.` (or `Next
 starts …`; `Next occurrence scheduled.` without a date or for several).

@@ -78,7 +78,7 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       result.add(i);
       if (_expanded.contains(entries[i].id)) {
         for (final part in values.parts(entries[i])) {
-          result.add(_Part(part));
+          result.add(_Part(part, entries[i]));
         }
       }
     }
@@ -252,8 +252,11 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
 
   /// One change: a single-change record, or one part of a batched record.
   /// Parts are indented and leave out the parent's time and device.
-  Widget _changeRow(ActivityEntry e, {bool part = false}) {
+  /// [batch] is set for a part shown inside its expanded batch.
+  Widget _changeRow(ActivityEntry e, {ActivityEntry? batch}) {
     final d = _row(e);
+    final part = batch != null;
+    final changes = part ? values.partChanges(batch, d.changes) : d.changes;
     final theme = Theme.of(context);
     return ListTile(
       key: ValueKey(e.key),
@@ -270,14 +273,14 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final change in d.changes.take(3))
+          for (final change in changes.take(3))
             Text.rich(
               activityChangeSpan(change),
               maxLines: 4,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
-          if (d.changes.length > 3) Text('+${d.changes.length - 3} more'),
+          if (changes.length > 3) Text('+${changes.length - 3} more'),
           if (!part) Text(_meta(e)),
         ],
       ),
@@ -374,7 +377,7 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
             return const Center(child: Text('No activity yet.'));
           }
           final item = items[i - 1];
-          if (item is _Part) return _changeRow(item.entry, part: true);
+          if (item is _Part) return _changeRow(item.entry, batch: item.batch);
           if (item is String) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
@@ -554,8 +557,9 @@ class ActivityChangeList extends StatelessWidget {
 }
 
 class _Part {
-  const _Part(this.entry);
+  const _Part(this.entry, this.batch);
   final ActivityEntry entry;
+  final ActivityEntry batch;
 }
 
 /// `old → new`; store links in the new value open the store, labelled by its

@@ -152,7 +152,8 @@ void registerActivityBatchWorkflowTests({
         final beans = inList('Food added: Synthetic beans');
         await reveal(beans);
         expect(beans, findsOneWidget);
-        expect(inList('Store link: Walmart'), findsWidgets);
+        // The summary names Walmart, so its parts don't repeat the link.
+        expect(inList('Store link'), findsNothing);
         expect(find.textContaining('https://'), findsNothing);
         // Capture from the top, with the parent row in view.
         tester.state<ScrollableState>(scrollable).position.jumpTo(0);
