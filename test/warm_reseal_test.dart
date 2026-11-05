@@ -9,9 +9,10 @@ import 'package:uuid/uuid.dart';
 
 import '../integration_test/native_text_fixtures.dart';
 
-/// Android stops backgrounded apps without a clean close. Sealing the warm
-/// proofs when the app is backgrounded keeps the next cold start warm; a
-/// write after the seal must still reopen correctly, strictly.
+/// Android stops backgrounded apps without a clean close. The history store
+/// is current after every commit; the Task projection witness is sealed when
+/// the app is backgrounded. A write after that seal invalidates only the
+/// witness: the history still reopens from the store, the Task rows strictly.
 void main() {
   late Directory root;
   setUp(() async {
@@ -59,13 +60,16 @@ void main() {
     }
     final rows = jsonEncode(store.rows);
 
-    // Without a seal, a stopped process rebuilds everything strictly.
+    // Without a seal, a stopped process rebuilds the Task rows strictly but
+    // still reads its history from the store.
     final unsealed = await reopen(
       folder,
       await killedCopy('${root.path}/profile', 'unsealed'),
     );
+    expect(jsonEncode(unsealed.rows), rows);
     expect(unsealed.warmProjectionReuses, 0);
-    expect(unsealed.unified!.decodedCacheReuses, 0);
+    expect(unsealed.unified!.decodedCacheReuses, greaterThan(0));
+    expect(unsealed.unified!.decodedRecords, 0);
     await unsealed.close(sealCache: false);
 
     await store.sealWarmCaches();
@@ -78,7 +82,8 @@ void main() {
     expect(sealed.unified!.decodedCacheReuses, greaterThan(0));
     await sealed.close(sealCache: false);
 
-    // A write after the seal makes it stale: correct rows, strict rebuild.
+    // A write after the seal makes the Task witness stale: correct rows,
+    // strict Task rebuild, history still from the store.
     await store.createNativeFixtureTask(const Uuid().v4(), {
       'title': 'Synthetic after the seal',
       'description': '',
@@ -91,13 +96,15 @@ void main() {
     );
     expect(jsonEncode(stale.rows), after);
     expect(stale.warmProjectionReuses, 0);
+    expect(stale.unified!.decodedRecords, 0);
     await stale.close(sealCache: false);
     await store.close();
   });
 
-  // Lee's history passed 4 MB in November 2026; the decode cache's old
-  // size estimate (4x the history against 16 MiB) then skipped it silently.
-  test('a history over 4 MB still reopens warm after a seal', () async {
+  // Lee's history passed 4 MB in November 2026, and the old decoded-history
+  // blob's size estimate then skipped it silently. The store has no cap
+  // beyond the log limits: twice the phone's history still reopens warm.
+  test('a history twice the phone copy still reopens warm', () async {
     final data = await Directory('${root.path}/data').create();
     final folder = LocalLogFolder(data.path);
     final person = const Uuid().v4();
@@ -108,7 +115,7 @@ void main() {
     );
     await store.command(person, 'user.created', {'name': 'Synthetic Lee'});
     var bytes = 0;
-    for (var i = 0; bytes <= 4300 * 1024; i++) {
+    for (var i = 0; bytes <= 2 * 4300 * 1024; i++) {
       await store.createNativeFixtureTask(const Uuid().v4(), {
         'title': 'Synthetic chore $i',
         'description': List.generate(
@@ -150,9 +157,9 @@ void main() {
     );
     expect(jsonEncode(stale.rows), after);
     expect(stale.warmProjectionReuses, 0);
-    expect(stale.unified!.decodedCacheReuses, 0);
-    expect(stale.unified!.decodedRecords, greaterThan(records));
+    expect(stale.unified!.decodedCacheReuses, records + 1);
+    expect(stale.unified!.decodedRecords, 0);
     await stale.close(sealCache: false);
     await store.close();
-  }, timeout: const Timeout(Duration(minutes: 3)));
+  }, timeout: const Timeout(Duration(minutes: 6)));
 }

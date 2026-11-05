@@ -14,6 +14,17 @@ from unittest.mock import patch
 from measure_startup import launch, verify_loaded, inspect_stopped_witness, send_wm_delete_window, STARTUP_DEADLINE_SECONDS
 
 
+def _synthetic_store(db, location, epoch):
+    """A minimal history store whose one seal equals its protected head."""
+    store=hashlib.sha256(location.encode()).hexdigest(); space='11111111-1111-4111-8111-111111111111'
+    db.execute(f'CREATE TABLE history_{store}_records(writer,seq,start_offset,length,hash,raw,typed)')
+    db.execute(f'CREATE TABLE history_{store}_seals(writer,sequence,end_offset,hash,last_start)')
+    db.execute('CREATE TABLE protected_app_heads(space,epoch,writer,sequence,hash,bytes,digest,published)')
+    db.execute(f'INSERT INTO history_{store}_seals VALUES (?,?,?,?,?)',('w',2,90,'d'*64,40))
+    db.execute('INSERT INTO protected_app_heads VALUES (?,?,?,?,?,?,?,?)',(space,epoch,'w',2,'d'*64,90,'chain1:'+'d'*64,2))
+    return (f'app5.store.{store}', json.dumps([1,3,space,epoch,'e'*64,'w',True]))
+
+
 class StartupDiagnostics(unittest.TestCase):
     def test_early_native_failure_retains_stdout_stderr_and_exit_status(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -190,23 +201,18 @@ class StartupDiagnostics(unittest.TestCase):
             profile.mkdir(); shared.mkdir(); epoch='22222222-2222-4222-8222-222222222222'
             (shared/'tandemlog-space.json').write_text(json.dumps({'epoch': epoch}))
             key=hashlib.sha256(f'{shared}#app5:{epoch}'.encode()).hexdigest()
-            decoded_key='app5.location.'+hashlib.sha256(str(shared).encode()).hexdigest()
-            payload='synthetic opaque decoded payload'; proof=hashlib.sha256(payload.encode()).hexdigest()
-            task=json.dumps({'generation':5,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
+            task=json.dumps({'generation':6,'native':True,'manifest':'a'*64,'revision':'b'*64})
             with closing(sqlite3.connect(profile/'local.sqlite')) as db, db:
                 db.execute('CREATE TABLE profile_metadata(key TEXT PRIMARY KEY,value TEXT)')
-                for name,value in [(f'app5.task.cache.{key}',task),(f'app5.decoded.proof.{decoded_key}',proof),
-                                   (f'app5.decoded.payload.{decoded_key}',payload)]:
+                binding=_synthetic_store(db,str(shared),epoch)
+                for name,value in [(f'app5.task.cache.{key}',task),binding]:
                     db.execute('INSERT INTO profile_metadata VALUES (?,?)',(name,value))
             before=(profile/'local.sqlite').read_bytes()
             observed=inspect_stopped_witness(profile,shared)
             self.assertTrue(observed['taskProofShapeValid'])
-            self.assertTrue(observed['decodedPayloadHashMatches'])
+            self.assertTrue(observed['historyStoreMatchesHeads'])
             self.assertFalse(observed['productionReuseVerified'])
             self.assertEqual((profile/'local.sqlite').read_bytes(),before)
-
-
-
 
     def test_stopped_witness_hashes_explicit_location_verbatim(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -216,26 +222,22 @@ class StartupDiagnostics(unittest.TestCase):
             location=r'R:\synthetic\shared/data'
             self.assertNotEqual(str(PureWindowsPath(location)),location)
             key=hashlib.sha256(f'{location}#app5:{epoch}'.encode()).hexdigest()
-            decoded_key='app5.location.'+hashlib.sha256(location.encode()).hexdigest()
-            payload='opaque synthetic decoded payload'
-            task=json.dumps({'generation':5,'native':True,'manifest':'a'*64,'revision':'b'*64,'digest':'c'*64})
+            task=json.dumps({'generation':6,'native':True,'manifest':'a'*64,'revision':'b'*64})
             with closing(sqlite3.connect(profile/'local.sqlite')) as db,db:
                 db.execute('CREATE TABLE profile_metadata(key TEXT PRIMARY KEY,value TEXT)')
                 db.executemany('INSERT INTO profile_metadata VALUES (?,?)',[
-                    (f'app5.task.cache.{key}',task),
-                    (f'app5.decoded.proof.{decoded_key}',hashlib.sha256(payload.encode()).hexdigest()),
-                    (f'app5.decoded.payload.{decoded_key}',payload)])
+                    (f'app5.task.cache.{key}',task),_synthetic_store(db,location,epoch)])
             before=(profile/'local.sqlite').read_bytes()
             normalized=inspect_stopped_witness(profile,shared)
             self.assertFalse(normalized['taskProofPresent'])
-            self.assertFalse(normalized['decodedProofPresent'])
+            self.assertFalse(normalized['historyStorePresent'])
             normalized_spelling=inspect_stopped_witness(
                 profile,shared,folder_location=str(PureWindowsPath(location)))
             self.assertFalse(normalized_spelling['taskProofPresent'])
-            self.assertFalse(normalized_spelling['decodedProofPresent'])
+            self.assertFalse(normalized_spelling['historyStorePresent'])
             observed=inspect_stopped_witness(profile,shared,folder_location=location)
             self.assertTrue(observed['taskProofShapeValid'])
-            self.assertTrue(observed['decodedPayloadHashMatches'])
+            self.assertTrue(observed['historyStoreMatchesHeads'])
             self.assertFalse(observed['productionReuseVerified'])
             self.assertEqual((profile/'local.sqlite').read_bytes(),before)
 

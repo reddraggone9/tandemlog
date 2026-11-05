@@ -426,6 +426,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (marker == 'TANDEMLOG_READY_MS') {
         debugPrint(startupTrace.line('TANDEMLOG_FIRST_LIST'));
       }
+      // Lists came from the stored state; apply other devices' newer records
+      // now (Lee 11-05: usable during catch-up).
+      if (store?.unified?.catchUpPending ?? false) importer?.request();
     });
   }
 
@@ -612,6 +615,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       textEngine: engine,
       alive: () => mounted,
       onPhase: startupTrace.mark,
+      deferPeerCatchUp: true,
     );
     if (session == null) return false;
     final opened = session.tasks;

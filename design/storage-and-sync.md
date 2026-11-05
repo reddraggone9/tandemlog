@@ -8,7 +8,7 @@ One atomic action/Save contains its typed effects in one physical record. Bulk c
 
 The private profile owns one exclusive SQLite connection and serialized queue. Complete candidate heads and both projections commit before publication. Exact admitted effect bytes acknowledge saves independently of physical line numbers. Unfinished bytes/native handles remain in memory only; startup admits canonical history without replaying unfinished private intent. Partial tails wait or receive owner-only safe suffix cleanup before new writes. Complete corruption, conflict copies and unknown complete semantics fail closed. A provider's in-progress staging copy of a valid app history (Syncthing's `.syncthing.<writer>.applog.tmp` / `~syncthing~<writer>.applog.tmp`) is not yet delivered history and is skipped until it is renamed into place; every other unexpected `.applog` name still fails closed.
 
-Current admission follows [ADR0007](decisions/0007-canonical-history-integrity.md): providers with demonstrated bounded seek and usable change hints reuse unchanged admitted files and read only growth from the last complete newline. Missing hints, replacement, shrinkage or uncertainty use bounded full reads. Unchanged hints cannot reveal same-size old-prefix damage; Settings Verify Logs and full reconstruction deliberately read and verify all bytes. Explicit chain commitments bind protected physical heads; legacy byte digests are fully checked before promotion. Own actions validate a coherent snapshot plus their delta and confirm exact appended bytes before committing both projections. Startup still reads actual canonical bytes and verifies physical/protected/migration evidence. A one-shot layout2 decode receipt can reuse exact-raw immutable Task/Food objects; a separate clean Task projection witness avoids redundant semantic rebuilding. Cache parsing/checksums and complete typed-table proof checks remain proportional to saved cache size. Tooling records actual read counts and timing boundaries. A shared poll performs common admission for both adapters; unchanged semantic slices retain identity.
+Current admission follows [ADR0007](decisions/0007-canonical-history-integrity.md): providers with demonstrated bounded seek and usable change hints reuse unchanged admitted files and read only growth from the last complete newline. Missing hints, replacement, shrinkage or uncertainty use bounded full reads. Unchanged hints cannot reveal same-size old-prefix damage; Settings Verify Logs and full reconstruction deliberately read and verify all bytes. Explicit chain commitments bind protected physical heads; legacy byte digests are fully checked before promotion. Own actions validate a coherent snapshot plus their delta and confirm exact appended bytes before committing both projections. Startup reads the [local history store](history-store.md) (Lee 11-05): per writer, a sealed offset plus the exact last record, then only bytes after the seal; a strict full read and rebuild happens only when that check fails or there is no store. A separate clean Task projection witness, guarded by row triggers, avoids redundant semantic rebuilding. Tooling records actual read counts and timing boundaries. A shared poll performs common admission for both adapters; unchanged semantic slices retain identity.
 
 ## External coordinated cutover
 
@@ -19,22 +19,7 @@ Retain continuing installation IDs and folder selections plus simple preferences
 Only a separate live-cutover approval can adopt converted history. Old applications must remain stopped afterward. Reverting after new-format writes requires reconciliation rather than copying old files over new work. No development test opens, resets or converts a production profile/workspace.
 
 
-Clean-cache startup preserves the same generation3 byte digest, scope binding,
-kind/position checks and opaque receipts. Fresh decoded JSON trees are frozen in
-place before unmodifiable views escape, avoiding redundant collection copies.
-Pure whole-batch verification runs in a short-lived Dart isolate with only three
-immutable strings; profile transactions, canonical reads/admission and native
-text ownership stay on the owning queue. The one-shot proof is consumed durably
-before awaiting the worker. Concurrent opens may share only an in-flight opaque
-receipt with exactly equal payload bytes, checksum and full binding; completed
-receipts are not retained in a process-wide cache. Unavailable or failed optional verification falls
-back to strict canonical reconstruction. This improves UI responsiveness rather
-than promising a particular duration for verification or disk durability.
-At clean close, bounded decoded-payload encoding/checksumming overlaps the
-independent Task-cache seal. Each proof is published in its own transaction on
-the serialized profile queue; no SQL or native owner crosses the worker boundary.
-A crash between the transactions only forgoes one or both optional caches.
-The same payload bytes, checksum, bounds and canonical comparison remain.
+The decoded-history blob and its whole-batch verification are replaced by the [history store](history-store.md).
 A full owned canonical candidate may reuse its already-computed Task root after
 an exact cached ID/raw bijection; a cached prefix retains its own root check
 before any arriving delta is admitted.

@@ -2069,12 +2069,12 @@ void main() {
       expect(dry['effects'], isNotEmpty);
       expect(await bytes(), before);
       // Both ran on disposable profile copies bound to the real location, so
-      // the decoded cache sealed by the last write applied (no cold replay).
+      // the history store written by the last write applied (no cold replay).
       expect(opened, hasLength(2));
       expect(opened.every((o) => o.disposable && o.reuses > 0), isTrue);
 
-      // The seal itself: opening consumes the proof. A disposable close does
-      // not re-seal; an ordinary close (the app's) does, as before.
+      // The history store is never consumed: disposable and ordinary opens
+      // alike read it, whatever closed before them.
       debugAgentWorkspaceOpened = null;
       final profile = AgentProfile.resolve(
         selection: 'default',
@@ -2092,7 +2092,7 @@ void main() {
       }
 
       expect(await openClose(disposable: true), greaterThan(0));
-      expect(await openClose(disposable: false), 0);
+      expect(await openClose(disposable: false), greaterThan(0));
       expect(await openClose(disposable: false), greaterThan(0));
     },
   );

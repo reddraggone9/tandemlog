@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:isolate';
-import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
@@ -333,51 +331,28 @@ class UnifiedRecord {
   }
 }
 
-/// Disposable, clean-close decode reuse. The receipt detects corruption/staleness;
-/// it is not authentication against replacement of cache AND its profile proof.
-/// Only this whole-batch verifier can construct private cached records/effects.
+/// Codec between records and their history-store rows (design/history-store.md):
+/// the canonical text plus pre-decoded Task/Food fields, so a warm start
+/// neither re-hashes nor re-parses effect payloads. Only this class can build
+/// the private cached records/effects.
 class UnifiedDecodedCache {
-  // Bump the receipt layout for closed validation/normalization changes.
+  // Typed field layout; part of the store binding.
   static const generation = ValidatedActionCache.layout;
-  static const maximumBytes = ValidatedActionCache.maximumBytes;
-  static const maximumRecords = ValidatedActionCache.maximumRecords;
 
-  static String encode(List<UnifiedRecord> records, String binding) =>
-      jsonEncode(_payload(records, binding));
+  /// The typed column of [record]'s store row.
+  static String typedFields(UnifiedRecord record) => jsonEncode([
+    for (final effect in record.effects)
+      if (effect.task != null)
+        [effect.kind, _task(effect.task!)]
+      else if (effect.food != null)
+        [effect.kind, _food(effect.food!)]
+      else
+        null,
+  ]);
 
-  /// The UTF-8 bytes of [encode], without the intermediate string.
-  static Uint8List encodeUtf8(List<UnifiedRecord> records, String binding) =>
-      JsonUtf8Encoder().convert(_payload(records, binding)) as Uint8List;
-
-  /// Pure bounded encoding can overlap the independent Task-cache seal. Only
-  /// detached value trees cross this boundary, never a profile or native owner.
-  static Future<({Uint8List payload, String digest})?> prepareOffThread(
-    List<UnifiedRecord> records,
-    String binding,
-  ) => _encodeDecodedPayload(_payload(records, binding));
-
-  static Map<String, Object?> _payload(
-    List<UnifiedRecord> records,
-    String binding,
-  ) => {
-    'generation': generation,
-    'binding': binding,
-    'records': [
-      for (final record in records)
-        [
-          record.encode(),
-          [
-            for (final effect in record.effects)
-              if (effect.task != null)
-                [effect.kind, _task(effect.task!)]
-              else if (effect.food != null)
-                [effect.kind, _food(effect.food!)]
-              else
-                null,
-          ],
-        ],
-    ],
-  };
+  /// Records from store rows of (canonical text, [typedFields]) pairs.
+  static List<UnifiedRecord> restoreStored(List<(String, String)> rows) =>
+      restoreVerifiedBatch(ValidatedActionCache.fromStoredRows(rows));
 
   static List<Object?> _task(LogEvent event) => [
     event.space,
@@ -409,22 +384,7 @@ class UnifiedDecodedCache {
     event.integrityHash,
   ];
 
-  static List<UnifiedRecord> restore(
-    String payload,
-    String expectedDigest,
-    String expectedBinding,
-  ) {
-    final batch = ValidatedActionCache.verify(
-      payload,
-      expectedDigest,
-      expectedBinding,
-    );
-    return restoreVerifiedBatch(batch);
-  }
-
-  /// Reconstruct only from the existing opaque, deeply immutable verifier
-  /// receipt. Startup may perform pure verification in a short-lived isolate;
-  /// native owners, profile objects and contextual admission remain here.
+  /// Reconstruct only from the opaque, deeply immutable decoded rows.
   static List<UnifiedRecord> restoreVerifiedBatch(ValidatedActionCache batch) {
     final records = <UnifiedRecord>[];
     for (final action in batch.records) {
@@ -513,11 +473,3 @@ bool isSyncthingAppLogStagingName(String name) {
   }
   return false;
 }
-
-Future<({Uint8List payload, String digest})?> _encodeDecodedPayload(
-  Map<String, Object?> value,
-) => Isolate.run(() {
-  final payload = JsonUtf8Encoder().convert(value) as Uint8List;
-  if (payload.length > UnifiedDecodedCache.maximumBytes) return null;
-  return (payload: payload, digest: sha256.convert(payload).toString());
-}, debugName: 'tandemlog-cache-seal');

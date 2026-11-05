@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:typed_data';
 import 'dart:convert';
 import 'dart:io';
 
@@ -18,28 +16,23 @@ import 'package:uuid/uuid.dart';
 
 import 'current_history_fixture.dart';
 
-class _ReadGateFolder extends LocalLogFolder {
-  _ReadGateFolder(super.location);
-  Future<void> Function(String)? beforeRead;
-
-  @override
-  Future<Uint8List> readBounded(String name, int maximumBytes) async {
-    await beforeRead?.call(name);
-    return super.readBounded(name, maximumBytes);
-  }
-}
-
 void main() {
+  String storeKey(LogFolder folder) =>
+      sha256.convert(utf8.encode(folder.location)).toString();
+
+  // Lee 11-05 (design/history-store.md): the fast check catches a changed
+  // binding/generation, a missing store, a changed last record and a seal
+  // that differs from the protected head; each opens strictly and rebuilds.
+  // Other stored row contents are trusted until Verify Logs rewrites them.
   for (final damage in [
     'none',
-    'typed',
-    'raw',
     'generation',
-    'binding',
     'missing',
-    'malformed',
+    'lastRaw',
+    'seal',
+    'typed',
   ]) {
-    test('clean action decode cache $damage retains canonical authority', () async {
+    test('history store damage "$damage" keeps canonical authority', () async {
       final root = await Directory.systemTemp.createTemp('decoded-clean-');
       final folder = LocalLogFolder(
         (await Directory('${root.path}/shared').create()).path,
@@ -56,116 +49,87 @@ void main() {
           'assignee': user,
         });
         final expected = jsonEncode(store.rows);
+        final records = store.unified!.snapshot.records.length;
+        String titles(TaskStore s) => jsonEncode([
+          for (final e in s.unified!.snapshot.tasks)
+            if (e.data['title'] != null) e.data['title'],
+        ]);
+        final canonicalTitles = titles(store);
         final files = {
           for (final entry in await folder.list())
             entry.name: base64Encode(await folder.read(entry.name)),
         };
         await store.close();
         store = null;
-        if (damage == 'none') {
-          // The seal binds UTF-8 bytes but stores the same TEXT value.
-          final profile = await LocalProfileDatabase.open(profilePath);
-          try {
-            final payload = profile.database
-                .select(
-                  "SELECT typeof(value) AS t, value FROM profile_metadata WHERE key LIKE 'app5.decoded.payload.%'",
-                )
-                .single;
-            final proof = profile.database
-                .select(
-                  "SELECT value FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
-                )
-                .single;
-            expect(payload['t'], 'text');
-            expect(
-              proof['value'],
-              sha256
-                  .convert(utf8.encode(payload['value'] as String))
-                  .toString(),
-            );
-          } finally {
-            await profile.close();
-          }
-        }
-        if (damage != 'none') {
-          final profile = await LocalProfileDatabase.open(profilePath);
-          try {
-            profile.transaction(() {
-              final payload = profile.database
-                  .select(
-                    "SELECT key,value FROM profile_metadata WHERE key LIKE 'app5.decoded.payload.%'",
-                  )
-                  .single;
-              final proof = profile.database
-                  .select(
-                    "SELECT key,value FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
-                  )
-                  .single;
-              if (damage == 'missing') {
-                profile.database.execute(
-                  'DELETE FROM profile_metadata WHERE key=?',
-                  [proof['key']],
+        final key = storeKey(folder);
+        final profile = await LocalProfileDatabase.open(profilePath);
+        try {
+          profile.transaction(() {
+            final db = profile.database;
+            switch (damage) {
+              case 'generation':
+                final row = db.select(
+                  'SELECT value FROM profile_metadata WHERE key=?',
+                  ['app5.store.$key'],
+                ).single;
+                final binding = jsonDecode(row['value'] as String) as List;
+                binding[0] = 999;
+                db.execute('UPDATE profile_metadata SET value=? WHERE key=?', [
+                  jsonEncode(binding),
+                  'app5.store.$key',
+                ]);
+              case 'missing':
+                db.execute('DELETE FROM profile_metadata WHERE key=?', [
+                  'app5.store.$key',
+                ]);
+              case 'lastRaw':
+                db.execute(
+                  "UPDATE history_${key}_records SET raw='{}' WHERE seq=(SELECT MAX(seq) FROM history_${key}_records)",
                 );
-                return;
-              }
-              final value = jsonDecode(payload['value'] as String) as Map;
-              switch (damage) {
-                case 'typed':
-                  final rows = value['records'] as List;
-                  final pair = rows
-                      .expand((row) => (row as List)[1] as List)
-                      .whereType<List>()
-                      .last;
-                  final typed = pair[1] as List;
-                  (typed[6] as Map)['title'] = 'Forged cached title';
-                case 'raw':
-                  (value['records'] as List).last[0] = '{}';
-                case 'generation':
-                  value['generation'] = 999;
-                case 'binding':
-                  value['binding'] = 'another profile';
-              }
-              final changed = damage == 'malformed' ? '{' : jsonEncode(value);
-              profile.database.execute(
-                'UPDATE profile_metadata SET value=? WHERE key=?',
-                [changed, payload['key']],
-              );
-              if (damage == 'generation' || damage == 'binding') {
-                // Even a coherent checksum cannot bypass reader/scope binding.
-                profile.database.execute(
-                  'UPDATE profile_metadata SET value=? WHERE key=?',
+              case 'seal':
+                db.execute(
+                  'UPDATE history_${key}_seals SET sequence=sequence+1',
+                );
+              case 'typed':
+                final row = db
+                    .select(
+                      "SELECT writer,seq,typed FROM history_${key}_records WHERE typed LIKE '%Canonical title%'",
+                    )
+                    .single;
+                db.execute(
+                  'UPDATE history_${key}_records SET typed=? WHERE writer=? AND seq=?',
                   [
-                    sha256.convert(utf8.encode(changed)).toString(),
-                    proof['key'],
+                    (row['typed'] as String).replaceAll(
+                      'Canonical title',
+                      'Forged stored title',
+                    ),
+                    row['writer'],
+                    row['seq'],
                   ],
                 );
-              }
-            });
-          } finally {
-            await profile.close();
-          }
+            }
+          });
+        } finally {
+          await profile.close();
         }
         store = await TaskStore.open(folder, profilePath);
         expect(jsonEncode(store.rows), expected);
-        expect(
-          store.unified!.decodedCacheReuses,
-          damage == 'none' ? greaterThan(0) : 0,
-        );
-        expect(
-          store.unified!.decodedRecords,
-          damage == 'none' ? 0 : greaterThan(0),
-        );
-        expect(
-          store.db.select(
-            "SELECT key FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
-          ),
-          isEmpty,
-          reason: 'A consumed proof cannot survive an unclean process stop.',
-        );
+        final fast = damage == 'none' || damage == 'typed';
+        expect(store.unified!.decodedCacheReuses, fast ? records : 0);
+        expect(store.unified!.decodedRecords, fast ? 0 : records);
+        // The accepted blind spot: other stored rows are trusted as stored.
+        expect(titles(store) == canonicalTitles, damage != 'typed');
         final beforeAudit = store.unified!.decodedRecords;
         await store.verifyHistory();
         expect(store.unified!.decodedRecords, greaterThan(beforeAudit));
         expect(jsonEncode(store.rows), expected);
+        expect(titles(store), canonicalTitles);
+        await store.close();
+        // Verify Logs rewrote the rows it re-read; the next open is warm and
+        // equals the strict decode again.
+        store = await TaskStore.open(folder, profilePath);
+        expect(store.unified!.decodedRecords, 0);
+        expect(titles(store), canonicalTitles);
         for (final entry in files.entries) {
           expect(base64Encode(await folder.read(entry.key)), entry.value);
         }
@@ -202,19 +166,11 @@ void main() {
           food.state.containers.map((v) => v.toJson()).toList(),
         );
         final records = tasks.unified!.snapshot.records;
-        final payload = UnifiedDecodedCache.encode(
-          records,
-          'Synthetic binding',
-        );
-        expect(
-          UnifiedDecodedCache.encodeUtf8(records, 'Synthetic binding'),
-          utf8.encode(payload),
-        );
-        final batch = ValidatedActionCache.verify(
-          payload,
-          sha256.convert(utf8.encode(payload)).toString(),
-          'Synthetic binding',
-        );
+        List<(String, String)> rowsOf(Iterable<UnifiedRecord> records) => [
+          for (final r in records)
+            (r.encode(), UnifiedDecodedCache.typedFields(r)),
+        ];
+        final batch = ValidatedActionCache.fromStoredRows(rowsOf(records));
         final receipts = batch.records
             .expand((record) => record.effects)
             .toList();
@@ -263,30 +219,18 @@ void main() {
           ),
           throwsFormatException,
         );
-        final swapped = jsonDecode(payload) as Map;
-        final row =
-            (swapped['records'] as List).firstWhere(
-                  (row) => ((row as List)[1] as List).any(
-                    (effect) =>
-                        effect is List &&
-                        (effect[0] as String).endsWith('food'),
-                  ),
-                )
-                as List;
-        final effect =
-            (row[1] as List).firstWhere(
-                  (effect) =>
-                      effect is List && (effect[0] as String).endsWith('food'),
-                )
-                as List;
-        effect[0] = 'task';
-        final changed = jsonEncode(swapped);
+        final swapped = rowsOf(records).map((row) {
+          final typed = jsonDecode(row.$2) as List;
+          final i = typed.indexWhere(
+            (effect) =>
+                effect is List && (effect[0] as String).endsWith('food'),
+          );
+          if (i < 0) return row;
+          (typed[i] as List)[0] = 'task';
+          return (row.$1, jsonEncode(typed));
+        }).toList();
         expect(
-          () => ValidatedActionCache.verify(
-            changed,
-            sha256.convert(utf8.encode(changed)).toString(),
-            'Synthetic binding',
-          ),
+          () => ValidatedActionCache.fromStoredRows(swapped),
           throwsFormatException,
         );
         final bytes = await folder.read('${tasks.writer}.applog');
@@ -351,14 +295,9 @@ void main() {
         previousHash: unifiedGenesis(space, epoch, currentAuthor),
         effect: UnifiedEffect('history.food', historical.encode()),
       );
-      final payload = UnifiedDecodedCache.encode([
-        record,
-      ], 'Historical binding');
-      final restored = UnifiedDecodedCache.restore(
-        payload,
-        sha256.convert(utf8.encode(payload)).toString(),
-        'Historical binding',
-      ).single;
+      final restored = UnifiedDecodedCache.restoreStored([
+        (record.encode(), UnifiedDecodedCache.typedFields(record)),
+      ]).single;
       final cached = restored.effect.food!,
           strict = FoodRecord.decode(restored.effect.raw);
       expect(cached.writer, originalWriter);
@@ -402,84 +341,6 @@ void main() {
       await root.delete(recursive: true);
     }
   });
-  test('warm verifier consumes proof and keeps the profile queue leased', () async {
-    final root = await Directory.systemTemp.createTemp('decoded-queue-');
-    final folder = _ReadGateFolder(
-      (await Directory('${root.path}/shared').create()).path,
-    );
-    final profilePath = '${root.path}/profile';
-    final entered = Completer<void>(), release = Completer<void>();
-    TaskStore? store;
-    LocalProfileDatabase? profile;
-    Future<TaskStore>? opening;
-    try {
-      store = await TaskStore.open(folder, profilePath);
-      await store.command(const Uuid().v4(), 'user.created', {
-        'name': 'Synthetic',
-      });
-      final expected = jsonEncode(store.rows);
-      final canonical = await folder.read('${store.writer}.applog');
-      final writer = store.writer;
-      await store.close();
-      store = null;
-      final owned = profile = await LocalProfileDatabase.open(profilePath);
-      expect(
-        owned.database.select(
-          "SELECT key FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
-        ),
-        hasLength(1),
-      );
-      folder.beforeRead = (name) async {
-        if (!name.endsWith('.applog')) return;
-        folder.beforeRead = null;
-        expect(
-          owned.database.select(
-            "SELECT key FROM profile_metadata WHERE key LIKE 'app5.decoded.proof.%'",
-          ),
-          isEmpty,
-          reason:
-              'The actual asynchronous verifier consumed its one-shot proof before canonical I/O.',
-        );
-        entered.complete();
-        await release.future;
-      };
-      opening = TaskStore.open(folder, profilePath, profileDatabase: owned);
-      await entered.future.timeout(const Duration(seconds: 5));
-      var queuedRan = false;
-      final queued = owned.serialize(() async {
-        queuedRan = true;
-      });
-      await Future<void>.delayed(Duration.zero);
-      expect(
-        queuedRan,
-        isFalse,
-        reason:
-            'No other profile work may interleave with awaited startup verification/readback.',
-      );
-      await expectLater(owned.close(), throwsStateError);
-      release.complete();
-      store = await opening;
-      opening = null;
-      await queued;
-      expect(queuedRan, isTrue);
-      expect(jsonEncode(store.rows), expected);
-      expect(
-        store.unified!.decodedCacheReuses,
-        greaterThan(0),
-        reason:
-            'A real isolate-transferred immutable receipt must be reusable.',
-      );
-      expect(store.unified!.decodedRecords, 0);
-      expect(await folder.read('$writer.applog'), canonical);
-    } finally {
-      if (!release.isCompleted) release.complete();
-      if (opening != null) store = await opening;
-      await store?.close();
-      await profile?.close();
-      await root.delete(recursive: true);
-    }
-  });
-
   test(
     'warm cached prefix admits a new complete peer suffix without reusing its root',
     () async {

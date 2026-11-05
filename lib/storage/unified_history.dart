@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'dart:isolate';
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:math' show min;
 import 'dart:typed_data';
 import 'package:sqlite3/sqlite3.dart' show SqliteException;
 
@@ -12,6 +13,7 @@ import '../domain/time_zone_policy.dart';
 import '../food/inventory.dart';
 import '../food/food_record.dart';
 import '../food/food_admission.dart';
+import 'history_store.dart';
 import 'local_profile_database.dart';
 import 'local_settings.dart';
 import 'log_folder.dart';
@@ -174,8 +176,9 @@ final class UnifiedHistory {
     this.profile,
     this.writer,
     this.now,
-    this.textEngine,
-  );
+    this.textEngine, {
+    bool deferPeerCatchUp = false,
+  }) : _deferPeerCatchUp = deferPeerCatchUp;
   final LogFolder folder;
   final LocalProfileDatabase profile;
   final String writer;
@@ -281,7 +284,7 @@ final class UnifiedHistory {
   // evicted back into strict decoding.
   final _decodedRecords = <String, UnifiedRecord>{};
   int _decodedRecordBytes = 0;
-  static const _decodedRecordBudget = UnifiedDecodedCache.maximumBytes;
+  static const _decodedRecordBudget = ValidatedActionCache.maximumBytes;
   int decodedRecords = 0;
   int semanticValidationRuns = 0;
   int incrementalFoodAdmissionRuns = 0, fullFoodAdmissionRuns = 0;
@@ -346,176 +349,325 @@ final class UnifiedHistory {
       (_semanticValidator?.copyProjectionTo(store, candidate.tasks) ?? false);
 
   Future<void> sealTaskProjectionCache(TaskStore store) async {
-    // Invalidate the decode witness before starting any asynchronous work.
-    // Each witness is independently consumed on open; a crash between these
-    // transactions merely leaves one or both caches requiring strict replay.
-    final prepared = _prepareDecodedCache();
-    prepared.ignore();
-    try {
-      profile.transaction(() {
-        _semanticValidator?.sealCleanCache(
-          store.db,
-          store.tables,
-          snapshot.tasks,
-        );
-      });
-    } catch (_) {
-      // Even a failed SQL seal drains its pure worker before close returns.
-      try {
-        await prepared;
-      } catch (_) {
-        /* Original SQL failure wins. */
-      }
-      rethrow;
-    }
-    final ({Uint8List payload, String digest})? encoded;
-    try {
-      encoded = await prepared;
-    } on IsolateSpawnException {
-      return;
-    } on RemoteError {
-      return;
-    } on ArgumentError {
-      return;
-    } on UnsupportedError {
-      return;
-    }
-    if (encoded == null) return;
-    final result = encoded;
     profile.transaction(() {
-      final db = profile.database;
-      db.execute(
-        'INSERT OR REPLACE INTO profile_metadata VALUES (?,CAST(? AS TEXT))',
-        [_decodedPayloadKey, result.payload],
+      _semanticValidator?.sealCleanCache(
+        store.db,
+        store.tables,
+        snapshot.tasks,
       );
-      db.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
-        _decodedProofKey,
-        result.digest,
-      ]);
     });
   }
 
-  String get _decodedPayloadKey => 'app5.decoded.payload.$_locationKey';
-  String get _decodedProofKey => 'app5.decoded.proof.$_locationKey';
-  bool _attemptedDecodedRestore = false;
+  /// Records restored from the history store at open (none on a strict open).
   int decodedCacheReuses = 0;
 
-  String _decodedCacheBinding(UnifiedManifest current) => jsonEncode([
-    _locationKey,
-    writer,
-    current.digest,
-    _protectedHeads(current),
-    textEngine != null,
-    UnifiedDecodedCache.generation,
-  ]);
+  // Lee 11-05 (design/history-store.md): the whole decoded history lives in
+  // the profile database, appended in the transactions that advance
+  // protected_app_heads. [_storeSeals] mirrors the stored seals while the
+  // store is known to match; null means the next commit rebuilds it.
+  late final HistoryStore _store = HistoryStore(
+    profile.database,
+    bytesDigest(utf8.encode(folder.location)),
+  );
+  Map<String, HistorySeal>? _storeSeals;
+  bool _attemptedStoreRestore = false;
+  final bool _deferPeerCatchUp;
+  bool _catchUpPending = false;
 
-  Future<({Uint8List payload, String digest})?> _prepareDecodedCache() {
-    final db = profile.database;
-    profile.transaction(
-      () => db.execute('DELETE FROM profile_metadata WHERE key=?', [
-        _decodedProofKey,
-      ]),
-    );
-    final current = _snapshot;
-    if (current == null ||
-        safetyFailure != null ||
-        _pending != null ||
-        current.incomplete ||
-        current.pendingEffects ||
-        !current.allVisibleTasksReady ||
-        current.records.length > UnifiedDecodedCache.maximumRecords ||
-        current.records.any(
-          (record) => record.sequence > (current.published[record.writer] ?? 0),
-        ) ||
-        _acceptedHeads != _protectedHeads(manifest)) {
-      return Future.value(null);
-    }
-    // The payload holds every canonical record, so their bytes are a lower
-    // bound; the worker checks the exact encoded size.
-    var estimate = 0;
-    for (final record in current.records) {
-      estimate += utf8.encode(record.encode()).length;
-      if (estimate > UnifiedDecodedCache.maximumBytes) {
-        return Future.value(null);
+  /// True after an open that admitted only the stored state while peers
+  /// have newer bytes; the next refresh applies them (Lee 11-05: lists are
+  /// usable during catch-up).
+  bool get catchUpPending => _catchUpPending;
+
+  String _storeBinding(UnifiedManifest m) => HistoryStore.binding(
+    space: m.space,
+    epoch: m.epoch,
+    manifestDigest: m.digest,
+    writer: writer,
+    nativeText: textEngine != null,
+  );
+
+  /// The open's fast check (design/history-store.md). Null means strict.
+  Future<
+    Map<
+      String,
+      ({
+        List<UnifiedRecord> records,
+        Uint8List bytes,
+        int end,
+        int migrationEnd,
+      })
+    >?
+  >
+  _restoreStore(
+    UnifiedManifest current,
+    Map<String, LogFileInfo> byName,
+  ) async {
+    if (folder is! BoundedRangeLogFolder) return null;
+    final range = folder as BoundedRangeLogFolder;
+    try {
+      if (_store.readBinding() != _storeBinding(current)) return null;
+      final seals = _store.readSeals();
+      final heads = profile.database.select(
+        'SELECT writer,sequence,hash,bytes FROM protected_app_heads WHERE space=? AND epoch=?',
+        [current.space, current.epoch],
+      );
+      if (heads.length != seals.length) return null;
+      for (final row in heads) {
+        final seal = seals[row['writer'] as String];
+        if (seal == null ||
+            seal.sequence != row['sequence'] ||
+            seal.hash != row['hash'] ||
+            seal.end != row['bytes']) {
+          return null;
+        }
       }
+      // Fast check for every writer first; decode rows only if all pass.
+      final tails = <String, Uint8List>{};
+      for (final MapEntry(key: owner, value: seal) in seals.entries) {
+        if (seal.sequence == 0) continue;
+        final name = unifiedLogName(owner);
+        final info = byName[name];
+        final size = info?.size;
+        if (info == null || size != null && size < seal.end) return null;
+        await _checkRegularFile(name);
+        final lastRaw = _store.rawAt(owner, seal.sequence);
+        if (lastRaw == null) return null;
+        final last = utf8.encode(lastRaw);
+        if (seal.end - seal.lastStart != last.length + 1) return null;
+        final tail = await range.readFromBounded(
+          name,
+          seal.lastStart,
+          maximumFileBytes - seal.lastStart,
+        );
+        readFiles++;
+        if (tail == null ||
+            tail.length <= last.length ||
+            tail[last.length] != 10 ||
+            !_samePrefix(tail, last, last.length)) {
+          return null;
+        }
+        tails[owner] = tail;
+      }
+      final result =
+          <
+            String,
+            ({
+              List<UnifiedRecord> records,
+              Uint8List bytes,
+              int end,
+              int migrationEnd,
+            })
+          >{};
+      var reused = 0, catchUp = false;
+      final rowsByOwner = <String, List<StoredRow>>{};
+      for (final owner in tails.keys) {
+        final seal = seals[owner]!;
+        final rows = _store.readWriter(owner, seal);
+        if (rows == null ||
+            rows.last.start != seal.lastStart ||
+            rows.last.start + rows.last.length + 1 != seal.end) {
+          return null;
+        }
+        rowsByOwner[owner] = rows;
+      }
+      final decoded = await _decodeStoredRows(rowsByOwner);
+      for (final MapEntry(key: owner, value: tail) in tails.entries) {
+        final seal = seals[owner]!;
+        final rows = rowsByOwner[owner]!;
+        final historicalCount = current.owners[owner]?['count'] as int? ?? 0;
+        if (historicalCount > rows.length) return null;
+        final migration = historicalCount == 0
+            ? null
+            : rows[historicalCount - 1];
+        final builder = BytesBuilder(copy: false);
+        for (final row in rows) {
+          builder
+            ..add(utf8.encode(row.raw))
+            ..addByte(10);
+        }
+        if (builder.length != seal.end) return null;
+        final suffix = Uint8List.sublistView(tail, seal.end - seal.lastStart);
+        final defer = _deferPeerCatchUp && owner != writer;
+        if (defer && suffix.isNotEmpty) catchUp = true;
+        if (!defer) builder.add(suffix);
+        result[owner] = (
+          records: List.unmodifiable(decoded[owner]!),
+          bytes: Uint8List.fromList(builder.takeBytes()).asUnmodifiableView(),
+          end: seal.end,
+          migrationEnd: migration == null
+              ? 0
+              : migration.start + migration.length + 1,
+        );
+        reused += rows.length;
+      }
+      _storeSeals = Map.of(seals);
+      decodedCacheReuses = reused;
+      _catchUpPending = catchUp;
+      return result;
+    } on SqliteException {
+      return null;
+    } on FormatException {
+      return null;
+    } on FormatFailure {
+      return null;
+    } on FolderAccessFailure {
+      return null;
+    } on TypeError {
+      return null;
+    } on RemoteError {
+      return null; // A failed worker decode cannot authorize a restore.
     }
-    return UnifiedDecodedCache.prepareOffThread(
-      current.records,
-      _decodedCacheBinding(manifest),
-    );
   }
 
-  Future<void> _primeDecodedCache(UnifiedManifest current) async {
-    if (_attemptedDecodedRestore) return;
-    _attemptedDecodedRestore = true;
-    final db = profile.database;
-    final proofs = db.select('SELECT value FROM profile_metadata WHERE key=?', [
-      _decodedProofKey,
-    ]);
-    if (proofs.isEmpty) return;
-    final digest = proofs.single['value'] as String;
-    // Consume before exposing any cached object. A crash now means strict
-    // reconstruction next time, never restart replay of unfinished Save intent.
-    profile.transaction(
-      () => db.execute('DELETE FROM profile_metadata WHERE key=?', [
-        _decodedProofKey,
-      ]),
-    );
+  /// Decodes stored rows in parallel short-lived isolates (pure data only;
+  /// no profile or native owner crosses), on this isolate if unavailable.
+  static Future<Map<String, List<UnifiedRecord>>> _decodeStoredRows(
+    Map<String, List<StoredRow>> rows,
+  ) async {
+    const chunk = 400;
+    final jobs = <(String, int, List<StoredRow>)>[
+      for (final MapEntry(key: owner, value: list) in rows.entries)
+        for (var i = 0; i < list.length; i += chunk)
+          (owner, i, list.sublist(i, min(i + chunk, list.length))),
+    ];
+    List<List<UnifiedRecord>> parts;
     try {
-      final sizes = db.select(
-        'SELECT length(CAST(value AS BLOB)) AS n FROM profile_metadata WHERE key=?',
-        [_decodedPayloadKey],
-      );
-      if (sizes.isEmpty ||
-          (sizes.single['n'] as int) > UnifiedDecodedCache.maximumBytes) {
-        return;
-      }
-      final payload =
-          db.select('SELECT value FROM profile_metadata WHERE key=?', [
-                _decodedPayloadKey,
-              ]).single['value']
-              as String;
-      final ValidatedActionCache batch;
-      try {
-        batch = await ValidatedActionCache.verifyOffThread(
-          payload,
-          digest,
-          _decodedCacheBinding(current),
-        );
-      } on IsolateSpawnException {
-        return; // Optional cache unavailable: use exact canonical decoding.
-      } on RemoteError {
-        return; // No worker result can authorize a partial cache restore.
-      } on ArgumentError {
-        return; // Failed optional spawn/transfer cannot bypass strict decoding.
-      } on UnsupportedError {
-        return; // Platforms without this optional optimization stay strict.
-      }
-      final records = UnifiedDecodedCache.restoreVerifiedBatch(batch);
-      for (final record in records) {
-        final raw = record.encode();
-        final cost = raw.length * 4;
-        if (cost > _decodedRecordBudget) continue;
-        while (_decodedRecords.isNotEmpty &&
-            (_decodedRecords.length >= UnifiedDecodedCache.maximumRecords ||
-                _decodedRecordBytes + cost > _decodedRecordBudget)) {
-          final oldest = _decodedRecords.keys.first;
-          _decodedRecords.remove(oldest);
-          _decodedRecordBytes -= oldest.length * 4;
-        }
-        _decodedRecords[raw] = record;
-        _decodedRecordBytes += cost;
-      }
-      decodedCacheReuses = records.length;
-    } on FormatException {
-      // Disposable evidence cannot change protected authority.
-    } on FormatFailure {
-      // Fall back to exact canonical decoding.
-    } on TypeError {
-      // Malformed typed cache falls back without modifying original history.
-    } on SqliteException {
-      // Missing/damaged optional cache is a reconstruction hint only.
+      parts = await Future.wait([
+        for (final job in jobs)
+          Isolate.run(
+            () => HistoryStore.decode(job.$3),
+            debugName: 'tandemlog-store-decode',
+          ),
+      ]);
+    } on IsolateSpawnException {
+      parts = [for (final job in jobs) HistoryStore.decode(job.$3)];
+    } on UnsupportedError {
+      parts = [for (final job in jobs) HistoryStore.decode(job.$3)];
     }
+    final result = <String, List<UnifiedRecord>>{};
+    for (var j = 0; j < jobs.length; j++) {
+      (result[jobs[j].$1] ??= []).addAll(parts[j]);
+    }
+    return result;
+  }
+
+  /// Inside the commit transaction: append each writer's newly admitted
+  /// records and move its seal to the protected head being written, or
+  /// rebuild the whole store when it is not known to match.
+  void _syncStore(
+    UnifiedManifest current,
+    List<List<Object?>> heads,
+    Map<String, List<UnifiedRecord>> records,
+    Map<String, Map<int, ({int start, int length})>> offsets,
+    Map<String, Uint8List> observed,
+  ) {
+    try {
+      var seals = _storeSeals;
+      if (seals == null) {
+        _store.reset(_storeBinding(current));
+        seals = {};
+      }
+      final next = <String, HistorySeal>{};
+      for (final row in heads) {
+        final owner = row[2] as String,
+            sequence = row[3] as int,
+            hash = row[4] as String,
+            end = row[5] as int;
+        final known = offsets[owner] ?? const {};
+        var old = seals[owner];
+        if (old != null && old.sequence > 0 && known.containsKey(1)) {
+          // This writer was re-read from byte 0 (audit or a prefix that could
+          // not be reused): replace its rows with that strict decode.
+          _store.deleteWriter(owner);
+          old = null;
+        } else if (old != null &&
+            old.sequence == sequence &&
+            old.hash == hash &&
+            old.end == end) {
+          next[owner] = old;
+          continue;
+        }
+        final from = old?.sequence ?? 0;
+        final ownerRecords = records[owner] ?? const <UnifiedRecord>[];
+        if (sequence < from || ownerRecords.length < sequence) {
+          throw StateError('History store is ahead of admitted history.');
+        }
+        var at = known;
+        for (var s = from + 1; s <= sequence; s++) {
+          if (!at.containsKey(s)) {
+            at = _lineOffsets(observed[owner]!);
+            break;
+          }
+        }
+        final added = [
+          for (var s = from + 1; s <= sequence; s++)
+            (
+              record: ownerRecords[s - 1],
+              start: at[s]!.start,
+              length: at[s]!.length,
+            ),
+        ];
+        final seal = HistorySeal(
+          sequence,
+          end,
+          hash,
+          sequence == 0 ? 0 : (added.lastOrNull?.start ?? old!.lastStart),
+        );
+        if (sequence > 0 && added.isEmpty) {
+          throw StateError('History store seal moved without records.');
+        }
+        _store.append(owner, added, seal);
+        next[owner] = seal;
+      }
+      _storeSeals = next;
+    } on Object {
+      // A store that cannot follow is dropped, never left half-current; the
+      // next open is strict and rebuilds it. Admission itself is unaffected.
+      _storeSeals = null;
+      try {
+        _store.drop();
+      } on SqliteException {
+        // Its seals no longer equal the protected heads: still strict.
+      }
+    }
+  }
+
+  /// Inside the own-action confirmation transaction: this device's record
+  /// goes after its own sealed head, with the protected head it moves to.
+  void _appendOwnToStore(UnifiedRecord record, int start, int end) {
+    final seals = _storeSeals;
+    if (seals == null) return; // Rebuilt at the next commit or strict open.
+    try {
+      final old = seals[writer];
+      if ((old?.sequence ?? 0) != record.sequence - 1 ||
+          (old?.end ?? 0) != start) {
+        throw StateError('Own record does not follow the sealed head.');
+      }
+      final seal = HistorySeal(record.sequence, end, record.hash, start);
+      _store.append(writer, [
+        (record: record, start: start, length: end - start - 1),
+      ], seal);
+      _storeSeals = {...seals, writer: seal};
+    } on Object {
+      _storeSeals = null;
+      try {
+        _store.drop();
+      } on SqliteException {
+        // Its seal no longer equals the protected head: still strict.
+      }
+    }
+  }
+
+  static Map<int, ({int start, int length})> _lineOffsets(Uint8List bytes) {
+    final result = <int, ({int start, int length})>{};
+    var start = 0, sequence = 0;
+    for (var i = 0; i < bytes.length; i++) {
+      if (bytes[i] != 10) continue;
+      result[++sequence] = (start: start, length: i - start);
+      start = i + 1;
+    }
+    return result;
   }
 
   UnifiedRecord _decodeRecord(String raw, {bool force = false}) {
@@ -530,7 +682,7 @@ final class UnifiedHistory {
     final cost = raw.length * 4;
     if (cost <= _decodedRecordBudget) {
       while (_decodedRecords.isNotEmpty &&
-          (_decodedRecords.length >= UnifiedDecodedCache.maximumRecords ||
+          (_decodedRecords.length >= ValidatedActionCache.maximumRecords ||
               _decodedRecordBytes + cost > _decodedRecordBudget)) {
         final oldest = _decodedRecords.keys.first;
         _decodedRecords.remove(oldest);
@@ -582,6 +734,7 @@ final class UnifiedHistory {
     required String writer,
     DateTime Function()? now,
     NativeTextEngine? textEngine,
+    bool deferPeerCatchUp = false,
   }) async {
     if (!isCanonicalId(writer)) {
       throw FormatFailure('Invalid installation writer.');
@@ -597,6 +750,7 @@ final class UnifiedHistory {
       writer,
       now ?? DateTime.now,
       textEngine,
+      deferPeerCatchUp: deferPeerCatchUp,
     );
     profile.acquireWorkspace(result._lease);
     try {
@@ -690,7 +844,10 @@ final class UnifiedHistory {
           'Installation writer differs from protected settings.',
         );
       }
+      // Any refresh after the open reads every writer up to its end.
+      final catchingUp = _attemptedStoreRestore;
       await _refresh(forceFullAudit: forceFullAudit);
+      if (catchingUp) _catchUpPending = false;
       if (!_joiningHeader &&
           !manifest.owners.containsKey(writer) &&
           physicalSequence == 0 &&
@@ -923,9 +1080,10 @@ final class UnifiedHistory {
         );
       }
     }
-    if (!forceFullAudit && _snapshot == null) {
-      await _primeDecodedCache(current);
-    }
+    final stored = observe && !forceFullAudit && !_attemptedStoreRestore
+        ? await _restoreStore(current, byName)
+        : null;
+    _attemptedStoreRestore = true;
     final previous = _snapshot;
     final sameAcceptedHeads =
         previous != null &&
@@ -945,6 +1103,7 @@ final class UnifiedHistory {
       final old = sameAcceptedHeads ? priorPhysical[owner] : null;
       final oldInfo = _fileInfos[name];
       final end = _completeEnds[owner];
+      final prefix = stored?[owner];
       if (info == null) {
         bytes = Uint8List(0).asUnmodifiableView();
       } else {
@@ -959,7 +1118,13 @@ final class UnifiedHistory {
         final forceOwnedObservation = _pending != null && owner == writer;
         final sameIdentity =
             oldInfo != null && oldInfo.identity == info.identity;
-        if (!forceFullAudit &&
+        if (prefix != null) {
+          // Passed the open's fast check: stored prefix plus the bytes read
+          // after the seal (none yet for a peer deferred to catch-up).
+          bytes = prefix.bytes;
+          retainedPrefixes.add(owner);
+          seekable.add(name);
+        } else if (!forceFullAudit &&
             canSeek &&
             !forceOwnedObservation &&
             old != null &&
@@ -1052,6 +1217,8 @@ final class UnifiedHistory {
         published = <String, int>{},
         heads = <List<Object?>>[];
     final semantic = <String, UnifiedEffect>{};
+    final ownerRecords = <String, List<UnifiedRecord>>{};
+    final parsedOffsets = <String, Map<int, ({int start, int length})>>{};
     var incomplete = false, total = 0;
     var reusedHistoricalCoverage =
         previous != null && current.digest == manifest.digest;
@@ -1112,25 +1279,32 @@ final class UnifiedHistory {
       var completeSequence = 0;
       var migrationEnd = 0;
       final historicalCount = current.owners[owner]?['count'] as int? ?? 0;
-      final oldBytes = previous?.physical[owner];
+      final prefix = stored?[owner];
+      final oldBytes = prefix?.bytes ?? previous?.physical[owner];
       final oldRecords =
-          previous?.recordsByWriter[owner] ?? const <UnifiedRecord>[];
-      final oldEnd = oldBytes == null
-          ? 0
-          : (_completeEnds[owner] ?? oldBytes.lastIndexOf(10) + 1);
+          prefix?.records ??
+          previous?.recordsByWriter[owner] ??
+          const <UnifiedRecord>[];
+      final oldEnd =
+          prefix?.end ??
+          (oldBytes == null
+              ? 0
+              : (_completeEnds[owner] ?? oldBytes.lastIndexOf(10) + 1));
       final reusePrefix =
+          prefix != null ||
           !forceFullAudit &&
-          previous != null &&
-          current.digest == manifest.digest &&
-          oldBytes != null &&
-          bytes.length >= oldEnd &&
-          (retainedPrefixes.contains(owner) ||
-              _samePrefix(bytes, oldBytes, oldEnd));
+              previous != null &&
+              current.digest == manifest.digest &&
+              oldBytes != null &&
+              bytes.length >= oldEnd &&
+              (retainedPrefixes.contains(owner) ||
+                  _samePrefix(bytes, oldBytes, oldEnd));
       // An exact fresh byte match and unchanged protected tuple reuse the
       // existing proof; every new complete suffix is still parsed and checked.
+      // A store prefix equals the protected head by its fast check.
       final reuseTrustedPrefix =
           reusePrefix &&
-          sameAcceptedHeads &&
+          (prefix != null || sameAcceptedHeads) &&
           protected.isNotEmpty &&
           (protected.single['bytes'] as int) <= oldEnd;
       if (protected.isNotEmpty) {
@@ -1176,7 +1350,7 @@ final class UnifiedHistory {
           }
         }
         if (historicalCount > 0) {
-          final cachedEnd = _migrationEnds[owner];
+          final cachedEnd = prefix?.migrationEnd ?? _migrationEnds[owner];
           if (cachedEnd != null) {
             migrationEnd = cachedEnd;
           } else {
@@ -1249,6 +1423,10 @@ final class UnifiedHistory {
             );
           }
           includeRecord(r);
+          (parsedOffsets[owner] ??= {})[r.sequence] = (
+            start: start,
+            length: i - start,
+          );
           sequence = r.sequence;
           head = r.hash;
           clock = r.clock;
@@ -1340,6 +1518,7 @@ final class UnifiedHistory {
         _chainCommitment(head),
         completeSequence,
       ]);
+      ownerRecords[owner] = all.sublist(ownerStart);
     }
     if (!reusedHistoricalCoverage) {
       _validateReferenceCoverage(all, current);
@@ -1415,6 +1594,7 @@ final class UnifiedHistory {
           row,
         );
       }
+      _syncStore(current, heads, ownerRecords, parsedOffsets, observed);
       for (final stage in _projections.values) {
         publications.add(stage(result));
       }
@@ -2456,6 +2636,7 @@ final class UnifiedHistory {
           writer,
         ],
       );
+      _appendOwnToStore(prepared.record, base, ownBytes.length);
       for (final stage in _projections.values) {
         publications.add(stage(result));
       }

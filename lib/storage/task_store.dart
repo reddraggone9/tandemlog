@@ -1364,6 +1364,7 @@ class TaskStore {
     NativeTextEngine? textEngine,
     LocalProfileDatabase? profileDatabase,
     bool initializeNewWorkspaceText = false,
+    bool deferPeerCatchUp = false,
   }) async {
     if (initializeNewWorkspaceText && textEngine == null) {
       throw ArgumentError(
@@ -1430,6 +1431,7 @@ class TaskStore {
               writer: writer,
               now: now,
               textEngine: textEngine,
+              deferPeerCatchUp: deferPeerCatchUp,
             );
       store = await openUnified(history);
       if (initializeNewWorkspaceText && !store.sharedTextInitialized) {
@@ -1478,6 +1480,9 @@ class TaskStore {
         final tables = TaskTables.forLocation(key);
         history.profile.transaction(() {
           for (final sql in _latestProjectionSchema(tables)) {
+            history.profile.database.execute(sql);
+          }
+          for (final sql in taskProofGuards(tables, key)) {
             history.profile.database.execute(sql);
           }
         });
@@ -5054,6 +5059,23 @@ String _taskProjectionRevision(Iterable<LogEvent> events) {
   );
 }
 
+/// Any change to a sealed projection row deletes its witness in the same
+/// statement, so a witness present at open proves the rows are exactly the
+/// sealed ones and the open need not re-hash them (Lee 11-05: no full
+/// re-verification at start). Profile database only, never the scratch store.
+List<String> taskProofGuards(TaskTables t, String locationKey) => [
+  for (final table in _taskCacheTables(t))
+    for (final (event, row) in const [
+      ('INSERT', 'NEW'),
+      ('UPDATE', 'OLD'),
+      ('DELETE', 'OLD'),
+    ])
+      'CREATE TRIGGER IF NOT EXISTS ${table}_proof_${event.toLowerCase()} '
+          'AFTER $event ON $table '
+          '${table == t.metadata ? "WHEN $row.key IN ('order_projection','text_baseline_verified') ${event == 'UPDATE' ? "OR NEW.key IN ('order_projection','text_baseline_verified') " : ''}" : ''}'
+          "BEGIN DELETE FROM profile_metadata WHERE key='app5.task.cache.$locationKey'; END",
+];
+
 List<String> _taskCacheTables(TaskTables t) => [
   t.events,
   t.views,
@@ -5100,7 +5122,7 @@ void _insertTaskCacheRows(
 }
 
 /// True only when [a] and [b] hold the same values with the same SQLite
-/// types, so their [_taskCacheDigest] inputs encode to identical bytes. Any
+/// types, so they would encode to identical bytes. Any
 /// value it cannot vouch for (NaN, an unexpected type) counts as different,
 /// which only forgoes a seal. Replaces a second full digest at close.
 bool sameTaskCacheRows(
@@ -5138,11 +5160,6 @@ bool sameTaskCacheRows(
   }
   return true;
 }
-
-String _taskCacheDigest(List<List<List<Object?>>> rows, List<String> ready) =>
-    // Identical JSON UTF-8 bytes without a full intermediate UTF-16 string.
-    // The entire ordered row inventory and ready list still enter the proof.
-    bytesDigest(JsonUtf8Encoder().convert({'rows': rows, 'ready': ready}));
 
 /// Disposable, process-local semantic admission oracle. Complete candidate
 /// batches are staged together; a failed or non-monotonic candidate rebuilds
@@ -5905,9 +5922,15 @@ class TaskSemanticValidator {
     );
     try {
       final proof = jsonDecode(proofRows.single['value'] as String) as Map;
-      if (proof['generation'] != 5 ||
+      if (proof['generation'] != 6 ||
           proof['manifest'] != manifestDigest ||
-          proof['native'] != (textEngine != null)) {
+          proof['native'] != (textEngine != null) ||
+          source.select(
+                "SELECT COUNT(*) AS n FROM sqlite_schema WHERE type='trigger' AND name LIKE ?",
+                ['tasks_${locationKey}_%_proof_%'],
+              ).single['n'] !=
+              _taskCacheTables(TaskTables.forLocation(locationKey!)).length *
+                  3) {
         return;
       }
       final tables = TaskTables.forLocation(locationKey!);
@@ -5938,8 +5961,7 @@ class TaskSemanticValidator {
           : _taskProjectionRevision(cachedEvents);
       if (ready.toSet().length != ready.length ||
           !ready.every(ids.contains) ||
-          proof['revision'] != cachedRevision ||
-          proof['digest'] != _taskCacheDigest(rows, ready)) {
+          proof['revision'] != cachedRevision) {
         return;
       }
       warmCacheProofMicroseconds = watch.elapsedMicroseconds;
@@ -6021,15 +6043,13 @@ class TaskSemanticValidator {
     // Do not bless an unobserved change to the live disposable cache at close.
     // Exact row equality implies equal digests, so one digest suffices.
     if (!sameTaskCacheRows(rows, expected)) return;
-    final digest = _taskCacheDigest(rows, ready);
     source.execute('INSERT OR REPLACE INTO profile_metadata VALUES (?,?)', [
       _proofKey,
       jsonEncode({
-        'generation': 5,
+        'generation': 6,
         'manifest': manifestDigest,
         'native': textEngine != null,
         'revision': _taskProjectionRevision(events),
-        'digest': digest,
         'ready': ready,
       }),
     ]);

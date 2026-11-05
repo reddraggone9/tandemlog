@@ -18,7 +18,8 @@ class ReadOnlyWorkspaceWrite implements Exception {
 
 /// Refuses every canonical mutation. Reads cannot join, clean an owned tail or
 /// confirm an outbox; any such attempt fails closed before touching the folder.
-class ReadOnlyLogFolder implements LogFolder, BoundedLogFolder {
+class ReadOnlyLogFolder
+    implements LogFolder, BoundedLogFolder, BoundedRangeLogFolder {
   ReadOnlyLogFolder(this.inner) : assert(inner is BoundedLogFolder);
   final LogFolder inner;
   static const _refusal = ReadOnlyWorkspaceWrite(
@@ -33,6 +34,19 @@ class ReadOnlyLogFolder implements LogFolder, BoundedLogFolder {
   @override
   Future<Uint8List> readBounded(String name, int maximumBytes) =>
       (inner as BoundedLogFolder).readBounded(name, maximumBytes);
+  // Seek reads let a read session use the history store's fast check.
+  @override
+  Future<Uint8List?> readFromBounded(
+    String name,
+    int offset,
+    int maximumBytes,
+  ) => inner is BoundedRangeLogFolder
+      ? (inner as BoundedRangeLogFolder).readFromBounded(
+          name,
+          offset,
+          maximumBytes,
+        )
+      : Future.value(null);
   @override
   Future<void> append(String name, Uint8List bytes) => Future.error(_refusal);
   @override
@@ -73,6 +87,7 @@ class WorkspaceSession {
     bool readOnly = false,
     bool Function()? alive,
     void Function(String phase)? onPhase,
+    bool deferPeerCatchUp = false,
   }) async {
     bool live() => alive?.call() ?? true;
     void phase(String name) => onPhase?.call(name);
@@ -98,6 +113,7 @@ class WorkspaceSession {
               profile: profile,
               writer: writer,
               textEngine: textEngine,
+              deferPeerCatchUp: deferPeerCatchUp,
             );
       phase('history');
       tasks = await TaskStore.openUnified(unified);
@@ -133,7 +149,9 @@ class WorkspaceSession {
         return null;
       }
       Object? migrationError;
-      if (!readOnly) {
+      // The migration refreshes first; while peers are still to be applied
+      // it waits for the caller's catch-up refresh, which migrates too.
+      if (!readOnly && !unified.catchUpPending) {
         final migration = await tasks.migrateOccurrenceDates(canCommit: live);
         migrationError = migration.error;
         phase('migration');

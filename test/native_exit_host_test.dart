@@ -127,11 +127,13 @@ void main() {
           ),
           hasLength(1),
         );
+        // One history store per opened location spelling (this test opens
+        // the same workspace through two); the probe below checks this one.
         expect(
           witness.where(
-            (row) => (row['key'] as String).startsWith('app5.decoded.proof.'),
+            (row) => (row['key'] as String).startsWith('app5.store.'),
           ),
-          hasLength(1),
+          isNotEmpty,
         );
         expect(
           jsonDecode(
@@ -141,7 +143,7 @@ void main() {
                 )['value']
                 as String,
           )['generation'],
-          5,
+          6,
         );
         // Probe the actual production-created keys in the stopped database,
         // rather than a Python fake fixture repeating the helper's key formula.
@@ -166,8 +168,8 @@ void main() {
         }))!;
         expect(probe['normalizedTaskProofPresent'], isFalse);
         expect(probe['taskProofShapeValid'], isTrue);
-        expect(probe['decodedProofPresent'], isTrue);
-        expect(probe['decodedPayloadHashMatches'], isTrue);
+        expect(probe['historyStorePresent'], isTrue);
+        expect(probe['historyStoreMatchesHeads'], isTrue);
         expect(probe['productionReuseVerified'], isFalse);
         expect(await exit(tester, state), AppExitResponse.exit);
         await unmount(tester);

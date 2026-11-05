@@ -179,40 +179,51 @@ def finish_process(proc, marker, close_mode, xdotool):
 
 
 def inspect_stopped_witness(profile, folder, *, folder_location=None):
-    """Presence/hash evidence only; production reuse validates actual bindings."""
+    """Presence/consistency evidence only; production reuse validates bindings."""
     database = profile/'local.sqlite'
-    result = {'taskProofPresent': False, 'decodedProofPresent': False,
-              'taskProofShapeValid': False, 'decodedPayloadHashMatches': False,
+    result = {'taskProofPresent': False, 'historyStorePresent': False,
+              'taskProofShapeValid': False, 'historyStoreMatchesHeads': False,
               'productionReuseVerified': False}
     if not database.exists():
         return result
     epoch = json.loads((folder/'tandemlog-space.json').read_text())['epoch']
     # Location is an opaque production identity. Path may normalize its slash or
-    # dot spelling for filesystem access; neither receipt hash may normalize it.
+    # dot spelling for filesystem access; neither key may normalize it.
     location = str(folder) if folder_location is None else folder_location
     key = hashlib.sha256(f'{location}#app5:{epoch}'.encode()).hexdigest()
-    # Task projections are scoped to format+epoch; decoded receipts are scoped
-    # to UnifiedHistory._locationKey, which is app5.location.SHA256(location).
-    decoded_key = 'app5.location.'+hashlib.sha256(location.encode()).hexdigest()
-    names = [f'app5.task.cache.{key}', f'app5.decoded.proof.{decoded_key}',
-             f'app5.decoded.payload.{decoded_key}']
+    # Task projections are scoped to format+epoch; the history store
+    # (design/history-store.md) to SHA256(location).
+    store = hashlib.sha256(location.encode()).hexdigest()
+    names = [f'app5.task.cache.{key}', f'app5.store.{store}']
     with closing(sqlite3.connect(database.resolve().as_uri()+'?mode=ro', uri=True, timeout=0)) as db:
         db.execute('PRAGMA query_only=ON')
-        rows = dict(db.execute('SELECT key,value FROM profile_metadata WHERE key IN (?,?,?)', names))
-    task, proof, payload = (rows.get(name) for name in names)
-    result.update(taskProofPresent=task is not None, decodedProofPresent=proof is not None)
+        rows = dict(db.execute('SELECT key,value FROM profile_metadata WHERE key IN (?,?)', names))
+        task, binding = (rows.get(name) for name in names)
+        tables = {name for (name,) in db.execute(
+            "SELECT name FROM sqlite_schema WHERE type='table' AND name IN (?,?)",
+            [f'history_{store}_records', f'history_{store}_seals'])}
+        result['historyStorePresent'] = binding is not None and len(tables) == 2
+        if result['historyStorePresent']:
+            try:
+                space, ep = json.loads(binding)[2:4]
+            except (ValueError, TypeError):
+                space = ep = None
+            seals = sorted(db.execute(
+                f'SELECT writer,sequence,end_offset,hash FROM history_{store}_seals'))
+            heads = sorted(db.execute(
+                'SELECT writer,sequence,bytes,hash FROM protected_app_heads WHERE space=? AND epoch=?',
+                [space, ep]))
+            result['historyStoreMatchesHeads'] = bool(heads) and seals == heads
+    result['taskProofPresent'] = task is not None
     if task is not None:
         result['taskProofSHA256'] = hashlib.sha256(task.encode()).hexdigest()
         try:
             value = json.loads(task)
-            result['taskProofShapeValid'] = (value.get('generation') == 5 and
+            result['taskProofShapeValid'] = (value.get('generation') == 6 and
                 value.get('native') is True and all(isinstance(value.get(field), str) and
-                re.fullmatch('[0-9a-f]{64}', value[field]) for field in ('manifest','revision','digest')))
+                re.fullmatch('[0-9a-f]{64}', value[field]) for field in ('manifest','revision')))
         except (ValueError, AttributeError):
             pass
-    if payload is not None:
-        result['decodedPayloadSHA256'] = hashlib.sha256(payload.encode()).hexdigest()
-        result['decodedPayloadHashMatches'] = result['decodedPayloadSHA256'] == proof
     return result
 
 
@@ -321,15 +332,15 @@ def verify_loaded(profile, folder, tasks, result, warm):
     result['startupCacheCounters'] = reuse
     before = result.get('witnessBeforeLaunch', {})
     task_reused = bool(reuse and reuse.get('warmTaskProjectionReuses', 0) > 0)
-    decoded_reused = bool(reuse and reuse.get('decodedCacheReuses', 0) > 0)
+    store_reused = bool(reuse and reuse.get('decodedCacheReuses', 0) > 0)
     clean_repeat = bool(warm and result.get('previousNormalExitVerified'))
     if clean_repeat and before.get('taskProofShapeValid') and not task_reused:
         raise RuntimeError('Prior sealed Task witness was not actually reused')
-    if clean_repeat and before.get('decodedPayloadHashMatches') and not decoded_reused:
-        raise RuntimeError('Prior sealed decoded witness was not actually reused')
+    if clean_repeat and before.get('historyStoreMatchesHeads') and not store_reused:
+        raise RuntimeError('Prior history store was not actually reused')
     result.update(cleanTaskWitnessVerified=clean_repeat and before.get('taskProofShapeValid', False) and task_reused,
-                  cleanDecodedWitnessVerified=clean_repeat and before.get('decodedPayloadHashMatches', False) and decoded_reused)
-    result['cleanWitnessVerified'] = result['cleanTaskWitnessVerified'] and result['cleanDecodedWitnessVerified']
+                  cleanStoreVerified=clean_repeat and before.get('historyStoreMatchesHeads', False) and store_reused)
+    result['cleanWitnessVerified'] = result['cleanTaskWitnessVerified'] and result['cleanStoreVerified']
 
 
 def main():
