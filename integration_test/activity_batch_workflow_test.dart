@@ -156,7 +156,7 @@ void registerActivityBatchWorkflowTests({
             find.descendant(of: list, matching: find.text(name));
         // Expanded, the parts name the items: the summary drops its names
         // line, and the parts don't repeat the summary's "Food added".
-        for (final name in ['Synthetic rice', 'Synthetic milk ×2']) {
+        for (final name in ['Synthetic rice', 'Synthetic milk\u00a0×2']) {
           await reveal(part(name));
           expect(part(name), findsOneWidget);
         }
@@ -178,7 +178,7 @@ void registerActivityBatchWorkflowTests({
             for (final name in [
               'Synthetic rice',
               'Synthetic beans',
-              'Synthetic milk ×2',
+              'Synthetic milk\u00a0×2',
             ])
               tester.getTopLeft(part(name)).dy,
           ]..sort();

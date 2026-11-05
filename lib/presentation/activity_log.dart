@@ -186,7 +186,8 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
   ) {
     final subject = _subject(e, d);
     if (subject != null && e.summary == values.summaryKind(batch)) {
-      return subject;
+      // A count stays with its item when the name wraps.
+      return subject.replaceAll(' ×', '\u00a0×');
     }
     return _headline(e, d);
   }
@@ -288,6 +289,8 @@ class _ActivityLogDialogState extends State<ActivityLogDialog> {
       contentPadding: part
           ? EdgeInsets.only(left: 40, right: 16, bottom: last ? 12 : 0)
           : null,
+      // The open hint is small; a narrower gap leaves the name its width.
+      horizontalTitleGap: part ? 8 : null,
       // Parts read as the group's contents: the collapsed names line's size,
       // not the row title's.
       title: Text(
