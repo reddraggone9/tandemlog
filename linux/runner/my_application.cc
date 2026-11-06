@@ -188,7 +188,36 @@ static void my_application_shutdown(GApplication* application) {
     (void)g_steal_pointer(&self->retained_widgets);
     g_warning("Flutter engines did not complete normal shutdown");
   } else {
-    g_clear_pointer(&self->retained_widgets, g_ptr_array_unref);
+    // The engine has stopped raster work, so the renderers may now finalize.
+    // A callback queued by the close can still hold one (seen after a quick
+    // close: renderer destroyed but not finalized at loop return). Finish the
+    // already-ready callbacks, with the same bounds, until every widget we
+    // retained is gone.
+    GPtrArray* retained = g_steal_pointer(&self->retained_widgets);
+    g_autoptr(GArray) alive = g_array_sized_new(FALSE, TRUE, sizeof(GWeakRef),
+                                                retained->len);
+    g_array_set_size(alive, retained->len);
+    for (guint i = 0; i < retained->len; ++i) {
+      g_weak_ref_init(&g_array_index(alive, GWeakRef, i),
+                      g_ptr_array_index(retained, i));
+    }
+    g_ptr_array_unref(retained);
+    auto any_alive = [&alive]() {
+      for (guint i = 0; i < alive->len; ++i) {
+        g_autoptr(GObject) object =
+            G_OBJECT(g_weak_ref_get(&g_array_index(alive, GWeakRef, i)));
+        if (object != nullptr) return true;
+      }
+      return false;
+    };
+    for (guint dispatched = 0;
+         dispatched < 256 && any_alive() && g_main_context_pending(nullptr);
+         ++dispatched) {
+      g_main_context_iteration(nullptr, FALSE);
+    }
+    for (guint i = 0; i < alive->len; ++i) {
+      g_weak_ref_clear(&g_array_index(alive, GWeakRef, i));
+    }
   }
 
   G_APPLICATION_CLASS(my_application_parent_class)->shutdown(application);

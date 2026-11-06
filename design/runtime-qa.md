@@ -1213,3 +1213,14 @@ Loaded diagnostic runs are not qualification. Candidate 42111287310 and its
 113→114 labs remain historical; changed source requires fresh qualification and
 exact signed-candidate lab acceptance. No live data, phone, release draft or
 publication is involved in this follow-up.
+
+Follow-up (2026-11-05, build 115 source): hosted dev CI 42134303610 then failed the
+same disposal check differently: after a quick warm close the renderer was destroyed
+but still alive when the application loop returned (engine finalized, exit 0, no
+abort). Locally the unchanged bundle reproduced it at trial 3 of 15. The runner
+released its retained widgets as soon as the engine was gone and stopped
+dispatching, so a callback already queued by the close kept the last renderer
+reference. It now keeps weak references after that release and finishes
+already-ready callbacks, with the same 256-dispatch bound and no waiting, until the
+retained widgets have finalized. Fixed bundle: 45 consecutive disposal trials
+(90 normal closes) pass. Renderers still never finalize before their engine.
