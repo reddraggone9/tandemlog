@@ -626,8 +626,8 @@ workspace. **Budget remains 1,000 ms median**; only Lee may change it.
 104 container edits, 92 removals, 148 product edits and eight purchase imports
 with 34 lines. Four writers use the production Task/Food APIs, one action per
 record. The synthetic reference shape contains **3,667 records / 6,419,277 bytes
-in four files**, 522 active containers in 483 Food rows, 551 products and 34
-purchases. Random fixture identities can change byte lengths slightly; every
+in four files** in the diagnostic fixture, with 522 active containers in 483 Food rows, 551 products and 34
+purchases. Random fixture identities can change byte lengths and grouping; every
 measurement retains its own authoritative receipt. The seeded Task projection
 contains 2,000 Tasks plus one person (560 completed Tasks remain in that
 projection).
@@ -711,9 +711,15 @@ added wholesale to the bound→post-frame interval.
 
 The former **420 ms result and candidate 42111287310 describe the Task-only
 shape**, not the corrected mixed case. They remain historical evidence, not
-current mixed-workload acceptance. Fresh mixed native evidence, controlled AOT
-qualification and candidate/labs are required after these source changes.
-See the committed current receipts for the final source and results.
+current mixed-workload acceptance. Fresh mixed native measurement on `7e7b028` passes at **520 ms median**
+(520, 520, 500, 520, 530 ms), with an uncached first launch of **2,500 ms**.
+Its receipt contains 3,667 records / 6,419,211 bytes / four writers and
+522 active containers / 480 Food rows / 551 products / 34 purchases; all
+measured launches match that receipt. Grouping differs from the diagnostic
+fixture because generated identities affect selection/grouping; this is not
+relabeling the diagnostic samples. This is the source-bound native case,
+not the still-pending controlled AOT q15 qualification or signed-candidate/lab
+acceptance. See the committed receipts for exact boundaries and provenance.
 
 Off-UI-isolate opening remains deferred: SQLite/store ownership and Android SAF
 channels make that a larger safety-critical change. Decoding already uses worker

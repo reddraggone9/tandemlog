@@ -4,12 +4,24 @@
   "budgetMs": 1000,
   "shape": {
     "tasks": 2000,
-    "warmStarts": 5
+    "warmStarts": 5,
+    "history": {
+      "peers": 3,
+      "taskEdits": 220,
+      "taskCompletions": 560,
+      "foodAdds": 530,
+      "foodMultiAdds": 17,
+      "foodRemovals": 92,
+      "foodEdits": 104,
+      "productEdits": 148,
+      "purchaseImports": 8,
+      "purchaseLines": 34
+    }
   },
-  "sourceRevision": "0b9aaf18851458dbb8086c9d86e46bc71b25a8ff",
+  "sourceRevision": "7e7b028154614cbe9755584bfc2e0ebc23b2fbc8",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "b33da461fc94189b9282a79be4b8433d3124c31aca872edd837a320033eb7926",
+    "sha256": "be7a27049f884e0d2b43d3bdc22c4e246dbee34fc49a8fe2c50bd55b29144ea9",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -1060,7 +1072,7 @@
         "mode": "100644"
       },
       "lib/application/workspace_session.dart": {
-        "sha256": "17bbcd63d92826710560dac986737d6c924b8fd667a0ec2d31f0b03455892b27",
+        "sha256": "10b75fb043b8a7124b8cb5a06c7d8254dbb9d8ac0836412a246d4486bb41453a",
         "mode": "100644"
       },
       "lib/diagnostics/operation_observer.dart": {
@@ -1236,7 +1248,7 @@
         "mode": "100644"
       },
       "lib/main.dart": {
-        "sha256": "3b22a0bac47643af9f99ea6797504ce176fb97b486edc1f3a4440dd677f4cf6e",
+        "sha256": "f6b3937e6df267931788049bbd2fc61d419e6d5f4b3ff256d0e6810e484c8f8d",
         "mode": "100644"
       },
       "lib/platform/android_section_navigation.dart": {
@@ -1464,7 +1476,7 @@
         "mode": "100644"
       },
       "lib/storage/task_store.dart": {
-        "sha256": "2b760c16bb46bad4802cf00d354e1fdcc329b3b539789f4e2c865a760a4c4836",
+        "sha256": "92a251bd27f55bf140c686c56f4dc290c61aa0cd4544e976b11346c1197cf978",
         "mode": "100644"
       },
       "lib/storage/task_tables.dart": {
@@ -1476,7 +1488,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "5fbfcd6615cdd7f1d22243ad9227663c224311bce076c8933032dfd04ea891f0",
+        "sha256": "f358b736b453252009fe8e876f268ab470885bc5bd6ef4aba45cacdc6b344936",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -2649,6 +2661,10 @@
         "sha256": "85ae34d233d999130e7a6d1d4f3c6431322f4a98907542934dc04dc74e062e5a",
         "mode": "100644"
       },
+      "test/history_store_parallel_restore_test.dart": {
+        "sha256": "d79d1bfa56eb4950a49931f208e7a6ff5795d3c7427d4577c85b2d77aa4521bc",
+        "mode": "100644"
+      },
       "test/history_store_test.dart": {
         "sha256": "6a0b4cdf7a244da33762d1e45b8244bf5a79049b597252fd3a0a7fc5b30af5da",
         "mode": "100644"
@@ -2722,7 +2738,7 @@
         "mode": "100644"
       },
       "test/occurrence_due_store_test.dart": {
-        "sha256": "4969dbde72eed42863b8398f613438cdf52fb87344a0b57205794477b7f647e1",
+        "sha256": "f35f9012d4b894e4ec33f3b4f3cf38b40ff89e73118bf9e6be0b36e5707b5110",
         "mode": "100644"
       },
       "test/order_projection_test.dart": {
@@ -3282,7 +3298,7 @@
         "mode": "100644"
       },
       "tool/initialize_synthetic_text_fixture.dart": {
-        "sha256": "2dcb1edbc8b29f9f61aca43bb188fe5f52434aaa9c1fea009018b32dc22ade12",
+        "sha256": "2569002666ecdea9afa8e0a86f78ead9b7e5df5b5f72acd2c9ac5d14cff7f388",
         "mode": "100644"
       },
       "tool/linux_lifecycle_probe.c": {
@@ -3294,7 +3310,7 @@
         "mode": "100644"
       },
       "tool/measure_startup.py": {
-        "sha256": "fac466547a09a61a7804e5f242aeb8c40c2c1c441a9a26a7dc818fd65433a332",
+        "sha256": "356ccdec99e712732aa815e85838da49b8ffebdaa20a4d243ff329c72be1ccb6",
         "mode": "100644"
       },
       "tool/minimal_startup.dart": {
@@ -3342,11 +3358,11 @@
         "mode": "100644"
       },
       "tool/performance/native-cold-start-v1.json": {
-        "sha256": "8a4250880ddcdda82e3df5f5896d7667a0d6af4c557b83b2ae41d681347078ef",
+        "sha256": "c19d7136125d0debca6ef00a4ccd8888df94bf3661640e30a7889be434ba2424",
         "mode": "100644"
       },
       "tool/performance/native_cold_start.py": {
-        "sha256": "e25b1b913103e46341f640d9f16c1018a81562f716b6f5f0969ee2ba8502a77f",
+        "sha256": "60d77cb1a833a49a7a6496a0f727a928d2a3d1c92abdb4fddb703dc68f78cda9",
         "mode": "100644"
       },
       "tool/performance/operation_diagnostics.dart": {
@@ -3398,7 +3414,7 @@
         "mode": "100644"
       },
       "tool/synthetic_text_fixture.py": {
-        "sha256": "4fc233e688d18038c4e9f16c264cf8194daa9cf70b20a8c2a1218b8bf11efa79",
+        "sha256": "37ab9db009d6216b076066809e0c82f3418a7014e135d7f874f49419a4ae1ac8",
         "mode": "100644"
       },
       "tool/test_action_cache_boundary.py": {
@@ -3462,7 +3478,7 @@
         "mode": "100644"
       },
       "tool/test_native_cold_start.py": {
-        "sha256": "a84cc1d51d74ece88f89b0f991d031c557f77327139588ff77636c769f06d60a",
+        "sha256": "fafda35e1d7be1419da2ca288bc60a55e78f004dac4e6c5327fc75ae35356be6",
         "mode": "100644"
       },
       "tool/test_performance_child_cleanup.py": {
@@ -3648,7 +3664,7 @@
     }
   },
   "binarySHA256": "8897415e655745d755b94b111d02a5ea56e5b492593c9bb829de82b1921265e9",
-  "appSHA256": "e041a2c6e7db9f74d468d9764ec417c4337f4574f03e52046c10a45225187029",
+  "appSHA256": "2e6032835b5f42138df5b0bd451969f9e049c9e1814ba626925e2db3b7ad59fe",
   "hostProfileSHA256": "80fab54aa863db2546cf143f9971b8943fe8dec5d82b807a89a5835fde329876",
   "host": {
     "architecture": "x86_64",
@@ -3663,73 +3679,131 @@
     "synthetic": true,
     "initialized": true,
     "format": "app-action-v5",
-    "baseline": "60c8263c-0978-445d-8e1c-9fe06156de55:2002",
-    "writer": "60c8263c-0978-445d-8e1c-9fe06156de55",
-    "user": "0efc2584-3df1-4dfc-adff-b01a919d6572",
+    "workload": "mixed-v2",
+    "writer": "511ddba6-6ada-46d6-ba19-d70899f5eabb",
+    "user": "041609f0-d157-4560-98c9-658e06e38fa9",
     "rows": 2001,
-    "settings_sha256": "5c5684850f038f044fe901fbf8a52f7162ab607edd435192a0afc20cb418ad65",
+    "records": 3667,
+    "effectFamilies": {
+      "container.add": 564,
+      "container.edit": 104,
+      "container.remove": 92,
+      "product.edit": 183,
+      "purchase.record": 34,
+      "task.completed": 560,
+      "task.created": 2000,
+      "task.edited": 220,
+      "text.baselineInitialized": 1,
+      "user.created": 1,
+      "writer.joined": 3
+    },
+    "food": {
+      "activeContainers": 522,
+      "groups": 480,
+      "products": 551,
+      "purchases": 34
+    },
+    "files": 4,
+    "historyBytes": 6419211,
+    "settings_sha256": "aac13db4aaa713b558bb41ba946b4bc6842fbdb3ed48d3238353130a90af78ee",
     "native_sha256": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2"
   },
   "loadAverage1m": {
-    "before": 1.5458984375,
-    "after": 1.77001953125
+    "before": 3.56201171875,
+    "after": 3.62255859375
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 1630,
-    "appMs": 1299,
-    "externalMs": 1635,
+    "processMs": 2500,
+    "appMs": 2130,
+    "food": {
+      "activeContainers": 522,
+      "groups": 480,
+      "products": 551,
+      "purchases": 34
+    },
+    "externalMs": 2503,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 430,
-      "appMs": 293,
-      "externalMs": 434,
+      "processMs": 520,
+      "appMs": 368,
+      "food": {
+        "activeContainers": 522,
+        "groups": 480,
+        "products": 551,
+        "purchases": 34
+      },
+      "externalMs": 513,
       "cleanWitnessVerified": true
     },
     {
       "run": 3,
-      "processMs": 430,
-      "appMs": 289,
-      "externalMs": 424,
+      "processMs": 520,
+      "appMs": 378,
+      "food": {
+        "activeContainers": 522,
+        "groups": 480,
+        "products": 551,
+        "purchases": 34
+      },
+      "externalMs": 515,
       "cleanWitnessVerified": true
     },
     {
       "run": 4,
-      "processMs": 410,
-      "appMs": 286,
-      "externalMs": 409,
+      "processMs": 500,
+      "appMs": 369,
+      "food": {
+        "activeContainers": 522,
+        "groups": 480,
+        "products": 551,
+        "purchases": 34
+      },
+      "externalMs": 503,
       "cleanWitnessVerified": true
     },
     {
       "run": 5,
-      "processMs": 410,
-      "appMs": 289,
-      "externalMs": 416,
+      "processMs": 520,
+      "appMs": 393,
+      "food": {
+        "activeContainers": 522,
+        "groups": 480,
+        "products": 551,
+        "purchases": 34
+      },
+      "externalMs": 526,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
-      "processMs": 420,
-      "appMs": 288,
-      "externalMs": 416,
+      "processMs": 530,
+      "appMs": 376,
+      "food": {
+        "activeContainers": 522,
+        "groups": 480,
+        "products": 551,
+        "purchases": 34
+      },
+      "externalMs": 530,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 420,
+    "medianMs": 520,
     "budgetMs": 1000,
     "passed": true,
     "samplesMs": [
-      430,
-      430,
-      410,
-      410,
-      420
+      520,
+      520,
+      500,
+      520,
+      530
     ],
-    "strictFirstLaunchMs": 1630
+    "strictFirstLaunchMs": 2500
   }
 }
