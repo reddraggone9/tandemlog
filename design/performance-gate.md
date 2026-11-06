@@ -711,15 +711,7 @@ added wholesale to the bound→post-frame interval.
 
 The former **420 ms result and candidate 42111287310 describe the Task-only
 shape**, not the corrected mixed case. They remain historical evidence, not
-current mixed-workload acceptance. Fresh mixed native measurement on `7e7b028` passes at **520 ms median**
-(520, 520, 500, 520, 530 ms), with an uncached first launch of **2,500 ms**.
-Its receipt contains 3,667 records / 6,419,211 bytes / four writers and
-522 active containers / 480 Food rows / 551 products / 34 purchases; all
-measured launches match that receipt. Grouping differs from the diagnostic
-fixture because generated identities affect selection/grouping; this is not
-relabeling the diagnostic samples. This is the source-bound native case,
-not the still-pending controlled AOT q15 qualification or signed-candidate/lab
-acceptance. See the committed receipts for exact boundaries and provenance.
+current mixed-workload acceptance. The first fresh mixed native measurement, on `7e7b028`, passed at 520 ms median (uncached first launch 2,500 ms; 480 Food rows in its receipt). After the Linux runner follow-up `e930f31` the case was measured again: **500 ms median** (500, 490, 500, 500, 500 ms), uncached first launch **2,550 ms**, receipt 3,667 records / 6,419,498 bytes / four writers and 522 active containers / 477 Food rows / 551 products / 34 purchases; every measured launch matches its own receipt. Food row counts differ between fixtures because generated identities affect selection and grouping; no sample is relabeled. This is the source-bound native case, not the controlled AOT qualification or signed-candidate/lab acceptance. See the committed receipts for exact boundaries and provenance.
 
 Off-UI-isolate opening remains deferred: SQLite/store ownership and Android SAF
 channels make that a larger safety-critical change. Decoding already uses worker

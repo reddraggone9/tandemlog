@@ -18,10 +18,10 @@
       "purchaseLines": 34
     }
   },
-  "sourceRevision": "7e7b028154614cbe9755584bfc2e0ebc23b2fbc8",
+  "sourceRevision": "e930f31be5d443d5db09ea79929721673f16bed6",
   "relevantSource": {
     "scheme": "relevant-source-v2",
-    "sha256": "be7a27049f884e0d2b43d3bdc22c4e246dbee34fc49a8fe2c50bd55b29144ea9",
+    "sha256": "ef4644c840128b9a1fc160ffee2fd4e33e968b7977cb1fc6f2046d4f858a313e",
     "files": {
       ".gitattributes": {
         "sha256": "27781e30a2814786598b37a16ffb349375f8c6757abe9498bee57d44da2ed538",
@@ -1564,7 +1564,7 @@
         "mode": "100644"
       },
       "linux/runner/my_application.cc": {
-        "sha256": "c082766f85671eb9f8447d6d76ba38e65f9627fec6a726d2282dfa2307abf78e",
+        "sha256": "09b208261924b389ce9cf9ddd2e6ea1f75c3a5350029a1acbe2243f2c8411c0e",
         "mode": "100644"
       },
       "linux/runner/my_application.h": {
@@ -3663,7 +3663,7 @@
       }
     }
   },
-  "binarySHA256": "8897415e655745d755b94b111d02a5ea56e5b492593c9bb829de82b1921265e9",
+  "binarySHA256": "a7d9a187ee0fc051e5772f8ad496778213e0e051b4c97a1edb36771f2739eb97",
   "appSHA256": "2e6032835b5f42138df5b0bd451969f9e049c9e1814ba626925e2db3b7ad59fe",
   "hostProfileSHA256": "80fab54aa863db2546cf143f9971b8943fe8dec5d82b807a89a5835fde329876",
   "host": {
@@ -3680,8 +3680,8 @@
     "initialized": true,
     "format": "app-action-v5",
     "workload": "mixed-v2",
-    "writer": "511ddba6-6ada-46d6-ba19-d70899f5eabb",
-    "user": "041609f0-d157-4560-98c9-658e06e38fa9",
+    "writer": "defa62c3-e6ef-40fa-b56c-2aba491a6160",
+    "user": "90215724-2e9b-469e-b41a-442b7a217f3f",
     "rows": 2001,
     "records": 3667,
     "effectFamilies": {
@@ -3699,111 +3699,111 @@
     },
     "food": {
       "activeContainers": 522,
-      "groups": 480,
+      "groups": 477,
       "products": 551,
       "purchases": 34
     },
     "files": 4,
-    "historyBytes": 6419211,
-    "settings_sha256": "aac13db4aaa713b558bb41ba946b4bc6842fbdb3ed48d3238353130a90af78ee",
+    "historyBytes": 6419498,
+    "settings_sha256": "1cd970395abaf57d5fcbebc9832e569c49608cfbbfe4f355724eb3f3c4baf9a3",
     "native_sha256": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2"
   },
   "loadAverage1m": {
-    "before": 3.56201171875,
-    "after": 3.62255859375
+    "before": 2.35009765625,
+    "after": 2.32177734375
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 2500,
-    "appMs": 2130,
+    "processMs": 2550,
+    "appMs": 2208,
     "food": {
       "activeContainers": 522,
-      "groups": 480,
+      "groups": 477,
       "products": 551,
       "purchases": 34
     },
-    "externalMs": 2503,
+    "externalMs": 2547,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 520,
-      "appMs": 368,
+      "processMs": 500,
+      "appMs": 366,
       "food": {
         "activeContainers": 522,
-        "groups": 480,
+        "groups": 477,
         "products": 551,
         "purchases": 34
       },
-      "externalMs": 513,
+      "externalMs": 501,
       "cleanWitnessVerified": true
     },
     {
       "run": 3,
-      "processMs": 520,
-      "appMs": 378,
+      "processMs": 490,
+      "appMs": 353,
       "food": {
         "activeContainers": 522,
-        "groups": 480,
+        "groups": 477,
         "products": 551,
         "purchases": 34
       },
-      "externalMs": 515,
+      "externalMs": 488,
       "cleanWitnessVerified": true
     },
     {
       "run": 4,
       "processMs": 500,
-      "appMs": 369,
+      "appMs": 368,
       "food": {
         "activeContainers": 522,
-        "groups": 480,
+        "groups": 477,
         "products": 551,
         "purchases": 34
       },
-      "externalMs": 503,
+      "externalMs": 501,
       "cleanWitnessVerified": true
     },
     {
       "run": 5,
-      "processMs": 520,
-      "appMs": 393,
+      "processMs": 500,
+      "appMs": 364,
       "food": {
         "activeContainers": 522,
-        "groups": 480,
+        "groups": 477,
         "products": 551,
         "purchases": 34
       },
-      "externalMs": 526,
+      "externalMs": 497,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
-      "processMs": 530,
-      "appMs": 376,
+      "processMs": 500,
+      "appMs": 362,
       "food": {
         "activeContainers": 522,
-        "groups": 480,
+        "groups": 477,
         "products": 551,
         "purchases": 34
       },
-      "externalMs": 530,
+      "externalMs": 500,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 520,
+    "medianMs": 500,
     "budgetMs": 1000,
     "passed": true,
     "samplesMs": [
-      520,
-      520,
       500,
-      520,
-      530
+      490,
+      500,
+      500,
+      500
     ],
-    "strictFirstLaunchMs": 2500
+    "strictFirstLaunchMs": 2550
   }
 }
