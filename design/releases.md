@@ -445,3 +445,8 @@ Flatpak Pages repository, Scoop/winget channel and post-stable device rollout
 were dropped. Their unused tooling (`flatpak_channel.py`, `update_channels.py`,
 `household_update_policy.py`, the Advance stable update channels workflow and
 the build's signing options) was removed; it never ran and no key was created.
+
+## Stable 2026.11.1/build116 published — 2026-11-07
+
+[Stable2026.11.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.1) is immutable Latest, published15:53 CST from `ef71b880`. Lee accepted RC115 on his phone at15:19 CST. Version/docs-only promotion reuses sealed q16 after identity verification, without a new benchmark or override. Signed candidate42415487006 and CI42415472687 passed first attempt. Exact Android and GTK115→116 retained-lab upgrades, independent reviews and four-asset anonymous public verification pass; all51 prior releases/tags unchanged. [Receipts and platform qualifications](../evidence/stable-2026.11.1/README.md).
+

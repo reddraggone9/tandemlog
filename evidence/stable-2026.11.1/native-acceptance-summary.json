@@ -1,0 +1,46 @@
+{
+  "result": "PASS",
+  "source": "ef71b8806fb93da3a9d2ce82f3610e86d044f05e",
+  "version": "2026.11.1+116",
+  "upgrade": "115->116",
+  "canonicalAndLocalDbInstallUnchanged": true,
+  "androidBindingAndSAFKept": true,
+  "prefixes": {
+    "android": {
+      "tandemlog-space.json": {
+        "before": 491,
+        "after": 491,
+        "prefix": true
+      },
+      "d9f0bbf5-f72a-4ad4-b703-59280ed6e23f.applog": {
+        "before": 31208,
+        "after": 32506,
+        "prefix": true
+      }
+    },
+    "gtk": {
+      "2203cba1-c79d-4274-9259-6ce1e4c4d930.applog": {
+        "before": 50574,
+        "after": 54185,
+        "prefix": true
+      },
+      "tandemlog-space.json": {
+        "before": 491,
+        "after": 491,
+        "prefix": true
+      }
+    }
+  },
+  "sqliteIntegrity": "ok",
+  "gtkNormalExits": [
+    0,
+    0
+  ],
+  "androidColdReopen": "0 open after completing Stable103task; retained Food and Activity",
+  "gtkColdReopen": "1 open repeating task after adding/completing Synthetic stable116 acceptance; retained Food and Activity",
+  "integrityUI": {
+    "android": "1 log,19 records,31208 bytes",
+    "gtk": "1 log,29 records,50574 bytes"
+  },
+  "nativeCoverage": "API30 x86_64 emulator and isolated GTK Flatpak; Windows candidate lifecycle/inventory only; no new manual Windows GUI claim"
+}

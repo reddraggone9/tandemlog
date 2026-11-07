@@ -1,5 +1,9 @@
 # Development status
 
+## Stable 2026.11.1/build116 published — 2026-11-07
+
+[Stable2026.11.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.1) is immutable Latest, published15:53 CST from `ef71b880`. Lee accepted RC115 on his phone at15:19 CST. Version/docs-only promotion reuses sealed q16 after identity verification, without a new benchmark or override. Signed candidate42415487006 and CI42415472687 passed first attempt. Exact Android and GTK115→116 retained-lab upgrades, independent reviews and four-asset anonymous public verification pass; all51 prior releases/tags unchanged. [Receipts and platform qualifications](../evidence/stable-2026.11.1/README.md).
+
 ## Stable 2026.11.0/build113 published — 2026-11-03
 
 [Stable 2026.11.0](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.0) is immutable Latest, published 2026-11-03T13:29:56Z (07:29 CST) from exact `b363a13`. Lee accepted 2026.11.0-rc.1 at 06:51 CST. Version metadata and documentation changed only; reference q12 `9d82e5c2` stays valid, with no performance rerun or override. Candidate 41639486016 and push CI 41639469591 passed on attempt 1. Android and GTK RC 112→113 in-place upgrades pass on the retained synthetic labs. [Receipts](../evidence/stable-2026.11.0/README.md).
