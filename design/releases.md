@@ -1,5 +1,11 @@
 # Builds and releases
 
+## Side-by-side RC handoff (Lee 2026-11-07)
+
+Goal: every RC release includes a ready-to-use isolated installation for owner testing, not only a download link. Choose Lee's Android phone or Leela based on the changed behavior, device availability and practical setup; no fresh permission is needed for this standard RC step. Honor an explicitly requested device.
+
+Method: keep stable installed and its settings/data untouched. On Android build the exact accepted RC source in release mode with a distinct application ID and clear test label; record the source, packaging-only changes, signer and hash, and disclose that this is a test variant, not the byte-identical published APK. On Leela use the accepted portable artifact with a separate profile and shortcut. Bind only to a private, non-synced copy of realistic data, never the live workspace. Verify version, coexistence, isolated binding and a usable launch; report any locked/unavailable-device blocker explicitly. Include the app/shortcut name and first-use versus subsequent-start caveat in the handoff. This does not replace exact published-artifact acceptance or authorize stable adoption.
+
 CI uses standard GitHub-hosted Ubuntu 24.04 and Windows 2022 runners, pinned official actions and Flutter 3.47.5 at a verified source revision. No larger/paid runners or billing changes. Intermediate artifacts expire after five days.
 
 Every executable-change main push and every pull request runs formatting, analysis, the complete domain/storage integrity/convergence/recovery suite and native Linux integration and release startup smoke checks (fresh/warm SQLite), plus Linux release, native Windows release and Android debug builds. Windows also runs domain/storage tests. Fast Linux checks start immediately; platform builds run independently. No integrity tests are removed for previews.
