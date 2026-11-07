@@ -531,3 +531,14 @@ relevant identity `b33da461fc94189b9282a79be4b8433d3124c31aca872edd837a320033eb7
 controller r8 with the owned ADB server running and idle. Four first-pass misses
 each passed their automatic rerun; absolute and both growth budgets passed and
 cleanup was clean. The `c592d2ca…` evidence is retained as `retained-c592d2ca`.
+
+Build 115's final source qualified fresh on q16, request
+`c9c2df012673fb5491d154903d519f85`, relevant identity
+`ef4644c840128b9a1fc160ffee2fd4e33e968b7977cb1fc6f2046d4f858a313e`.
+The q14 `08e1623d…` bundle is retained as `retained-08e1623d`.
+The enforcing run on 2026-11-07 12:44–12:49 CST passed correctness,
+absolute latency and both history-growth budgets, with clean cleanup and the
+same owned ADB server idle throughout. Two first-pass growth misses
+(`food-own-history:scaling:agent.write.purchaseImport2` and
+`food-own-history:scaling:converted.task.reopen.withChecklist`) each passed
+the gate's automatic same-label confirmation; no manual rerun was performed.
