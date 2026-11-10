@@ -115,7 +115,10 @@ and only while it applies.
   for in one action, one Undo, and he can clear Keeps for again before Save. Not
   pressing it changes nothing: the date is saved, and the product's next import
   arrives undated in the Inbox again. So a labeled product never gains a Keeps
-  for by being dated, however often that happens.
+  for by being dated, however often that happens. Remember is offered only the
+  first time a product is dated: once it has a suggested date (below), dating it
+  shows no Remember, so labeled food is asked once and never again. Typing
+  Keeps for by hand always works.
 - **Update** (`Remember: keeps 5 days`): Lee changes an estimated date in the
   row editor, and the new date implies a different duration than the product's
   Keeps for. Pressing it replaces Keeps for (`1 week` → `5 days`). Same wording
@@ -128,7 +131,7 @@ and only while it applies.
   Expiration, where Lee checks it against the label and edits it like any typed
   date. The calendar button opens on the same date instead of today. Nothing is
   filled in or saved until he presses or picks. Once Expiration has any text,
-  the suggestion goes away (and Remember may take its place).
+  the suggestion goes away and nothing replaces it.
 - **Why no pre-filled date on labeled food:** a store can sell food that sat on
   its shelf for months, so a date from the usual gap would be confidently wrong
   for exactly the items that most need checking, and nothing would prompt Lee to
@@ -251,7 +254,9 @@ editor never offers Remember, Update or a suggested date for them.
 - **Remember** shows when all hold: single-row editor; the row was in the Inbox
   when opened (no date, not retained, not deleted); the product has no Keeps
   for; purchase day known; the current Expiration is a valid date after the
-  purchase day; Keeps for in the form is empty or differs from that duration.
+  purchase day; Keeps for in the form is empty or differs from that duration;
+  no suggested date exists for the row (the product has not been dated from a
+  purchase before).
   Text `Remember: keeps N days`, as weeks when the day difference divides by 7.
 - **Update** shows when all hold: single-row editor on an estimated row; the
   product has Keeps for; Lee changed the date; the new date is after the
@@ -316,9 +321,12 @@ list):
 - **Labeled food that arrives already expired:** it is in the Inbox, undated;
   Lee dates it from the label, so it shows as expired. The suggested date may be
   later than the label; it is only a button and he checks it against the label.
-- **Labeled food dated repeatedly:** each time, Remember is offered after he
-  picks a date and nothing happens unless he presses it; the product keeps
-  arriving in the Inbox.
+- **Labeled food dated repeatedly:** Remember is offered the first time only.
+  From the second time on he gets `Like last time` and no Remember; the product
+  keeps arriving in the Inbox.
+- **Fresh food where he skipped Remember the first time:** later imports offer
+  `Like last time` (one press). To stop it coming to the Inbox he types Keeps
+  for in the editor.
 - **Remembered by mistake:** clear Keeps for in the product's editor; the next
   import arrives undated. Containers already estimated keep their dates.
 - **No purchase date:** hand entries and older imports have none, so no offers
@@ -360,7 +368,8 @@ list):
   retry no-op; Undo removes containers, dates and locations; dry run report.
 - Limits: dating an Inbox item and saving without pressing Remember leaves the
   product's Keeps for empty, and its next import lands in the Inbox; pressing
-  Remember then Save sets it (one Undo); clearing it after pressing saves none.
+  Remember then Save sets it (one Undo); clearing it after pressing saves none;
+  a product with a suggested date never shows Remember.
 - Grouping: estimated and hand-dated rows stay separate; editing the date clears
   `est.` and moves the container into the plain row.
 - Offers: Remember, Update and suggested date each appear only under their exact
