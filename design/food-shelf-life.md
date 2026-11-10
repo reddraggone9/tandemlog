@@ -1,7 +1,8 @@
 # Food shelf life ("Keeps for")
 
 Status: **design proposal for Lee's OK; nothing implemented.** Branch
-`vex/food-keeps-for-design`. Mock-ups: `design/mockups/food-shelf-life/`.
+`vex/food-keeps-for-design`. Mock-ups: `design/mockups/food-shelf-life/`
+(list at the end).
 
 ## Goal (Lee, 2026-11-09)
 
@@ -85,7 +86,8 @@ Nothing new appears for products without Keeps for.
 - **Question:** "Should this product remember what I just did?"
 - **Learn:** Lee dates an Inbox item whose product has no Keeps for, and the
   container came from a receipt (so the purchase day is known). Keeps for fills
-  itself in as he picks the date (`12 days`, helper `From bought 2026-11-07`).
+  itself in as he picks the date (`12 days`, helper `Learned from purchase
+  on 2026-11-07`).
   It is an ordinary field: he can clear or change it before Save. Save writes
   the date and the product's Keeps for in one action, one Undo.
 - **Offer to update:** Lee changes an estimated date, or the autofilled date in
@@ -278,3 +280,31 @@ estimating and claim compatibility (1.5), `est.` display and grouping (0.5),
 learning and update offer (1), Add autofill (0.5), agent CLI and seed (1), tests,
 performance coverage, captures and native acceptance (1.5). Usual location adds
 half a day to a day.
+
+## Mock-ups
+
+Widget-test captures (labelled as such per ux-principles 25): the real Food page
+and editor with the production dark theme, phone width 412 dp, rendered by
+`flutter test` with a throwaway prototype of the new parts. Prototype branch
+`vex/food-keeps-for-mockup-proto` (never merged; `test/shelf_life_mockup_capture_test.dart`).
+Synthetic data: a Walmart receipt from 2026-11-07, viewed on 2026-11-09.
+
+1. `01-food-list-after-import.png`: Inbox holds only the two products without
+   Keeps for; imported rows sit in Stock with `est.`.
+2. `02-product-editor-keeps-for.png`, `-2x-text.png`, `-2x-text-scrolled.png`:
+   row editor on an estimated row; 2x text keeps the title on one line and
+   Cancel/Save side by side.
+3. `03-inbox-dating-learns-keeps-for.png` (and 2x): dating Mango fills Keeps for
+   with 12 days.
+4. `04-changed-estimate-offers-update.png` (and 2x): moving the strawberries'
+   estimate two days earlier offers `Use 5 days instead`.
+5. `05-add-autofills-date-and-location.png` (and 2x): picking "Carrots, cut" in
+   Add fills Expiration (today + 2 weeks) and Location (Fridge).
+
+Self-review against this brief and `ux-principles.md`: fixed a centered helper
+line under Expiration and awkward helper wording. Known and unchanged by this
+feature: the dialog's tight side padding at 2x and Food name autofocus in the
+row editor (both existing app behavior; the padding is already on the open UX
+list). "Keeps for" and "Keep at least" sit four fields apart and read
+differently in context; if Lee finds them confusable, the fallback label is
+"Shelf life".
