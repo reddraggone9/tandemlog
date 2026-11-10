@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/schedule.dart';
+import 'support/frozen_stable_v3/schedule.dart' as old;
 
 void main() {
   TaskSchedule schedule(String rule, String due) =>
@@ -127,6 +128,61 @@ void main() {
     },
   );
 
+  test('weekday and month lists share ", ", " and " and ", and "', () {
+    // New spelling -> the comma form the previous reader already accepted.
+    const spellings = {
+      'every week on Monday and Friday': 'every week on Monday, Friday',
+      'every week on Monday, Wednesday and Friday':
+          'every week on Monday, Wednesday, Friday',
+      'every week on Monday, Wednesday, and Friday':
+          'every week on Monday, Wednesday, Friday',
+      'every 2 weeks on Tuesday and Thursday when done':
+          'every 2 weeks on Tuesday, Thursday when done',
+      'every week on monday and friday': 'every week on monday, friday',
+      'every January, April, July, and October on the 1st':
+          'every January, April, July and October on the 1st',
+      'every March, June, September, and December on the 15th when done':
+          'every March, June, September, December on the 15th when done',
+    };
+    for (final MapEntry(key: rule, value: equivalent) in spellings.entries) {
+      // Exact input text is what gets stored.
+      expect(schedule(rule, '2026-11-01').toJson()['recurrence'], rule);
+      for (final (due, done) in [
+        ('2026-11-01', '2026-11-01'),
+        ('2026-11-02', '2026-11-02'),
+        ('2026-11-06', '2026-11-20'),
+        ('2026-12-15', '2026-12-01'),
+      ]) {
+        expect(
+          next(rule, due, done),
+          next(equivalent, due, done),
+          reason: '$rule from $due',
+        );
+      }
+      // The previous reader refuses these bytes, so they need revision 4.
+      expect(recurrenceRequiresRevision4(rule), isTrue, reason: rule);
+      expect(
+        () => old.TaskSchedule(
+          dueDate: '2026-11-01',
+          recurrence: rule,
+        ).next(DateTime.parse('2026-11-01')),
+        throwsFormatException,
+        reason: rule,
+      );
+    }
+    expect(next('every week on Monday and Friday', '2026-11-02'), '2026-11-06');
+    expect(next('every week on Monday and Friday', '2026-11-06'), '2026-11-09');
+    expect(
+      next('every January, April, July, and October on the 1st', '2026-10-01'),
+      '2027-01-01',
+    );
+    // Comma-only weekday lists keep their revision.
+    expect(
+      recurrenceRequiresRevision4('every week on Monday, Wednesday, Friday'),
+      isFalse,
+    );
+  });
+
   test('invalid grammar explains supported forms', () {
     for (final rule in [
       'every 2 months on the 5th Tuesday',
@@ -135,6 +191,11 @@ void main() {
       'every Jany on the 1st',
       'every January, May on the 0th',
       'every week on Funday',
+      'every week on Monday and',
+      'every week on and Friday',
+      'every week on Monday and and Friday',
+      'every week on Monday, , Friday',
+      'every January, and on the 1st',
     ]) {
       expect(
         () => schedule(rule, '2026-11-01'),
