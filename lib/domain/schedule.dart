@@ -8,8 +8,9 @@ const supportedRecurrenceGrammar =
     '1st–31st. Add when done to calculate from completion.';
 
 /// A required wire revision, not a migration or a normalization of saved text.
-/// The previous reader accepted all ordinary intervals, weekly day lists,
-/// monthly last-day/1st-Friday rules and the exact quarterly month literal.
+/// The previous reader accepted all ordinary intervals, comma-only weekly day
+/// lists, monthly last-day/1st-Friday rules and the exact quarterly month
+/// literal.
 bool recurrenceRequiresRevision4(String text) => _Rule.parse(text).extended;
 
 const unchangedRecurrenceMessage =
@@ -365,7 +366,7 @@ class _Rule {
         'november',
         'december',
       ];
-      final tokens = monthList[1]!.split(RegExp(r', | and '));
+      final tokens = splitList(monthList[1]!);
       final day = parseOrdinal(monthList[2]!);
       if (tokens.isNotEmpty && tokens.every(names.contains) && day != null) {
         return _Rule(
@@ -397,7 +398,7 @@ class _Rule {
     final suffix = match[3];
     if (suffix == null) return _Rule(unit, interval, done);
     if (unit == 'week') {
-      final names = suffix.split(', ');
+      final names = splitList(suffix);
       if (names.any((name) => !weekdayNames.contains(name))) {
         throw unsupported(text);
       }
@@ -406,6 +407,13 @@ class _Rule {
         interval,
         done,
         names.map((name) => weekdayNames.indexOf(name) + 1).toSet().toList(),
+        null,
+        null,
+        null,
+        null,
+        null,
+        // The previous reader split weekday lists on ', ' only.
+        names.join(', ') != suffix,
       );
     }
     if (unit == 'month') {
@@ -451,6 +459,10 @@ class _Rule {
     }
     throw unsupported(text);
   }
+
+  /// One list grammar for weekdays and months: ', ', ' and ' or ', and '.
+  static List<String> splitList(String text) =>
+      text.split(RegExp(r', and |, | and '));
 
   static FormatException unsupported(String text) => FormatException(
     'Unsupported recurrence: $text. $supportedRecurrenceGrammar',
