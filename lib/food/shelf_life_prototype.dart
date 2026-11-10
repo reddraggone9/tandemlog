@@ -12,6 +12,9 @@ final prototypeKeepsFor = <String, KeepsFor>{};
 /// Product name -> purchase day of its imported containers.
 final prototypePurchaseDay = <String, String>{};
 
+/// Product name -> days from purchase to the last hand-set date.
+final prototypeLastGapDays = <String, int>{};
+
 /// Product name -> usual location.
 final prototypeUsualLocation = <String, String>{};
 
@@ -39,10 +42,7 @@ DateTime addKeepsFor(DateTime start, KeepsFor k) => switch (k.unit) {
   'month' => DateTime(
     start.year,
     start.month + k.count,
-    start.day.clamp(
-      1,
-      DateTime(start.year, start.month + k.count + 1, 0).day,
-    ),
+    start.day.clamp(1, DateTime(start.year, start.month + k.count + 1, 0).day),
   ),
   _ => DateTime(start.year, start.month, start.day + k.count),
 };

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+
 import '../domain/schedule.dart' show formatCivilDate;
 import 'calendar_date_picker_fork.dart';
 
@@ -24,6 +25,7 @@ class CivilDateInput extends StatelessWidget {
     this.compactDecoration = true,
     this.isOwnerMounted,
     this.onPickerChanged,
+    this.pickerStart,
   });
 
   final TextEditingController controller;
@@ -42,6 +44,9 @@ class CivilDateInput extends StatelessWidget {
 
   /// Lets a draft defer navigation until its calendar has finished.
   final ValueChanged<bool>? onPickerChanged;
+
+  /// Prototype: where the calendar opens while the field holds no date.
+  final DateTime? Function()? pickerStart;
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -80,7 +85,7 @@ class CivilDateInput extends StatelessWidget {
                             parsed.year >= 1900 &&
                             parsed.year <= 9999
                         ? parsed
-                        : DateTime.now(),
+                        : pickerStart?.call() ?? DateTime.now(),
                     firstDate: DateTime(1900),
                     lastDate: DateTime(9999, 12, 31),
                   );

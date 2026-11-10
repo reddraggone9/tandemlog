@@ -81,8 +81,6 @@ class FoodEditorState extends State<FoodEditor> {
   late final FoodDetails? original;
   // Prototype state for design/food-shelf-life.md mock-ups.
   String? _autofilledExpiry;
-  bool _learned = false;
-  late final String _originalKeeps;
   String? get _purchaseDay => original == null || widget.group == null
       ? null
       : prototypePurchaseDay[original!.name];
@@ -94,7 +92,7 @@ class FoodEditorState extends State<FoodEditor> {
   late final String initial;
 
   /// Bulk editing writes only applied fields; mixed fields start blank.
-  static const bulkFields = ['name', 'brand', 'size', 'location', 'retention'];
+  static const bulkFields = ['name', 'brand', 'location', 'size', 'retention'];
 
   /// Name, Brand and Container size describe the product (decision 2).
   static const productFields = {'name', 'brand', 'size'};
@@ -177,15 +175,17 @@ class FoodEditorState extends State<FoodEditor> {
     keepsFor = TextEditingController(
       text: known == null ? '' : formatKeepsFor(known),
     );
-    _originalKeeps = keepsFor.text;
     final templateKeeps = widget.template == null
         ? null
         : prototypeKeepsFor[widget.template!.name];
     if (templateKeeps != null) {
       expiry.text = civil(addKeepsFor(prototypeToday, templateKeeps));
       _autofilledExpiry = expiry.text;
+      // Add has no Keeps for field; the hidden draft carries the product's.
+      keepsFor.text = formatKeepsFor(templateKeeps);
     }
     expiry.addListener(_expiryChanged);
+    keepsFor.addListener(_expiryChanged);
     retention = start(
       'retention',
       widget.template == null ? original?.retention ?? '' : '',
@@ -215,40 +215,53 @@ class FoodEditorState extends State<FoodEditor> {
   }
 
   void _expiryChanged() {
-    if (!mounted) return;
-    final start = _purchaseDay;
-    if (widget.group != null &&
-        original?.expiry == null &&
-        _originalKeeps.isEmpty &&
-        start != null) {
-      final implied = impliedKeepsFor(start, expiry.text.trim());
-      if (implied != null && (_learned || keepsFor.text.isEmpty)) {
-        keepsFor.text = formatKeepsFor(implied);
-        _learned = true;
-      } else if (implied == null && _learned) {
-        keepsFor.clear();
-        _learned = false;
-      }
-    }
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
-  /// Start day for the update offer: purchase day of an estimated row, or
-  /// today for an autofilled Add.
+  /// The row was undated in the Inbox when the editor opened.
+  bool get _fromInbox =>
+      !bulk &&
+      widget.group != null &&
+      original?.expiry == null &&
+      (original?.retention ?? '').isEmpty;
+
+  /// Remember: an Inbox item just dated, product without Keeps for.
+  KeepsFor? get _remember {
+    final start = _purchaseDay;
+    if (!_fromInbox || start == null) return null;
+    if (prototypeKeepsFor[original!.name] != null) return null;
+    final implied = impliedKeepsFor(start, expiry.text.trim());
+    if (implied == null) return null;
+    final current = parseKeepsFor(keepsFor.text);
+    if (current != null && sameDuration(start, implied, current)) return null;
+    return implied;
+  }
+
+  /// Suggested date: purchase day + the product's last hand-set gap.
+  String? get _suggestedDate {
+    final start = _purchaseDay;
+    if (!_fromInbox || start == null || expiry.text.trim().isNotEmpty) {
+      return null;
+    }
+    if (prototypeKeepsFor[original!.name] != null) return null;
+    final gap = prototypeLastGapDays[original!.name];
+    if (gap == null || gap < 1) return null;
+    return civil(addKeepsFor(parseCivil(start)!, (count: gap, unit: 'day')));
+  }
+
+  /// Start day for the update offer: purchase day of an estimated row.
   String? get _offerStart {
     if (widget.group != null && original?.estimated == true) {
       return _purchaseDay;
     }
-    if (widget.group == null && _autofilledExpiry != null) {
-      return civil(prototypeToday);
-    }
+    // Add has no Keeps for field, so it offers no update.
     return null;
   }
 
   KeepsFor? get _offer {
     final start = _offerStart;
-    final current = parseKeepsFor(keepsFor.text) ??
-        prototypeKeepsFor[name.text.trim()];
+    final current =
+        parseKeepsFor(keepsFor.text) ?? prototypeKeepsFor[name.text.trim()];
     if (start == null || current == null) return null;
     if (expiry.text.trim() == (original?.expiry ?? _autofilledExpiry)) {
       return null;
@@ -267,13 +280,46 @@ class FoodEditorState extends State<FoodEditor> {
         keeps != null) {
       return 'Estimated: bought $_purchaseDay + ${formatKeepsFor(keeps)}';
     }
+    final draft = parseKeepsFor(keepsFor.text);
     if (widget.group == null &&
         _autofilledExpiry != null &&
-        expiry.text.trim() == _autofilledExpiry &&
-        keeps != null) {
-      return 'Keeps ${formatKeepsFor(keeps)} from today';
+        draft != null &&
+        expiry.text.trim() == civil(addKeepsFor(prototypeToday, draft))) {
+      return 'Keeps ${formatKeepsFor(draft)} from today';
     }
     return null;
+  }
+
+  /// One quiet offer under Expiration at a time; pressing changes the form.
+  List<Widget> _expiryOffers() {
+    final suggested = _suggestedDate;
+    final keeps = _offer ?? _remember;
+    final (label, onPressed) = suggested != null
+        ? ('Like last time: $suggested', () => expiry.text = suggested)
+        : keeps != null
+        ? (
+            'Remember: keeps ${formatKeepsFor(keeps)}',
+            () => keepsFor.text = formatKeepsFor(keeps),
+          )
+        : (null, null);
+    if (label == null) return const [];
+    return [
+      Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: TextButton(
+          key: const ValueKey('food-expiry-offer'),
+          // Label lines up with the field text and helper lines.
+          style: TextButton.styleFrom(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 16),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minimumSize: const Size(0, 32),
+            visualDensity: VisualDensity.compact,
+          ),
+          onPressed: onPressed,
+          child: Text(label),
+        ),
+      ),
+    ];
   }
 
   void _apply(String field) {
@@ -305,11 +351,11 @@ class FoodEditorState extends State<FoodEditor> {
             'name',
             'brand',
             'expiry',
-            'size',
             'location',
+            'size',
+            if (product != null) ...['minimum', 'link'],
             if (widget.group == null) 'count',
             if (widget.group != null) 'retention',
-            if (product != null) ...['link', 'minimum'],
           ];
     for (final field in active) {
       final controller = _fields[field]!;
@@ -919,6 +965,7 @@ class FoodEditorState extends State<FoodEditor> {
             expiry.text = civil(addKeepsFor(prototypeToday, keeps));
             _autofilledExpiry = expiry.text;
           }
+          keepsFor.text = keeps == null ? '' : formatKeepsFor(keeps);
           final usual = prototypeUsualLocation[picked.name];
           if (usual != null && location.text.trim().isEmpty) {
             location.text = usual;
@@ -969,10 +1016,6 @@ class FoodEditorState extends State<FoodEditor> {
           labelText: 'Keeps for',
           hintText: 'e.g. 5 days, 2 weeks, 3 months',
           hintMaxLines: 1,
-          helperMaxLines: 2,
-          helperText: _learned && _purchaseDay != null
-              ? 'Learned from purchase on $_purchaseDay'
-              : null,
         ),
       ),
       'minimum' => TextField(
@@ -1008,6 +1051,10 @@ class FoodEditorState extends State<FoodEditor> {
         focusNode: expiryFocus,
         autofocus: widget.template != null,
         label: 'Expiration',
+        pickerStart: () {
+          final suggested = _suggestedDate;
+          return suggested == null ? null : parseCivil(suggested);
+        },
       ),
       'size' => TextField(
         enabled: enabled,
@@ -1108,10 +1155,10 @@ class FoodEditorState extends State<FoodEditor> {
             'name',
             'brand',
             if (!bulk) 'expiry',
+            'location',
             if (product != null) 'keepsFor',
             'size',
-            if (product != null) ...['link', 'minimum'],
-            'location',
+            if (product != null) ...['minimum', 'link'],
             if (!bulk && group == null) 'count',
             if (bulk || group != null) 'retention',
           ].indexed) ...[
@@ -1139,18 +1186,8 @@ class FoodEditorState extends State<FoodEditor> {
                   child: _secondary(_expiryNote()!),
                 ),
               ),
-            if (field == 'keepsFor' && _offer != null)
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: TextButton(
-                  key: const ValueKey('food-keeps-for-offer'),
-                  onPressed: () => setState(() {
-                    keepsFor.text = formatKeepsFor(_offer!);
-                  }),
-                  child: Text('Use ${formatKeepsFor(_offer!)} instead'),
-                ),
-              ),
-            if (field == 'minimum' && prices != null)
+            if (field == 'expiry') ..._expiryOffers(),
+            if (field == 'link' && prices != null)
               _secondary(prices, key: const ValueKey('food-product-prices')),
           ],
         ],

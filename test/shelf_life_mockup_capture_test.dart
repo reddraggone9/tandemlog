@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/food/shelf_life_prototype.dart';
+import 'package:tandemlog/presentation/civil_date_input.dart';
 import 'package:tandemlog/presentation/tandemlog_theme.dart';
 
 import 'support/ux_capture.dart';
@@ -52,17 +53,63 @@ List<FoodOperation> _add(
 List<FoodOperation> _events() {
   _n = 0;
   return [
-    // Hand entries already in Stock.
-    ..._add('Milk', brand: 'Great Value', size: '1 gal', expiry: '2026-11-15', location: 'Fridge'),
-    ..._add('Greek yogurt', brand: 'Oikos', size: '32 oz', expiry: '2026-11-20', location: 'Fridge'),
+    // Already in Stock. The yogurt came from a 2026-10-24 receipt and was
+    // dated by hand from its label (a 27-day gap).
+    ..._add(
+      'Milk',
+      brand: 'Great Value',
+      size: '1 gal',
+      expiry: '2026-11-15',
+      location: 'Fridge',
+    ),
+    ..._add(
+      'Greek yogurt',
+      brand: 'Oikos',
+      size: '32 oz',
+      expiry: '2026-11-20',
+      location: 'Fridge',
+    ),
     ..._add('Carrots, cut', expiry: '2026-11-17', location: 'Fridge'),
     // Walmart receipt of 2026-11-07: products with Keeps for arrive dated.
-    ..._add('Broccoli', expiry: '2026-11-12', estimated: true, location: 'Fridge'),
-    ..._add('Strawberries', size: '1 lb', expiry: '2026-11-14', estimated: true, location: 'Fridge', count: 2),
-    ..._add('Romaine lettuce', expiry: '2026-11-21', estimated: true, location: 'Fridge'),
-    ..._add('Oranges', expiry: '2026-11-28', estimated: true, location: 'Fridge', count: 6),
-    ..._add('Onions', brand: 'Great Value', size: '3 lb', expiry: '2027-02-07', estimated: true, location: 'Pantry'),
-    // Products without Keeps for stay undated in the Inbox.
+    ..._add(
+      'Broccoli',
+      expiry: '2026-11-12',
+      estimated: true,
+      location: 'Fridge',
+    ),
+    ..._add(
+      'Strawberries',
+      size: '1 lb',
+      expiry: '2026-11-14',
+      estimated: true,
+      location: 'Fridge',
+      count: 2,
+    ),
+    ..._add(
+      'Romaine lettuce',
+      expiry: '2026-11-21',
+      estimated: true,
+      location: 'Fridge',
+    ),
+    ..._add(
+      'Oranges',
+      expiry: '2026-11-28',
+      estimated: true,
+      location: 'Fridge',
+      count: 6,
+    ),
+    ..._add(
+      'Onions',
+      brand: 'Great Value',
+      size: '3 lb',
+      expiry: '2027-02-07',
+      estimated: true,
+      location: 'Pantry',
+    ),
+    // Products without Keeps for (labeled food, fresh food not yet
+    // remembered) stay undated in the Inbox, with their usual location when
+    // they have one (Mango and spinach are new here).
+    ..._add('Greek yogurt', brand: 'Oikos', size: '32 oz', location: 'Fridge'),
     ..._add('Mango'),
     ..._add('Baby spinach', brand: 'Marketside', size: '10 oz'),
   ];
@@ -90,9 +137,13 @@ void _seed() {
         'Onions',
         'Mango',
         'Baby spinach',
+        'Greek yogurt',
       ])
         name: '2026-11-07',
     });
+  prototypeLastGapDays
+    ..clear()
+    ..addAll({'Greek yogurt': 27});
   prototypeUsualLocation
     ..clear()
     ..addAll({'Carrots, cut': 'Fridge', 'Milk': 'Fridge'});
@@ -111,7 +162,9 @@ Future<void> _fonts() async {
           '${directory.path}/bin/cache/artifacts/material_fonts/Roboto-$weight.ttf',
         );
         if (await f.exists()) {
-          loader.addFont(Future.value(ByteData.sublistView(await f.readAsBytes())));
+          loader.addFont(
+            Future.value(ByteData.sublistView(await f.readAsBytes())),
+          );
         }
       }
       await loader.load();
@@ -166,20 +219,25 @@ Future<void> _capture(WidgetTester tester, String name) async {
   await tester.runAsync(() async {
     final image = await boundary.toImage(pixelRatio: 2.625);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    await File('$directory/$name.png').writeAsBytes(bytes!.buffer.asUint8List());
+    await File(
+      '$directory/$name.png',
+    ).writeAsBytes(bytes!.buffer.asUint8List());
     image.dispose();
   });
 }
 
 Future<void> _openRow(WidgetTester tester, String name) async {
-  await tester.scrollUntilVisible(
-    find.text(name),
-    120,
-    scrollable: find.descendant(
-      of: find.byType(CustomScrollView),
-      matching: find.byType(Scrollable),
-    ).first,
-  );
+  final list = find
+      .descendant(
+        of: find.byType(CustomScrollView),
+        matching: find.byType(Scrollable),
+      )
+      .first;
+  for (var i = 0; i < 50 && find.text(name).evaluate().isEmpty; i++) {
+    await tester.drag(list, const Offset(0, -120));
+    await tester.pumpAndSettle();
+  }
+  await tester.ensureVisible(find.text(name).first);
   await tester.pumpAndSettle();
   await tester.tap(find.text(name).first);
   await tester.pumpAndSettle();
@@ -190,9 +248,12 @@ Future<void> _setExpiry(WidgetTester tester, String value) async {
     of: find.byKey(const ValueKey('food-expiration')),
     matching: find.byType(EditableText),
   );
-  await tester.enterText(field.evaluate().isEmpty
-      ? find.byKey(const ValueKey('food-expiration'))
-      : field, value);
+  await tester.enterText(
+    field.evaluate().isEmpty
+        ? find.byKey(const ValueKey('food-expiration'))
+        : field,
+    value,
+  );
   await tester.pumpAndSettle();
 }
 
@@ -228,22 +289,41 @@ void main() {
       }
     });
 
-    testWidgets('03 dating an Inbox item learns$suffix', (tester) async {
+    testWidgets('03 dating an Inbox item offers Remember$suffix', (
+      tester,
+    ) async {
       await _pump(tester, textScale: scale);
       await _openRow(tester, 'Mango');
       await _setExpiry(tester, '2026-11-19');
-      expect(find.text('12 days'), findsOneWidget);
+      expect(find.text('Remember: keeps 12 days'), findsOneWidget);
+      expect(find.text('12 days'), findsNothing);
       await _show(tester, 'food-keeps-for');
-      await _capture(tester, '03-inbox-dating-learns-keeps-for$suffix');
+      await _show(tester, 'food-expiry-offer');
+      await _capture(tester, '03-inbox-dating-offers-remember$suffix');
     });
 
     testWidgets('04 changed estimate offers update$suffix', (tester) async {
       await _pump(tester, textScale: scale);
       await _openRow(tester, 'Strawberries');
       await _setExpiry(tester, '2026-11-12');
-      expect(find.text('Use 5 days instead'), findsOneWidget);
-      await _show(tester, 'food-keeps-for-offer');
+      expect(find.text('Remember: keeps 5 days'), findsOneWidget);
+      await _show(tester, 'food-keeps-for');
+      await _show(tester, 'food-expiry-offer');
       await _capture(tester, '04-changed-estimate-offers-update$suffix');
+    });
+
+    testWidgets('06 labeled Inbox item suggests a date$suffix', (tester) async {
+      await _pump(tester, textScale: scale);
+      await _openRow(tester, 'Greek yogurt');
+      expect(find.text('Like last time: 2026-12-04'), findsOneWidget);
+      await _show(tester, 'food-expiry-offer');
+      await _capture(tester, '06-labeled-inbox-item-suggests-date$suffix');
+      if (scale == 1) {
+        await tester.tap(find.byTooltip('Choose Expiration'));
+        await tester.pumpAndSettle();
+        expect(find.byType(CivilDatePickerDialog), findsOneWidget);
+        await _capture(tester, '07-calendar-opens-on-suggested-date');
+      }
     });
 
     testWidgets('05 Add autofills date and location$suffix', (tester) async {
