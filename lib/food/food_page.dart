@@ -1627,8 +1627,23 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               if (!inInboxSection)
-                                Text(
-                                  details.expiry ?? 'Needs expiration',
+                                Text.rich(
+                                  TextSpan(
+                                    text: details.expiry ?? 'Needs expiration',
+                                    children: [
+                                      if (details.estimated == true &&
+                                          details.expiry != null)
+                                        TextSpan(
+                                          text: ' est.',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
                                         fontWeight: FontWeight.w600,

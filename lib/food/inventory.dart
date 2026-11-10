@@ -64,8 +64,9 @@ class FoodDetails {
     'size': size,
   };
   String get groupKey => canonicalDataJson(toJson());
+  // Prototype: estimated rows group apart from hand-dated ones.
   String get displayGroupKey =>
-      canonicalDataJson(toJson()..remove('estimated'));
+      canonicalDataJson(toJson()..['estimated'] = estimated == true);
   void validate() {
     _text(name, 500, required: true);
     for (final value in [brand, retention, location, size]) {

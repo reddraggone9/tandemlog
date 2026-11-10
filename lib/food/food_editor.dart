@@ -11,6 +11,7 @@ import '../presentation/form_validation.dart';
 import '../presentation/settled_center_alignment.dart';
 import '../presentation/tag_input.dart';
 import 'inventory.dart';
+import 'shelf_life_prototype.dart';
 
 /// One Food draft owns its inputs and captured commands across layout changes.
 class FoodEditor extends StatefulWidget {
@@ -75,8 +76,16 @@ class FoodEditorState extends State<FoodEditor> {
       count,
       retentionQuery,
       link,
-      minimum;
+      minimum,
+      keepsFor;
   late final FoodDetails? original;
+  // Prototype state for design/food-shelf-life.md mock-ups.
+  String? _autofilledExpiry;
+  bool _learned = false;
+  late final String _originalKeeps;
+  String? get _purchaseDay => original == null || widget.group == null
+      ? null
+      : prototypePurchaseDay[original!.name];
 
   /// The edited row's product (single-row Edit only).
   late final FoodProductSummary? product;
@@ -164,6 +173,19 @@ class FoodEditorState extends State<FoodEditor> {
         : null;
     link = TextEditingController(text: product?.links.firstOrNull ?? '');
     minimum = TextEditingController(text: product?.minimum?.toString() ?? '');
+    final known = product == null ? null : prototypeKeepsFor[product!.name];
+    keepsFor = TextEditingController(
+      text: known == null ? '' : formatKeepsFor(known),
+    );
+    _originalKeeps = keepsFor.text;
+    final templateKeeps = widget.template == null
+        ? null
+        : prototypeKeepsFor[widget.template!.name];
+    if (templateKeeps != null) {
+      expiry.text = civil(addKeepsFor(prototypeToday, templateKeeps));
+      _autofilledExpiry = expiry.text;
+    }
+    expiry.addListener(_expiryChanged);
     retention = start(
       'retention',
       widget.template == null ? original?.retention ?? '' : '',
@@ -192,6 +214,68 @@ class FoodEditorState extends State<FoodEditor> {
     }
   }
 
+  void _expiryChanged() {
+    if (!mounted) return;
+    final start = _purchaseDay;
+    if (widget.group != null &&
+        original?.expiry == null &&
+        _originalKeeps.isEmpty &&
+        start != null) {
+      final implied = impliedKeepsFor(start, expiry.text.trim());
+      if (implied != null && (_learned || keepsFor.text.isEmpty)) {
+        keepsFor.text = formatKeepsFor(implied);
+        _learned = true;
+      } else if (implied == null && _learned) {
+        keepsFor.clear();
+        _learned = false;
+      }
+    }
+    setState(() {});
+  }
+
+  /// Start day for the update offer: purchase day of an estimated row, or
+  /// today for an autofilled Add.
+  String? get _offerStart {
+    if (widget.group != null && original?.estimated == true) {
+      return _purchaseDay;
+    }
+    if (widget.group == null && _autofilledExpiry != null) {
+      return civil(prototypeToday);
+    }
+    return null;
+  }
+
+  KeepsFor? get _offer {
+    final start = _offerStart;
+    final current = parseKeepsFor(keepsFor.text) ??
+        prototypeKeepsFor[name.text.trim()];
+    if (start == null || current == null) return null;
+    if (expiry.text.trim() == (original?.expiry ?? _autofilledExpiry)) {
+      return null;
+    }
+    final implied = impliedKeepsFor(start, expiry.text.trim());
+    if (implied == null || sameDuration(start, implied, current)) return null;
+    return implied;
+  }
+
+  String? _expiryNote() {
+    final keeps = prototypeKeepsFor[original?.name ?? name.text.trim()];
+    if (widget.group != null &&
+        original?.estimated == true &&
+        expiry.text.trim() == original?.expiry &&
+        _purchaseDay != null &&
+        keeps != null) {
+      return 'Estimated: bought $_purchaseDay + ${formatKeepsFor(keeps)}';
+    }
+    if (widget.group == null &&
+        _autofilledExpiry != null &&
+        expiry.text.trim() == _autofilledExpiry &&
+        keeps != null) {
+      return 'Keeps ${formatKeepsFor(keeps)} from today';
+    }
+    return null;
+  }
+
   void _apply(String field) {
     if (bulk && mounted && applied.add(field)) setState(() {});
   }
@@ -206,6 +290,7 @@ class FoodEditorState extends State<FoodEditor> {
     'retention': retentionQuery,
     'link': link,
     'minimum': minimum,
+    'keepsFor': keepsFor,
   };
 
   void _validationChanged() {
@@ -827,6 +912,17 @@ class FoodEditorState extends State<FoodEditor> {
           name.text = picked.name;
           brand.text = picked.brand;
           size.text = picked.size;
+          final keeps = prototypeKeepsFor[picked.name];
+          if (keeps != null &&
+              (expiry.text.trim().isEmpty ||
+                  expiry.text == _autofilledExpiry)) {
+            expiry.text = civil(addKeepsFor(prototypeToday, keeps));
+            _autofilledExpiry = expiry.text;
+          }
+          final usual = prototypeUsualLocation[picked.name];
+          if (usual != null && location.text.trim().isEmpty) {
+            location.text = usual;
+          }
         },
       ),
       'name' => TextField(
@@ -863,6 +959,20 @@ class FoodEditorState extends State<FoodEditor> {
               icon: const Icon(Icons.open_in_new),
             ),
           ),
+        ),
+      ),
+      'keepsFor' => TextField(
+        key: const ValueKey('food-keeps-for'),
+        enabled: enabled,
+        controller: keepsFor,
+        decoration: InputDecoration(
+          labelText: 'Keeps for',
+          hintText: 'e.g. 5 days, 2 weeks, 3 months',
+          hintMaxLines: 1,
+          helperMaxLines: 2,
+          helperText: _learned && _purchaseDay != null
+              ? 'Learned from purchase on $_purchaseDay'
+              : null,
         ),
       ),
       'minimum' => TextField(
@@ -998,6 +1108,7 @@ class FoodEditorState extends State<FoodEditor> {
             'name',
             'brand',
             if (!bulk) 'expiry',
+            if (product != null) 'keepsFor',
             'size',
             if (product != null) ...['link', 'minimum'],
             'location',
@@ -1019,6 +1130,25 @@ class FoodEditorState extends State<FoodEditor> {
                           key: const ValueKey('food-product-scope'),
                         );
                 },
+              ),
+            if (field == 'expiry' && _expiryNote() != null)
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 16),
+                  child: _secondary(_expiryNote()!),
+                ),
+              ),
+            if (field == 'keepsFor' && _offer != null)
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton(
+                  key: const ValueKey('food-keeps-for-offer'),
+                  onPressed: () => setState(() {
+                    keepsFor.text = formatKeepsFor(_offer!);
+                  }),
+                  child: Text('Use ${formatKeepsFor(_offer!)} instead'),
+                ),
               ),
             if (field == 'minimum' && prices != null)
               _secondary(prices, key: const ValueKey('food-product-prices')),
