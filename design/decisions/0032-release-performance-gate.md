@@ -1,6 +1,6 @@
 # ADR0032: release performance regression gate
 
-Status: accepted by Lee on 2026-10-22; implementation and initial limit activation are separately evidenced.
+Status: accepted by Lee on 2026-10-22; implemented. Gate placement superseded by [ADR0033](0033-controlled-reference-performance.md); sampling and retry rules superseded by the 2026-10-31 amendment below ([the gate rule](../performance-gate.md#the-gate-rule-lee-2026-10-31)).
 
 [ADR0033](0033-controlled-reference-performance.md) prospectively changes host
 roles after Lee's2026-10-25 approval:controlled reference absolute/growth

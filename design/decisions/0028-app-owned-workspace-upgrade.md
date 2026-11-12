@@ -2,9 +2,9 @@
 
 Current-client supersession: [ADR0031](0031-coordinated-unified-cutover.md) replaces this transition/reader mechanism. This record remains historical rationale and released-source attribution; it does not require current live old decoders, conversion UI or durable unfinished intent.
 
-Status: implementation approved by Lee on 2026-10-18; implementation and synthetic
-acceptance in progress. Production conversion and stable publication have not
-been authorized for this engineering task.
+Status: implementation approved by Lee on 2026-10-18; published only in prerelease 2026.10.7-rc.3.
+Superseded by [ADR0031](0031-coordinated-unified-cutover.md) from rc.4 on; the 2026-10-27 cutover
+used an external one-time converter instead.
 
 ## Problem and decision
 

@@ -1,6 +1,6 @@
 # ADR 0031: Coordinated unified-only cutover and required operation revisions
 
-Status: implementation authorized by Lee on 2026-10-20. Development and validation on copies are authorized. Live cutover and release publication remain separately held.
+Status: implementation authorized by Lee on 2026-10-20; released in stable 2026.10.7/build101, and the live cutover ran on 2026-10-27 with Lee's approval.
 
 ## Decision
 

@@ -1,6 +1,6 @@
 # Android build dependency repository routing
 
-Status: accepted bounded build-security mitigation,2026-10-12; final release gates pending.
+Status: accepted bounded build-security mitigation, 2026-10-12; released in 2026.10.4 (`tool/gradle_repository_policy.py`).
 
 Context: Gradle9.4.1 can continue to a later repository after some SSL failures.
 The signed build resolves dependencies while owner signing credentials are

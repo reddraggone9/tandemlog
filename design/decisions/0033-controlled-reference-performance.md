@@ -1,6 +1,6 @@
 # ADR0033 — controlled reference performance, mandatory hosted correctness
 
-Status: **accepted by Lee2026-10-25; implementation/qualification in progress**.
+Status: **accepted by Lee 2026-10-25; implemented and in force** (required `reference-performance` job). The reference host is Bender, registered as `farnsworth`, its name until 2026-11-08.
 Supersedes ADR0032's gate placement only. Its budgets,action/history coverage,
 correctness and source/fixture seals remain mandatory. New timing results use the
 [current gate rule](../performance-gate.md#the-gate-rule-lee-2026-10-31); the original retry policy below is historical.

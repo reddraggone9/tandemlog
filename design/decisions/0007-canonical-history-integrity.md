@@ -1,6 +1,6 @@
 # 0007 — Canonical record chains and explicit integrity checks
 
-Status: accepted by Lee on 2026-10-03; implementation and exact candidate validation in progress. This replaces the v2-only integrity decision in the earlier Android reconciliation review. No stable release, data reset, conversion or real-data cutover is authorized by this decision.
+Status: accepted by Lee on 2026-10-03; implemented and released (the wire format is now protocol v5, [schema](../schema.md)). This replaces the v2-only integrity decision in the earlier Android reconciliation review. No stable release, data reset, conversion or real-data cutover is authorized by this decision.
 
 ## Context and goals
 

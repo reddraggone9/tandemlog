@@ -2,7 +2,7 @@
 
 Current-client supersession: [ADR0031](0031-coordinated-unified-cutover.md) replaces this transition/reader mechanism. This record remains historical rationale and released-source attribution; it does not require current live old decoders, conversion UI or durable unfinished intent.
 
-Status: published experimentally as 2026.10.7-rc.2/build91 for isolated disposable trials.
+Status: published experimentally as 2026.10.7-rc.2/build91 for isolated disposable trials. Superseded by [ADR0031](0031-coordinated-unified-cutover.md), released in stable 2026.10.7/build101.
 Adoption/consolidation of abandoned writers is deferred by Lee (2026-10-18).
 
 ## Context and decision

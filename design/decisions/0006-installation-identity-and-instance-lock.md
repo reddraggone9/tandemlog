@@ -1,6 +1,6 @@
 # 0006 — Installation identity and one active app instance
 
-Status: accepted by Lee, 2026-10-03. Implementation is pending final native/CI acceptance; canonical protocol remains v2.
+Status: accepted by Lee, 2026-10-03; released in 2026.10.0 (`lib/storage/profile_lock.dart`). The canonical protocol it mentions is now v5 ([schema](../schema.md)).
 
 ## Reason and behavior
 

@@ -1,6 +1,6 @@
 # Observable workspace state
 
-Status: Accepted implementation direction, 2026-10-20; verification in progress.
+Status: Accepted implementation direction, 2026-10-20; released in stable 2026.10.7/build101.
 
 ## Context
 

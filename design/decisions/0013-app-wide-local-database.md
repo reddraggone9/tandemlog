@@ -1,5 +1,7 @@
 # One app-wide local database
 
+Status: accepted and released in stable 2026.10.3/build56; the Flatpak private-XDG profile followed in 2026.10.4. Since 2026.11.1 the same database also holds the [history store](../history-store.md). The milestone notes below are historical.
+
 RC2/build64 milestone: published as prerelease/not-Latest after exact hosted,
 artifact, parent Android native and independent readiness acceptance. Actual public
 installer identities/source/notes/signature and prior-release preservation verified.

@@ -1,8 +1,8 @@
 # ADR0035 — exact completion instants and viewer-local history
 
-Status: Lee accepted2026-10-26; implemented locally, unreleased. Supersedes
-ADR0034's civil-date-only completion scope. Publication/live adoption remain held
-by ADR0031; no original history or published release is rewritten.
+Status: Lee accepted 2026-10-26; released in stable 2026.10.7/build101 and live since the
+2026-10-27 cutover. Supersedes ADR0034's civil-date-only completion scope; no original history
+or published release is rewritten.
 
 ## Goal and decision
 
