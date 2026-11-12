@@ -263,6 +263,7 @@ Map<String, Object?> foodGroupJson(FoodGroup g, {int from = 0}) {
     'brand': d.brand,
     'size': d.size,
     'expiry': d.expiry,
+    if (g.estimate) 'estimated': true,
     'location': d.location,
     'retention': d.retention,
     'count': g.containers.length,
@@ -287,7 +288,8 @@ String foodGroupLine(FoodGroup g, int thisYear) {
     '${shortId(g.containers.first.id)} ${d.name}',
     if (d.brand.isNotEmpty) d.brand,
     [if (d.size.isNotEmpty) d.size, '×${g.containers.length}'].join(' '),
-    if (d.expiry != null) 'exp ${shortDate(d.expiry, thisYear)}',
+    if (d.expiry != null)
+      'exp ${shortDate(d.expiry, thisYear)}${g.estimate ? ' est.' : ''}',
     if (d.location.isNotEmpty) d.location,
     if (d.retention.isNotEmpty) 'kept: ${d.retention}',
     if (g.containers.first.deleted) 'deleted',

@@ -756,6 +756,90 @@ void main() {
     expect((await json(['purchases', 'list']))['total'], 1);
   });
 
+  test('products set --keeps-for dates and places the next import', () async {
+    await setUpAgent();
+    await json([
+      'food',
+      'add',
+      '--name',
+      'Strawberries',
+      '--expiry',
+      '2026-11-03',
+      '--location',
+      'Fridge',
+    ]);
+    final p =
+        ((await json(['products', 'list']))['products'] as List).single as Map;
+    expect(p['keepsFor'], isNull);
+    final bad = await json([
+      'products',
+      'set',
+      p['id'] as String,
+      '--if-rev',
+      p['rev'] as String,
+      '--keeps-for',
+      'a while',
+    ]);
+    expect(bad['error']['kind'], 'validation');
+    final set = await json([
+      'products',
+      'set',
+      p['id'] as String,
+      '--if-rev',
+      p['rev'] as String,
+      '--keeps-for',
+      '1 week',
+    ]);
+    expect(set['product']['keepsFor'], '1 week');
+    expect(set['product']['rev'], isNot(p['rev']));
+    final lines = File('${root.path}/lines.json')
+      ..writeAsStringSync(
+        jsonEncode([
+          {
+            'source': {'kind': 'test', 'key': 'r2#1'},
+            'date': '2026-10-28',
+            'store': 'Walmart',
+            'amount': 298,
+            'quantity': 2,
+            'product': p['id'],
+          },
+        ]),
+      );
+    final plan = await json(['purchases', 'plan', lines.path]);
+    final dry = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--dry-run',
+    ]);
+    final line = (dry['lines'] as List).single as Map;
+    expect(line['expiry'], '2026-11-04');
+    expect(line['location'], 'Fridge');
+    expect(line['created'], hasLength(2));
+    final done = await json([
+      'purchases',
+      'import',
+      plan['plan'] as String,
+      '--expect-plan',
+      dry['planHash'] as String,
+    ]);
+    expect(done['actions'], hasLength(1));
+    final listed = jsonEncode(await json(['food', 'list']));
+    expect(listed, contains('"expiry":"2026-11-04","estimated":true'));
+    expect('"estimated":true'.allMatches(listed), hasLength(1));
+    final cleared = await json([
+      'products',
+      'set',
+      p['id'] as String,
+      '--if-rev',
+      set['product']['rev'] as String,
+      '--keeps-for',
+      'none',
+    ]);
+    expect(cleared['product']['keepsFor'], isNull);
+    expect(cleared['product']['rev'], p['rev']);
+  });
+
   test('MCP lists every non-setup registry command and calls tools', () async {
     await setUpAgent();
     final server = McpServer(environment: env, profile: 'default');

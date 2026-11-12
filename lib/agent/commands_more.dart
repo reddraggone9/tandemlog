@@ -874,7 +874,7 @@ List<AgentCommand> moreCommands() => [
   ),
   AgentCommand(
     'products set',
-    'Set a product\'s store link and minimum to keep.',
+    'Set a product\'s store link, minimum to keep and Keeps for.',
     CommandKind.write,
     const [
       AgentArg('id', 'string', 'Product.', required: true, positional: true),
@@ -886,6 +886,13 @@ List<AgentCommand> moreCommands() => [
       ),
       AgentArg('link', 'string', 'Store link (https://…), or "none".'),
       AgentArg('min', 'string', 'Minimum to keep (whole number), or "none".'),
+      AgentArg(
+        'keeps-for',
+        'string',
+        'Shelf life of fresh food with no printed date ("5 days", "2 weeks", '
+            '"3 months"), or "none". New imports and hand entries are dated '
+            'from it; existing containers keep their dates.',
+      ),
     ],
     (call) async {
       final products = foodState(call).products;
@@ -929,6 +936,18 @@ List<AgentCommand> moreCommands() => [
           );
         }
         changes['minimum'] = value;
+      }
+      final keeps = call.string('keeps-for');
+      if (keeps != null) {
+        final value = keeps == 'none' ? null : FoodKeepsFor.parse(keeps);
+        if (keeps != 'none' && value == null) {
+          throw const AgentFailure(
+            'validation',
+            'Keeps for must be a length of time. ${FoodKeepsFor.hint}',
+            details: {'field': 'keeps-for', 'error': 'invalid'},
+          );
+        }
+        changes['keepsFor'] = value?.toJson();
       }
       final before = ownHead(call);
       final store = call.ws.session.food;
@@ -1187,6 +1206,10 @@ List<AgentCommand> moreCommands() => [
             'newProduct': l.newProduct,
             'matched': l.matched,
             'created': l.created,
+            // What new containers arrive with: a date estimated from the
+            // product's Keeps for (null: undated, Inbox) and its usual place.
+            'expiry': l.expiry,
+            'location': l.location,
           },
       ];
       final result = writeResult(
@@ -1195,7 +1218,7 @@ List<AgentCommand> moreCommands() => [
         [
           'Purchase import: ${report.status.name} \u00b7 import plan ${report.planHash}',
           for (final l in lines)
-            '${l['status']} ${l['productName'] ?? shortId(l['product'] as String)}${l['newProduct'] == true ? ' (new product)' : ''} \u00b7 matched ${(l['matched'] as List).length} \u00b7 Inbox +${(l['created'] as List).length}',
+            '${l['status']} ${l['productName'] ?? shortId(l['product'] as String)}${l['newProduct'] == true ? ' (new product)' : ''} \u00b7 matched ${(l['matched'] as List).length} \u00b7 ${l['expiry'] == null ? 'Inbox' : 'est. ${l['expiry']}'} +${(l['created'] as List).length}${(l['location'] as String).isEmpty ? '' : ' \u00b7 ${l['location']}'}',
         ].join('\n'),
         const [],
         extra: {

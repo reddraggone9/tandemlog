@@ -24,12 +24,7 @@ List<FoodOperation> _events() {
         order: order,
         action: FoodAction.product,
         targets: [id],
-        product: {
-          'name': name,
-          'brand': '',
-          'size': '',
-          if (keepsFor != null) 'keepsFor': keepsFor,
-        },
+        product: {'name': name, 'brand': '', 'size': '', 'keepsFor': ?keepsFor},
       );
   FoodOperation purchase(String id, String product, String date) =>
       FoodOperation(
@@ -69,7 +64,7 @@ List<FoodOperation> _events() {
     createdAt: '2026-11-07T18:00:00Z',
     link: {
       'product': product,
-      if (purchase != null) 'purchase': purchase,
+      'purchase': ?purchase,
       if (purchase != null && (expiry != null || location.isNotEmpty))
         'prefill': true,
     },

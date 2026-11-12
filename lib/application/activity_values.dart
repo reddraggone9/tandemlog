@@ -74,6 +74,7 @@ const _productLabels = {
   'size': 'Size',
   'links': 'Store link',
   'minimum': 'Keep at least',
+  'keepsFor': 'Keeps for',
 };
 const _undoTypes = {
   'task.undo',
@@ -255,6 +256,8 @@ class ActivityValues {
 
   static String _productValue(Object? value) => value is List
       ? (value.isEmpty ? 'none' : value.map(_text).join(', '))
+      : value is Map
+      ? FoodKeepsFor.fromJson(value)?.label ?? 'none'
       : _text(value);
 
   /// Resolves one field write of [record]: old value only when certain.
