@@ -1,6 +1,6 @@
 # Recovery and known boundaries
 
-The [current action format](schema.md) is under validation. [Earlier recovery instructions](archive/recovery-before-coordinated-cutover.md) retain their original released-source attribution.
+The [current action format](schema.md) shipped in stable 2026.10.7. [Earlier recovery instructions](archive/recovery-before-coordinated-cutover.md) retain their original released-source attribution.
 
 - Stop edits and preserve the canonical folder before manual repair. Sync is not a backup.
 - Restore missing/changed committed history from an intact copy. Do not hand-merge logs or hide conflict copies.
@@ -12,7 +12,7 @@ The [current action format](schema.md) is under validation. [Earlier recovery in
 
 The exclusive local DB stores installation identity, preferences and acknowledged common observations as well as disposable projections. Do not clone that profile onto another active device or delete SQLite as a cache reset. WAL/recovery sidecars belong with a stopped profile during investigation. Current/future damaged authority fails closed.
 
-The coordinated cutover deliberately retains simple settings and resets other private state, including drafts/pending saves. Full stopped-profile collection is optional precaution, not a prerequisite. Accepted frozen canonical originals, explicit mapping and separate live-cutover approval remain necessary. No implementation or QA instruction authorizes a real reset.
+The coordinated cutover deliberately retains simple settings and resets other private state, including drafts/pending saves. Full stopped-profile collection is optional precaution, not a prerequisite. Converting any remaining pre-2026.10.7 workspace still needs accepted frozen canonical originals, explicit mapping and Lee's approval. No implementation or QA instruction authorizes a real reset.
 
 A separate process-scoped TANDEMLOG_PROFILE selects separate Tandemlog app data, not a new Windows user. Moving just SQLite does not isolate settings, writer identity, native caches, WAL/SHM and instance ownership. Confirm actual native/Flatpak roots rather than assuming they share data.
 
@@ -25,7 +25,10 @@ question and says nothing it doesn't know yet.
 
 - **Opening** ("is it working?"): the app name and an indeterminate progress
   bar, nothing else. No onboarding or error copy while the workspace opens;
-  opening runs in bounded slices so the bar keeps moving.
+  decoding yields between bounded slices so the bar keeps moving. A strict open
+  or rebuild still runs one synchronous transaction on the UI isolate and can
+  stall the bar briefly; moving the open off the UI isolate is deferred (Lee
+  11-05, [history store](history-store.md)).
 - **No folder set** ("what is this, what do I do?"): the existing onboarding
   (headline, one line, Start / Choose an existing folder). Only here.
 - **Open failed** ("what broke, what can I do?"): title "Can't open your data
