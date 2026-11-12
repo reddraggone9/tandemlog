@@ -1201,34 +1201,43 @@ class FoodEditorState extends State<FoodEditor> {
                 listenable: Listenable.merge([expiry, keepsFor]),
                 builder: (context, _) {
                   final note = _expiryNote, offer = _expiryOffer;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (note != null)
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(start: 16),
-                          child: _secondary(
-                            note,
-                            key: const ValueKey('food-expiry-note'),
-                          ),
-                        ),
-                      if (offer != null)
-                        TextButton(
-                          key: const ValueKey('food-expiry-offer'),
-                          // The label lines up with the field text.
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsetsDirectional.symmetric(
-                              horizontal: 16,
+                  if (note == null && offer == null) {
+                    return const SizedBox.shrink();
+                  }
+                  // Both start where the field's text starts.
+                  return SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (note != null)
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 16,
                             ),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            minimumSize: const Size(0, 32),
-                            visualDensity: VisualDensity.compact,
+                            child: _secondary(
+                              note,
+                              key: const ValueKey('food-expiry-note'),
+                            ),
                           ),
-                          onPressed: saving || pending() ? null : offer.$2,
-                          child: Text(offer.$1),
-                        ),
-                    ],
+                        if (offer != null)
+                          TextButton(
+                            key: const ValueKey('food-expiry-offer'),
+                            // The label lines up with the field text.
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 16,
+                              ),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              minimumSize: const Size(0, 32),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            onPressed: saving || pending() ? null : offer.$2,
+                            child: Text(offer.$1),
+                          ),
+                      ],
+                    ),
                   );
                 },
               ),
