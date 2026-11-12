@@ -2,7 +2,7 @@
 
 Historical proposal and isolated evidence. Lee subsequently authorized production
 implementation and the shared baseline with an offline new-task exception;
-[ADR 0010](decisions/0010-collaborative-text-adoption.md) supersedes the decision
+[ADR 0010](../decisions/0010-collaborative-text-adoption.md) supersedes the decision
 status below. Its remaining native/platform gates are not marked complete.
 
 Status: Lee approved late legacy text writes losing after activation on 2026-10-04
@@ -136,14 +136,14 @@ mechanism remains a design gate, not an implemented protocol claim.
 Recommendation: implement the approved legacy loser policy; prefer the one
 shared baseline and one-time sync limitation for a first adoption. No production
 activation or recovery operation is implemented. The separately frozen
-[activation-policy matrix](../experiments/yrs-spike/evidence/activation-policy-matrix.json)
+[activation-policy matrix](../../experiments/yrs-spike/evidence/activation-policy-matrix.json)
 extends acceptance requirements without changing earlier frozen assertions. Its
-separate [four-case draft extension](../experiments/yrs-spike/evidence/activation-draft-policy-matrix.json)
+separate [four-case draft extension](../../experiments/yrs-spike/evidence/activation-draft-policy-matrix.json)
 adds editing gates and explicit captured-base handling. These frozen documents
 retain their pre-implementation `not-run` entries. The isolated
-[activation coordinator](../experiments/yrs-spike/activation_lab/README.md) now
+[activation coordinator](../../experiments/yrs-spike/activation_lab/README.md) now
 passes all22 policy cases plus four native-preparation and four stronger recovery
-cases on Linux. [Results](../experiments/yrs-spike/evidence/activation-results.json)
+cases on Linux. [Results](../../experiments/yrs-spike/evidence/activation-results.json)
 record actual TaskStore compatibility, native pending-state restore,
 fresh-process replay, draft/controller handling and the five reproduced fixes.
 This validates the bounded behavior with an explicitly configured issuer; it

@@ -161,7 +161,7 @@ Actual extracted executable bundle tests pass on download and both upload/merge
 bundles: five attempts, exactly120s allowed waiting,121s fail-before-sleep,
 positive/invalid/date/array header behavior,8s fallback, orchestration sanitization
 and idempotence, BigInt precision/noisy-string round-trip and UTF-8 basename
-sanitization. [Source and evidence](../evidence/dependency-patches-2026-10-11/)
+sanitization. [Source and evidence](../../evidence/dependency-patches-2026-10-11)
 record exact bundle hashes, npm advisory comparisons and original failures.
 
 Full PR CI[38159861434](https://github.com/reddraggone9/tandemlog/actions/runs/38159861434)
@@ -182,7 +182,7 @@ is a test-only debug APK, not an owner-signed release. Windows artifact117103803
 contains the unsigned installer and portable ZIP. The retained Windows unit
 artifact11710100488 also matches its service digest and reports1014 passes,
 two skips and zero failures with a successful final summary. The
-[artifact receipt](../evidence/dependency-patches-2026-10-11/current-ci-artifact-verification.json)
+[artifact receipt](../../evidence/dependency-patches-2026-10-11/current-ci-artifact-verification.json)
 binds IDs, source/run, filenames, sizes and hashes without temporary download
 credentials. No installation or release acceptance is inferred from archive
 verification.
@@ -231,7 +231,7 @@ Dependency CI38165875973 on prior head
 Windows had1028 visible unit passes/two skips but failed synthetic SQLite fixture
 cleanup; Linux had155 native passes and the same three assertion failures seen
 on main. Desktop release/startup/installer gates were skipped, not accepted.
-The [terminal receipt](../evidence/dependency-patches-2026-10-11/build66-terminal-verification.json)
+The [terminal receipt](../../evidence/dependency-patches-2026-10-11/build66-terminal-verification.json)
 retains exact job IDs, failure excerpts and independent artifact verification.
 Both retained ZIPs passed service digest/CRC checks; the Windows report had zero
 visible unit failures and the Android test-only APK matched its checksum file.
@@ -247,4 +247,4 @@ parent's separate release candidate. Keep the temporary smoke branch unmergeable
 
 The proposal now integrates current main `b9474a575bba7bae70ed55eac7f8d80020ca8859`, including exact RC70 editor fixes and approved release-note copy. RC3 publication has completed from the original accepted candidate; these dependency changes do not alter its binaries. There are no merge conflicts, all214 compared application/platform/native/packaging files equal main, and the audited lock, smoke fixtures and upstream audit evidence retain exact bytes. Workflow changes remain only the reviewed immutable action pins and upload annotation; signing/admission safeguards stay intact.
 
-All three jobs in prior exact-head CI38170327228 passed. New integrated-head full CI is required before merge readiness; prior results retain their historical attribution. Local79 release/tool tests pass with one existing skip. [Integration evidence](../evidence/dependency-patches-2026-10-11/rc70-integration/) distinguishes the setup-only sudo failure and preserved raw logs from actual passing checks. Keep PR8 draft and unmerged while the coordinator reviews the new terminal result. No stable publication, live Food operation or temporary smoke-branch merge is authorized.
+All three jobs in prior exact-head CI38170327228 passed. New integrated-head full CI is required before merge readiness; prior results retain their historical attribution. Local79 release/tool tests pass with one existing skip. [Integration evidence](../../evidence/dependency-patches-2026-10-11/rc70-integration) distinguishes the setup-only sudo failure and preserved raw logs from actual passing checks. Keep PR8 draft and unmerged while the coordinator reviews the new terminal result. No stable publication, live Food operation or temporary smoke-branch merge is authorized.

@@ -6,7 +6,7 @@ Status: implementation authorized 2026-09-30; shipped in stable 2026.10.0.
 
 Replace Lee's current Markdown task workflow with separate start/scheduled/due dates with optional times, tags, shared manual order and the 37 observed recurrence forms. Preserve the compact capture/list experience. Games, nutrition, notifications and a general planner remain outside this milestone. The source and live data remain untouched until an explicit validated migration destination is approved.
 
-Source behavior is Obsidian Tasks 7.20.0, with scheduled-date removal on recurrence enabled and successor-before-completed ordering. Match due > scheduled > start reference selection, calendar-day offsets, completion-relative versus original-date recurrence and monthly/yearly clamping. The pure Dart algorithm is independently implemented; upstream MIT-licensed source is an external test oracle, not embedded app code. Tests include all 37 observed forms, off-pattern references, month end, leap day and DST dates. See [planning evidence](../next-task-parity-draft.md) and [schema](../schema.md).
+Source behavior is Obsidian Tasks 7.20.0, with scheduled-date removal on recurrence enabled and successor-before-completed ordering. Match due > scheduled > start reference selection, calendar-day offsets, completion-relative versus original-date recurrence and monthly/yearly clamping. The pure Dart algorithm is independently implemented; upstream MIT-licensed source is an external test oracle, not embedded app code. Tests include all 37 observed forms, off-pattern references, month end, leap day and DST dates. See [planning evidence](../archive/next-task-parity-draft.md) and [schema](../schema.md).
 
 ## Time semantics
 

@@ -24,9 +24,9 @@ file hashes, not a newly announced release name.
 ## Reproducible historical fixture
 
 Copy every file from
-[`qa-fixture/shared`](../evidence/production-text/shared-history/qa-fixture/shared/)
+[`qa-fixture/shared`](../../evidence/production-text/shared-history/qa-fixture/shared)
 unchanged into a new synthetic sync folder. Verify the hashes in
-[`manifest.json`](../evidence/production-text/shared-history/qa-fixture/manifest.json).
+[`manifest.json`](../../evidence/production-text/shared-history/qa-fixture/manifest.json).
 These are actual retained test records, not manually rewritten canonical bytes.
 Use a fresh local profile on each peer; do not copy writer identities or caches.
 On Android grant the new folder through the real DocumentsUI/SAF chooser. Select
@@ -76,6 +76,6 @@ inspect representative frames. Linux evidence is not Android or Windows evidence
 Cloud coverage includes 507 Flutter tests,37 tooling/compiler checks, independent
 review, actual Linux GTK creation/remote draft/Save/scoped Undo/legacy setup,
 historical recompletion and dark200% narrow restart. See the
-[review receipt and explicit performance limits](../evidence/production-text/shared-history/review-gates/README.md).
+[review receipt and explicit performance limits](../../evidence/production-text/shared-history/review-gates/README.md).
 Checklist behavior and the separate autocomplete/rank/layout/accessibility/
 dependency queue are not part of this candidate.

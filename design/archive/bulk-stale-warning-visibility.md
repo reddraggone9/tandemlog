@@ -13,8 +13,8 @@ After a peer changes a selected task, Save correctly rejects the old bulk draft.
 The narrow modal previously put its failure in the heading, above the scrolled
 form. The warning existed but was invisible at the bottom. The same real native
 peer-change scenario fails the baseline visibility assertion at main311. Its
-[baseline screenshot](../evidence/bulk-stale-warning/baseline-native/bulk-failure-narrow-dark-rejected.png)
-and [corrected screenshot](../evidence/bulk-stale-warning/native-verified/bulk-failure-narrow-dark-rejected.png)
+[baseline screenshot](../../evidence/bulk-stale-warning/baseline-native/bulk-failure-narrow-dark-rejected.png)
+and [corrected screenshot](../../evidence/bulk-stale-warning/native-verified/bulk-failure-narrow-dark-rejected.png)
 show the difference at the same actual 390×820 dark GTK window.
 
 Bulk-modal failures now appear above the fixed actions. The message scrolls
@@ -42,11 +42,11 @@ The native engine uses the adjacent built bundle rather than a library override;
 its hash matches the unchanged reviewed library. Linux simulated geometry is
 not Android keyboard or spoken accessibility evidence.
 
-The [7.47-second desktop demo](../evidence/bulk-stale-warning/native-verified/linux-gtk-narrow-dark.mp4)
+The [7.47-second desktop demo](../../evidence/bulk-stale-warning/native-verified/linux-gtk-narrow-dark.mp4)
 records a 1200×850 X11 desktop containing the actual narrow GTK window. Its
 visible pointer identifies the scripted Save, retry, Cancel and Discard controls;
 the permanent caption identifies Linux GTK debug and the scripted click flow.
-The [receipt](../evidence/bulk-stale-warning/receipt.json) binds source, test logs,
+The [receipt](../../evidence/bulk-stale-warning/receipt.json) binds source, test logs,
 screenshots, video and hashes. Initial investigation captures are retained and
 are not substituted for final-source evidence. Independent correctness,
 architecture/UX and security reviewers accepted the final source and final
@@ -57,8 +57,8 @@ runtime proof within this scope.
 At 360×520, 200% text and a simulated 280px keyboard, the actual app header
 leaves only 160px for the editor. Its existing wrapped Delete/Cancel/Save controls
 consume that space; the pinned warning has zero remaining height. The
-[retained reproduction](../evidence/bulk-stale-warning/extreme-native-red.txt)
-and [pixels](../evidence/bulk-stale-warning/native-diagnostic/bulk-failure-small-dark-200-ime-rejected-debug.png)
+[retained reproduction](../../evidence/bulk-stale-warning/extreme-native-red.txt)
+and [pixels](../../evidence/bulk-stale-warning/native-diagnostic/bulk-failure-small-dark-200-ime-rejected-debug.png)
 remain an explicit limitation. An earlier standalone enlarged-font probe with
 Delete also overflowed at 240px usable height; its investigation log is retained.
 This fix does not establish

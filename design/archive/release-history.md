@@ -79,7 +79,7 @@ rebuilding. Public anonymous installer bytes match their accepted originals;
 official public APK owner signer/package/version/code60 checks pass. All22 prior
 release identities/assets/notes and tag refs remain unchanged; stable2026.10.3
 stays Latest. [Public evidence](../../evidence/food-2026.10.4-rc.1/candidate/build60/publication/root-public-verification.json)
-records exact identity, and the [native handoff](../food-native-acceptance.md) preserves
+records exact identity, and the [native handoff](food-native-acceptance.md) preserves
 current60 acceptance and older59 editor/upgrade attribution. Private fixtures and
 importer evidence remain separate; no live import or stable promotion occurred.
 

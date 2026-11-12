@@ -1,4 +1,4 @@
-> Historical review. Lee subsequently approved Flutter/Dart and portable file synchronization; see [ADR 0001](decisions/0001-client-and-storage.md). Open questions here may be superseded.
+> Historical review. Lee subsequently approved Flutter/Dart and portable file synchronization; see [ADR 0001](../decisions/0001-client-and-storage.md). Open questions here may be superseded.
 
 # Architecture review — 2026-09-30
 
@@ -41,4 +41,4 @@ Retain external Syncthing only if separate setup and a trusted household folder 
 2. Is a mostly Rust codebase a priority worth Android adapter work, or is shortest path to a polished mobile app the priority? Recommend Rust/Dioxus only with the device spike; otherwise Flutter/Dart. No dual UI implementation.
 3. Are all household members trusted to read every module's data? Recommend explicit shared-workspace semantics for tasks, but do not assume food/weight records may be shared. Also clarify whether “MacroFactor-like” includes adaptive expenditure/coaching or mainly logging/search/weight trends; this does not block the task milestone.
 
-The reviewed first milestone and evidence gates are in [product behavior](product-behavior.md). Future module semantics must be reviewed before their schemas, not implemented preemptively.
+The reviewed first milestone and evidence gates are in [product behavior](../product-behavior.md). Future module semantics must be reviewed before their schemas, not implemented preemptively.

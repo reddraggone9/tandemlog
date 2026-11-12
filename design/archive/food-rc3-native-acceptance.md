@@ -25,9 +25,9 @@ Full [build68 candidate38169726969](https://github.com/reddraggone9/tandemlog/ac
 - Package `com.reddraggone9.tandemlog`, version `2026.10.4-rc.3`, code68, nondebuggable; armeabi-v7a/arm64-v8a/x86_64.
 - Owner certificate SHA256 `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`.
 
-[Exact handoff and original identities](../evidence/toolbar-2026.10.4-rc.3/candidate/build68/exact-parent-handoff.json) and [independent final review](../evidence/toolbar-2026.10.4-rc.3/candidate/build68/build68-final-independent-artifact-review.json) retain source-bound evidence. Parent owns installed Android acceptance and publication after fresh quota; no further cloud downloads or cleanup are needed.
+[Exact handoff and original identities](../../evidence/toolbar-2026.10.4-rc.3/candidate/build68/exact-parent-handoff.json) and [independent final review](../../evidence/toolbar-2026.10.4-rc.3/candidate/build68/build68-final-independent-artifact-review.json) retain source-bound evidence. Parent owns installed Android acceptance and publication after fresh quota; no further cloud downloads or cleanup are needed.
 This document does not claim installed
-Android acceptance. [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md)
+Android acceptance. [Source evidence](../../evidence/toolbar-2026.10.4-rc.3/README.md)
 retains failures, attributed actual checks and independent reviews.
 
 Use disposable synthetic data and the locally coordinated fresh trial only.
@@ -67,7 +67,7 @@ manifest or text baseline directly. Prepare a new immutable plan using returned
 contents are explicitly `{numerator: 1, denominator: 1, unit: null}`; explicit
 fractions/measured amounts remain exact and blank nominal size stays independent.
 Call `dryRunImport(plan)` before the separate authorized `commitImport(plan)`.
-The [import contract](food-import-contract.md) retains exact retry and receipt
+The [import contract](../food-import-contract.md) retains exact retry and receipt
 rules. This recipe does not authorize a live import.
 
 ## Focused installed checks

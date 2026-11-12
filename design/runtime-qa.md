@@ -27,7 +27,7 @@ to run QA (UX pass, demos, release audits) are in [AGENTS.md](../AGENTS.md).
 - **Android:** hardware-accelerated API 30 x86_64 emulator on Farnsworth for
   candidate acceptance and retained upgrade labs. Cloud software emulation is
   unusable. RC owner testing uses the side-by-side install on Lee's phone or Leela
-  described in [releases.md](releases.md#side-by-side-rc-handoff-lee-2026-11-07);
+  described in [releases.md](releases.md#6-hand-the-rc-to-lee);
   it does not replace exact-artifact lab acceptance.
 - **Windows:** hosted CI builds and unit tests, installer lifecycle (install,
   launch, replace, uninstall with data kept, reinstall) and payload inventory.

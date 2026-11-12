@@ -11,7 +11,7 @@ Full [CI37810677866](https://github.com/reddraggone9/tandemlog/actions/runs/3781
 checks exactly e205e65. All three platforms completed successfully: Linux 628 unit and 70 actual native
 app flows; Windows 626 unit with two expected Linux-only skips; each desktop
 4 Cargo, 107 native worker and 37 tooling cases. Packaged-native/notices, release
-packaging and installation smoke/lifecycle gates passed. The [qualified receipt](../evidence/final-preview/ci/receipt.json)
+packaging and installation smoke/lifecycle gates passed. The [qualified receipt](../../evidence/final-preview/ci/receipt.json)
 records source, terminal status, counts, artifact metadata and exact decoded-log hashes.
 
 | Binding | Exact reported value |
@@ -65,14 +65,14 @@ runtime results as acceptance of the combined payload.
 4. Test SAF picker/grant/reopen/replacement/refresh, lifecycle and runtime FFI on
    the actual Android package. Retain recurrence/checklist/text/integrity/Undo and
    stable-v3 readability coverage, plus the distinct task-based UX audit required
-   in [runtime QA](runtime-qa.md). Keep the approved 6GiB/2CPU/one-AVD lab cap and
+   in [runtime QA](../runtime-qa.md). Keep the approved 6GiB/2CPU/one-AVD lab cap and
    parent storage-path restrictions; no live synced user data.
 5. Accept the exact Windows installed payload with manual visual/keyboard/
    assistive-technology checks. The separately scoped Windows debug route uses
    runner source `a249af55d49148db0525abd7f713ee716900353b`, application/test/native
    inputs byte-identical to e205, and selects three tag plus one historical flow.
    [Scoped run 37813474065](https://github.com/reddraggone9/tandemlog/actions/runs/37813474065)
-   passed all four flows without failures/skips. Its [qualified receipt](../evidence/final-preview/windows-native/receipt.json)
+   passed all four flows without failures/skips. Its [qualified receipt](../../evidence/final-preview/windows-native/receipt.json)
    records actual source/startup/count evidence and reported ZIP 8025 bytes, artifact
    `11565823346`, SHA256 `2b83a2627cea3a210cc3cacce0ac886defdd2ce88ae2b063b1eb7bde70047a77`.
    Consumer ZIP/member/payload hashes are not verified here. This supports debug

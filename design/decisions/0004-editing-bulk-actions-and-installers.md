@@ -1,6 +1,6 @@
 # Decision 0004 — editing, bulk actions and desktop installers
 
-Status: accepted RC4 scope, 2026-10-01; shipped in stable 2026.10.0. Acceptance: [status](../status.md), [UX audit](../ux-audit-rc4.md).
+Status: accepted RC4 scope, 2026-10-01; shipped in stable 2026.10.0. Acceptance: [status](../status.md), [UX audit](../archive/ux-audit-rc4.md).
 
 Lee requested multi-tag filtering, direct editing without task overflow menus, a wide side editor, bulk actions and desktop installers. These extend the [compact interface](0002-onboarding-and-everyday-interface.md) and retain [date/manual ordering](0003-task-parity-and-prerelease-boundary.md).
 

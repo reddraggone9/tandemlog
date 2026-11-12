@@ -5,7 +5,7 @@ Status: **Accepted (Lee, 2026-10-28 22:10 CDT); released in stable
 agentic access, I think you've convinced me. Do what you think is best.”
 [ADR0036](decisions/0036-agent-interface.md) records the choice and
 alternatives. Section 11 records how the implementation answered section 9 and
-where it differs from this text; the [feasibility record](agent-interface-feasibility.md)
+where it differs from this text; the [feasibility record](archive/agent-interface-feasibility.md)
 holds the evidence.
 
 ## 1. Goal (Lee, 2026-10-28)

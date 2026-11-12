@@ -2,7 +2,7 @@
 
 ## Published stable2026.10.4/build71
 
-[Source-bound acceptance and qualifications](../evidence/stable-2026.10.4/candidate71/README.md) supersede pending current-release statements below. Prepared stable56→71 and separate RC70→71 native upgrades passed, with preserved existing history and affected offline text/Food/SAF/Gboard checks. Actual emulator runtime is Android11/API30. Earlier RC observations keep their original source attribution. [Stable publication and anonymous verification](../evidence/stable-2026.10.4/publication/README.md) completed 2026-10-12T21:28:15Z using the accepted original installers. No live Food import or cutover occurred.
+[Source-bound acceptance and qualifications](../../evidence/stable-2026.10.4/candidate71/README.md) supersede pending current-release statements below. Prepared stable56→71 and separate RC70→71 native upgrades passed, with preserved existing history and affected offline text/Food/SAF/Gboard checks. Actual emulator runtime is Android11/API30. Earlier RC observations keep their original source attribution. [Stable publication and anonymous verification](../../evidence/stable-2026.10.4/publication/README.md) completed 2026-10-12T21:28:15Z using the accepted original installers. No live Food import or cutover occurred.
 
 ## Published RC2/build64 — exact native acceptance complete
 
@@ -23,7 +23,7 @@ publication from the exact64 binaries without rebuild.
 normal promotion38139953180 using reviewed docs dispatch445f608. Actual public
 installer bytes, tag/source, approved notes and owner APK signer/version pass;
 stable2026.10.3 remains Latest and all23 prior releases/assets/notes/tag refs
-remain unchanged. [Publication receipts](../evidence/food-2026.10.4-rc.2/candidate/build64/publication/README.md)
+remain unchanged. [Publication receipts](../../evidence/food-2026.10.4-rc.2/candidate/build64/publication/README.md)
 retain exact identities, native attribution and existing qualifications.
 No stable promotion, live import, deletion or new feature is authorized.
 
@@ -60,7 +60,7 @@ publication. No stable behavior promotion is authorized by this correction.
 Complete executable source `7ae14371fa0b734599fcdbb184d93376b8898a2a` passes all five jobs in
 [signed candidate38121211371](https://github.com/reddraggone9/tandemlog/actions/runs/38121211371)
 and all three push CI38121201969 jobs. Independent/root verification accept the
-[three original archives and14 members](../evidence/food-2026.10.4-rc.2/candidate/build62/artifacts/manifest.json),
+[three original archives and14 members](../../evidence/food-2026.10.4-rc.2/candidate/build62/artifacts/manifest.json),
 including both installed desktop lifecycles and Linux's actual catalog/private-XDG/
 one-database gate. The original Android artifact is
 `11696122674`; APK SHA256
@@ -78,7 +78,7 @@ Build61/source00594c1 and failed d38/43df build62 runs are retained intermediate
 records, ineligible for handoff/publication. Their partial archives are not reused.
 All approved expanded scope is in this source, including Search/Add, Stock/date/
 Filter/account behavior, required shared date input, selective Food Undo, fixed
-expanded controls and Flatpak fixes. [Handoff](../evidence/food-2026.10.4-rc.2/candidate/build62/README.md)
+expanded controls and Flatpak fixes. [Handoff](../../evidence/food-2026.10.4-rc.2/candidate/build62/README.md)
 records original evidence, source-qualified local coverage and Food Undo's older-
 reader/protected-receipt downgrade boundary.
 
@@ -131,7 +131,7 @@ Focused actual Android acceptance for the complete changed candidate:
    bytes, without duplicate actions. Undo Add hides untouched physical IDs from
    active and Deleted while retaining canonical births; later independent work
    protects them. A Task completion notice cannot Undo after switching to Food,
-   and normal Task Undo still works when returning. See[ADR0018](decisions/0018-food-session-undo.md)
+   and normal Task Undo still works when returning. See[ADR0018](../decisions/0018-food-session-undo.md)
    for the older-reader/protected-receipt downgrade boundary.
 7. Expand/collapse a multi-container group. Remove/Inspect and title/date width
    stay fixed; overflow appears in the existing count/location row and controls
@@ -148,7 +148,7 @@ RC2026.10.4-rc.1/build60 passed the parent's affected Android native acceptance
 and is now published as an experimental prerelease. Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
 [signed candidate38085381679](https://github.com/reddraggone9/tandemlog/actions/runs/38085381679)
 (all five jobs) and push CI38085382087 (all three jobs).
-[Exact original-artifact handoff](../evidence/food-2026.10.4-rc.1/candidate/build60/artifacts/manifest.json)
+[Exact original-artifact handoff](../../evidence/food-2026.10.4-rc.1/candidate/build60/artifacts/manifest.json)
 records three independently/root-verified archives and14 original members,
 including both hosted installed lifecycles. Android artifact11681994515 contains
 the67082973-byte APK, SHA256 `2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db`.
@@ -193,7 +193,7 @@ scrolls below it, and the notice copy scrolls within a third of the region. Sear
 and rows stay usable at 200% text on short screens and above a keyboard, and Retry
 is reachable by scrolling.
 
-[Source-bound build60 evidence](../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
+[Source-bound build60 evidence](../../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
 records40 final widget cases,149 earlier qualified Food regressions, final native
 40-case scrolling matrix plus production Save/restart/Restore in4:08, eight
 density variants and the actual pointer-visible synthetic GTK matrix excerpt.
@@ -218,21 +218,21 @@ not a timeout. Owner signing was skipped and no replacement APK exists from that
 run. The new Food matrix passed; a scoped root Scaffold correction restores Task
 keyboard-safe bounds after Save changes focus while leaving Food handling intact.
 The unchanged four bulk native flows now pass after reproducing both failures.
-The [failure disposition](../evidence/food-2026.10.4-rc.1/candidate/build59/source87-failed/manifest.json)
+The [failure disposition](../../evidence/food-2026.10.4-rc.1/candidate/build59/source87-failed/manifest.json)
 preserves the original failed run and source-bound Windows artifact evidence.
 [Fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
 and push CI38076106828 passed all hosted gates at corrected source
 `75557b100bdb17aeb76deb41fad646d95a9cc898`. Independent and root verification
-accept the [three new original archives and14-member inventory](../evidence/food-2026.10.4-rc.1/candidate/build59/task-inset-correction/artifacts/manifest.json),
+accept the [three new original archives and14-member inventory](../../evidence/food-2026.10.4-rc.1/candidate/build59/task-inset-correction/artifacts/manifest.json),
 including both exact hosted installed lifecycles. None from the failed source87
 run is promoted. The actual owner-signed Android artifact is11679079347; APK
 SHA256 `689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`,
 67066589 bytes, package/version2026.10.4-rc.1/code59. Official signature, owner
 pin, threeABIs, nondebuggable and native16K/ELF/exports/notices checks pass.
 Local independent code/UX/demo and actual-range notes
-reviews accept the scoped correction. [Actual GTK evidence](../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
+reviews accept the scoped correction. [Actual GTK evidence](../../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
 records120 captures and the earlier fixture qualification. The separate
-[corrected-source rerun](../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
+[corrected-source rerun](../../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
 passes production Food persistence and the twelve-case matrix in5:38, executing
 the final glyph assertion without rewriting the original evidence. Parent actual Gboard/editor passes and the blocking Inbox finding for this APK
 are recorded above; static identity checks do not replace Android acceptance. Windows manual GUI remains RC-waived by the parent;
@@ -240,8 +240,8 @@ the fresh hosted Linux/Windows installed lifecycle proofs passed. Prior local CL
 retains its original build57 or stable56 attribution.
 
 Stable promotion requires Lee's acceptance. The
-[source/evidence checkpoint](../evidence/food-2026.10.4-rc.1/README.md) and
-[import contract](food-import-contract.md) separate app behavior from private
+[source/evidence checkpoint](../../evidence/food-2026.10.4-rc.1/README.md) and
+[import contract](../food-import-contract.md) separate app behavior from private
 migration. Empty-inventory acceptance can finish before any source cutover.
 
 Use the successful main signed-candidate run's original `android-release` APK
@@ -314,7 +314,7 @@ upgrade passes retain their original attribution. Independent final readiness
 review accepts exact Food RC publication without rebuilding; stable2026.10.3
 remains Latest. Private native fixtures remain outside the repository.
 
-[Accepted-native readiness](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/accepted-native-readiness.json) records the source-bound publication attestation.
+[Accepted-native readiness](../../evidence/food-2026.10.4-rc.1/candidate/build60/publication/accepted-native-readiness.json) records the source-bound publication attestation.
 
 ## Published exact build60 RC
 
@@ -325,5 +325,5 @@ accepted candidate38085381679/source3d binaries without rebuilding. Root and
 independent anonymous downloads match all three original installers; public APK
 owner signer/package/version/code60/nondebuggable/native checks pass. Notes/tag
 and all22 prior releases/tag refs are unchanged; stable2026.10.3 remains Latest.
-[Public verification](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/root-public-verification.json)
+[Public verification](../../evidence/food-2026.10.4-rc.1/candidate/build60/publication/root-public-verification.json)
 records exact public identities. No live import or stable promotion occurred.

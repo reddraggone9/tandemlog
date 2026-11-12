@@ -33,7 +33,7 @@ single enlarged-text boundary; omitting it would have understated the limit.
 There are no supported localized date/time formats or translated field labels
 in this editor, so no invented locale test is claimed.
 
-Evidence: [native screenshots and receipt](../evidence/date-time-layout/receipt.json).
+Evidence: [native screenshots and receipt](../../evidence/date-time-layout/receipt.json).
 All 16 selected native GTK screenshots were visually inspected: paired
 360/520px single and 500/640px bulk viewports at 100/200%, plus exactly 1px
 above/below each candidate limit. The focused test's actual logical viewport

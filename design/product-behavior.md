@@ -284,7 +284,7 @@ occurrence, completing the old task retains that next occurrence exactly. Its
 edits, notes, schedule, tags, manual order, draft and scoped Undo survive; completed
 or deleted children keep that status. Undo/reopen affects the old parent's
 completion and keeps the existing child. Forward native recurrence retains its
-approved completion-observed union. See the [policy and compatibility boundary](historical-recurring-text-policy.md).
+approved completion-observed union. See the [policy and compatibility boundary](archive/historical-recurring-text-policy.md).
 
 
 Food expiration is a calendar date only in the interface. Historical certainty

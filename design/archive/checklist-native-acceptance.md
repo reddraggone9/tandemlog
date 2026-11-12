@@ -14,9 +14,9 @@ resource caps; a different cap needs Lee's approval through the coordinator.
 
 ## Starting fixture
 
-Copy every file in [qa-fixture/shared](../evidence/checklists/ui/qa-fixture/shared/)
+Copy every file in [qa-fixture/shared](../../evidence/checklists/ui/qa-fixture/shared)
 unchanged to a new synthetic shared folder. Verify each SHA256 from
-[manifest.json](../evidence/checklists/ui/qa-fixture/manifest.json). Give every peer
+[manifest.json](../../evidence/checklists/ui/qa-fixture/manifest.json). Give every peer
 a fresh private profile; never copy seed-private writer identities or caches.
 The fixture was produced and history-verified by production commands in
 `tool/checklist_qa_fixture.dart`, without hand-authoring canonical bytes.

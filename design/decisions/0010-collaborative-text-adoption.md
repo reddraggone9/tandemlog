@@ -165,7 +165,7 @@ is explicitly rejected before local receipt preparation; neither history nor
 existing character identities are rebased. Lee subsequently accepted a parent-only historical recompletion record that
 retains the independently initialized child unchanged. The explicit native
 inheritance guard remains; the normal completion action uses the accepted
-[historical policy](../historical-recurring-text-policy.md).
+[historical policy](../archive/historical-recurring-text-policy.md).
 
 The production controller, captured editor and session Undo are wired. The
 native Linux flow covers offline creation before setup, private draft retention
@@ -185,7 +185,7 @@ Windows packaged lifecycle, and accept the exact signed APK on Android.
 Release-mode startup samples are recorded in the production checkpoint with
 their exact source and methodological limits; final UI/release review remains
 pending. Stable promotion requires
-separate behavior acceptance. [Prototype evidence](../text-merge-prototype.md)
+separate behavior acceptance. [Prototype evidence](../archive/text-merge-prototype.md)
 remains historical; passing it alone is not production acceptance.
 
 ## Historical proposal — superseded by the accepted sections
@@ -459,7 +459,7 @@ of decoding every successor history again.
 These changes introduce no canonical, clock, UUID, context, packet, Undo or cache
 schema migration. They do not rebase identities or change completion-observed
 union. See [measurements and limits](../../evidence/production-text/recurring/README.md).
-Historical mixed-lineage behavior remains [a separate decision](../historical-recurring-text-policy.md).
+Historical mixed-lineage behavior remains [a separate decision](../archive/historical-recurring-text-policy.md).
 
 ## Shared-history redesign foundation — 2026-10-08
 

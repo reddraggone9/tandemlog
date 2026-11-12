@@ -17,7 +17,7 @@ initializer when durable successor task or checklist activity established its
 independent work. That activity remains protective after Undo or deletion. An
 untouched native successor continues to use ordinary forward/concurrent inheritance.
 The original scalar eligibility rules remain unchanged. See the
-[native checklist regression](../evidence/historical-checklist-recompletion/README.md)
+[native checklist regression](../../evidence/historical-checklist-recompletion/README.md)
 for the Android finding, production-command reproduction and acceptance status.
 
 Ordinary forward native recurrence retains its observed-text union behavior.
@@ -36,7 +36,7 @@ source records are retained as transport dependencies and revalidated on arrival
 local commands require the source before preparing a receipt. A self/forward
 same-writer reference fails wire admission even if its source has not arrived.
 
-See [implementation evidence](../evidence/production-text/historical-recompletion/README.md).
+See [implementation evidence](../../evidence/production-text/historical-recompletion/README.md).
 
 ## Earlier proposal, superseded by Lee's approval
 

@@ -36,7 +36,7 @@ midnight, zone retention, clear without losing date, row proportions, 390px fit,
 320px/200% stacking and single/bulk field order. Every UI revision still needs
 actual native desktop inspection and exact Android affected-workflow acceptance.
 
-An [isolated follow-up investigation](../date-time-layout-investigation.md)
+An [isolated follow-up investigation](../archive/date-time-layout-investigation.md)
 measures populated fields before tightening enlarged-text stacking. It remains
 a separately reviewed presentation candidate; its native evidence does not
 promote Android or release acceptance.

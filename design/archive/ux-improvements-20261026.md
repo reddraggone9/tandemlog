@@ -3,7 +3,7 @@
 Status: local development implementation with bounded native development coverage
 below; not released or accepted as a full release candidate.
 
-Completion chronology and picker details below record the initial bounded implementation. The subsequent exact-instant/viewer-local implementation and native screenshot-driven year-grid correction follow [ADR0035](decisions/0035-exact-completion-instants.md) and the current product behavior; old checks retain their source attribution.
+Completion chronology and picker details below record the initial bounded implementation. The subsequent exact-instant/viewer-local implementation and native screenshot-driven year-grid correction follow [ADR0035](../decisions/0035-exact-completion-instants.md) and the current product behavior; old checks retain their source attribution.
 
 ## Accepted scope
 
@@ -14,7 +14,7 @@ The improvements note's unspecified Food logging, games and tentative menu
 redesign are not implemented. Agent read/write access remains a separate proposed
 architecture, not a product endpoint.
 
-Current behavior is specified in [product behavior](product-behavior.md).
+Current behavior is specified in [product behavior](../product-behavior.md).
 ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
 
 ## Implementation boundaries
@@ -70,7 +70,7 @@ ADR0016's former explicit-clearing choice is replaced by Lee's newer request.
   Compact English month labels match the current English app; full localized
   month/year labels are supplied to semantics (header menus: "Select month,
   October 2026" and "Select year, 2026"). No new package; the one fork is
-  recorded in [dependencies](dependencies.md#forked-flutter-calendardatepicker--2026-10-27).
+  recorded in [dependencies](../dependencies.md#forked-flutter-calendardatepicker--2026-10-27).
 
 ## Development evidence
 
@@ -205,7 +205,7 @@ Back/Escape returns to the day calendar before dismissing it; Cancel preserves t
 draft. There is no stays-deleted note. Native screenshot iterations corrected the
 large-text selected-year offset, partial year rows and excess grid spacing.
 
-[ADR0035](decisions/0035-exact-completion-instants.md) supersedes the date-only
+[ADR0035](../decisions/0035-exact-completion-instants.md) supersedes the date-only
 completion decision: all live completion reservations require revision3 and a
 canonical UTC microsecond instant, sampled after the final fresh-input guards.
 Completed chronology uses viewer-local headings and instant order. Recurrence and

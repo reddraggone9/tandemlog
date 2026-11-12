@@ -64,7 +64,7 @@ application checks are integration gates; native acceptance remains separate.
 
 ## Narrow Kotlin maintenance — 2026-10-08
 
-The isolated remediation branch changes the main Android KGP request from 2.4.0 to 2.4.20, keeping AGP 9.1.0 and Gradle 9.3.1. [Per-version review and effective scope evidence](kotlin-2.4.20-remediation.md) record the KAPT advisory, signed artifacts, bundled hooks/native payloads and retained older Flutter/subproject scopes. The proposal passes independent static review, targeted resolution, local native-backed source tests and all-platform first CI at ac20d4e. Hosted cold/warm Android builds at 45eb9e8 and independent actual artifact/selected-graph review pass; all-platform follow-up CI at 45eb9e8 also passes. Final integration, Android runtime ABI/UI/provider acceptance and publication remain separate. Compiled-source receipts are distinct from later evidence-only commits. The historical inventory below is not rewritten as a claim that every Kotlin scope has upgraded.
+The isolated remediation branch changes the main Android KGP request from 2.4.0 to 2.4.20, keeping AGP 9.1.0 and Gradle 9.3.1. [Per-version review and effective scope evidence](archive/kotlin-2.4.20-remediation.md) record the KAPT advisory, signed artifacts, bundled hooks/native payloads and retained older Flutter/subproject scopes. The proposal passes independent static review, targeted resolution, local native-backed source tests and all-platform first CI at ac20d4e. Hosted cold/warm Android builds at 45eb9e8 and independent actual artifact/selected-graph review pass; all-platform follow-up CI at 45eb9e8 also passes. Final integration, Android runtime ABI/UI/provider acceptance and publication remain separate. Compiled-source receipts are distinct from later evidence-only commits. The historical inventory below is not rewritten as a claim that every Kotlin scope has upgraded.
 
 ## Coordinated Android tooling integration — 2026-10-09
 
@@ -81,7 +81,7 @@ exact-artifact Android checks before any publication; signing policy is unchange
 
 ## Bounded action and URL-launcher patches — 2026-10-11
 
-The isolated [per-version source review and smoke verification](dependency-patches-2026-10-11.md)
+The isolated [per-version source review and smoke verification](archive/dependency-patches-2026-10-11.md)
 proposes download-artifact8.0.2, upload-artifact7.0.2 and url_launcher6.3.3 on
 current main. Native URL-launcher locks stay unchanged. Integration/publication
 remain coordinated with active RC3; held AGP #1/Gradle #2 remain outside scope.
@@ -210,7 +210,7 @@ Primary reference checks (2026-10-04): [Dependabot ecosystem support](https://do
 
 ## Complete resolved Dart graph and archive provenance
 
-The [isolated Yrs experiment](text-merge-prototype.md) preceded the authorized
+The [isolated Yrs experiment](archive/text-merge-prototype.md) preceded the authorized
 [production text bridge](decisions/0010-collaborative-text-adoption.md).
 One implementation now lives in `native/text_engine`; experiment wrappers include
 it rather than maintain a second engine. Rust1.99.0, Yrs0.28.0, serde_json1.0.154

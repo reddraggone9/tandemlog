@@ -8,7 +8,7 @@ This is not RC/native acceptance or a passing performance qualification.
 
 ## Headless Dart/native assets — Linux source proof PASS
 
-Pinned Dart3.13.4 built [the synthetic probe](../test/support/agent_headless_probe.dart)
+Pinned Dart3.13.4 built [the synthetic probe](../../test/support/agent_headless_probe.dart)
 with `dart build cli --target test/support/agent_headless_probe.dart --output
 build/agent-headless-probe`. The compiled AOT binary, with DISPLAY and
 WAYLAND_DISPLAY unset, loaded native SQLite and the existing reviewed text
@@ -18,7 +18,7 @@ libdl, not GTK/Flutter. The text engine uses the injected/default executable-
 relative library location; the probe copied its existing reviewed library into
 `bin/lib` without changing its bytes. No new dependency or toolchain upgrade.
 
-[Receipt](../evidence/agent-interface-feasibility/headless-linux.json) binds
+[Receipt](../../evidence/agent-interface-feasibility/headless-linux.json) binds
 payload hashes and scope. The first build failed certificate validation through
 the inherited proxy; the normal direct HTTPS route succeeded with proxy variables
 unset, not with certificate checking disabled. The first runtime probe exposed
@@ -37,7 +37,7 @@ The accepted design requires distinct agent identities/installations/logs and
 no agent-count cap. Existing v5 source carries count-only ceilings of 256
 (probe `test/support/agent_writer_limit_probe.dart` from commit c1f2444,
 removed with the ceilings in 46bde26 and superseded by `test/writer_count_test.dart`;
-[receipt](../evidence/agent-interface-feasibility/writer-limit.json): 256
+[receipt](../../evidence/agent-interface-feasibility/writer-limit.json): 256
 accepted, 257 rejected, no writes).
 
 Independent read-only review (2026-10-29) verdict: **not a canonical format or
@@ -60,7 +60,7 @@ Implementation path:
 3. Tests: 257/1,000-writer actions accepted with manifest still capped; folder
    with ≥257 histories; inventory round-trip >256; frozen stable106 refuses a
    257-writer workspace with unchanged bytes.
-4. Registered: `writer300-refresh` checks exactly300 physical histories, complete join admission, unchanged Tasks/Food values, canonical inventory and replay under the existing refresh budgets on all three shapes (see [performance coverage](performance-gate.md#bounded-cache-proof-overlap-and-installation-cardinality-refresh)).
+4. Registered: `writer300-refresh` checks exactly300 physical histories, complete join admission, unchanged Tasks/Food values, canonical inventory and replay under the existing refresh budgets on all three shapes (see [performance coverage](../performance-gate.md#bounded-cache-proof-overlap-and-installation-cardinality-refresh)).
 5. Release note: workspaces above 256 installations (agents included) need every
    device on this release or newer.
 

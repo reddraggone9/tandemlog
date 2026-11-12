@@ -10,7 +10,7 @@ Use the isolated `feature/shared-tag-input` candidate. Production is
 `041c06488cb2d937d38519dec8e3e3ebd69abbf3`; final interaction-test source is
 `ec2309dbbdde09d5fce0a07610bc253258dd508b`. Full CI
 [37796892998](https://github.com/reddraggone9/tandemlog/actions/runs/37796892998)
-passed all platforms. Its [receipt](../evidence/shared-tags/green/ci-receipt.json)
+passed all platforms. Its [receipt](../../evidence/shared-tags/green/ci-receipt.json)
 binds the source and reported artifact IDs/digests. Before device testing, bind
 downloaded archive/APK hashes, signer and native payload. Consumer byte verification
 and runtime acceptance remain pending, alongside the blocking core fix. The displayed
@@ -25,10 +25,10 @@ combined, owner-signed release acceptance remains a later gate.
 
 ## Known starting inputs
 
-Copy only [qa-fixture/shared](../evidence/shared-tags/native/qa-fixture/shared/)
+Copy only [qa-fixture/shared](../../evidence/shared-tags/native/qa-fixture/shared)
 into the new shared folder, preserving its two files. Verify each SHA256 from
-[manifest.json](../evidence/shared-tags/native/qa-fixture/manifest.json). The
-[generation receipt](../evidence/shared-tags/native/qa-fixture-receipt.json)
+[manifest.json](../../evidence/shared-tags/native/qa-fixture/manifest.json). The
+[generation receipt](../../evidence/shared-tags/native/qa-fixture-receipt.json)
 records eight v3 records emitted by production commands and verified through
 `TaskStore.verifyHistory`. Each peer gets a fresh private profile; never copy a
 seed writer identity or cache. Android must grant this folder using actual
@@ -81,4 +81,4 @@ Never hand-edit the canonical files to manufacture a state or repair a test.
 Actual GTK tag flows and the separately qualified 22 hosted Windows debug flows
 provide supporting evidence. They do not establish Android IME/provider/visual
 acceptance or acceptance of a later combined signed artifact. See
-[runtime QA](runtime-qa.md) and the [tag receipts](../evidence/shared-tags/README.md).
+[runtime QA](../runtime-qa.md) and the [tag receipts](../../evidence/shared-tags/README.md).

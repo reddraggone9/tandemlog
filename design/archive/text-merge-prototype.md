@@ -1,13 +1,13 @@
 # Test-first isolated Yrs prototype — 2026-10-04
 
 Historical test-first evaluation. Current authorized, unreleased integration and
-remaining gates are in [ADR 0010](decisions/0010-collaborative-text-adoption.md).
+remaining gates are in [ADR 0010](../decisions/0010-collaborative-text-adoption.md).
 
 Status: Lee authorized a bounded cross-platform investigation, not production
 adoption. No application dependency, event meaning, durable history, schema,
 signing identity or checklist changes are part of this experiment. The isolated
 working package was first created outside the repository, then mirrored under
-[experiments/yrs-spike](../experiments/yrs-spike/README.md) to obtain repeatable
+[experiments/yrs-spike](../../experiments/yrs-spike/README.md) to obtain repeatable
 hosted native Windows/Linux checks. It is a separate crate with a separate
 lockfile; no production app imports or packages it. Its manually dispatched
 read-only workflow has no signing secrets or publication capability.
@@ -144,7 +144,7 @@ run37216546961; this experiment does not authorize application publication.
 
 ## Isolated Flutter editor harness
 
-The separate [editor lab](../experiments/yrs-spike/editor_lab/README.md) uses only
+The separate [editor lab](../../experiments/yrs-spike/editor_lab/README.md) uses only
 synthetic in-memory replicas and an independent Android package. Its 12-case
 matrix and assertions were frozen at16:42:24UTC before implementation, repository
 commit `e1afed4`. Ten automated session/widget cases and the native Linux Flutter
@@ -159,7 +159,7 @@ verified hosted hardened revision. Official NDK28.2 `llvm-strip --strip-unneeded
 reproduces each APK-contained native payload exactly. It has a separate temporary
 debug signer, contains no app protocol/storage imports and cannot access any
 Tandemlog shared folder. Restart intentionally resets its synthetic data.
-[Results](../experiments/yrs-spike/evidence/editor-results.json) are separate from
+[Results](../../experiments/yrs-spike/evidence/editor-results.json) are separate from
 the immutable acceptance matrix. Main app analysis excludes independent
 experimental packages; the manual isolated workflow analyzes/tests this one
 explicitly, including Linux native integration and Android APK packaging.
@@ -172,18 +172,18 @@ actors, checkpoints and measured budgets. None is an adopted production protocol
 
 Lee approved late legacy scalar text writes losing after activation, with original
 records retained and no reconciliation UI. That does not permit upgraded native
-edits to lose. The separate [18-case matrix](../experiments/yrs-spike/evidence/activation-policy-matrix.json)
+edits to lose. The separate [18-case matrix](../../experiments/yrs-spike/evidence/activation-policy-matrix.json)
 was written before any activation-policy implementation; its historical `not-run`
 entries remain unchanged, as do earlier frozen matrices/assertions. A separately
 frozen four-case draft extension adds captured-base/controller handling.
 
-The [isolated coordinator](../experiments/yrs-spike/activation_lab/README.md) now
+The [isolated coordinator](../../experiments/yrs-spike/activation_lab/README.md) now
 passes30 Linux tests:22 policy/draft, four native-preparation and four stronger
 recovery cases. Test-first commit `bc43c9b` precedes implementation; `2330222`
 freezes the stronger checks before their fixes. Five reproduced implementation
 defects were fixed without changing frozen expectations. The existing52 native,
 ten editor session/widget, Linux Dart FFI and eight production clock/warning
-checks also pass. [Separate results and logs](../experiments/yrs-spike/evidence/activation-results.json)
+checks also pass. [Separate results and logs](../../experiments/yrs-spike/evidence/activation-results.json)
 include actual frozen-v3 TaskStore replay, old-reader rejection without checkpoint
 advancement, a real pending native restore and fresh-process journal-only replay.
 

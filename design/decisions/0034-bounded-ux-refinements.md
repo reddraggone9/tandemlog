@@ -43,7 +43,7 @@ the current English app; full localized month/year semantics remain available.
 Existing day-cell measurements, both themes and enlarged text remain covered.
 The dialog swaps its calendar body for the month/year grid in place; it never stacks a second dialog. Back or Escape returns to the day calendar before closing. The fork keeps upstream's day grid, paging, keyboard and semantics code verbatim; date validation stays in the date field. The cost is a manual port of upstream fixes when the Flutter pin changes.
 
-[Implementation evidence](../ux-improvements-20261026.md) records independent
+[Implementation evidence](../archive/ux-improvements-20261026.md) records independent
 review corrections, replay/cache/Undo checks, visual observations and platform
 gaps. Existing performance budgets and candidate/native gates are not waived.
 No agent endpoint, menu redesign, schema migration or broad Food/game module is

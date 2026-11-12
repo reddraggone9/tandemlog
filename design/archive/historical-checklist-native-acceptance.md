@@ -19,7 +19,7 @@ This is an internal test-only APK, not a public preview release.
 passed all three jobs. Linux606unit/67actual-native apps and Windows604unit with
 two expected Linux-only skips passed; each desktop also passed4Cargo,107native
 worker and37tool checks. Release packaging/staticnative/installation smoke gates
-passed. The [qualified receipt](../evidence/historical-checklist-recompletion/green/ci-receipt.json)
+passed. The [qualified receipt](../../evidence/historical-checklist-recompletion/green/ci-receipt.json)
 preserves exact source/job/artifact and decoded-log binding.
 
 The GitHub artifact transfer returned403 here. ZIP/APK bytes, APK size and signer
@@ -74,6 +74,6 @@ Child task title must stay `Pack for a walk ChildA`; copied item must stay
    actual Android IME observations. Keep frozen failed APK evidence unchanged.
 
 The original Library packet remains unmaterialized in this consumer; parent owns
-its actual checkpoint. [Reproduction and preservation evidence](../evidence/historical-checklist-recompletion/README.md)
+its actual checkpoint. [Reproduction and preservation evidence](../../evidence/historical-checklist-recompletion/README.md)
 qualifies the authorized generated-command fallback. No live synced user data,
 Kotlin update or shared-tag implementation is part of this replacement APK.
