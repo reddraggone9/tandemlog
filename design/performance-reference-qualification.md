@@ -1,5 +1,283 @@
 # Controlled reference qualification — operating protocol
 
+Implements [ADR0033](decisions/0033-controlled-reference-performance.md) under the
+[gate rule](performance-gate.md#the-gate-rule-lee-2026-10-31). The sections before
+[History](#history) are the current procedure. History keeps earlier rules, overrides,
+controller revisions and per-release outcomes; none of it is a step to follow.
+
+## What is pinned now
+
+All of this is in `tool/performance/reference-host-v1.json` and checked by
+`reference_receipt.py`:
+
+- **Host:** Bender, the household server (i5-12600KF, x86_64, 16 logical CPUs, ext4
+  measurement path). Its registered `hostId` is `farnsworth`, the machine's name until
+  2026-11-08. The id is a constant in the verifier and its tests, not a different
+  machine. There is no hardware multiplier (`hardwareMultiplier: 1`).
+- **Environment:** kernel `7.2.14-arch1-1`, Python `3.14.9`. `request` and the run
+  compare the live `fingerprint` with this registration exactly. A routine OS update
+  that changes either one blocks the next request until the registration is refreshed,
+  and the refreshed file is relevant source, so it needs its own fresh qualification.
+- **Caps:** 6 GiB memory, no swap, 200% CPU, 128 tasks.
+- **Limits:** `limits-v1.json` SHA-256
+  `142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8`, also pinned in
+  `validate.yml`. It differs from `553896b3…` only in the gate-rule fields (`gateRule`,
+  `gateRuleSource`, `warmups: 0`, `samples: 1`); every budget number is unchanged.
+- **Toolchain and libraries:** Dart 3.13.4 `dart`/`gen_snapshot`, `libtandemlog_text.so`
+  and `libsqlite3.so` by hash (`toolHashes`; libraries re-registered 2026-10-28, see
+  `libraryReregistration`), plus the lockfile, package contract and compiled-dependency
+  inventory. A native or dependency change needs new provenance review and
+  re-registration before a request. Do not modify binaries or package roots to get a pass.
+- **Controller:** r8, SHA-256
+  `f5e6262ee5c4665e1a5cf3b30728165f21651471b33eea79150c8090d78a8645`, with its pressure
+  module `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`. The
+  controller source is private; only its hash is published. r8 admits the household's
+  idle `vex-adb.service` ADB server, so qualification does not stop it
+  ([history](#controller-r8-the-owned-adb-server-stays-up-2026-11-02)).
+
+## Required roles
+
+- Hosted Linux/Windows/Android correctness/build/native checks remain required.
+  Hosted AOT uses `--hosted-advisory`, strict physical caps and all 257 metrics across
+  all 3 shapes. Correctness, replay, integrity, coverage, source/tool/fixture drift,
+  invalid growth contracts and incomplete child cleanup remain fatal. Only timing
+  comparisons become advisory; every raw miss/log remains. No timing rerun.
+- Bender runs the **same** uninstrumented enforcing harness, without
+  measure-only/advisory/diagnostic flags. Absolute and both growth-rule sets decide
+  under the [gate rule](performance-gate.md#the-gate-rule-lee-2026-10-31): one sample,
+  no warmups, one automatic rerun of first-pass misses inside the invocation, and a
+  run fails only when the same label misses twice. Never retry-until-pass.
+- Hosted `reference-performance` independently verifies the committed bundle.
+  Missing or stale data fails; passing hosted timing never substitutes for it.
+  `releaseGateAccepted` in the standalone result means only its AOT scope, not
+  owner-signed/native-visible/release/live acceptance.
+
+## When a fresh qualification is needed
+
+A bundle qualifies the relevant-source identity its request recorded. Receipt/docs-only
+descendants remain valid only when the complete relevant identity is unchanged and the
+request commit is an ancestor. Changing runtime, tests, assets, workflow, gate tooling,
+host registration or limits requires a fresh request/run. No generic branch-name or
+age-only freshness shortcut exists. A stable rename of a qualified RC needs no new run
+(identity v2, below). Keep release branches linear: a merge commit breaks the ancestor
+check and forces a new qualification.
+
+### Relevant-source identity schemes
+
+Source inventories read literal Git blobs through one `cat-file --batch` process
+per identity check,requesting each distinct object ID once even when paths share
+content. The verifier checks ordered object IDs,blob type,size,content hash and
+exact framing/completeness;duplicate inventory paths or protocol responses fail.
+Worktree dirty/untracked,regular-file and literal-byte checks remain unchanged.
+This transport does not change either identity scheme or receipt bytes.
+
+The request records its identity scheme inside `relevantSource`,so the nine
+controller fields are unchanged. A receipt is always verified under the scheme it
+recorded;old receipts are never reinterpreted.
+
+- `relevant-source-v1` (no `scheme` field):every relevant file's literal bytes.
+  All receipts issued before this change,including the stable101 owner override,
+  are v1 and keep exactly that meaning.
+- `relevant-source-v2` (`scheme: relevant-source-v2`,issued by `request` from
+  now on):the same files,except that two release-version carriers are pinned
+  version-free and marked `normalized`:
+  - `pubspec.yaml`:only a single top-level `version: <value>` line
+    (`[0-9A-Za-z.+~-]`,no comment) is replaced. Any other byte,dependency,flag,
+    comment or a second/malformed version line changes the identity;
+  - `packaging/linux/com.reddraggone9.tandemlog.metainfo.xml`:only one
+    `<releases>` list made solely of `<release version date type/>` entries
+    (stable/development) is dropped. Anything else in the file,or any other
+    release markup,changes the identity.
+
+  Neither value reaches the benchmark:`lib/` does not read the version and the
+  metainfo is not compiled. A stable rename of an already qualified RC (`version:`
+  change plus the matching AppStream release list that
+  `test_linux_flatpak_metadata.py` requires) therefore keeps its qualification.
+  The verifier still requires the result's pubspec pin/seal to equal the literal
+  bytes at the request's own revision. Actual history:RC.5 `be93df2`,stable
+  `d494d9b` and `dfb2260` have three v1 identities and one v2 identity.
+
+## Procedure
+
+Run it once per qualifying source. Each step either passes or stops; a stop is
+retained as evidence, never retried on unchanged source.
+
+1. **Prepare the source.** Check out the exact commit detached and clean, as the
+   lab user, outside the controller/request/output paths, with the registered pub
+   cache in `.dart_tool/package_config.json` (the package contract must match the
+   registration), then make it read-only. Dirty, untracked or nonliteral relevant
+   source is refused.
+2. **Fingerprint.** `reference_receipt.py fingerprint --repo "$qualification_source"
+   --output "$output_parent"` must equal the registered `environment`. If it does not,
+   refresh the registration first (see [What is pinned now](#what-is-pinned-now)).
+3. **Request.**
+
+   ```bash
+   python3 tool/performance/reference_receipt.py request \
+     --repo "$qualification_source" --controller "$reviewed_controller" \
+     --output "$qualification_request"
+   ```
+
+   The request binds a fresh nonce/UTC time, exact source commit and all relevant
+   tracked file bytes/modes, host-profile hash and controller path/hash. The actual
+   controller bytes, environment, caps and source/request pins are rechecked during
+   measurement.
+4. **Wait for a quiet host, then launch once.** The private quiet-admission check wants
+   120 continuous seconds with 1-minute load below 1, CPU PSI avg10 about 0, and no
+   build, test, emulator, benchmark or lab unit running. Never lower these checks to get
+   a run admitted. The private launcher then plans, starts the r8 manager and runs, inside
+   its bounded unprivileged workload unit with its curated environment:
+
+   ```bash
+   /usr/bin/python3 "$qualification_source/tool/performance/run_gate.py" \
+     --repo "$qualification_source" --dart "$reviewed_dart" \
+     --native-library "$reviewed_native" --sqlite-library "$reviewed_sqlite" \
+     --expected-limits-sha256 142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8 \
+     --reference-request "$qualification_request" --output "$qualification_run"
+   ```
+
+   No `--measure-only`, `--hosted-advisory` or `--diagnose-costs`. Do not set SQLite
+   LD_PRELOAD on the manager/shell; the driver applies it to actual Dart/AOT children.
+   The fresh output must not exist. All 3 shapes retain identical current state and
+   initial prefixes, their module-specific history growth, all 257 labels, one sample
+   and no warmups, first-use fixtures and complete replay/prefix/native-owner
+   assertions. Reruns follow the gate rule inside this invocation; nothing is
+   discarded as an outlier. No foreground window is needed.
+5. **Finalize and map cleanup.** After the manager exits, run its `finalize` mode within
+   the original deadline, then map the controller's actual readbacks into
+   `cleanup.json` (format below).
+6. **Seal.**
+
+   ```bash
+   python3 "$qualification_source/tool/performance/reference_receipt.py" seal \
+     --repo "$qualification_source" --request "$qualification_request" \
+     --run "$qualification_run" --cleanup "$qualification_cleanup" \
+     --output "$qualification_bundle"
+   ```
+
+   The exporter rechecks the executable hash/execute bit and all actual generated
+   canonical fixture bytes, then retains the request, complete report, compile/generation/
+   attempt and rerun logs, fixture manifests, cleanup and exact member hashes. It does not
+   export personal data or the executable/canonical workspaces. Original raw run output
+   stays with the local executor. A partial or failed export remains evidence, not
+   qualification.
+7. **Commit and verify.** Rename the previous `evidence/reference-performance/current/`
+   to `retained-<first 8 hex of its requestId>`, put the new bundle at `current/` in an
+   evidence-only commit (it keeps the relevant identity), and run
+   `python3 tool/performance/reference_receipt.py verify --repo .` before pushing. Logs
+   are tracked (`evidence/**/*.log`). Then run one exact relevant-source CI. If source
+   changes while qualification/CI runs, retain the old evidence and prepare the next
+   genuine source-bound request.
+
+### Cleanup mapping
+
+After the actual controller has stopped/queried its owned units and processes,
+the local executor maps its original verified receipts into `cleanup.json`:
+
+```json
+{
+  "requestId": "EXACT_REQUEST_NONCE",
+  "controllerSHA256": "EXACT_REGISTERED_REVIEWED_CONTROLLER_HASH",
+  "ownedUnitsInactive": true,
+  "ownedProcessesAbsent": true,
+  "inputPinsUnchanged": true,
+  "withinDeadline": true,
+  "activeProcesses": 0,
+  "workloadSwapBytes": 0,
+  "oomKills": 0,
+  "completedAtUTC": "ACTUAL_UTC",
+  "deadlineUTC": "ORIGINAL_ACTUAL_UTC",
+  "errors": []
+}
+```
+
+These fields must come from actual manager/process/cgroup/pressure readbacks,
+not assertions filled by hand to satisfy a parser. Preserve the original
+controller logs and failed/uncertain cleanup. Mapping uses the existing verified
+manager controls; it must not suppress a stop/query error or relaunch uncertain work.
+This is an explicit trusted-executor attestation, not a claim that a hash proves
+physical execution; no signing key is needed.
+
+## Controller and lab requirements
+
+The per-request manager adaptation must preserve:
+
+| Control | Required |
+| --- | --- |
+| Ownership | existing verified lab UID/GID1002,unique transient manager/workload units |
+| Memory / swap / CPU / pids | 6GiB /0 /200% /128 |
+| Manager settings | RuntimeMax1500s,TimeoutStop1s,StartLimitBurst1,StartLimitIntervalinfinity,Restartno,KillModecontrol-group,OOMPolicykill |
+| Workload settings | RuntimeMax1500s,TimeoutStop19s,Restartno,KillModecontrol-group,OOMPolicykill;BindsTo+After exact nonce manager |
+| Outer qualification bound | **one invocation,25minutes from PID1 manager activation**,plus one shared20s termination cleanup (19s workload+1s manager);no external retry/extension |
+| Pressure | corrected ARC-aware stable preflight and genuine-pressure checks;global swap allocation alone is not swapping proof |
+| Concurrency | no emulator,app,other benchmark or build/test load;never kill unrelated work |
+| Cleanup | unconditional exact-unit stop/query,MainPID0,owned processes absent;preserve timeout/errors |
+
+The existing management route must start the nonce manager with
+`systemd-run --wait --pipe --service-type=exec`,the manager settings
+above,and a clean environment running `/usr/bin/python3 -I -B` on the privately
+reviewed controller. Keep the existing supervised10second heartbeat stream open;
+EOF or35seconds without valid heartbeat cancels. Do not use a finite stdin pipe.
+After the manager exits,invoke its `finalize` mode separately through existing
+management access,with the same six path arguments and a finite timeout fitting
+the **original** activation+1520second deadline. Finalize can only read status and
+write evidence;it cannot launch units. Do not overwrite a failed finalization,
+reuse a claimed request or restart an uncertain invocation.
+
+The real workload completes its source/report/child checks,then remains alive
+at the explicit work-complete/pre-exit boundary. The manager reads actual live
+cgroup counters and publishes a hash-bound ACK; the original worker verifies it
+and exits normally. Captured counters do not substitute for original normal exit
+or independent post-exit unit/process/cgroup/deadline verification. Missing
+capture/ACK,failed/collected/default status or missing cleanup refuses qualification.
+Public verification requires this boundary attestation and original group
+absence for compile,generation and every measured attempt.
+
+Keep the reviewed controller bytes stable across candidates:read the exact
+source/nonce from the reviewed per-run request and verify them,with fixed bounds
+in code. Do not embed the qualified Git commit inside controller source:the
+profile itself pins that controller hash,which would otherwise create a circular
+commit/hash dependency. Changing the controller means a new hash, review and
+re-registration. Unknown registration or material drift fails. Do not merely
+rename a host.
+
+## How long it takes
+
+The measurement is short. A full single-sample pass takes about 3.4 minutes under
+the caps, and the invocation, family reruns included, must finish within its
+25-minute bound. q16 (request `c9c2df01…`, build 115 and stable 116) measured from
+12:44 to 12:49 CST on 2026-11-07 with two automatic reruns. Waiting for quiet
+admission is what costs wall time: that request was issued at 2026-11-06 00:49 UTC,
+its first admission attempts timed out on a busy host, and it ran about 42 hours
+later, once background work had been paused for it.
+
+## Hosted verification
+
+```bash
+python3 tool/performance/reference_receipt.py verify --repo "$checkout"
+```
+
+The required read-only job verifies request/commit ancestry/current identity,
+host/controller/SDK/dependencies/package roots/seals/import closure,caps,all input
+and log hashes,each registered sample/order/summary,both growth contracts/limits,
+the rerun plan and judgments recomputed from retained samples,and complete cleanup. Historical,
+advisory,instrumented,missing,mismatched,incomplete or over-budget results fail.
+It reads only `current/`; a first-pass miss that passed its rerun prints a CI warning.
+Documentation changes cannot rewrite original failed statuses. Missing
+qualification means blocked, not permission to disable the job or reuse old
+measure-only passes.
+
+All ordinary platform/correctness jobs remain hosted. Foreground/native-visible,
+physical-device, signing/candidate/release and live gates remain separate; a
+qualification authorizes none of them.
+
+## History
+
+Nothing below is a current step. Every sealed result keeps the meaning of the rules
+in force at its own commit.
+
+### Preamble before controller r8
+
 Implements [ADR0033](decisions/0033-controlled-reference-performance.md). No
 hardware multiplier. `limits-v1.json` SHA256 is
 `142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8`, which differs
@@ -16,24 +294,7 @@ No qualification is implied by this registration.
 The implementation is not qualified until host/controller registration,a fresh
 reference receipt and exact-source hosted CI all pass. Do not promote old samples.
 
-## Required roles
-
-- Hosted Linux/Windows/Android correctness/build/native checks remain required.
-  Hosted AOT uses `--hosted-advisory`,strict physical caps and all257metrics across
-  all3shapes. Correctness,replay,integrity,coverage,source/tool/fixture drift,
-  invalid growth contracts and incomplete child cleanup remain fatal. Only timing
-  comparisons become advisory;every raw miss/log remains. No timing rerun.
-- Controlled Farnsworth runs the **same** uninstrumented enforcing harness,without
-  measure-only/advisory/diagnostic flags. Absolute and both growth-rule sets decide
-  under the [gate rule](performance-gate.md#the-gate-rule-lee-2026-10-31): one sample,
-  no warmups, one automatic rerun of first-pass misses inside the invocation, and a
-  run fails only when the same label misses twice. Never retry-until-pass.
-- Hosted `reference-performance` independently verifies the committed bundle.
-  Missing or stale data fails;passing hosted timing never substitutes for it.
-  `releaseGateAccepted` in the standalone result means only its AOT scope,not
-  owner-signed/native-visible/release/live acceptance.
-
-## One-shot execution authority and registration
+### One-shot execution authority and registration
 
 Parent coordinates the existing authorized local executor. Use the existing
 reviewed manager/unprivileged lab route and corrected pressure controller. No
@@ -69,18 +330,6 @@ profile itself pins that controller hash,which would otherwise create a circular
 commit/hash dependency. This is one existing-manager adapter,not a request daemon
 or permission to accept jobs from untrusted callers.
 
-The per-request manager adaptation must preserve:
-
-| Control | Required |
-| --- | --- |
-| Ownership | existing verified lab UID/GID1002,unique transient manager/workload units |
-| Memory / swap / CPU / pids | 6GiB /0 /200% /128 |
-| Manager settings | RuntimeMax1500s,TimeoutStop1s,StartLimitBurst1,StartLimitIntervalinfinity,Restartno,KillModecontrol-group,OOMPolicykill |
-| Workload settings | RuntimeMax1500s,TimeoutStop19s,Restartno,KillModecontrol-group,OOMPolicykill;BindsTo+After exact nonce manager |
-| Outer qualification bound | **one invocation,25minutes from PID1 manager activation**,plus one shared20s termination cleanup (19s workload+1s manager);no external retry/extension |
-| Pressure | corrected ARC-aware stable preflight and genuine-pressure checks;global swap allocation alone is not swapping proof |
-| Concurrency | no emulator,app,other benchmark or build/test load;never kill unrelated work |
-| Cleanup | unconditional exact-unit stop/query,MainPID0,owned processes absent;preserve timeout/errors |
 
 The invocation contains any automatic family reruns within that25minute bound;a full
 pass took about 3.4 minutes under these caps (earlier receipts' seven repetitions took about
@@ -126,28 +375,8 @@ capture/ACK,failed/collected/default status or missing cleanup refuses qualifica
 Public verification now requires this boundary attestation and original group
 absence for compile,generation and every measured attempt. A bounded reap wait
 uses the original stage deadline; live/zombie residue is not ignored. A reaped
-leader receives no additional group signal; a live unreaped leader must match
-its original PID/start/session before owned cleanup.
 
-The controller fingerprints the existing invocation before the driver creates
-its fresh run directory,and verifies the created output's exact mount identity
-without symlink traversal before completion. Pre-admission blank loaded/dead
-status is pending under the original10s admission deadline; a cgroup alone does
-not prove a running process. Real failed starts and observed exits still retain
-their original status and cannot waive counter requirements.
-
-The existing management route must start the nonce manager with
-`systemd-run --wait --pipe --service-type=exec`,the manager settings
-above,and a clean environment running `/usr/bin/python3 -I -B` on the privately
-reviewed controller. Keep the existing supervised10second heartbeat stream open;
-EOF or35seconds without valid heartbeat cancels. Do not use a finite stdin pipe.
-After the manager exits,invoke its `finalize` mode separately through existing
-management access,with the same six path arguments and a finite timeout fitting
-the **original** activation+1520second deadline. Finalize can only read status and
-write evidence;it cannot launch units. Do not overwrite a failed finalization,
-reuse a claimed request or restart an uncertain invocation.
-
-## Fresh request and immutable inputs
+### Fresh request and immutable inputs
 
 Prepare a detached clean checkout at the requested policy/source commit using
 the existing reviewed SDK/locked packages. Controller,request and outputs stay
@@ -162,57 +391,8 @@ and registration. Do not modify binaries or package roots to get a pass.
 
 After the parent has reviewed the bounded controller adaptation and its hash:
 
-```bash
-python3 tool/performance/reference_receipt.py request \
-  --repo "$qualification_source" --controller "$reviewed_controller" \
-  --output "$qualification_request"
-```
 
-The request binds a fresh nonce/UTC time,exact source commit and all relevant
-tracked file bytes/modes,host-profile hash and controller path/hash. Dirty,
-untracked or nonliteral relevant source is refused. The actual controller bytes,
-environment,caps and source/request pins are rechecked during measurement.
-Receipt/docs-only descendants remain valid only when the complete relevant
-identity is unchanged and the request commit is an ancestor. Changing runtime,
-tests,assets,workflow,gate tooling,host registration or limits requires a fresh
-request/run. No generic branch-name or age-only freshness shortcut exists.
-
-### Relevant-source identity schemes
-
-Source inventories read literal Git blobs through one `cat-file --batch` process
-per identity check,requesting each distinct object ID once even when paths share
-content. The verifier checks ordered object IDs,blob type,size,content hash and
-exact framing/completeness;duplicate inventory paths or protocol responses fail.
-Worktree dirty/untracked,regular-file and literal-byte checks remain unchanged.
-This transport does not change either identity scheme or receipt bytes.
-
-The request records its identity scheme inside `relevantSource`,so the nine
-controller fields are unchanged. A receipt is always verified under the scheme it
-recorded;old receipts are never reinterpreted.
-
-- `relevant-source-v1` (no `scheme` field):every relevant file's literal bytes.
-  All receipts issued before this change,including the stable101 owner override,
-  are v1 and keep exactly that meaning.
-- `relevant-source-v2` (`scheme: relevant-source-v2`,issued by `request` from
-  now on):the same files,except that two release-version carriers are pinned
-  version-free and marked `normalized`:
-  - `pubspec.yaml`:only a single top-level `version: <value>` line
-    (`[0-9A-Za-z.+~-]`,no comment) is replaced. Any other byte,dependency,flag,
-    comment or a second/malformed version line changes the identity;
-  - `packaging/linux/com.reddraggone9.tandemlog.metainfo.xml`:only one
-    `<releases>` list made solely of `<release version date type/>` entries
-    (stable/development) is dropped. Anything else in the file,or any other
-    release markup,changes the identity.
-
-  Neither value reaches the benchmark:`lib/` does not read the version and the
-  metainfo is not compiled. A stable rename of an already qualified RC (`version:`
-  change plus the matching AppStream release list that
-  `test_linux_flatpak_metadata.py` requires) therefore keeps its qualification.
-  The verifier still requires the result's pubspec pin/seal to equal the literal
-  bytes at the request's own revision. Actual history:RC.5 `be93df2`,stable
-  `d494d9b` and `dfb2260` have three v1 identities and one v2 identity.
-
-## Results under earlier rules
+### Results under earlier rules
 
 Before 2026-10-31 each result took two warmups and five samples, and medians and maxima both
 decided. Three routes around a timing failure existed; the
@@ -249,7 +429,7 @@ in the tree as records; at this source, `verify` reads only `current/`.
 
 The last full text of these rules is `design/performance-reference-qualification.md` at `9b06f97`.
 
-## Release-owner override — stable 2026.10.7+101 only
+### Release-owner override — stable 2026.10.7+101 only
 
 The q10 qualification of `dfb2260` failed one task-own-history growth timing;its
 single official rerun q11 failed a different one
@@ -292,7 +472,7 @@ identity v2,q9's pass covers `dfb2260`,and q11 recomputed as borderline under th
 would need new code for the current result shape;`owner_override.py` left the tree with the
 rules it validated and remains in these releases' commits.
 
-## Release-owner override — prerelease 2026.10.9-rc.1+104 only
+### Release-owner override — prerelease 2026.10.9-rc.1+104 only
 
 The q4 qualification of `634cd9c` (request `ed8ff0a6`) failed three timing
 maxima: dense-food `food.product.edit.undo` (21.763ms > 20ms) and the
@@ -321,93 +501,7 @@ exactly `2026.10.9-rc.1+104`. It is not a precedent and accepts no native-visibl
 signing,candidate,release or live gate. The I/O-attribution gate rule proposed by
 the profiling report is a separate change needing Lee's approval.
 
-## Existing manager payload — no wrapper ownership change
-
-Launch **only inside** the existing manager's bounded unprivileged workload unit,
-using its curated environment and the actual Dart SDK binary:
-
-```bash
-/usr/bin/python3 "$qualification_source/tool/performance/run_gate.py" \
-  --repo "$qualification_source" --dart "$reviewed_dart" \
-  --native-library "$reviewed_native" --sqlite-library "$reviewed_sqlite" \
-  --expected-limits-sha256 142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8 \
-  --reference-request "$qualification_request" --output "$qualification_run"
-```
-
-No `--measure-only`,`--hosted-advisory` or `--diagnose-costs`. Do not set SQLite
-LD_PRELOAD on the manager/shell;the driver applies it to actual Dart/AOT children.
-The fresh output must not exist. All3shapes retain identical current state and
-initial prefixes,their module-specific history growth,all257labels,one sample and no
-warmups,first-use fixtures and complete replay/prefix/native-owner assertions. Failures
-remain raw data. Reruns follow the gate rule;nothing is discarded as an outlier.
-
-## Cleanup adapter and export
-
-After the actual controller has stopped/queried its owned units and processes,
-the local executor maps its original verified receipts into `cleanup.json`:
-
-```json
-{
-  "requestId": "EXACT_REQUEST_NONCE",
-  "controllerSHA256": "EXACT_REGISTERED_REVIEWED_CONTROLLER_HASH",
-  "ownedUnitsInactive": true,
-  "ownedProcessesAbsent": true,
-  "inputPinsUnchanged": true,
-  "withinDeadline": true,
-  "activeProcesses": 0,
-  "workloadSwapBytes": 0,
-  "oomKills": 0,
-  "completedAtUTC": "ACTUAL_UTC",
-  "deadlineUTC": "ORIGINAL_ACTUAL_UTC",
-  "errors": []
-}
-```
-
-These fields must come from actual manager/process/cgroup/pressure readbacks,
-not assertions filled by hand to satisfy a parser. Preserve the original
-controller logs and failed/uncertain cleanup. Mapping uses the existing verified
-manager controls;it must not suppress a stop/query error or relaunch uncertain work.
-
-Only after cleanup,separately from the stopped manager,seal a fresh bundle:
-
-```bash
-python3 "$qualification_source/tool/performance/reference_receipt.py" seal \
-  --repo "$qualification_source" --request "$qualification_request" \
-  --run "$qualification_run" --cleanup "$qualification_cleanup" \
-  --output "$qualification_bundle"
-```
-
-The exporter rechecks the executable hash/execute bit and all actual generated
-canonical fixture bytes,then retains the request,complete report,compile/generation/
-attempt and rerun logs,fixture manifests,cleanup and exact member hashes. It does not export
-personal data or the executable/canonical workspaces. Original raw run output stays
-with the local executor. Partial/failed export remains evidence,not qualification.
-
-Parent/reviewer examines the original manager/result evidence and the sealed
-public-synthetic metadata/logs through the existing route. Cloud independently
-verifies the bundle before committing it at
-`evidence/reference-performance/current/`;that evidence-only commit preserves the
-relevant identity. No unauthenticated `passed:true` file substitutes for the
-authorized executor and review. This is an explicit trusted-executor attestation,
-not a claim that a hash proves physical execution;no new signing key is needed.
-
-## Hosted consumption and Vex cutover
-
-```bash
-python3 tool/performance/reference_receipt.py verify --repo "$checkout"
-```
-
-The required read-only job verifies request/commit ancestry/current identity,
-host/controller/SDK/dependencies/package roots/seals/import closure,caps,all input
-and log hashes,each registered sample/order/summary,both growth contracts/limits,
-the rerun plan and judgments recomputed from retained samples,and complete cleanup. Historical,
-advisory,instrumented,missing,mismatched,incomplete or over-budget results fail.
-Documentation changes cannot rewrite original failed statuses.
-
-Run one exact relevant-source CI after fresh qualification is committed;do not
-dispatch duplicate CI while the local run is pending. All ordinary platform/
-correctness jobs remain hosted. If source changes while qualification/CI runs,
-retain the old evidence and prepare the next genuine source-bound request.
+### Hosted consumption and Vex cutover (2026-10-26)
 
 For Vex: fetch the pushed checkpoint,read the current request/profile/receipt and
 verify them before relying on a pass. Missing qualification means blocked,not
@@ -418,7 +512,7 @@ physical-device,signing/candidate/editorial/release/live-cutover gates remain op
 under their existing qualifications. The policy transition authorizes none of
 those operations or new persistent infrastructure.
 
-## Activity release qualification outcomes — 2026-10-31
+### Activity release qualification outcomes — 2026-10-31
 
 Relevant source `597476b6` (source `22baa2c`) is qualified by q3 request
 `8993c1aaa0b86d74a92b80eb91f5b8df`, the single authorized official rerun
@@ -452,7 +546,7 @@ isolate, so they now overlap. Alternating control/change, nine fresh processes e
 filesystem: `agent.write.taskComplete` 496.5 to 451.2ms, `textEdit` 492.1 to 442.9ms, `textEditUndo` 494.3 to
 439.6ms, `coldOpenTasksList` 377.4 to 331.1ms. Budgets are unchanged and this source has no qualification yet.
 
-## Controller r8: the owned ADB server stays up (2026-11-02)
+### Controller r8: the owned ADB server stays up (2026-11-02)
 
 Earlier qualifications stopped the household's `vex-adb.service` because the
 controller refused any `adb` process; stopping it drops device connections other
