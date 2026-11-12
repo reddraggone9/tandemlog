@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/tandemlog_theme.dart';
+
+import 'support/ux_capture.dart';
 
 // design/food-shelf-life.md: a Walmart receipt from 2026-11-07 seen on
 // 2026-11-09, after an earlier receipt from 2026-10-24.
@@ -134,31 +139,61 @@ Future<List<_Edit>> _pump(
   addTearDown(tester.view.resetDevicePixelRatio);
   final edits = <_Edit>[];
   await tester.pumpWidget(
-    MaterialApp(
-      theme: tandemlogTheme(Brightness.dark),
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(
-          context,
-        ).copyWith(textScaler: TextScaler.linear(textScale)),
-        child: child!,
-      ),
-      home: FoodInventoryPage(
-        state: projectFood(_events()),
-        now: () => DateTime(2026, 11, 9, 9),
-        onAdd: (details, count) => adds?.add((details, count)),
-        onRemove: (_) {},
-        onRestore: (_) {},
-        onDetails: (items, details, fields, products) => edits.add((
-          ids: items.map((e) => e.id).toList(),
-          details: details,
-          fields: fields,
-          products: products,
-        )),
+    RepaintBoundary(
+      key: const ValueKey('ux-root'),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: tandemlogTheme(Brightness.dark),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          child: child!,
+        ),
+        home: FoodInventoryPage(
+          state: projectFood(_events()),
+          now: () => DateTime(2026, 11, 9, 9),
+          onAdd: (details, count) => adds?.add((details, count)),
+          onRemove: (_) {},
+          onRestore: (_) {},
+          onDetails: (items, details, fields, products) => edits.add((
+            ids: items.map((e) => e.id).toList(),
+            details: details,
+            fields: fields,
+            products: products,
+          )),
+        ),
       ),
     ),
   );
   await tester.pumpAndSettle();
   return edits;
+}
+
+/// Readable text in review captures; ordinary runs keep the test font.
+Future<void> _loadRoboto() async {
+  var directory = File(Platform.resolvedExecutable).parent;
+  while (true) {
+    final fonts = Directory(
+      '${directory.path}/bin/cache/artifacts/material_fonts',
+    );
+    if (await File('${fonts.path}/Roboto-Regular.ttf').exists()) {
+      final loader = FontLoader('Roboto');
+      for (final weight in ['Regular', 'Medium', 'Bold']) {
+        final font = File('${fonts.path}/Roboto-$weight.ttf');
+        if (await font.exists()) {
+          loader.addFont(
+            Future.value(ByteData.sublistView(await font.readAsBytes())),
+          );
+        }
+      }
+      await loader.load();
+      return;
+    }
+    final parent = directory.parent;
+    if (parent.path == directory.path) throw StateError('Roboto not found');
+    directory = parent;
+  }
 }
 
 final _offer = find.byKey(const ValueKey('food-expiry-offer'));
@@ -493,6 +528,49 @@ void main() {
     expect(tops, [...tops]..sort());
     expect(tops.toSet(), hasLength(tops.length));
   });
+
+  // Widget-test renders for review (TANDEMLOG_UX_CAPTURES=<dir>): the real
+  // Food page and editor, production dark theme, synthetic data.
+  for (final scale in [1.0, 2.0]) {
+    final tag = scale == 1 ? '' : '-2x-text';
+    testWidgets('review captures at ${scale}x text', (tester) async {
+      const phone = Size(412, 892);
+      if (Platform.environment['TANDEMLOG_UX_CAPTURES'] != null) {
+        await tester.runAsync(() async {
+          await loadUxIcons();
+          await _loadRoboto();
+        });
+      }
+      await _pump(tester, size: phone, textScale: scale);
+      await captureUx(tester, 'keeps-for-01-list$tag');
+      await _open(tester, 'Strawberries');
+      await captureUx(tester, 'keeps-for-02-estimated-row$tag');
+      await tester.enterText(_expiration, '2026-11-12');
+      await tester.pumpAndSettle();
+      await captureUx(tester, 'keeps-for-03-changed-estimate$tag');
+      await tester.pumpWidget(const SizedBox());
+      await _pump(tester, size: phone, textScale: scale);
+      await _open(tester, 'Mango');
+      await tester.enterText(_expiration, '2026-11-19');
+      await tester.pumpAndSettle();
+      await captureUx(tester, 'keeps-for-04-remember$tag');
+      await tester.pumpWidget(const SizedBox());
+      await _pump(tester, size: phone, textScale: scale);
+      await _open(tester, 'Greek yogurt');
+      await captureUx(tester, 'keeps-for-05-like-last-time$tag');
+      await tester.pumpWidget(const SizedBox());
+      await _pump(tester, size: phone, textScale: scale);
+      await tester.tap(find.byTooltip('Add food'));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Food name'),
+        'Carrots, cut',
+      );
+      await tester.pumpAndSettle();
+      await captureUx(tester, 'keeps-for-06-add-autofill$tag');
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   for (final (width, scale) in [(412.0, 1.0), (412.0, 2.0), (360.0, 2.0)]) {
     testWidgets('offers fit a ${width.toInt()} dp phone at ${scale}x text', (
