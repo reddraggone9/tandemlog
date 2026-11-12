@@ -2,13 +2,13 @@
 
 ## Current workspace and device names
 
-[The coordinated-cutover decision](decisions/0031-coordinated-unified-cutover.md) is implemented under validation. Current workspaces have no in-app upgrade wizard or timezone opt-in. Newly supported timezone names establish their required operation revision when first saved. Startup, draft selection and Cancel write no compatibility metadata; incompatible older readers must update.
+[The coordinated-cutover decision](decisions/0031-coordinated-unified-cutover.md) shipped in stable 2026.10.7; Lee authorized the live cutover on 2026-10-27. Current workspaces have no in-app upgrade wizard or timezone opt-in. Newly supported timezone names establish their required operation revision when first saved. Startup, draft selection and Cancel write no compatibility metadata; incompatible older readers must update.
 
 Settings offers an optional Device name, up to80characters; blank clears it. The immutable short installation ID remains visible. Equal labels are allowed and do not decide ownership/deduplication. Existing validation, IME, keyboard/viewport reveal and one-shot route rules remain.
 
 Tasks/Food share one admitted revision. Unknown complete required effects or corruption stop both sections. The current session retains exact uncertain-write/native ownership; restart forgets unfinished intent. Fully appended valid actions remain canonical. Drafts and session Undo stacks do not survive restart; recorded Undo and native text lineage do.
 
-Live conversion is coordinated externally with frozen accepted copies, explicit writer mapping and immutable originals. Implementation approval does not authorize adoption of converted production data. New exact native acceptance remains pending.
+Converting a workspace written by 2026.10.6 or earlier is coordinated outside the app with frozen accepted copies, explicit writer mapping and immutable originals (see the README's upgrade note).
 
 ## Released local sections and Food refinements
 
@@ -18,9 +18,9 @@ Food keeps Stock/Retained/Deleted choices. **More filters…** contains Brand an
 
 
 The approved second capability is [food inventory](decisions/0014-food-inventory.md).
-Its scope is separate from tasks. Its first experimental prerelease uses production
-navigation and the shared profile DB. The accepted next preview combines undated,
-unretained Inbox food at the top of Stock, keeps retained food exclusively
+Its scope is separate from tasks. It uses production navigation and the shared
+profile DB. Stock lists undated,
+unretained Inbox food at the top, keeps retained food exclusively
 Retained, and uses Filter for Stock/Retained/Deleted choices. **Search food** matches all food regardless of saved Stock/Retained/Deleted or
 retention-reason filters. Active matches keep their ordinary ordering; deleted
 matches follow in a separate sticky **Deleted** group, ordered by deletion
@@ -31,8 +31,8 @@ menu retains app-wide user switching and Settings. Expiration date text uses
 local-calendar red/orange/yellow urgency thresholds with theme-readable tones for
 active and retained food. Deleted rows use neutral secondary date text in Deleted
 and all-status search; Restore returns them to the normal urgency colors.
-[Accepted Food refinement](decisions/0017-food-stock-and-toolbar-refinements.md)
-requires fresh native and release gates. Manual Food Add/detail editing requires
+[Food Stock refinement](decisions/0017-food-stock-and-toolbar-refinements.md).
+Manual Food Add/detail editing requires
 expiration using the shared Tasks date input/picker; undated records remain
 readable, Cancel retains them and unrelated fieldwise edits preserve untouched
 dates. Other descriptive fields remain optional without optional label suffixes.
@@ -44,8 +44,9 @@ Food Edit, Add and Add another use a side pane at section widths of at least
 cap and toolbar edges; inventory uses the remaining width. Resizing retains one
 draft, caret/composition and focus. Row/section/workspace changes resolve it first.
 Add another copies descriptive fields with count 1, blank focused expiration and
-blank retention. Bulk editing stays modal; row Remove/Restore stays
-separate from draft editing. [Rationale](decisions/0025-food-responsive-editor-pane.md).
+blank retention. At the same widths a bulk selection opens the bulk editor in the
+side pane straight away, as on Tasks (Lee, 2026-10-28); narrower windows use the
+selection bar's Edit and a dialog. Row Remove/Restore stays separate from draft editing. [Rationale](decisions/0025-food-responsive-editor-pane.md).
 
 ## Accepted direction
 
@@ -60,7 +61,7 @@ does not invent a value. The existing X clears time and retains its date.
 Controls stack when width or larger text requires it. Tags and Assignee follow
 all scheduling content, before actions, in single and bulk editors. [Layout rationale](decisions/0009-date-and-optional-time-rows.md).
 
-Offline household task management first. Windows and Android are the first intended user platforms. Food inventory is the approved second capability; future modules include games, nutrition logging, and assisted input. Time tracking is undecided and excluded.
+Offline household task management first. Windows and Android are the first intended user platforms. Food inventory is the approved second capability; future modules include games, nutrition logging, and assisted input. Time tracking was dropped ([deferred directions](time-tracking-deferred.md)).
 
 The current section identity in the toolbar opens the Tasks/Food menu. Wide
 layouts show its icon, name and downward triangle; sufficiently narrow layouts
@@ -74,18 +75,19 @@ Wide Add and Filter actions share an outlined style. Active filters use the same
 small dot plus an accessible active-filter description, without numeric badges
 or a layout shift; Food pauses every filter while searching; Tasks retains its existing active-filter conditions. [Approved rationale](decisions/0015-toolbar-section-navigation.md).
 
-The accepted next preview defaults to one full-width **Search tasks** input.
+Tasks defaults to one full-width **Search tasks** input.
 The toolbar's plus **Add** action switches it to **What needs doing?**; the
 magnifier **Search** action switches back. Wide actions may show their names;
-narrow actions keep full accessible descriptions and touch targets. Explicit
-mode changes clear outgoing text and remove any outgoing search query while
-keeping chosen filters. Pending submitted captures retain their confirmation/
+narrow actions keep full accessible descriptions and touch targets. An explicit
+mode change carries the typed text into the other input and pauses Search while
+in Add, keeping chosen filters ([ADR0034](decisions/0034-bounded-ux-refinements.md)
+replaced the earlier clearing rule). Pending submitted captures retain their confirmation/
 retry ownership and block the switch. Successful capture stays in Add for
 repeated entry. Default Search does not summon the keyboard on section navigation;
 deliberate Add focuses entry. Task-editor draft guards remain separate.
-[Accepted rationale](decisions/0016-task-search-and-add-input.md).
+[Original rationale](decisions/0016-task-search-and-add-input.md).
 
-The first slice is folder/user selection, capture, edit, complete, undo, persistence, and convergence tests. Recurrence, reminders, deletion, advanced dates, floating priorities, manual shared sorting, and other modules are outside this slice.
+The first slice was folder/user selection, capture, edit, complete, undo, persistence, and convergence tests. Recurrence, reminders, deletion, advanced dates, floating priorities, manual shared sorting, and other modules are outside this slice.
 
 ## Platform verification milestone M0 — remove platform uncertainty
 
@@ -141,13 +143,13 @@ Title and quieter metadata are content-sized blocks in a wrapping layout: share 
 
 Settings **Check data integrity** is an explicit full audit of the current canonical chains and any retained previous-history baseline. Show a scrollable/selectable report with affected log, record and byte offset where known, and Copy report. It writes no canonical events or repairs, preserves drafts/edits/selection/Undo, and may import valid arriving records normally. Ordinary startup remains incremental. The report distinguishes consistency from authentication and remote sync; [ADR 0007](decisions/0007-canonical-history-integrity.md) specifies the limits.
 
-## Current milestone M2 — Markdown task parity
+## Milestone M2 — Markdown task parity (complete)
 
 Separate start/scheduled/due dates with optional times and a shared Local or explicit IANA zone, spelling-preserving tags, shared relative manual ordering and all 37 observed recurrence forms. Keep date precision rather than fabricate midnight/end-of-day timestamps. Start must not follow due; derive date-only due as the exclusive beginning of the following day. The entire coupled schedule is one validated register, so concurrent field edits cannot produce an invalid hybrid.
 
-Completion writes its successor proposal atomically. Recurrence uses the configured removal of scheduled date and places the successor before completed history. Reopening history preserves the successor; recompleting does not duplicate it. The compact list retains one preview line and full title wrapping; details remain in the editor. Notifications and general planner views remain outside this candidate. Renderer parity now requires the time-dependent visibility and effective-date ordering below.
+Completion writes its successor proposal atomically. Recurrence uses the configured removal of scheduled date and places the successor before completed history. Reopening history preserves the successor; recompleting does not duplicate it. The compact list retains one preview line and full title wrapping; details remain in the editor. Notifications and general planner views remain out of scope. Renderer parity now requires the time-dependent visibility and effective-date ordering below.
 
-See [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md) for reasons, temporal/recurrence rules, event-clock correction and the explicit prerelease compatibility break. Private one-off migration tooling is outside the app repository and release scope. It validates domain-only round trips against a copied snapshot; Markdown remains authoritative until the coordinated stable cutover.
+See [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md) for reasons, temporal/recurrence rules, event-clock correction and the explicit prerelease compatibility break. Private one-off migration tooling is outside the app repository and release scope. It validated domain-only round trips against a copied snapshot; tasks moved from Markdown to Tandemlog on 2026-10-04.
 
 
 ## Effective date and availability — accepted renderer parity
@@ -230,7 +232,7 @@ or restart clears it. Failed originals and inverses retain exact protected recei
 until fully admitted. Task Undo callbacks remain unavailable in Food. See
 [Food Undo contract and downgrade recovery](decisions/0018-food-session-undo.md).
 
-Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions. Checkbox Reopen retains recurring successors; true Undo of recurring completion retracts an untouched successor proposal while preserving independently changed or referenced successor work. Late-arriving work restores its protected successor deterministically. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. No per-event actor attribution or audit UI is implemented.
+Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions. Checkbox Reopen retains recurring successors; true Undo of recurring completion retracts an untouched successor proposal while preserving independently changed or referenced successor work. Late-arriving work restores its protected successor deterministically. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. Changes are attributed to the writing device, not a person (Lee, 2026-11-02); the read-only [Activity log](activity-log.md) shows them.
 
 
 ## Approved one-level checklists
@@ -250,8 +252,7 @@ preference in the existing cache metadata; losing the cache resets it.
 Unfinished items trigger a warn-but-allow parent completion dialog; incoming
 changes renew consent before bytes are prepared. The operation stays guarded
 while this dialog awaits a decision, without showing pending-write progress.
-See [ADR0011](decisions/0011-one-level-checklists.md). The revised inline workflow
-is under native acceptance; publication and stable promotion remain separate.
+See [ADR0011](decisions/0011-one-level-checklists.md).
 
 ## Completion eligibility and reorder continuity — RC5 follow-up
 
@@ -301,7 +302,7 @@ Food and Tasks share one selection rule set ([batch selection](batch-selection.m
 
 Tasks and Food share compact flat row surfaces with subtle dividers and hover, pressed and keyboard-focus feedback. Below600px row surfaces reach the content edges while internal padding and separate controls retain their sizes; wider lists retain16px outer insets. Shared search alignment and the1450px content limit remain unchanged. [ADR0023](decisions/0023-shared-list-row-surfaces.md) records this presentation boundary.
 
-Food uses flat whole-container rows. Row tap/click/Enter edits the entire observed group; Space toggles its selection, as on Task rows. The dedicated button removes one container, or restores one in Deleted. The ellipsis and desktop secondary click share Add another, Select/Deselect, Move some… on active rows with at least two containers, plus Remove/Restore of the entire observed group. There are no expandable groups, contents controls, split-group editor or edit-count interface. Rows show name and container count, then expiration · location · retention reason, then brand · size. A linked product adds Open store link to the row menu, without another row button. [ADR 0022](decisions/0022-food-whole-container-rows.md) records the accepted scope, symmetric quantities and compatibility boundary.
+Food uses flat whole-container rows. Row tap/click/Enter edits the entire observed group; Space toggles its selection, as on Task rows. The dedicated button removes one container, or restores one in Deleted. The ellipsis and desktop secondary click share Add another, Select/Deselect, Move some… on active rows with at least two containers, plus Remove/Restore of the entire observed group. There are no expandable groups, contents controls, split-group editor or edit-count interface. Rows show name and container count, then expiration · location · retention reason, then brand · size. A linked product adds Open *store* link ("Open Walmart link", or the link's host for unknown stores) to the row menu, without another row button. [ADR 0022](decisions/0022-food-whole-container-rows.md) records the accepted scope, symmetric quantities and compatibility boundary.
 
 **Move some…** (Lee, 2026-10-29) asks how many containers (1 to the row's current count; default 1) and a new Location, using the editor's Location suggestions, with errors beside each field: a count outside the range, or the row's own location. Move applies one Location edit to that many of the row's current containers, so they form their own row; it is one host command and one session Undo action. Moving all of them equals editing the row's Location. Retention reason is not split this way. Cancel writes nothing. This replaces Add another plus Remove one per container as the only way to split a row.
 
@@ -331,11 +332,11 @@ the selected reasons.
 
 ## Form feedback and scheduling guidance
 
-The accepted [field help and validation decision](decisions/0026-field-help-validation-and-occurrence-due.md) applies neutral fresh actions, local blur/review errors and synchronized revealed-error and action state after committed corrections across Task/Food/checklist/setup/user forms, with the approved simple-input exceptions above. Task field guidance is in one scrollable help surface. This occurrence shares the responsive date/optional-Time pattern. The same decision records the approved existing-occurrence-to-Due conversion, conflict preservation and accepted prerequisite-removal interaction. Those features shipped experimentally in RC.1/RC.2. Immediate synchronization of the corrected action with revealed field errors is in progress for the next candidate.
+The accepted [field help and validation decision](decisions/0026-field-help-validation-and-occurrence-due.md) applies neutral fresh actions, local blur/review errors and synchronized revealed-error and action state after committed corrections across Task/Food/checklist/setup/user forms, with the approved simple-input exceptions above. Task field guidance is in one scrollable help surface. This occurrence shares the responsive date/optional-Time pattern. The same decision records the approved existing-occurrence-to-Due conversion, conflict preservation and accepted prerequisite-removal interaction. These shipped in stable 2026.10.7.
 
-### Food products (prerelease 2026.10.9-rc.1; approved RC.2 presentation follow-up)
+### Food products (stable 2026.10.9)
 
-Settled by Lee on 2026-10-27; rationale and method in [Food as products](food-products.md). Containers belong to a product; existing containers belong to the product their name/brand/size describe, so rows look the same after the upgrade. Rows group one product's containers with equal expiration, retention and location. Name, Brand and Container size edit the product, so a fix reaches every container of it; the row editor says "Also changes N other containers" when there are any, and renaming into another product's exact description merges the two ("Merges with N containers of …"; one Undo). The bulk editor's Name/Brand/Container size edit the selected products the same way, so applying one name unifies them. The row editor adds Store link (with an open button) and Keep at least, and shows "Last … · store · date · typical …" once purchases exist. Products below Keep at least enable a Running low view in the Stock/Retained/Deleted menu and a warning dot on the closed filter button. That view has product rows with name and warning-colored "1 of 3", then brand · size, plus a linked open button and Add another; no container expiration/location/retention line. There is no low-stock section in Stock. When the low set empties, the active view falls back to Stock. Add suggests existing products and joins one whose description matches, ignoring case. Receipt imports (Vex's YNAB workflow) link recent hand entries of the product and create the remaining purchased containers in the Inbox. Food rows support Up/Down focus and Shift+Up/Down range selection; at pane widths a selection opens the bulk editor in the side pane. Older installations stop with "Update the app" once a product record arrives.
+Settled by Lee on 2026-10-27; rationale and method in [Food as products](food-products.md). Containers belong to a product; existing containers belong to the product their name/brand/size describe, so rows look the same after the upgrade. Rows group one product's containers with equal expiration, retention and location. Name, Brand and Container size edit the product, so a fix reaches every container of it; the row editor says "Also changes N other containers" when there are any, and renaming into another product's exact description merges the two ("Merges with N containers of …"; one Undo). The bulk editor's Name/Brand/Container size edit the selected products the same way, so applying one name unifies them. The row editor adds Store link (with an open button) and Keep at least, and shows "Last … · store · date · typical …" once purchases exist. Products below Keep at least enable a Running low view in the Stock/Retained/Deleted menu and a warning dot on the closed filter button. That view has product rows with name and warning-colored "1 of 3", then brand · size, plus a store-link button named for the store ("Walmart") and Add another; no container expiration/location/retention line. There is no low-stock section in Stock. When the low set empties, the active view falls back to Stock. Add suggests existing products and joins one whose description matches, ignoring case. Receipt imports (Vex's YNAB workflow) link recent hand entries of the product and create the remaining purchased containers in the Inbox. Food rows support Up/Down focus and Shift+Up/Down range selection; at pane widths a selection opens the bulk editor in the side pane. Older installations stop with "Update the app" once a product record arrives.
 
 ### 2026-10-26 Food and date-entry refinements
 
