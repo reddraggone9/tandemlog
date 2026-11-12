@@ -165,6 +165,10 @@
     "food.product.import.dryRun",
     "food.product.import.retry",
     "food.product.import.undo",
+    "food.product.keepsFor",
+    "food.product.keepsFor.undo",
+    "food.product.importEstimated.commit",
+    "food.product.importEstimated.undo",
     "food.product.merge",
     "food.product.merge.undo",
     "food.restore.1",
@@ -342,7 +346,7 @@
       "interaction": "Food descriptive edit single/bulk (Location and Retention reason per container; Food name, Brand and Container size edit the product, merging coincident descriptions)",
       "productionAPI": "changeDetails(ids,details,fields,products: FoodProductChange) -> planFoodProductChanges",
       "actualUIPath": "main.dart:1092; food_editor.dart bulk Save",
-      "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending. Product-level name/brand/size/link/minimum edits and merges are measured by food.product.edit, bulkEdit, merge and their .undo labels with prospective unchanged 15ms median/20ms maximum limits; see food-products family for correctness and native/UI gaps."
+      "boundary": "food.details.1/3 and .undo measure and assert all five bulk-editable fields with unchanged limits. Widget food_bulk_edit_fields_test covers applied/mixed fields; one-Undo store/replay correctness there too. Native bulk-editor visible response pending. Product-level name/brand/size/link/minimum edits and merges are measured by food.product.edit, bulkEdit, merge and their .undo labels with prospective unchanged 15ms median/20ms maximum limits; see food-products family for correctness and native/UI gaps. Setting Keeps for from the single-row editor (typed, or via the Remember offer) is the same changeDetails call, timed by food.product.keepsFor and .undo with the same limits."
     },
     {
       "interaction": "Food row \u22ee Move some\u2026: how many + new Location, splitting them into their own row; session Undo",
@@ -471,10 +475,10 @@
       "boundary": "No storage action before editor Save. Header/fast-month tests cover month menu, year menu to month grid, paging, leap/clamp/cancel/pending-day and content-sized dialog; native popup and selected-month visible-response timing pending."
     },
     {
-      "interaction": "Food receipt purchase import (Vex YNAB workflow; links recent hand entries, creates Inbox containers)",
+      "interaction": "Food receipt purchase import (Vex YNAB workflow; links recent hand entries, creates Inbox containers; products with Keeps for arrive dated and estimated, all with the usual location)",
       "productionAPI": "FoodStore.dryRunPurchaseImport/commitPurchaseImport -> planFoodPurchaseImport",
       "actualUIPath": "No app UI caller; private tooling only",
-      "boundary": "food.product.import.dryRun/commit/retry/undo measure the two-line private-tooling path, with correctness/replay assertions and unchanged prospective 15ms median/20ms maximum limits. Background-free; no app UI caller. Maximum-line and native/UI gaps remain in the food-products family."
+      "boundary": "food.product.import.dryRun/commit/retry/undo measure the two-line private-tooling path, with correctness/replay assertions and unchanged prospective 15ms median/20ms maximum limits. Background-free; no app UI caller. Maximum-line and native/UI gaps remain in the food-products family. food.product.importEstimated.commit/undo time a one-line import whose two new containers are prefilled from Keeps for and the usual location (same limits)."
     },
     {
       "interaction": "Food Running low dropdown view (products below Keep at least)",
@@ -506,6 +510,12 @@
       "productionAPI": "activityEntries(UnifiedSnapshot)",
       "actualUIPath": "main.dart identity menu; presentation/activity_log.dart",
       "boundary": "AOT activity.read.derive times published-row derivation and sorting, asserts uniqueness/order/canonical immutability across all3 shapes. Native open-to-visible, scroll/details and incoming refresh remain required; no closed-log work. Details Open checks one item on opening details (task: one projection under current filters, at most 8 more when they hide it; food: at most 3 unfiltered row compositions) and then reuses the timed row-tap paths. User identity was not recorded; installation labels are advisory."
+    },
+    {
+      "interaction": "Food Add / Add another autofill of Expiration (today + Keeps for) and Location (usual location); row editor offers under Expiration (Remember, Like last time) and calendar start date",
+      "productionAPI": "FoodEditorState._autofill/_expiryOffer -> foodUsualLocation/foodSuggestedExpiry/FoodKeepsFor (one pass over the product's containers)",
+      "actualUIPath": "lib/food/food_editor.dart; lib/food/shelf_life.dart",
+      "boundary": "No write before Save; Save is the existing food.add / food.details / food.product paths. food_shelf_life_ui_test drives typing, offers, calendar and Save at 412/360 dp and 2x text. Native input-to-visible timing pending; no budget change."
     }
   ],
   "actualUITimingAccepted": false,
@@ -620,17 +630,22 @@
       "food.product.import.dryRun",
       "food.product.import.commit",
       "food.product.import.retry",
-      "food.product.import.undo"
+      "food.product.import.undo",
+      "food.product.keepsFor",
+      "food.product.keepsFor.undo",
+      "food.product.importEstimated.commit",
+      "food.product.importEstimated.undo"
     ],
     "repetitions": "The single sample (no warmups) starts from a separate fresh sealed fixture copy, retaining original imported Food1000 (small60 functional-only Food4).",
-    "boundary": "Production changeDetails with FoodProductChange (implicit first edit; mixed bulk two roots; rename-to-existing merge), add matching renamed product (three revision2 linked containers), dryRunPurchaseImport and commitPurchaseImport (two lines: existing product matched hand entry plus new product/three Inbox containers); exact confirmation and FoodUndoHistory in timed writes/Undo.",
-    "correctness": "Full containers/catalog/products/aliases/purchases including voided state; exact purchase values/links and counts; read-only dry-run and idempotent retry; Undo to full prior state; active-state reopen before each inverse; fresh-profile canonical replay of still-active explicit product seed; Tasks unchanged, original prefixes and peers retained.",
-    "budgets": "Prospective15ms median/20ms maximum, all3shapes, comparable existing Food details/add/Undo; both ordinary growth pairs unchanged1.25x+3ms /1.4x+5ms. No measurements used to choose budgets.",
+    "boundary": "Production changeDetails with FoodProductChange (implicit first edit; mixed bulk two roots; rename-to-existing merge), add matching renamed product (three revision2 linked containers), dryRunPurchaseImport and commitPurchaseImport (two lines: existing product matched hand entry plus new product/three Inbox containers); exact confirmation and FoodUndoHistory in timed writes/Undo. Shelf life (design/food-shelf-life.md): changeDetails setting the product's Keeps for (product.edit revision 2), then commitPurchaseImport of one existing-product line creating two prefilled Inbox-bypassing containers (container.add revision 3: estimated date and usual location); Keeps for is set again outside timers before the import and undone after it.",
+    "correctness": "Full containers/catalog/products/aliases/purchases including voided state; exact purchase values/links and counts; read-only dry-run and idempotent retry; Undo to full prior state; active-state reopen before each inverse; fresh-profile canonical replay of still-active explicit product seed; Tasks unchanged, original prefixes and peers retained. Keeps for value after Save and after Undo; both estimated containers carry purchase day + Keeps for, estimated true and the product's usual location.",
+    "budgets": "Prospective15ms median/20ms maximum, all3shapes, comparable existing Food details/add/Undo; both ordinary growth pairs unchanged1.25x+3ms /1.4x+5ms. No measurements used to choose budgets. The four shelf-life labels (added 2026-11-12) take the same prospective 15ms/20ms and growth limits before any measurement.",
     "gaps": [
       "No actual widget/input/paint timing acceptance.",
       "Two-line receipt distribution only; maximum500-line import not timed.",
       "No separate timing distributions for large bulk selections or deep/concurrent merge chains.",
-      "Concurrent offline receipt allocation and its rare targeted full-admission fallback are correctness-covered, not a separate timing distribution."
+      "Concurrent offline receipt allocation and its rare targeted full-admission fallback are correctness-covered, not a separate timing distribution.",
+      "Shelf life: dry run and retry of an estimating import reuse the timed import labels' code path and are not timed separately; Add autofill, the offers under Expiration and est. row rendering are UI-only (no write before Save) and have widget coverage in food_shelf_life_ui_test, with native visible-response timing pending."
     ]
   },
   "agentCliContract": {

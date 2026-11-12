@@ -407,7 +407,7 @@ jobs:
           mkdir "$RUNNER_TEMP/performance-diagnostics"
           # Hosted correctness/bindings remain mandatory; timing stays advisory with no
           # rerun. The same limits qualify separately on the controlled reference host.
-          limits_sha="142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8"
+          limits_sha="6045b956a7cc2392716da847927ddc3213a9fa8723f0a8a48b3f09a3a2eb90fc"
           mode=(--hosted-advisory)
           if [[ "${{ inputs.performance_calibration }}" == true ]]; then
             mode=(--measure-only)

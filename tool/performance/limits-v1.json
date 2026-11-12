@@ -992,6 +992,22 @@
         "medianMs": 15,
         "maxMs": 20
       },
+      "food.product.keepsFor": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.keepsFor.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.importEstimated.commit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.importEstimated.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
       "food.moveSome": {
         "medianMs": 15,
         "maxMs": 20
@@ -2022,6 +2038,22 @@
         "medianMs": 15,
         "maxMs": 20
       },
+      "food.product.keepsFor": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.keepsFor.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.importEstimated.commit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.importEstimated.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
       "food.moveSome": {
         "medianMs": 15,
         "maxMs": 20
@@ -3049,6 +3081,22 @@
         "maxMs": 20
       },
       "food.product.import.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.keepsFor": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.keepsFor.undo": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.importEstimated.commit": {
+        "medianMs": 15,
+        "maxMs": 20
+      },
+      "food.product.importEstimated.undo": {
         "medianMs": 15,
         "maxMs": 20
       },
@@ -4573,6 +4621,30 @@
         "maximumAdditiveMs": 5
       },
       "food.product.import.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.keepsFor": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.keepsFor.undo": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.importEstimated.commit": {
+        "maxMedianRatio": 1.25,
+        "medianAdditiveMs": 3,
+        "maxMaximumRatio": 1.4,
+        "maximumAdditiveMs": 5
+      },
+      "food.product.importEstimated.undo": {
         "maxMedianRatio": 1.25,
         "medianAdditiveMs": 3,
         "maxMaximumRatio": 1.4,
@@ -6123,6 +6195,30 @@
           "maximumAdditiveMs": 5
         },
         "food.product.import.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.keepsFor": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.keepsFor.undo": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.importEstimated.commit": {
+          "maxMedianRatio": 1.25,
+          "medianAdditiveMs": 3,
+          "maxMaximumRatio": 1.4,
+          "maximumAdditiveMs": 5
+        },
+        "food.product.importEstimated.undo": {
           "maxMedianRatio": 1.25,
           "medianAdditiveMs": 3,
           "maxMaximumRatio": 1.4,
