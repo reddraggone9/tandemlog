@@ -124,7 +124,7 @@ String? foodSuggestedExpiry(FoodState state, FoodContainer container) {
     if (c.id == container.id ||
         day == null ||
         expiry == null ||
-        c.details.estimated == true ||
+        c.estimate ||
         _civil(expiry).difference(_civil(day)).inDays < 1) {
       continue;
     }

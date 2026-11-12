@@ -894,7 +894,7 @@ void main() {
         );
         final rows = food.state.view(FoodView.inventory);
         expect(rows, hasLength(2));
-        expect(rows.map((g) => g.details.estimated).toSet(), {true, false});
+        expect(rows.map((g) => g.estimate).toSet(), {true, false});
         expect(rows.map((g) => g.rowKey).toSet(), hasLength(2));
       });
     });

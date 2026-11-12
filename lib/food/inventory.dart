@@ -66,14 +66,8 @@ class FoodDetails {
     'size': size,
   };
   String get groupKey => canonicalDataJson(toJson());
-
-  /// Estimated dates (imports dated from the product's Keeps for) form their
-  /// own row, so a row's `est.` is true of every container in it.
-  String get displayGroupKey => canonicalDataJson(
-    toJson()
-      ..remove('estimated')
-      ..addAll({if (estimated == true && expiry != null) 'estimated': true}),
-  );
+  String get displayGroupKey =>
+      canonicalDataJson(toJson()..remove('estimated'));
   void validate() {
     _text(name, 500, required: true);
     for (final value in [brand, retention, location, size]) {
@@ -551,6 +545,7 @@ class FoodContainer {
     this.productLink,
     this.purchase,
     this.placedOrder = 0,
+    this.prefilled = false,
     String? product,
   }) : deletions = Set.unmodifiable(deletions),
        contentsEdits = Map.unmodifiable(contentsEdits),
@@ -575,6 +570,15 @@ class FoodContainer {
 
   /// Clock of the operation that last set this container's Location.
   final int placedOrder;
+
+  /// Born from a receipt with its location or date filled in by the app.
+  final bool prefilled;
+
+  /// The date is the app's estimate (purchase day + the product's Keeps for)
+  /// and the user has not changed it. Legacy certainty values on other
+  /// containers stay hidden (ADR0014, 2026-10-11).
+  bool get estimate =>
+      prefilled && ownDetails.estimated == true && ownDetails.expiry != null;
 
   /// The product this container names: explicit, else implicit.
   late final String productRef =
@@ -610,6 +614,7 @@ class FoodContainer {
     contentsEdits: contentsEdits,
     productLink: productLink,
     placedOrder: placedOrder,
+    prefilled: prefilled,
     product: _product,
   );
 
@@ -639,6 +644,7 @@ class FoodContainer {
       productLink: productLink,
       purchase: purchase,
       placedOrder: placedOrder,
+      prefilled: prefilled,
       product: root,
     );
   }
@@ -665,12 +671,16 @@ class FoodGroup {
   FoodDetails get details => containers.first.details;
   String get product => containers.first.product;
 
+  /// Every container's date is the app's estimate; such rows group apart.
+  bool get estimate => containers.first.estimate;
+
   /// The product part of this row's identity; empty while every product is
   /// implicit, where the description already identifies it.
   final String productKey;
 
   /// Distinguishes rows of different products with equal descriptions.
-  String get key => '$productKey\n${details.displayGroupKey}';
+  String get key =>
+      '$productKey\n${details.displayGroupKey}${estimate ? '\nest' : ''}';
 
   /// Row identity: product, description, expiry, retention, location and
   /// deletion status. A selected row means whichever containers have it now.
@@ -1060,6 +1070,7 @@ FoodState projectFood(
         productLink: productLink,
         purchase: purchase,
         placedOrder: placedOrder,
+        prefilled: seed.link?['prefill'] == true,
       ),
     );
   }
@@ -1115,14 +1126,15 @@ FoodState projectFood(
 
 String foodRowKey(FoodContainer item, String productKey) =>
     '${item.deleted ? 'deleted' : 'active'}:$productKey\n'
-    '${item.details.displayGroupKey}';
+    '${item.details.displayGroupKey}${item.estimate ? '\nest' : ''}';
 
 List<FoodGroup> _group(Iterable<FoodContainer> values, bool products) {
   final grouped = <String, List<FoodContainer>>{};
   for (final item in values) {
     grouped
         .putIfAbsent(
-          '${item.details.displayGroupKey}\n${products ? item.product : ''}',
+          '${item.details.displayGroupKey}\n${products ? item.product : ''}'
+          '${item.estimate ? '\nest' : ''}',
           () => [],
         )
         .add(item);
