@@ -599,7 +599,12 @@ class FoodStore {
             containers,
             details: details,
             contents: const Contents.fraction(1, 1),
-            link: {'product': product, 'purchase': purchase},
+            link: {
+              'product': product,
+              'purchase': purchase,
+              if (details.expiry != null || details.location.isNotEmpty)
+                'prefill': true,
+            },
           ),
       },
   ];

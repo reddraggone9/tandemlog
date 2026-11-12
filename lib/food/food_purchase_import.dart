@@ -210,6 +210,8 @@ class FoodPurchaseLineReport {
     required List<String> matched,
     required List<String> created,
     this.newProduct = false,
+    this.expiry,
+    this.location = '',
   }) : matched = List.unmodifiable(matched),
        created = List.unmodifiable(created);
   final String purchase, product;
@@ -218,6 +220,11 @@ class FoodPurchaseLineReport {
   /// Recent hand entries linked to this purchase, and new Inbox containers.
   final List<String> matched, created;
   final bool newProduct;
+
+  /// What the new containers arrive with: a date estimated from the product's
+  /// Keeps for (null: undated, in the Inbox) and its usual location.
+  final String? expiry;
+  final String location;
 }
 
 enum FoodPurchaseImportStatus { ready, committed }
@@ -412,10 +419,17 @@ planFoodPurchaseImport(
       );
     }
     final product = state.products[root];
+    // Fresh food arrives dated purchase day + Keeps for, marked estimated;
+    // everything else stays undated in the Inbox. Both get the usual location.
+    final expiry = product?.keepsFor?.addTo(line.date);
+    final location = product == null ? '' : foodUsualLocation(state, root);
     final details = FoodDetails(
       name: product?.name ?? line.name!,
       brand: product?.brand ?? line.brand,
       size: product?.size ?? line.size,
+      expiry: expiry,
+      estimated: expiry != null,
+      location: location,
     );
     for (var i = 0; i < fresh.length; i += 100) {
       steps.add(
@@ -435,6 +449,8 @@ planFoodPurchaseImport(
         matched: matched,
         created: fresh,
         newProduct: created,
+        expiry: fresh.isEmpty ? null : expiry,
+        location: fresh.isEmpty ? '' : location,
       ),
     );
   }

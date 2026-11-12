@@ -185,9 +185,7 @@ class FoodRecord {
       clock: clock.toJson(),
       subject: space,
       family: foodOperationFamily(operation.action),
-      revision: operation.action == FoodAction.add && operation.link != null
-          ? 2
-          : 1,
+      revision: foodOperationRevision(operation),
       value: {'values': values, 'creationBasis': createdWith},
       predecessor: previousHash,
       referenceHash: retainedReferenceHash,
@@ -207,10 +205,11 @@ class FoodRecord {
           .toList();
       if (actions.length != 1 ||
           current.revision !=
-              (actions.single == FoodAction.add &&
-                      (current.value['values'] as Map).containsKey('link')
-                  ? 2
-                  : 1) ||
+              _foodRevision(
+                actions.single,
+                (current.value['values'] as Map)['link'],
+                (current.value['values'] as Map)['product'],
+              ) ||
           current.subject != current.space ||
           current.value.length != 2 ||
           !current.value.containsKey('values') ||
@@ -251,6 +250,20 @@ class FoodRecord {
     }
   }
 }
+
+/// Required wire revision of an operation. container.add: 2 with a product
+/// link, 3 when a receipt birth is prefilled. product.edit: 2 when it sets or
+/// clears Keeps for. An older app stops at a revision it does not know.
+int foodOperationRevision(FoodOperation operation) =>
+    _foodRevision(operation.action, operation.link, operation.product);
+
+int _foodRevision(FoodAction action, Object? link, Object? product) =>
+    switch (action) {
+      FoodAction.add when link is Map => link.containsKey('prefill') ? 3 : 2,
+      FoodAction.product when product is Map =>
+        product.containsKey('keepsFor') ? 2 : 1,
+      _ => 1,
+    };
 
 /// Wire family of each Food action. Product-level and link families are
 /// required families an older app rejects with the update message.

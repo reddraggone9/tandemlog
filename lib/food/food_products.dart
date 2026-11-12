@@ -12,7 +12,14 @@ import 'inventory.dart';
 /// existing history needs no migration writes.
 
 const foodProductNamespace = '5b0e8a52-3c4d-4f71-9a2e-6d1c7b9f0e34';
-const productFieldNames = {'name', 'brand', 'size', 'links', 'minimum'};
+const productFieldNames = {
+  'name',
+  'brand',
+  'size',
+  'links',
+  'minimum',
+  'keepsFor',
+};
 const purchaseFieldNames = {
   'product',
   'date',
@@ -84,10 +91,7 @@ Map<String, String> foodReceiptBirthClaims(Iterable<FoodOperation> operations) {
   for (final op in ops) {
     if (op.action != FoodAction.add ||
         op.link?['purchase'] == null ||
-        op.details!.expiry != null ||
-        op.details!.location.isNotEmpty ||
-        op.details!.retention.isNotEmpty ||
-        op.details!.estimated != false ||
+        !_receiptBirthDefaults(op) ||
         canonicalDataJson(op.contents?.toJson()) !=
             canonicalDataJson(const Contents.fraction(1, 1).toJson())) {
       continue;
@@ -116,6 +120,21 @@ Map<String, String> foodReceiptBirthClaims(Iterable<FoodOperation> operations) {
     }
   }
   return result;
+}
+
+/// A receipt birth is an untouched Inbox default. A prefilled birth
+/// (container.add revision 3) may also carry the product's usual location and
+/// a date estimated from its Keeps for; importers with different catalogs can
+/// disagree on those, so they are not part of the claim.
+bool _receiptBirthDefaults(FoodOperation op) {
+  final details = op.details!;
+  if (details.retention.isNotEmpty) return false;
+  if (op.link?['prefill'] == true) {
+    return details.estimated == (details.expiry != null);
+  }
+  return details.expiry == null &&
+      details.location.isEmpty &&
+      details.estimated == false;
 }
 
 /// Original source purchase values are immutable even when no new containers
@@ -272,6 +291,10 @@ void validateFoodProductValues(Map<String, Object?> values) {
             (value is! int || value < 0 || value > maximumProductMinimum)) {
           _invalid('minimum');
         }
+      case 'keepsFor':
+        if (value != null && FoodKeepsFor.fromJson(value) == null) {
+          _invalid('keeps for');
+        }
     }
   }
 }
@@ -313,8 +336,14 @@ void validateFoodPurchaseValues(
 
 /// container.add revision 2 requires a product; container.link names a
 /// subset of product/purchase, where a null purchase clears the link.
+/// `prefill: true` (container.add revision 3) marks a receipt birth that
+/// carries a usual location or an estimated date.
 void validateFoodLink(Map<String, Object?> values, {required bool creation}) {
   final keys = values.keys.toSet();
+  if (keys.remove('prefill') &&
+      (!creation || values['prefill'] != true || values['purchase'] == null)) {
+    _invalid('container link');
+  }
   if (keys.isEmpty ||
       keys.any((k) => k != 'product' && k != 'purchase') ||
       (creation && !keys.contains('product')) ||
@@ -520,6 +549,7 @@ class FoodProductSummary {
     required this.size,
     required this.links,
     required this.minimum,
+    this.keepsFor,
     required this.onHand,
     required this.containers,
     required this.purchases,
@@ -527,6 +557,9 @@ class FoodProductSummary {
   final String id, name, brand, size;
   final List<String> links;
   final int? minimum;
+
+  /// Shelf life of fresh food with no printed date; null for everything else.
+  final FoodKeepsFor? keepsFor;
 
   /// Non-deleted containers (decision 5), and every container.
   final int onHand, containers;
@@ -598,7 +631,8 @@ class FoodProductMerge extends FoodProductStep {
 }
 
 /// Plans product changes. [changes] holds only the fields the user changed:
-/// name/brand/size and, from the single-row editor, links/minimum. Products
+/// name/brand/size and, from the single-row editor, links/minimum/keepsFor
+/// (keepsFor as its JSON object, or null to clear). Products
 /// whose resulting descriptions coincide with each other, or with another
 /// existing product, merge (decisions 2 and 4).
 List<FoodProductStep> planFoodProductChanges(
@@ -657,6 +691,19 @@ List<FoodProductStep> planFoodProductChanges(
     if (changes.containsKey('minimum') &&
         changes['minimum'] != target.minimum) {
       values['minimum'] = changes['minimum'];
+    }
+    if (changes.containsKey('keepsFor')) {
+      if (changes['keepsFor'] != null &&
+          FoodKeepsFor.fromJson(changes['keepsFor']) == null) {
+        _invalid('keeps for');
+      }
+      if (FoodKeepsFor.fromJson(changes['keepsFor']) != target.keepsFor) {
+        values['keepsFor'] = changes['keepsFor'];
+      }
+    } else if (target.keepsFor == null) {
+      // A merge keeps the shelf life only the merged-away product had.
+      final kept = sources.map((p) => p.keepsFor).nonNulls.firstOrNull;
+      if (kept != null) values['keepsFor'] = kept.toJson();
     }
     // The first edit of an implicit product, or a merge into it, records its
     // description so it no longer depends on any container's own fields.
