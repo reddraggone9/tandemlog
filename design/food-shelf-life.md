@@ -1,8 +1,9 @@
 # Food shelf life ("Keeps for")
 
-Status: **design proposal for Lee's OK; nothing implemented.** Branch
-`vex/food-keeps-for-design`. Mock-ups: `design/mockups/food-shelf-life/`
-(list at the end).
+Status: **approved by Lee 2026-11-10 (revision 2); being built on branch
+`vex/food-keeps-for`, not released.** What is built, and where the build
+departs from the method below, is under [Build notes](#build-notes).
+Mock-ups: `design/mockups/food-shelf-life/` (list at the end).
 
 ## What Keeps for applies to
 
@@ -388,6 +389,61 @@ list):
 - Performance: import and product-edit actions keep their budgets under the
   performance gate's coverage contract.
 - Native acceptance on Linux and Android, and an RC side by side on Lee's phone.
+
+## Build notes
+
+State on branch `vex/food-keeps-for` (2026-11-12). Implemented and covered by
+unit and widget tests; not yet run natively, captured or reviewed.
+
+Built: `FoodKeepsFor` and the derived usual location and suggested date
+(`lib/food/shelf_life.dart`); the product field and its wire revision; dated
+and placed receipt births; `est.` rows; the editor's field order, Keeps for
+field, three offers, calendar start date and estimate helper; Add and Add
+another autofill; agent CLI (`products set --keeps-for`, `keepsFor` on
+products, `estimated` on food rows, `expiry` and `location` on import report
+lines); the Activity label.
+
+Where the build differs from the method above:
+
+1. **Dates and locations ride on the birth, not on an edit in the same
+   action.** The check named under "Method: receipt import" came out negative:
+   an edit needs its container's birth already admitted, so one action cannot
+   carry both. A same-action edit would also have broken duplicate offline
+   receipts, because a surplus unit is suppressed only while nothing has
+   touched it. So the fallback is used: `container.add` **revision 3**, a
+   receipt birth whose link carries `prefill: true` and whose details may hold
+   a location and an estimated date. Those values are left out of the receipt
+   claim comparison. When two devices import the same receipt with different
+   Keeps for, the first birth in canonical order supplies the date (not the
+   last writer). A product seen for the first time, with no Keeps for and no
+   usual location, still writes the unchanged revision 2 birth.
+2. **Two new required revisions, not one:** `product.edit` r2 (sets or clears
+   Keeps for) and `container.add` r3. An older install stops with "Update the
+   app" at either. The sentence above that older installs can read estimated
+   containers no longer holds.
+3. **Only the app's own estimates read `est.`** The container flag `estimated`
+   also exists on records from before 2026-10-11, when Lee removed date
+   certainty from the interface (ADR0014): hidden, never splitting rows. Showing
+   the flag again would have brought those back. A row is an estimate only when
+   its container was born prefilled and still has `estimated: true`; legacy
+   values stay hidden and group as before.
+4. **Offers need one purchase day for the whole row.** A row can hold
+   containers from two receipts (two undated yogurts bought a week apart). The
+   offers count from the purchase day only when every container in the row
+   shares it; otherwise none shows.
+5. **The suggested date also uses a sibling from the same receipt**, so after
+   dating one of two identical items the other offers `Like last time` with the
+   same date.
+6. Keeps for accepts a bare number as days and the short forms `d`, `wk`,
+   `mo`; it always displays the full unit.
+7. The estimate helper falls back to `Estimated when bought <day>` when the
+   product's Keeps for has changed since the import.
+
+Still to do: the old-reader fixture (an r1-only build stops and writes
+nothing), seed tooling (one action through the agent CLI, including products
+with no containers), performance coverage registration, `schema.md` /
+`product-behavior.md` / `status.md` updates, native Linux and Android runs,
+dark-theme captures and the independent UX review.
 
 ## Rough build size
 
