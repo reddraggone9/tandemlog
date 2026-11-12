@@ -1,6 +1,6 @@
 # Dependency inventory — 2026-10-04
 
-Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `2026.10.2-rc.1+43`; app dependency graph remains unchanged at `29827eb`. Inventory itself required no package update/build. Subsequent maintenance implements the bounded updater and enforced lockfile below; no dependency PR is merged.
+First taken at app source `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921` (`2026.10.2-rc.1+43`). The dependency, build-tool, Actions and resolved-graph tables match `pubspec.lock`, the Gradle files and workflows at 2026.11.1; the dated sections record each reviewed change since. Update a table in the same change that moves a pin.
 
 
 ## Forked Flutter CalendarDatePicker — 2026-10-27
@@ -91,19 +91,19 @@ Historical inventory below is retained as its dated observation.
 
 Audited PR8/PR9 are merged: download-artifact8.0.2, upload-artifact7.0.2, url_launcher6.3.3 with unchanged federated native locks, and serde_json1.0.154 with the otherwise unchanged47-package native graph. The signed stable71 candidate and actual native text/upgrade checks passed. [Candidate evidence](../evidence/stable-2026.10.4/candidate71/README.md) records original payload/notice bindings. [ADR0020](decisions/0020-build-dependency-repository-routing.md) records the approved bounded Gradle repository policy; Gradle9.4.1/AGP9.2.1/Kotlin2.4.20 pins remain. Held Gradle/AGP/base64 proposals are outside this release. Historical inventory below is retained with its original date.
 
-## Direct application dependencies (historical inventory)
+## Direct application dependencies (current at 2026.11.1)
 
 | Dependency | Declared | Resolved | Purpose |
 |---|---|---|---|
 | flutter | `sdk: flutter` | Flutter SDK 3.47.5 (lock placeholder 0.0.0) | UI, services and platform integration |
-| sqlite3 | `^3.7.0` | 3.7.0 | Rebuildable local SQLite cache; native asset hook |
+| sqlite3 | `3.8.0` | 3.8.0 | Local profile database (history store, projections); native asset hook bundling SQLite 3.54.1 |
 | ffi | `^2.2.0` | 2.2.0 | Native POSIX/Windows durability calls |
 | path_provider | `^2.1.5` | 2.1.6 | Per-user settings/cache directories |
 | file_selector | `^1.0.4` | 1.1.0 | Desktop folder selection |
 | crypto | `^3.0.6` | 3.0.7 | Canonical SHA-256 event chains and cache/settings identifiers |
 | uuid | `^4.5.1` | 4.6.0 | Task/event/device identities |
-| url_launcher | `^6.3.2` | 6.3.2 | Open task workspace in OS folder manager |
-| timezone | `0.11.1` | 0.11.1 | IANA zone interpretation for schedule/availability; bundled database 2025c |
+| url_launcher | `^6.3.3` | 6.3.3 | Open task workspace in OS folder manager |
+| timezone | `0.11.2` | 0.11.2 | IANA zone interpretation for schedule/availability; bundled database 2026e |
 
 ## Direct development dependencies
 
@@ -118,9 +118,9 @@ SDK constraints differ: manifest Dart `>=3.9.0 <4.0.0`; resolved graph Dart `>=3
 
 ## Native dependencies and provenance
 
-- SQLite is **3.53.4**, obtained from the default `sqlite3` 3.7.0 precompiled hook. Existing `build/linux/x64/release/bundle/lib/libsqlite3.so` was queried via `sqlite3_libversion()` and SHA-256 hashed, without rebuilding. Its `0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace` matches the package's `lib/src/hook/asset_hashes.dart` x64 Linux entry. This is local existing-bundle evidence, not an attestation for future CI artifacts.
-- Hook release tag: `sqlite3-3.7.0`; default download: `https://github.com/simolus3/sqlite3.dart/releases/download/$RELEASE_TAG/$FILENAME`. Package `hook/build.dart` and `lib/src/hook/compile/description.dart` choose/download assets and validate hashes, including cached bytes. No app `hooks.user_defines` override exists. The source-compilation fallback's old `sqlite-amalgamation-3500200.zip` is **not** evidence of the default bundled version.
-- Relevant pinned default assets: arm Android `a42fa9d0f5c006d30b000d4904bc497705191c5d7330b178618546004295bb49`; arm64 Android `0c2d3bfc8c87abceb21ed72a4bb49964121c5fe1a8ef3848d83ba907d01b6161`; x64 Android `949965f0eba976f707ae364cdcb42c342b5f0626081f8d7f0378fb7b52848772`; x64 Windows `98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce`. SQLCipher/OpenSSL/SQLite3 Multiple Ciphers entries exist upstream but the app does not select them; do not inventory those as shipped app dependencies.
+- SQLite is **3.54.1**, from the default `sqlite3` 3.8.0 precompiled hook. Hook release tag `sqlite3-3.8.0`; per-target asset hashes and the local `sqlite3_libversion()` check are in [sqlite3 3.8.0](#sqlite3-380-replaces-held-pr13--2026-10-26). The reference host registers the Linux library by hash (`tool/performance/reference-host-v1.json`).
+- Default download: `https://github.com/simolus3/sqlite3.dart/releases/download/$RELEASE_TAG/$FILENAME`. Package `hook/build.dart` and `lib/src/hook/compile/description.dart` choose/download assets and validate hashes, including cached bytes. No app `hooks.user_defines` override exists. The source-compilation fallback's amalgamation is **not** evidence of the default bundled version.
+- SQLCipher/OpenSSL/SQLite3 Multiple Ciphers entries exist upstream but the app does not select them; do not inventory those as shipped app dependencies.
 - Native/platform transitive Dart packages are fully listed below. Of particular interest: `hooks` 2.2.0, `code_assets` 1.2.1, `native_toolchain_c` 0.19.3, `jni`/`jni_flutter` 1.0.3, `jni_util` 1.0.0, `objective_c` 9.5.0, and federated file/path/URL implementations. These can introduce executable build hooks or platform build behavior despite not being direct app entries.
 - Linux runner CMake directly requires GTK3 via pkg-config; OS libraries and GTK transitives are system/runtime dependencies, not pub lock entries. Windows links the OS runner APIs and depends on the MSVC runtime selected by the actual CMake compiler. Installer verifies that prerequisite and points to Microsoft's redistributable; it does not bundle/download it. Android SAF folder integration is repository Kotlin/Android framework code, not a separate third-party sync library.
 
@@ -131,9 +131,9 @@ SDK constraints differ: manifest Dart `>=3.9.0 <4.0.0`; resolved graph Dart `>=3
 | Flutter | 3.47.5 stable | `.github/actions/setup-flutter/action.yml` clones official `flutter/flutter` tag and checks exact commit `6a19cca56475dbfba1478ee68d7bd0c2ef891da1` |
 | Flutter engine | `af7e796e161ae0bb1ff0758c71a7105418bd9ded` | `bin/internal/engine.version` in pinned SDK; observed engine artifact hash `ab598368592da0064197e2bc15c7f5b0a2c6bb1f` |
 | Dart / DevTools | 3.13.4 / 2.60.0 | Bundled with pinned Flutter; SDK packages' 0.0.0 lock values are placeholders |
-| Gradle wrapper | 9.3.1 `all.zip` | `android/gradle/wrapper/gradle-wrapper.properties`; **no `distributionSha256Sum`**; wrapper JAR SHA-256 `16caeaf66d57a0d1d2087fef6a97efa62de8da69afa5b908f40db35afc4342da` measured locally |
-| Android Gradle Plugin | 9.1.0 | `android/settings.gradle.kts`; Google/MavenCentral/Gradle plugin repositories, no committed Gradle dependency lock or verification metadata found |
-| Kotlin Android plugin | 2.4.0 | Same settings file; explicit declaration (application uses Flutter Gradle plugin rather than applying Kotlin plugin directly) |
+| Gradle wrapper | 9.4.1 `all.zip` | `android/gradle/wrapper/gradle-wrapper.properties` with official `distributionSha256Sum` `708d2c6e…` |
+| Android Gradle Plugin | 9.2.1 | `android/settings.gradle.kts`; Google/MavenCentral/Gradle plugin repositories, no committed Gradle dependency lock or verification metadata found |
+| Kotlin Android plugin | 2.4.20 | Same settings file; explicit declaration (application uses Flutter Gradle plugin rather than applying Kotlin plugin directly) |
 | Flutter Gradle loader/plugin | loader 1.0.0; implementation from SDK | Included build at pinned SDK `packages/flutter_tools/gradle` |
 | Android SDK | compile 36 / target 36 / min 24 | Inherited from pinned `FlutterExtension.kt`; app does not hardcode these |
 | Android NDK | 28.2.13676358 (r28c) | Inherited from pinned `FlutterExtension.kt`; local SDK source.properties matches |
@@ -151,9 +151,9 @@ The pinned Flutter source provides strong framework selection, but engine/Dart b
 | Action | Exact committed pin | Version annotation in repository | Purpose |
 |---|---|---|---|
 | actions/checkout | `3d3c42e5aac5ba805825da76410c181273ba90b1` | v7.0.1 | Source checkout |
-| actions/upload-artifact | `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` | v7.0.1 | Validation/candidate artifact retention |
-| actions/download-artifact | `3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c` | No tag annotation found; commit is exact current version | Fetch exact candidate payload for promotion |
-| actions/setup-java | `de7274f081f381c8f8158605e0321c36c376e2e6` | v6.0.1 | Android Java installation |
+| actions/upload-artifact | `cf430e030ddbb5b0abf93d22962f4752f3646cd9` | v7.0.2 | Validation/candidate artifact retention |
+| actions/download-artifact | `9000827ccba6bdab643e8b6fd33ac0654aef8333` | v8.0.2 | Fetch exact candidate payload for promotion |
+| actions/setup-java | `b843ebf9b913146b38da2eaa7aeddf76074ae1ad` | v6.1.0 | Android Java installation |
 
 Local setup-Flutter action and reusable validate workflow resolve with repository source; they are not independent third-party action versions. Action tag annotations above are local documentation, not separately verified tag attestations.
 
@@ -163,7 +163,7 @@ Observed under `/workspace/toolchains/env.sh`: Clang 19.1.7, CMake 3.31.6, ninja
 
 ## Update automation and coverage
 
-Before this maintenance change, no committed Dependabot, Renovate or equivalent updater existed. The bounded configuration below is now committed; first bot execution/Gradle recognition remains unverified. Repository-level security alert/settings state is not inferred from source inspection.
+Before this maintenance change, no committed Dependabot, Renovate or equivalent updater existed. The bounded configuration below is committed and its first scans ran (see below). Repository-level security alert/settings state is not inferred from source inspection.
 
 Implemented initial configuration in `.github/dependabot.yml`:
 
@@ -210,10 +210,10 @@ Primary reference checks (2026-10-04): [Dependabot ecosystem support](https://do
 
 ## Complete resolved Dart graph and archive provenance
 
-The [isolated Yrs experiment](text-merge-prototype.md) preceded the authorized,
-unreleased [production text bridge](decisions/0010-collaborative-text-adoption.md).
+The [isolated Yrs experiment](text-merge-prototype.md) preceded the authorized
+[production text bridge](decisions/0010-collaborative-text-adoption.md).
 One implementation now lives in `native/text_engine`; experiment wrappers include
-it rather than maintain a second engine. Rust1.99.0, Yrs0.28.0, serde_json1.0.151
+it rather than maintain a second engine. Rust1.99.0, Yrs0.28.0, serde_json1.0.154
 and base640.22.1 are pinned by the canonical Cargo.lock. Its46 registry pins,
 checksums and dependency notices are recorded in
 [`THIRD_PARTY_NOTICES.txt`](../native/text_engine/THIRD_PARTY_NOTICES.txt). The
@@ -319,16 +319,16 @@ All hosted entries below are `https://pub.dev` package archives with their commi
 | record_use | 1.1.1 | transitive | `1cb8564af8d43b464294411db9217f5ec04891c6f22ee2c32d73ae05e88a6bd2` |
 | sky_engine | 0.0.0 | transitive | `Flutter SDK 3.47.5` |
 | source_span | 1.10.2 | transitive | `56a02f1f4cd1a2d96303c0144c93bd6d909eea6bee6bf5a0e0b685edbd4c47ab` |
-| sqlite3 | 3.7.0 | direct main | `cc62d72dbf16bb1f6ae8954b238016de1473e53df060ed0c332eed0a41dd1848` |
+| sqlite3 | 3.8.0 | direct main | `5340531ad17f386ae444873f643f281060b6238cc702edeee6b1e90bc4c6874e` |
 | stack_trace | 1.12.2 | transitive | `277654b3034d17ac6f9f1cb5595db011b1d5d41e8806866db28e0abaa101c490` |
 | stream_channel | 2.1.4 | transitive | `969e04c80b8bcdf826f8f16579c7b14d780458bd97f56d107d3950fdbeef059d` |
 | string_scanner | 1.4.1 | transitive | `921cd31725b72fe181906c6a94d987c78e3b98c2e205b397ea399d4054872b43` |
 | sync_http | 0.3.1 | transitive | `7f0cd72eca000d2e026bcd6f990b81d0ca06022ef4e32fb257b30d3d1014a961` |
 | term_glyph | 1.2.2 | transitive | `7f554798625ea768a7518313e58f83891c7f5024f88e46e7182a4558850a4b8e` |
 | test_api | 0.7.12 | transitive | `2a122cbe059f8b610d3a5415f42e255b6c17b1f21eee1d960f31080237fb4f11` |
-| timezone | 0.11.1 | direct main | `981d1020d6ef8fe1e7b3de5054e5b25579ae7c403d7734adc508ffc47668e9cb` |
+| timezone | 0.11.2 | direct main | `9f4e5a1a0e4fef7dd3424842c0575db01bfb7a11730e8d55753fcd5c5c98767b` |
 | typed_data | 1.4.0 | transitive | `f9049c039ebfeb4cf7a7104a675823cd72dba8297f264b6637062516699fa006` |
-| url_launcher | 6.3.2 | direct main | `f6a7e5c4835bb4e3026a04793a4199ca2d14c739ec378fdfe23fc8075d0439f8` |
+| url_launcher | 6.3.3 | direct main | `e8cc955c97e06df9879140a1fe301f3d493f01b7c62dec7f46834be31d7e9fda` |
 | url_launcher_android | 6.3.33 | transitive | `611e87fb320b70d1dd721dc46af89c98aceccea9b31fde49e084591414e0c610` |
 | url_launcher_ios | 6.4.2 | transitive | `8faa1aab294f1ab4040b43660c887b0418d5fa4f0cffef76a484e6aa1092eb4a` |
 | url_launcher_linux | 3.2.3 | transitive | `10f86fef4c2c43563fa6c211ff9cf757adf4d3ab762c56bd430664a947d70cd0` |
