@@ -286,14 +286,15 @@ class AdditiveFixtureConfigTests(unittest.TestCase):
         frozen=json.loads((PATH.parent/'original-action-ids-v1.json').read_text())['actions']
         self.assertEqual(len(frozen),146)
         self.assertTrue(set(frozen).issubset(coverage))
-        self.assertEqual(len(coverage),257)
+        self.assertEqual(len(coverage),261)
         self.assertIn('activity.read.derive', coverage)
         for values in limits['actionsBySize'].values():
             self.assertEqual(values['activity.read.derive'], {'medianMs':15,'maxMs':30})
         products = {'food.product.' + name for name in (
             'edit','edit.undo','bulkEdit','bulkEdit.undo','merge','merge.undo',
             'addWithProduct','addWithProduct.undo','import.dryRun','import.commit',
-            'import.retry','import.undo')}
+            'import.retry','import.undo','keepsFor','keepsFor.undo',
+            'importEstimated.commit','importEstimated.undo')}
         self.assertEqual({a for a in coverage if a.startswith('food.product.')},products)
         for values in limits['actionsBySize'].values():
             for action in products:
@@ -490,6 +491,13 @@ class CalibratedInitialLimitTests(unittest.TestCase):
         import hashlib
         limits=json.loads((PATH.parent/'limits-v1.json').read_text())
         budgets={k:limits[k] for k in ('actionsBySize','pairedScaling','additionalPairedScaling','historySizes')}
+        # Shelf-life labels added 2026-11-12 at the receipt import's limits; every earlier number is unchanged.
+        added=('food.product.keepsFor','food.product.keepsFor.undo',
+               'food.product.importEstimated.commit','food.product.importEstimated.undo')
+        tables=[*budgets['actionsBySize'].values(),budgets['pairedScaling']['rules'],
+                budgets['additionalPairedScaling']['food-own-history']['rules']]
+        for table in tables:
+            for label in added:self.assertEqual(table.pop(label),table['food.product.import.undo'])
         digest=hashlib.sha256(json.dumps(budgets,sort_keys=True,separators=(',',':')).encode()).hexdigest()
         # The same value at limits 553896b3, the last file under the old rule. Loosening needs Lee.
         self.assertEqual(digest,'9b82975c770648bf8c82f7d40009b173bfb2e76f830b0e974f20b5c26d313b68')
@@ -509,7 +517,7 @@ class CalibratedInitialLimitTests(unittest.TestCase):
         opening=('startup.','agent.')
         for values in limits['actionsBySize'].values():
             ordinary={k:v for k,v in values.items() if not k.startswith(opening)}
-            self.assertEqual(len(ordinary),241)
+            self.assertEqual(len(ordinary),245)
             self.assertEqual(sum(k.startswith('startup.') for k in values),8)
             self.assertEqual(sum(k.startswith('agent.') for k in values),8)
             for bound in ordinary.values():

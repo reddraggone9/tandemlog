@@ -2916,6 +2916,82 @@ Future<void> foodProducts(Audit a) async {
   );
   await inverse('import', before);
 
+  // Shelf life: set Keeps for on the product, then import one line whose two
+  // new containers arrive dated from it, with the product's usual location.
+  Future<void> keepFor(Object? value) => a.food.changeDetails(
+    [source.id],
+    source.details,
+    const [],
+    products: FoodProductChange(
+      roots: [sourceRoot],
+      changes: {'keepsFor': value},
+    ),
+  );
+  const twoWeeks = {'count': 2, 'unit': 'week'};
+  await a.measure(
+    'food.product.keepsFor',
+    rep,
+    () => confirmed(() => keepFor(twoWeeks)),
+    expectedDelta: 1,
+  );
+  require(
+    a.food.state.products[sourceRoot]!.keepsFor ==
+        const FoodKeepsFor(2, 'week'),
+    'Keeps for Save differs',
+  );
+  await inverse('keepsFor', before);
+  require(
+    a.food.state.products[sourceRoot]!.keepsFor == null,
+    'Keeps for Undo differs',
+  );
+  // Setup outside timers; undone again below.
+  await keepFor(twoWeeks);
+  final keepsForSetup = List<FoodRecord>.of(a.food.lastPreparedRecords);
+  final kept = productFoodState(a.food);
+  final usual = foodUsualLocation(a.food.state, sourceRoot);
+  final estimatedPlan = FoodPurchaseImportPlan(
+    space: a.food.space,
+    importId: benchmarkId('product-benchmark-import-estimated:$rep'),
+    sourceSha256: bytesDigest(utf8.encode('synthetic estimated receipt $rep')),
+    lines: [
+      FoodPurchaseLine(
+        sourceKind: 'benchmark',
+        sourceKey: 'estimated-$rep',
+        // Far from every hand entry, so both units are new containers.
+        date: '2031-01-31',
+        store: 'Synthetic store',
+        amount: 500,
+        quantity: 2,
+        product: sourceRoot,
+      ),
+    ],
+  );
+  await a.measure(
+    'food.product.importEstimated.commit',
+    rep,
+    () => confirmed(() async {
+      await a.food.commitPurchaseImport(estimatedPlan);
+    }),
+    expectedDelta: 1,
+  );
+  final estimated = a.food.state.containers
+      .where((c) => c.purchase == estimatedPlan.lines.single.purchaseId)
+      .toList();
+  require(
+    estimated.length == 2 &&
+        estimated.every(
+          (c) =>
+              c.estimate &&
+              c.details.expiry == '2031-02-14' &&
+              c.details.location == usual &&
+              c.product == sourceRoot,
+        ),
+    'Estimated receipt containers differ',
+  );
+  await inverse('importEstimated', kept);
+  await a.food.undoOperations(keepsForSetup);
+  require(productFoodState(a.food) == before, 'Keeps for setup Undo differs');
+
   // Force a new profile to replay the still-active explicit product seed.
   await a.closeHandles();
   a.profileOverride = '${a.root.path}/product-fresh-replay';

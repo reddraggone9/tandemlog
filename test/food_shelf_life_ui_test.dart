@@ -206,6 +206,9 @@ String _text(WidgetTester tester, Finder field) =>
     tester.widget<TextField>(field).controller!.text;
 
 Future<void> _open(WidgetTester tester, String name, {int row = 0}) async {
+  // Large text can push a row below the fold.
+  await tester.ensureVisible(find.text(name).at(row));
+  await tester.pumpAndSettle();
   await tester.tap(find.text(name).at(row));
   await tester.pumpAndSettle();
 }
