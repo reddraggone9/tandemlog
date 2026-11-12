@@ -95,7 +95,7 @@ descendant protection in `domain/checklist.dart`. `storage/checklist_store.dart`
 shares the existing TaskStore command/ingestion transaction as a focused part;
 it owns parent/anchor admission and native copy-proof validation. Item title/notes
 reuse item-scoped native contexts and receipts without new Rust or dependencies.
-Native-enabled cache16 aggregates items under task projections, while the ordinary
+The native-enabled Task projection aggregates items under their tasks, while the ordinary
 task list excludes item rows. Immutable-prefix baseline selection and live
 selection use the same pure descendant-protection rule. Editor captures and local
 item writes check the containing task's availability; remote late work retains

@@ -59,8 +59,9 @@ descendants remain valid only when the complete relevant identity is unchanged a
 request commit is an ancestor. Changing runtime, tests, assets, workflow, gate tooling,
 host registration or limits requires a fresh request/run. No generic branch-name or
 age-only freshness shortcut exists. A stable rename of a qualified RC needs no new run
-(identity v2, below). Keep release branches linear: a merge commit breaks the ancestor
-check and forces a new qualification.
+(identity v2, below). Keep release branches linear (rebase, never merge): `main` requires linear history,
+so flattening a merge rewrites the qualified commit out of HEAD's ancestry and forces
+a new qualification.
 
 ### Relevant-source identity schemes
 
