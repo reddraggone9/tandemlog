@@ -8,9 +8,14 @@ Backlog, progress, notes and eventual recurring game activities. Start with sepa
 
 ## Food logging and inventory
 
-Manual inventory is now approved and in phased implementation; see
-[decision 0014](decisions/0014-food-inventory.md). The lot/delta and automatic
-logging ideas below remain deferred research, not the current specification.
+Manual inventory shipped in stable 2026.10.4 and Food products in 2026.10.9; see
+[decision 0014](decisions/0014-food-inventory.md) and [Food as products](food-products.md).
+The lot/delta and automatic logging ideas below remain deferred research, not the
+current specification. Meal cost, partial containers and pot weights (stored tare
+weights subtracted from a recipe's weight) wait for consumption logging (Lee,
+2026-10-27 and 2026-11-09). Per-product shelf life ("Keeps for") and a usual
+location were approved by Lee on 2026-11-10; the design is on branch
+`vex/food-keeps-for-design` (`design/food-shelf-life.md`) until it is built.
 
 Lee confirmed nutrition includes adaptive expenditure estimation from weight and calorie intake to inform goals, alongside food logging. Before implementation, research MacroFactor’s public explanations and failure lessons; do not claim to reproduce its proprietary algorithm exactly. Catalog licensing, barcode/search quality, household privacy and offline availability may be larger product costs than UI implementation. No coaching algorithm or service is selected. Default household sharing is accepted; future private data belongs in a separate synced data space, not a filtered shared view.
 
@@ -28,6 +33,6 @@ A shared floating schedule can appear at different instants to traveling househo
 
 ## Assisted capture
 
-Walmart receipt → proposed products/lots/quantities; expiration photo → proposed date linked to a selected lot; voice → proposed task title, description, due date and recurrence. Receipt prices are not quantities, and receipt lines do not prove expiration dates. Show the evidence and ambiguity, allow correction, validate units/dates, and deduplicate retries before acceptance. See the [trust boundary](architecture.md#trust-and-privacy). Model availability must not prevent manual offline use.
+Receipts are not parsed by Tandemlog: Vex's YNAB itemization workflow feeds the [purchase import](food-products.md#5-method-prices-and-receipt-import) (Lee, 2026-10-27). Still deferred: expiration photo → proposed date linked to a selected lot; voice → proposed task title, description, due date and recurrence. Receipt prices are not quantities, and receipt lines do not prove expiration dates. Show the evidence and ambiguity, allow correction, validate units/dates, and deduplicate retries before acceptance. See the [trust boundary](architecture.md#trust-and-privacy). Model availability must not prevent manual offline use.
 
-Time tracking is separately [deferred](time-tracking-deferred.md).
+Time tracking was [dropped](time-tracking-deferred.md).

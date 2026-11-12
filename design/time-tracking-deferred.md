@@ -1,5 +1,5 @@
-# Time tracking — deferred
+# Time tracking — dropped
 
-The product need remains uncertain. No timer schema, notification, home-screen timer, or automatic next-task timing belongs in the initial task slice. Reassess the problem with Lee before selecting behavior or implementation.
+Lee dropped time tracking (earlier decisions with Nibbler, 2026-09-30 to 10-24). No timer schema, notification, home-screen timer, or automatic next-task timing is planned. Raise it with Lee again only if a new need appears.
 
 Earlier proposals are historical only and recoverable from Git and [archived product behavior](archive/product-behavior.md).

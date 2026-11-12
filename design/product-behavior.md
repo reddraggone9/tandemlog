@@ -61,7 +61,7 @@ does not invent a value. The existing X clears time and retains its date.
 Controls stack when width or larger text requires it. Tags and Assignee follow
 all scheduling content, before actions, in single and bulk editors. [Layout rationale](decisions/0009-date-and-optional-time-rows.md).
 
-Offline household task management first. Windows and Android are the first intended user platforms. Food inventory is the approved second capability; future modules include games, nutrition logging, and assisted input. Time tracking was dropped ([deferred directions](time-tracking-deferred.md)).
+Offline household task management first. Windows and Android are the first intended user platforms. Food inventory is the approved second capability; future modules include games, nutrition logging, and assisted input. Time tracking was [dropped](time-tracking-deferred.md).
 
 The current section identity in the toolbar opens the Tasks/Food menu. Wide
 layouts show its icon, name and downward triangle; sufficiently narrow layouts
