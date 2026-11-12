@@ -32,8 +32,12 @@ class FoodEditor extends StatefulWidget {
     this.onReadinessChanged,
     this.onRemoveTargets,
     this.onRestoreTargets,
+    this.today,
   });
   final bool panel;
+
+  /// The device's local day, for dating hand entries from Keeps for.
+  final DateTime Function()? today;
   final FoodGroup? group;
   final FoodDetails? template;
   final List<FoodContainer>? targets;
@@ -75,8 +79,22 @@ class FoodEditorState extends State<FoodEditor> {
       count,
       retentionQuery,
       link,
-      minimum;
+      minimum,
+      keepsFor;
   late final FoodDetails? original;
+
+  /// The day the edited row was bought, when all of it came from one day's
+  /// receipts; the offers under Expiration count from it.
+  late final String? _purchaseDay;
+
+  /// `Like last time`: the date this Inbox row would get from the product's
+  /// previous purchase. Fixed when the editor opens.
+  late final String? _suggestedExpiry;
+
+  /// Add: what the form filled in from the matched product, so only an
+  /// untouched autofill is ever replaced.
+  String? _autofilledExpiry, _autofilledLocation;
+  FoodKeepsFor? _autofillKeepsFor;
 
   /// The edited row's product (single-row Edit only).
   late final FoodProductSummary? product;
@@ -85,7 +103,7 @@ class FoodEditorState extends State<FoodEditor> {
   late final String initial;
 
   /// Bulk editing writes only applied fields; mixed fields start blank.
-  static const bulkFields = ['name', 'brand', 'size', 'location', 'retention'];
+  static const bulkFields = ['name', 'brand', 'location', 'size', 'retention'];
 
   /// Name, Brand and Container size describe the product (decision 2).
   static const productFields = {'name', 'brand', 'size'};
@@ -134,6 +152,7 @@ class FoodEditorState extends State<FoodEditor> {
     retentionQuery,
     link,
     minimum,
+    keepsFor,
   ];
   String snapshot() => jsonEncode([
     for (final controller in _controllers) controller.text,
@@ -164,6 +183,23 @@ class FoodEditorState extends State<FoodEditor> {
         : null;
     link = TextEditingController(text: product?.links.firstOrNull ?? '');
     minimum = TextEditingController(text: product?.minimum?.toString() ?? '');
+    keepsFor = TextEditingController(text: product?.keepsFor?.label ?? '');
+    final days = product == null
+        ? const <String?>{}
+        : {
+            for (final c in widget.group!.containers)
+              foodPurchaseDay(widget.state, c),
+          };
+    _purchaseDay = days.length == 1 ? days.single : null;
+    _suggestedExpiry = _purchaseDay == null
+        ? null
+        : foodSuggestedExpiry(widget.state, widget.group!.containers.first);
+    if (!bulk && widget.group == null) {
+      _autofill();
+      for (final field in [name, brand, size]) {
+        field.addListener(_autofill);
+      }
+    }
     retention = start(
       'retention',
       widget.template == null ? original?.retention ?? '' : '',
@@ -196,6 +232,111 @@ class FoodEditorState extends State<FoodEditor> {
     if (bulk && mounted && applied.add(field)) setState(() {});
   }
 
+  String _civil(DateTime day) => DateTime.utc(
+    day.year,
+    day.month,
+    day.day,
+  ).toIso8601String().substring(0, 10);
+
+  /// Add and Add another: the product the typed description names fills
+  /// Expiration with today + its Keeps for and Location with its usual
+  /// location. Text the user typed is never replaced.
+  void _autofill() {
+    final match = widget
+        .state
+        .productsByDescription[foodDescriptionKey(
+          name.text,
+          brand.text,
+          size.text,
+        )]
+        ?.first;
+    final keeps = match?.keepsFor;
+    if (expiry.text.trim().isEmpty || expiry.text == _autofilledExpiry) {
+      final date = keeps?.addTo(_civil((widget.today ?? DateTime.now)())) ?? '';
+      if (expiry.text != date) expiry.text = date;
+      _autofilledExpiry = date.isEmpty ? null : date;
+      _autofillKeepsFor = keeps;
+    }
+    if (location.text.trim().isEmpty || location.text == _autofilledLocation) {
+      final usual = match == null
+          ? ''
+          : foodUsualLocation(widget.state, match.id);
+      if (location.text != usual) location.text = usual;
+      _autofilledLocation = usual.isEmpty ? null : usual;
+    }
+  }
+
+  /// The edited row's date is the app's estimate from Keeps for.
+  bool get _estimate => !bulk && (widget.group?.estimate ?? false);
+
+  /// The row was undated in the Inbox when the editor opened.
+  bool get _fromInbox =>
+      product != null &&
+      original!.expiry == null &&
+      original!.retention.isEmpty &&
+      widget.group!.containers.every((c) => !c.deleted);
+
+  /// The typed Expiration when it is a date after the purchase day.
+  FoodKeepsFor? get _impliedKeepsFor {
+    final day = _purchaseDay, text = expiry.text.trim();
+    return day == null || !isFoodCivilDate(text)
+        ? null
+        : FoodKeepsFor.between(day, text);
+  }
+
+  /// One quiet offer under Expiration: a label and what pressing it types
+  /// into the form. Nothing is saved until Save.
+  (String, VoidCallback)? get _expiryOffer {
+    final current = product, day = _purchaseDay;
+    if (current == null || day == null) return null;
+    final text = expiry.text.trim();
+    if (text.isEmpty) {
+      final suggested = _suggestedExpiry;
+      return _fromInbox && current.keepsFor == null && suggested != null
+          ? ('Like last time: $suggested', () => expiry.text = suggested)
+          : null;
+    }
+    final implied = _impliedKeepsFor;
+    if (implied == null) return null;
+    final draft = FoodKeepsFor.parse(keepsFor.text);
+    // Remember: an Inbox item dated for the first time. Update: an estimate
+    // the user corrected.
+    final remember =
+        _fromInbox &&
+        current.keepsFor == null &&
+        _suggestedExpiry == null &&
+        (keepsFor.text.trim().isEmpty || draft != null);
+    final update =
+        _estimate &&
+        current.keepsFor != null &&
+        text != original!.expiry &&
+        draft != null;
+    if ((!remember && !update) || draft?.addTo(day) == text) return null;
+    return (
+      'Remember: keeps ${implied.label}',
+      () => keepsFor.text = implied.label,
+    );
+  }
+
+  /// Where an untouched date came from.
+  String? get _expiryNote {
+    final text = expiry.text.trim();
+    if (text.isEmpty) return null;
+    if (widget.group == null) {
+      final keeps = _autofillKeepsFor;
+      return !bulk && keeps != null && expiry.text == _autofilledExpiry
+          ? 'Keeps ${keeps.label} from today'
+          : null;
+    }
+    if (!_estimate || text != original!.expiry) return null;
+    final keeps = product?.keepsFor, day = _purchaseDay;
+    return day != null && keeps != null && keeps.addTo(day) == text
+        ? 'Estimated: bought $day + ${keeps.label}'
+        : day != null
+        ? 'Estimated when bought $day'
+        : 'Estimated date';
+  }
+
   Map<String, TextEditingController> get _fields => {
     'name': name,
     'brand': brand,
@@ -206,6 +347,7 @@ class FoodEditorState extends State<FoodEditor> {
     'retention': retentionQuery,
     'link': link,
     'minimum': minimum,
+    'keepsFor': keepsFor,
   };
 
   void _validationChanged() {
@@ -220,11 +362,12 @@ class FoodEditorState extends State<FoodEditor> {
             'name',
             'brand',
             'expiry',
-            'size',
             'location',
+            if (product != null) 'keepsFor',
+            'size',
+            if (product != null) ...['minimum', 'link'],
             if (widget.group == null) 'count',
             if (widget.group != null) 'retention',
-            if (product != null) ...['link', 'minimum'],
           ];
     for (final field in active) {
       final controller = _fields[field]!;
@@ -238,6 +381,12 @@ class FoodEditorState extends State<FoodEditor> {
           issues.add(
             const FieldIssue('link', 'Enter a web address starting https://'),
           );
+        }
+        continue;
+      }
+      if (field == 'keepsFor') {
+        if (value.isNotEmpty && FoodKeepsFor.parse(value) == null) {
+          issues.add(const FieldIssue('keepsFor', FoodKeepsFor.hint));
         }
         continue;
       }
@@ -304,7 +453,10 @@ class FoodEditorState extends State<FoodEditor> {
       name: value('name', name.text.trim()),
       brand: value('brand', brand.text.trim()),
       expiry: bulk ? original!.expiry : expiry.text.trim(),
-      estimated: estimated,
+      // A date the user changed is their own, no longer an estimate.
+      estimated: _estimate && expiry.text.trim() != original!.expiry
+          ? false
+          : estimated,
       retention: widget.group == null && !bulk
           ? ''
           : value(
@@ -507,7 +659,6 @@ class FoodEditorState extends State<FoodEditor> {
             : after.keys
                   .where(
                     (key) =>
-                        key != 'estimated' &&
                         !productFields.contains(key) &&
                         before[key] != after[key],
                   )
@@ -568,6 +719,8 @@ class FoodEditorState extends State<FoodEditor> {
     }
     final keep = int.tryParse(minimum.text.trim());
     if (keep != current.minimum) changes['minimum'] = keep;
+    final keeps = FoodKeepsFor.parse(keepsFor.text);
+    if (keeps != current.keepsFor) changes['keepsFor'] = keeps?.toJson();
     return FoodProductChange(roots: [current.id], changes: changes);
   }
 
@@ -865,6 +1018,18 @@ class FoodEditorState extends State<FoodEditor> {
           ),
         ),
       ),
+      'keepsFor' => TextField(
+        key: const ValueKey('food-keeps-for'),
+        enabled: enabled,
+        controller: keepsFor,
+        decoration: InputDecoration(
+          labelText: 'Keeps for',
+          hintText: 'e.g. 5 days, 2 weeks, 3 months',
+          hintMaxLines: 1,
+          errorText: _validation.errorFor('keepsFor'),
+          errorMaxLines: 3,
+        ),
+      ),
       'minimum' => TextField(
         key: const ValueKey('food-keep-at-least'),
         enabled: enabled,
@@ -898,6 +1063,15 @@ class FoodEditorState extends State<FoodEditor> {
         focusNode: expiryFocus,
         autofocus: widget.template != null,
         label: 'Expiration',
+        // While the offer shows, the calendar opens on the date it offers.
+        pickerStart: () {
+          final suggested = _suggestedExpiry;
+          return suggested != null &&
+                  _expiryOffer != null &&
+                  expiry.text.trim().isEmpty
+              ? DateTime.parse(suggested)
+              : null;
+        },
       ),
       'size' => TextField(
         enabled: enabled,
@@ -998,9 +1172,10 @@ class FoodEditorState extends State<FoodEditor> {
             'name',
             'brand',
             if (!bulk) 'expiry',
-            'size',
-            if (product != null) ...['link', 'minimum'],
             'location',
+            if (product != null) 'keepsFor',
+            'size',
+            if (product != null) ...['minimum', 'link'],
             if (!bulk && group == null) 'count',
             if (bulk || group != null) 'retention',
           ].indexed) ...[
@@ -1020,7 +1195,44 @@ class FoodEditorState extends State<FoodEditor> {
                         );
                 },
               ),
-            if (field == 'minimum' && prices != null)
+            if (field == 'expiry')
+              // Follows the draft: one note or one offer, only while it applies.
+              ListenableBuilder(
+                listenable: Listenable.merge([expiry, keepsFor]),
+                builder: (context, _) {
+                  final note = _expiryNote, offer = _expiryOffer;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (note != null)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 16),
+                          child: _secondary(
+                            note,
+                            key: const ValueKey('food-expiry-note'),
+                          ),
+                        ),
+                      if (offer != null)
+                        TextButton(
+                          key: const ValueKey('food-expiry-offer'),
+                          // The label lines up with the field text.
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsetsDirectional.symmetric(
+                              horizontal: 16,
+                            ),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            minimumSize: const Size(0, 32),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          onPressed: saving || pending() ? null : offer.$2,
+                          child: Text(offer.$1),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            if (field == 'link' && prices != null)
               _secondary(prices, key: const ValueKey('food-product-prices')),
           ],
         ],
