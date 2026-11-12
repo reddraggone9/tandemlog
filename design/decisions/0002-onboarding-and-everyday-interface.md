@@ -1,6 +1,6 @@
 # 0002 — Progressive setup and a task-focused everyday interface
 
-Status: accepted direction from Lee, 2026-09-30; implemented for the next experimental candidate. Extends [0001](0001-client-and-storage.md) without changing the canonical protocol.
+Status: accepted direction from Lee, 2026-09-30; shipped in stable 2026.10.0. Extends [0001](0001-client-and-storage.md) without changing the canonical protocol.
 
 ## Goals and choices
 

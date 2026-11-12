@@ -1,6 +1,6 @@
 # 0021 — Local section memory and Android launcher shortcuts
 
-Status: accepted scope from Lee's next-RC instructions, 2026-10-12; implemented and published as experimental 2026.10.5-rc.1/build75 on 2026-10-13. Stable 2026.10.4 remains Latest. [Publication receipts](../../evidence/prerelease-2026.10.5-rc.1/publication/README.md) bind the accepted original artifacts.
+Status: accepted scope from Lee's next-RC instructions, 2026-10-12; implemented and published as experimental 2026.10.5-rc.1/build75 on 2026-10-13. Shipped in stable 2026.10.5. [Publication receipts](../../evidence/prerelease-2026.10.5-rc.1/publication/README.md) bind the accepted original artifacts.
 
 Reopening returns to the last successfully visited Tasks/Food section on this device. A cancelled draft guard leaves the draft and remembered section alone. Android offers two explicit launcher destinations, which override the saved preference and wait for workspace and user setup. Newer explicit navigation takes precedence over delayed startup and setup fallback.
 

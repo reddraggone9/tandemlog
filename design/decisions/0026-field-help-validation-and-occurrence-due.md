@@ -1,6 +1,6 @@
 # Field help, form validation and occurrence Due conversion
 
-Status: accepted by Lee on 2026-10-17; published experimentally in 2026.10.7-rc.1/build86 after full candidate and exact signed native acceptance. [Publication evidence](../../evidence/prerelease-2026.10.7-rc.1/publication/README.md) binds independent reviews and public bytes. Separate standing ready-RC publication authorization applies after all gates; this decision does not authorize stable promotion.
+Status: accepted by Lee on 2026-10-17; published experimentally in 2026.10.7-rc.1/build86 after full candidate and exact signed native acceptance. Shipped in stable 2026.10.7. [Publication evidence](../../evidence/prerelease-2026.10.7-rc.1/publication/README.md) binds independent reviews and public bytes. Separate standing ready-RC publication authorization applies after all gates; this decision does not authorize stable promotion.
 
 ## Context
 

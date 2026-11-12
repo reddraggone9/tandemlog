@@ -1,6 +1,6 @@
 # 0037 — Android Food bulk-editor Cancel exits selection
 
-Status: Accepted by Lee, 2026-10-30.
+Status: Accepted by Lee, 2026-10-30; the behavior shipped in stable 2026.10.10.
 
 ## Context
 

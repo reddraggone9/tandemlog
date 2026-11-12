@@ -1,6 +1,6 @@
 # Decision 0004 — editing, bulk actions and desktop installers
 
-Status: accepted RC4 scope, 2026-10-01. Acceptance: [status](../status.md), [UX audit](../ux-audit-rc4.md).
+Status: accepted RC4 scope, 2026-10-01; shipped in stable 2026.10.0. Acceptance: [status](../status.md), [UX audit](../ux-audit-rc4.md).
 
 Lee requested multi-tag filtering, direct editing without task overflow menus, a wide side editor, bulk actions and desktop installers. These extend the [compact interface](0002-onboarding-and-everyday-interface.md) and retain [date/manual ordering](0003-task-parity-and-prerelease-boundary.md).
 
@@ -36,7 +36,7 @@ Rejected for now: universal filtering, unrestricted date drag, replacing untouch
 
 ## First stable follow-up — title/notes sizing and due precision
 
-Status: approved by Lee after first stable 2026.10.0; implemented for the next preview.
+Status: approved by Lee after first stable 2026.10.0; shipped in stable 2026.10.1.
 
 Timed effective values sort before date-only tasks on their shared calendar day. This matches the useful distinction between a specific appointment/deadline and a task due sometime that day. Keep scheduled-over-due precedence and pinned conversion, bound-day clamping, group keys and shared manual ranks. Derive ordering from explicit precision rather than storing a fake end-of-day timestamp. Exact midnight cannot share a drag/move bucket with date-only intent. A date-only scheduled override stays date-only even if the underlying due schedule has a time; reversing override precedence was not requested.
 

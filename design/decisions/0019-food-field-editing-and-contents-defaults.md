@@ -1,8 +1,8 @@
 # Food field editing and Full defaults
 
-Status: accepted by Lee for the next experimental preview on 2026-10-11;
-implementation and exact native acceptance are tracked in
-[status](../status.md). No live-data replacement is authorized in the cloud.
+Status: accepted by Lee on 2026-10-11; shipped in stable 2026.10.4. The
+expanded/contents interface was superseded by [ADR0022](0022-food-whole-container-rows.md)
+in 2026.10.5. Acceptance is in [status](../status.md). No live-data replacement is authorized in the cloud.
 
 ## Context and decision
 

@@ -1,6 +1,6 @@
 # Task parity, temporal meaning and prerelease compatibility
 
-Status: implementation authorized 2026-09-30; candidate acceptance pending.
+Status: implementation authorized 2026-09-30; shipped in stable 2026.10.0.
 
 ## Goal and scope
 

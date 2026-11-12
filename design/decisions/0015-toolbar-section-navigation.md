@@ -1,7 +1,6 @@
 # Toolbar section navigation
 
-Status: accepted by Lee on2026-10-11; implementation and focused native acceptance
-are being prepared for the next Food preview. Stable promotion remains separate.
+Status: accepted by Lee on 2026-10-11; shipped in stable 2026.10.4.
 
 ## Context and choice
 

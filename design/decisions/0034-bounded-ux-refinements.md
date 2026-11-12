@@ -1,7 +1,6 @@
 # ADR0034 — bounded input, calendar and history refinements
 
-Status: Lee-requested scope accepted2026-10-26; implemented locally, not released
-or native/performance accepted. Supersedes ADR0016's outgoing-text clearing rule.
+Status: Lee-requested scope accepted 2026-10-26; shipped in stable 2026.10.8. Supersedes ADR0016's outgoing-text clearing rule.
 
 ## Context and decision
 

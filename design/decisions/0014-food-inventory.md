@@ -1,6 +1,6 @@
 # Food inventory alongside tasks
 
-Status: Lee approved phased implementation on the stable2026.10.3 base and an
+Status: shipped in stable 2026.10.4 (partial contents later removed by [ADR0022](0022-food-whole-container-rows.md); products added by [Food as products](../food-products.md) in 2026.10.9). Lee approved phased implementation on the stable2026.10.3 base and an
 early working preview before layout freeze. Product scope below is accepted;
 visual refinements remain provisional. The original slice is synthetic and
 process-local; the durable implementation now uses production navigation and the

@@ -1,9 +1,11 @@
 # Food Stock and toolbar refinements
 
+Status: shipped in stable 2026.10.4.
+
 RC2/build64 milestone: published as prerelease/not-Latest after exact hosted,
 artifact, parent Android native and independent readiness acceptance. Actual public
 installer identities/source/notes/signature and prior-release preservation verified.
-[Current accepted evidence](../../evidence/food-2026.10.4-rc.2/candidate/build64/README.md).
+[Accepted evidence](../../evidence/food-2026.10.4-rc.2/candidate/build64/README.md).
 
 Historical preparation status (superseded by the build64 milestone above): accepted by Lee on2026-10-11 and implemented for RC2/build62 with
 independent source review and native Linux checks. The full frozen candidate and

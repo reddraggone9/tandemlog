@@ -1,6 +1,6 @@
 # Decision 0005 — session Undo and toolbar fit
 
-Status: accepted RC5 scope with the RC8 completion-Undo refinement below; originally accepted 2026-10-01; Linux and exact Android acceptance passed and RC5 published. Supersedes RC4's transient Undo and permanent-deletion description. [Product behavior](../product-behavior.md), [schema](../schema.md).
+Status: accepted RC5 scope with the RC8 completion-Undo refinement below; originally accepted 2026-10-01; Linux and exact Android acceptance passed and RC5 published; shipped in stable 2026.10.0. Supersedes RC4's transient Undo and permanent-deletion description. [Product behavior](../product-behavior.md), [schema](../schema.md).
 
 Lee wants task changes recoverable after a popup disappears. The toolbar keeps Undo available on desktop and phone, disabled when the session has no saved action. Repeated Undo steps through at most 50 actions; there is no redo. Restart and workspace changes clear this local history, not the canonical task history. Edits, single/bulk relative moves, completion/reopening and deletion participate. Capture creation and identity changes do not. Bulk retries belong to their original action and retain each independently confirmed operation. Save/move actions are quiet. Completion/deletion briefly offer the same Undo action through a snackbar; dismissal/expiry has no effect on availability. Ctrl/Cmd+Z acts on tasks outside editable text, leaving native text Undo in inputs. Resolve the frozen dirty editor through Save/Discard/Cancel first.
 

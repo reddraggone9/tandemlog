@@ -1,7 +1,6 @@
 # 0009 — Separate Start/Due date and time controls
 
-Status: approved presentation revision for the next preview, 2026-10-04.
-Native visual/release acceptance are separate gates. Published build43 keeps its
+Status: approved presentation revision, 2026-10-04; shipped in stable 2026.10.2. Published build43 keeps its
 original Add time behavior; build44 supersedes that presentation.
 
 Lee requested Start and Due rows with a wider date and smaller independent time.
