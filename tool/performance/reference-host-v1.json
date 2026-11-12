@@ -1,14 +1,12 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "status": "registered",
   "hostId": "farnsworth",
   "hardwareMultiplier": 1,
   "environment": {
     "cpuModel": "12th Gen Intel(R) Core(TM) i5-12600KF",
     "architecture": "x86_64",
-    "kernel": "7.2.14-arch1-1",
     "logicalCPUs": 16,
-    "python": "3.14.9",
     "filesystemType": "ext4"
   },
   "registrationEvidence": {

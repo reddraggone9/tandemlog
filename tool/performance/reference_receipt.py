@@ -302,12 +302,15 @@ def fingerprint(output):
 
 def profile(repo):
     value = read(Path(repo) / PROFILE)
-    need(value.get('schemaVersion') == 1 and value.get('status') == 'registered',
+    need(value.get('schemaVersion') in (1, 2) and value.get('status') == 'registered',
          'Controlled reference host is not registered')
     need(value.get('hostId') == 'farnsworth' and type(value.get('hardwareMultiplier')) is int and value['hardwareMultiplier'] == 1,
          'Only the approved unscaled reference host is allowed')
     expected = value.get('environment', {})
-    need(set(expected) == {'architecture', 'kernel', 'python', 'logicalCPUs', 'cpuModel', 'filesystemType'}
+    fields = {'architecture', 'logicalCPUs', 'cpuModel', 'filesystemType'}
+    if value['schemaVersion'] == 1:
+        fields |= {'kernel', 'python'}
+    need(set(expected) == fields
          and all(v is not None and v != '' for v in expected.values()), 'Incomplete reference environment registration')
     need(re.fullmatch('[0-9a-f]{64}', value.get('controllerSHA256', '')) is not None,
          'Reviewed external controller hash required')
@@ -331,6 +334,16 @@ def profile(repo):
     need(digest(Path(repo) / 'pubspec.lock') == value['pubspecLockSHA256'], 'Reviewed dependency lock differs')
     need(digest(Path(repo) / 'tool/performance/limits-v1.json') == value['limitsSHA256'], 'Reference limits differ')
     return value
+
+
+def check_environment(actual, host):
+    """v1 receipts enforce all versions; v2 records versions without pinning them."""
+    fields = {'architecture', 'kernel', 'python', 'logicalCPUs', 'cpuModel', 'filesystemType'}
+    need(isinstance(actual, dict) and set(actual) == fields and
+         all(v is not None and v != '' for v in actual.values()) and
+         all(isinstance(actual[k], str) and actual[k].strip() for k in ('kernel', 'python')) and
+         all(actual.get(k) == v for k, v in host['environment'].items()),
+         'Actual reference environment differs or is incomplete')
 
 
 REQUEST_FIELDS = {'schemaVersion', 'purpose', 'requestId', 'issuedAtUTC', 'sourceRevision',
@@ -357,11 +370,12 @@ def request_context(repo, request_path, output, bounds):
     controller = Path(value['controllerPath'])
     need(controller.is_absolute() and controller.is_file() and not controller.is_symlink() and
          digest(controller) == host['controllerSHA256'], 'Actual external controller bytes changed')
-    need(fingerprint(output) == host['environment'], 'Actual reference environment differs')
+    actual = fingerprint(output)
+    check_environment(actual, host)
     need(bounds == host['resourceBounds'], 'Actual reference resource bounds differ')
     return {'requestId': value['requestId'], 'requestSHA256': canonical_digest(value),
             'issuedAtUTC': value['issuedAtUTC'], 'relevantSourceSHA256': identity['sha256'],
-            'hostProfileSHA256': value['hostProfileSHA256'], 'environment': host['environment'],
+            'hostProfileSHA256': value['hostProfileSHA256'], 'environment': actual,
             'controllerSHA256': host['controllerSHA256']}
 
 
@@ -528,8 +542,12 @@ def validate_report(repo, report, request, host, log_root):
          binding.get('requestSHA256') == canonical_digest(request), 'Reference request binding differs')
     need(binding.get('relevantSourceSHA256') == recorded_identity(repo, request['relevantSource'])[0]['sha256'] ==
          request['relevantSource']['sha256'], 'Stale reference source')
-    need(binding.get('hostProfileSHA256') == digest(repo / PROFILE) == request['hostProfileSHA256'] and
-         binding.get('environment') == host['environment'], 'Reference environment/profile differs')
+    need(binding.get('hostProfileSHA256') == digest(repo / PROFILE) == request['hostProfileSHA256'],
+         'Reference environment/profile differs')
+    check_environment(binding.get('environment'), host)
+    if host['schemaVersion'] == 2:
+        need(all(report.get('environment', {}).get(k) == binding['environment'][k]
+                 for k in ('kernel', 'python')), 'Result/reference runtime versions differ')
     need(binding.get('controllerSHA256') == host['controllerSHA256'], 'Reference controller differs')
     need(instant(request['issuedAtUTC']) <= instant(report['startedAtUTC']) <= instant(report['finishedAtUTC']),
          'Qualification predates request or has invalid timestamps')

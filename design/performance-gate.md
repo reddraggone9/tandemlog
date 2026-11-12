@@ -735,5 +735,7 @@ cost is the shared warm open and close seal, not the command.
 
 New requests use relevant-source v3: only benchmark-compiled Dart code,
 `tool/performance/`, `pubspec.lock` and the native engine (`native/`) void a
-qualification. Budgets and host registration pins are unchanged. Historical
+qualification. Budgets and CPU/caps/filesystem registration pins are unchanged.
+Schema-v2 host registration records kernel/Python in every result and receipt
+instead of enforcing exact versions; historical schema-v1 receipts keep their rules. Historical
 receipts keep their recorded scheme; see [qualification protocol](performance-reference-qualification.md#relevant-source-identity-schemes).

@@ -28,7 +28,7 @@ stale,mismatched,incomplete,incorrect or over either absolute/growth limit.
 The reference uses the existing bounded one-shot manager route,not a persistent
 GitHub runner/service,listener,new credential or changed host security setting.
 Policy approval alone grants no such infrastructure permission. Its registered
-hardware/kernel/Python/filesystem,controller,toolchain/native/SQLite/dependency
+hardware/filesystem,controller,toolchain/native/SQLite/dependency
 and resource receipts are explicit. Material drift requires reviewed registration,
 never a multiplier or automatic recalibration.
 
@@ -99,3 +99,11 @@ The controlled host's qualification now follows
 [the gate rule](../performance-gate.md#the-gate-rule-lee-2026-10-31). Host roles, caps, the
 fail-closed verifier and hosted advisory timing are unchanged. The official-rerun amendment above
 applies only to results sealed before this date.
+
+## Host runtime observations (Lee, 2026-11-12)
+
+Schema-v2 reference-host registration keeps CPU, caps and filesystem exact but
+records kernel and Python versions in each result/reference binding instead of
+pinning them. A runtime update can now yield a slower or failed qualification
+rather than being refused before measurement. Schema-v1 receipts retain their
+original exact-version rules. Budgets are unchanged.

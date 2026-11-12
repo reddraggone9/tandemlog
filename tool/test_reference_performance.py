@@ -369,6 +369,57 @@ class ReferenceReceiptTests(ReceiptFixture):
             with self.assertRaisesRegex(ValueError, 'environment differs'):
                 receipt.request_context(self.repo, self.bundle / 'request.json', self.repo, self.bounds)
 
+    def use_recorded_runtime_policy(self):
+        self.host['schemaVersion'] = 2
+        for key in ('kernel', 'python'):
+            del self.host['environment'][key]
+        write(self.repo / receipt.PROFILE, self.host)
+        self.commit()
+        self.request['sourceRevision'] = self.head()
+        self.request['relevantSource'] = receipt.source_identity(self.repo, receipt.IDENTITY_V2)
+        self.request['hostProfileSHA256'] = receipt.digest(self.repo / receipt.PROFILE)
+        self.report['referenceBinding'].update(
+            hostProfileSHA256=self.request['hostProfileSHA256'],
+            requestSHA256=receipt.canonical_digest(self.request),
+            relevantSourceSHA256=self.request['relevantSource']['sha256'])
+        self.rebind()
+        actual = {**self.host['environment'], 'kernel': 'updated-kernel', 'python': 'updated-python'}
+        self.report['referenceBinding']['environment'] = actual
+        self.report['environment'] = {k: actual[k] for k in ('kernel', 'python')}
+        self.refresh()
+        return actual
+
+    def test_v2_host_records_updated_runtime_in_preflight_and_receipt(self):
+        actual = self.use_recorded_runtime_policy()
+        with patch.object(receipt, 'fingerprint', return_value=actual):
+            binding = receipt.request_context(self.repo, self.bundle / 'request.json', self.repo, self.bounds)
+        self.assertEqual(binding['environment'], actual)
+        self.verify()
+
+    def test_v2_host_keeps_cpu_filesystem_and_caps_pinned(self):
+        actual = self.use_recorded_runtime_policy()
+        for key in ('architecture', 'logicalCPUs', 'cpuModel', 'filesystemType'):
+            with self.subTest(key=key), patch.object(receipt, 'fingerprint', return_value={**actual, key: 'other'}):
+                with self.assertRaisesRegex(ValueError, 'environment differs'):
+                    receipt.request_context(self.repo, self.bundle / 'request.json', self.repo, self.bounds)
+        with patch.object(receipt, 'fingerprint', return_value=actual):
+            with self.assertRaisesRegex(ValueError, 'resource bounds'):
+                receipt.request_context(self.repo, self.bundle / 'request.json', self.repo, {})
+
+    def test_v2_receipt_requires_recorded_consistent_runtime_versions(self):
+        self.use_recorded_runtime_policy()
+        original = copy.deepcopy(self.report)
+        for key in ('kernel', 'python'):
+            for missing in (True, False):
+                self.report = copy.deepcopy(original)
+                if missing:
+                    del self.report['referenceBinding']['environment'][key]
+                else:
+                    self.report['environment'][key] = 'different'
+                self.refresh()
+                with self.subTest(key=key, missing=missing), self.assertRaises(ValueError):
+                    self.verify()
+
     def test_request_controller_cannot_change_after_review(self):
         self.controller.write_text('changed controller\n')
         with patch.object(receipt, 'fingerprint', return_value=self.host['environment']):

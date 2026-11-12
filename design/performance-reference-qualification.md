@@ -7,17 +7,21 @@ controller revisions and per-release outcomes; none of it is a step to follow.
 
 ## What is pinned now
 
-All of this is in `tool/performance/reference-host-v1.json` and checked by
+The current schema-v2 registration is in `tool/performance/reference-host-v1.json`
+(the filename is retained for controller compatibility) and checked by
 `reference_receipt.py`:
 
 - **Host:** Bender, the household server (i5-12600KF, x86_64, 16 logical CPUs, ext4
   measurement path). Its registered `hostId` is `farnsworth`, the machine's name until
   2026-11-08. The id is a constant in the verifier and its tests, not a different
   machine. There is no hardware multiplier (`hardwareMultiplier: 1`).
-- **Environment:** kernel `7.2.14-arch1-1`, Python `3.14.9`. `request` and the run
-  compare the live `fingerprint` with this registration exactly. A routine OS update
-  that changes either one blocks the next request until the registration is refreshed,
-  and the refreshed file is relevant source, so it needs its own fresh qualification.
+- **Runtime observations:** kernel and Python versions are recorded in every result
+  and reference binding, not pinned (Lee, 2026-11-12). CPU model, architecture,
+  logical CPU count and measurement filesystem still match exactly. An OS/runtime
+  update may produce a slower or failed benchmark instead of blocking it up front.
+  Historical schema-v1 registrations/receipts retain their exact version checks;
+  no old receipt is rewritten. The runner and verifier require both runtime versions
+  to be present and consistent in each new receipt.
 - **Caps:** 6 GiB memory, no swap, 200% CPU, 128 tasks.
 - **Limits:** `limits-v1.json` SHA-256
   `142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8`, also pinned in
@@ -59,7 +63,8 @@ commit must remain an ancestor. New requests use v3 (Lee 11-12): only benchmark-
 Dart code (transitive import/export/part closure, including conditional alternatives),
 `tool/performance/`, `pubspec.lock` and the native engine (`native/`) void a qualification.
 Tests outside that closure, workflows, platform packaging, docs and unrelated app code
-do not. Budgets and reference-host pins (including kernel/Python) are unchanged.
+do not. Budgets, CPU, caps and filesystem pins are unchanged; kernel/Python are recorded
+rather than pinned under schema-v2 registration.
 Stable version renames therefore retain a v3 qualification. Old receipts still use
 their original rules. Keep release branches linear (rebase, never merge).
 
@@ -113,8 +118,9 @@ retained as evidence, never retried on unchanged source.
    registration), then make it read-only. Dirty, untracked or nonliteral relevant
    source is refused.
 2. **Fingerprint.** `reference_receipt.py fingerprint --repo "$qualification_source"
-   --output "$output_parent"` must equal the registered `environment`. If it does not,
-   refresh the registration first (see [What is pinned now](#what-is-pinned-now)).
+   --output "$output_parent"` must match the registered CPU/architecture/count and
+   filesystem. Kernel/Python are observations, not equality requirements. If a pinned
+   field differs, refresh the registration first (see [What is pinned now](#what-is-pinned-now)).
 3. **Request.**
 
    ```bash
