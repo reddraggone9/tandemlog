@@ -1,8 +1,10 @@
 import '../domain/event.dart' show isCanonicalId;
 import '../domain/event_chain.dart' show canonicalDataJson;
 import 'food_products.dart';
+import 'shelf_life.dart';
 
 export 'food_products.dart';
+export 'shelf_life.dart';
 
 /// Container actions plus the product-level families (ADR pending,
 /// design/food-products.md). Product-level actions target product or purchase
@@ -64,8 +66,14 @@ class FoodDetails {
     'size': size,
   };
   String get groupKey => canonicalDataJson(toJson());
-  String get displayGroupKey =>
-      canonicalDataJson(toJson()..remove('estimated'));
+
+  /// Estimated dates (imports dated from the product's Keeps for) form their
+  /// own row, so a row's `est.` is true of every container in it.
+  String get displayGroupKey => canonicalDataJson(
+    toJson()
+      ..remove('estimated')
+      ..addAll({if (estimated == true && expiry != null) 'estimated': true}),
+  );
   void validate() {
     _text(name, 500, required: true);
     for (final value in [brand, retention, location, size]) {
@@ -542,6 +550,7 @@ class FoodContainer {
     FoodDetails? ownDetails,
     this.productLink,
     this.purchase,
+    this.placedOrder = 0,
     String? product,
   }) : deletions = Set.unmodifiable(deletions),
        contentsEdits = Map.unmodifiable(contentsEdits),
@@ -563,6 +572,9 @@ class FoodContainer {
   /// Explicit product and purchase links (container.add r2/container.link).
   final String? productLink, purchase;
   final String? _product;
+
+  /// Clock of the operation that last set this container's Location.
+  final int placedOrder;
 
   /// The product this container names: explicit, else implicit.
   late final String productRef =
@@ -597,6 +609,7 @@ class FoodContainer {
     lastDeletionId: lastDeletionId,
     contentsEdits: contentsEdits,
     productLink: productLink,
+    placedOrder: placedOrder,
     product: _product,
   );
 
@@ -625,6 +638,7 @@ class FoodContainer {
       ownDetails: ownDetails,
       productLink: productLink,
       purchase: purchase,
+      placedOrder: placedOrder,
       product: root,
     );
   }
@@ -693,12 +707,18 @@ class FoodState {
   late final bool usesProducts =
       !catalog.isEmpty || containers.any((c) => c.productLink != null);
 
-  /// Every product that has containers or recorded fields, by root ID.
-  late final Map<String, FoodProductSummary> products = () {
+  /// Every container by its product's root ID, removed ones included.
+  late final Map<String, List<FoodContainer>> containersByProduct = () {
     final members = <String, List<FoodContainer>>{};
     for (final item in containers) {
       (members[item.product] ??= []).add(item);
     }
+    return members;
+  }();
+
+  /// Every product that has containers or recorded fields, by root ID.
+  late final Map<String, FoodProductSummary> products = () {
+    final members = containersByProduct;
     final ids = {
       ...members.keys,
       for (final id in catalog.products.keys)
@@ -720,6 +740,7 @@ class FoodState {
           (fields['links'] as List?)?.cast<String>() ?? const <String>[],
         ),
         minimum: fields['minimum'] as int?,
+        keepsFor: FoodKeepsFor.fromJson(fields['keepsFor']),
         onHand: items.where((e) => !e.deleted).length,
         containers: items.length,
         purchases: List.unmodifiable(
@@ -977,7 +998,8 @@ FoodState projectFood(
     }
     var details = seed.details!,
         contents = seed.contents ?? const Contents.fraction(1, 1),
-        deletedOrder = 0;
+        deletedOrder = 0,
+        placedOrder = seed.order;
     var productLink = seed.link?['product'] as String?,
         purchase = seed.link?['purchase'] as String?;
     final deletions = <String>{},
@@ -994,6 +1016,7 @@ FoodState projectFood(
           for (final field in op.fields) {
             merged[field] = changed[field];
           }
+          if (op.fields.contains('location')) placedOrder = op.order;
           details = FoodDetails.fromJson(merged);
         }
         if (op.contents != null) {
@@ -1036,6 +1059,7 @@ FoodState projectFood(
         contentsEdits: edits,
         productLink: productLink,
         purchase: purchase,
+        placedOrder: placedOrder,
       ),
     );
   }

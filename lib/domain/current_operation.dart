@@ -132,7 +132,10 @@ class CurrentOperation {
             module == 'tasks' &&
             _zoneFamilies.contains(family)) &&
         !(revision == 3 && module == 'tasks' && family == 'task.complete') &&
-        !(revision == 2 && module == 'food' && family == 'container.add') &&
+        !((revision == 2 || revision == 3) &&
+            module == 'food' &&
+            family == 'container.add') &&
+        !(revision == 2 && module == 'food' && family == 'product.edit') &&
         !(revision == 2 &&
             module == 'tasks' &&
             _zoneFamilies.contains(family))) {

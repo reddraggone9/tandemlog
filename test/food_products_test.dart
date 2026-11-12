@@ -276,13 +276,15 @@ void main() {
   });
 
   group('purchase import', () {
-    FoodPurchaseImportPlan plan(List<FoodPurchaseLine> lines) =>
-        FoodPurchaseImportPlan(
-          space: food.space,
-          importId: '11111111-1111-4111-8111-111111111111',
-          sourceSha256: 'a' * 64,
-          lines: lines,
-        );
+    FoodPurchaseImportPlan plan(
+      List<FoodPurchaseLine> lines, {
+      String importId = '11111111-1111-4111-8111-111111111111',
+    }) => FoodPurchaseImportPlan(
+      space: food.space,
+      importId: importId,
+      sourceSha256: 'a' * 64,
+      lines: lines,
+    );
     FoodPurchaseLine milk({int quantity = 3, int amount = 1044}) =>
         FoodPurchaseLine(
           sourceKind: 'ynab',
@@ -528,6 +530,373 @@ void main() {
       expect(food.state.active, isEmpty);
       expect(food.state.catalog.purchases, isEmpty);
       expectReplayEquivalent();
+    });
+
+    group('shelf life', () {
+      final today = DateTime.now().toUtc().toIso8601String().substring(0, 10);
+      const second = '22222222-2222-4222-8222-222222222222';
+      Future<String> keepMilk(
+        FoodStore store,
+        Object? keepsFor, {
+        String location = '',
+      }) async {
+        if (store.state.containers.isEmpty) {
+          await store.add(FoodDetails(name: 'milk', location: location), 1);
+          // Outside the receipt matching window, so imports create new units.
+        }
+        final root = store.state.products.keys.single;
+        await store.changeDetails(
+          [store.state.containers.first.id],
+          const FoodDetails(name: 'milk'),
+          [],
+          products: FoodProductChange(
+            roots: [root],
+            changes: {'keepsFor': keepsFor},
+          ),
+        );
+        return root;
+      }
+
+      FoodPurchaseLine old({int quantity = 2, String key = 'txn-9#1'}) =>
+          FoodPurchaseLine(
+            sourceKind: 'ynab',
+            sourceKey: key,
+            date: '2026-01-31',
+            store: 'Walmart',
+            amount: 500,
+            quantity: quantity,
+            name: 'milk',
+          );
+
+      test('Keeps for is product.edit revision 2 and round-trips', () async {
+        final root = await keepMilk(food, {'count': 2, 'unit': 'week'});
+        final edit = records().last;
+        expect(edit.currentOperation.family, 'product.edit');
+        expect(edit.currentOperation.revision, 2);
+        expect(FoodRecord.decode(edit.encode()).encode(), edit.encode());
+        expect(
+          food.state.products[root]!.keepsFor,
+          const FoodKeepsFor(2, 'week'),
+        );
+        await keepMilk(food, null);
+        expect(records().last.currentOperation.revision, 2);
+        expect(food.state.products[root]!.keepsFor, isNull);
+        await food.undoOperations(food.lastPreparedRecords);
+        expect(
+          food.state.products[root]!.keepsFor,
+          const FoodKeepsFor(2, 'week'),
+        );
+        expectReplayEquivalent();
+      });
+
+      test('invalid Keeps for values are refused before any write', () async {
+        await food.add(const FoodDetails(name: 'milk'), 1);
+        final before = records().length;
+        for (final bad in [
+          {'count': 0, 'unit': 'day'},
+          {'count': 1000, 'unit': 'day'},
+          {'count': 121, 'unit': 'month'},
+          {'count': 1, 'unit': 'year'},
+          {'count': 1},
+          '2 weeks',
+        ]) {
+          await expectLater(keepMilk(food, bad), throwsFormatException);
+        }
+        expect(records().length, before);
+      });
+
+      test(
+        'import dates fresh food from the purchase day and fills the usual location',
+        () async {
+          await keepMilk(food, {
+            'count': 1,
+            'unit': 'month',
+          }, location: 'Fridge');
+          final dry = await food.dryRunPurchaseImport(plan([old()]));
+          expect(dry.lines.single.expiry, '2026-02-28');
+          expect(dry.lines.single.location, 'Fridge');
+          final before = records().length;
+          await food.commitPurchaseImport(plan([old()]));
+          final births = records()
+              .skip(before)
+              .where((r) => r.operation.action == FoodAction.add)
+              .toList();
+          expect(births.single.currentOperation.revision, 3);
+          expect(
+            FoodRecord.decode(births.single.encode()).encode(),
+            births.single.encode(),
+          );
+          final imported = food.state.containers
+              .where((c) => c.purchase != null)
+              .toList();
+          expect(imported, hasLength(2));
+          for (final c in imported) {
+            expect(c.details.expiry, '2026-02-28');
+            expect(c.details.estimated, true);
+            expect(c.details.location, 'Fridge');
+          }
+          expect(
+            food.state.view(FoodView.inbox).expand((g) => g.containers),
+            hasLength(1),
+          );
+          // A retry finds the purchase and writes nothing.
+          final after = records().length;
+          await food.commitPurchaseImport(plan([old()]));
+          expect(records().length, after);
+          expectReplayEquivalent();
+          await food.undoOperations(records().skip(before).toList());
+          expect(
+            food.state.containers.where((c) => c.purchase != null),
+            isEmpty,
+          );
+          expectReplayEquivalent();
+        },
+      );
+
+      test(
+        'food without Keeps for arrives undated in the Inbox, with its usual location',
+        () async {
+          await food.add(
+            const FoodDetails(name: 'milk', location: 'Fridge'),
+            1,
+          );
+          final dry = await food.dryRunPurchaseImport(plan([old()]));
+          expect(dry.lines.single.expiry, isNull);
+          expect(dry.lines.single.location, 'Fridge');
+          await food.commitPurchaseImport(plan([old()]));
+          final imported = food.state.containers
+              .where((c) => c.purchase != null)
+              .toList();
+          expect(imported, hasLength(2));
+          for (final c in imported) {
+            expect(c.details.expiry, isNull);
+            expect(c.details.estimated, false);
+            expect(c.details.location, 'Fridge');
+          }
+          expect(
+            food.state.view(FoodView.inbox).expand((g) => g.containers),
+            hasLength(3),
+          );
+          expectReplayEquivalent();
+        },
+      );
+
+      test(
+        'a product seen for the first time stays a revision 2 birth',
+        () async {
+          await food.commitPurchaseImport(plan([old()]));
+          final birth = records().lastWhere(
+            (r) => r.operation.action == FoodAction.add,
+          );
+          expect(birth.currentOperation.revision, 2);
+          expect(birth.operation.link!.containsKey('prefill'), false);
+          expect(
+            food.state.containers.every((c) => c.details.expiry == null),
+            true,
+          );
+        },
+      );
+
+      test(
+        'clearing Keeps for sends the next import back to the Inbox',
+        () async {
+          await keepMilk(food, {'count': 5, 'unit': 'day'});
+          await food.commitPurchaseImport(plan([old(key: 'a')]));
+          await keepMilk(food, null);
+          await food.commitPurchaseImport(
+            plan([old(key: 'b')], importId: second),
+          );
+          final byPurchase = {
+            for (final c in food.state.containers)
+              if (c.purchase != null) c.purchase!: c.details.expiry,
+          };
+          expect(byPurchase.values.toSet(), {'2026-02-05', null});
+          // Containers already estimated keep their dates.
+          expect(
+            food.state.containers.where((c) => c.details.estimated == true),
+            hasLength(2),
+          );
+        },
+      );
+
+      test(
+        'duplicate offline receipts with different Keeps for are both admitted',
+        () async {
+          await food.add(const FoodDetails(name: 'milk'), 1);
+          await withPeer((peer, peerData) async {
+            await keepMilk(food, {'count': 2, 'unit': 'week'});
+            await keepMilk(peer, {'count': 5, 'unit': 'day'});
+            await food.commitPurchaseImport(plan([old()]));
+            await peer.commitPurchaseImport(plan([old()]));
+            await File(
+              '${peerData.path}/${peer.writer}.applog',
+            ).copy('${root.path}/data/${peer.writer}.applog');
+            await food.refresh();
+            final imported = food.state.containers
+                .where((c) => c.purchase != null)
+                .toList();
+            expect(imported, hasLength(2));
+            expect(imported.map((c) => c.details.expiry).toSet(), hasLength(1));
+            expect(imported.every((c) => c.details.estimated == true), true);
+            expectReplayEquivalent();
+          }, offline: true);
+        },
+      );
+
+      test(
+        'a prefilled surplus unit is still suppressed when a peer matched a hand entry',
+        () async {
+          await keepMilk(food, {
+            'count': 2,
+            'unit': 'week',
+          }, location: 'Fridge');
+          final receipt = plan([milk(quantity: 2)]);
+          await withPeer((peer, peerData) async {
+            // Only this device knows a second, recent hand entry.
+            await food.add(const FoodDetails(name: 'milk'), 1);
+            await food.commitPurchaseImport(receipt);
+            await peer.commitPurchaseImport(receipt);
+            await File(
+              '${peerData.path}/${peer.writer}.applog',
+            ).copy('${root.path}/data/${peer.writer}.applog');
+            await food.refresh();
+            expect(
+              food.state.containers.where((c) => c.purchase != null),
+              hasLength(2),
+            );
+            expect(food.state.active, hasLength(2));
+            expectReplayEquivalent();
+          }, offline: true);
+        },
+      );
+
+      test(
+        'merging keeps the shelf life only the merged-away product had',
+        () async {
+          await food.add(const FoodDetails(name: 'Carrots'), 2);
+          await food.add(const FoodDetails(name: 'Carrot'), 1);
+          final carrot = food.state.containers.firstWhere(
+            (c) => c.details.name == 'Carrot',
+          );
+          await food.changeDetails(
+            [carrot.id],
+            const FoodDetails(name: 'Carrot'),
+            [],
+            products: FoodProductChange(
+              roots: [carrot.product],
+              changes: const {
+                'keepsFor': {'count': 1, 'unit': 'month'},
+              },
+            ),
+          );
+          await food.changeDetails(
+            [carrot.id],
+            const FoodDetails(name: 'Carrots'),
+            [],
+            products: FoodProductChange(
+              roots: [carrot.product],
+              changes: const {'name': 'Carrots'},
+            ),
+          );
+          final merged = food.state.products.values.single;
+          expect(merged.containers, 3);
+          expect(merged.keepsFor, const FoodKeepsFor(1, 'month'));
+          await food.undoOperations(food.lastPreparedRecords);
+          expect(food.state.products, hasLength(2));
+          expectReplayEquivalent();
+        },
+      );
+
+      test(
+        'usual location follows the most recently placed container',
+        () async {
+          await food.add(
+            const FoodDetails(name: 'milk', location: 'Pantry'),
+            1,
+          );
+          await food.add(
+            const FoodDetails(name: 'milk', location: 'Fridge'),
+            1,
+          );
+          final root = food.state.products.keys.single;
+          expect(foodUsualLocation(food.state, root), 'Fridge');
+          final pantry = food.state.containers.firstWhere(
+            (c) => c.details.location == 'Pantry',
+          );
+          await food.changeDetails(
+            [pantry.id],
+            const FoodDetails(name: 'milk', location: 'Garage'),
+            ['location'],
+          );
+          expect(foodUsualLocation(food.state, root), 'Garage');
+          // Eaten food still says where it lived.
+          await food.remove([pantry.id]);
+          expect(foodUsualLocation(food.state, root), 'Garage');
+          // An edit of another field is not a placement.
+          final fridge = food.state.containers.firstWhere(
+            (c) => c.details.location == 'Fridge',
+          );
+          await food.changeDetails(
+            [fridge.id],
+            const FoodDetails(name: 'milk', expiry: '2026-12-01'),
+            ['expiry'],
+          );
+          expect(foodUsualLocation(food.state, root), 'Garage');
+        },
+      );
+
+      test('suggested date repeats the last gap the user set', () async {
+        await food.commitPurchaseImport(plan([old(key: 'a', quantity: 1)]));
+        final first = food.state.containers.single;
+        expect(foodSuggestedExpiry(food.state, first), isNull);
+        await food.changeDetails(
+          [first.id],
+          const FoodDetails(name: 'milk', expiry: '2026-02-20'),
+          ['expiry', 'estimated'],
+        );
+        await food.commitPurchaseImport(
+          plan([
+            FoodPurchaseLine(
+              sourceKind: 'ynab',
+              sourceKey: 'b',
+              date: today,
+              store: 'Walmart',
+              amount: 500,
+              quantity: 1,
+              name: 'milk',
+            ),
+          ], importId: second),
+        );
+        final next = food.state.containers.firstWhere(
+          (c) => c.details.expiry == null,
+        );
+        expect(
+          foodSuggestedExpiry(food.state, next),
+          const FoodKeepsFor(20, 'day').addTo(today),
+        );
+        // Hand entries have no purchase day, so no suggestion.
+        await food.add(
+          const FoodDetails(name: 'milk'),
+          1,
+          ids: ['00000000-0000-4000-8000-0000000000aa'],
+        );
+      });
+
+      test('estimated and hand-dated containers form separate rows', () async {
+        await keepMilk(food, {'count': 1, 'unit': 'month'});
+        await food.commitPurchaseImport(plan([old()]));
+        final one = food.state.containers.firstWhere((c) => c.purchase != null);
+        expect(food.state.view(FoodView.inventory), hasLength(1));
+        await food.changeDetails(
+          [one.id],
+          FoodDetails(name: 'milk', expiry: one.details.expiry),
+          ['expiry', 'estimated'],
+        );
+        final rows = food.state.view(FoodView.inventory);
+        expect(rows, hasLength(2));
+        expect(rows.map((g) => g.details.estimated).toSet(), {true, false});
+        expect(rows.map((g) => g.rowKey).toSet(), hasLength(2));
+      });
     });
   });
 
