@@ -1,6 +1,6 @@
 # Local history store and fast start
 
-Status: accepted direction (Lee, 2026-11-05); implemented for 2026.11.1.
+Status: accepted direction (Lee, 2026-11-05); released in 2026.11.1-rc.1 (build 115), stable 2026.11.1 (build 116).
 
 ## Lee's decisions
 

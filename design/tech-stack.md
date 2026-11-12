@@ -1,6 +1,6 @@
 # Approved stack
 
-See [ADR 0001](decisions/0001-client-and-storage.md). Flutter/Dart, SQLite, canonical JSONL logs and native folder adapters remain the application stack. [ADR 0010](decisions/0010-collaborative-text-adoption.md) authorizes a narrow Yrs/Rust bridge for collaborative task text; this integration is unreleased and retains its platform/compatibility gates. Domain commands and SQLite stay in Dart. Tasks first; no future-domain implementation.
+See [ADR 0001](decisions/0001-client-and-storage.md). Flutter/Dart, SQLite, canonical JSONL logs and native folder adapters remain the application stack. [ADR 0010](decisions/0010-collaborative-text-adoption.md) authorizes a narrow Yrs/Rust bridge for collaborative task text; it shipped in stable 2026.10.2 (build 53). Domain commands and SQLite stay in Dart. Food inventory ([ADR0014](decisions/0014-food-inventory.md)) is the second domain module; add further domains only when Lee asks for them.
 
 The headless agent CLI (`tandemlog-cli`, [agent interface](agent-interface.md)) is plain Dart built with `dart build cli` (native assets for SQLite) and loads the app's own text library by explicit path; it ships inside the Flatpak and the Windows installer/ZIP, not separately.
 

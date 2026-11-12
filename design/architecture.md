@@ -8,7 +8,7 @@ The host observes one committed revision and shared health; unknown complete sem
 
 Canonical records decide what survived restart. Exact unfinished bytes and prepared native handles remain process memory only. Read-only probes do not clean tails; provider adapters expose explicit safe owner-suffix truncation without replacing a committed prefix. [Storage](storage-and-sync.md) and [schema](schema.md) specify that boundary.
 
-Historical normalization stays in an external one-time tool with frozen readers and prefix replay-equivalence checks. Current profile adoption preserves simple settings and resets other local state; it does not rescue intent or orchestrate live conversion. Exact native acceptance and independent review remain pending.
+Historical normalization stays in an external one-time tool with frozen readers and prefix replay-equivalence checks. Current profile adoption preserves simple settings and resets other local state; it does not rescue intent or orchestrate live conversion. This boundary shipped in stable 2026.10.7 (build 101); the household's live cutover ran on 2026-10-27.
 
 Status: accepted direction; see [ADR 0001](decisions/0001-client-and-storage.md) and [implemented schema](schema.md).
 
@@ -32,7 +32,7 @@ profile ([agent interface](agent-interface.md), [ADR0036](decisions/0036-agent-i
 
 Inject time, IDs, storage and platform services at boundaries. Commands produce validated domain events; incoming events use the same versioned deterministic projection semantics, not current UI validation or current wall time. Keep diagnostics available even if a workspace cannot safely open for writing.
 
-RC4 extracts single/bulk editor draft ownership into `presentation/task_editor.dart`; host navigation owns editor-session identity and dirty-close routing. Shared `presentation/tag_input.dart` owns focus and anchored suggestion geometry; its host owns selected values and query drafts. `presentation/tag_filter_picker.dart` is the thin Filter policy wrapper. `domain/bulk_task_edit.dart` describes explicit functional patches and per-task results, while `TaskStore` serializes validation/durable writes. UI passes target/context guards, never writes SQL/logs. A validated bulk command commits its effects in one canonical action; incomplete bytes expose no subset. Main still combines workspace/filter/selection/drag orchestration; extract a focused controller when concrete duplication or another workflow warrants it, rather than a generic framework during this candidate.
+RC4 extracts single/bulk editor draft ownership into `presentation/task_editor.dart`; host navigation owns editor-session identity and dirty-close routing. Shared `presentation/tag_input.dart` owns focus and anchored suggestion geometry; its host owns selected values and query drafts. `presentation/tag_filter_picker.dart` is the thin Filter policy wrapper. `domain/bulk_task_edit.dart` describes explicit functional patches and per-task results, while `TaskStore` serializes validation/durable writes. UI passes target/context guards, never writes SQL/logs. A validated bulk command commits its effects in one canonical action; incomplete bytes expose no subset. Main still combines workspace/filter/selection/drag orchestration; extract a focused controller when concrete duplication or another workflow warrants it, rather than a generic framework.
 
 Food's page owns one keyed session and captured command/target origin.
 FoodEditor owns controllers, validation, one-shot Save and coalesced close through
@@ -126,7 +126,7 @@ Model-derived content is untrusted input. A later ingestion adapter produces a p
 
 ## Growth and review
 
-The app-wide profile owner released in stable2026.10.3 serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup retains simple settings from recognized old profiles and resets disposable state before opening current adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and completed acceptance. The next preview's Flatpak packaging correction uses its private XDG profile by default, with no automatic host-profile migration.
+The app-wide profile owner released in stable2026.10.3 serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup retains simple settings from recognized old profiles and resets disposable state before opening current adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and completed acceptance. The Flatpak uses its private XDG profile (`packaging/linux/tandemlog`), with no automatic host-profile migration. Since stable 2026.11.1 the same database also holds the decoded canonical history as persistent rows ([history store](history-store.md)), so a warm start reads only bytes after each writer's sealed offset.
 
 At each milestone, review dependencies, duplicated rules, error/recovery paths, UX consistency and actual performance. For every module addition, review cross-module transactions and compatibility before UI expansion. Record refactors and bounded debt; do not use “future flexibility” to justify unused infrastructure.
 
@@ -143,7 +143,7 @@ Food selection and Brand/Location suggestions/filters are page-local projections
 
 The RC-only unspecified contents branch is removed. Numeric fraction/amount encoding and existing frozen numeric record hashes are unchanged; omitted Add contents and import-builder contents default Full. All-null payloads fail decoding rather than changing signed bytes. Old import vectors remain frozen as rejection evidence; a new independently generated Full vector covers current identities and hashes.
 
-## Following RC section adapter
+## Section adapter (Android shortcuts)
 
 The Android bridge emits only validated constant section destinations and monotonically sequenced delivery IDs. The existing application host owns readiness, coalescing, editor guards and successful LocalSettings persistence. Native shortcut publication and restored-intent suppression stay in the Android adapter; domain, canonical replay and sync remain independent. [ADR 0021](decisions/0021-local-sections-and-launcher-shortcuts.md) records the accepted boundary and alternatives.
 

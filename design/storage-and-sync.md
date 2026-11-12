@@ -1,6 +1,6 @@
 # Storage and sync
 
-[ADR0031](decisions/0031-coordinated-unified-cutover.md) and the [current schema](schema.md) specify the implemented current-only boundary. Validation is ongoing. Earlier released formats remain in [historical documentation](archive/storage-and-sync-before-coordinated-cutover.md) and external frozen readers.
+[ADR0031](decisions/0031-coordinated-unified-cutover.md) and the [current schema](schema.md) specify the current-only boundary, released in stable 2026.10.7 (build 101) and adopted by the live cutover on 2026-10-27. Earlier released formats remain in [historical documentation](archive/storage-and-sync-before-coordinated-cutover.md) and external frozen readers.
 
 UnifiedHistory is the sole append allocator and common admission owner. TaskStore and FoodStore retain domain APIs over the same admitted revision. The provider transports immutable bootstrap metadata and per-installation append histories with delayed/reordered/repeated delivery; it decides neither authorship nor merge meaning. Sync only the selected canonical folder, never the private app profile.
 
@@ -16,7 +16,7 @@ The one-time converter stays outside the repository. Its input is an accepted fr
 
 Retain continuing installation IDs and folder selections plus simple preferences. Other private state may reset, including drafts and unfinished saves; full profile export is not required. Sync-node count does not determine historical authors. Missing mappings stop conversion.
 
-Only a separate live-cutover approval can adopt converted history. Old applications must remain stopped afterward. Reverting after new-format writes requires reconciliation rather than copying old files over new work. No development test opens, resets or converts a production profile/workspace.
+Only a separate live-cutover approval can adopt converted history (Lee approved and the household cutover ran on 2026-10-27). Old applications must remain stopped afterward. Reverting after new-format writes requires reconciliation rather than copying old files over new work. No development test opens, resets or converts a production profile/workspace.
 
 
 The decoded-history blob and its whole-batch verification are replaced by the [history store](history-store.md).
