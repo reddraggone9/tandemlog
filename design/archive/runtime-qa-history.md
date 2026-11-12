@@ -1,0 +1,1229 @@
+> Archived verbatim from `design/runtime-qa.md` at commit `c494196` (2026-11-12). Historical per-build QA log, not current method: see [runtime QA](../runtime-qa.md).
+> Relative links below were written for `design/`; resolve them from there (or open this text at `c494196:design/runtime-qa.md`).
+
+# Food row selection and Move some — 2026-10-29 local Linux check
+
+Branch `vex/food-row-selection-20261029`. `integration_test/food_row_selection_workflow_test.dart` runs the full app on native Linux GTK (debug, Xvfb/openbox, private runtime dir) against a private synthetic workspace at 1200 and 390 px in dark and light: 4/4 passed. Screenshots were visually inspected: a selected row's count follows a peer arrival (wide "Edit 3 → 4 containers", narrow "3 → 4 selected"), there is no checkbox or row shift, Esc clears, the row ⋮ menu offers Move some… only on rows with two or more containers, dialog errors sit beside How many / New location, Move 2 splits the row and one toolbar Undo ("Undo editing 2 containers") restores it. Media stays private. Not Android/Windows/200% text/screen-reader evidence; not registered in the native CI suite.
+
+# Food RC.2 development acceptance — 2026-10-28
+
+[Sanitized acceptance](../evidence/food-rc2-20261028/development-acceptance.json) binds the scoped checks todeaeb729: full1699 unit/host cases (runtime-identical a4efe25 plus final harness26),293 tooling checks, clean analysis; final native GTK selection parity9,Food products17 and distinct task-based audit3 pass. The audit captures five tasks, resumes interrupted drafts, admits incoming changes, switches users and recovers read errors. Parent inspected actual native pixels at320/390/1400,including enlarged text/both themes and Task/Food pane/row workflows. Native input is scripted; the demo visibly marks targets with the X pointer. Food captures mount the production component with synthetic callbacks; Task parity/audit use the full app and isolated native storage. This is not Android/Windows or signed-installer acceptance.
+
+Independent source/notes/media review passed after repairing the separately reproduced Select matching pane gap. Stable6b8bb74 reproduces the original Tasks/Food gap and sole-row recreation: pre-existing behavior,not a new Food-products regression. The optional dark native comparison uses released-RC1-equivalent634cd9c and initial RC2e0508e3; subsequent fixes do not change its illustrated low-view rendering. Exact final native checks separately cover Space,dirty guard and Select matching. Owned native processes stopped; existing household portals and live data untouched. Fresh enforcing reference qualification,hosted/signed checks and exact native Android acceptance remain pending. No RC.1 owner override is applicable and no timing budget/policy is changed.
+
+# Review capture theme
+
+All review screenshots use the production theme from
+`lib/presentation/tandemlog_theme.dart` (`tandemlogTheme(Brightness)`).
+Component-only capture harnesses must use it too; a bare `ThemeData` uses
+Flutter's default purple palette, not Tandemlog. `captureUx` checks theme parity
+even when PNG output is disabled. Widget captures remain labelled as widget
+captures, not native-platform evidence.
+
+# RC4 repair continuation — 2026-10-25
+
+Exact source `5dc4e3e398e63e7956312ddff258ac88b6465649` was exercised in a native
+Linux GTK release bundle from CI40148192820, under isolated1200×800 Xvfb in dark
+theme. Actual pointer/keyboard Save, dirty-edit Undo → Cancel, then Undo → Discard
+passed visual inspection. Cancel left canonical bytes identical; Save and Undo
+added exactly two actions, retained every original prefix and restored all three
+synthetic task titles/notes. Independent fresh-profile replay passed without
+changing its canonical copy. Normal WM_DELETE exit0; all owned processes stopped.
+The saved desktop demonstration visibly includes the pointer; idle observation
+pauses are removed with action speed unchanged. Detailed media remains private.
+[Sanitized proof](../evidence/rc4-cloud-attribution-20261024/followup-owned-state-native-demo.json).
+
+This Linux software-rendered workflow establishes neither Windows presentation
+latency nor complete action performance acceptance. Android native workflow/video
+and separately coordinated Windows foreground validation remain pending. CI's
+current performance result fails60 absolute/45 paired checks,0 retries, despite
+all three shapes/232 correctness metrics passing. Limits remain unchanged; no
+release/live cutover is authorized. Historical evidence below keeps its attribution.
+
+# Coordinated cutover RC.4/build99 - qualified development acceptance
+
+## Latest development result - 2026-10-21
+
+[Current acceptance](../evidence/coordinated-cutover-build99/README.md) records source0acfb3b and CI39633973437: all three jobs green,203 native Linux cases passed,1314 current unit/host cases,89 tooling checks and8 external-copy controls. Exact original-payload GTK Save/peer-while-Food/restart and200-percent Light/Dark checks passed. Android06 independently accepted the affected source243d253 debug-APK modal/restart flows; earlier source-specific peer/tail coverage retains its attribution. All temporary labs stopped with settings restoration and independent process checks. Local desktop and Android demonstrations retain their exact source labels.
+
+This completes the scoped development/native validation, not release or live-cutover approval. Actual physical-writer mapping and a fresh frozen real-copy conversion/replay remain prerequisites. No production data/profile, published release, Latest stable or held dependency changed. The following entries preserve the chronology and qualifications of earlier trials.
+
+Commit [5ede6c4](https://github.com/reddraggone9/tandemlog/commit/5ede6c4ed6c8d62ce277e0536effc21ed0f39988) passes1304 unit/host tests and86 tooling checks, both analyzers, full formatting, converter continuation/prefix checks and the compiled profile/WAL helper. [Development CI39552456268](https://github.com/reddraggone9/tandemlog/actions/runs/39552456268) passed Windows unit/build/installer lifecycle and the Android debug build/payload gates. The original Android debug APK's bytes, package/version, debug certificate, native libraries, notices and alignment verify; it is not an owner-signed release candidate.
+
+Linux native integration and current GTK workflows remain pending. A fixture-only follow-up replaces retired settings-file seeds and separate Task/Food log assumptions with schema6 settings, ordinary writer enrollment and typed effects in one app log. It retains Save/Undo/recurrence/account coverage, replaces the obsolete separate-Food corruption expectation with the common fail-closed contract, and bounds future native runs. Three focused real-IO fixture controls, analysis, formatting and86 tooling checks pass. Headless harness attempts retain their failures and do not establish native acceptance.
+
+Exact debug99 Android11/API30 x86_64 checks at320x640dp now cover five-task capture in one action, native Save/Undo/repeated Save, no-write draft/Discard, first-persisted timezone revision2, cold reopen, incoming native text admitted while Food, and owner-only SAF incomplete-tail cleanup followed by one action with create/move effects. Both themes and200% editor text were visually inspected. These use source5ede6c4 and the original CI39552456268 debug APK; they do not establish owner signing or publication acceptance.
+
+The first Android99 trial restored its six settings and stopped its processes but missed the required separate readback window; that failed trial remains unwaived. A distinct fresh replacement repeated the functional cases and passed the separate sealed readback of all six original settings, including absent/null font scale, plus terminal process/port checks. Its stop controller was armed before UI work. A pre-completion tail snapshot is retained; the post-UI final snapshot proves the valid one-action append. A fresh Android99-03 media-only lab recorded verified OS tap indicators and native keyboard input, passed independent media/restoration/cleanup review and stopped. The local41.93-second demo labels Android11 emulator/DEBUG99/source5ede and synthetic data; removed pauses and the final3-second actual post-Save still are disclosed. Failed media requests remain retained. Independent source/evidence review found no must-fix findings before the focused corrections below.
+
+The binding correction let [CI39573900955](https://github.com/reddraggone9/tandemlog/actions/runs/39573900955) execute actual native Linux cases:141 passed and17 failed before its35-minute timeout, leaving the suite incomplete and no Linux package. Windows and Android jobs passed. That failed trial remains retained. Review separated obsolete provider/separate-store/enrollment/recovery fixtures from two confirmed product defects: audit counts included previously admitted Task events, and a pending checklist modal could hide the common recovery control.
+
+The focused corrections keep exact receipts in memory for the current session, with no durable unfinished-save intent or restart replay. Three host modal cases assert exact before-write retry, no additional append after lost acknowledgement, and no write on changed-workspace refusal; the audit case asserts unchanged/incoming/repeated counts. Independent review found no remaining must-fix issue. The current gate passed1308 unit/host tests and86 tooling checks, with clean analysis/format/version/whitespace and matching source hashes. These are host checks. A fresh exact-source hosted run, affected native workflows and GTK/manual acceptance remain required; original Android evidence does not validate these new product fixes. The required native CI step now follows packaging/upload for diagnostic availability and has a finite50-minute limit within its90-minute job.
+
+No release or live cutover is authorized. Actual historical-to-physical writer mapping remains incomplete; a sync peer count is not author identity. Full profile collection is not mandatory: retain simple settings and accepted canonical originals, deliberately reset other local state as approved.
+
+The next hosted run, [CI39592287800](https://github.com/reddraggone9/tandemlog/actions/runs/39592287800), passed Windows and Android and the Linux unit suite, then stopped in installed-Flatpak QA before native workflows. Its synthetic initializer correctly refused a measured profile outside the test workspace. The QA harness now stages a fresh, closed settings-only database inside that workspace and places it at the actual default sandbox profile without overriding profile discovery or adding filesystem grants. All89 tooling checks, a real Dart initializer run with the default profile outside the seed workspace, and production native replay passed; writer/settings and canonical bytes match. This changes QA only; product/APK build inputs are unchanged. A fresh hosted lifecycle/native run remains required. The failed run and diagnostic attempts retain their original attribution.
+
+[CI39599026628](https://github.com/reddraggone9/tandemlog/actions/runs/39599026628) passed Windows, Android, Linux unit/build/payload and installed-Flatpak lifecycle checks. Native Linux reached185 passes and6 failures, then its50-minute cap during preparation of the1001-task layout fixture, before the first frame. Independent review found one real diagnostics regression (missing physical file/record/byte location), two ambiguous Food Retry selectors, two missing explicit shared-read recovery steps and an obsolete no-enrollment assertion. These failed cases and the timeout remain unwaived until a fresh native run. The layout fixture retains1000 open tasks, one completed task and six viewport/text-scale samples, using bounded production capture batches. The integration binding now has an actual three-minute per-case timeout as well as the outer job bound.
+
+Android99-05 independently verified peer admission while Food, actual incoming Title/Notes, owner-only partial-tail cleanup with one create/move action, cold restart and separate settings/process cleanup on the exact e73440f debug APK. It also exposed a blocked pre-append checklist modal after repair. The focused modal fix admits the repaired shared history on explicit Save before retaining the existing identity and same-session receipt safeguards. Its full host gate passed1310 tests and89 tooling checks; new physical-location/UTF-8/tail regressions pass. Current-source native modal and GTK checks remain required. No durable unfinished-save intent or restart retry was introduced.
+
+[CI39611408787](https://github.com/reddraggone9/tandemlog/actions/runs/39611408787) passed Windows, Android and Linux package/lifecycle gates. Native Linux finished with189 passes and14 reported failures: two remaining fixtures and the large header case's three-minute timeout caused eleven subsequent harness failures. Physical corruption-location assertions and the earlier recovery/enrollment cases passed. The recovery Settings helper now uses the existing recovery control while preserving the invalid history, and Food Retry checks the unchanged writer prefix plus the exact reserved suffix. Header setup uses one bounded1001-task production action, retains1000 open/one completed tasks and all six layout samples, and keeps the per-case/outer bounds. Its local UI waits reserve shutdown time, and failure cleanup checks the actual app connection is closed before deleting the fixture. Native-engine setup/completion/fresh-profile replay measured34 seconds; fresh hosted UI verification remains required. These follow-ups change QA only; Android06's exact243d253 APK evidence retains that attribution.
+
+[CI39623398386](https://github.com/reddraggone9/tandemlog/actions/runs/39623398386), source2fab629, completed201 native passes and two assertions without timeout/cascade. The full1001-task header case passed all six samples and verified profile shutdown; uncertain Food Retry passed. The integrity fixture now retains the disabled-check assertion while corruption fences the workspace, restores only its injected suffix, explicitly retries read admission, and retains queued-check/profile-lease coverage. The future-task Notes fixture waits for successful editor closure before its unchanged independent canonical assertion. That async-race diagnosis still requires a fresh native result. These corrections remain QA-only; Android06 retains source243d253 attribution and accepted cleanup. GTK manual acceptance remains pending.
+
+# Experimental 2026.10.7-rc.3/build98 - accepted and published
+
+[RC.3](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.7-rc.3) is published from accepted source `5358967e9c3c97dabd914acd5ca59fd5f15317c3`. [Acceptance and public receipts](../evidence/prerelease-2026.10.7-rc.3/publication/README.md) bind successful signed candidate39454347693 and promotion39488138047 to the original three installers without rebuilding. Exact native GTK Save/peer incoming-while-Food and owner-APK Android workflows, canonical audits, visible-input media and separate editorial review completed. Android01's failed independent cleanup remains unwaived; a fresh distinct Android02 completed guided/native-IME and independent settings-restoration/cleanup acceptance. All labs stopped.
+
+Anonymous public downloads match the exact accepted bytes; owner APK signature/package/version/build98 and actual notes/tag/source verify. Prerelease=true and stable2026.10.6 remains Latest; all35 prior releases/assets/tag refs are preserved. Windows manual-GUI waiver, manual extracted GTK versus hosted Flatpak and API30/x86_64 qualifications remain explicit. SQLite/Gradle/AGP/Base64 holds remain. No production migration or stable promotion occurred. Earlier entries below retain their original source/build attribution.
+
+# Guided upgrade — build96 acceptance in progress
+
+Actual signed build94 Android11/API30 x86_64 testing at320x640dp and200% text
+found an unreadable upgrade-warning viewport in both themes. The build95 shared
+title/content scroll passed the same four headless theme/scale cases and affected
+dialog/host checks. Actual build95 Linux GTK at320x640 and200% text in both
+themes confirmed its warning paragraphs and actions are reachable.
+
+The same GTK check exposed a separate ellipsis in the expanded historical-ID
+helper, hiding the participating-devices distinction. Build96 shows complete
+wrapping field labels and uncapped help. Focused same-font checks reproduce all
+eight label/help failures against95 while its four warning/guard cases pass. The corrected twelve cases pass, along with
+the24 affected dialog/host cases. A separate final twelve-case run also checks
+actual retained focus and exact entered IDs after scrolling. These headless
+checks do not replace exact candidate native acceptance, which remains pending;
+build95 evidence does not establish build96 acceptance.
+
+Build94 separately exercised real Settings grant loss and restoration to the same
+synthetic SAF tree, a waiting independent participant, pre-staging cancellation,
+a new single-device conversion, the focused Food calendar Save/Undo case, five
+Tasks, guarded launcher navigation and cold section preference. Strict canonical
+replay and individual command/projection reviews passed with qualified evidence;
+the non-debug owner application's private SQLite was unavailable. Detailed exports,
+profiles and media stay private. Both native labs stopped with original settings
+restored. Exact build96 artifacts/native acceptance remain pending; existing
+Windows manual-GUI, GTK-versus-Flatpak and API30/x86_64 qualifications still apply.
+
+# Stable2026.10.6/build85 - accepted and published
+
+[Stable candidate acceptance](../evidence/stable-2026.10.6/candidate85/README.md) records full hosted and original artifact gates plus fresh exact-source LinuxGTK and exact signed Android84-to85 in-place native acceptance. Original canonical prefixes, exact six Food records/Undo targets, full replayed final projection, Task native fields/order, settings raw/writer and SAF grants verify. Native settings restored, temporary processes stopped and SDK test link absent. Desktop video covers Add Save/Undo/Edit Save with separate Edit Undo/Another proof; final independent Android/media review accepts the qualified evidence. Manual WindowsGUI waiver, manual GTK versus hosted Flatpak and API30 x86_64/simulated-wide qualifications remain explicit. Raw evidence stays private. [Publication receipts](../evidence/stable-2026.10.6/publication/README.md) verify anonymous original installer bytes, owner APK identity, exact notes/tag/source/Latest and preserved release history after authorized promotion38837831145 and independent public-byte review. Historical entries below retain original attribution.
+
+# Responsive Food pane - build84 accepted and published experimental
+
+[Publication receipts](../evidence/prerelease-2026.10.6-rc.1/publication/README.md) bind accepted source `09d631ce073a4fd42e42c9baafd2a79ac3364845`, candidate38806622314 and promotion38819962767 to anonymous downloads of the three exact original installers. [Native acceptance](../evidence/prerelease-2026.10.6-rc.1/acceptance.json) preserves source-qualified workflow, byte/replay/settings/SAF and media results. Independent source/native/artifact/editorial/privacy and post-publication reviews accept the qualified evidence. Original settings restored, temporary native processes stopped and SDK test link absent. Manual Windows GUI waiver, manual GTK versus hosted Flatpak and Android API30 x86_64/simulated-wide qualifications remain explicit; detailed profiles and media remain private. Stable2026.10.5 remains Latest. Historical entries retain their original attribution.
+
+# Stable 2026.10.5/build 81 - exact artifacts accepted and published
+
+[Publication receipts](../evidence/stable-2026.10.5/publication/README.md) bind exact source `bfb17ed71e0ed7953cc32c8f77a8907e7fdb337d`, the original signed stable candidate and anonymous public bytes. Fresh stable LinuxGTK AOT acceptance covered row press/editor/drag/no-op/Undo, settings/version and both themes at enlarged text. Exact original owner APK81 upgraded retained RC.4/build80 in place; saved-section/cold/warm actual pinned shortcuts, dirty-draft cancellation/focus/keyboard, no-op, completion/reorder/checklist/Food actions and Undo, actual light/dark 200% layouts and live Recents reuse passed. Original canonical byte prefixes, settings identity/raw bytes, captured SQLite/native-text projections, SAF grants and read-only replays passed. Actual desktop pointer and Android touch indicators were visually reviewed in private demonstrations. Native processes stopped, original device settings restored, test links absent and no new OOM or OOM kill occurred. Independent exact-source/artifact/native/editorial acceptance preceded publication; only sanitized public metadata enters Git.
+
+Linux manual GUI used exact-source GTK AOT; hosted Flatpak lifecycle is separate. Windows installer lifecycle and portable payload/provenance checks passed hosted gates under the existing manual-GUI waiver. Android used Android 11/API 30 x86_64; no physical ARM/API 36/16 KiB runtime claim is made. Long content wraps and scrolls at 200%. Earlier entries below preserve their own source/build attribution. Detailed profiles, canonical captures and media remain private.
+
+# Task row feedback and visible drops — RC.4/build80 accepted and published
+
+Focused/native checks distinguish main-row ink from the separate checklist panel, require active press feedback and protect independent controls. Continuous short-window mouse coverage measures one shared boundary through autoscroll and sticky headings and verifies identical saved results/Undo with hidden completed, assignee and tag-filtered rows. Native no-op cases compare canonical bytes and retain prior Undo; a clock-only inferred-neighbor regression exercises the write guard. All required hosted gates, exact original artifact verification, source-matched LinuxGTK AOT and signed Android79-to80 upgrade acceptance, actual pointer/touch demos and independent reviews passed. [Publication receipts](../evidence/prerelease-2026.10.5-rc.4/publication/README.md) bind the exact source and public bytes. Windows manual-GUI waiver, API30 x86_64 and inherited native/16KiB qualifications remain; no physical ARM/API36 claim is made. Temporary native processes stopped, original device settings restored and the temporary test symlink removed. Private data-bearing evidence remains external. Earlier receipts below retain their own attribution.
+
+# Shared rows — replacement build78 candidate
+
+The unchanged strict catalog-version test made build77 candidate38676004651 ineligible before signing. [Correction receipt](../evidence/prerelease-2026.10.5-rc.3/build78/correction.json) updates actual Flatpak release metadata and advances the build to78. Production Dart, tests, notes and dependencies remain unchanged. Build77 formatting/analysis and application/native contract gates passed; complete replacement hosted gates and exact signed Android78 acceptance remain pending. Existing native77 UI evidence keeps its original attribution.
+
+# Shared row surfaces — 2026.10.5-rc.3/build77 preparation
+
+[Current preparation](../evidence/prerelease-2026.10.5-rc.3/README.md) records the approved presentation scope,97 focused widget passes and5 final native Linux drag passes, including equivalent destinations at100/200% text, hidden global anchors, group-heading/bucket rejection and an attached cached offscreen anchor. The guard-removal red and exact-source green qualify the offscreen correction. Independent source/test and actual-note editorial review accept the snapshot. Full hosted/exact-artifact/native visual acceptance remains pending; earlier receipts below retain their original source/build attribution.
+
+# Following 2026.10.5-rc.1/build72 native gates
+
+The following RC is under acceptance. Earlier native receipts retain their original source/build attribution. Widget evidence covers coalesced/repeated guard answers, late dismissed callbacks, setup/picker/recovery queues, successful/failed direct saves, retained reason filtering and keyboard/layout regressions; it does not replace native launcher or installed icon acceptance.
+
+The exact signed candidate must verify Android cold/warm Tasks/Food shortcuts, newer destination precedence, missing workspace/user setup, unsaved Tasks/checklist/Food decisions, an in-flight save, repeated delivery, activity recreation and Home/process-kill/Recents restoration. Confirm two fixed-ID dynamic shortcuts and no automatic pinning/new permissions. Capture real launcher/resource icons on Android and Windows and installed Flatpak metadata/pixels. Exercise Food Add/Add another/Edit and Retained More filters… at normal and 200% text in both themes on native desktop and Android; retain actual OS/build labels and demo inputs. Compare synthetic canonical filenames and bytes before/after navigation and cold reopen, with expected command changes separately identified.
+
+Use isolated synthetic profiles, one emulator, 6GiB/2CPU/zero swap and bounded temporary processes. Restore settings and stop processes after acceptance or blockers. Remove the precisely verified temporary native-test symlink after local widget checks. Candidate native acceptance and publication remain pending.
+
+# Current RC3/build68 gate status
+
+Build66 candidate38165025596/sourcee6e26a1 is terminal FAILED: Windows tooling hits a synthetic SQLite connection cleanup error after1027 unit passes/two skips, Rust4 and107contracts; Linux completes155native passes/3 failures, without a deadline failure. The explicit-close fixture fix passes actual same-source automatic Windows CI. Build67 candidate38166126728/source3ae00be is terminal CANCELLED by root because both navigation-theme readiness failures and Retained whole-selection geometry are confirmed shared source; its preflight passes and all downstream jobs are cancelled. No eligible signed APK exists from either run.
+
+Build68 changes only two test fixtures and monotonic version code68. Navigation awaits bounded actual Tasks/dialog readiness after Discard; original draft guards and canonical checks stay intact. Retained asserts every visible ASCII fixture character with unchanged0.5px tolerance, adds vertical bounds and keeps row/card/behavior checks; build68 hosted diagnostics now observe the excess whole-range selection at SPACEoffset13, with every nonspace fixture character within bounds. Failed66 exact character offset was not logged and remains unproven. Actual local reproduction fails both navigation cases; corrected native light/Retained pass and separate same-source dark rerun passes after an explicitly retained X11 capture failure. Four widget cases, clean analysis/formatting and79tool tests pass. Independent architecture/native and correctness reviews accept the narrow corrections. Production/UI/native/platform/dependency/pipeline and release notes/media remain unchanged relative to frozen build67. All83 bound inputs include the previously omitted navigation fixture.
+
+Full [candidate38169726969](https://github.com/reddraggone9/tandemlog/actions/runs/38169726969) at exact `8c6ee23c78232094715b9bf79f9d3be54b3b522a` completed all five required jobs successfully at20:47:25UTC. Linux passes1030 unit tests and158 native workflows; Windows passes1027 units with two platform skips. Both pass4 Rust tests,107 native contracts and79 tooling checks. Independent review verifies all three original archives,14 actual members, desktop installed lifecycles and the pinned owner-signed APK. Frozen482source/83input/193evidence and final-range editorial reviews pass. [Exact APK handoff](food-rc3-native-acceptance.md) binds code68 and hash `19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c`. Parent installed Android acceptance, fresh quota and publication clearance remain pending. No RC3 publication, stable promotion or live-data operation occurs. [Full receipts](../evidence/toolbar-2026.10.4-rc.3/README.md) preserve failures and qualified passing evidence.
+
+# Runtime and visual QA — updated 2026-10-11
+
+## Published RC2/build64 — exact native acceptance complete
+
+Source71045e5021f9dee821bc24ea1c118158f029fd83, candidate38133887765,
+APKc5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f
+(67,000,993 bytes) passed exact parent Android acceptance: Tasks/Food calendars at
+normal and320dp/200% both themes, day10/15/17 semantics/readability, selected17
+physical rotation/return/OK/Save, actual SAF child switch/return clearing workspace
+Undo, and cold new-v2 UI replay without canonical appends. Settings restored and
+lab stopped; no remaining native blocker. Broad62 Android passes retain exact
+7ae1437 attribution. Current64 Windows/Linux originals, payloads and installed
+lifecycles independently pass; earlierRC1+57 Windows hash is historical only.
+
+Full hosted source gates pass970 Linux units/143 native flows and967 Windows
+units/two skips, plus Rust/contracts/tooling/build/owner signing. Parent cleared
+publication from the exact64 binaries without rebuild.
+[RC2/build64](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.2) published2026-10-11T12:37:41Z through
+normal promotion38139953180 using reviewed docs dispatch445f608. Actual public
+installer bytes, tag/source, approved notes and owner APK signer/version pass;
+stable2026.10.3 remains Latest and all23 prior releases/assets/notes/tag refs
+remain unchanged. [Publication receipts](../evidence/food-2026.10.4-rc.2/candidate/build64/publication/README.md)
+retain exact identities, native attribution and existing qualifications.
+No stable promotion, live import, deletion or new feature is authorized.
+
+
+## Historical complete Food RC2 preparation
+
+Build62 covers section navigation, date-only Food, short Inbox task hit areas,
+default Task Search/explicit Add, combined Food Stock/Inbox, local-calendar date
+colors, shared Filter/account toolbar presentation, shared required date input,
+selective Food Undo stack, fixed group action anchors and Flatpak catalog/private
+profile fixes. The cancelled build61
+checkpoint predates the expanded scope and is ineligible for handoff/publication.
+[RC2 preparation](../evidence/food-2026.10.4-rc.2/README.md) records tests-first
+failures, implementation and source-qualified independent/native reviews.
+Build62 full hosted gates passed, but exact Android acceptance found clipped
+calendar days at320dp/200%. Shared Tasks/Food picker correction now passes26
+focused checks and14 native Linux layout/selection/lifecycle cases across320/390×640,
+both themes and normal/enlarged text. All31 day labels retain full-date semantics;
+normal day typography stays unchanged and enlarged dates remain larger than
+normal. Actual native pixels and pointer-visible scripted Linux demo are retained
+with source attribution. Default English action styles and pinned Flutter3.47.5
+portrait geometry define this bounded coverage; no universal custom-theme,
+locale, landscape or48dp-wide day target claim is made.
+
+Build62 Android passes remain attributed to its exact APK. Replacement build64
+requires complete hosted/artifact gates and exact shared-picker Android acceptance,
+plus remaining SAF child switching/return, workspace-cleared Undo and final cold
+new-v2 fixture UI replay. See [native contract](food-native-acceptance.md). Linux
+images do not supply Android acceptance; no RC2 publication has occurred.
+
+Build63 candidate38132007787 was cancelled before signing after a real resize
+reset. Build64 retains selected17 across resizing/rotation, delivers it through
+the mounted controller owner and protects disposed controllers. The separate
+[build64 evidence](../evidence/food-2026.10.4-rc.2/calendar-build64/README.md)
+retains26 focused/14 native passes and independent review; build63 remains HOLD.
+
+## Stable2026.10.2 — exact accepted candidate published
+
+Stable2026.10.2/build53 at source687163b preserves accepted RC7 app/native/
+platform/dependency/test/workflow source; only embedded version/build metadata
+changed. Full candidate37960853538 and pushCI37960786048 passed647 Linux app,
+87 native,107 contract and50 policy checks; Windows645 app checks pass with two
+documented Linux-only skips. New stable release payloads/startup/installer
+lifecycle and owner-signing gates passed. Existing RC7 feature/geometry/demo
+evidence retains its original source/OS attribution; no new stable UI/video
+captures are claimed.
+
+Parent independently verified actual signed ZIP/APK and accepted36 bounded
+Android checks, reusing56 RC7 behavioral checks, with no blockers. Stable53
+identity/owner signature/native payloads/notices, four synthetic profiles'
+upgrade-retained settings/identities/history/full task/order/text state, cold
+replay and SAF continuity passed. Lab/settings were restored/stopped with no
+new OOM events. Cloud private archive materialization remainedHTTP403; those
+native bytes/device checks belong to parent and no live synced data was used.
+
+[Stable evidence and review receipts](../evidence/stable-2026.10.2/README.md)
+bind accepted APK SHA256
+`b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd`.
+Successful promotion37966878729 reused exact candidate installers without
+rebuild after actual hosted archive/member/lifecycle/APK/strict checksum gates.
+Root anonymous public downloads verify all3 actual installer hashes, stable
+tag/source/Latest and all20 prior releases unchanged. Official SDK signature,
+stable53/ABI/nondebuggable, all79 member CRC and native payload/notices pass;
+all3 native library bytes equal accepted RC7. Published stable is Latest at
+2026-10-09T17:31:53Z; fresh parent17:25:54UTC publication clearance passed.
+
+## Compact disclosure — RC7 published
+
+Lee approved the compact exception documented in [ADR0011](decisions/0011-one-level-checklists.md).
+Actual Linux GTK/Flutter debug checks pass1200/390px at100/200% text, with/without
+secondary text and expanded/collapsed. All count bottom gaps are6px; normal
+footer height28 grows to48 at200%, with width at least48 and a separate48px body.
+The final flow checks Material paint coverage, lower-corner taps, button/expanded
+semantics and Space/Enter. Retained resizing/safe-inset flow and analysis pass.
+[Evidence, inspected native captures and independent review](../evidence/disclosure-layout/README.md)
+record the earlier clipping/seam finding and accepted actual-pixel correction.
+The [25.8-second native desktop demonstration](../evidence/disclosure-layout/native-linux-pointer-demo.mp4)
+has visible pointer/input, resized native narrow window and enlarged text;
+[receipt](../evidence/disclosure-layout/desktop-demo-verification.json) labels the
+actual Linux debug/scripted evidence, source-attributed to build51. Candidate51
+failed one float-bound coverage inequality by0.000003815px, with86 other native
+flows passing. Replacement build52 retains production UI/media unchanged and
+applies the existing0.01px tolerance only to that test's coverage inequalities;
+the focused replacement flow passes1/0 in19s. Replacement signed candidate37945597400
+and pushCI37945597874 pass at exact74afbe2, including647 Linux application tests
+and all87 native workflows, native payload/notices and hosted desktop installed
+lifecycle gates. [Terminal candidate/artifact handoff](../evidence/rc7-candidate/README.md)
+records signed artifact11626160033 and its GitHub-reported archive digest.
+Its supported cloud materialization returnedHTTP403. Parent independently verified
+actual ZIP/APK identity and owner signature, then passed56 bounded native Android
+checks against APK SHA256
+`bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d`.
+[Parent native attestation](../evidence/rc7-candidate/native-acceptance-attestation.json)
+covers28/48px geometry, uniform rounded ink, target activation/separation, upgrade
+preservation and cold replay; settings restored and capped lab stopped. Actual
+recording shows ink/state changes, while SDK taps do not show Show Touches dots;
+parent accepted this cosmetic limitation. Packet bytes/pixels were inspected by
+parent, not this cloud worker, whose supported packet materialization also403.
+[Promotion37956467233](https://github.com/reddraggone9/tandemlog/actions/runs/37956467233)
+passed trusted source098e14f at16:05UTC, reused accepted candidate37945597400
+without rebuilding and verified actual candidate ZIP digests, portable members,
+installed lifecycle, exact accepted APK identity and installer checksums before
+creation. [Public receipt](../evidence/rc7-candidate/public-download-verification.json)
+records all three actual anonymous installer downloads matching GitHub digests
+and sizes, official public APK signer/package/version52/nondebuggable/ABI checks,
+full APK CRC and native payload/notices, exact reviewed notes and tag/source.
+Preview2026.10.2-rc.7 is prerelease/non-Latest; stable2026.10.1 and all19 prior
+release/asset identities are unchanged. These byte checks do not claim another
+local Windows or Android runtime acceptance.
+[Independent final release review](../evidence/rc7-candidate/independent-post-publication-review.json)
+separately verifies the actual public installer bytes, official APK identity/CRC,
+hosted gate order, notes/metadata and prior release/stable Latest preservation.
+
+## Historical RC6 checklist controls follow-up
+
+Six affected actual Linux GTK/Flutter flows and23 focused widget tests pass;
+analysis is clean. [Evidence and independent review](../evidence/checklist-controls/README.md)
+cover the hold/drag regression, live Add visibility with keyboard Delete,
+direct toolbar action, filters/incoming state and canonical-byte preservation,
+aligned48px targets, content-width resizing and2px disclosure line gap.
+Actual390/1200px and enlarged390px PNGs were inspected; one black toggle capture
+is excluded. At100% text, the48px disclosure target has26px below its20px count
+plus2px top gap; separate body/disclosure touch areas do not overlap. Exact
+signed Android acceptance and publication gates remain separate. The18.1-second
+[native desktop demonstration](../evidence/checklist-controls/native-linux-pointer-demo.mp4)
+shows the held Map drag completing, Undo, menus, direct display action and narrow
+layout; its7s frame verifies the visible pointer. [Demo receipt](../evidence/checklist-controls/desktop-demo-verification.json).
+
+## Pending field-spacing fixes
+
+[Isolated field-spacing evidence](../evidence/field-layout/README.md) records six
+frozen reds,42 affected widget tests and three actual native Linux workflows.
+The floating sort-bound label and empty/selected Find tags baseline now retain
+clear separation at normal/enlarged text. Android/Windows acceptance is pending;
+the preserved checklist candidate remains unchanged.
+
+## Next preview2026.10.2-rc.2 build44 — direct Time fields and editor order
+
+Actual native Linux GTK/Flutter debug inspection uses synthetic tasks at1200px,
+390/320px, both themes and100/200% text. Sixteen screenshots and a52.6-second
+pointer-visible recording cover blank Time focus, explicit midnight, X clearing
+without losing the date/input, single/bulk Tags/Assignee after sort bounds,
+stacking, scrolling and simulated260px keyboard insets. The narrow enlarged
+layouts remain operable; action labels can wrap at320px/200%. This is native
+Linux evidence, not Android or Windows visual acceptance.
+
+All376 application tests,22 Python policy tests and analysis pass. The focused
+native precision/zone/clean-Cancel/save flow passes across four geometries in17s
+excluding build. Bulk field order and unchanged mixed/apply behavior have31
+focused widget regressions. The recording/source and hashes remain in the
+candidate receipt. Exact signed Android affected-flow acceptance is pending;
+no publication or stable promotion is authorized by desktop inspection alone.
+
+## 2026.10.2-rc.1 build43 — Settings/version and date-row presentation
+
+Native Linux GTK/Flutter debug inspection uses synthetic tasks, 1200px desktop,
+390/320px narrow viewports, both themes and 100/200% text. Settings displays and
+copies the running compiled release name, with no platform counter. Date/time
+rows fit at normal phone width, stack at enlarged text, focus on Add time,
+retain explicit midnight, and clear only time. A desktop visual-density override
+was needed to retain a 48px Add time target. The native Save/Cancel flow retains
+zone/precision and canonical contents as asserted; simulated keyboard insets
+prove Linux layout only. The inaccessible Library reference image was not
+inspected; the implemented layout follows Lee's approved written direction.
+
+Sixteen screenshots and the 65-second pointer-visible desktop demonstration
+were inspected. [UI receipt](../evidence/2026.10.2-rc1-build43-native-ui-verification.json).
+The first full aggregate passed 46 flows; one older test assumed a permanently
+visible empty time field. Its updated Add time interaction passes along with
+the two new flows. The final aggregate passes all 47 flows in 10m36s. Hosted
+builds/install lifecycle and exact Android acceptance remain separate gates. No runtime Windows visual
+claim, real-phone claim, protocol/schema or cache change follows from Linux.
+
+## Actual environment and target matrix
+
+| Target | Verified evidence | Remaining limit |
+| --- | --- | --- |
+| Linux native | Flutter GTK app built in debug/release, launched under Xvfb/Openbox; actual folder picker, capture/edit/completion shown; native integration flow passed restart, undo and unsupported-record recovery | Linux is the accepted primary desktop visual QA target, not proof of Windows-specific behavior. Software display/container performance does not predict phones. |
+| Android build | RC4 code 24 universal owner-signed, nondebuggable APK independently verified; hosted target/build/signing gates passed | Compilation and signing do not establish revised native UI or SAF acceptance. |
+| Android runtime | Exact RC4 code 24 passed native API 30 phone/IME/editor/filter/drag acceptance through 200% text on accelerated Farnsworth; build 23 tablet/stale/block/theme results remain separately source-tied. Earlier RC3 SAF/idle/search evidence is below. | Broader real-phone/API 36/provider, permission revocation and Android hardware Ctrl/Shift remain unperformed. Cloud software emulation is unusable. |
+| Windows | RC4 code 24 hosted native build/tests plus per-user install, visible launch, replacement, uninstall/data preservation and reinstall passed | Full manual UI/folder-dialog/scaling and prerequisite-missing clean-machine acceptance remain unperformed. Linux is the routine desktop visual QA target. |
+| Web | Not used for app acceptance | A browser preview would not validate Android or Windows. |
+
+The [Android emulator acceleration guide](https://developer.android.com/studio/run/emulator-acceleration) describes KVM requirements. Here `emulator -accel-check` reports KVM requires vmx/svm; `/dev/kvm` is absent. Software emulation was actually attempted, not dismissed from this probe alone.
+
+## Historical first-slice Linux workflow evidence
+
+`flutter test integration_test/task_flow_test.dart -d linux` exercises real native Flutter: create/select user, capture, edit title/notes, complete, immediate undo, retain a typed draft through periodic refresh, recreate the app with the same profile, encounter a complete unknown-version record, remove the bad test fixture and recover. The folder chooser was separately operated in the native GTK UI; integration preselects a test folder. App recreation verifies persisted state; process restart is also exercised by release measurement/manual workflow.
+
+Visual inspection: cream background, green primary action, bounded white task cards, explicit Inbox labels and notes. The empty state directs capture. The edit dialog shows title/notes and character limits. Initial periodic refresh disabled capture and could interrupt typing; changed to quiet serialized refresh and added a draft-retention check. Actual errors retain known task content with a visible banner. Evidence is under `evidence/`; final selected video/screenshots are delivered through Library when upload succeeds.
+
+## Startup measurement
+
+`tool/measure_startup.py` launches five separate native Linux **release** processes against 2,000 synthetic tasks plus one user. It resets only its isolated benchmark store directory (SQLite cache and local writer identity) before run 1, preserving the synthetic canonical history; runs 2–5 reuse cache. OS page caches are **not** flushed. The external timer begins immediately before process creation and ends when stdout reports a post-frame callback after loading state. The Dart stopwatch begins at TasksPage state construction, excluding engine/process initialization. Neither marker proves physical display presentation or input-ready latency; the external marker is a useful end-to-end approximation, not a device cold-boot claim.
+
+`FILES_READ=0` on warm runs means canonical log contents were not read/replayed. Manifest and directory metadata still receive validation. Cache-hit correctness and total user-perceived startup are separate questions. Raw numbers and concurrency conditions belong with the final JSON results; do not use the internal stopwatch as full cold-start time.
+
+## Android SAF acceptance script
+
+1. Install native APK; choose a dedicated tree using Android DocumentsUI; create user/task.
+2. Force-stop/relaunch and reboot; verify retained URI permission, task and write ability.
+3. Replace a remote writer file atomically through the actual sync provider, then refresh/resume; verify enumeration reopens the new document and imports once.
+4. Revoke the grant/remove the folder; verify visible failure, no false save acknowledgment and no history overwrite; regrant/recover.
+5. Two intended phones: initialize one space, transport manifest, join second; edit offline, exchange logs with BasicSync and another compatible provider where available; check convergence and no-internet hotspot behavior.
+6. Record Android API/device/provider versions and actual demo. Emulator directory grants alone cannot establish BasicSync/phone provider behavior.
+
+Android uses [SAF tree/document URIs and persisted grants](https://developer.android.com/training/data-storage/shared/documents-files), not ordinary filesystem paths. SQLite remains private. Syncthing Android's [official retirement](https://forum.syncthing.net/t/discontinuing-syncthing-android/23002) and [closed replacement/grant report #10887](https://github.com/syncthing/syncthing/issues/10887) motivate provider testing; the report is not universal proof of failure or an assertion that the upstream issue remains open.
+
+## Desktop verification split
+
+Linux is the primary desktop visual QA target and ships an x64 bundle. Routine shared UI changes require native Linux visual inspection. Windows retains hosted native builds and targeted packaging, Unicode/path, folder-dialog and startup smoke checks; a full emulated Windows session is not required for every shared UI change. Android still needs independent native visual, lifecycle and SAF tests.
+
+## Windows verification path
+
+On Windows with official Flutter and Visual Studio's Desktop development with C++ workload: `flutter doctor -v`, `flutter pub get`, `flutter analyze`, `flutter test`, `flutter test integration_test/task_flow_test.dart -d windows`, `flutter build windows --release`. Run the generated executable; test native folder picker, keyboard/focus, scaling, Unicode paths, restart, read-only/missing folder and two local profiles exchanging logs. Record an actual Windows video. Do not label a Linux build, cross-compilation, or Wine run as native Windows verification.
+
+Every subsequent UI change requires rerunning the affected workflow, visually inspecting it, recording observations and correcting issues. Accessibility/touch checks, error/repeated/interrupted flows and device transport tests remain explicit acceptance work.
+
+### Recorded release measurements
+
+Historical pre-fix measurement batch (native Linux release, Xvfb/Openbox, software emulator paused; no Gradle build active at batch start):
+
+| Run | SQLite | External launch → loaded-frame marker | Dart state → marker | Log files read |
+| --- | --- | ---: | ---: | ---: |
+| 1 | Rebuild | 7,955 ms | 963 ms | 1 |
+| 2 | Warm | 7,038 ms | 657 ms | 0 |
+| 3 | Warm | 7,304 ms | 837 ms | 0 |
+| 4 | Warm | 9,234 ms | 1,927 ms | 0 |
+| 5 | Warm | 7,535 ms | 1,056 ms | 0 |
+
+Historical pre-fix [JSON](../evidence/linux-release-startup.json); superseded by the controlled diagnosis below. All are fresh processes; “warm” refers to the SQLite cache, not an already-running app. These times are not satisfactory startup performance. The difference before Dart state construction needs profiling of engine/platform initialization on actual intended targets; do not blame SQLite or claim a device-speed prediction without that evidence. Subsequent SDK extraction/download overlapped the measurement batch, so this is not a controlled idle-machine benchmark.
+
+### Deliverables and delivery limitation
+
+`evidence/tandemlog-linux-release-demo.mp4`: 25.001 seconds, native Linux release at 1000×740 content size; actual capture/edit/complete/undo and process restart. Restart pause is shortened and explicitly labeled. Raw recording retained as `tandemlog-linux-demo.mp4`. Key frames and the contact sheet were visually inspected. Final screenshots: `linux-edit-final.png`, `linux-complete-final.png`, `linux-tasks-final.png`, `linux-restart-final.png`.
+
+The reviewed native Linux video and Android emulator ANR screenshot were delivered through Library. Private artifact identity metadata is not committed.
+
+
+## Controlled startup diagnosis and correction
+
+A separate `flutter create --empty --platforms=linux` project, with **no task code or plugins**, uses `tool/minimal_startup.dart` as its entrypoint. Tests use the same release toolchain, Xvfb display and host. New instrumentation records external launch→Dart `main`, first framework frame, loaded-task frame, identity/lock, SQLite open/schema, manifest, ingestion, query, model decoding and sorting. The first frame may show loading; it is not task-ready. The loaded-frame callback follows `busy=false` and loaded rows, but does not measure physical display presentation or OS input latency.
+
+With emulator paused and builds finished, before correcting the desktop session:
+
+| Workload | Launch→loaded marker, three fresh processes | Launch→Dart main |
+| --- | --- | --- |
+| Minimal Flutter | 6,867 / 6,454 / 6,476 ms | 6,761 / 6,366 / 6,398 ms |
+| 10 tasks | 6,991 / 6,956 / 7,479 ms | 6,466 / 6,297 / 6,343 ms |
+| 2,000 tasks | 7,357 / 7,160 / 6,889 ms | 6,394 / 6,539 / 6,353 ms |
+
+`strace -f -tt -T` exposed repeated `dbus-launch --autolaunch` subprocesses sleeping three seconds. `DBUS_SESSION_BUS_ADDRESS` was unset in the headless session. Starting a session bus and explicitly exporting its address removed these waits **without changing the application or Flutter renderer**. This is a verified environment cause, not a general Flutter startup diagnosis or assumed graphics cost.
+
+After correction, emulator paused:
+
+| Workload | Launch→loaded marker | Launch→Dart main | Launch→first frame |
+| --- | --- | --- | --- |
+| Minimal Flutter | 356 / 445 / 455 ms | 274 / 349 / 373 ms | Same loaded-frame marker |
+| 10 tasks | 941 / 878 / 863 ms | 377 / 364 / 263 ms | 656 / 651 / 593 ms |
+| 2,000 tasks | 1,091 / 1,001 / 908 ms | 281 / 428 / 308 ms | 603 / 732 / 594 ms |
+
+For task rows, run 1 rebuilds cache, runs 2–3 reuse it; every run starts a fresh process and OS caches are not flushed. Minimal Flutter does not use SQLite. In the 2,000-task corrected run, rebuild ingestion costs 212 ms, warm ingestion 11/21 ms; query 0/5/5 ms, JSON decoding 5/10/5 ms, sorting 1/1/0 ms. Warm reads remain zero log contents. No warm-start N+1 database query was found: one `views` query supplies UI rows. Rebuild does query/project each touched entity, but measured rebuild work is bounded at this dataset and is not the six-second cause. Retain larger-history streaming/projection debt; do not refactor SQL speculatively from the old timings.
+
+Raw controlled results: `evidence/startup-{minimal,small,large}-paused.json` and `evidence/startup-{minimal,small,large}-dbus-paused.json`. Traces are under `/workspace/toolchains/minimal-{startup,process}.strace`. The corrected result is substantially better, but target Windows/phone measurements and input-ready timing remain acceptance work.
+
+For reproducible headless commands, run under an explicit session bus, for example `dbus-run-session -- env DISPLAY=:99 NO_AT_BRIDGE=1 python3 tool/measure_startup.py --tasks 2000 --runs 3`. The current saved environment uses `unix:path=/tmp/tandemlog-session-bus`; recreate it after environment restart. Do not alter users' normal desktop session settings in the shipped app.
+
+With the corrected session and emulator running, minimal release launch→frame is **408 / 460 / 384 ms** (Dart main **303 / 363 / 301 ms**); 2,000 tasks are **1,231 / 1,032 / 951 ms** (Dart main **384 / 373 / 457 ms**, first frame **675 / 645 / 687 ms**). Cache rebuild with fresh benchmark writer identity is the first task run; the next two read zero log contents. Raw files: `startup-minimal-dbus-running.json`, `startup-large-dbus-running.json`. The modest variation does not explain the original pre-Dart delay. All measurements are software-display Linux development evidence, not native target acceptance.
+
+The deliverable video was recorded before the session-bus correction; its edited restart pause is not a startup benchmark. The UI remains the same. Current performance results come from the separate instrumented release runs above.
+
+## Android build and boot attempts
+
+Official build tools and a matching Debian OpenJDK 21 JDK live under `/workspace/toolchains`. Maven Central HTTP 429 was handled with a workspace-only Gradle initialization file using Google's Maven Central mirror; Java proxy settings are also workspace-only. The repository does not force this workaround on other developers. The final debug APK rebuild passed in **26.0 seconds**; the first successful complete build took **262.0 seconds**. Static analysis and all 23 domain/storage tests pass; the final native Linux integration rerun passed after the indexed capture existence-check change.
+
+API 36 software emulation was tried at the original device dimensions, then 480×800 with 3 GiB RAM, two virtual cores, SwiftShader, Vulkan disabled and fresh userdata. It reaches ADB and system_server/package service, but installation returned `Error: device is still booting.` Screen capture has timed out. No native Android app run, tree-grant restart, atomic-replacement test, or Android demo is yet verified. An official API 30 AOSP x86_64 fallback was also tried; its default 12 GiB userdata request exceeded available disk, so the test AVD was configured with a smaller userdata partition. Its final failure is recorded below.
+
+Raw logs: `/workspace/toolchains/android-build-final.log`, `android-install-retry.log`, `emulator-small.log`, `emulator-api30.log`. This is a practical unaccelerated-runtime limitation established in this environment, not a claim that Android emulation is universally impossible. No native Windows environment is exposed.
+
+Final fallback result: API 30 reached `sys.boot_completed=1`, but the package service failed (`Broken pipe (32)`) after a complete x86_64 APK transfer. Host emulator-console screenshots repeatedly showed **System UI isn’t responding**, before Tandemlog installation. Guest input and screenshot requests also timed out. Both software emulators were stopped. This establishes an unusable runtime in this environment, not an application failure. Evidence: `evidence/android-emulator-system-ui-anr.png`. A usable accelerated emulator/device is required for the remaining Android checks.
+
+Hosted target build/test evidence is linked in [current status](status.md#hosted-validation-and-publication). Distribution follows Flutter’s official [Linux bundle guidance](https://docs.flutter.dev/platform-integration/linux/building) and [Windows ZIP guidance](https://docs.flutter.dev/platform-integration/windows/building). Keep all bundle files together; system runtime dependencies are documented in the candidate notes.
+
+Published v0.1.0-rc.1 was downloaded, checksum-verified and run as a native Linux binary. Visual checks showed ten loaded tasks, completion reducing the count to nine, and Undo restoring ten. Captured at 1280×900 under Xvfb/Openbox; screenshots are `linux-published-release.png`, `linux-published-complete.png`, and `linux-published-undo.png`. The public Windows ZIP passed CRC/checksum validation; the public Android APK passed signature/checksum/version/ABI inspection, without implying native execution. See current status for exact release/commit and startup metrics.
+
+## Android rc1 device-worker evidence
+
+The parent supplied successful native **rc1** evidence from an accelerated local Linux/KVM host: Android API 30, 720p, SwiftShader with Vulkan disabled, a 4 GiB/two-CPU container cap and 2 GiB guest RAM. Eight assertions covered capture/edit/complete/undo, SAF force-stop/reopen, external atomic-replacement ingestion and subsequent local writes; eleven unique canonical events were preserved. The emulator was stopped afterward and its video delivered through Library. These are rc1 observations, not coverage of the changed onboarding/theme/keyboard UI in the next candidate. Real phones, API 36 and the actual BasicSync provider remain unverified.
+
+Future Android demo recordings should enable Show taps and visibly verify the touch indicators in the video. Desktop recordings should retain the pointer. Keep exact candidate/version, native platform, fixture, restart/provider actions and remaining gaps with each recording.
+
+## User-reported rc1 cross-device observation
+
+Lee reports users and tasks syncing between their devices and the UI updating promptly. An already-open user menu does not show a newly arrived user until reopened; retain selection stability and treat this as low-priority polish. This is user-reported real setup evidence, not an independently observed device/provider matrix or exhaustive BasicSync validation.
+
+## rc2 local release validation
+
+Implementation commit `45d0b1c8f4616a7a0460a3ba61038a689c5a1a9a`: clean analyzer, 28 unit/integrity tests and five native Linux integration workflows passed. The native suite includes 390-pixel width and 200% text scaling for the list and settings. Manual release inspection covered actual desktop Enter/Shift+Enter/keypad Enter, inline setup, light/dark and narrow layout. See the [task-based UX audit](ux-audit-rc2.md).
+
+Two fresh Linux release processes with 2,000 tasks measured **979 ms cache rebuild / 740 ms warm cache** to the loaded-frame marker; first-frame markers were 589/496 ms externally. Warm cache read zero canonical log files. `evidence/startup-rc2.json` contains raw phases. OS page cache was not flushed; no emulator/build was active, but an idle native demo window was open. Methodology/limits above still apply.
+
+The rc2 native Linux walkthrough is time-compressed (23 seconds), shows five captures, inline setup, theme change, completion and settings, and overlays the measured pointer location because the reconnected display did not support normal shared-memory recording. It is not timing evidence. Open data folder was separately confirmed to launch Thunar at the actual canonical location.
+
+The final responsive correction at `106f90aaf3671cee798d5e055ff98bfe7ebfca10` rebuilt successfully for Linux release and Android x86_64 debug. The native suite passed again; the revised narrow Settings layout was visually inspected. Screenshots are `evidence/linux-rc2-*`. The initial hosted failure exposed real large-text overflow; it was fixed rather than relaxing the assertion.
+
+[Corrected rc2 full CI](https://github.com/reddraggone9/tandemlog/actions/runs/36746991732) passed Linux native integration/release startup, Windows native build/tests, and Android build/signature verification for implementation `106f90a`. This resolves the large-text failure in the preceding run. Device-worker acceptance of this corrected APK is still tracked separately.
+
+## rc2 build 3
+
+Implementation `0d66917402c2647c3badab9a50b75161b3e8716a`, version `0.1.0-rc.2+3`: 31 unit/integrity tests and five native workflows pass, including persistent Completed browsing/unchecking and 48×48 hit targets. Independent persistence review requested two additional reopen boundary tests (arrival between snapshot and refresh; partial durable undo then retry); both pass. Linux release and Android x86_64 debug builds succeeded. The APK was signature/version-verified and handed off separately for device regression.
+
+Native release visual inspection confirms compact rows, full long-title wrapping, dark snackbar contrast and checked Completed rows. The [UX audit](ux-audit-rc2.md#measured-native-linux-comparison) records measured density and exact limits. Android build 3 regression and its phone/video evidence remain pending: the accelerated worker dispatch hit approval-service timeouts before task admission. This is not an application failure or a new user-approval requirement.
+
+Final build-3 implementation `20e4f3e5bb9032aed628ffee698fcc96c20bddca` clears the stale Undo snackbar after reopening. The native regression and release walkthrough verify that change. [Final full CI](https://github.com/reddraggone9/tandemlog/actions/runs/36752532225) passed on Linux, Windows and Android. The final independent UX review found no concrete regression in the native Linux screenshots/walkthrough; Android-specific runtime evidence remains pending as stated above.
+
+
+### Final build-3 startup sample
+
+Frozen app source `20e4f3e` was measured in five fresh native Linux release processes, with 2,000 synthetic tasks, explicit session bus, Xvfb/software graphics and no emulator/build or demo app running. Launch to loaded-frame marker: **1,880 ms cache rebuild; 978 / 844 / 801 / 860 ms warm cache**. External first-frame times were **1,328 / 757 / 683 / 589 / 629 ms**. The rebuild reached Dart main at 987 ms, then reported 246 ms ingestion and 8 ms total query/decode/sort; warm runs read zero canonical log contents. The complete cached task count was asserted on every run. Raw data: `evidence/startup-rc2-build3.json`.
+
+A subsequent three-process minimal Flutter release comparison in the same display/session measured **474 / 428 / 379 ms** to its first frame, with Dart main at **365 / 319 / 291 ms** (`evidence/startup-minimal-rc2-build3.json`). Retain the slower rebuild sample rather than replacing it with earlier favorable timings. Its longer pre-Dart interval does not establish an application regression or prove an environmental cause. These are sequential samples, not controlled target-device acceptance.
+
+The benchmark resets only its isolated local cache before run 1; OS page caches are not flushed. The loaded post-frame marker approximates task-ready startup, not physical presentation or a measured first successful input. Internal phase timers exclude engine startup; first frame can precede task readiness. Windows and Android startup acceptance remain separate.
+
+The final Android build-3 worker was subsequently admitted successfully; its current regression result is pending. Publication is held for that result, with no speculative app changes during the freeze.
+
+
+### Build 4 validation delta
+
+`434771783eeba45499c30179b46794931bd3f342` passes analyzer, 31 tests and five native workflows locally. Linux release and Android x86_64 debug builds passed; Android versionName `0.1.0-rc.2`, code 4, APK SHA-256 `1223efd0091faf41ad15c5bf0d7592673971f1fb46e1b1033abab777152519a0`. The APK uses the existing cloud debug certificate, matching local build 3 but differing from public rc1. No new signing identity was generated. The [UX audit](ux-audit-rc2.md#build-4-settings-and-notes-preview) distinguishes native release screenshots from the temporary 200% text harness. Android settings/notes recheck is pending; do not carry forward build-3 UI evidence as if it covered this delta.
+
+
+### External Android build-4 result
+
+The parent reports native accelerated Android QA passed for source `434771783eeba45499c30179b46794931bd3f342`, debug version `0.1.0-rc.2+4`: final settings/radio choice, full multiline editor notes versus one-line preview, 130% font scaling, capture/completion/Undo/checked-row reopening, persisted SAF grants and external updates. Public rc1 was preserved; the local build 3→4 upgrade succeeded because those cloud APKs share a certificate, distinct from public rc1. Touch-video verification was still finishing when this result was recorded. This is worker-supplied evidence, not a cloud emulator run. The code-5 owner-signed release APK needs a separate installed smoke test because build mode and signer differ; domain/UI source is unchanged from tested build 4.
+
+
+### Owner-signed build-5 artifact verification
+
+Candidate run `36762053783` at source `d89a7d99fabecd27993e81707e98e7f0a3a8227c` passed the full platform matrix and owner-signing gate. Independent downloaded-archive CRC, APK checksum, apksigner, aapt package/version/non-debuggable/ABI and source-metadata checks passed. APK SHA-256 is `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046`, certificate SHA-256 is `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`. This confirms build/signing integrity; native install/launch smoke of this exact release APK remains pending the device worker. Earlier build-4 debug QA is separate evidence.
+
+
+### Signed native acceptance and public release
+
+The device worker reports PASS for the exact owner-signed APK SHA-256 `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046` on KVM Android 11/API 30: launch, SAF access to copied canonical history, retained users/tasks/notes, capture/completion/checked-row reopening and process restart; fourteen unique events and four UI states checked. No OOM; services were stopped and rc1/debug AVDs preserved. This acceptance preceded publication and was supplied by the parent; evidence ZIP was delivered through Library.
+
+Published rc2 preserves that exact APK, and public-download checks additionally passed for its signature/version/checksum, all asset SHA-256 values, Windows archive CRC and native Linux release startup. See [final publication status](status.md#verified-rc2-publication). Real phones/API 36/provider matrix and interactive Windows acceptance remain broader gates; no stable release was published.
+
+## Local next-candidate onboarding spacing (2026-09-30)
+
+Unreleased local correction after rc2: wrapping primary/secondary actions with 12-pixel horizontal/vertical gaps, standard label typography, 48-pixel minimum targets and scrollable welcome content. Actual native Linux debug inspection covered 1000×760 at normal text, 320×820 at normal text and 390×820 at 200% text. Screenshots were visually inspected: desktop actions share a row, narrow/enlarged actions stack, labels remain readable and no overflow exception occurred. The first native assertion exposed desktop visual density shrinking a requested 48-pixel minimum to 40; explicit standard density corrected it. The rerun verified both target heights, spacing and no canonical `data/` folder before Start. Temporary visual harness/screenshots are local toolchain artifacts, not shipped app code.
+
+This is Linux evidence, not Android or Windows runtime acceptance. Android verification and refreshed platform demos remain part of the next coherent candidate, not a separate release for this adjustment.
+
+### Local capture caret regression
+
+Reproduced the reported Shift+Enter bug in the native Linux app before fixing it: with four existing lines, the caret bottom reached 120 pixels in a 96-pixel editable viewport and remained clipped after layout settled. The fix calls `EditableTextState.userUpdateTextEditingValue` with the keyboard cause and explicit collapsed selection, preserving Flutter's post-layout reveal behavior. A first attempted generic replacement action preserved a selected range; the final method preserves the original shortcut's collapsed-caret behavior instead.
+
+The permanent regression in `integration_test/task_flow_test.dart` checks visibility before any further input after three successive Shift+Enter presses, multiline clipboard paste, middle selected-text replacement and active composition preservation, at normal and 200% text. Native screenshots at both scales were inspected and show the caret on the final blank line inside the field. No general controller listener or refresh-driven scroll was introduced. These are local Linux debug results, not a new published candidate or Android validation.
+
+Validation for these local corrections: `flutter analyze` passed; 31 unit/storage tests passed; the final native `task_flow_test.dart` run passed all six scenarios (53 seconds), including the added caret regression. `git diff --check` passed. Temporary screenshot capture code was removed before the final integration run.
+
+### Local stable header regression
+
+The next-candidate header uses a viewport/text-scale breakpoint and reserves both actual count-label layouts, preventing Open/Completed text changes from moving the controls. Native Linux inspection uses a sanitized long username, 1,000 open tasks versus one completed task, widths 1000/390/320 at normal text and 390 at 200% text (820-pixel height). The check compares exact user-selector, Everyone-filter and tab-bar rectangles across both tabs. Screenshots are inspected separately: equal rectangles alone would not catch clipped names. Inspection exposed Chip's inherited one-line text restriction and its avatar growing with multiline label height; the label now wraps and the icon keeps an explicit 18-pixel box. Android runtime validation remains pending with the next candidate.
+
+### Local settings paragraph/action inspection
+
+Actual native Linux debug screenshots at 1000×820, 390×820 and 390×820 with 200% text were inspected. The single paragraph is readable, desktop actions share a row with a gap, narrow actions wrap with a gap, and the enlarged dialog scrolls to both actions without overflow. The native visual harness passed action-spacing and single-paragraph assertions; temporary screenshot code remains outside the repository.
+
+Final local batch validation after the header/settings corrections: static analysis passed and all seven native Linux integration scenarios passed in 102 seconds, including the 1,001-task header fixture. The permanent header regression uses Flutter test view sizing; separate native window resizing/screenshots supplied the visual evidence above. `git diff --check` passed. No candidate was published and no Android runtime claim is made for this batch.
+
+## rc3 integrated local validation
+
+Final local static analysis passed; all 83 unit/domain/storage/migration tests and six release-gate Python tests passed. The complete native Linux integration file passed nine scenarios in 116 seconds, including precise start/scheduled/due times, zone selection, invalid-date draft preservation, tags, manual movement, successor placement after a move, history reopening and nonblocking future-clock capture. The 185 pinned upstream recurrence comparisons are part of the schedule tests, not 185 separately reported test functions.
+
+Native visual inspection covered 1000×820 and 390×820, light/dark, 100%/200% text (56 frames across eight combinations), plus the future-clock warning at desktop/narrow/enlarged sizes. Six captures with the warning visible persisted through reopen. The demo caught a genuine successor-ordering defect; chronological order projection and late-arrival/cache-rebuild regressions fixed it before the final native run. See [task-based UX findings](ux-audit-rc3.md).
+
+The compiled external migration CLI passed byte-exact synthetic reconstruction. A separate bundled oracle from official Obsidian Tasks 7.20.0 matched 99 synthetic recurring rows covering 37 forms at three completion dates, including DST/leap-day dates. These are not claims about the private source. Private-source rehearsal and exact signed Android candidate acceptance remain pending; source text is never a public fixture or release asset.
+
+Release-mode startup measurements and hosted candidate results will be recorded separately. No native Windows or Android rc3 result is inferred from Linux or compilation.
+
+### Completion metadata and standalone production-store audit
+
+Actual private rehearsal exposed a missing completion-action parser case; no source or live destination was changed. The corrected adapter preserves source flags, deliberately retains all app history, and reports any authorized Markdown export normalization separately from byte equality. The fresh source inventory is checked privately, never hardcoded from an earlier snapshot.
+
+The integrated local suite passes 89 tests and clean analysis. Five audit tests cover read-only canonical access, output containment and failure integrity. A relocated Linux bundle containing only its executable and bundled SQLite library ran with an empty environment: production TaskStore loaded canonical events, reopened identical cached rows with zero log reads, and verified unchanged canonical hashes. This is actual storage evidence, not Android/UI acceptance. Independent read-only review confirmed the completion adapter and audit guard fixes without finding further defects.
+
+### Rc3 native release startup samples
+
+After the completion-metadata/storage-audit changes (storage source `794ad22`) and the first header checkmark correction, native Linux release process launch to loaded-frame measured **996 ms** for a 2,000-task cache rebuild and **706 / 622 / 729 / 1,448 ms** for warm cache. External first-frame times were **548 / 508 / 473 / 564 / 1,049 ms**. A subsequent ten-task set measured **1,198 ms** rebuild and **1,402 / 1,239 / 759 / 1,156 ms** warm; first frames **1,033 / 1,120 / 1,066 / 607 / 973 ms**. All warm runs read zero log contents, and every projected task count was asserted. Raw samples: `evidence/startup-rc3-2000.json` and `evidence/startup-rc3-10.json`.
+
+Method: five fresh processes per workload, native release, Xvfb/software graphics and explicit session D-Bus; no local emulator, recording or native build/test running. Only the isolated first-run SQLite cache was removed; OS page caches were not flushed. These are loaded post-frame markers, not physical presentation or measured first successful input. Small-workload timings are not consistently faster, so these variable sequential VM samples cannot isolate workload cost or establish target-device performance. The subsequent narrow large-text tab orientation change is outside this measured binary; hosted final-source startup remains a candidate check.
+
+### Build 7 final local native regression
+
+Source `46bcb5a981cd7c8d751a187dd463b898c316835f` passed all nine native Linux scenarios in 111 seconds, including the final measured-width filter layout, all optional times, manual order, recurrence/history and nonblocking future-clock warning. The six-width/text-scale filter test checks both toggle directions and verifies each label remains a single rendered line. Actual native screenshots at 350px/200% and 390px/250% confirm the vertical fallback; ordinary widths remain horizontal. Analyzer, formatting, 89 Dart tests and six Python tests pass. Hosted platform and exact signed Android results remain separate gates.
+
+### Independent private-source rehearsal acceptance
+
+The local worker, reported through the parent, passed the corrected tooling at source `794ad226337a39d8852f79a47a6c793b473b19c0`: 217 tasks (210 open, seven completed) matched independently for order, titles/opaque links, tags, completion, schedules, precision and floating times. All 95 recurrence rows across 37 forms matched pinned upstream Obsidian Tasks at 2026-09-30, 2027-03-14 and 2028-02-29, including relative offsets and configured scheduled-date removal.
+
+Production TaskStore/SQLite import and unchanged cache reopen passed with zero reopen log reads and unchanged canonical hashes. Canonical-only export reconstructed byte-identical Markdown with the source unavailable; provenance is in import.document events, with no external sidecar. Same-timestamp fresh-staging retries were identical, and existing-staging overwrite was refused without changes. All 95 source delete flags remain Markdown provenance while app behavior keeps history; zero export normalization was needed. Both original source copies remained unchanged. Private source text, hashes and detailed reports are not published here.
+
+This verifies unchanged-import fidelity, not edited-task Markdown export. Build-7 source has identical domain/storage/schema code to the audited tool revision; only UI, QA tooling and documentation differ. Matching Android UI acceptance and explicit live-destination approval remain separate.
+
+### Data-only replacement after owner review
+
+The owner rejected canonical formatting provenance after build 7. Its publication is canceled; prior source-map rehearsal results remain historical only. The replacement removes import-only records/references, uses shared actual projection/order for canonical Markdown, and fails explicitly on values the source syntax cannot represent. Cache format 6 prevents older cached provenance or invalid UUID namespaces bypassing wire validation.
+
+The data-only storage change passed all nine local native workflows (115 seconds). Focused tests cover valid deterministic UUIDv5 import identities, strict reference completeness, unsafe output containment, edited-state export and projected completion dates. A compiled importer created a fresh synthetic recurring task, then the standalone production-store audit completed that imported task in a separate copied workspace: one successor, correct dates/order, identical cache reopen with zero log reads, and unchanged original canonical hashes. This exercises actual UUID-based successor generation rather than recurrence-date prediction alone. The new private source formatting diff and semantic acceptance remain pending.
+
+## Renderer semantics correction — release still blocked
+
+The initial field/recurrence rehearsal did not cover the adjacent renderer’s functional due-bound tags, visibility and ordering. It is superseded as evidence of full workflow parity. The new standalone private oracle adapter uses the application’s shared task timing evaluator, checks a copied source hash and transient line mapping, and separates date/order/visibility from intentional group-label presentation differences. No source mapping is persisted in app events.
+
+Native Linux idle-boundary regression passed: future-start tasks appeared without an edit/import, capture focus/selection/draft and an open notes editor survived, and canonical JSONL remained byte-identical. Invalid bounds produced no write; valid typed bounds preserved the stored deadline. Eight viewport/theme/text-scale visual configurations passed; screenshots remain outside the repository. Linux’s foreground timerfd count decreased by one on disposal, confirming observer cleanup; this is not a test that changes the host clock. Actual Android/Windows system-change delivery remains pending.
+
+A separate Dart JIT microbenchmark with 2,000 synthetic timed/bounded tasks measured pure projection at 225 ms on the first invocation (including initialization) and 39–42 ms on three subsequent invocations. This is not an AOT startup or end-to-end UI latency measurement. Final candidate startup/device checks remain required after behavior and private renderer acceptance.
+
+### Build 10 renderer acceptance checkpoint
+
+The independent private actual-renderer comparison passed all 7,812 task/instant evaluations. Someday representation (null versus legacy sentinel) and group-label wording/countdown were normalized as intentional differences; availability, effective dates, bounds and ordering had zero unexpected differences. This applies to the audited snapshot, not future edits automatically.
+
+[Candidate run 36790803679](https://github.com/reddraggone9/tandemlog/actions/runs/36790803679), source `09bb3cf1cd7d9804a2fc7199b2349d80e29bae62`, passed Linux native workflows/release startup, Windows tests/native compilation, Android compilation and owner signing. The readiness marker now waits for successful time projection and the loaded task frame; a delayed-zone native regression prevents early readiness claims. Build 10 is available for exact Android testing but predates the final drag/warning changes. Compilation does not establish native Windows or Android runtime acceptance.
+
+### Build 10 native Android timing evidence
+
+The authorized local worker reported successful build-10 native Android tests for idle start-time appearance with capture draft preservation; intraday ordering of precise and bounded times; midnight bound advancement retaining task time/draft; floating visibility after Los Angeles/Chicago zone changes and resume; and multiline keyboard behavior. Canonical hashes were unchanged for view-only clock/zone operations. These are build-10 results, before drag/Show upcoming and the cache recovery fix.
+
+A retained build-7 fixture exposed a cache-version-4 versus current-version-7 opening failure. Both the fixture and cache were preserved for exact code-11 upgrade testing. Build 10 had a tag editor but no tag-filter UI; its native evidence does not establish filter behavior.
+
+### Code 11 final local acceptance
+
+Formatting and analysis pass, with 102 generic app tests and six release-gate tests. All 12 native Linux workflows pass in 154 seconds on the final production source. The drag scenario covers hidden global order, rejected different-time destinations, stale view cancellation, and a wall-clock advance without a timer callback; the guarded append rejects the expired bucket. Show upcoming preserves capture text, permits editing a future task and resets off after restart. Nonrecurring scheduled values warn and save without loss.
+
+Known obsolete cache regressions preserve writer identity, a readable old SQLite snapshot, workspace binding and committed-stream checks through failed replay/retry. Unknown future cache versions and incompatible canonical records remain explicit failures. Exact Android retained-cache upgrade remains a separate gate.
+
+### Code 11 native release startup samples
+
+Source `4d255e2b06187d6d6ad383d9142bfb2b3454c6b4`, locally compiled native Linux release, measured external process-launch to loaded-frame at **1,570 ms** for a fresh 2,000-task cache rebuild and **819 / 983 / 853 / 954 ms** warm. Corresponding first-frame times were **980 / 620 / 773 / 634 / 714 ms**. Ten tasks measured **860 ms** rebuild and **818 / 771 / 884 / 840 ms** warm, with first frames **686 / 658 / 613 / 654 / 665 ms**. Every warm run read zero log contents and asserted the complete workload in SQLite. Raw samples: `evidence/startup-rc3-code11-2000.json` and `evidence/startup-rc3-code11-10.json`.
+
+Method: five sequential fresh processes per workload, prepared selected-folder profile, isolated fresh cache on the first run, native AOT release under Xvfb/software graphics with an explicit D-Bus session. No emulator, recording or build/test ran concurrently; OS page caches were not flushed. The loaded-frame marker follows successful time projection and post-frame rendering, not a physical presentation or first successful input measurement. Cache-hit correctness is demonstrated separately by zero content reads; these VM samples do not establish target-phone performance or a cold OS launch.
+
+The refreshed 90-second native Linux demonstration shows accepted and rejected drag targets, timed groups/bounds, Show upcoming, recurrence/history and both themes, with visible pointer. It uses sanitized fixtures and an explicitly controlled advancing UTC view clock in an instrumented debug build; actual native Android clock/lifecycle results remain separately scoped.
+
+### Code 11 hosted candidate and artifact handoff
+
+[Signed candidate 36793617099](https://github.com/reddraggone9/tandemlog/actions/runs/36793617099) passed all platform gates for source `4d255e2b06187d6d6ad383d9142bfb2b3454c6b4`. Android version `0.1.0-rc.3`, code 11, is nondebuggable and includes arm64-v8a, armeabi-v7a and x86_64. Its owner certificate matches the pinned fingerprint. Exact APK SHA256: `957bcb065c7d7dbfcf2351fd691994fcc23045c73c58b9c50abfddbe7bbfc74c`. Retained-cache upgrade and the final drag/upcoming/lifecycle checks are handed to the native Android worker; no release is published from compilation alone.
+
+The Windows unsigned x64 ZIP hash is `ffbecd2a2a91f3af17fcc1e2637e3121636785f0f94dffb823681b3ceecd3ed9`; Linux x64 tar.gz is `241755e0899b49f8b45ebb6dff9c1a64680059ed497d3cab5b924fd063c5c2b7`. Hosted Linux startup smoke measured 427 ms rebuild and 322 ms warm for its ten-task workload, with zero warm log reads. These hosted values are separate samples from the local software-graphics VM measurements above. Subsequent documentation-only commits do not change the accepted production/artifact source.
+
+### Code 12 tag and long-list drag acceptance
+
+Formatting and analysis are clean. All 103 generic app tests, six release-gate tests and 13 native Linux workflows pass (176 seconds). The new flow combines exact-tag filtering with user/Everyone, Open/Completed and Show upcoming, preserves capture drafts, clears the tag explicitly and resets on restart. A stationary edge drag reaches an initially unmounted peer and preserves the relative global ranks of hidden tagged tasks and completed history. Canceling over a valid target writes no move. Existing cross-bucket/time/concurrent-change guards still pass.
+
+Native screenshots at 1000px/100% and 390px/200%, Light/Dark, show a bounded tag label and reachable clear action. The reviewed 90-second Linux demo shows tag selection/reset and earlier task/drag/theme flows; its recording ends before the long-list edge segment, which has separate native regression evidence. The demo uses sanitized fixtures and an explicitly controlled advancing UTC clock in a native debug build. Exact code-12 Android affected regression remains required; these Linux results do not establish touch behavior.
+
+### Code 11 native Android core acceptance
+
+The local worker reported exact signed-APK/certificate verification and successful retained schema-4 to schema-7 cache recovery: the archived cache was retained and canonical bytes plus writer identity were unchanged. Valid handle dragging, rejected cross-date drops without an event, absent handles across different times, hidden manual ranks, upcoming edit/default/reset, scheduled warnings, intraday ordering and cold persistence passed. The reviewed touch-visible demo accompanies this evidence. Picker-reopen automation remained blocked; retained-grant testing used an already-authorized profile. This is code-11 API-30 evidence, before code-12 tag filtering and edge scrolling.
+
+### Code 12 hosted candidate handoff
+
+[Candidate 36796794061](https://github.com/reddraggone9/tandemlog/actions/runs/36796794061) and push CI 36796787111 passed for source `bd02aa6fc58b6f82488cc0a005c989effa6d8c0c`. All target checks/builds and owner signing are green. Android is nondebuggable, version `0.1.0-rc.3`, code 12, package `com.reddraggone9.tandemlog`, with ARM and x86_64 support. The pinned owner certificate is verified; APK SHA256 is `3c4be43dfd40aada0f18b77521bec7c24ae0b67f106074ded11ff3d50f490d9b`. Its exact signed package is handed to local Android affected regression; no public release is authorized by compilation alone.
+
+Linux x64 tar.gz SHA256: `9824da968773e83b4fe4b0c988c4ddfca53297f879326d83e74b6773a8b633a8`. Windows unsigned ZIP SHA256: `22764af605ac9c66b6cf37950e2e53b67129f13edd87faf4678e4d40a7b3ce32`. Hosted Linux ten-task release startup measured 471 ms rebuild and 438 ms warm, zero warm log contents; OS page caches were retained. The earlier methodology and limitations still apply. Documentation-only follow-ups do not change the accepted production/artifact source.
+
+### Code 13 consolidated header acceptance
+
+Formatting and analysis pass, with 103 generic app tests, six release-gate tests and all 14 native Linux workflows passing (209 seconds). The new flow verifies filter composition, reopen/reset, real Tab/arrow navigation and Escape, retained capture text/selection, active-identity separation and Settings access. Existing six-size header geometry, stationary edge-scroll, stale/cross-bucket/time guards, lifecycle and domain workflows still pass.
+
+Final desktop/narrow screenshots cover both themes and 100%/200% text; the task-based audit records same-fixture density measurements. The reviewed 90-second native Linux debug demo shows the new menu/reset, identity/Settings, both themes and stationary edge movement within the recording. Sanitized fixtures and a controlled advancing UTC view clock are explicit; this is not Android or physical-device performance evidence. Code 12 remains an intermediate candidate. Final code-13 platform/signing and exact Android menu/header acceptance remain required before publication.
+
+### Code 13 signed candidate handoff
+
+[Candidate 36799901390](https://github.com/reddraggone9/tandemlog/actions/runs/36799901390) and push CI 36799892529 passed for production source `f5f3d025841ae64da13af3ba3f615309e00221df`. All platform gates and owner signing are green. The exact nondebuggable APK is version `0.1.0-rc.3`, code 13, with the pinned owner certificate and phone ARM/emulator x86_64 support. SHA256: `edf56111b8d66343f939571bc41f9e8e4fb6e42395800a1a9541b6abf18bcfcf`. It is handed to native Android menu/header regression; publication remains held for that result.
+
+Linux tar.gz SHA256: `1215813eb879abaaf376d3beb3827c21285e1b904b21f3d37d8a46e19deb9c1c`. Windows unsigned ZIP SHA256: `2fd33dc7cd359bc5b4aaf86ae2bedf2ac73792c1506ac45854cdafccff522969`. Hosted ten-task Linux startup measured 469 ms rebuild and 367 ms warm, with zero warm log contents and retained OS page caches. These samples follow the documented loaded-frame methodology; they do not establish target-phone or physical-presentation latency. Subsequent documentation-only commits do not change artifact source.
+
+### Code 13 Android affected acceptance
+
+The local worker verified the exact signed APK/certificate and passed combined filters, reset/indicator, dismiss/reopen, identity versus assignee, Settings and narrow 150% text scaling. Stationary edge-scroll automation held the handle tooltip instead of initiating a drag; that result is inconclusive, not a verified application defect. Code 14 removes the handle's touch-long-press tooltip recognizer while retaining mouse-hover help and its accessibility label. A native Linux touch regression holds 700 ms before moving and then verifies stationary edge scrolling, cancellation and preserved hidden ranks. Exact Android touch regression remains required on the replacement candidate.
+
+### Code 14 native review and aggregate checks
+
+Formatting and analysis are clean; all 103 generic app tests, six release-gate tests and 15 native Linux workflows pass (227 seconds). The added workflow covers a 100-tag inventory, bounded lazy results, case-insensitive search with exact-case selection, empty results, selected-tag clear/reopen/reset, adjacent wide metadata and narrow 100%/200% layouts. Existing composition, keyboard, drag/hidden-rank/concurrency guards, cache recovery, time transitions and draft-preservation tests remain green.
+
+Forty-two sanitized native screenshots cover Light/Dark at 1000px and 390px, including 200% text, full pinned deadlines, long tags, bare tasks and one-line description previews. The reviewed focused 30.5-second native Linux debug demo shows picker search/clear/reset and wide metadata with a visible pointer. Early screenshots and the demo were delivered before the full platform build, allowing user feedback in parallel with validation. Exact signed Android replacement checks remain pending; no new runtime or performance claims follow from these Linux visuals.
+
+### Code 15 group-date presenter
+
+All 108 app tests and six release-gate tests pass, including five presenter cases for same/different/bounded dates, exact times, pinned zones, Someday and empty separators. The final affected native Linux metadata/picker workflow passes (9 seconds), explicitly covering a differing bounded start date. The retained-view timezone-reload regression also passed during this refinement; the final presenter has no live timezone reads or timezone-resolution machinery.
+
+Light/dark 1000px/390px and 200% screenshots were inspected. Lee's final rule is times/roles/zones only in day-group rows, with all full dates in the editor; the earlier differing-date exception was superseded before publication. Early reviewed screenshots were delivered before rebuilding. Source/task facts and storage formats are unchanged. Final candidate CI runs the full platform matrix and native Linux suite; exact revised Android acceptance remains required.
+
+### Code 16 localized list times
+
+Formatting/analysis are clean, all 111 app tests and six release-gate tests pass. Eight presenter regressions verify pinned-to-local midnight rollover, zone changes, DST gaps/folds shared with production projection, bound consistency, unchanged source maps, floating times and date-only precision. Two affected native Linux workflows pass (10 seconds), including retained rendering during a timezone reload. Both-theme wide/narrow and 200% screenshots were inspected; a reviewed 12-second native debug clip with visible cursor was delivered before the final build. Original editor dates/zones and canonical data are unchanged. Full final hosted gates and exact Android affected acceptance remain required.
+
+The first code-16 candidate passed Windows/Android but correctly blocked signing when one native Linux test still expected the removed `09:30 UTC` list suffix. The assertion now requires `Start 09:30` and no suffix, while the existing canonical-zone/time assertions remain. The complete affected native dates/recurrence/history flow passes (17 seconds). Application behavior was unchanged by this test correction; the full candidate gates rerun on the corrected source.
+
+### Code 17 workspace search — checks in progress
+
+All 113 app tests and six release-gate tests pass, with clean formatting and analysis. The pure view search checks trim/case-insensitive title and description matching, retained future availability, assignee/tag bypass and empty-query restoration. The focused native Linux search workflow passed in 11 seconds: hidden/title/description matches, restored filters, drafts, incoming updates on resume, same-key drag, cross-completion rejection and checked-history reopening. Wide/narrow 200% screenshots were inspected. The changed occurrence/date/zone/tags/recurring-history scenario also passed (16 seconds). Code 16's final hosted matrix/signing passed at run 36807290597; it is superseded, not published. No build-17 Android runtime acceptance is claimed yet.
+
+### Published RC3 exact-artifact acceptance — 2026-10-01
+
+Source `8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e`; candidate [36809817199](https://github.com/reddraggone9/tandemlog/actions/runs/36809817199) and push CI 36809817060 passed all targets. The exact owner-signed nondebuggable Android APK, code 17, passed native Android 11/API 30 acceptance: title/description search across hidden categories and filter restoration/live updates; bounded tag picker; responsive layouts; occurrence label; natural time transitions/draft preservation; restart; hidden-rank constrained dragging; actual stationary edge scrolling; rejected drops with no events. Active touches were verified in demo Library `libfile_96544bdb91248191981a26be26194d2c`. Local services stopped and guest state restored; real source/data untouched. This does not establish real-phone/API 36/provider-specific coverage.
+
+APK SHA256 `fa3f5758c3b54567587f788827d5a694952b23c0721fa5de28c905ed0577315f`; public certificate SHA256 `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`. Windows unsigned bundle SHA256 `9f8ec5a062b935b9097bfefe0440703551f9a8739d3fd66ce46cf4c451f57a1b`; Linux bundle SHA256 `c6e187da756e4bfe497bb2b391714021a66d11cac1e89519f1444eb04e83a7a1`. Windows hosted builds/tests and archive checks passed, not full manual Windows UI acceptance.
+
+Publication [36812834339](https://github.com/reddraggone9/tandemlog/actions/runs/36812834339) reused those artifacts without rebuilding, creating [v0.1.0-rc.3](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.3) with prerelease=true and latest=false. Public unauthenticated downloads of all nine assets matched GitHub digests and accompanying checksums. The downloaded APK signature/package/version/nondebuggable flags, Windows ZIP and Linux tar integrity passed. Tag points to the tested source; Latest endpoint returned404 (no stable release). Release notes disclose identifier/protocol break, canonical backups/reselection, and runtime limits. No migration tooling or private source content is bundled.
+
+Native release Linux/Xvfb startup, 10 tasks, OS page cache not flushed: external loaded-task marker439ms with rebuilt cache and396ms warm; external first-frame264/265ms; app loaded markers263/221ms; warm read zero log contents. These process-launch observations are not physical-display or OS cold-boot timing. Method and complete measurements accompany `linux-startup.json`. Reviewed native Linux debug search demo is Library `libfile_ed918c8cdf5c81918f597466be0e92ab`, version10; synthetic fixtures, visible pointer. Stable 0.1.0 and coordinated live migration remain unapproved.
+
+### RC4 build 22 exact candidate handoff
+
+Source `a742f3325dce0b8d2340ba893ab4ea58e3cef0b6`, version `0.1.0-rc.4+22`. [Full CI 36885633090](https://github.com/reddraggone9/tandemlog/actions/runs/36885633090) and [signed candidate 36885656212](https://github.com/reddraggone9/tandemlog/actions/runs/36885656212) passed all target gates. Formatting/analysis, all 141 application tests, 12 packaging/release tests and the complete native Linux workflow suite are green. Six focused local native flows include selected-block edge scrolling/cancellation, mixed search-section range selection, dirty Save/Discard/Cancel, checkbox keyboard isolation and dropdown repositioning after metrics change. The final native visual flow passed in 77 seconds with 24 sanitized Light/Dark/desktop/narrow/200% screenshots. Lee accepted the reviewed 22.5-second pointer-visible native Linux debug preview. Simulated keyboard insets are Linux geometry coverage, not Android keyboard evidence.
+
+Downloaded candidate ZIP CRC/digests, every bundle checksum and Android signer/metadata passed independent verification. APK SHA256: `349b817861246a878f2154ec23b58dd0b721daebf55b3447bda9ebdc4d764313`; pinned owner certificate `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`; package `com.reddraggone9.tandemlog`, nondebuggable code 22, ARMv7/arm64/x86_64. Native Android acceptance subsequently failed the keyboard-open tag-picker flow; this candidate is superseded and must not publish. RC3 evidence is not claimed for these changed flows.
+
+Linux Flatpak SHA256: `f353f3cd5e56b3208c343df1f160732bd99a956e2e52ea14b4bb9008136e845d`. All installed lifecycle phases passed with verified exact-instance cleanup. Replacement uses a private metadata-only baseline with identical payload/permissions and a distinct OSTree commit, then restores the untouched candidate; it proves package replacement, not previous-version application compatibility. Windows unsigned installer SHA256: `099c5cfa1843f93b27f2c370f262f2636be63d4db4919874d8340aa91802b680`. Its four hosted native lifecycle phases passed with payload/shortcut, visible-window/projection and preserved-profile/canonical checks. Manual Windows UX, missing-runtime clean-machine behavior and cloud Flatpak runtime remain explicitly unverified.
+
+Hosted native Linux **release**, ten synthetic tasks, two fresh processes: external launch→loaded-task frame **571 ms cache rebuild / 417 ms warm**; external first framework frame **348 / 296 ms**; launch→Dart main **259 / 200 ms**; internal loaded markers **308 / 213 ms**. Warm log-content reads were zero (rebuild one). OS page caches were not flushed. These markers distinguish complete model/cache behavior from engine initialization; they do not measure physical presentation, first accepted input, cold OS/device boot or phone performance. The original `linux-startup.json` asset contains a D-Bus log preamble before the intact JSON; independent parsing preserved the original artifact. Strict report-output cleanup is bounded CI debt in [status](status.md#architecture-review-and-bounded-debt), not an application failure or a reason to rebuild the native-acceptance candidate.
+
+### RC4 build 23 picker regression
+
+The device worker verified build-22 signing/upgrade and retained synthetic data, then reproduced no reachable tag suggestion with the keyboard open on Android 11/API 30, 540×960 pixels at density 240. Remaining selection/bulk/tablet checks and the final Android demo were not completed; the emulator was stopped. That failed acceptance overrides green hosted gates and Lee's desktop-preview acceptance.
+
+An added native Linux regression exposed a control-tap race: the query's outside-tap handling dismissed the dropdown before the same tap activated its collapse/expand control. The entire picker now belongs to the text field tap region. Regression requires successful collapse/reopen, retained query focus, actual hit-testable matching/no-match output, popup height at least 48 logical pixels, keyboard-safe bounds, stable dialog rectangles and successful tag selection at 360×640/1.5 density with a 280-logical-pixel simulated IME inset. Three affected native workflows passed in 60 seconds, covering compound filters/selection/bulk/drafts and the earlier bounded picker/200% scenario. All 141 generic app tests, 12 Python gates, formatting and analysis pass. Ten both-theme native Linux screenshots were inspected; these use overridden phone metrics and simulated insets under Xvfb, not a real Android keyboard. No storage/protocol/cache meaning changes. New full hosted build/signing gates and exact build-23 native Android acceptance remain required.
+
+The new [signed candidate 36897516356](https://github.com/reddraggone9/tandemlog/actions/runs/36897516356) and [push CI 36897514952](https://github.com/reddraggone9/tandemlog/actions/runs/36897514952) passed all platform gates at source `b9e445da917e58fef18f4e8fe45607eda4eab090`. Exact owner-signed APK `1c1eefd969e73a95a2266821320bc788474e0bdf36455ed3d48f6cf1f92ede32`, code 23, independently verified and handed off; native Android tag acceptance passed but the editor keyboard gate failed, so this candidate is superseded. Linux Flatpak `7f1bbd369993b023021e0751b74d5e4accef902352e5900a75aefc65458757cd` and unsigned Windows setup `ecebf2c3c9aa1955afbf78ba115e03cff9fa4d427436f1c8ae8fd030e9958dfe` passed archive/checksum and all four installed lifecycle checks. [Derived verification evidence](../evidence/rc4-build23-candidate-verification.json) preserves the original startup-report hash and declares its D-Bus preamble extraction; candidate assets are unchanged.
+
+Hosted ten-task native Linux release startup: **432 ms rebuild / 367 ms warm** external launch→loaded-frame marker; first frame **284 / 238 ms**, Dart main **213 / 167 ms**, internal ready **215 / 197 ms**. Warm log reads zero; two fresh processes, OS page caches retained. Physical presentation, first input, cold OS boot and phone latency remain unmeasured. The refreshed 11.5-second native Linux debug clip has visible pointer input and simulated IME insets; the broader previously accepted desktop design preview remains historical evidence, not Android acceptance.
+
+### Published RC4 build 24 — editor correction and exact acceptance
+
+Native API 30 build 23 passed tag keyboard/results, selection, Save/Discard/Cancel and bulk clearing tests, then failed both editor form visibility with the keyboard open at 540×960/density 240. No publication of that candidate is authorized. An actual-app Linux debug regression with the matching phone metrics, status/navigation padding and simulated 280px logical keyboard reproduced the 8px scroll viewport. The correction prevents double IME subtraction and scrolls the modal heading with the form; wide panel scrolling remains separate. Tests require a usable scroll viewport, focused caret inside it/above the IME through repeated open/close, both single/bulk at 100/130/200% text, and unchanged canonical files after focus-only cancellation. Linux simulated metrics remain geometry evidence, not native Android acceptance.
+
+Local build-24 results: focused actual-app geometry/caret/canonical-invariance regression **39 seconds, pass**; both-theme visual flow **96 seconds, pass**, 24 inspected synthetic screenshots. Normal, 130% and 200% text use the same 540×960 physical/1.5 density, 24px logical status/navigation padding and 280px logical IME. Modal title/form share the scroll region, so heading may scroll out while an offscreen field is focused; actions remain available. All **142** application unit tests, **18** editor cases and **12** Python packaging/release cases pass, analysis/format clean. Hosted full suite and exact new Android runtime acceptance remain pending.
+
+Exact build-24 [candidate 36906871648](https://github.com/reddraggone9/tandemlog/actions/runs/36906871648) and [CI 36906794308](https://github.com/reddraggone9/tandemlog/actions/runs/36906794308) passed all targets at `ded2eebc10eb1670658995cbc0c06b4676a5c583`. Signed APK SHA256 `eaf16ed555acc6bef637542133d907a7ee349434657cf6c7f64a7e5cdff57bda`, code 24, approved owner signer/nondebuggable/three ABIs; exact native Android acceptance remains pending. Linux Flatpak `f9c4f883b596498a650d35be892e14e29a97038d19622b6d37ff856dae487ec9` and unsigned Windows setup `b7fab39b4eb98565f31d42f13706c6c2b1eb9ddd3687f9bbe9dd19122f37f875` passed independent downloaded digest/CRC/checksum and all four installed lifecycle phases. [Evidence](../evidence/rc4-build24-candidate-verification.json).
+
+Hosted ten-task native Linux release, two fresh processes: external launch→loaded-frame marker **507 ms rebuild / 391 ms warm**; first framework frame **307 / 258 ms**; launch→Dart main **217 / 168 ms**; internal ready **287 / 220 ms**. Warm log-content reads zero; OS page caches retained. Physical presentation, first accepted input, cold OS boot and phone latency are unmeasured. Original startup asset retains its known daemon/portal/PipeWire preamble; derived strict JSON extraction matches the reviewed prior preamble aside from numeric process/timing values, and preserves the original hash. No candidate assets were modified.
+
+The reviewed 28.23-second native Linux debug regression clip has visible pointer input and a permanent explicit simulated-phone/IME caption. It shows single/bulk field focus and scrolling, not Android runtime behavior or startup timing. Temporary capture harness is outside tracked source. Exact Android build-24 test and updated device demo remain required before publication.
+
+The coordinating native worker accepted the exact build 24 APK on accelerated Android11/API30, 540×960/density240: single/bulk IME access through 200% text, mixed Due focus without canonical writes, explicit clearing, draft guards, retained data/restart, filters/upcoming, drag, bulk tags, delete cancellation and completion/Undo. Separate build 23 testing passed tablet/stale/block-drag/confirmed-delete/theme flows; those are not relabeled as exact build24 tests. Physical-phone/provider matrix and Android hardware Ctrl/Shift remain unperformed. The final native device demo was delivered separately with visible input.
+
+[Publication 36915456832](https://github.com/reddraggone9/tandemlog/actions/runs/36915456832) succeeded after that acceptance, reusing signed candidate 36906871648 with no rebuild. [v0.1.0-rc.4](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.4) is prerelease=true, latest=false, draft=false; its tag points to exact candidate source `ded2eebc10eb1670658995cbc0c06b4676a5c583`, not later docs commits. All 11 downloaded assets match the candidate byte for byte and GitHub/checksum digests; the downloaded public APK again verifies the owner certificate, code 24/package/nondebuggable/three ABIs. RC3 source/assets remain intact. [Public verification](../evidence/rc4-public-release-verification.json) records direct links/hashes and anonymous-download results. Reviewed release notes disclose actual native coverage, unsigned desktop packaging/runtime/folder access, mixed partial writes and stable/cutover deferral. No credentials or access grants changed.
+
+## RC5 session Undo — candidate preparation
+
+The header-only commit passed hosted run 36928124738 at exact source `4c8a013a24701a17c066dbcd4a315ab718dd7f85`. Broader build 25 adds named-operation retraction and fit-aware toolbar identity. Unit geometry covers 320/390/900/1450px, both themes and 100/200/250% text, including open search, full-name accessible menu and 48px targets. Storage/history tests exercise mixed bulk schedules/tags/assignees, newer remote registers and independent same-label tag additions, successor work, independent completion/deletion, relative order and cache 7→8 replay, uncertain append acknowledgement, partial retry, exact-byte ID reuse and delayed invalid references. The independent review reran nine tests and 24 shuffled-arrival projections with no further concrete defect.
+
+Native Linux acceptance must cover repeated toolbar Undo, actual Ctrl+Z inside/outside text, snackbar expiry, dirty editor Cancel/Discard, deletion and newer remote writes. The initial native check found missing keyboard fallback scope after input unfocus; a task-page FocusScope fixes routing without consuming native text Undo. Another check established that the installed Flutter SDK defaults action snackbars to persistence: shared Undo notices now explicitly use `persist:false` and clear superseded queued notices. Screenshots/demo, hosted installed lifecycle gates and exact signed Android acceptance remain pending; previous RC4 Android evidence does not cover these changes.
+
+The production native Linux Undo regression passes in 54 seconds after those fixes. It verifies capture draft preservation through task Undo and no task retraction while text is focused, repeated task Undo outside text, ten-second completion notice expiry with toolbar availability, dirty Cancel/Discard and newer remote title survival, deletion recovery and restart clearing. This is a functional Linux debug test; its instrumentation is not a new release startup benchmark or Android acceptance.
+
+Final RC5 Linux visual run: 105 seconds, 15 synthetic screenshots, Light/Dark at 1200×800 and 390×800, 100/200% text. Actual pixels show full identity name when fitted and a 48px accessible initial avatar at narrow widths, no title label in chrome, protected dirty editor and retained newer synced title after Undo. Final demo: 37.55 seconds, 296857 bytes, SHA256 `fc899608d5480ebdc18085476b35d5d288bb4e8dc096f625337ef5b0897969a3`; Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version16. Pointer is visible, synthetic/narrow-Linux labeling is explicit, unrelated background is masked. Temporary visual harnesses remain outside the maintained app/release. This does not establish Android or Windows manual UI acceptance.
+
+RC5 build25 final candidate run36932940961 passed every gate at exact app source `134c8b9e8006abaa07e596f4e91d32b0f2b8edd6`; all 20 native Linux workflows and installed Linux/Windows lifecycle gates passed. Exact downloaded desktop ZIP digests/CRCs/member checksums and lifecycle reports are verified. Owner-signed APK digest/package/code25/nondebuggable/three ABIs/pinned certificate verified; native Android acceptance is pending. Workflow/docs run36933481048 also passed all targets. [Evidence](../evidence/rc5-build25-candidate-verification.json). Additional standalone native bulk edit/deletion Undo passed in 8 seconds, retaining original different tags and restoring both deleted tasks.
+
+Hosted Linux release startup: ten synthetic tasks, Xvfb, OS page cache not flushed. External process launch to rendered-task marker: cache rebuild624ms and warm436ms; internal main-to-loaded marker355ms/213ms with logs read1/0. External first frame335ms/299ms. These are separate from debug visual timing and true power-on cold start. The attached startup report includes console diagnostics before its final JSON block; machine consumers must separate that prefix, a small report-format cleanup for a later workflow change. No app change is needed for those diagnostics.
+
+
+## RC5 build 26 follow-up — local evidence
+
+All 170 app tests, 12 Python gates and affected native Linux workflows pass before the final visual/evidence-only additions. Focused storage coverage includes 1/30/100-task append/list/read/cache-transaction counts across create/edit/tag/move/delete/Undo, prefix/full-write/cache failure and preserved incomplete owned tails, retry deduplication, cache reconstruction and delayed invalid references to the second prepared Undo/tag event. Historic unchanged recurrence still ingests and reopens; newly generated identical-date completion writes nothing. Civil-day eligibility tests cover travel and 23/25-hour DST days.
+
+The four affected native flows pass in 32 seconds: below-first bounded tag queries, recurring reason and idle-midnight enabling, single/bulk dirty-editor state/geometry continuity through cancellation/rejection/move/Undo, ID-anchored Shift range after own reorder with a hidden assignee, and 1/30/100 capture with exactly one text update per submission. The complete 23-flow native Linux suite passes in 6m11s. Capture input-clear/settled timings are 104/345ms for one task, 181/618ms for 30 and 372/777ms for 100; each has three measured frames and one controller text update. Native integration harness timing includes debug/test instrumentation and implicit animations; it is not a release interaction benchmark.
+
+Final both-theme native Linux visual run passes in 34 seconds, capturing ten synthetic screenshots at 1200×800 and actual 390×800 window widths. Inspected pixels show readable unavailable-completion feedback, compact recurrence markers, usable below-first tag suggestions and the same dirty editor through reorder. An earlier capture had a resized Flutter test viewport inside an unchanged desktop window; its purported narrow images were rejected and replaced by this actual-window run. Enlarged-text/keyboard geometry remains covered by the complete native suite and the prior broad RC5 visual pass, not by these ten new screenshots. The 17.45-second pointer-visible delta demo is Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version 17, SHA256 `68ea436eee3db562b52bfad1e23f8e8807c806b0199b946ce4668a59b70ac187`. It labels native Linux debug/synthetic data and narrow Linux layout; unrelated background is masked. This is not Android evidence. Full hosted and exact signed Android gates remain pending.
+
+Independent Sol6.1 performance/reference review found no remaining persistence blocker. AOT timing used Dart3.13.4 executables, the app's SQLite native asset, Linux local folders, WAL/FULL and three fresh-process samples per version with synthetic fixtures; histories grow through move, edit/Undo, tag/Undo and delete/Undo in the same fixture. Before storage source was frozen, with shared compatible domain modules. Median 30-task capture/move 95.4/172.8→11.5/19.3ms; 100-task capture/move 407.2/1301.5→31.7/57.0ms; 100 edit/tag/delete/Undo-delete 1808.9/2152.7/2376.8/2404.1→78.4/127.8/187.3/229.7ms. Every after sample uses one durable append and one cache commit; original per-task implementation used N appends and repeated scans. Raw samples/source hashes: [evidence](../evidence/rc5-batch-performance.json). These are storage timings with OS caches unflushed, not power-on cold start, full Flutter frame latency or Android provider performance. Failure-path phase metrics do not include fallback reconciliation.
+
+## RC5 build 27 — fixed selection commands and notice regression
+
+Build26 was canceled unpublished after Lee reported that selection commands scrolled away wherever the side pane could not fit. The responsive correction applies to all platforms: count/Clear Selection/Edit participate in layout above the list viewport, with no row overlay. The production native Linux regression passes in 32 seconds across a 60-task list, selection near task46, top/bottom scrolling, final-row visibility, 100/200% text, bulk editor open/close, long-press/toggle/zero exit, canceled edge drag with no event and 899/900px side-pane transitions. Safe-area metrics are injected; this is narrow Linux layout evidence, not Android touch/IME acceptance. The separate widget geometry/callback check covers 320/390px, both themes and 200% text. All 171 app tests pass.
+
+The native both-theme visual run passes in 49 seconds with twelve actual 390px screenshots. Inspected pixels confirm reachable commands at the bottom and top, correctly wrapped large text, usable bulk form and removal on exit. A private phone screenshot could not be materialized through the supported Library transfer; no pixel inspection of it is claimed. Actual production code and reproduced long-list behavior establish the defect/fix independently.
+
+Lee's persistent completion-snackbar report applies to published RC4: its action notice omitted `persist:false`, and the installed Flutter SDK defaults persistence on when an action exists. RC5 already explicitly disables that default and clears superseded notices. The expanded production native test passes in 69 seconds: real 11-second expiry, toolbar recovery afterward, two rapid completions, focused/hovered Undo, accessibleNavigation enabled and an unrelated metrics rebuild all leave no lingering notice/queue. The 10-second timeout is deliberate even in accessibility mode because the separately accessible toolbar Undo remains available. It does not implement a custom timer or disable other accessibility behavior. Exact final Android acceptance still must confirm platform-specific touch/IME and notice behavior before publication.
+
+Final replacement visual evidence adds the 33-second ten-screenshot desktop/actual-narrow delta run on current build 27 source; both themes retain readable recurring explanation, below-first popup and dirty editor through drag. Combined reviewed 42.15-second, 588099-byte pointer-visible demo: SHA256 `d18d268145f431f27c7c9a27349c83ee1c3139330671fe74a9f5f9749c75fb5c`, Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version 18. It labels Linux debug/synthetic tasks and masks unrelated background; no Android evidence is claimed. Earlier version 17 remains historical in Library.
+
+Final local gate: all 24 native Linux workflows pass in 6m57s, including the new fixed commands and expanded notice test. Analysis, formatting 49 files and 12 Python gates pass after temporary capture tests were removed. Hosted platform/installed-package checks and exact new native Android acceptance remain required; no final RC5 artifact has yet been published.
+
+Build 27 [candidate 36942561444](https://github.com/reddraggone9/tandemlog/actions/runs/36942561444) and [push CI 36942516952](https://github.com/reddraggone9/tandemlog/actions/runs/36942516952) passed all targets at exact application source `d7dd98124f2bab09b05c39ca7df4c8506fa37f08`. Independent downloaded archive/member/CRC/checksum verification and installed desktop lifecycle reports pass. Signed Android artifact 11201391795 verifies the pinned owner certificate, code 27, package, nondebuggable flag and arm64/ARMv7/x86_64 libraries. APK SHA256 `f7dd093e894d064c1d524c2abe5d99c7b218a216ffcad55c397f7f3e829174a6`; [evidence](../evidence/rc5-build27-candidate-verification.json). Native Android acceptance is pending, and no RC5 release is published.
+
+Hosted native Linux release startup, ten synthetic tasks/Xvfb/two fresh processes with OS page caches retained: external launch→loaded-task-frame marker 514ms cache rebuild/393ms warm; first framework frame 322/263ms; external Dart main 253/192ms; internal loaded markers 257/197ms and log reads 1/0. These are rendered-model/cache measurements, not physical presentation, first accepted input, OS cold boot or Android latency. Original startup artifact is preserved byte-for-byte; derived evidence separates its known portal/daemon diagnostic prefix from the final JSON.
+
+
+## RC5 build 28 — explicit Add and tag accessibility
+
+Build 27 exact Android API30/Gboard QA is blocked: tapping Add during visible word composition produced no task or event; adding a space first allowed capture. Tag results painted correctly but were absent from UIAutomator's hierarchy. Unaffected build27 evidence is retained as source-specific evidence, not final build28 acceptance. No RC5 publication.
+
+The focused production native Linux capture regression passes in 10 seconds. It drives `TestTextInput` composing values into the actual mobile UI branch, verifies explicit Add clears/finalizes and commits exactly once, hardware Enter preserves a Unicode candidate, same-frame double Add callbacks do not duplicate, mobile newline does not submit, supported Done does submit, multiline blank lines are excluded, invalid/empty drafts remain, and failed canonical ingestion preserves the draft for an exact-ID retry. These are simulated IME values on Linux, not physical Gboard evidence.
+
+The tag overlay widget regression verifies labels/tap actions and that the suggestion node has only its own result-list scrolling ancestor, not the clipped dialog query viewport. Accessibility activation calls the actual selection callback and keeps query focus; metrics/keyboard/one/zero/many results and open-popup disposal retain their geometry/lifecycle checks. Exact Android accessibility hierarchy and interaction must pass on build28.
+
+All 171 app tests, 12 Python gates, analysis and formatting49 files pass. Complete 25-flow native Linux suite passes in 6m34s. The separate 52-second real-window visual run captures 16 synthetic Light/Dark screenshots at 1200×800 and 390×800, narrow 100/200% text; inspected capture before/after, below-first popup and selected chip remain readable/stable. It activates suggestions through their actual semantics tap callback and verifies only the result list is a scrolling ancestor. A first visual harness iteration correctly deselected an already-selected tag but expected it selected; reset between scenarios fixed the harness without changing the app.
+
+Reviewed pointer-visible delta demo: 25.10 seconds, 321359 bytes, SHA256 `48b8168aa73489aa1a60e33ea6222daa2db821aea53a65b0fc00a8d02f61deec`, Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version19, backing file `file_00000000920881f782c0a00d0b2174ab`. The label explicitly says native Linux debug/synthetic tasks/simulated composing input; no Gboard result is implied. Build27/version18 remains historical evidence for unchanged flows. No custom icon adopted, no private source/canonical data touched. Exact signed build28 Android acceptance and all hosted candidate gates still required.
+
+Build28 exact source `b501dc64766be078d327ae778c09952995acd84e`: [candidate 36949182910](https://github.com/reddraggone9/tandemlog/actions/runs/36949182910) and push CI36949158719 pass all targets. Independent downloaded archive digest/member/CRC/asset-checksum and desktop installed lifecycle checks pass. Official apksigner/aapt plus the production gate confirm retained owner certificate, version0.1.0-rc.5/code28/nondebuggable/package/three ABIs and source. APK SHA256 `551e60c00811a6668c28f73ce2ffc59d37b980540b0022441c1274354f08112c`; Android artifact11204325644, Library `libfile_d79725baf6808191866011380e33d70d` version0. [Recorded evidence](../evidence/rc5-build28-candidate-verification.json).
+
+Hosted native Linux release startup uses10 tasks, two fresh processes, Xvfb, OS page caches retained: external process-launch-to-loaded-frame431ms rebuild/331ms warm, external first frame270/220ms, main204/155ms, internal ready223/172ms, log files read1/0. The successful model load and cache row count are verified; this is not OS cold boot, first accepted input, Android or Windows user-perceived startup. The original startup asset's diagnostic prefix remains unchanged; only its final complete JSON is extracted for the evidence record. Exact new Android Gboard/accessibility acceptance remains required; build27 unchanged-flow results are not mislabeled as build28 verification. Publication must reuse the exact native-accepted artifacts without rebuilding.
+
+
+## Build28 exact Android core acceptance; build29 follow-ups
+
+Parent-reported exact APK551e60c00811a6668c28f73ce2ffc59d37b980540b0022441c1274354f08112c / sourceb501dc6 passed native API30 Gboard Add once, native tag hierarchy/filter/reset,100-task bulk edit and exact Undo, successor-work retention, single/bulk delete Undo, storage-failure draft/retry, single/block edge dragging with dirty editors and SAF restart. Android demo Library `libfile_3ef9bfe5827481918dedab1b312ecf1e`; detailed evidence ZIP `libfile_9cf6eb42aa848191ac46a638c3a2d311`. These results do not cover build29's changed keyboard/error paths. No RC5 publication.
+
+Observed twice at100%: API30 /540×960 /density240, Gboard hidden→Filter→Expand focuses the query, then keyboard/dialog resize collapses the suggestions and restores the Expand arrow. Hiding Gboard and expanding again works; a second tap with Gboard still visible was not verified. At200%, a later option was partly visible (36px); the subsequent Back/Home sequence lacks intermediate capture and is not evidence of an app crash or failed selection. The native storage repro removes only a synthetic manifest before Save; the draft/logs survive, exact restore plus Save yields one edit. Mid-write partial provider I/O and physical modifier-key input remain unverified natively; shared fault/keyboard tests are complementary coverage.
+
+A widget fixture reproduces initial collapse at100% before the fix. Fixed100/200% tests require no typing/reopening/explicit external ensureVisible after IME arrival, retain query focus, select a result and still dismiss after deliberate scroll-away. Native Linux tracing identifies a later animated viewport shrink after the first metrics reveal; viewport extent tracking fixes the actual dialog case. Its19-second production flow covers empty-query initial opening, staged90/240/420physical-pixel IME insets at540×960 /1.5DPR,100/200% text, scrolling a later tag fully into view with at least48px height, selection/Done/reopen and byte-unchanged canonical files. These are simulated IME metrics on Linux, not new Android Gboard proof.
+
+Eight mocked Android MethodChannel tests cover unchanged successful byte/name/stamp behavior, missing manifest restoration guidance, four generic I/O operations, genuinely denied access/picker busy and preserved partial progress/canonical-validation text. The production editor widget preserves its draft after a readable folder failure and succeeds once on retry. This tests presentation/adapter behavior, not physical interrupted provider writes.
+
+Build29 local checks: all 182 app tests, 12 Python gates and clean analysis pass. All 25 production native Linux integration flows pass in 7m02s. The separate 70-second visual pass captures 22 synthetic Light/Dark screenshots using actual 1200×800 and 390×800 GTK windows, narrow 100/200% text. Initial empty-query suggestions survive staged keyboard insets without typing or reopening. A last option is scrolled fully into view and selected, then Done returns to the filtered list. Inspected pixels show readable popup rows and error/draft text without overflow. The error demonstration mounts the production editor and Android adapter with a simulated missing manifest; exact restore/retry succeeds once. Canonical fixture bytes remain unchanged. These are native Linux debug visuals with simulated IME/provider behavior, not new Android acceptance.
+
+The first visual harness popped its root route on successful Save; an initial correction retained a busy editor after a no-op close callback. Replacing that harness callback with actual editor removal fixed the recording without changing the app. Temporary visual/demo sources remain outside the tracked repository. Exact signed build29 hosted and native Android gates are still pending; no RC5 publication or custom icon adoption.
+
+Reviewed build29 demo: Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version20, backing file `file_0000000080dc81f792261bc888d977fc`, 26.45 seconds/266392 bytes, SHA256 `2d9c02019befa9f5e906ea70f4571a103ad72e9deed4e3c1467e2d830fae79ac`. Pointer is visibly present; caption says Linux debug/synthetic/IME and I/O simulated. Narrow segments mask the area outside the actual window. Successful same-identity replacement retains earlier demo versions. Formatting verifies 51 files with zero changes after the temporary harness is removed.
+
+Build29 initial hosted push CI36957862262 and candidate36958161592 failed at the same immediate post-Done list assertion in the strengthened popup test; later failures cascaded from unreset simulated phone metrics. Android compilation and Windows installation checks passed, and signing was skipped. The same isolated test passes unchanged locally under no-window-manager Xvfb in20 seconds. The test now awaits route closure, explicitly dismisses its injected IME before enlarged-text list inspection, waits for rendered rows and guarantees cleanup after failures. All keyboard-opening/geometry/focus/later-tag/Done/reopening/canonical-byte assertions remain; no application code, UI behavior, signing identity or version changes are introduced. The hardened focused Xvfb flow passes in20 seconds; replacement full hosted gates are required rather than retrying/blessing the failed source.
+
+Build29 replacement exact source `b6bc029c4d5e30ccb791f0502173b16810811d68`: [candidate36958983160](https://github.com/reddraggone9/tandemlog/actions/runs/36958983160) and push CI36958982363 both finish SUCCESS, including the corrected full25-flow native suite,182 app tests,12 Python gates, analysis/formatting, target builds, Linux/Windows installed lifecycle and owner signing. Independent downloaded ZIP digest/member/CRC/asset checksums verify. Official apksigner/aapt and production release gate verify package/code29/nondebuggable/three ABIs/source and pinned owner certificate. APK `16e8bd00d916054eca3afac02779fbfb16206b0dc004504771535d7dabf1414b`, artifact11207378670, Library `libfile_60352131ee848191b695a64af079ccda` version0/backing file `file_00000000a17881f5b771a7ea9d1665de`. [Verification evidence](../evidence/rc5-build29-candidate-verification.json).
+
+Hosted native Linux release uses10 tasks, two fresh processes under Xvfb and unflushed OS page caches. Process-launch-to-loaded-frame516ms rebuilt cache/431ms warm; external first frame338/273ms, main267/202ms, internal ready245/224ms; log files read1/0. Model load/cache row correctness is verified. These are not OS cold boot, first accepted input or Android/Windows latency. The original startup asset is preserved; its final complete JSON alone is extracted for the report. Production files are identical to the preceding visual/demo source; the correction affects only test lifecycle/docs. Native build29 Gboard initial opening,200% complete tag selection and readable missing-manifest restore/retry remain pending; unchanged build28 core acceptance is complementary source-scoped evidence. No publication or icon change.
+
+## Published RC5 exact acceptance and public verification
+
+Parent-reported exact code29 APK `16e8bd00d916054eca3afac02779fbfb16206b0dc004504771535d7dabf1414b` passed native API30 initial dropdown with real Gboard at100/200% text, enlarged tag selection, readable folder errors/draft/retry, capture, Undo189 entities and SAF restart. Unchanged build28 core evidence remains source-scoped coverage. The cloud independently reverified the downloaded public APK signer, version29, nondebuggable flag and three ABIs; no physical-phone/API36 or exhaustive provider coverage is implied.
+
+[Promotion36963075812](https://github.com/reddraggone9/tandemlog/actions/runs/36963075812) succeeded using exact candidate36958983160 with accepted SHA, without compilation/rebuild. [v0.1.0-rc.5](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.5) has prerelease=true/draft=false, immutable tag pointing to `b6bc029c4d5e30ccb791f0502173b16810811d68`, and explicit latest=false. The public latest endpoint returns404 (no stable release). All11 uploaded asset downloads match their accepted-candidate hashes and recorded sizes/digests, including checksum/signature/metadata/install/startup reports. RC4 release ID401290180 and all its asset IDs remain unchanged. [Public evidence](../evidence/rc5-public-verification.json).
+
+Every participating app must upgrade before Undo writes `task.operationUndone`, which older readers reject. The release notes carry this warning; do not delete shared history to make an older app load. Windows/Linux packages remain unsigned, Android retains its approved owner identity. No custom icon adoption, stable release, Markdown cutover or source/live-folder cleanup.
+
+## RC6 build30 — approved repeat-checkbox v4
+
+UI-only replacement of repeating-task completion perimeter by Lee's exact approved SVG path. Native Checkbox still owns semantics, checked fill/checkmark, padded48×48 target, touch/keyboard and hover/focus reaction. Vector is18×22, with viewBox y=-2 translation and intentional tips; it is not scaled down to18px height. Separate repeat metadata is removed. No recurrence, selection/drag, protocol2/cache8, package or signing changes.
+
+Local184 generic app tests,12 Python release gates, clean analysis/format51files and the complete25-flow native Linux suite pass (7m01s). The distinct83-second native Xvfb/Openbox debug visual run captured26 screenshots at actual1200×800 and390×800 windows, Light/Dark,100/200% text. Inspected open/checked/unavailable, hover/focus, explanation and reopened states: ordinary/repeating squares align, tips are unclipped, large text remains readable, disabled appearance matches existing dimmed completion. Native completion preserves another row's selection, the guard explains and writes nothing, and uncheck reopens history while retaining its successor. Inputs/pointer are included in the short refreshed desktop clip. Two initial scratch-harness mistakes (private Focus state type and a wide-pane Clear Selection finder) were fixed in the external harness only; production app stayed unchanged.
+
+Library reference SVG text matches the supplied approved source exactly. The supported reference-image materialization helper returned download failure and native image read supplied only extracted text; no alternate transfer or access bypass was attempted. Actual running Flutter pixels, not a browser rendering, are the geometry evidence. The actual-size reading tradeoff remains Lee's hands-on assessment, as requested. Android affected acceptance of the exact signed30 artifact remains required before RC6 publication; Linux at390px is explicitly desktop/narrow evidence, not Android. RC5 remains preserved.
+
+Exact build30 source `5f615f536ad89eef835c828b77cdd200c08d4541`: signed candidate36966612040 and push CI36966616831 both succeed. Independent downloads/ZIP digests/CRC/member/asset checksums and installed Linux/Windows lifecycle reports verify; official local SDK rechecks approved owner certificate, `com.reddraggone9.tandemlog`, `0.1.0-rc.6`, code30, nondebuggable and three ABIs. APK SHA256 `1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5`, owner-signed Android artifact11210695995, archiveSHA `b5e96a056c0029e0c8a35c6b7fa0c7b69612762dd895683b287c3a40a8a003ef`. Library archive `libfile_4f031fe77e0c8191ae04e39f3fb6f2dc` version0. Linux artifact11210605740 and Windows11209554263 both verify. [Receipt](../evidence/rc6-build30-candidate-verification.json).
+
+Hosted native Linux release startup uses10 synthetic tasks, two fresh processes, OS page cache not flushed. External launch-to-loaded-frame:415ms rebuilt cache/305ms warm; launch-to-first-frame:255/211ms; launch-to-main:191/148ms. Internal main-to-ready:220/154ms; log files read1/0. This is neither OS cold boot nor measured first accepted input, and does not establish Android/Windows perceived latency. Original startup artifact keeps diagnostic prefix and complete JSON; extracted local metric receipt is `/workspace/toolchains/rc6-build30-startup-measurement.json`.
+
+Reviewed pointer-visible32.25-second372789-byte native Linux debug/synthetic clip, actual desktop/narrow windows, both themes/100/200%, SHA256 `2d885960c77ca4ab8c57c3b36fb115b61b6623a81733d535f9c95ea75e623516`. Existing Library demo identity retained at `libfile_ed918c8cdf5c81918f597466be0e92ab` version21. Exact native Android affected acceptance remains pending; RC6 promotion is held. No real-data migration/cutover/source changes.
+
+### Exact native Android acceptance — RC6 build30
+
+Parent's native Farnsworth hardware-KVM Android11/API30 worker accepted the exact owner-signed APK SHA256 `1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5`: both themes at100/200%,48dp padded target, unchanged-next-occurrence explanation with zero event writes, completion/reopen/Undo, selection/drag independence and process restart. All193 baseline entities remained identical; one successor was intentionally added by completion. Services were stopped; real data untouched. Touches verified in66.7-second native Android clip, Library `libfile_7b44e8dfa588819199a6228c4af94f7b`. This is source/exact-artifact acceptance, not exhaustive physical-phone/API36/provider coverage. RC6 exact promotion authorized; no rebuild, stable release or migration change.
+
+### Verified public RC6 promotion
+
+[Promotion36972030651](https://github.com/reddraggone9/tandemlog/actions/runs/36972030651) succeeded from docs dispatch `ff1be33a80e2bc1f6c752ab323f2397683670f20`, reusing the exact accepted candidate36966612040 artifacts without rebuild. Public [v0.1.0-rc.6](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.6) is `prerelease=true`, `draft=false`, explicitly `latest=false`; latest endpoint remains404 because no stable/latest release exists. Tag commit is `5f615f536ad89eef835c828b77cdd200c08d4541`. All11 uploaded assets were downloaded through public URLs and independently matched candidate hashes, GitHub digests and sizes. Public APK official signer/version/package/nondebuggable recheck passed: retained owner cert, code30, SHA256 `1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5`. RC5 release ID401533006, all11 asset IDs/hashes/sizes and notes are unchanged. [Complete evidence](../evidence/rc6-public-verification.json). No stable release, history rewrite, real-data import or cutover occurred.
+
+
+## RC7 sticky-heading local verification — before future-start hints
+
+The task list now uses the existing controller in a native CustomScrollView, with each nonempty date/Someday group scoped by SliverMainAxisGroup and one measured SliverPersistentHeader. The next group pushes the current heading away; the heading sits inside the list viewport below the toolbar and any compact selection strip. Measuring the rendered text preserves wrapping at enlarged text sizes. There is one semantic heading rather than a duplicate overlay. Pointer-based drag hover/release rejects the painted heading area while existing edge scrolling remains active.
+
+Three focused widget regressions pass: long-group pinning, next-group/one-row push-off at 100/200% text, and narrow 200% heading wrapping with one header semantic node. All 187 then-current generic tests and clean analysis/formatting passed. The complete 26-flow native Linux suite passed in 7m18s, including the new sticky workflow, clock-driven regrouping with capture focus/drafts and no writes, tag/search scope, selected block edge scrolling, dirty editors, reorder and Undo. This run preceded the later approved future-start hint implementation and is complementary baseline evidence, not the final aggregate candidate gate. The final strengthened sticky native fixture separately passed in 16s: release still occurred within the painted pinned heading after top-edge scrolling, canonical fixture bytes remained identical, and wide editor/narrow selection/capture drafts survived.
+
+A separate 72-second native Linux debug/Xvfb/Openbox visual pass passed both themed workflows and captured 22 synthetic screenshots at actual 1200×800 and 390×800 GTK content sizes, 100/200% text. Inspected wide dirty panes, wrapped compact controls, date/Someday headings, top-edge dragging, search Open/Completed sections, completed-only and empty results remain readable. Native rectangle assertions establish the intermediate push-off boundary; the later screenshot labeled push-off shows the new group after the previous heading has left, so it is not pixel proof of that intermediate boundary. One Light wide 200% capture has incomplete toolbar pixels during a repeated window resize; the corresponding Dark capture is intact, and the incomplete frame is excluded from the selected clip. No production workaround was introduced for this capture artifact.
+
+Evidence remains outside the repository at `/workspace/toolchains/sticky-groups-visual/`; its external harness is `/workspace/toolchains/sticky-groups-visual.dart`. Reviewed pointer-visible selected clip `/workspace/toolchains/sticky-groups-demo.mp4`: 13.45 seconds, 281073 bytes, SHA256 `2e90101b85107dc7e0c352ac98160a38a31ab125f27c225b576281bdde7d0b0d`. Both raw themed clips and timing markers are retained. Caption identifies native Linux debug, synthetic data, desktop/narrow windows and 100/200% text. The scratch integration harness was removed; no real user data or canonical history was edited. These results do not establish Android behavior; affected exact Android QA and the aggregate candidate gates remain required.
+
+
+## RC7 build31 — aggregate local evidence
+
+The approved v6 vector uses18×26px with a y=4 viewBox translation; the native checkbox square remains18px and the padded target48×48px. Actual1× Light/Dark screenshots measure the ordinary square18×18px, v4 paint18×20px within18×22, and v6 paint18×24px within18×26. No scale or clipping workaround is involved. Inspected open/checked/unavailable, hover/focus and reopened states retain native checkmark/interaction while the larger tips and gaps distinguish the arrows. A100-second actual native debug visual pass captured32 screenshots at1200/390px,100/200% text, both themes, including future-start hints.
+
+Future-only hints reuse projected availability and its successful clock/zone observation. Three final affected native workflows pass in37 seconds: idle start-time disappearance and midnight date-to-time change without edits; Show upcoming/search and resume into another zone; existing search composition and temporal editor/recurrence history. Capture drafts and canonical fixture bytes remain unchanged. Unit tests cover passed/today/later/date-only values, cross-year labels, pinned conversion, DST gap/fold and the earlier local-midnight label boundary. The first new native assertion forgot that search also displays the assignee; the test now checks the hint component. Production behavior needed no correction from that assertion. All190 app tests,12 Python gates and clean analysis/format pass after the scratch visual harness is removed. The preceding full26-flow baseline and strengthened16-second sticky drop check remain explicitly tied to their earlier source; hosted full27-flow acceptance and exact new Android acceptance are pending.
+
+Reviewed combined33.35-second734787-byte pointer-visible clip: `/workspace/toolchains/tandemlog-rc7-sticky-start-hints-demo.mp4`, SHA256 `f6e0bf6cd4af29fc433f3fd9cc15c673ec8f1eb7ed041aa8ea5100b3d9e5b9f1`. Captions identify native Linux debug, synthetic tasks/clock and desktop/narrow100/200%; this is not Android or a release startup benchmark. [Structured local evidence](../evidence/rc7-native-ui-verification.json). Protocol2/cache8, signer/package, visibility, ordering and all real task data remain unchanged. Exact signed Android checks must cover pinned push-off and drag obstruction, new start hints at midnight/start/resume/search, both themes/enlarged text, check/reopen/guard/selection isolation and process restart before experimental promotion.
+
+
+## RC7 build32 — confirmed save acknowledgment regression
+
+Independent follow-up deterministically reproduced13 false-success cases on the original code: a successful append followed by actual atomic replacement retained the previously committed prefix but dropped zero/part of the new suffix before refresh. Single edits, reopen and batches reported success; same-ID/different raw bytes were also not an acknowledgment of the prepared contribution. Exact immutable receipt confirmation now runs after single/batch reconciliation; missing records return failure, batches retain exact confirmed progress, and incomplete results cannot report success. The combined88 storage/batch/Undo regressions and full203 app suite pass;13 Python release tests, formatting, analysis and workflow lint pass. No protocol/cache migration, event rewrite or blind retry was added.
+
+A3-second native Linux integration mounts the real production TaskEditor against the production TaskStore and a deterministic local transport wrapper performing atomic replacement. After failure, the editor stays open, title/notes remain enabled and unchanged, the canonical file equals its pre-save bytes; deliberate retry closes once and leaves exactly one committed edit. This isolates the editor/store boundary rather than claiming the full app's provider lifecycle. It is registered in the aggregate28-flow native suite. A separate9-second external visual harness reran the same behavior in Light1000×800100% and Dark390×800200%, using native GTK windows; screenshots `/workspace/toolchains/rc7-save-error-light-wide100.png` and `rc7-save-error-dark-narrow200.png` were inspected. Failure copy wraps, fields scroll and both actions remain reachable. Scratch harness removed. The first test incorrectly assumed TaskStore.rows excluded users; selecting the task by ID corrected only the fixture.
+
+Build31's full hosted27-flow candidate passed at `6d9726b6a68fd8e91a639216ac33d923ad619273`; that evidence does not substitute for build32's additional regression or exact Android acceptance. Directory creation/power-loss durability, ambiguous SAF names and complete backup/fresh-writer/restore/rejoin acceptance remain documented stable-readiness conditions; process-crash/cache-rebuild tests alone do not close them. Existing UI demo Library identity is retained at `libfile_ed918c8cdf5c81918f597466be0e92ab` version22. No private source or real canonical folder was touched.
+
+
+### Verified signed build32 handoff
+
+[Candidate37009157582](https://github.com/reddraggone9/tandemlog/actions/runs/37009157582) and [push CI37009157078](https://github.com/reddraggone9/tandemlog/actions/runs/37009157078) succeed at app source `5d62b93f8154d71b9998683d9053e104dce16ae7`. The configured28-flow Linux native step passed in473 seconds including debug build/launch; desktop installed lifecycle gates passed. All three downloaded archives match GitHub digests, CRC and contained checksums. Official local apksigner/aapt independently verifies owner pin/package/code32/nondebuggable/phone+emulator ABIs. Exact APK SHA256 `1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80`; archive SHA256 `e9b50457376ab59aadc87547be8eca18cb05b75f85c398eb92287db501ca1fde`. Library `libfile_4f031fe77e0c8191ae04e39f3fb6f2dc` version1; original0 retained in Library history. Supported direct replacement and local metadata writeback succeeded. Public staging exposes three versioned installer copies with byte-identical hashes; all11 internal evidence files remain gated. No publication before exact native Android acceptance. [Receipt](../evidence/rc7-build32-candidate-verification.json).
+
+Hosted Linux x64 release/Xvfb startup:10 synthetic tasks, two fresh processes, OS page cache unflushed. External launch-to-loaded-frame502ms rebuilt/394ms warm, first-frame320/260ms, main251/191ms; internal main-to-ready248/198ms, log files read1/0. This is not OS cold boot, measured first accepted input, Android latency or Windows latency. Raw diagnostic-prefixed startup artifact retained; extraction records complete JSON and methodology in the candidate receipt.
+
+A separate independent native Linux production-runtime recovery bundle passes12 isolated synthetic checks and relocation: canonical backup copies, fresh distinct writers/new writes, peer convergence, reopen/cache replay, Undo/order/newer peer work and preserved-byte invalid-history rejection. Official Dart CLI native assets and26 packaged checksums are verified; [bounded evidence](../evidence/rc7-supplementary-restore-verification.json). Exact provided recovery ZIP/private importer remain unrun after supported Library transfer `download failed` and discoveryHTTP401; this supplementary result is not their adapter/migration validation or actual-phone restore acceptance. Standalone source/executables stay outside this repository. No real source/live destination was accessed.
+
+A transient disconnect notification was followed by successful executor reads; checkout preserved. Local verification initially exhausted disk space; removing only gitignored `.dart_tool/flutter_build` generated cache freed9.2GiB and verification resumed. No environment reset, canonical/profile data or retained evidence cleanup occurred.
+
+
+### Exact Android acceptance — RC7 build32
+
+Parent's native Farnsworth hardware-KVM Android11/API30 worker accepted exact APK SHA256 `1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80`, source `5d62b93f8154d71b9998683d9053e104dce16ae7`, version0.1.0-rc.7/code32: both themes100/200%, v6 completion controls, sticky headings, pinned selection, editing/drag Undo, future visibility and idle draft with zero events, keyboard and restart. All194 retained rows remain unchanged. Touch-visible121.3-second native demo: Library `libfile_9af720403ba88191af387bb607bf2010`. Local recovery12 checks also passed. Emulator/QEMU/ADB stopped and settings restored; no OOM. A leftover ADB child caused a cleanup timeout and was removed; this was cleanup, not an app failure. Physical-phone/provider acceptance and private migration refresh remain separate.
+
+Exact experimental promotion is authorized from candidate37009157582 without rebuilding, with only the three versioned installers and compact notes; prerelease=true/latest=false. Stable release and real-data cutover remain held. RC6 must remain unchanged.
+
+
+### Verified public RC7 promotion
+
+[Promotion37018242305](https://github.com/reddraggone9/tandemlog/actions/runs/37018242305) succeeded from documentation dispatch `8992b9c12896af37150c36a11de5472861fe42ae`, reusing candidate37009157582 with no rebuild. Public [v0.1.0-rc.7](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.7), release ID401876291, has three versioned APK/EXE/Flatpak assets; all downloaded bytes match accepted candidate hashes, GitHub digests and sizes. Tag points to app source `5d62b93f8154d71b9998683d9053e104dce16ae7`; prerelease=true/draft=false and explicitlatest=false. Latest endpoint remains404 because there is no stable/latest release. Notes exactly match approved dispatch copy; no source-hash append or diagnostic assets are uploaded. The public APK independently passes official apksigner/aapt checks against owner pin, package, nondebuggable code32 and three ABIs. RC6 release ID401577213 retains every asset ID/hash/size and its notes. [Complete verification](../evidence/rc7-public-verification.json). Stable, physical-phone/provider coverage and final migration/cutover remain separate; no source/live data change or private-tool publication occurred.
+
+
+## RC8 builds33/34 — conditional Undo and completed appearance
+
+The broad read-only review confirmed that the reported “Task reopened; next occurrence kept.” came from checkbox Reopen. It also confirmed that the historical trueUndo implementation retained even an untouched successor. Lee's clarified expectation is implemented explicitly: the new recurring-completion Undo type suppresses only an untouched proposal, retaining independent work and dependencies and restoring protected work on late delivery. Historical meaning stays unchanged; cache 8→9 and all-peer upgrade behavior are covered separately from UI appearance.
+
+225 application tests and 13 release-tool tests pass locally;21 new storage/domain tests include actual prefix replacement, cache rebuild, late remote work/convergence, changed dates/title/parent position recompletion, historical-format fixture and strict delayed-reference admission. Exact RC7 decoder verification independently accepts that fixture and rejects the new type. No destructive power-loss or physical-provider claim is made.
+
+The focused native Linux regression at 390×800/200% dark text completes a repeating task, checks ordinary completed controls, removes/restores the manifest, proves failed reopening writes no canonical change or false success, recovers via Retry, reopens, and distinguishes trueUndo from historical Reopen. The updated native flow additionally protects an externally edited successor and checks the outcome notice. All 29 native Linux workflows passed in 7m 46s on build33, including the updated external-successor outcome check. Analysis/format checks are clean. A separate actual GTK visual pass captured 12 Light/Dark frames at 1200/390px and 100/200% text; inspected completed, reopened and retracted states show ordinary checked boxes, restored arrows and the intended row counts. Final 32.05-second, 505991-byte pointer/tap-visible clip was reviewed and saved to Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version23. SHA256 `661f5c69ed8b12badeeb49b901605fcac13db2675e07ef1999ce10f03983e59c`; current clip `/workspace/toolchains/tandemlog-rc8-completion-undo-demo.mp4`. The caption identifies native Linux GTK, synthetic tasks and narrow 200% coverage; this is neither Android verification nor a startup benchmark. [Receipt](../evidence/rc8-local-verification.json). Native Android build33 has not yet been accepted.
+
+
+### Build34 focus correction
+
+After build33's full hosted checks passed, a strengthened checkbox widget test reproduced a focus-node disposal when the repeat wrapper was removed on completion. Build34 keeps the native checkbox at the same element position and toggles only its decorative overlay. The same native focus node and focused semantics survive the transition; the test passes after failing on build33. All 225 app tests, analysis/format, 13 Python gates and workflow lint pass again. The affected native Linux production-app workflow passes in 12 seconds excluding build. The local 29-flow aggregate above is build33 evidence; build34's candidate reruns the full configured suite. Corrected source `0547f4cf3182fb0381c9b31425b205dee320250f`, candidate37027539131 and push CI37027506551. Build33 is intermediate and superseded; exact build34 Android acceptance is pending.
+
+
+The corrected build34 native GTK visual pass succeeded in 34 seconds and captured 12 screenshots across Light/Dark, 1200×800 and 390×800 windows, 100/200% text. Completed ordinary checkboxes, Reopen retaining the next row, true Undo removing the untouched row, compact Filter surface and outcome notices were inspected. The pointer/tap-visible 32.05-second clip is 416336 bytes, SHA256 `c5e75e48467c3a51e8291afbe9998d1f9ab1e812ea461ac57e3f98ebedd85ceb`, saved to the same Library demo identity at version24. Earlier version23 remains historical. The footer labels build34, native Linux and synthetic tasks. This is not Android or Windows visual verification.
+
+
+### Verified signed build34 handoff
+
+[Candidate 37027539131](https://github.com/reddraggone9/tandemlog/actions/runs/37027539131) and [push CI 37027506551](https://github.com/reddraggone9/tandemlog/actions/runs/37027506551) both passed at exact app source `0547f4cf3182fb0381c9b31425b205dee320250f`. All 29 configured native Linux flows pass in 535 seconds including build/launch. Downloaded Windows/Flatpak/owner-signed APK archives pass CRC, GitHub digests and contained checksums; production desktop lifecycle gate validation passes. The three versioned installer staging copies are byte-identical to those verified originals; staging is local and no publication occurred.
+
+Official local apksigner/aapt independently verifies the owner signer, `com.reddraggone9.tandemlog`, version 0.1.0-rc.8/code34, nondebuggable and ARMv7/arm64/x86_64. APK SHA256 `e2e26cb33c1ac6a2597057a3c024db7a25b493e16718ac2097bd81ed476b806b`; original Actions ZIP SHA256 `5e195e85f977e6e2dd225dd87fe104879b747708c54a5396c5c62b6850ff5111`. Exact archive is delivered to Library `libfile_4f031fe77e0c8191ae04e39f3fb6f2dc` version2, preserving prior RC7 in history. Native Android acceptance remains pending before promoting this same artifact without rebuilding. Every folder-sharing peer must update before the new conditional Undo event.
+
+Hosted Linux x64 release/Xvfb startup used ten synthetic tasks and two fresh processes with OS page cache retained: external process launch to loaded-frame 1142ms on cache rebuild and 307ms warm; first frames 235/198ms; internal main-to-ready 957/160ms; logs read 1/0. The fresh run's SQLite-open/schema phase was 726ms. These are one pair of runner measurements, not physical-device cold boot, first accepted input or evidence attributing the variance to the small checkbox change. Raw diagnostic-prefixed startup output and extracted methodology/results are retained in the [candidate receipt](../evidence/rc8-build34-candidate-verification.json). Full interactive Windows and exact native Android verification are not inferred from hosted builds or Linux visuals.
+
+
+### Build34 Android focus blocker and build35 presentation correction
+
+Parent's hardware-KVM API30 acceptance passed build34's completion visuals, conditional true Undo versus Reopen, independently edited successor protection, both themes/enlarged text and cache rebuilding. It found a settled ordinary-task focus defect specifically in Global Search: the task remains present while Space changes Open↔Completed, but the primary focus transfers from the checkbox to an anonymous wrapper. The recurring focus capture was transient and is not reported as settled Android failure evidence. Public promotion remains blocked.
+
+A real native Linux production-app regression reproduces primary-focus loss while preserving the same checkbox FocusNode and task identity across group changes. The causal difference is the short `busy` interval setting `onChanged:null`; native disabled controls relinquish focus. Build35 retains the callback/focusability and uses the synchronous busy guard to reject extra commands. No timer requests focus after async work. Three scenarios pass on regular Light 1200×800 at 100%, regular Dark 390×800 at 100%, and recurring Dark 390×800 at 200%, including remote regrouping, exactly one write from overlapping callbacks, Tab staying elsewhere and removed-view focus fallback. A separate 42-second actual GTK visual run captures 15 states; representative native checkbox focus halos are readable. Full registered hosted suite is 32 flows. Domain/storage/application runtime and dependency lock remain byte-identical to build34's accepted private audit pin; no schema/cache/clock migration or private import is needed for this fix. [Receipt](../evidence/rc8-build35-focus-verification.json). Exact build35 Android acceptance is pending.
+
+
+Build35 keyboard-focus video: Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version25, `tandemlog-rc8-keyboard-focus-demo.mp4`, 18.65 seconds/119190 bytes, SHA256 `c2ee3ddb558eacb0423eb20343f4a1064c69b1cf354d86b53e53fc93bc4e2996`. The recorded GTK UI shows native focus halos, regular-task Search status changes and enlarged recurring regrouping. Caption identifies scripted keyboard Space input; the desktop pointer is verified. The video selects visible states from the longer native run; it does not claim automatic focus scrolling when a group moves below the viewport. Previous completed/Undo video remains in version24. Source `7027851cc66b8681eb1c66f251f84f0bc740cbeb`, candidate37041309886/push CI37041218115; exact replacement Android QA still pending. Only `lib/main.dart` differs among application source files from accepted private runtime pin0547f4c.
+
+
+### Exact signed build35 replacement handoff
+
+Candidate 37041309886 and push CI 37041218115 passed every target at app source `7027851cc66b8681eb1c66f251f84f0bc740cbeb`. All 32 native Linux flows passed in 506 seconds including build/launch; installed desktop lifecycle reports pass. Downloaded archives pass CRC, GitHub digests and contained checksums. Official local apksigner/aapt verifies owner pin, package, version 0.1.0-rc.8/code35, nondebuggable and ARMv7/arm64/x86_64. Exact APK SHA256 `47d748968401533371219a0b0fa5dfb964c87a584296ed2f720497ad55de7f15`; ZIP SHA256 `d9e81c574775ae6b69c5b8b271a06d9adea3553586d83ddce5c586a863280573`; Library `libfile_4f031fe77e0c8191ae04e39f3fb6f2dc` version3. Prior build34 remains in history and is superseded. Three versioned installer staging copies are byte-identical to accepted-build inputs; staging is local, not publication. Exact Android Search keyboard-focus recheck remains required before promotion without rebuilding.
+
+Hosted Linux release/Xvfb uses ten synthetic tasks, two fresh processes and retained OS page cache: process launch-to-loaded-frame 422ms rebuild/329ms warm; first frames 276/219ms; internal main-to-ready 198/162ms; logs read 1/0. Raw startup artifact and extracted results are retained in the [receipt](../evidence/rc8-build35-candidate-verification.json). This is neither first accepted input nor a physical-phone/OS cold boot claim, and the pair does not attribute runner variance to this UI fix. Core runtime/dependency bytes still match private audit pin `0547f4c`; no migration schema/cache change or repeated private rehearsal is implied.
+
+
+### Exact build35 Android acceptance
+
+Parent's hardware-KVM Android11/API30 worker accepted APK SHA256 `47d748968401533371219a0b0fa5dfb964c87a584296ed2f720497ad55de7f15`. Settled regular and recurring native checkbox focus survives completion/Reopen in Global Search; three rapid Space activations produce exactly one completion; deliberate Tab is not stolen. Reopen retains its successor and true Undo suppresses the untouched proposal. When a task leaves the Open view, focus falls back to a visible previous checkbox and Space does not reopen the hidden task. All 226 synthetic rows and writer settings were restored exactly; emulator/ADB stopped, no OOM. Evidence Library `libfile_ce42af8e727c8191a48c0e3cf8ad2c2b` version0. Migration v11 remains applicable to the unchanged core. Promotion is authorized from candidate37041309886 without rebuilding, with three versioned installers and the all-peer upgrade warning; prerelease=true/latest=false. Physical phone/API36/provider coverage and stable real-data cutover remain separate.
+
+
+### Verified public RC8 promotion
+
+[Promotion 37047766068](https://github.com/reddraggone9/tandemlog/actions/runs/37047766068) succeeded from approved notes dispatch `d4270b9c68f71bfa117a0157ac55c72155dfd8c5`, reusing accepted candidate37041309886 without rebuilding. Public [v0.1.0-rc.8](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.8), release ID402059579, points to application source `7027851cc66b8681eb1c66f251f84f0bc740cbeb`. Exactly three versioned APK/EXE/Flatpak installers are published; unauthenticated public downloads match GitHub digests, sizes and accepted candidate bytes. Approved compact notes match exactly, including the all-peer upgrade warning. Prerelease=true/draft=false; the workflow requested latest=false and the public Latest endpoint remains404 because there is no stable/latest release. RC7 release notes, metadata and asset IDs/hashes/sizes remain unchanged.
+
+The downloaded public APK passes official apksigner/aapt checks against the owner certificate pin, package, nondebuggable version0.1.0-rc.8/code35 and all three ABIs. Windows setup remains unsigned; hosted installed lifecycle evidence is separate from interactive Windows UI acceptance. [Complete publication receipt](../evidence/rc8-public-verification.json). Native Android API30 acceptance preceded promotion; physical-phone/API36/provider matrix, stable durability gates and real-data cutover remain separate. No private source, live canonical history, signing credentials or standalone migration tools were published or changed.
+
+
+## RC9 build36 — combined header / selection slot
+
+Approved header and compact-selection implementation follows [decision0005](decisions/0005-session-undo-and-toolbar.md#combined-header-and-stationary-compact-selection--rc9). Two production-app Linux native flows verify equal exact screen rectangles and scroll offset before/after long press at390/320px and100/200% text, including scrolled sticky headings, a four-line capture buffer and cursor selection, keyboard metric changes, range/last selection, Search/Filter/Settings and resize to the wide pane. Canonical files remain byte-identical. Narrow selection stays active at one task. Focused navigation retains visible rows and reveals rows hidden by a pinned header; long assignee names have bounded selected text with full menu content.
+
+The first34-case aggregate ran an intermediate enlarged two-row narrow header and failed two tight-height cases. Corrected error/reopen and phone-editor/IME cases pass in the affected run; final Search/selection flows pass separately. 227 unit tests, 13 Python gates, analysis/format pass; the final hosted aggregate passes all 34 native flows in527 seconds including build/launch. Four additional actual GTK visual flows use165 synthetic tasks, 1200/390px, Light/Dark and100/200% text. Inspected before/after frames show the same pressed-row position and retained draft. Current native screenshots/video are outside the repository, with a controlled UTC view clock; this is not Android or Windows visual acceptance or a startup benchmark. The supplied private reference image was identified but its supported Library materialization failed; its pixels were not claimed as inspected. Exact signed Android candidate and device regression are now accepted and publication verified below. RC8 and real source/live data are unchanged. [Receipt](../evidence/rc9-header-local-verification.json).
+
+
+RC9 desktop demo: Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version26,49.15seconds/731309bytes, SHA256 `dc62c8f676f24c52f229f0ca96123b5efe73d77e0399265116fd5f0c202b742c`. Reviewed decoded frames show the visible pointer and a permanent explicit Linux/synthetic/controlled-clock caption, including literal percentage text. Client-area crops keep1200px wide and390px narrow app pixels unscaled, padded into a1200×900 presentation canvas. Before/after selected row rectangles match exactly at 390px/100% and200%, in both themes; wide selection intentionally changes list width for its existing side pane, while header height and row top stay fixed. Original33 screenshots and raw recording remain outside the repository. Exact app source `cf44c463ab632b6594f8114bdc0caee81feb2db2`; candidate 37087766510/push CI37087750325. Android runtime and its updated demo passed separately before promotion, as recorded below.
+
+
+RC9 candidate 37087766510 and push CI37087750325 pass all targets. Exact owner-signed build36 is delivered in Library `libfile_4f031fe77e0c8191ae04e39f3fb6f2dc` version4, APK SHA256 `b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2`; official local apksigner/aapt and metadata checks pass. CRC, complete inner checksum sets and successful installed lifecycle reports verify the Linux/Windows candidate bundles. Native Android layout/selection/draft/keyboard acceptance passed for this exact artifact before RC9 publication; details follow. [Receipt](../evidence/rc9-build36-candidate-verification.json).
+
+Hosted native Linux release startup uses ten synthetic tasks, two fresh processes, rebuilt/warm SQLite and unflushed OS caches: external loaded-frame536/411ms, external first-frame328/265ms, app ready274/212ms; warm ingest reads zero canonical log contents. These are loaded-frame markers, not first-input readiness or physical-phone cold-start measurements. Installed Flatpak lifecycle measurements are separate.
+
+
+Exact build36 hardware-KVM Android11/API30 acceptance passes 11 narrow/wide geometry cases across Light/Dark and100/200% text, scrolled sticky headings and keyboard. The held row remains at y546–660 before/during/after selection and clear; heading remains at y267–297. Final deselection restores the multiline buffer/caret24, and 6 Search/Filter/identity interactions pass. Canonical files, writer and preferences remain unchanged with zero canonical events. Resource caps hold with no OOM; temporary processes stop and settings are restored. Parent local-worker evidence: Library `libfile_1d48f49b84bc8191af829bb6b69e552f` version0, 50-second Android demo with touches verified. These coordinates describe the tested fixture, not a universal layout requirement. Physical-phone/API36/provider coverage remains separate.
+
+[Promotion37091940925](https://github.com/reddraggone9/tandemlog/actions/runs/37091940925) succeeds, reusing exact candidate 37087766510 without rebuilding. Public [v0.1.0-rc.9](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.9), release 402295941, points to app source `cf44c463ab632b6594f8114bdc0caee81feb2db2`. All three versioned installer downloads match accepted size/SHA256 and GitHub digests; public Android bytes pass official signer/package/code36/nondebuggable/ABI checks. Notes match the approved dispatch copy exactly. Prerelease=true/draft=false; latest=false was requested and public Latest remains 404 with no stable release. RC8 notes/metadata/asset IDs/names/hashes/sizes are unchanged. Windows installer remains unsigned; hosted lifecycle coverage is distinct from new interactive Windows UI coverage. Domain/storage/application clocks/schema/lock/public signing pin are byte-identical to RC8, protocol 2/cache 9. No private source/live data, stable or cutover changes. [Publication receipt](../evidence/rc9-public-verification.json).
+
+
+## Unreleased default-folder, Search and Add refinements — 2026-10-03
+
+New desktop Start creates `shared-data` under the existing private root; saved selections stay unchanged. A settings-reset regression opens a populated earlier `data` default, restores selection across restart, creates no `shared-data` replacement and verifies every canonical file byte and file count unchanged. Theme changes, canceled selection, an unavailable saved folder and Android picker cancellation create no default folder. The Linux Flatpak lifecycle fixture now uses the new default under the same existing profile permission grant; hosted installed packaging acceptance remains a separate gate.
+
+231 app tests,13 Python release-tool tests, analysis and formatting pass. Eleven actual Linux affected flows pass in67 seconds excluding build. The new Search cases use1200px/100% Light,1200px/200% Dark,390px/100% Dark and320px/200% Light: exact Undo rectangles survive Ctrl+F, typing and Clear search; wide input/count baselines differ by at most0.5px using layout-baseline measurements; capture text/caret and canonical files remain unchanged. Existing narrow stationary selection flows now also assert Undo position across Search. The composing Add regression covers either responsive button type and still rejects overlapping callbacks without duplicate events.
+
+A separate native GTK visual run captures12 frames across those four viewport/theme/text-scale combinations and passes in12 seconds. Actual pixels show Search/close before the stationary Undo, matching ordinary text alignment, wide **+ Add**, narrow plus-only and readable enlarged fallback rows. Settings folder screenshots were inspected at1000px/100% Light and390px/200% Dark; the path is the new canonical subdirectory and long paths wrap inside scrollable content. Synthetic fixtures and screenshots remain outside the repository. The supplied three private Library references resolved, but the supported materialization helper returned `download failed`; their pixels were not inspected. Earlier screenshot attempts failed due to a local recorder grabbing the display; only that recorder was terminated, and final native runs passed. These results are native Linux, not Android/Windows acceptance. The new combined desktop/Android feature demos remain pending the Inbox decision and final candidate.
+
+
+## Unreleased RC10 — Inbox, profile lease and range checkpoints
+
+Three production-app native Linux flows pass: raw captures group in Inbox; cancel preserves Inbox; saved edit leaves it; Undo restores it; completion/history/reopen retains semantics. A second app instance cannot read/write preferences or canonical data under the held profile lease, and Retry opens after release. Disposal during startup retains the lease until pending work finishes. A focused compact Filter regression passes after correcting an invalid assumption that native IME composition survives menu focus; text, selection and drafts remain preserved.
+
+Nine separate native comparison cases capture identical synthetic task fixtures for the current tag layout and two temporary alternatives at1000/390px, Light/Dark and100/200% text. All prototype code was removed after recording; no tag-layout choice ships without Lee's decision. A reviewed34.55-second native Linux video captures explicit Start/inline person, multiline capture, Inbox/edit/Undo, Search with retained draft/Undo, canonical-folder settings, Dark390px and200% text. Pointer and Linux/synthetic/unreleased labels are visible in decoded frames. Artifacts are delivered privately through Library; these narrow Linux views are not Android runtime evidence.
+
+The prior `fdf4834` hosted Windows/Android jobs pass. Linux passed38/39 native flows, failing only the overly strict IME-composition assertion; the corrected affected flow passes locally. The new full aggregate and exact signed build37 are separate gates. [Incremental process measurements](../evidence/rc10-incremental-history.json) distinguish zero-history-read cache reopen from process/first-frame/input-ready startup. Exact Android notification/seek/replacement/lifecycle and final UI QA remain pending; published RC9 and real Markdown/synced task data remain unchanged.
+
+
+Final local RC10 analysis/formatting, 284 application tests and13 release-tool tests pass. The initial42-flow aggregate passes38 and fails four older fixture/copy expectations under the approved Inbox grouping. Those four corrected cases all pass in47seconds: sticky date groups, workspace Search, hidden-order/time-bucket dragging and dirty single/bulk panes. Organized fixtures now include a saved edit so they remain in the intended Someday bucket; dedicated raw Inbox tests retain the changed product behavior. Updated hosted CI will rerun all42 on the exact candidate; no aggregate all-pass claim is inferred from separate runs.
+
+
+Initial RC10 source `b091af59a80e6be9745bc3a48ad6fa5c0445f599` built a native Linux release. Two new processes per workload measured external loaded-frame664/540ms (10tasks, fresh/warm cache) and830/534ms (2,000tasks); first frames361/347ms and315/327ms respectively. Warm cache reads zero canonical logs and all projected rows are checked. OS page caches are unflushed; this is process-to-loaded-frame, not first-input or physical-device cold boot. [Ten-task raw metrics](../evidence/rc10-startup-local-10.json), [2,000-task raw metrics](../evidence/rc10-startup-local-2000.json).
+
+That source's hosted Windows gate exposed selected-cache UUID migration comparing native backslash directory paths with a slash-built string. The corrected lookup matches cache directory names, preserving the selected UUID across separators. All15 focused identity/lock tests pass locally; the original failing Windows test remains enabled. No canonical/writer file rewrite or new signing identity is involved. Corrected-source hosted gates remain mandatory; the failed candidate will not publish.
+
+
+The Windows native installer check at corrected app source `a2b5910` passed app tests/build, then rejected the approved writer addition to a legacy preferences fixture at its next replacement phase. Installer fixtures now seed current folder/user/System/writer preferences, retaining byte-exact settings and canonical comparisons instead of allowing arbitrary migration differences. The existing legacy-migration tests remain separate and enabled. All four phases of the same lifecycle checker pass against the production native Linux release on an isolated synthetic profile; no actual Linux install/uninstall is claimed from this local checker run. Fresh hosted installed Windows/Flatpak gates remain required.
+
+
+## CalVer build38/v3 final local validation — 2026-10-03
+
+Production source `d30dd58727c8a795e3a06995f2e2dc4c1a0275c7` passes all354 app tests, formatting of77 files and clean analysis. The unchanged release policy passes18 Python tests and actionlint. Storage safeguards pass172 focused regressions; Linux durability passes23 tests and Android adapter duplicate-name handling passes25 mock tests. The actual Kotlin debug build succeeds, but that compilation is not Android provider runtime evidence.
+
+The earlier complete native Linux suite passed44 flows before the final writer safeguards. The later aggregate passed43 and failed an obsolete retry fixture; the corrected exact-provider-replacement case passes natively at `7e2b869`, preserving the draft, issuing no second append while unresolved, restoring the exact originally attempted suffix and confirming one edit. Full hosted native aggregation remains required on the final candidate. Linux integration and release builds must run sequentially in one checkout: they share `linux/flutter/ephemeral` generated CMake configuration. Do not infer application failures from concurrently overwritten build targets.
+
+Separately, the optimized Dart audit reproduced an actual `_refresh` captured-context SIGSEGV. Extracting its named helpers into typed instance methods fixes both read-only and recurrence-copy AOT audits and the freshly rebuilt production native release; chain/guard validation remains enabled. The final compiled audits confirm unchanged canonical files, identical cache reopen and zero warm log reads. No debug-only or optimizer-disabling workaround ships.
+
+Two sequential Linux x64 release processes per synthetic workload under Xvfb measured external loaded-frame startup675/580ms for10 tasks (fresh/warm cache), and1069/606ms for2000 tasks. External first-frame markers were316/306ms and305/309ms respectively. Every cached row is checked and warm runs read zero canonical log contents. OS page caches were not flushed; no emulator, recorder, Linux build or native test ran concurrently during these samples. The loaded-frame callback is not physical display presentation, first input acceptance or phone cold boot. [10-task raw phases](../evidence/v3-build38-startup-local-10.json), [2000-task raw phases](../evidence/v3-build38-startup-local-2000.json).
+
+The reviewed native Linux integrity/metadata demo covers wide and390px Light/Dark with200% text, natural wrapping, successful checks and copyable scrollable errors; its UI source is `2d54bbf`, before backend guard changes. Exact final signed Android acceptance, hosted installed Linux/Windows gates and the private v11 adapter rehearsal remain separate. No public release or actual data cutover follows from these local checks alone.
+
+The first hosted build38 Windows tests/build passed before its installed launch failed. The lifecycle checker still seeded v2; v3 manifest/chained records now replace that stale fixture. The unchanged production native Linux binary passes the checker after-install, replacement, retained-data-after-uninstall and after-reinstall phases with unchanged canonical/settings hashes. This checks the helper against production admission and is not a local Windows install. Hosted native Windows/Flatpak lifecycle and full candidate gates must rerun before signing/publication. No real user state or application API changed.
+
+The replacement Windows log (retrieved through the authorized GitHub app after the CLI blob transfer returned403) confirms native startup reaches manifest before failing to load. The new fixture used Python text-mode writes, which translate LF to CRLF on Windows; production v3 rejects the extra CR as noncanonical. Canonical fixture logs now write explicit UTF-8 bytes. Existing production framing regressions still reject CRLF, and the corrected native lifecycle launch passes locally. This is a packaging-fixture correction, not a relaxation of the v3 protocol or a new app API. Hosted acceptance remains pending.
+
+
+Final exact candidate37151096841/source`c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e` and pushCI37151056529 are green. Native Linux44 flows, all354 Linux app tests,352 Windows tests/2 platform skips and18 Python tests pass; installed Windows/Flatpak lifecycle pass. Every downloaded platform ZIP matches GitHub digest and CRC/internal checksums. Official downloaded-APK apksigner/aapt match retained owner certificate, com.reddraggone9.tandemlog,2026.10.0-rc.1/code38/nondebuggable/ARMv7+arm64+x86_64. [Full candidate verification](../evidence/calver-build38-candidate-verification.json). Hosted native Linux release ten-task fresh/warm loaded-frame867/447ms, first-frame268/220ms, warm0logreads; OS page caches unflushed. Exact Android runtime and latest private v3 semantic/recovery rehearsal remain pending. No release or actual cutover has occurred.
+
+
+## Exact CalVer build38 bounded acceptance — executor report
+
+The coordinator reports exact APK`ab841c340193dbd42a84c3266e440ffa16ce2ae54cb04c271b034e9a7adf9036` native API30 acceptance: signature/install/launch and preserved v2 refusal; fresh v3 SAF access/restart/wrapping/integrity refusal/recovery; time/DST, recurring Undo with edited successor, upcoming and filtered relative order. Valid v3 remote arrival/growth/atomic replacement preserves the draft; subsequent local capture appends exactly one contiguous owned event. A separate production-store installation-guard harness rejects an older owned backup at a different folder with empty cache without altering either history/checkpoint; restoring the current history permits the next write. This harness result is not described as a native Android folder-picker test.
+
+The private one-off package passed the approved independent task/linked-note domain-retention and restoration contract, including mutation rejection. Generic export deliberately refuses nonempty notes, so this is not generic notes-export support. No source, note text, reconstruction metadata or one-off tooling is shipped in the repository/app. Broader provider/device/theme cross-product coverage, physical S24/API36/actualBasicSync and power-loss tests are follow-ups, not added RC gates. Cutover needs a new agreed source freeze/window; no stable publication follows from these reports.
+
+
+## CalVer build38 public promotion — 2026-10-03
+
+[Promotion37163085342](https://github.com/reddraggone9/tandemlog/actions/runs/37163085342) passed from notes/policy dispatch `c4d780fc11b08f397ab29049a1c0b16ae3f3416b`, reusing accepted candidate37151096841 without rebuilding. [v2026.10.0-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0-rc.1) points to exact application source `c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e`. The three versioned APK/EXE/Flatpak installers were downloaded without authentication from their public release URLs; every byte count/SHA256 matches both the accepted candidate and GitHub digest. The downloaded APK independently passes official apksigner/aapt owner-pin/package/code38/nondebuggable/three-ABI checks. Release notes match approved dispatch copy exactly; prerelease=true, draft=false and explicit latest=false. The public Latest endpoint returns404 because no stable/latest release exists. RC9 release metadata/notes, tag and all asset IDs/digests/sizes remain unchanged. [Complete receipt](../evidence/calver-build38-public-verification.json).
+
+This publication adds no runtime evidence beyond the exact candidate acceptance above. The Windows installer remains unsigned; manual Windows UI and wider phone/API36/provider/power-loss checks remain unclaimed. No stable publication, canonical history conversion, source change or actual data cutover occurred.
+
+
+## First stable 2026.10.0 build39 candidate — 2026-10-04
+
+Lee explicitly approved first stable publication from accepted RC38 production code with version/release changes only. Source `aacabf942122283731b5ea448a3800fe73ab63a2` changes no `lib/`, dependency lock, protocol3/cache13, package or owner signer; `pubspec.yaml` changes only the display version/build to2026.10.0+39. New frozen synthetic v3 history covers all nine supported event types, exact bytes/clocks/identities, tags/schedules/Undo/successor/order, both stream arrival orders, cache reopen/fresh replay and a new writer preserving historical logs. Local358 app tests,18 policy tests, formatting and analysis pass. The first Windows candidate correctly rejected Git's CRLF conversion of the fixture; byte-preserving attributes fix checkout, and a `core.autocrlf=true` checkout probe retains the frozen hash. No production admission or fixture bytes were loosened.
+
+[Replacement candidate37174502075](https://github.com/reddraggone9/tandemlog/actions/runs/37174502075) and pushCI37174488229 pass all targets. Hosted358 Linux app tests,356 Windows tests/2 platform skips,18 Python checks,44 native Linux flows and both installed desktop lifecycle gates pass. All platform archives independently match API digests, ZIP CRC and internal asset checksums; official APK signature/package/embedded stable version/code39/nondebuggable/three-ABI verification passes. Exact Android acceptance remains pending for this rebuilt APK; prior RC runtime acceptance alone does not authorize its publication. [Candidate receipt](../evidence/stable-2026.10.0-candidate-verification.json).
+
+The exact Linux release ten-task process-to-loaded-frame sample is674ms with rebuilt SQLite and530ms warm, first-frame350/273ms, with warm0canonical log reads. OS page caches were not flushed; Xvfb callback timing is not display presentation or first input, and not phone/device cold boot. The raw startup artifact includes desktop-portal diagnostic preamble; the receipt extracts its single structured measurement object without discarding the original artifact/checksum. UI/implementation remains unchanged; no new feature demo or broader phone/provider/manual Windows coverage is claimed. Live Tandemlog data remains authoritative and untouched; no reset, import or history rewrite accompanies stable publication.
+
+
+## First stable build39 exact acceptance and publication
+
+The coordinator reports exact APK`86b9edadc37915b5e1deafb262b608e5a4bb8b21345d1a5ff428e2aa127fe3b4` native Android acceptance: owner certificate/package/nondebuggable2026.10.0/code39; in-place RC upgrade retains SAF grant/settings/writer/guards and43 synthetic tasks/60 events. Native append/completion Undo/integrity/restart pass. Fixtures are restored, temporary services stop and live data stays unchanged. Wider device/provider/manual Windows limits remain recorded; this report is bounded to the exact rebuilt stable candidate.
+
+[Promotion37176968099](https://github.com/reddraggone9/tandemlog/actions/runs/37176968099) passed using accepted candidate37174502075 without rebuilding. [Stable2026.10.0](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0) is Latest, prerelease=false/draft=false, at tag source `aacabf942122283731b5ea448a3800fe73ab63a2`. All three unauthenticated public downloads independently match candidate/GitHub hashes and sizes. Official downloaded-APK signer/package/nondebuggable/stable version/code39/three-ABI recheck passes. Notes match approved copy; every prior release's metadata, notes and assets remains unchanged. [Public receipt](../evidence/stable-2026.10.0-public-verification.json). The durable-v3 compatibility boundary is active. No source/live data reset, import, conversion or history rewrite occurred.
+
+## Intermediate preview build 40 local editor/precision evidence — 2026-10-04
+
+Native Linux GTK debug, Xvfb, synthetic workspace: the production TaskStore/app flow verifies timed tasks before date-only on the same day, explicit-midnight/date-only invalid drag with unchanged canonical files, a valid same-precision reorder, and notes-only editing of a retained historical multiline title without title/history mutation. All366 application tests and 18 release-policy tests pass; analyzer/format pass. The new pure cases retain grouping, scheduled-first precision, manual ties, pinned conversion and calendar bounds across midnight/DST.
+
+The running editor was visually inspected at1200×850 light/dark and390×820 dark, including200% text and a300px simulated keyboard inset. Titles grow from one visual line to two; eight notes lines enlarge the field and40 lines scroll within its cap. Save/Cancel remain visible/reachable in the desktop pane and the narrowed dialog. The32.6-second Linux demonstration includes visible pointer/interaction markers and is explicitly labelled phone-width/keyboard simulation. It is not Android/Windows visual acceptance. The45-flow native aggregate passed44 and exposed one fixture lookup that assumed the date-only row preceded a long timed row. The lazy-list lookup now scrolls the row into the built viewport; the unchanged metadata assertions pass in the14-second native recheck. [Replacement candidate37178408565](https://github.com/reddraggone9/tandemlog/actions/runs/37178408565), exact source `249cfbdf853ceb4ee264510171e3bb051b0f3612`, passes all45 native flows,366 Linux tests,364 Windows tests/2 skips,18 release-policy tests and installed Windows/Flatpak lifecycle checks. Hosted native Linux release ten-task process-to-loaded-frame samples are599ms fresh cache/420ms warm cache, first frame268/222ms and warm zero canonical reads. OS page caches are not flushed; these are neither phone cold-start nor first-input timings. Build40 remains unpublished: final visual review confirmed a caret hidden after a runtime text-scale increase during long-notes editing.
+
+### Build 41 bounded caret correction and visual rerun
+
+Explicit title/notes focus nodes reveal the current caret once after editor geometry changes using Flutter's public EditableTextState API. They never mutate draft text, selection or IME composition. Theme, validation and incoming-task rebuilds preserve a deliberately scrolled-away offset. Both fields pass27 editor regressions plus the exact formerly failing resize probe through keyboard inset,200% text, pane shrink/expand and restoration.
+
+The actual native Linux editor rerun passes in36 seconds, including a direct caret-rectangle assertion after the200%/300px keyboard reflow without another text edit. Refreshed light/dark1200×850 and narrow390×820 screenshots were inspected: the caret is within the notes viewport and Save/Cancel remain accessible. The synthetic desktop demonstration is refreshed to 33.6 seconds and remains labelled native Linux/keyboard simulation.
+
+[Final candidate 37179994243](https://github.com/reddraggone9/tandemlog/actions/runs/37179994243), source `eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9`, and push CI 37179970796 pass all gates: 368 Linux application tests, 366 Windows tests/2 skips, 18 release-policy tests, 45 native Linux workflows, installed Windows/Flatpak lifecycle and owner signing. All three downloaded archives pass API digests/CRC/internal checksums. Official APK verification confirms retained owner pin/package/nondebuggable 2026.10.1-rc.1/code 41/three ABIs. [Final receipt](../evidence/2026.10.1-rc1-build41-candidate-verification.json). Hosted native Linux release ten-task process-to-loaded-frame samples are 477 ms fresh cache/362 ms warm, first frame 231/188 ms and zero warm canonical reads. The cache was rebuilt only for the first process; OS page caches were not flushed. These two variable hosted samples do not establish a performance improvement over build 40, physical-device cold start or first successful input. At candidate handoff, exact final Android install/upgrade/editor acceptance was pending; the executor report below closes that gate. No live workspace or released stable artifact was changed.
+
+
+### Build 41 exact Android acceptance — coordinator report
+
+The native executor reports affected-scope acceptance for exact APK `b7d35aec8641e77367629935d7d730b73574e54f384d9eef8bb96318c42ef658`, source `eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9`, Android 11/API30 x86_64. Native clipboard normalization/caret, notes growth/internal scroll, 200% text with the actual keyboard and reachable Save/Cancel, save/restart and Cancel/Discard with no writes pass. Prior accepted unchanged upgrade, precision ordering, constrained drag/Undo and historical multiline-title flows complement final affected testing. Final integrity passes; temporary services stop and settings restore. No defects/blockers are reported. This supports promoting the exact accepted candidate as an experimental preview without rebuilding, while stable2026.10.0 remains Latest. No physical-phone/API36/provider-wide or new stable-patch acceptance is inferred.
+
+
+### Build 41 public experimental promotion — 2026-10-04
+
+[Promotion 37185384722](https://github.com/reddraggone9/tandemlog/actions/runs/37185384722) passed using accepted candidate 37179994243 without rebuilding. [v2026.10.1-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.1-rc.1) points to exact application source `eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9`. The three public APK/EXE/Flatpak assets were downloaded without authentication; every hash/size matches both the accepted candidate and GitHub digest. Official downloaded-APK verification matches the retained owner certificate/package, nondebuggable 2026.10.1-rc.1/code 41 and three ABIs. Approved notes match the pinned dispatch commit; release is prerelease=true and explicitly not Latest. Stable 2026.10.0 remains Latest at its original source, and all 11 prior releases retain metadata/notes/asset IDs/hashes/sizes. [Public receipt](../evidence/2026.10.1-rc1-build41-public-verification.json).
+
+This publication adds no runtime coverage beyond accepted candidate evidence. Windows remains unsigned; manual Windows UI, physical-phone/API36/provider-wide and power-loss coverage remain unclaimed. No new stable patch, live-data reset/import or canonical-history rewrite occurred.
+
+## Stable 2026.10.1 build 42 version-only candidate — 2026-10-04
+
+Lee explicitly approved stable 2026.10.1 from accepted RC41 production code. Exact source `da4859ea82f8b066ed701740c57cb9bcff1083ff` changes only the pubspec display version/build to 2026.10.1+42; all 165 tracked production/platform/tool/test/dependency files and frozen v3 fixtures match RC41 byte-for-byte. Local four frozen-history tests and 18 release-policy tests pass. No feature or canonical history change is included.
+
+[Candidate 37202648731](https://github.com/reddraggone9/tandemlog/actions/runs/37202648731) and push CI37202635308 pass 368 Linux tests, 366 Windows tests/2 skips, 18 policy tests, 45 native Linux workflows, all target builds and installed Windows/Flatpak lifecycle. All three downloaded archives pass API digests/CRC/internal checksums; official APK verification matches the retained owner pin/package/nondebuggable 2026.10.1/code 42/three ABIs. [Receipt](../evidence/stable-2026.10.1-build42-candidate-verification.json). Hosted native Linux release ten-task process-to-loaded-frame samples are 691 ms fresh cache/508 ms warm, first frame 333/269 ms and warm zero canonical reads. OS page caches remain unflushed; these variable samples are not phone cold-start/input acceptance or evidence of a version-only performance change.
+
+The exact rebuilt stable APK is handed off for bounded RC41 upgrade/retained-data/SAF/identity/write/Undo/integrity/restart acceptance. Existing RC41 feature/visual evidence is retained because production code is unchanged. Stable Latest promotion is held for this exact APK result; no live source/data reset/import or history rewrite occurred. End-user notes contain only the three improvements since 2026.10.0. README capability/sync copy and stable-publication review rules are updated separately without changing candidate binaries.
+
+
+### Stable 2026.10.1 build 42 exact native acceptance
+
+The coordinator reports acceptance for exact APK `bd2f7097fde440f8b3850f75a1c99acdc734602ac9434e8f8b086d2d9823f908`, source `da4859ea82f8b066ed701740c57cb9bcff1083ff`, Android 11/API30 x86_64. Owner/package/nondebuggable/stable version checks pass; in-place upgrade retains 52 synthetic tasks, logs, settings, writer/guards and SAF grant. Native edit/Undo, process restart and integrity pass with only two expected receipts. Temporary services stop and the profile restores; live data is untouched. This closes the exact version-only stable-name gate; accepted RC41 feature/visual evidence is retained, without inferring wider device/provider coverage.
+
+
+### Stable 2026.10.1 public promotion — 2026-10-04
+
+[Promotion37205170375](https://github.com/reddraggone9/tandemlog/actions/runs/37205170375) reused exact accepted candidate37202648731 without rebuilding, at source `da4859ea82f8b066ed701740c57cb9bcff1083ff`. [Stable2026.10.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.1) is Latest, prerelease=false/draft=false. The three unauthenticated public APK/EXE/Flatpak downloads match accepted candidate hashes/GitHub digests/sizes. Official downloaded-APK owner pin/package/nondebuggable2026.10.1/code42/three-ABI recheck passes; tag and pinned three-change notes match. All12 prior releases retain metadata/notes/asset IDs/hashes/sizes. [Receipt](../evidence/stable-2026.10.1-build42-public-verification.json). No new runtime coverage is inferred from publication; Windows remains unsigned, wider manual Windows/phone/API36/provider/power-loss coverage remains unclaimed. No live-data reset/import or canonical-history rewrite occurred.
+
+
+## Bulk stale-save warning visibility — isolated follow-up
+
+The [reviewed follow-up](bulk-stale-warning-visibility.md) pins bulk-modal failures
+beside recovery actions. Final source d0ecbbb passes 55 focused widget tests and
+four actual GTK peer-change workflows, with retained canonical hashes and drafts.
+Baseline311 native pixels reproduce the off-screen warning. The exact-source
+video has visible pointer input and an accurate Linux/scripted caption.
+Android/Windows and spoken accessibility acceptance of a replacement artifact
+remain pending. The reproduced 160px editor limit is explicitly retained, with
+UI maintenance ownership and a revisit before stable promotion; no universal
+small-keyboard claim is made. Frozen signed source77/build46 remains unchanged.
+
+
+## RC3/build65 source preparation — 2026-10-11
+
+The approved Food/toolbar/date/empty-workspace batch has independent source/UX acceptance with no remaining source must-fix. Final analysis is clean;120 focused and98 cross-module checks pass. The real205-container Food host callback produces one Undo action and preserves newer peer fields; the independent Full vector and eight-case genuine-new initializer gates pass. Existing legacy fixtures retain deliberate historical initialization through the explicitly named fixture helper; released readers and stable Task meanings remain checked.
+
+Actual Linux GTK synthetic refinement flows pass7/7, covering both themes, wide/narrow layouts,200% text, free Brand/Location input/suggestions, multi-value filters, bulk partial selection/clear/cancel/workspace guards, date insets, fixed48px row targets and production Food Undo. The run predates the localized filter route-ownership fix; two meaningful widget failures become seven passes after a one-shot/current-route guard and route.completed controller cleanup. The affected native batch passes25/28; three fixture failures are retained and corrected with enabled Continue readiness and account-width qualification for inherited Food900px vs wider Tasks constraints. The actual targeted rerun passes3/3, including cold fresh-workspace reopen with no canonical writes. These are scoped runs, not a claimed single28-green aggregate.
+
+[Evidence](../evidence/toolbar-2026.10.4-rc.3/README.md) records the settled source hashes, independent receipts, original failures and corrections, native logs and representative actual pixels. The dark320px/200% expanded-row comparison uses matched synthetic screenshots and records raw hashes/crop coordinates. A black first wide-dark autocomplete startup frame is rejected. The current1:05 recapture passes and produces a genuine readable suggestion frame. Its28.6-second native Linux GTK component demonstration shows bulk fields/date input at900×850 on a1200×850 recording canvas; root sampled the actual visible X pointer. Flutter scripts inputs, so this is not production-host, Android or Windows input acceptance. Full hosted final-source candidate, original archive/owner signing verification, exact Android affected runtime/Show taps demo remain pending. Independent final release editorial review and its exact replacement-source extension accept unchanged notes and media. Linux GTK narrow windows are not Android or Windows acceptance. No live synced data or old trial is modified.
+
+
+### RC3 initial hosted gate and narrow fixture correction
+
+First candidate38152037169/source16cb07d is held: Linux/Windows unit gates fail before owner signing, despite Android debug passing. One old combined-stock expectation contradicted inclusive search; eight Edit1/Edit100 keyboard variants left Brand suggestions over the next input. Actual hit traces establish the autocomplete overlay, rather than a date-inset defect. Root reproduces7PASS/9FAIL, then16/16 passes after two fixture-only corrections. Search checks all four views, exact active/deleted order/uniqueness and paused impossible filters; editor dismisses Brand/Location suggestions with actual Escape and asserts unchanged full draft/focus while retaining fatal hit-testing/IME/validation/canonical checks. Analysis and separate review pass. All production code and original60 source bindings remain unchanged. Targeted native GTK12-variant narrow editor rerun passes in4:45, using simulated IME metrics with both themes100/200% and Add/Edit1/Edit100; root inspects actual final blank-date/error pixels. Replacement candidate38153414378 uses exact source1bd746e; full hosted/artifact gates remain pending. The first run has no eligible signed APK or native Android acceptance.
+
+
+### RC3 native Undo fixture and runner allowance correction
+
+Replacement38153414378/source1bd746e ends cancelled at the explicitly annotated40m0s Linux deadline. Before cancellation, the native capture/edit/completion/Undo/restart/error case fails on a global Undo-text tap matching both approved wide toolbar and Snackbar action. Subsequent cases progress through16:37:16, so the log is neither a full native pass nor a timeout-only green gate. Signing is skipped. Source-bound official decoded text, annotations, terminal APIs and independent hold are retained in [RC3 evidence](../evidence/toolbar-2026.10.4-rc.3/README.md).
+
+The two selectors now target the unique transient SnackBarAction labeled Undo; all remaining workflow assertions stay unchanged. The actual targeted native GTK case passes in25 seconds, with clean analysis, unchanged formatting and74 release-tool passes. Independent review accepts the fixture and Linux-only40→55-minute allowance; runner, permissions, full matrix, release/Flatpak checks and signing dependency are unchanged. Build65 candidate38156985011/source3c162347105bbd01f55ef09652d29c397d013e01 later failed startup smoke; signing was skipped. Its terminal receipts remain historical. Fresh build66 original static/artifact review, exact installed Android acceptance and publication clearance remain required. Existing held originals/logs remain retained; no live or trial data is touched.
+
+
+## Field help, validation and occurrence-to-Due development — 2026-10-17
+
+The accepted implementation and independent source/architecture/privacy review are complete. The combined affected suite passes 320 tests with clean full analysis and formatting. Subsequent whole-input Help reveal changes pass all 41 Task editor tests and 14 shared/host/reflow checks. The final capture spacing correction passes 17 affected host, shared-validation, real-font error-layout and reflow tests, full analysis and formatting. The prior hosted commit passes complete Linux and Windows unit suites; final-source hosted integration, packaging and native Android acceptance remain pending.
+
+Actual Linux GTK development testing uses a fresh synthetic profile. Native testing found and corrected truncated time explanations, shifting modal actions, mouse Help focus loss, a partially obscured restored input and capture floating-label overlap at 200-percent text. Scoped independent visual review accepts Task light/dark and 100/200-percent layouts, narrow 420×900 Help through its final topic, whole-input focus restoration above fixed actions, and stable Food/checklist/capture actions with readable errors. Private pointer-visible recordings and exact production-file manifests are retained outside Git. Linux is not Windows or Android visual acceptance.
+
+Every original synthetic canonical prefix remains exact. Validation, review and cancellation add no events. The complete native session contains the approved initial task.edited schedule conversion, one synthetic checklist completion and its exact operation Undo. Fresh-cache replay matches all five expected user/task rows and checklist contents, including exact midnight Due conversion, existing Due and the preserved invalid conflict. Repeated migration appends nothing and preserves all canonical files. Application version, dependencies, canonical format and signing policy are unchanged; this is development source without a release candidate or publication claim. Private profiles, fixture identifiers, screenshots and raw evidence remain outside Git.
+
+
+### Per-task checklist disclosure follow-up — 2026-10-17
+
+The approved toolbar-only follow-up removes global checklist expansion/collapse in every responsive layout. Per-task disclosure, Add checklist and local expansion storage remain unchanged. All 27 affected toolbar, entry-area, checklist presentation and local expansion tests pass, with clean full analysis, unchanged formatting and diff checks. The native workflow now checks absent global controls across narrow, wide and enlarged layouts and preserves independent disclosure, filtering, live updates, local reopen and canonical-byte assertions. This adapted native workflow and final-source desktop/Android acceptance remain pending; earlier native captures retain their original source attribution. No version, dependency, permissions, durable format or publication change is included.
+
+
+### Native keyboard and primary-gesture follow-up — 2026-10-17
+
+Actual Android testing at 320×640 dp and 200-percent text found checklist error clipping when the keyboard arrived, and a compact Task action moving during input blur before a held gesture completed. The reproduction includes the navigation-bar portion of the IME inset. The checklist gains space only with the keyboard present and re-reveals the whole invalid field after its actual viewport shrinks. Shared validation preserves painted error heights during the owned primary pointer while keeping logical validation and captured Review intent live; controller replacement, newer pointer delivery, cancellation and callback ownership have separate regressions.
+
+The combined 33-file affected suite passes all 336 tests with clean full analysis and formatting. Coverage includes real-font light/dark keyboard arrival, first-gesture Task Review with touch and mouse, the immutable retry and prerequisite suites, Food/checklist forms, navigation and storage. Source review accepts the narrow geometry and action-ownership changes. Rebuilt actual Android keyboard and gesture acceptance remains required; retained screenshots and videos from the earlier source are failure evidence, not acceptance of these fixes. Earlier native Android setup/capture, cold reopen and peer-arrival checks preserved every canonical prefix, delayed the ordinary midnight Due conversion until the draft was released, and wrote no discarded title change. No version, dependency, permission, signing-policy or release change is included.
+
+
+### Retained-focus Review follow-up — 2026-10-17
+
+Final native Android checklist pixels confirm the entire title input and explanation fit above both actions and Gboard at 200-percent text. Native Task testing exposed a separate reveal defect: touch retained focus on the invalid Due time while the user scrolled to Save. Requesting the same focus did nothing, and the prior end-only scroll policy refused to return upward. The earlier regression explicitly removed focus and therefore masked this path. A retained-touch regression fails on the old policy while the existing touch/mouse blur cases pass. Deliberate Review now explicitly reveals the first field in either direction while retaining bottom alignment for the complete explanation and floating label. Actual compact GTK pixels exposed top-alignment clipping, and all three real-font pointer cases now assert the transformed painted label bounds as well as the input and error. The strengthened assertion fails for top alignment. Existing validation-only intent and lifecycle guards remain unchanged.
+
+The updated 33-file aggregate passes all 337 tests, full analysis and formatting. Independent review accepts the minimal reveal policy and retained-focus regression. Rebuilt Android first-Review acceptance remains pending. All four synthetic Android canonical files remain byte-identical after the failed Review and explicit draft discard. This follow-up changes no version, dependency, durable format, permission, signing policy or publication state. Private runtime state, native media and original failure receipts remain outside Git.
+
+### Following RC: whole-integration validation corrections
+
+The complete Linux run for [development source 130feb7](https://github.com/reddraggone9/tandemlog/actions/runs/39052268112) exposed stale native expectations and runtime presentation defects. Native reproductions retain the original failures. Fixtures now target the paired occurrence input, assert ordinary append-only conversion into Due, and exercise deliberate Review without saving a corrected draft. Capture, header, Food template identity, immutable retry IDs, Undo, composition, geometry and canonical-byte checks remain enforced. Android focus-policy simulations are explicitly distinguished from native Android acceptance.
+
+A successful capture now invalidates its already queued pre-reset blur callback, keeping the next draft neutral; later real blur still validates. Capture persistence failures retain one existing host recovery notice. Enlarged bulk recovery text gets a two-line height budget within the flexible footer, and the Sort-date bounds heading leaves a scaled gap above the painted floating label. Independent source and actual before/after pixel review accept these bounded corrections.
+
+The affected aggregate passes all 338 tests across 33 files, full analysis and unchanged formatting. The native Linux GTK regression subset passes all 27 cases, including all five bulk failure layouts, light/dark composition and resize cases, four header layouts, three field-spacing variants, Food Add another/Undo and capture recovery. The original bulk warning visibility assertions remain unchanged. Private exact source manifests, failing and passing logs and original screenshots are retained outside Git.
+
+Replacement full-source CI, versioned signed-candidate checks and exact owner-signed Android upgrade acceptance remain pending. Prior native demonstrations retain their stated source bindings; these scoped GTK checks do not claim Windows or Android device coverage.
+
+### Build97 upgrade-dialog keyboard reveal — candidate preparation
+
+Genuine Android11/API30 x86_64 finger input on signed source96 at320×640dp and
+200-percent text reproduced an empty ID field hidden after the actual keyboard
+settled. Separate genuine parent scrolling retained keyboard focus and a later
+character reached the same field. This did not waive the initial-focus defect.
+The trial's three canonical files remained exact. The closed synthetic
+investigation restored five settings exactly, but font-scale readback was1.0
+rather than its original missing value; that discrepancy remains explicit and
+the emulator and temporary processes are stopped.
+
+Four delayed-IME empty-field regressions reproduce on96 with the actual422px
+bottom inset, including the navigation bar. A whole-field reveal fails four
+populated-field controls. Additional diagnostics found a current-line glyph
+extending below the viewport even when its caret fit. Build97 reveals the current
+caret and measured visual line after the viewport changes; invalid or empty line
+selections retain the caret fallback. The final20 layout tests and32 affected
+upgrade tests pass, with unchanged original12 cases and four causal empty-field
+assertions, clean formatting and analysis. A new overly strict caret-to-inner-box
+assertion was corrected after examining the pinned SDK's pixel snapping; full
+caret containment in the outer viewport and full first-glyph containment in the
+actual editable/outer intersection remain strict, without added tolerances.
+
+Source96 canonical replay independently accepts each of12 commands and seven
+entity changes. The two later export corroborations retain their actual timing;
+unequal early exports are preserved and do not count as immediate matching pairs.
+Owner private SQLite authority, pending writes, outbox and hidden cache contents
+remain unobserved. Build97 artifacts and actual native keyboard acceptance remain
+pending; these headless checks do not establish them. Earlier GTK, Android94
+recovery and Android96 canonical evidence retain their own exact source coverage.
+
+
+### Preappend checklist recovery follow-up
+
+The e73440f Android debug APK passed actual SAF onboarding, native peer delivery while Food remained active, and current/non-owner partial-tail handling. Fresh raw readbacks verified all six original emulator settings before shutdown; the worker, controller, helper processes and fifteen private ports were independently checked absent/closed. Complete invalid input correctly fenced the checklist modal, but Save remained fenced after the exact synthetic fault was removed. This is a confirmed preappend recovery defect, separate from the earlier prepared-receipt retry path, and that native case remains failed. The focused repair permits explicit modal Save to revalidate shared history without durable intent, restart retry or automatic append. New create/edit host regressions and existing receipt controls pass; a new exact-source artifact must verify the repaired flow. These observations do not replace outstanding GTK/manual, hosted native-suite or current demo gates.
+
+## RC114 Linux renderer lifetime repair
+
+A candidate normal-close trial reproduced a native compositor mutex abort. GTK
+could dispose/finalize the renderer while its engine still had raster work. The
+runner now retains the widget tree from creation through ordinary engine shutdown,
+then releases the renderers on the GTK thread. It never forcibly disposes the
+engine or treats an incomplete shutdown as success. The native observer delegates
+actual GObject type finalizers (weak notifications alone observe disposal), and
+requires engine finalization before renderer finalization. The original runner
+fails this native invariant; the repair passes 30 fresh/warm closes. Independent
+ownership and integrated-observer reviews pass; hosted candidate acceptance is
+still required. No rendering backend or engine revision changed.
+
+## Mixed Task/Food native startup coverage correction (11-05)
+
+The previous 420 ms native first-list gate used Tasks only. The corrected case
+seeds production Task and Food histories from four synthetic writers, audits
+planned action counts/current inventory, and checks actual Food counts after
+each first-list marker. The 1,000 ms budget is unchanged. Process-cold/warm-cache
+and uncached first launches are separate; the marker ends at the UI post-frame
+callback, before raster/presentation. See [boundaries, paired diagnostics and
+safety evidence](performance-gate.md#native-cold-process-start-to-first-usable-list-lee-2026-11-03-coverage-correction-11-05).
+Loaded diagnostic runs are not qualification. Candidate 42111287310 and its
+113→114 labs remain historical; changed source requires fresh qualification and
+exact signed-candidate lab acceptance. No live data, phone, release draft or
+publication is involved in this follow-up.
+
+Follow-up (2026-11-05, build 115 source): hosted dev CI 42134303610 then failed the
+same disposal check differently: after a quick warm close the renderer was destroyed
+but still alive when the application loop returned (engine finalized, exit 0, no
+abort). Locally the unchanged bundle reproduced it at trial 3 of 15. The runner
+released its retained widgets as soon as the engine was gone and stopped
+dispatching, so a callback already queued by the close kept the last renderer
+reference. It now keeps weak references after that release and finishes
+already-ready callbacks, with the same 256-dispatch bound and no waiting, until the
+retained widgets have finalized. Fixed bundle: 45 consecutive disposal trials
+(90 normal closes) pass. Renderers still never finalize before their engine.
