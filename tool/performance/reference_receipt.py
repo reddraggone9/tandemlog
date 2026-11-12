@@ -1,11 +1,14 @@
 """Source-bound one-shot reference qualification. No runner, access or launch API."""
 import argparse
+import contextlib
+import tempfile
 import datetime as dt
 import hashlib
 import json
 import os
 from pathlib import Path
 import platform
+import posixpath
 import re
 import secrets
 import shutil
@@ -59,7 +62,8 @@ def relevant(path):
 # top-level `version:` line and a plain Flatpak release list, which must follow that version.
 IDENTITY_V1 = 'relevant-source-v1'
 IDENTITY_V2 = 'relevant-source-v2'
-IDENTITY_SCHEME = IDENTITY_V2
+IDENTITY_V3 = 'relevant-source-v3'
+IDENTITY_SCHEME = IDENTITY_V3
 METAINFO = 'packaging/linux/com.reddraggone9.tandemlog.metainfo.xml'
 VERSION_LINE = re.compile(rb'^version:[ \t]*[0-9A-Za-z.+~-]+[ \t]*(\r?\n|$)', re.M)
 RELEASE_LIST = re.compile(rb'<releases>(?:\s*<release version="[0-9A-Za-z.+~-]+" date="[0-9]{4}-[0-9]{2}-[0-9]{2}"'
@@ -70,8 +74,8 @@ def identity_scheme(identity):
     need(isinstance(identity, dict), 'Relevant-source identity required')
     if 'scheme' not in identity:
         return IDENTITY_V1
-    need(identity['scheme'] == IDENTITY_V2, 'Unknown relevant-source identity scheme')
-    return IDENTITY_V2
+    need(identity['scheme'] in (IDENTITY_V2, IDENTITY_V3), 'Unknown relevant-source identity scheme')
+    return identity['scheme']
 
 
 def release_normalized(name, content):
@@ -134,13 +138,88 @@ def git_blobs(repo, objects):
     return blobs
 
 
+def benchmark_sources(repo, revision='HEAD'):
+    """Conservative Dart import/export/part closure, from committed source only.
+
+    Include every conditional URI (even inactive alternatives); package dependencies
+    are bound by pubspec.lock. Benchmark tooling and the native engine are pinned
+    wholesale, not by a hand-maintained list of application directories.
+    """
+    rows = subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-r', '-z', revision]).decode().split('\0')
+    objects = {}
+    for row in rows:
+        if row:
+            info, name = row.split('\t', 1)
+            if name.endswith('.dart'):
+                objects[name] = info.split()[2]
+    blobs = git_blobs(repo, objects.values())
+    selected = set()
+    pending = [n for n in objects if n.startswith('tool/performance/')]
+    while pending:
+        name = pending.pop()
+        if name in selected:
+            continue
+        need(name in objects, 'Missing benchmark Dart source: ' + name)
+        selected.add(name)
+        source = blobs[objects[name]].decode()
+        # Anchored directives avoid strings containing source-like snippets.
+        for directive in re.findall(r'^\s*(?:import|export|part)\s+(?!of\b)([^;]+);', source, re.M):
+            for uri in re.findall(r"['\"]([^'\"]+)['\"]", directive):
+                if uri.startswith('package:tandemlog/'):
+                    target = 'lib/' + uri[len('package:tandemlog/'):]
+                elif ':' in uri:
+                    continue
+                else:
+                    target = posixpath.normpath(posixpath.join(posixpath.dirname(name), uri))
+                if target not in selected:
+                    pending.append(target)
+    return selected
+
+
+@contextlib.contextmanager
+def measured_tree(repo, request):
+    """Validate the report's full build inventory at its request, not a descendant.
+
+    V3 allows unrelated lib files and pubspec metadata to change afterwards; the
+    relevant identity comparison still binds every benchmark input to today.
+    """
+    if identity_scheme(request['relevantSource']) != IDENTITY_V3:
+        yield repo
+        return
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        rows = subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-r', '-z',
+                                        request['sourceRevision']]).decode().split('\0')
+        inventory = []
+        for row in rows:
+            if row:
+                info, name = row.split('\t', 1)
+                if name.startswith(('lib/', 'tool/performance/')) or name in ('pubspec.yaml', 'pubspec.lock'):
+                    mode, kind, obj = info.split()
+                    need(kind == 'blob' and mode in ('100644', '100755'), 'Linked measured source')
+                    inventory.append((name, obj))
+        blobs = git_blobs(repo, (obj for _, obj in inventory))
+        for name, obj in inventory:
+            path = root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(blobs[obj])
+        yield root
+
+
+def relevant_v3(path, compiled):
+    return (path in compiled or path == 'pubspec.lock' or
+            path.startswith(('tool/performance/', 'native/')))
+
+
 def source_identity(repo, scheme=IDENTITY_SCHEME):
-    """All tracked non-documentation inputs, including tests, workflows and native source."""
+    """Inputs under the recorded scheme; v3 pins only benchmark-affecting source."""
     identity_scheme({'scheme': scheme} if scheme != IDENTITY_V1 else {})
     repo = Path(repo).resolve()
+    compiled = benchmark_sources(repo) if scheme == IDENTITY_V3 else None
+    includes = (lambda p: relevant_v3(p, compiled)) if compiled is not None else relevant
     changed = subprocess.check_output(['git', '-C', str(repo), 'diff', 'HEAD', '--name-only', '-z']).decode().split('\0')
     untracked = subprocess.check_output(['git', '-C', str(repo), 'ls-files', '--others', '--exclude-standard', '-z']).decode().split('\0')
-    need(not any(p and relevant(p) for p in changed + untracked), 'Relevant source is dirty or untracked')
+    need(not any(p and includes(p) for p in changed + untracked), 'Relevant source is dirty or untracked')
     pins = {}
     inventory = []
     names = set()
@@ -150,7 +229,7 @@ def source_identity(repo, scheme=IDENTITY_SCHEME):
         info, name = row.split('\t', 1)
         need(name not in names, 'Duplicate Git source inventory path')
         names.add(name)
-        if not relevant(name):
+        if not includes(name):
             continue
         mode, blob, stage = info.split()
         need(stage == '0' and mode in ('100644', '100755'), 'Unmerged or linked relevant source')
@@ -170,6 +249,8 @@ def source_identity(repo, scheme=IDENTITY_SCHEME):
 def committed_identity(repo, revision, scheme=IDENTITY_SCHEME):
     identity_scheme({'scheme': scheme} if scheme != IDENTITY_V1 else {})
     need(re.fullmatch('[0-9a-f]{40}', revision) is not None, 'Exact source commit required')
+    compiled = benchmark_sources(repo, revision) if scheme == IDENTITY_V3 else None
+    includes = (lambda p: relevant_v3(p, compiled)) if compiled is not None else relevant
     pins = {}
     inventory = []
     names = set()
@@ -179,7 +260,7 @@ def committed_identity(repo, revision, scheme=IDENTITY_SCHEME):
         info, name = row.split('\t', 1)
         need(name not in names, 'Duplicate Git source inventory path')
         names.add(name)
-        if not relevant(name):
+        if not includes(name):
             continue
         mode, kind, blob = info.split()
         need(kind == 'blob' and mode in ('100644', '100755'), 'Linked/unexpected committed source')
@@ -454,30 +535,34 @@ def validate_report(repo, report, request, host, log_root):
          'Qualification predates request or has invalid timestamps')
     need(report['resourceBounds'] == host['resourceBounds'], 'Reference resource bounds differ')
     need(report.get('sourceRewrites') == [] and report.get('shimAllowlist') == [], 'Source rewrite/shim refused')
-    pins = source_pins(repo, repo / 'tool/performance')
-    expected = {Path(p).relative_to(repo).as_posix(): v for p, v in pins.items()}
-    # Identity equality leaves only pubspec.yaml's version line able to differ from what ran.
-    requested_pubspec = requested_bytes_sha256(repo, request, 'pubspec.yaml')
-    expected['pubspec.yaml'] = requested_pubspec
-    normalized, rename = check_reference_toolchain(report, host)
-    actual = {rename(p).removeprefix('project/'): v for p, v in report['sourcePins'].items()}
-    need(actual == expected, 'Reference source pin inventory differs')
-    seals = report['compiledFileSeals']
-    originals = {p.relative_to(repo).as_posix(): digest(p) for p in (repo / 'lib').rglob('*') if p.is_file()}
-    originals.update({'pubspec.yaml': requested_pubspec, 'pubspec.lock': digest(repo / 'pubspec.lock')})
-    need(set(seals) == set(originals), 'Compiled project file inventory differs')
-    for name, value in seals.items():
-        need(value == {'originalSHA256': originals[name], 'compiledSHA256': originals[name], 'change': 'none'},
-             'Compiled project bytes differ')
-    need({k.removeprefix('staged/'): v for k, v in normalized.items()
-          if k.startswith('staged/') and k != 'staged/.dart_tool/package_config.json'} == originals,
-         'Compiled project pin inventory/bytes differ')
-    need({k for k in normalized if k.startswith('project/')} == {'project/.dart_tool/package_config.json'},
-         'Unexpected original project compilation input')
-    imports = validate_project_imports(repo / 'tool/performance/benchmark.dart', repo, host['packageNames'])
-    need(all(rename(p).startswith(('staged/', 'project/')) for p in report['projectImportClosure']), 'Import escaped project')
-    need(sorted(rename(p).split('/', 1)[1] for p in report['projectImportClosure']) ==
-         sorted(Path(p).relative_to(repo).as_posix() for p in imports), 'Compiled project import closure differs')
+    original_repo = repo
+    with measured_tree(repo, request) as measured:
+        repo = measured
+        pins = source_pins(repo, repo / 'tool/performance')
+        expected = {Path(p).relative_to(repo).as_posix(): v for p, v in pins.items()}
+        # Identity equality leaves only pubspec.yaml's version line able to differ from what ran.
+        requested_pubspec = requested_bytes_sha256(original_repo, request, 'pubspec.yaml')
+        expected['pubspec.yaml'] = requested_pubspec
+        normalized, rename = check_reference_toolchain(report, host)
+        actual = {rename(p).removeprefix('project/'): v for p, v in report['sourcePins'].items()}
+        need(actual == expected, 'Reference source pin inventory differs')
+        seals = report['compiledFileSeals']
+        originals = {p.relative_to(repo).as_posix(): digest(p) for p in (repo / 'lib').rglob('*') if p.is_file()}
+        originals.update({'pubspec.yaml': requested_pubspec, 'pubspec.lock': digest(repo / 'pubspec.lock')})
+        need(set(seals) == set(originals), 'Compiled project file inventory differs')
+        for name, value in seals.items():
+            need(value == {'originalSHA256': originals[name], 'compiledSHA256': originals[name], 'change': 'none'},
+                 'Compiled project bytes differ')
+        need({k.removeprefix('staged/'): v for k, v in normalized.items()
+              if k.startswith('staged/') and k != 'staged/.dart_tool/package_config.json'} == originals,
+             'Compiled project pin inventory/bytes differ')
+        need({k for k in normalized if k.startswith('project/')} == {'project/.dart_tool/package_config.json'},
+             'Unexpected original project compilation input')
+        imports = validate_project_imports(repo / 'tool/performance/benchmark.dart', repo, host['packageNames'])
+        need(all(rename(p).startswith(('staged/', 'project/')) for p in report['projectImportClosure']), 'Import escaped project')
+        need(sorted(rename(p).split('/', 1)[1] for p in report['projectImportClosure']) ==
+             sorted(Path(p).relative_to(repo).as_posix() for p in imports), 'Compiled project import closure differs')
+    repo = original_repo
     limits = read(repo / 'tool/performance/limits-v1.json')
     limits['sha256'] = digest(repo / 'tool/performance/limits-v1.json')
     validate_registered_coverage(read(repo / 'tool/performance/coverage-v1.json'), limits, scaling_specs(limits))

@@ -54,14 +54,14 @@ All of this is in `tool/performance/reference-host-v1.json` and checked by
 
 ## When a fresh qualification is needed
 
-A bundle qualifies the relevant-source identity its request recorded. Receipt/docs-only
-descendants remain valid only when the complete relevant identity is unchanged and the
-request commit is an ancestor. Changing runtime, tests, assets, workflow, gate tooling,
-host registration or limits requires a fresh request/run. No generic branch-name or
-age-only freshness shortcut exists. A stable rename of a qualified RC needs no new run
-(identity v2, below). Keep release branches linear (rebase, never merge): `main` requires linear history,
-so flattening a merge rewrites the qualified commit out of HEAD's ancestry and forces
-a new qualification.
+A bundle qualifies the relevant-source identity its request recorded, and the request
+commit must remain an ancestor. New requests use v3 (Lee 11-12): only benchmark-compiled
+Dart code (transitive import/export/part closure, including conditional alternatives),
+`tool/performance/`, `pubspec.lock` and the native engine (`native/`) void a qualification.
+Tests outside that closure, workflows, platform packaging, docs and unrelated app code
+do not. Budgets and reference-host pins (including kernel/Python) are unchanged.
+Stable version renames therefore retain a v3 qualification. Old receipts still use
+their original rules. Keep release branches linear (rebase, never merge).
 
 ### Relevant-source identity schemes
 
@@ -70,17 +70,21 @@ per identity check,requesting each distinct object ID once even when paths share
 content. The verifier checks ordered object IDs,blob type,size,content hash and
 exact framing/completeness;duplicate inventory paths or protocol responses fail.
 Worktree dirty/untracked,regular-file and literal-byte checks remain unchanged.
-This transport does not change either identity scheme or receipt bytes.
+This transport preserves historical identity schemes and receipt bytes.
 
 The request records its identity scheme inside `relevantSource`,so the nine
 controller fields are unchanged. A receipt is always verified under the scheme it
 recorded;old receipts are never reinterpreted.
 
+- `relevant-source-v3` (new requests): the inputs listed above, pinned literally.
+  The Dart closure is derived from the request's committed source, not a manually
+  maintained directory allowlist. Dirty/untracked relevant files still reject a run.
+  Third-party Dart packages are bound by the lockfile. Changing an import changes
+  its importing source and brings the newly reachable files into the identity.
 - `relevant-source-v1` (no `scheme` field):every relevant file's literal bytes.
   All receipts issued before this change,including the stable101 owner override,
   are v1 and keep exactly that meaning.
-- `relevant-source-v2` (`scheme: relevant-source-v2`,issued by `request` from
-  now on):the same files,except that two release-version carriers are pinned
+- `relevant-source-v2` (`scheme: relevant-source-v2`,historical requests):the same files,except that two release-version carriers are pinned
   version-free and marked `normalized`:
   - `pubspec.yaml`:only a single top-level `version: <value>` line
     (`[0-9A-Za-z.+~-]`,no comment) is replaced. Any other byte,dependency,flag,

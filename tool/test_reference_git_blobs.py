@@ -158,23 +158,23 @@ class BulkIdentityTests(unittest.TestCase):
             with self.subTest(committed=committed), patch.object(receipt.subprocess, 'check_output', side_effect=duplicated):
                 with self.assertRaisesRegex(ValueError, 'Duplicate.*inventory path'):
                     if committed:
-                        receipt.committed_identity(self.repo, self.revision)
+                        receipt.committed_identity(self.repo, self.revision, receipt.IDENTITY_V2)
                     else:
-                        receipt.source_identity(self.repo)
+                        receipt.source_identity(self.repo, receipt.IDENTITY_V2)
 
     def test_dirty_untracked_and_literal_worktree_checks_remain(self):
         path = self.repo / 'binary'
         path.write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'dirty or untracked'):
-            receipt.source_identity(self.repo)
+            receipt.source_identity(self.repo, receipt.IDENTITY_V2)
         # Even an assume-unchanged index entry must be checked against literal worktree bytes.
         self.git('update-index', '--assume-unchanged', 'binary')
         with self.assertRaisesRegex(ValueError, 'literal Git bytes'):
-            receipt.source_identity(self.repo)
+            receipt.source_identity(self.repo, receipt.IDENTITY_V2)
         path.write_bytes(self.contents['binary'])
         (self.repo / 'untracked').write_bytes(b'new')
         with self.assertRaisesRegex(ValueError, 'dirty or untracked'):
-            receipt.source_identity(self.repo)
+            receipt.source_identity(self.repo, receipt.IDENTITY_V2)
 
     def test_linked_or_missing_worktree_and_committed_symlinks_are_rejected(self):
         path = self.repo / 'binary'
@@ -187,13 +187,13 @@ class BulkIdentityTests(unittest.TestCase):
                 except OSError:
                     self.skipTest('symlink creation unavailable')
             with self.subTest(linked=linked), self.assertRaisesRegex(ValueError, 'missing or linked'):
-                receipt.source_identity(self.repo)
+                receipt.source_identity(self.repo, receipt.IDENTITY_V2)
         self.git('update-index', '--no-assume-unchanged', 'binary')
         self.git('add', 'binary')
         self.git('commit', '-qm', 'linked source')
         revision = self.git('rev-parse', 'HEAD').decode().strip()
         with self.assertRaisesRegex(ValueError, 'Linked/unexpected'):
-            receipt.committed_identity(self.repo, revision)
+            receipt.committed_identity(self.repo, revision, receipt.IDENTITY_V2)
 
 
 if __name__ == '__main__':

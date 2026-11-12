@@ -730,3 +730,10 @@ the miss is likely but unproven, since the load was not removed and re-measured.
 Even on a quiet host the label has only about 5% headroom (475.6 ms at `e212575`). If a
 quiet-host qualification also misses it, treat that as a repeatable miss: the remaining
 cost is the shared warm open and close seal, not the command.
+
+### Qualification scope (Lee 2026-11-12)
+
+New requests use relevant-source v3: only benchmark-compiled Dart code,
+`tool/performance/`, `pubspec.lock` and the native engine (`native/`) void a
+qualification. Budgets and host registration pins are unchanged. Historical
+receipts keep their recorded scheme; see [qualification protocol](performance-reference-qualification.md#relevant-source-identity-schemes).

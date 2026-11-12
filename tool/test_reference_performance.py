@@ -126,7 +126,7 @@ class ReceiptFixture(unittest.TestCase):
         subprocess.run(['git', '-C', str(self.repo), 'config', 'user.email', 'receipt@example.invalid'], check=True)
         subprocess.run(['git', '-C', str(self.repo), 'config', 'core.autocrlf', 'false'], check=True)
         self.commit()
-        self.identity = receipt.source_identity(self.repo)
+        self.identity = receipt.source_identity(self.repo, receipt.IDENTITY_V2)
         self.request = {'schemaVersion': 1, 'purpose': 'controlled-reference-performance-v1', 'requestId': '1' * 32,
                         'issuedAtUTC': '2026-10-25T00:00:00Z', 'sourceRevision': self.head(),
                         'relevantSource': self.identity, 'hostProfileSHA256': receipt.digest(self.repo / receipt.PROFILE),
@@ -227,7 +227,7 @@ class ReceiptFixture(unittest.TestCase):
 
     def rebind(self, scheme=None):
         """Rebind the synthetic report to the current committed source, as a real run would."""
-        self.identity = receipt.source_identity(self.repo, scheme or receipt.IDENTITY_SCHEME)
+        self.identity = receipt.source_identity(self.repo, scheme or receipt.IDENTITY_V2)
         self.request.update(sourceRevision=self.head(), relevantSource=self.identity)
         pins = {'/repo/' + Path(p).relative_to(self.repo).as_posix(): v
                 for p, v in run_gate.source_pins(self.repo, self.tools).items()}
@@ -437,6 +437,66 @@ RC_RELEASES = ('    <release version="2026.10.7-rc.5" date="2026-10-23" type="de
 STABLE_RELEASES = '    <release version="2026.10.7" date="2026-10-27" type="stable"/>\n'
 
 
+class BenchmarkSourceIdentityTests(ReceiptFixture):
+    def setUp(self):
+        super().setUp()
+        self.rebind(receipt.IDENTITY_V3)
+        self.refresh()
+
+    def current(self):
+        return receipt.source_identity(self.repo)
+
+    def change(self, name, content):
+        path = self.repo / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content)
+
+    def test_v3_receipt_and_committed_inventory_agree(self):
+        self.assertEqual(self.identity['scheme'], receipt.IDENTITY_V3)
+        self.assertEqual(self.current(), self.identity)
+        self.assertEqual(receipt.committed_identity(self.repo, self.head()), self.identity)
+        self.assertTrue(self.verify()['referencePerformanceQualified'])
+
+    def test_unrelated_changes_do_not_void_receipt_even_when_dirty(self):
+        for name in ('test/widget_test.dart', '.github/workflows/ci.yml',
+                     'android/app/build.gradle', 'windows/runner/main.cpp',
+                     'lib/unrelated.dart', 'pubspec.yaml', receipt.METAINFO):
+            self.change(name, '// irrelevant to benchmark\n')
+        self.assertEqual(self.current(), self.identity)
+        self.commit()
+        self.assertEqual(self.current(), self.identity)
+        self.assertTrue(self.verify()['referencePerformanceQualified'])
+
+    def test_each_relevant_category_voids_receipt_and_rejects_dirty_source(self):
+        for name in ('lib/a.dart', 'tool/performance/run_gate.py',
+                     'pubspec.lock', 'native/text_engine/src/lib.rs'):
+            with self.subTest(name=name):
+                self.change(name, '// changed\n')
+                with self.assertRaisesRegex(ValueError, 'dirty or untracked'):
+                    self.current()
+                self.commit()
+                self.assertNotEqual(self.current(), self.identity)
+                with self.assertRaisesRegex(ValueError, 'stale/mismatched|dependency lock differs'):
+                    self.verify()
+
+    def test_transitive_exports_parts_and_conditional_imports(self):
+        self.change('lib/a.dart', "export 'nested/b.dart';\npart 'a_part.dart';\n")
+        self.change('lib/nested/b.dart', "import '../default.dart' if (dart.library.io) '../io.dart';\n")
+        for name in ('a_part', 'default', 'io'):
+            self.change('lib/' + name + '.dart', '// source\n')
+        self.commit()
+        files = self.current()['files']
+        for name in ('a', 'a_part', 'default', 'io', 'nested/b'):
+            self.assertIn('lib/' + name + '.dart', files)
+        before = self.current()
+        self.change('lib/io.dart', '// changed conditional source\n')
+        self.commit()
+        self.assertNotEqual(self.current(), before)
+        self.change('lib/a.dart', '// remove dependency edges\n')
+        self.commit()
+        self.assertNotIn('lib/io.dart', self.current()['files'])
+
+
 class RelevantSourceIdentityTests(ReceiptFixture):
     """Identity v2 ignores only the release version, so a stable rename keeps its qualification."""
     def setUp(self):
@@ -451,7 +511,7 @@ class RelevantSourceIdentityTests(ReceiptFixture):
         (self.repo / receipt.METAINFO).parent.mkdir(parents=True, exist_ok=True)
         (self.repo / receipt.METAINFO).write_text(metainfo.format(releases))
         self.commit()
-        return receipt.source_identity(self.repo)['sha256']
+        return receipt.source_identity(self.repo, receipt.IDENTITY_V2)['sha256']
 
     def stable(self, pubspec=PUBSPEC):
         return pubspec.replace('version: 2026.10.7-rc.5+100', 'version: 2026.10.7+101')
@@ -466,7 +526,7 @@ class RelevantSourceIdentityTests(ReceiptFixture):
         result = self.verify()
         self.assertTrue(result['referencePerformanceQualified'])
         self.assertEqual(result['relevantSourceSHA256'], before)
-        self.assertEqual(receipt.committed_identity(self.repo, self.base), self.identity)
+        self.assertEqual(receipt.committed_identity(self.repo, self.base, receipt.IDENTITY_V2), self.identity)
 
     def test_version_with_any_other_pubspec_change_is_a_new_identity(self):
         before = self.identity['sha256']
@@ -507,7 +567,7 @@ class RelevantSourceIdentityTests(ReceiptFixture):
             self.verify()
 
     def test_unknown_or_forged_scheme_refuses(self):
-        for identity in [{**self.identity, 'scheme': 'relevant-source-v3'},
+        for identity in [{**self.identity, 'scheme': 'relevant-source-v999'},
                          {**receipt.source_identity(self.repo, receipt.IDENTITY_V1), 'scheme': 'relevant-source-v1'}]:
             self.request['relevantSource'] = identity
             self.report['referenceBinding'].update(requestSHA256=receipt.canonical_digest(self.request),
@@ -534,7 +594,7 @@ class RelevantSourceIdentityTests(ReceiptFixture):
             receipt.main()
         value = receipt.read(output)
         self.assertEqual(set(value), receipt.REQUEST_FIELDS)
-        self.assertEqual(value['relevantSource'], self.identity)
+        self.assertEqual(value['relevantSource'], receipt.source_identity(self.repo))
 
     def test_request_keeps_the_registered_controller_field_set(self):
         self.request['extra'] = {}
