@@ -81,7 +81,7 @@ Also in scope (Lee, 2026-10-27; see [batch selection](batch-selection.md)):
   draft and clear selection too. Food view-menu / More-filters retain the shared
   recomputation policy. The broader search / filter retention intent remains an
   explicit question, not a silent Tasks behavior change. See
-  [batch selection](batch-selection.md#exit).
+  [batch selection](batch-selection.md#audit-outcomes).
 
 ## 3. Method: data model
 
@@ -348,7 +348,7 @@ whole selected row uses its single editor; multiple rows open the bulk editor.
 Opening, closing and resizing follow the Tasks reference. Search closes guarded
 drafts and clears selection, matching Tasks today. The conflict with item (l)'s
 retention intent is recorded as an explicit question in
-[batch selection](batch-selection.md#exit); Tasks' behavior was not changed.
+[batch selection](batch-selection.md#audit-outcomes); Tasks' behavior was not changed.
 
 Food's entry area sits above the list, outside its scroll view, as on Tasks (Lee,
 2026-10-31): Search and the narrow count/Clear/Edit bar stay put while rows scroll.
