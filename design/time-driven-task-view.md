@@ -1,6 +1,6 @@
 # Time-driven task views — implementation plan
 
-Status: renderer implementation and private actual-renderer comparison pass; exact final native Android acceptance remains required. Build 9 is diagnostic only and must not be published as workflow parity. The prior private rehearsal proved parsed-field reconstruction and recurrence behavior, not the complete adjacent Markdown renderer's semantics. Tags such as `#due-min` and `#due-max` carry behavior beyond opaque tag membership. They now map to typed sorting bounds under the audited rules in product behavior; prior opaque-tag rehearsals are superseded.
+Status: implemented and shipped since the first stable release (2026.10.0); [product behavior](product-behavior.md#effective-date-and-availability--accepted-renderer-parity) owns the current rules. The open native-evidence gaps are listed at the end. The prior private rehearsal proved parsed-field reconstruction and recurrence behavior, not the complete adjacent Markdown renderer's semantics. Tags such as `#due-min` and `#due-max` carry behavior beyond opaque tag membership. They now map to typed sorting bounds under the audited rules in product behavior; prior opaque-tag rehearsals are superseded.
 
 ## Original gap (corrected)
 
@@ -25,7 +25,7 @@ Compute midnight using the relevant civil calendar/zone, never by assuming every
 - Widget: leave the app open across a boundary without edits/imports and observe visibility/order/count update; preserve a partially typed capture and an open editor. Completed history behavior follows the agreed view policy.
 - Native desktop and Android: actual boundary, background/resume and platform time/zone notification behavior, then refreshed feature demos. A fake-clock unit test is not evidence of native notification delivery.
 
-No final import or source edits are authorized by this plan. Markdown remains authoritative, and the private serializer must be revalidated for newly discovered functional fields after the renderer audit.
+This plan authorized no import by itself; tasks moved from Markdown to Tandemlog on 2026-10-04 after the renderer audit.
 
 ## Implemented infrastructure checkpoint
 
