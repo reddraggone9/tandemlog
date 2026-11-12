@@ -1,7 +1,10 @@
-# Activity log — next release design (2026-10-30)
+# Activity log
 
-Accepted scope: Lee requested a visible, read-only cross-writer Activity log,
-interleaved by occurrence, with user/device attribution. This supersedes only
+Shipped in stable 2026.10.11; values, day headings and details in 2026.11.0;
+full-height list, expandable batches and store names in 2026.11.1.
+
+Accepted scope (2026-10-30): Lee requested a visible, read-only cross-writer Activity log,
+interleaved by occurrence, with device attribution. This supersedes only
 the browsable-audit exclusion in agent-interface.md §6; cross-writer Undo stays
 excluded. Bulk-editor Cancel continues to exit selection.
 
@@ -175,7 +178,7 @@ sorting, which lazy rows don't. It doesn't bound what a person sees: native
 first-visible, scrolling, details and incoming refresh have no numeric budget and
 no timed gate, and must be reviewed natively before acceptance, on realistic history.
 
-## Other next-release fixes
+## Fixes that shipped with it (2026.10.11)
 
 Suppress the Food recovery banner for healthy in-flight writes, retaining it for
 unresolved reservations/failures. Constrain Move some title/content at 200% text
@@ -183,10 +186,10 @@ with keyboard and allow Enter in its free-text location without bypassing an
 active autocomplete selection. Increase the slow Windows CLI integration test
 margin only (not product/performance budgets), retaining finite timeouts.
 
-## Verification / release
+## Verification
 
 Focused invariant/widget tests, independent code/design/editorial review, dark
 native GTK and Android workflow/media, current-source unchanged-budget reference
-qualification and mandatory hosted correctness/build/signing/install gates.
-Publish an immutable signed prerelease, never Latest; no stable promotion or live
-household data. Identity limitation above must remain explicit in evidence.
+qualification and the hosted correctness/build/signing/install gates; release
+records are in [releases](releases.md). The identity limitation above (device
+labels are advisory, not authenticated) stays explicit in evidence.
