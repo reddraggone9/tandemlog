@@ -1,11 +1,11 @@
-# Desktop experimental installers
+# Desktop installers
 
-Release assets are a genuine single-file Flatpak bundle and a per-user
-Windows installer. The exact candidate assets are installed and smoke-tested in
-the reusable validation workflow, retained for five days, and consumed by the
-publication job without rebuilding. APK acceptance/signing gates remain unchanged.
-No stable release, signing service, credentials, paid runner, or Flathub submission
-is introduced.
+Release assets are a single-file Flatpak bundle, a per-user Windows installer
+and a Windows portable ZIP. The exact candidate assets are installed and
+smoke-tested in the reusable validation workflow, retained for five days, and
+consumed by the publication job without rebuilding ([release procedure](../design/releases.md)).
+The desktop packages have no publisher signature and are not submitted to
+Flathub; the Android APK is signed with the pinned release key.
 
 Public filenames include the release version. Runtime downloads use the official Flathub repository metadata.
 
