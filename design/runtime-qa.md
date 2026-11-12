@@ -3,7 +3,7 @@
 How native QA is done and what counts as evidence. The per-build log of every
 earlier run is in [archive/runtime-qa-history.md](archive/runtime-qa-history.md);
 each release's actual results are in its `evidence/` receipt. The rules on when
-to run QA (UX pass, demos, release audits) are in [AGENTS.md](../AGENTS.md).
+to run QA (UX pass, review captures) are in [AGENTS.md](../AGENTS.md).
 
 ## What counts as native evidence
 
@@ -24,7 +24,7 @@ to run QA (UX pass, demos, release audits) are in [AGENTS.md](../AGENTS.md).
 - **Linux (primary desktop visual target):** native GTK app under Xvfb with
   `xvfb-run -a dbus-run-session`, private runtime/profile dirs; release
   acceptance uses the installed Flatpak bundle in an isolated lab.
-- **Android:** hardware-accelerated API 30 x86_64 emulator on Farnsworth for
+- **Android:** hardware-accelerated API 30 x86_64 emulator on the engineering host for
   candidate acceptance and retained upgrade labs. Cloud software emulation is
   unusable. RC owner testing uses the side-by-side install on Lee's phone or Leela
   described in [releases.md](releases.md#6-hand-the-rc-to-lee);
@@ -46,7 +46,7 @@ prerequisite-missing clean machine.
   Flutter's default purple palette, not Tandemlog. `captureUx` checks theme parity
   even when PNG output is disabled.
 - UX review set (see AGENTS.md): dark and light, wide and 390 px, 200% text.
-- Demo videos show inputs (desktop pointer; Android Show taps) and label the
+- Videos show inputs (desktop pointer; Android Show taps) and label the
   actual OS/device and build; verify the inputs appear in the recording.
 
 ## Desktop verification split
@@ -69,6 +69,12 @@ On Windows with official Flutter and Visual Studio's Desktop development with C+
 Android uses [SAF tree/document URIs and persisted grants](https://developer.android.com/training/data-storage/shared/documents-files), not ordinary filesystem paths. SQLite remains private.
 
 ## Harness notes
+
+- On a desktop host that someone is logged in to, give the native Linux session
+  its own runtime directory: export a private `XDG_RUNTIME_DIR` **before**
+  `dbus-run-session` and set `GTK_USE_PORTAL=0`. Otherwise the private bus
+  activates a document portal on the real session's runtime directory, and
+  teardown unmounts it and kills that user's portal (seen 2026-10-26).
 
 - Linux integration tests and the Linux release build must run one after the
   other in a checkout: they share `linux/flutter/ephemeral`.

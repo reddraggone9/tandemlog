@@ -19,8 +19,8 @@ Each subject below has one source of truth; link to it rather than repeating it.
 ## Product
 
 - [product-behavior.md](product-behavior.md): product behavior and milestones.
-- [future-modules.md](future-modules.md) and [time-tracking-deferred.md](time-tracking-deferred.md):
-  deferred directions, not commitments.
+- [future-modules.md](future-modules.md): deferred directions, not commitments.
+  Time tracking was [dropped](time-tracking-deferred.md).
 - Feature designs, all released: [time-driven-task-view.md](time-driven-task-view.md)
   (timed task views), [food-products.md](food-products.md) (products, purchases,
   Running low, receipt import; 2026.10.9), [batch-selection.md](batch-selection.md)
@@ -44,14 +44,16 @@ Each subject below has one source of truth; link to it rather than repeating it.
 
 ## Decisions
 
-[decisions/README.md](decisions/README.md) indexes ADR 0001–0037. Status lines
-inside many ADRs predate their release; the release that shipped a feature is in
-[releases.md](releases.md).
+[decisions/README.md](decisions/README.md) indexes ADR 0001–0037 with the release
+that shipped each. An ADR records a decision and its reasons; where a later ADR
+changed it, its Status line points there.
 
 ## Release and QA
 
-- [releases.md](releases.md): CI gates, signed candidate, prerelease and stable
-  workflows, RC handoff, signing, release-note policy; per-release record.
+- [releases.md](releases.md): how a release is made, step by step: who decides
+  what, CI, signed candidate, acceptance, publishing, RC handoff, stable
+  promotion, release notes, signing. Each release's own record is its
+  `evidence/<release>/README.md`.
 - [prerelease-notes.md](prerelease-notes.md) and [stable-notes.md](stable-notes.md):
   release-note bodies the publish workflows read; images in `media/`.
 - [runtime-qa.md](runtime-qa.md): QA method, environments and what counts as
@@ -66,11 +68,13 @@ inside many ADRs predate their release; the release that shipped a feature is in
 
 ## History
 
-Historical records, kept unchanged in [archive/](archive/). Not requirements;
-later decisions supersede them. Their relative links were written for `design/`.
+Historical records in [archive/](archive/), unchanged except that relative links
+were repointed after the move. Not requirements and not required reading; later
+decisions supersede them.
 
 - Logs: [status-history.md](archive/status-history.md),
-  [runtime-qa-history.md](archive/runtime-qa-history.md).
+  [runtime-qa-history.md](archive/runtime-qa-history.md),
+  [release-history.md](archive/release-history.md).
 - Earlier specs: [product-behavior](archive/product-behavior.md),
   [storage-and-sync](archive/storage-and-sync.md), [tech-stack](archive/tech-stack.md),
   [storage](archive/storage-and-sync-before-coordinated-cutover.md),
