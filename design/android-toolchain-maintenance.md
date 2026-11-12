@@ -2,8 +2,7 @@
 
 Status: reviewed dependency integration approved by Lee; PR #4 rebase-merged
 at `912a4a28fda84399294ed15717ca181f0140d6eb` and released in stable 2026.10.3
-(AGP 9.2.1, Gradle 9.4.1 and Kotlin 2.4.20 are still the pins at 2026.11.1; bot
-proposals PR #1/#2 below remain held). The integrated tree equals reviewed PR head
+(AGP 9.2.1, Gradle 9.4.1 and Kotlin 2.4.20 are still the pins at 2026.11.1). The integrated tree equals reviewed PR head
 `c4a155f18b1fc157ba71a58e79123aa619fb8ff7`. Baseline is
 `d93b6329c91559051d46915fc7a8114d17565cb8`, whose application remains stable
 2026.10.2/build53 from `687163b1f9c95fe8dee1dffa0775ee7fe4cd3884`.
