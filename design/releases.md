@@ -100,7 +100,7 @@ The native Linux workflow suite (`integration_test/task_flow_test.dart -d linux`
 
 Hosted timing is advisory; hosted correctness is mandatory. Absolute and history-growth budgets are enforced only on the controlled reference host ([ADR0033](decisions/0033-controlled-reference-performance.md)).
 
-**Known intermittent failure:** the Linux job's normal-exit check (`verify_linux_disposal.py`) occasionally sees a quit-time abort (`FlutterEngineRemoveView` kInvalidArguments, then `g_mutex_clear`). If it recurs, collect core stacks ([`tool/collect_linux_core_stacks.py`](../tool/collect_linux_core_stacks.py)); do not redispatch to clear it.
+**Linux quit-time abort.** Until 2026.11.1 the Linux job's normal-exit check (`verify_linux_disposal.py`) occasionally saw an abort at quit (`FlutterEngineRemoveView` kInvalidArguments, then `g_mutex_clear`); the renderer-lifetime fix in 2026.11.1 (`0b9aaf1`, `e930f31`) addressed it. If an abort at quit shows up again, collect core stacks ([`tool/collect_linux_core_stacks.py`](../tool/collect_linux_core_stacks.py)); do not redispatch to clear it.
 
 **Documentation-only pushes** (only Markdown or `evidence/` changed) skip push CI. Pull requests, manual runs and the signed candidate always run the full matrix, and publication requires that candidate run's exact artifacts.
 
