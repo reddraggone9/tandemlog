@@ -1,16 +1,15 @@
 # Release performance gate
 
-## Prospective host-role transition — ADR0033
+## Where timing is judged (ADR0033)
 
-Lee approved [controlled reference qualification](decisions/0033-controlled-reference-performance.md)
-on2026-10-25: unchanged absolute and both history-growth limits qualify on
-Farnsworth;hosted correctness/build/replay/integrity/source/fixture/completeness
-remain mandatory,with hosted timing advisory. No hardware multipliers. This
-supersedes earlier hosted placement only; all budgets and coverage stay active,
-with timing confirmation governed by the current gate rule below. [Operating protocol](performance-reference-qualification.md).
-Missing or stale reference qualification fails the separate required verifier.
-Old failures and measure-only passes retain their original status;implementation
-is not qualified until reviewed registration,a fresh enforcing receipt and CI pass.
+[ADR0033](decisions/0033-controlled-reference-performance.md) (Lee, 2026-10-25): absolute
+and both history-growth budgets are judged only on the controlled reference host, Bender
+(registered as `farnsworth`, its name until 2026-11-08), under the reference caps and with
+no hardware multiplier. Hosted CI keeps correctness, build, replay, integrity, source,
+fixture and completeness checks mandatory; hosted timing is advisory and never reruns. The
+required `reference-performance` job verifies the committed bundle in
+`evidence/reference-performance/current/`; missing or stale qualification fails it and never
+counts as a pass. Procedure: [operating protocol](performance-reference-qualification.md).
 
 ## The gate rule (Lee, 2026-10-31)
 
@@ -95,11 +94,11 @@ Run `python3 tool/test_performance_gate.py` for gate policy and receipt regressi
 
 The runner accepts no caller package configuration, source override or alternate limits file. It reads the repository package configuration, rejects a `tandemlog` root that resolves outside that checkout, creates its own fresh source fork, and changes only that package root URI and normalizes its already-validated effective library URI to lib/. Every copied file retains identical original and compiled SHA-256 values. The standalone storage closure needs no Flutter notifier/platform shim: the rewrite and shim allowlists are empty. Reachable Flutter UI imports, missing/escaping project imports, source extraction changes, changed dependency files or changed SDK kernel inputs fail closed. Production `LocalLogFolder` and `LocalDurability` implementations remain byte-exact, including append/flush semantics. A release invocation must execute tooling from the same checkout and supply the workflow's expected SHA-256 for the fixed versioned limits file.
 
-The shared validation workflow has a separate required Linux performance job; it is also required by signed-candidate checks. Its 65-minute whole-job bound includes native setup; the gate runs as the existing runner UID in a transient system-manager service with 55-minute runtime, 6 GiB physical-memory cap, no swap, 2 CPU quota and 128-task cap, plus bounded compile/generation/workload children. An outer timeout and exit/signal trap stop that exact service; actual cgroup bounds are recorded and required before release measurement. It retains preflight stderr/stdout, compile/generation logs, the timing result, paired comparisons, source/tool/fixture seals and per-size fixture contracts, including failures. Synthetic workspace payloads and local SQLite profiles are excluded from uploaded artifact paths. The committed initial calibrated limits are active and the workflow pins their exact SHA. Fresh exact-source enforcement is required after tooling or application changes; measure-only observations do not satisfy it. Food editor/controller construction/cancel/paint is explicitly a native-UI coverage gap; no storage-only number substitutes for it.
+The shared validation workflow has a separate required Linux performance job; it is also required by signed-candidate checks. Its 65-minute whole-job bound includes native setup; the gate runs as the existing runner UID in a transient system-manager service with 55-minute runtime, 6 GiB physical-memory cap, no swap, 2 CPU quota and 128-task cap, plus bounded compile/generation/workload children. An outer timeout and exit/signal trap stop that exact service; actual cgroup bounds are recorded and required before release measurement. It retains preflight stderr/stdout, compile/generation logs, the timing result, paired comparisons, source/tool/fixture seals and per-size fixture contracts, including failures. Synthetic workspace payloads and local SQLite profiles are excluded from uploaded artifact paths. The workflow pins the limits file's exact SHA and runs the gate with `--hosted-advisory` (`tool/performance/run_ci.sh`): hosted correctness, bindings, coverage and caps decide the job, while hosted timing misses are recorded but never fail it or rerun. Timing acceptance comes only from the reference bundle that the separate `reference-performance` job verifies; measure-only and hosted observations never satisfy it. Food editor/controller construction/cancel/paint is explicitly a native-UI coverage gap; no storage-only number substitutes for it.
 
 The initial calibration showed that the pre-existing task.title/notes/titleAndNotes and task.editorOpenCancel labels select the fixture's inherited recurring successor with a copied checklist, rather than an explicit Task birth. Those labels and observations are retained and their target is now asserted. Separate explicitTask.* cases add native-born ordinary Task title/Notes/both Save, Undo, editor preparation and complete native cancellation; they do not replace the inherited cases or excuse their scaling failures.
 
-Manual development CI can explicitly request performance calibration while initial limits or a runner-class review is pending. This collects the same source-bound observations with releaseGateAccepted=false; it cannot satisfy release acceptance. Signed-candidate validation explicitly fixes performance_calibration=false, and normal push/PR CI also defaults to the enforcing path. No calibration switch is exposed by candidate or promotion workflows.
+A manual `ci.yml` dispatch can set `calibrate_performance` to run the hosted job with `--measure-only` instead. This collects the same source-bound observations with releaseGateAccepted=false; it cannot satisfy release acceptance. Signed-candidate validation explicitly fixes performance_calibration=false, and normal push/PR CI uses `--hosted-advisory`. No calibration switch is exposed by candidate or promotion workflows.
 
 ## Initial performance acceptance
 
@@ -286,7 +285,8 @@ IDs, sample counts, first-use fixtures, history-growth comparisons and versioned
 budgets are unchanged. See task-latency-repair.md for the SQL-hook limitation,
 remaining attribution gaps and exact-row Task snapshot representation memo.
 
-## Food-product prospective coverage (2026-10-28)
+<a id="food-product-prospective-coverage-2026-10-28"></a>
+## Food-product coverage (added 2026-10-28)
 
 Twelve additive `food.product.*` labels cover production implicit-product edit
 (name/brand/size/links/minimum), mixed two-product/container bulk Save,
@@ -305,9 +305,10 @@ responsiveness bounds, not a measured baseline or qualification. The import is
 explicitly two lines/four containers (one matched historical hand entry and three
 new Inbox containers), not a maximum500-line import allowance. Native widget,
 input, publication/paint and larger bulk/import/merge-chain timings remain
-separate gaps. Fresh enforcing qualification is pending.
+separate gaps. These labels are part of the 257-label inventory every current qualification measures.
 
-## Food Move some prospective coverage (2026-10-29)
+<a id="food-move-some-prospective-coverage-2026-10-29"></a>
+## Food Move some coverage (added 2026-10-29)
 
 Two additive labels, `food.moveSome` and `food.moveSome.undo`, cover the Food
 row ⋮ **Move some…** action: the production Location `changeDetails` the page
@@ -325,9 +326,10 @@ bounds, because Move some is the same one-action Location edit. Both paired
 ordinary rules remain1.25x+3ms median/1.40x+5ms maximum. These are intended
 responsiveness bounds, not a measured baseline or qualification. The dialog's
 open, typing and paint, and moves of hundreds of containers, remain separate
-gaps. Fresh enforcing qualification is pending.
+gaps. Both labels are in every current qualification.
 
-## Agent CLI prospective coverage (2026-10-29)
+<a id="agent-cli-prospective-coverage-2026-10-29"></a>
+## Agent CLI coverage (added 2026-10-29)
 
 Eight additive `agent.*` labels cover the headless agent CLI
 ([agent interface](agent-interface.md) section 8): `agent.read.coldOpenTasksList`,
@@ -379,6 +381,155 @@ startup family now opens the same profile through `WorkspaceSession.open` and
 requires identical Task/Food state and no canonical writes. Folder listing and
 the open-time occurrence migration remain outside the startup labels (the
 existing startup gap); `agent.*` calls time them end to end.
+
+### Bounded cache proof overlap and installation-cardinality refresh
+
+Clean close now prepares the bounded decoded-cache payload/checksum on a pure
+worker while sealing the independently compared Task projection. Each proof is
+still invalidated/consumed before exposure; publishing either or both independent
+proofs after a crash cannot authorize unfinished intent. No canonical bytes,
+receipt generation, digest algorithm, admission checks or budgets changed.
+Concurrent opens share only an *in-flight* opaque verification receipt when
+payload bytes, digest and complete binding are exactly equal. No completed result
+or path/stat-based authority is retained.
+
+The additive `writer300-refresh` family registers two labels under the existing
+unchanged Tasks/Food refresh budgets and ordinary growth rules. A fresh copy of
+each sealed shape receives enough deterministic synthetic joined installations
+to have exactly300 physical histories; every join must be admitted before the
+timers. Every repetition checks unchanged full Task/Food values and canonical
+inventory; reopen and original-prefix checks still apply. This is writer-count
+stress, not isolated history causation; actual GUI scheduling/paint stays separate.
+The manifest owner bound is unchanged. All prior254labels/limits are retained.
+
+### Read-only Activity log
+
+Before first measurement, `activity.read.derive` adds a 15ms median / 30ms maximum
+readmodel budget on all three shapes and the unchanged ordinary paired-growth
+rules. It builds published rows and current installation labels once per revision,
+sorts by recorded logical occurrence clock, and checks count, uniqueness, order
+and canonical immutability. This adds a 257th label; all previous 256 absolute and
+growth bounds remain byte-value unchanged. It does not time first paint, scrolling,
+details or incoming-history visible refresh; native workflows must assess these.
+No work runs while the dialog is closed. No physical occurrence/skew correction
+or missing actor-user reconstruction is claimed.
+
+## Native cold process start to first usable list (Lee 2026-11-03, coverage correction 11-05)
+
+**Goal:** show a usable Task list promptly while opening the shared Task + Food
+workspace. **Budget remains 1,000 ms median**; only Lee may change it.
+
+### Workload and correctness
+
+`tool/performance/native-cold-start-v1.json` specifies 2,000 synthetic Tasks,
+220 Task edits and 560 completions, plus 530 Food add actions (17 multi-adds),
+104 container edits, 92 removals, 148 product edits and eight purchase imports
+with 34 lines. Four writers use the production Task/Food APIs, one action per
+record. The synthetic reference shape contains **3,667 records / 6,419,277 bytes
+in four files** in the diagnostic fixture, with 522 active containers in 483 Food rows, 551 products and 34
+purchases. Random fixture identities can change byte lengths and grouping; every
+measurement retains its own authoritative receipt. The seeded Task projection
+contains 2,000 Tasks plus one person (560 completed Tasks remain in that
+projection).
+
+The seeder independently checks planned action-family counts, expected active
+inventory, purchases and writer count through a read-only production reopen and
+full integrity audit. The native run verifies the complete Task cache and actual
+warm-proof reuse. It also requires `TANDEMLOG_FOOD` counts to exactly match the
+nonzero receipt on every strict and warm launch. Food counts are emitted **after**
+the first-list marker, outside the timer; Food admission itself remains inside
+workspace opening. Food attachment under 1 ms is not total Food startup cost.
+A Task-only fixture or missing/mismatched Food evidence cannot satisfy this case.
+
+### Timing boundaries and source binding
+
+`TANDEMLOG_FIRST_LIST process_ms` ends at the UI-thread post-frame callback for
+the first usable Task list. It includes process/engine startup, workspace open,
+Task view setup and UI build/layout/paint submission. **It does not establish
+raster completion, GPU presentation or physical screen visibility.** `ms` starts
+later, at app-state creation. Logged `settings/folderList/history/tasks/food/
+migration/bound` values are cumulative wall checkpoints, not CPU attribution.
+Subtract adjacent checkpoints for their intervals; do not sum them.
+
+Each series starts one new **uncached/strict** process (reported, not budgeted),
+then five new **cold processes with warm persisted caches**, following verified
+normal close and seal reuse. OS page cache is not flushed. Thus "cold process"
+is not "uncached history" and neither is a phone measurement.
+`native_cold_start.py measure` builds a clean, source-bound GTK release under
+Xvfb on the registered reference host (Bender, registered as `farnsworth`; ext4). The result retains the
+fixture receipt, samples and load. `verify` checks the exact relevant source,
+host, unchanged budget/shape, Food correctness, reuse and recomputed median.
+The committed result lives in `evidence/native-cold-start/current/`, and the
+`reference-performance` job runs `native_cold_start.py verify` after the AOT
+receipt check, so a relevant-source change needs a fresh native measurement as
+well as a fresh AOT qualification. The native case has no automatic quiet-host
+controller; loaded-host exploratory runs below are **not** the controlled AOT
+qualification, and neither replaces signed-candidate acceptance.
+
+### Investigation and bounded improvements (11-05)
+
+[Diagnostic samples](../evidence/startup-investigation-20261105/diagnostic-summary.json)
+are same-pristine-workspace A/B runs on a loaded host (about 5–7 load), not gate
+acceptance. Warm medians were **630→520 ms** and **540→510 ms** in two paired
+series. Independent per-writer tail checks fell from ~42–45 ms to ~8–9 ms;
+open-time migration's candidate-discovery refresh fell from ~23–32 ms to <1 ms.
+Do not add these component medians to explain the entire process-median change:
+noise, scheduling and other work vary between samples.
+
+History opening includes SQL/store restore, asynchronous provider operations,
+isolate decoding, rebuilding bytes, semantic validation and projection commits.
+In the first paired series, stored-row SQL was ~12–16 ms, isolate decode ~51–56 ms,
+byte rebuilding ~23–28 ms and validation ~105–107 ms. Task semantic validation
+(~49–51 ms) and Food admission (~18–20 ms) are **inside** that validation interval,
+not additional terms. Nested restore laps likewise cannot be added again to
+outer open intervals. These are wall measurements, not CPU samples.
+
+Food admission is directly measured; the Food share of shared SQL/decode/rebuild
+is not separately attributed. The synthetic logs contain 882 Food-bearing records
+(24.1%) and 1,837,099 Food-bearing bytes (28.6%). Those proportions are measured
+counts, **not an assertion of equal CPU-cost shares**. An earlier private estimate
+of ~40% shared Food cost was unsupported and is superseded by this distinction.
+
+The two contained changes preserve the trust boundary:
+
+- Tail checks run in batches of at most four and settle all started operations
+  before strict fallback, preserving deterministic seal order and every check.
+- Only the deferred app-open migration uses already-loaded candidate discovery.
+  Each candidate still refreshes before planning, commands recheck snapshots and
+  unified writes recheck canonical revisions/admission. Ordinary/CLI migration
+  and workspace refresh retain their discovery refresh. Newly arrived candidates
+  absent from the loaded projection are handled by the app's mandatory importer
+  reconcile (`ForegroundImporter.start` requests one immediately, plus watcher
+  hints and fallback); no stale migration is permitted to overwrite peer Due.
+
+Bound→post-frame was ~61–89 ms. A bounded Task-only control at 150 versus 2,000
+Tasks measured ~54–60 ms for the first full UI build/layout/paint, while Task
+projection was ~0.2–0.9 ms versus ~2–3 ms. The lazy list does not build every row.
+This supports leaving the already-fast list logic alone; it is not a CPU profile
+of every widget. Corresponding raster durations (~7–18 ms) occur beyond the
+marker. FrameTiming's vsync overhead may overlap history opening and must not be
+added wholesale to the bound→post-frame interval.
+
+### Current acceptance and limitations
+
+The former **420 ms result and candidate 42111287310 describe the Task-only
+shape**, not the corrected mixed case. They remain historical evidence, not
+current mixed-workload acceptance. The first fresh mixed native measurement, on `7e7b028`, passed at 520 ms median (uncached first launch 2,500 ms; 480 Food rows in its receipt). After the Linux runner follow-up `e930f31` the case was measured again: **500 ms median** (500, 490, 500, 500, 500 ms), uncached first launch **2,550 ms**, receipt 3,667 records / 6,419,498 bytes / four writers and 522 active containers / 477 Food rows / 551 products / 34 purchases; every measured launch matches its own receipt. Food row counts differ between fixtures because generated identities affect selection and grouping; no sample is relabeled. This is the source-bound native case, not the controlled AOT qualification or signed-candidate/lab acceptance. See the committed receipts for exact boundaries and provenance.
+
+Off-UI-isolate opening remains deferred: SQLite/store ownership and Android SAF
+channels make that a larger safety-critical change. Decoding already uses worker
+isolates; validation/commits and the first full frame still occupy the UI thread.
+The bounded findings do not justify a broad rewrite or claim perfectly smooth
+startup. Phone after-history-store timing remains unmeasured (keyguard blocked
+an earlier attempt); no phone was accessed during this follow-up. Desktop
+software-rendered figures cannot be promoted to phone numbers.
+
+## History
+
+Dated measurements and fixes kept for their reasoning. They are not current procedure; results
+under earlier gate rules keep their own meaning ([results under earlier rules](performance-reference-qualification.md#results-under-earlier-rules)).
+
+### Agent CLI first measurement (2026-10-29)
 
 First local `run_gate.py --measure-only` observation (Farnsworth, the
 reference unit caps, ext4 output, all252labels, 2 warmups/5 samples; advisory,
@@ -477,27 +628,6 @@ growth pair's maximum. That in-session Undo does not open, close or seal, so
 the spike is not attributed to these changes; it is unexplained. The
 dense-food write misses are open.
 
-
-### Bounded cache proof overlap and installation-cardinality refresh
-
-Clean close now prepares the bounded decoded-cache payload/checksum on a pure
-worker while sealing the independently compared Task projection. Each proof is
-still invalidated/consumed before exposure; publishing either or both independent
-proofs after a crash cannot authorize unfinished intent. No canonical bytes,
-receipt generation, digest algorithm, admission checks or budgets changed.
-Concurrent opens share only an *in-flight* opaque verification receipt when
-payload bytes, digest and complete binding are exactly equal. No completed result
-or path/stat-based authority is retained.
-
-The additive `writer300-refresh` family registers two labels under the existing
-unchanged Tasks/Food refresh budgets and ordinary growth rules. A fresh copy of
-each sealed shape receives enough deterministic synthetic joined installations
-to have exactly300 physical histories; every join must be admitted before the
-timers. Every repetition checks unchanged full Task/Food values and canonical
-inventory; reopen and original-prefix checks still apply. This is writer-count
-stress, not isolated history causation; actual GUI scheduling/paint stays separate.
-The manifest owner bound is unchanged. All prior254labels/limits are retained.
-
 ### Planned purchase import: one plan check, entities encoded once (2026-10-29)
 
 A phase probe of the dense-food planned import (reference caps) showed two
@@ -577,19 +707,6 @@ q2 passed it (5.293 ≤ 9.120). Both refreshes in the merge take the unchanged
 fast path; the remaining 1–2 ms of Food growth is in the Food append and
 projection. It stays within its bound and is not changed in this release.
 
-
-### Next-release read-only Activity log
-
-Before first measurement, `activity.read.derive` adds a 15ms median / 30ms maximum
-readmodel budget on all three shapes and the unchanged ordinary paired-growth
-rules. It builds published rows and current installation labels once per revision,
-sorts by recorded logical occurrence clock, and checks count, uniqueness, order
-and canonical immutability. This adds a 257th label; all previous 256 absolute and
-growth bounds remain byte-value unchanged. It does not time first paint, scrolling,
-details or incoming-history visible refresh; native workflows must assess these.
-No work runs while the dialog is closed. No physical occurrence/skew correction
-or missing actor-user reconstruction is claimed.
-
 ### Next-release reference failure (request d8874dea, 2026-10-31)
 
 The first qualification of `de6636d` failed on timing alone: dense-food
@@ -613,110 +730,3 @@ the miss is likely but unproven, since the load was not removed and re-measured.
 Even on a quiet host the label has only about 5% headroom (475.6 ms at `e212575`). If a
 quiet-host qualification also misses it, treat that as a repeatable miss: the remaining
 cost is the shared warm open and close seal, not the command.
-
-## Native cold process start to first usable list (Lee 2026-11-03, coverage correction 11-05)
-
-**Goal:** show a usable Task list promptly while opening the shared Task + Food
-workspace. **Budget remains 1,000 ms median**; only Lee may change it.
-
-### Workload and correctness
-
-`tool/performance/native-cold-start-v1.json` specifies 2,000 synthetic Tasks,
-220 Task edits and 560 completions, plus 530 Food add actions (17 multi-adds),
-104 container edits, 92 removals, 148 product edits and eight purchase imports
-with 34 lines. Four writers use the production Task/Food APIs, one action per
-record. The synthetic reference shape contains **3,667 records / 6,419,277 bytes
-in four files** in the diagnostic fixture, with 522 active containers in 483 Food rows, 551 products and 34
-purchases. Random fixture identities can change byte lengths and grouping; every
-measurement retains its own authoritative receipt. The seeded Task projection
-contains 2,000 Tasks plus one person (560 completed Tasks remain in that
-projection).
-
-The seeder independently checks planned action-family counts, expected active
-inventory, purchases and writer count through a read-only production reopen and
-full integrity audit. The native run verifies the complete Task cache and actual
-warm-proof reuse. It also requires `TANDEMLOG_FOOD` counts to exactly match the
-nonzero receipt on every strict and warm launch. Food counts are emitted **after**
-the first-list marker, outside the timer; Food admission itself remains inside
-workspace opening. Food attachment under 1 ms is not total Food startup cost.
-A Task-only fixture or missing/mismatched Food evidence cannot satisfy this case.
-
-### Timing boundaries and source binding
-
-`TANDEMLOG_FIRST_LIST process_ms` ends at the UI-thread post-frame callback for
-the first usable Task list. It includes process/engine startup, workspace open,
-Task view setup and UI build/layout/paint submission. **It does not establish
-raster completion, GPU presentation or physical screen visibility.** `ms` starts
-later, at app-state creation. Logged `settings/folderList/history/tasks/food/
-migration/bound` values are cumulative wall checkpoints, not CPU attribution.
-Subtract adjacent checkpoints for their intervals; do not sum them.
-
-Each series starts one new **uncached/strict** process (reported, not budgeted),
-then five new **cold processes with warm persisted caches**, following verified
-normal close and seal reuse. OS page cache is not flushed. Thus "cold process"
-is not "uncached history" and neither is a phone measurement.
-`native_cold_start.py measure` builds a clean, source-bound GTK release under
-Xvfb on the registered Farnsworth/ext4 environment. The result retains the
-fixture receipt, samples and load. `verify` checks the exact relevant source,
-host, unchanged budget/shape, Food correctness, reuse and recomputed median.
-The native case has no automatic quiet-host controller; loaded-host exploratory
-runs below are **not** the controlled AOT qualification. A separate source-bound
-reference qualification and exact signed-candidate acceptance are still required.
-
-### Investigation and bounded improvements (11-05)
-
-[Diagnostic samples](../evidence/startup-investigation-20261105/diagnostic-summary.json)
-are same-pristine-workspace A/B runs on a loaded host (about 5–7 load), not gate
-acceptance. Warm medians were **630→520 ms** and **540→510 ms** in two paired
-series. Independent per-writer tail checks fell from ~42–45 ms to ~8–9 ms;
-open-time migration's candidate-discovery refresh fell from ~23–32 ms to <1 ms.
-Do not add these component medians to explain the entire process-median change:
-noise, scheduling and other work vary between samples.
-
-History opening includes SQL/store restore, asynchronous provider operations,
-isolate decoding, rebuilding bytes, semantic validation and projection commits.
-In the first paired series, stored-row SQL was ~12–16 ms, isolate decode ~51–56 ms,
-byte rebuilding ~23–28 ms and validation ~105–107 ms. Task semantic validation
-(~49–51 ms) and Food admission (~18–20 ms) are **inside** that validation interval,
-not additional terms. Nested restore laps likewise cannot be added again to
-outer open intervals. These are wall measurements, not CPU samples.
-
-Food admission is directly measured; the Food share of shared SQL/decode/rebuild
-is not separately attributed. The synthetic logs contain 882 Food-bearing records
-(24.1%) and 1,837,099 Food-bearing bytes (28.6%). Those proportions are measured
-counts, **not an assertion of equal CPU-cost shares**. An earlier private estimate
-of ~40% shared Food cost was unsupported and is superseded by this distinction.
-
-The two contained changes preserve the trust boundary:
-
-- Tail checks run in batches of at most four and settle all started operations
-  before strict fallback, preserving deterministic seal order and every check.
-- Only the deferred app-open migration uses already-loaded candidate discovery.
-  Each candidate still refreshes before planning, commands recheck snapshots and
-  unified writes recheck canonical revisions/admission. Ordinary/CLI migration
-  and workspace refresh retain their discovery refresh. Newly arrived candidates
-  absent from the loaded projection are handled by the app's mandatory importer
-  reconcile (`ForegroundImporter.start` requests one immediately, plus watcher
-  hints and fallback); no stale migration is permitted to overwrite peer Due.
-
-Bound→post-frame was ~61–89 ms. A bounded Task-only control at 150 versus 2,000
-Tasks measured ~54–60 ms for the first full UI build/layout/paint, while Task
-projection was ~0.2–0.9 ms versus ~2–3 ms. The lazy list does not build every row.
-This supports leaving the already-fast list logic alone; it is not a CPU profile
-of every widget. Corresponding raster durations (~7–18 ms) occur beyond the
-marker. FrameTiming's vsync overhead may overlap history opening and must not be
-added wholesale to the bound→post-frame interval.
-
-### Current acceptance and limitations
-
-The former **420 ms result and candidate 42111287310 describe the Task-only
-shape**, not the corrected mixed case. They remain historical evidence, not
-current mixed-workload acceptance. The first fresh mixed native measurement, on `7e7b028`, passed at 520 ms median (uncached first launch 2,500 ms; 480 Food rows in its receipt). After the Linux runner follow-up `e930f31` the case was measured again: **500 ms median** (500, 490, 500, 500, 500 ms), uncached first launch **2,550 ms**, receipt 3,667 records / 6,419,498 bytes / four writers and 522 active containers / 477 Food rows / 551 products / 34 purchases; every measured launch matches its own receipt. Food row counts differ between fixtures because generated identities affect selection and grouping; no sample is relabeled. This is the source-bound native case, not the controlled AOT qualification or signed-candidate/lab acceptance. See the committed receipts for exact boundaries and provenance.
-
-Off-UI-isolate opening remains deferred: SQLite/store ownership and Android SAF
-channels make that a larger safety-critical change. Decoding already uses worker
-isolates; validation/commits and the first full frame still occupy the UI thread.
-The bounded findings do not justify a broad rewrite or claim perfectly smooth
-startup. Phone after-history-store timing remains unmeasured (keyguard blocked
-an earlier attempt); no phone was accessed during this follow-up. Desktop
-software-rendered figures cannot be promoted to phone numbers.
