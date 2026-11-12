@@ -332,6 +332,7 @@ Map<String, Object?> productJson(dynamic p) => {
   'size': p.size,
   'links': p.links,
   'minimum': p.minimum,
+  'keepsFor': p.keepsFor?.label,
   'onHand': p.onHand,
   'containers': p.containers,
   'runningLow': p.runningLow,
@@ -347,11 +348,19 @@ Map<String, Object?> productJson(dynamic p) => {
 };
 
 /// A product's rev hashes its described fields (name, brand, size, links,
-/// minimum); a Food container's hashes its projected state. Both are
+/// minimum, Keeps for); a Food container's hashes its projected state. Both are
 /// projected-state revisions, unlike a task's admitted operation IDs (see the
 /// feasibility record).
-String productRev(dynamic p) =>
-    revOf([p.id, p.name, p.brand, p.size, p.links, p.minimum]);
+String productRev(dynamic p) => revOf([
+  p.id,
+  p.name,
+  p.brand,
+  p.size,
+  p.links,
+  p.minimum,
+  // Only when set, so products without Keeps for keep their revs.
+  if (p.keepsFor != null) p.keepsFor.label,
+]);
 
 /// Current rev of any Food target an action can name: a container, a live or
 /// merged-away product, or a purchase. Null when the ID names none of them.
@@ -385,6 +394,7 @@ String productLine(dynamic p) => [
   if ((p.size as String).isNotEmpty) p.size,
   'on hand ${p.onHand}${p.minimum == null ? '' : '/min ${p.minimum}'}',
   if (p.runningLow == true) 'running low',
+  if (p.keepsFor != null) 'keeps ${p.keepsFor.label}',
   if ((p.links as List).isNotEmpty) (p.links as List).first,
 ].join(' · ');
 
