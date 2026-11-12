@@ -1,7 +1,7 @@
 # Batch selection: Tasks and Food
 
-Status: shared Tasks/Food rules, with selection-retention follow-ups in local
-development on `vex/food-products`; those follow-ups are not released. Behavior is specified in
+Status: shared Tasks/Food rules; the audit fixes shipped in stable 2026.10.9 and
+row-level Food selection with Move some… in 2026.10.10. Behavior is specified in
 [product behavior](product-behavior.md#approved-rc3-food-editing-refinements);
 this document records the 2026-10-27 consistency audit and its outcomes.
 
@@ -44,7 +44,7 @@ Entry gestures:
   the clicked group. Fixed; Food now starts with the edited group after the usual
   unsaved-draft decision.
 - Shift+Arrow range: Tasks only, because Food rows had no arrow-key row
-  navigation at all. Resolved (Lee, 2026-10-27, on `vex/food-products`): Up/Down
+  navigation at all. Resolved (Lee, 2026-10-27): Up/Down
   move focus between Food rows and Shift+Up/Down extend the selection from its
   anchor (the focused row when there is none), using the shared rules.
 - Filter → Select matching containers: Food only. Deliberate: Food's unification
@@ -68,7 +68,7 @@ Selection affordances:
   partial state exists and neither section has a checkbox column.
 - Wide layouts: Tasks opens the bulk editor in the side pane as soon as a
   selection exists; Food kept a modal bulk editor opened from Edit. Resolved
-  (Lee, 2026-10-27, on `vex/food-products`): at pane widths a Food selection
+  (Lee, 2026-10-27 and 10-28: "standardize on tasks' behavior"): at pane widths a Food selection
   opens the editor immediately in the side pane (one whole row uses its single
   editor; multiple rows use the bulk editor). Changing selection first resolves
   an unsaved draft. Search remains visible, with no redundant count/Clear/Edit
