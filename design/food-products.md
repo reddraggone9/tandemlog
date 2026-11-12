@@ -1,12 +1,12 @@
 # Food as products
 
-Status: **Settled design; implementation in progress on `vex/food-products`.**
-Lee settled every open decision on 2026-10-27 (section 8). Nothing here is
-released. This page records the goals and the decisions, which change only with
-Lee, separately from the method, which can change when a better one turns up.
-Once released, the behavior moves into [product-behavior.md](product-behavior.md),
-[schema.md](schema.md) and [storage-and-sync.md](storage-and-sync.md), and this
-page becomes rationale.
+Status: **Shipped in stable 2026.10.9** (row-level selection and Move some… in
+2026.10.10; store names on links in 2026.11.1). Lee settled every open decision on
+2026-10-27 (section 8). This page records the goals and the decisions, which change
+only with Lee, separately from the method, which can change when a better one turns
+up. Current behavior is in [product-behavior.md](product-behavior.md),
+[schema.md](schema.md) and [storage-and-sync.md](storage-and-sync.md); this page is
+the rationale.
 
 ## 1. Goals (Lee, 2026-10-27)
 
@@ -28,7 +28,10 @@ Product model:
   box is one container); container cost = line price / receipt quantity.
 - Keep-in-stock minimums are **per Product**, with no groups.
 - "Container size" moves to the Product **unchanged** (freeform text). It gets
-  restructured only together with consumption logging.
+  restructured only together with consumption logging. Variable-weight packages
+  use the store's listed range for now, e.g. a Walmart chicken tray `3.0-7.3 lb`,
+  which "works for now in terms of differentiating SKUs" (Lee, 2026-11-01); a
+  package's actual weight waits for consumption logging.
 - Products show only derived money figures (last and typical price).
 - Meal cost and partial containers wait for consumption logging. Cost per meal
   will use the consumed container's own Purchase, and estimate from recent
@@ -275,7 +278,7 @@ Changes:
   outside the selection, because "same SKU" is a fact about the product; the scope
   line states it ("Merges 3 products, 12 containers"). Location and Retention
   reason stay per container.
-- **Running low (Lee, 2026-10-28):** a view in the Stock/Retained/Deleted menu, offered only while a product is below its minimum; a warning dot on the closed filter button signals this. The menu entry repeats the warning dot and shows the number of low products (for example, “Running low · 2”); the filter and entry announce the product count to screen readers, including while search pauses saved filters. If the active view empties, return to Stock. No low-stock section in Stock. Product rows use the normal Food row name line with warning-colored “1 of 3”, omit container expiry/location/retention, then show brand · size. Linked low rows keep the open-link button; linked container rows offer “Open store link” only in their menu.
+- **Running low (Lee, 2026-10-28):** a view in the Stock/Retained/Deleted menu, offered only while a product is below its minimum; a warning dot on the closed filter button signals this. The menu entry repeats the warning dot and shows the number of low products (for example, “Running low · 2”); the filter and entry announce the product count to screen readers, including while search pauses saved filters. If the active view empties, return to Stock. No low-stock section in Stock. Product rows use the normal Food row name line with warning-colored “1 of 3”, omit container expiry/location/retention, then show brand · size. Linked low rows keep the open-link button, labelled with the store's name (“Walmart”); linked container rows offer “Open Walmart link” only in their menu (store names: Lee, 2026-11-03).
 
 - **Keyboard (j):** Up/Down move focus between Food rows; Shift+Up/Down extend
   the selection from the anchor, using the shared selection rules.
@@ -286,8 +289,9 @@ Changes:
   scope and merge lines already say what a product edit affects, in context.
 
 Deliberately not added: a Products screen or list; product rows outside Running
-low; a split or "move container" command; Unmerge; a purchase list or price
-entry; store links on ordinary rows; product deletion; a category.
+low; Unmerge; a purchase list or price
+entry; store links on ordinary rows; product deletion; a category. (A split
+command was left out here too; Lee added **Move some…** on 2026-10-29, below.)
 
 Shared with Tasks: autocomplete, the sticky group header, bulk Apply controls,
 selection rules (`list_selection.dart`), field help and validation, and the
