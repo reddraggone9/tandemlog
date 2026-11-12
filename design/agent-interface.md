@@ -391,11 +391,10 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
    text library, copied byte-for-byte) and loads the text library by explicit
    path. Flatpak: `/app/tandemlog-cli`, command `tandemlog-cli`. Windows: `cli\`
    inside the Release bundle, so the installer and ZIP carry it unchanged.
-   The hosted CI workflow is *configured* to build and smoke it headlessly on
-   both platforms and from the installed packages, including one Windows call
-   without `--tz` and a Flatpak call against a host folder granted with
-   `flatpak override --filesystem`; it has not run on this release line yet,
-   so packaged Windows/Flatpak launch remains unverified. Windows reads the
+   Hosted CI (`validate.yml`) builds and smokes it headlessly on both
+   platforms on every push, including one Windows call without `--tz` and a
+   Flatpak call against a host folder granted with `flatpak override
+   --filesystem`; it shipped in the Flatpak, installer and ZIP of 2026.10.10. Windows reads the
    zone through `GetDynamicTimeZoneInformation` and the system ICU, as the app
    runner does.
 2. *Profiles.* `TANDEMLOG_CLI_PROFILE` (or `--profile`) names a profile under
@@ -457,8 +456,8 @@ Code: `lib/agent/` (registry, CLI, MCP, commands), `bin/tandemlog_cli.dart`,
    700ms median by about 100ms (warm history open plus close-time seal; the
    import opens twice). The ~300-writer refresh case from the writer-cap review
    is not registered yet. The `WorkspaceSession` change to the app's open
-   path and these storage changes still owe the normal reference
-   qualification.
+   path and these storage changes passed the normal reference qualification
+   (`50a8ca56`) before 2026.10.10 shipped.
 
 **Differences from sections 4–7.**
 - MCP opens the workspace for each tool call and closes it, instead of keeping
