@@ -65,20 +65,20 @@ for whole-action text Undo across process restarts (sections 6 and 9).
    a later process can undo an earlier one. Food only lets a writer retract its own
    operations. The exception is title/notes text: native text Undo is refused
    outside "its retained editing session". Section 6 covers this.
-4. **Reusing Farnsworth's installation e52144b5 isn't recommended.** Its profile
+4. **Reusing the home server's installation (Bender; called Bender until 2026-11-08) e52144b5 isn't recommended.** Its profile
    is a 32 KB `local.sqlite` in **Hester's** Flatpak data
    (`/home/hester/.var/app/com.reddraggone9.tandemlog/data/...`, mode 0600,
    hester-owned), last written 10-21, before the cutover. Reusing it would mean:
    running as Hester or copying her account's profile; a one-way upgrade of a
    profile the cutover deliberately preserved; mixing agent writes into the history
    that holds the historical importer and initial task import; and, if a GUI is
-   ever installed for Hester on Farnsworth, Vex and that GUI fighting over one
+   ever installed for Hester on Bender, Vex and that GUI fighting over one
    profile lock. The only gain is avoiding one more `.applog`. Purchase-import
    idempotency comes from source-derived purchase IDs in canonical history, not
    from a private ledger, so nothing ties imports to e52144b5. It would be safe
    only with exclusive ownership forever. The accepted direction is a fresh agent
    installation; do not reuse it.
-5. **"A local copy" is the device's synced folder itself.** On Farnsworth that is
+5. **"A local copy" is the device's synced folder itself.** On Bender that is
    the Syncthing hub folder `mypool/sync/tandemlog`, which is lee-owned (ACL
    lee/hester rwx), so Vex can append to its own file there. The CLI never writes
    any other writer's file, and staging names like `.syncthing.*.tmp` are already
@@ -285,7 +285,7 @@ that audit exclusion only; cross-writer Undo remains excluded.
     alongside its native libraries, with the same release version as the GUI.
   - **No additional tarball, download, package or independently updated CLI.**
     Android has no CLI entry point.
-- **Install on Farnsworth.** Install/update the ordinary Flatpak once, run its
+- **Install on Bender.** Install/update the ordinary Flatpak once, run its
   second command headlessly, select Vex's private profile and `init` it against
   the synced workspace. This does not initialize or reuse a GUI profile. Verify
   sandbox workspace access and native-library loading during implementation;

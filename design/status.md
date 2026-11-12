@@ -85,8 +85,8 @@ performance qualification is in [performance-gate.md](performance-gate.md) and
   authenticated. Undo covers only this session's own actions.
 - Unsaved drafts and unfinished Save/import intent live in memory only; they do
   not survive the app being closed ([ADR0031](decisions/0031-coordinated-unified-cutover.md)).
-- One shared household space; private spaces, games, nutrition logging and time
-  tracking are deferred ([future-modules.md](future-modules.md)).
+- One shared household space; private spaces, games and nutrition logging are
+  deferred ([future-modules.md](future-modules.md)); time tracking was dropped.
 - Platform evidence limits: Android acceptance runs on an API 30 x86_64 emulator
   plus Lee's phone for the RC handoff; Windows has hosted builds/tests and
   installer lifecycle checks, not a manual GUI pass; broader real-phone/provider

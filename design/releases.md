@@ -218,7 +218,7 @@ Historical cause and local/live read-only evidence:
 
 ## Android signing
 
-Lee authorized a dedicated durable signing key generated/stored under the engineering account on the engineering host (called Farnsworth in older documents and in the registered reference-host ID; renamed Bender on 2026-11-08). The owner provisions GitHub secrets; the cloud agent neither generates nor transmits that private material. The public SHA-256 certificate fingerprint is pinned in `android/signing-certificate.sha256`; the supplied fingerprint is now pinned, and the owner-provisioned inputs successfully signed candidate run `36762053783`. Android release builds fail without all signing inputs; there is no generated-key or debug-key fallback.
+Lee authorized a dedicated durable signing key generated/stored under the engineering account on the engineering host (called Farnsworth in older documents and in the registered reference-host ID; renamed Bender on 2026-11-08). The repository's Actions secrets hold a copy for hosted signing; maintaining them and the signing tooling is routine maintainer work, while replacing or rotating the key is Lee's decision (installed copies refuse updates signed by a different key). The public SHA-256 certificate fingerprint is pinned in `android/signing-certificate.sha256`; the supplied fingerprint is now pinned, and the owner-provisioned inputs successfully signed candidate run `36762053783`. Android release builds fail without all signing inputs; there is no generated-key or debug-key fallback.
 
 At [repository Actions secrets](https://github.com/reddraggone9/tandemlog/settings/secrets/actions), choose **New repository secret** for each:
 
