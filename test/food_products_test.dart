@@ -17,6 +17,8 @@ import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 
+import 'support/frozen_recurrence_r3/current_operation.dart' as frozen;
+
 const installation = '00000000-0000-4000-8000-000000000001';
 
 void main() {
@@ -588,6 +590,55 @@ void main() {
         );
         expectReplayEquivalent();
       });
+
+      test(
+        'an install from before Keeps for stops at both new revisions and reads the rest',
+        () async {
+          await keepMilk(food, {
+            'count': 1,
+            'unit': 'week',
+          }, location: 'Fridge');
+          await food.commitPurchaseImport(plan([old()]));
+          final revisions = <String>{};
+          for (final record in records()) {
+            final op = record.currentOperation;
+            final newer =
+                (op.family == 'product.edit' && op.revision == 2) ||
+                (op.family == 'container.add' && op.revision == 3);
+            revisions.add('${op.family} r${op.revision}');
+            // The decoder of a build that predates this format.
+            if (newer) {
+              expect(
+                () => frozen.CurrentOperation.decode(
+                  record.encode(),
+                  module: 'food',
+                ),
+                throwsA(
+                  isA<FormatException>().having(
+                    (e) => e.message,
+                    'message',
+                    contains('Update the app; history was preserved'),
+                  ),
+                ),
+                reason: '${op.family} r${op.revision}',
+              );
+            } else {
+              frozen.CurrentOperation.decode(record.encode(), module: 'food');
+            }
+            // A revision that does not match its payload is not this format.
+            final forged = jsonDecode(record.encode()) as Map<String, dynamic>;
+            (forged['operation'] as Map)['revision'] = op.revision == 1 ? 2 : 1;
+            expect(
+              () => FoodRecord.decode(jsonEncode(forged)),
+              throwsFormatException,
+            );
+          }
+          expect(
+            revisions,
+            containsAll(['product.edit r2', 'container.add r3']),
+          );
+        },
+      );
 
       test('invalid Keeps for values are refused before any write', () async {
         await food.add(const FoodDetails(name: 'milk'), 1);

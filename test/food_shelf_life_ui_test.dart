@@ -439,6 +439,42 @@ void main() {
     expect(adds.single.$1.location, 'Fridge');
   });
 
+  testWidgets('Add another fills the date from Keeps for and keeps the '
+      'row\'s location', (tester) async {
+    final adds = <(FoodDetails, int)>[];
+    await _pump(tester, adds: adds);
+    await tester.tap(find.byTooltip('Actions for Strawberries'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(PopupMenuItem<String>, 'Add another…'),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Add food'), findsOneWidget);
+    expect(_text(tester, _expiration), '2026-11-16');
+    expect(_text(tester, find.widgetWithText(TextField, 'Location')), 'Fridge');
+    expect(find.text('Keeps 1 week from today'), findsOneWidget);
+    await tester.tap(_save);
+    await tester.pumpAndSettle();
+    expect(adds.single.$1.expiry, '2026-11-16');
+    expect(adds.single.$1.location, 'Fridge');
+    // A hand entry is the user's own date, never an estimate.
+    expect(adds.single.$1.estimated, isNot(true));
+  });
+
+  testWidgets('Add another of food without Keeps for leaves Expiration '
+      'blank, as before', (tester) async {
+    await _pump(tester);
+    await tester.tap(find.byTooltip('Actions for Greek yogurt').first);
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(PopupMenuItem<String>, 'Add another…'),
+    );
+    await tester.pumpAndSettle();
+    expect(_text(tester, _expiration), '');
+    expect(_note, findsNothing);
+    expect(_offer, findsNothing);
+  });
+
   testWidgets('Add field order: Location under Expiration', (tester) async {
     await _pump(tester);
     await tester.tap(find.byTooltip('Add food'));
