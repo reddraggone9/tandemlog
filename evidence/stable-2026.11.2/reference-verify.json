@@ -1,0 +1,55 @@
+{
+  "referencePerformanceQualified": true,
+  "absoluteAndBothGrowthBudgetsPassed": true,
+  "relevantSourceSHA256": "2afefe81ee6b52335b0f11670b5eb32f454be599c61b3f9552deb44cef417172",
+  "requestId": "76fe0f5e24537af72e12d1680fe588ba",
+  "gateRule": "single-sample-confirm-v1",
+  "firstPassFailureCount": 3,
+  "firstPassFailures": [
+    "dense-food:writer300.refresh.food.unchanged",
+    "task-own-history:scaling:agent.write.purchaseImport2",
+    "task-own-history:scaling:converted.food.paired.details.save"
+  ],
+  "rerunJudgments": [
+    {
+      "label": "dense-food:writer300.refresh.food.unchanged",
+      "kind": "absolute",
+      "firstPassMs": 10.195,
+      "rerunMs": 8.612,
+      "boundMs": 10,
+      "failedAgain": false
+    },
+    {
+      "label": "task-own-history:scaling:agent.write.purchaseImport2",
+      "kind": "growth",
+      "firstPass": {
+        "smallSampleMs": 188.223,
+        "largeSampleMs": 548.106,
+        "boundMs": 523.50175
+      },
+      "rerun": {
+        "smallSampleMs": 171.512,
+        "largeSampleMs": 326.039,
+        "boundMs": 485.902
+      },
+      "failedAgain": false
+    },
+    {
+      "label": "task-own-history:scaling:converted.food.paired.details.save",
+      "kind": "growth",
+      "firstPass": {
+        "smallSampleMs": 5.872,
+        "largeSampleMs": 10.858,
+        "boundMs": 10.34
+      },
+      "rerun": {
+        "smallSampleMs": 6.133,
+        "largeSampleMs": 6.918,
+        "boundMs": 10.66625
+      },
+      "failedAgain": false
+    }
+  ],
+  "notJudgedOverBound": [],
+  "releaseOrNativeUIAccepted": false
+}

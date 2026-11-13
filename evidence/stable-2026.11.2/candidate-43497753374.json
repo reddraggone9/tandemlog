@@ -1,0 +1,66 @@
+{
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / performance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / reference-performance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / linux-workflows (3)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / linux-workflows (2)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / linux-workflows (0)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / linux-workflows (1)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks / linux-workflows-union",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "signed-android",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "status": "completed"
+}

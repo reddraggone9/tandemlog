@@ -1,0 +1,104 @@
+{
+  "result": "PASS",
+  "completedUtc": "2026-11-13T20:39:47.177382+00:00",
+  "candidate_run": "43497753374",
+  "source": "a17da44084c7030f22495ce335b2db5033f02120",
+  "version": "2026.11.2",
+  "build": 118,
+  "apk_sha256": "166e6598f3572b6a1896091c864fce548d1e141cf7398abed235044681b349ed",
+  "flatpak_sha256": "862a6b52e2f866834d4b74d8615b5d7ed0d2a6e6d88ff4d26dc5d867a5c50225",
+  "apkSigningCertificateSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "nonDebuggable": true,
+  "candidateBuildAndParentVerification": "PASS",
+  "exactArtifactUpgrades": {
+    "117 -> 118": {
+      "android": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "persistedSafReadWriteGrantPreserved": true,
+        "packageUidAndFirstInstallTimePreserved": true,
+        "coldLaunchAfterInstall": 1,
+        "normalReopen": 1,
+        "normalBackExits": 2,
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 2,
+          "records": 46,
+          "bytes": 94305
+        }
+      },
+      "gtk": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "coldLaunches": 2,
+        "normalExitCodes": [
+          0,
+          0
+        ],
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 3,
+          "records": 62,
+          "bytes": 124025
+        },
+        "usableRenderedHistoryVerified": true
+      }
+    },
+    "116 -> 118": {
+      "android": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "persistedSafReadWriteGrantPreserved": true,
+        "packageUidAndFirstInstallTimePreserved": true,
+        "coldLaunchAfterInstall": 1,
+        "normalReopen": 1,
+        "normalBackExits": 2,
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 1,
+          "records": 20,
+          "bytes": 32506
+        }
+      },
+      "gtk": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "coldLaunches": 2,
+        "normalExitCodes": [
+          0,
+          0
+        ],
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 2,
+          "records": 33,
+          "bytes": 55562
+        },
+        "usableRenderedHistoryVerified": true
+      }
+    }
+  },
+  "windowsCoverage": "Candidate hosted-runner installer lifecycle and portable inventory checks only; no additional Windows GUI run or physical-device coverage claimed.",
+  "scope": "Version-only stable promotion; scripted acceptance on retained synthetic Android API30 emulator and isolated GTK Flatpak labs. No new reviewer agents, full RC feature matrix, physical/owner devices, owner seeds, source edits or publishing.",
+  "labSetupNotes": [
+    "Stable116 baseline restored from retained pre-RC synthetic history/profile snapshots; baseline package bootstrapped in retained emulator. The actual 116-to-118 update then used install -r and preserved its captured identity and SAF grant.",
+    "Lab-only staging permission and baseline restart setup failures were repaired; original attempt evidence retained. No signed candidate was rebuilt or rerun."
+  ],
+  "receiptPrivacy": "Sanitized: no local folder paths, device serials, writer/user identifiers, credentials or synthetic record text."
+}

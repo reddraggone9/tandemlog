@@ -1,0 +1,14 @@
+{
+  "case": "native.coldStart.firstList",
+  "medianMs": 490,
+  "budgetMs": 1000,
+  "passed": true,
+  "samplesMs": [
+    520,
+    510,
+    480,
+    480,
+    490
+  ],
+  "strictFirstLaunchMs": 2800
+}
