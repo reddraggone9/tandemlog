@@ -209,6 +209,17 @@ class TaskStore {
     }
   }
 
+  Iterable<String> _withCopySeedIndexSteps(Iterable<String> body) sync* {
+    final outer = _copySeedScopeDepth++ == 0;
+    if (outer) _invalidateCopySeedIndex();
+    try {
+      yield* body;
+    } finally {
+      _copySeedScopeDepth--;
+      if (outer) _invalidateCopySeedIndex();
+    }
+  }
+
   RecurringTextInput? _canonicalTextInput;
   static const _textTypes = nativeTextIntentTypes;
   bool _writerHasPendingAppend = false;
@@ -374,7 +385,9 @@ class TaskStore {
 
   bool _projectionIndexesReady = false;
 
-  void _ensureProjectionIndexes() {
+  void _ensureProjectionIndexes() => _runSteps(_ensureProjectionIndexesSteps());
+
+  Iterable<String> _ensureProjectionIndexesSteps() sync* {
     if (_projectionIndexesReady) return;
     for (final sql in [
       'CREATE INDEX IF NOT EXISTS ${tables.events}_entity ON ${tables.events}(entity)',
@@ -384,6 +397,7 @@ class TaskStore {
       "CREATE INDEX IF NOT EXISTS ${tables.views}_occurrence_due ON ${tables.views}(id) WHERE json_extract(raw,'\$.kind')='task' AND COALESCE(json_extract(raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(raw,'\$.successorSuppressed'),0)=0 AND json_extract(raw,'\$.schedule.dueDate') IS NULL AND json_extract(raw,'\$.schedule.scheduledDate') IS NOT NULL",
     ]) {
       db.execute(sql);
+      yield 'replay.indexes';
     }
     _projectionIndexesReady = true;
   }
@@ -395,6 +409,30 @@ class TaskStore {
     bool knownReadyDelta = false,
     bool auditCanonicalReferences = true,
   }) {
+    final out = _StepResult<({Set<String> projectedIds, bool orderRebuilt})>();
+    _runSteps(
+      _replaySemanticEventsSteps(
+        events,
+        out,
+        incremental: incremental,
+        settledDelta: settledDelta,
+        knownReadyDelta: knownReadyDelta,
+        auditCanonicalReferences: auditCanonicalReferences,
+      ),
+    );
+    return out.value;
+  }
+
+  /// [_replaySemanticEvents] as steps, for a caller that owns [db] exclusively
+  /// until the last step (the semantic validator's scratch store).
+  Iterable<String> _replaySemanticEventsSteps(
+    List<LogEvent> events,
+    _StepResult<({Set<String> projectedIds, bool orderRebuilt})> out, {
+    bool incremental = false,
+    bool settledDelta = false,
+    bool knownReadyDelta = false,
+    bool auditCanonicalReferences = true,
+  }) sync* {
     TextCache? cache;
     try {
       _invalidateCopySeedIndex();
@@ -416,6 +454,7 @@ class TaskStore {
           e.canonicalRaw,
           jsonEncode({'type': e.type, 'data': e.data}),
         ]);
+        yield 'replay.insert';
       }
       _canonicalTextInput = incremental
           ? _canonicalTextInput?.appendedCanonical(
@@ -427,7 +466,7 @@ class TaskStore {
       // Build expression indexes only after old disposable rows were cleared
       // and known canonical events inserted. An old malformed cache must reach
       // its normal canonical rebuild before JSON index expressions evaluate.
-      _ensureProjectionIndexes();
+      yield* _ensureProjectionIndexesSteps();
       final writers = events.map((e) => e.writer).toSet();
       for (final author in writers) {
         final ordered = events.where((e) => e.writer == author).toList()
@@ -455,11 +494,14 @@ class TaskStore {
           memo: _recurringTextMemo,
           tables: tables,
         );
+        yield 'replay.streams';
         cache.validatePackets(events);
+        yield 'replay.packets';
       }
       final previousBaseline = _textBaseline?.id;
       final previousTextBlocked = textWriteBlocked;
-      _validateTextBaseline();
+      yield* _validateTextBaselineSteps();
+      yield 'replay.baseline';
       RecurringTextResolver? resolution;
       if (auditCanonicalReferences) {
         if (settledDelta || knownReadyDelta) {
@@ -495,6 +537,7 @@ class TaskStore {
                 enforceLocalAvailability: false,
               );
             }
+            yield 'replay.settledReferences';
           }
         } else {
           if (textEngine != null &&
@@ -504,8 +547,9 @@ class TaskStore {
                   )
                   .isNotEmpty) {
             resolution = _textResolution();
+            yield 'replay.resolution';
           }
-          _validateSemanticReferences(resolution);
+          yield* _validateSemanticReferencesSteps(resolution);
         }
       }
       final entities = events.map((e) => e.entity).toSet();
@@ -557,16 +601,19 @@ class TaskStore {
             entities.add((item as Map)['id'] as String);
           }
         }
+        yield 'replay.entities';
       }
       for (final entity in entities.toList()) {
         final parent = _checklistParent(entity);
         if (parent != null) entities.add(parent);
+        yield 'replay.parents';
       }
       resolution ??=
           textEngine != null &&
               (!incremental || entities.any(_hasInheritedText))
           ? _textResolution(entities: entities)
           : null;
+      yield 'replay.entityResolution';
       for (final entity in entities) {
         final state = _projectEntity(
           entity,
@@ -581,6 +628,7 @@ class TaskStore {
         } else if (incremental) {
           db.execute('DELETE FROM ${tables.views} WHERE id=?', [entity]);
         }
+        yield 'replay.project';
       }
       final orderRebuilt =
           !incremental ||
@@ -616,9 +664,9 @@ class TaskStore {
                 }.contains(e.type),
               );
       if (orderRebuilt) {
-        _rebuildOrder();
+        yield* _rebuildOrderSteps();
       }
-      return (
+      out.value = (
         projectedIds: Set.unmodifiable(entities),
         orderRebuilt: orderRebuilt,
       );
@@ -630,13 +678,21 @@ class TaskStore {
     }
   }
 
-  void _validateSemanticReferences([RecurringTextResolver? resolution]) {
+  Iterable<String> _validateSemanticReferencesSteps([
+    RecurringTextResolver? resolution,
+  ]) sync* {
     _validateUndoReferences();
+    yield 'references.undo';
     _validateMoves();
+    yield 'references.moves';
     _validateTagReferences();
+    yield 'references.tags';
     _validateHistoricalCompletions();
+    yield 'references.completions';
     _validateChecklistReferences(null);
+    yield 'references.checklists';
     _validateChecklistCompletions(null, true, resolution);
+    yield 'references.checklistCompletions';
   }
 
   // A derived birth becomes a stable point target only AFTER independent
@@ -1167,10 +1223,20 @@ class TaskStore {
   }
 
   Set<String> _semanticReadyIds(List<LogEvent> events) {
-    final states = {
-      for (final r in db.select('SELECT id,raw FROM ${tables.views}'))
-        r['id'] as String: jsonDecode(r['raw'] as String) as Map,
-    };
+    final out = _StepResult<Set<String>>();
+    _runSteps(_semanticReadyIdsSteps(events, out));
+    return out.value;
+  }
+
+  Iterable<String> _semanticReadyIdsSteps(
+    List<LogEvent> events,
+    _StepResult<Set<String>> out,
+  ) sync* {
+    final states = <String, Map>{};
+    for (final r in db.select('SELECT id,raw FROM ${tables.views}')) {
+      states[r['id'] as String] = jsonDecode(r['raw'] as String) as Map;
+      yield 'ready.states';
+    }
     final births = <String, String>{};
     final copiedBirths = <String, LogEvent>{};
     final derived = <String>{}, nativeSeeds = <String>{};
@@ -1204,6 +1270,7 @@ class TaskStore {
         }
       }
     }
+    yield 'ready.births';
     // Resolve derived births with the exact same seed selection used by rows.
     for (final child in derived) {
       final seeds = db.select(
@@ -1221,6 +1288,7 @@ class TaskStore {
         final copied = copiedBirths[child];
         if (copied != null) births[child] = copied.id;
       }
+      yield 'ready.derived';
     }
     final birthsByEvent = <String, List<String>>{};
     for (final entry in births.entries) {
@@ -1229,20 +1297,30 @@ class TaskStore {
     final inherited = <String, bool>{};
     final nativePending = <String>{};
     if (textEngine != null) {
-      for (final r in db.select('SELECT * FROM ${tables.textFields}')) {
-        if (r['adapter'] == 2) {
-          continue; // resolver already checks shared history
+      // Checkpoints are stepped from a cursor: the statement closes on every
+      // exit, and only the validator's private store is ever left paused.
+      final fields = db.prepare('SELECT * FROM ${tables.textFields}');
+      try {
+        final cursor = fields.selectCursor();
+        while (cursor.moveNext()) {
+          final r = cursor.current;
+          if (r['adapter'] == 2) {
+            continue; // resolver already checks shared history
+          }
+          if (textEngine!.checkpointHasPending(
+            NativeTextCheckpoint(
+              NativeTextState.fromBytes(r['state'] as Uint8List),
+            ),
+            limits: NativeTextLimits(
+              visibleUtf16: r['field'] == 'title' ? 500 : 10000,
+            ),
+          )) {
+            nativePending.add(r['entity'] as String);
+          }
+          yield 'ready.native';
         }
-        if (textEngine!.checkpointHasPending(
-          NativeTextCheckpoint(
-            NativeTextState.fromBytes(r['state'] as Uint8List),
-          ),
-          limits: NativeTextLimits(
-            visibleUtf16: r['field'] == 'title' ? 500 : 10000,
-          ),
-        )) {
-          nativePending.add(r['entity'] as String);
-        }
+      } finally {
+        fields.close();
       }
     }
     final competingRoots =
@@ -1342,13 +1420,18 @@ class TaskStore {
       }
       refs.remove(e.id);
       dependencies[e.id] = refs;
+      yield 'ready.dependencies';
     }
     while (true) {
       final blocked = candidates
           .where((id) => !dependencies[id]!.every(candidates.contains))
           .toList();
-      if (blocked.isEmpty) return Set.unmodifiable(candidates);
+      if (blocked.isEmpty) {
+        out.value = Set.unmodifiable(candidates);
+        return;
+      }
       candidates.removeAll(blocked);
+      yield 'ready.closure';
     }
   }
 
@@ -2480,13 +2563,15 @@ class TaskStore {
   }
 
   /// Persist disposable sequence positions only when order-affecting history changes.
-  void _rebuildOrder() {
+  Iterable<String> _rebuildOrderSteps() sync* {
     globalOrderRebuilds++;
     final ids = db
         .select(
           "SELECT id FROM ${tables.views} ORDER BY json_extract(raw,'\$.order'),id",
         )
-        .map((row) => row['id'] as String);
+        .map((row) => row['id'] as String)
+        .toList();
+    yield 'order.ids';
     final retracted = retractedOperationIds(
       db
           .select(
@@ -2494,6 +2579,7 @@ class TaskStore {
           )
           .map((r) => _recurringTextMemo.decodeCanonical(r['raw'] as String)),
     );
+    yield 'order.retracted';
     // Views already contain the selected derived creation's exact clock/writer
     // stamp. Strict per-writer clocks identify that completion uniquely. Reuse
     // this projection after affected views update, instead of replaying every
@@ -2504,40 +2590,43 @@ class TaskStore {
       ))
         row['successor'] as String: row['id'] as String,
     };
-    final actions = db
-        .select(
-          "SELECT id,entity,json_extract(semantic,'\$.type') AS type,json_extract(semantic,'\$.data.before') AS before_id,json_extract(semantic,'\$.data.successor.id') AS successor FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
-        )
-        .where((row) {
-          if (row['type'] == 'task.moved') {
-            return !retracted.contains(row['id']);
-          }
-          final successor = row['successor'] as String?;
-          if (isTaskCompletion(row['type'] as String) && successor != null) {
-            final selected = selectedSeedIds.putIfAbsent(
+    yield 'order.seeds';
+    final actions = <OrderAction>[];
+    for (final row in db.select(
+      "SELECT id,entity,json_extract(semantic,'\$.type') AS type,json_extract(semantic,'\$.data.before') AS before_id,json_extract(semantic,'\$.data.successor.id') AS successor FROM ${tables.events} WHERE json_extract(semantic,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
+    )) {
+      if (row['type'] == 'task.moved') {
+        if (retracted.contains(row['id'])) continue;
+      } else {
+        final successor = row['successor'] as String?;
+        if (isTaskCompletion(row['type'] as String) && successor != null) {
+          final selected = selectedSeedIds.putIfAbsent(
+            successor,
+            () => _entityEvents(
               successor,
-              () => _entityEvents(
-                successor,
-              ).where((event) => event.type == 'task.created').single.id,
-            );
-            return selected == row['id'];
-          }
-          return true;
-        })
-        .map(
-          (row) => OrderAction(
-            row['entity'] as String,
-            row['type'] as String,
-            before: row['before_id'] as String?,
-            successor: row['successor'] as String?,
-          ),
-        );
+            ).where((event) => event.type == 'task.created').single.id,
+          );
+          if (selected != row['id']) continue;
+        }
+      }
+      actions.add(
+        OrderAction(
+          row['entity'] as String,
+          row['type'] as String,
+          before: row['before_id'] as String?,
+          successor: row['successor'] as String?,
+        ),
+      );
+      yield 'order.actions';
+    }
     final ordered = projectOrder(ids, actions);
+    yield 'order.project';
     db.execute('DELETE FROM ${tables.positions}');
     final insert = db.prepare('INSERT INTO ${tables.positions} VALUES (?,?)');
     try {
       for (var i = 0; i < ordered.length; i++) {
         insert.execute([ordered[i], i]);
+        yield 'order.positions';
       }
     } finally {
       insert.close();
@@ -2693,7 +2782,9 @@ class TaskStore {
     return head != null && event.sequence <= (head['seq'] as int);
   }
 
-  void _validateTextBaseline() {
+  void _validateTextBaseline() => _runSteps(_validateTextBaselineSteps());
+
+  Iterable<String> _validateTextBaselineSteps() sync* {
     final roots = db.select(
       "SELECT raw FROM ${tables.events} WHERE json_extract(semantic,'\$.type')='text.baselineInitialized'",
     );
@@ -2746,7 +2837,9 @@ class TaskStore {
       "SELECT value FROM ${tables.metadata} WHERE key='text_baseline_verified'",
     );
     if (verified.isEmpty || verified.single['value'] != root.id) {
-      final fields = _baselineSeedFields(root);
+      final seeded = _StepResult<Map<String, Map<String, String>>>();
+      yield* _baselineSeedFieldsSteps(root, seeded);
+      final fields = seeded.value;
       if (textBaselineSeedDigest(fields) != root.data['seedDigest']) {
         throw FormatFailure('Text baseline seed digest differs in ${root.id}.');
       }
@@ -2759,11 +2852,21 @@ class TaskStore {
   }
 
   Map<String, Map<String, String>> _baselineSeedFields(LogEvent root) {
-    final prefix = db
-        .select('SELECT raw FROM ${tables.events}')
-        .map((row) => _recurringTextMemo.decodeCanonical(row['raw'] as String))
-        .where((event) => _baselineIncludes(event, root))
-        .toList();
+    final out = _StepResult<Map<String, Map<String, String>>>();
+    _runSteps(_baselineSeedFieldsSteps(root, out));
+    return out.value;
+  }
+
+  Iterable<String> _baselineSeedFieldsSteps(
+    LogEvent root,
+    _StepResult<Map<String, Map<String, String>>> out,
+  ) sync* {
+    final prefix = <LogEvent>[];
+    for (final row in db.select('SELECT raw FROM ${tables.events}')) {
+      final event = _recurringTextMemo.decodeCanonical(row['raw'] as String);
+      if (_baselineIncludes(event, root)) prefix.add(event);
+      yield 'baseline.decode';
+    }
     final grouped = <String, List<LogEvent>>{};
     final successors = <String, List<LogEvent>>{};
     for (final event in prefix) {
@@ -2773,6 +2876,7 @@ class TaskStore {
         successors.putIfAbsent(entity, () => []).add(event);
       }
     }
+    yield 'baseline.group';
     for (final entry in successors.entries) {
       final own = grouped[entry.key] ?? [];
       final parent = entry.value.first.entity;
@@ -2791,6 +2895,7 @@ class TaskStore {
       grouped
           .putIfAbsent(entry.key, () => [])
           .add(successorCreation(selected.seed));
+      yield 'baseline.successors';
     }
     final fields = <String, Map<String, String>>{};
     for (final entry in grouped.entries) {
@@ -2811,8 +2916,9 @@ class TaskStore {
               )
               .toString(),
       };
+      yield 'baseline.seed';
     }
-    return fields;
+    out.value = fields;
   }
 
   bool get sharedTextInitialized =>
@@ -5102,14 +5208,22 @@ List<String> _taskCacheTables(TaskTables t) => [
 
 List<List<List<Object?>>> _taskCacheRows(Database db, TaskTables t) => [
   for (final entry in _taskCacheTables(t).indexed)
-    // Deterministic primary-key order; checkpoint bytes remain byte arrays.
-    db
-        .select(
-          "SELECT * FROM ${entry.$2} ${entry.$1 == 8 ? "WHERE key IN ('order_projection','text_baseline_verified') " : ''}ORDER BY ${const [1, 1, 1, 2, 2, 2, 1, 1, 1][entry.$1] == 2 ? '1,2' : '1'}",
-        )
-        .map((r) => r.values.toList())
-        .toList(),
+    _taskCacheTableRows(db, entry.$1, entry.$2),
 ];
+
+// Deterministic primary-key order; checkpoint bytes remain byte arrays.
+List<List<Object?>> _taskCacheTableRows(
+  Database db,
+  int index,
+  String name, {
+  int? limit,
+  int offset = 0,
+}) => db
+    .select(
+      "SELECT * FROM $name ${index == 8 ? "WHERE key IN ('order_projection','text_baseline_verified') " : ''}ORDER BY ${const [1, 1, 1, 2, 2, 2, 1, 1, 1][index] == 2 ? '1,2' : '1'}${limit == null ? '' : ' LIMIT $limit OFFSET $offset'}",
+    )
+    .map((r) => r.values.toList())
+    .toList();
 
 // The schema/row inventory is fixed by _taskCacheTables. Reuse each table's
 // INSERT while restoring the independently checked disposable projection.
@@ -5117,7 +5231,13 @@ void _insertTaskCacheRows(
   Database db,
   List<String> names,
   List<List<List<Object?>>> rows,
-) {
+) => _runSteps(_insertTaskCacheRowsSteps(db, names, rows));
+
+Iterable<String> _insertTaskCacheRowsSteps(
+  Database db,
+  List<String> names,
+  List<List<List<Object?>>> rows,
+) sync* {
   for (var i = 0; i < names.length; i++) {
     if (rows[i].isEmpty) continue;
     final insert = db.prepare(
@@ -5126,6 +5246,7 @@ void _insertTaskCacheRows(
     try {
       for (final row in rows[i]) {
         insert.execute(row);
+        yield 'restore.insert';
       }
     } finally {
       insert.close();
@@ -5243,6 +5364,31 @@ final class TaskTextReadSelection {
   final int lookups;
 }
 
+/// Cooperative time slices for [TaskSemanticValidator.validateBetweenFrames]:
+/// validation runs until [due], then [pause] lets a frame through.
+class TaskValidationFrames {
+  TaskValidationFrames({this.slice = const Duration(milliseconds: 4)});
+  final Duration slice;
+  final _held = Stopwatch()..start();
+
+  bool get due => _held.elapsed >= slice;
+
+  Future<void> pause() async {
+    await Future<void>.delayed(Duration.zero);
+    _held.reset();
+  }
+}
+
+/// The result of a step generator, set before its last step ends.
+final class _StepResult<T> {
+  late T value;
+}
+
+/// Run every step of a generator synchronously.
+void _runSteps(Iterable<String> steps) {
+  for (final _ in steps) {}
+}
+
 class TaskSemanticValidator {
   TaskSemanticValidator({
     required this.space,
@@ -5272,6 +5418,23 @@ class TaskSemanticValidator {
   int settledTextReadinessRuns = 0;
   int warmCacheProofMicroseconds = 0;
   int warmCacheRestoreMicroseconds = 0;
+
+  /// Longest synchronous stretch of the last [validateBetweenFrames] and the
+  /// step that ended it.
+  int longestSliceMicroseconds = 0;
+  String? longestSliceStep;
+  int validationPauses = 0;
+
+  // A sliced validation owns the scratch store until it ends; [close] during a
+  // pause advances the generation so the paused steps never resume.
+  bool _slicing = false;
+  int _generation = 0;
+
+  void _requireIdle() {
+    if (_slicing) {
+      throw StateError('Task validation is already in progress.');
+    }
+  }
 
   String? _validatedInputKey;
   _TaskTextRelations _textRelations = _TaskTextRelations();
@@ -5321,6 +5484,7 @@ class TaskSemanticValidator {
   bool _hasOwnedSelectionScope() {
     final store = _store;
     if (store == null ||
+        _slicing ||
         _textSelectionSuppressed ||
         owningHistory?.ownsTaskValidator(this) != true ||
         _ready == null ||
@@ -5501,21 +5665,79 @@ class TaskSemanticValidator {
   }
 
   Set<String> validate(List<LogEvent> events, {String? inputKey}) {
+    _requireIdle();
     // Generic/interior/peer validation may replace the entire candidate. Its
     // SQL transaction must never borrow the previous committed selected scope.
     _textSelectionSuppressed = true;
     try {
-      return _validateFull(events, inputKey: inputKey);
+      final out = _StepResult<Set<String>>();
+      _runSteps(_validateFull(events, inputKey, out));
+      return out.value;
     } finally {
       _textSelectionSuppressed = false;
     }
   }
 
-  Set<String> _validateFull(List<LogEvent> events, {String? inputKey}) {
+  /// [validate] with the same steps, checks and result, but a frame may run
+  /// between steps once [frames] is due. Until the future completes the
+  /// validator refuses other validation and text selection; its scratch
+  /// transaction is private, so nothing else observes a partial replay.
+  /// [close] during a pause fails the validation with a [StateError].
+  Future<Set<String>> validateBetweenFrames(
+    List<LogEvent> events, {
+    String? inputKey,
+    TaskValidationFrames? frames,
+  }) async {
+    _requireIdle();
+    final budget = frames ?? TaskValidationFrames();
+    final generation = _generation;
+    final out = _StepResult<Set<String>>();
+    final slice = Stopwatch()..start();
+    longestSliceMicroseconds = 0;
+    longestSliceStep = null;
+    validationPauses = 0;
+    _slicing = true;
+    _textSelectionSuppressed = true;
+    var finished = false;
+    try {
+      for (final step in _validateFull(events, inputKey, out)) {
+        if (slice.elapsedMicroseconds > longestSliceMicroseconds) {
+          longestSliceMicroseconds = slice.elapsedMicroseconds;
+          longestSliceStep = step;
+        }
+        if (!budget.due) continue;
+        await budget.pause();
+        validationPauses++;
+        if (_generation != generation) {
+          throw StateError('Task validation closed while paused.');
+        }
+        slice.reset();
+      }
+      if (slice.elapsedMicroseconds > longestSliceMicroseconds) {
+        longestSliceMicroseconds = slice.elapsedMicroseconds;
+        longestSliceStep = 'validator.result';
+      }
+      finished = true;
+      return out.value;
+    } finally {
+      if (_generation == generation) {
+        _slicing = false;
+        _textSelectionSuppressed = false;
+        // Steps that stopped early may hold an open scratch transaction.
+        if (!finished) _reset();
+      }
+    }
+  }
+
+  Iterable<String> _validateFull(
+    List<LogEvent> events,
+    String? inputKey,
+    _StepResult<Set<String>> out,
+  ) sync* {
     final incoming = {for (final e in events) e.id: e.canonicalRaw!};
     if (_store != null &&
         _raws.entries.any((e) => incoming[e.key] != e.value)) {
-      close();
+      _reset();
     }
     if (_store == null) {
       final db = sqlite3.openInMemory();
@@ -5543,19 +5765,23 @@ class TaskSemanticValidator {
       }
     }
     final store = _store!;
-    return store._withCopySeedIndex(() {
+    yield 'validator.input';
+    yield* store._withCopySeedIndexSteps(() sync* {
       if (!_attemptedWarm) {
         _attemptedWarm = true;
-        _restoreCleanCache(events, inputKey: inputKey);
+        yield* _restoreCleanCache(events, inputKey: inputKey);
         _rebuildTextRelations();
+        yield 'validator.textRelations';
       }
       final delta = events.where((e) => !_raws.containsKey(e.id)).toList();
       if (delta.isEmpty && _ready != null) {
         _validatedInputKey = inputKey;
-        return _ready!;
+        out.value = _ready!;
+        return;
       }
-      return _admitDelta(
+      yield* _admitDelta(
         delta,
+        out,
         orderedEvents: () => events,
         inputKey: inputKey,
         record: () {
@@ -5574,7 +5800,7 @@ class TaskSemanticValidator {
           _rebuildTextRelations();
         },
       );
-    });
+    }());
   }
 
   /// Validate an exact monotonic extension of the current validated input,
@@ -5589,6 +5815,7 @@ class TaskSemanticValidator {
     required String inputKey,
     required List<LogEvent> Function() orderedEvents,
   }) {
+    _requireIdle();
     final store = _store;
     if (store == null ||
         !_attemptedWarm ||
@@ -5612,36 +5839,42 @@ class TaskSemanticValidator {
     // relation index plus this byte-checked candidate instead of scanning all
     // canonical rows, so a delivered peer action costs O(delta), not O(history).
     _textCandidate = List.unmodifiable(delta);
+    final out = _StepResult<Set<String>>();
     try {
-      return store._withCopySeedIndex(
-        () => _admitDelta(
-          delta,
-          orderedEvents: orderedEvents,
-          inputKey: inputKey,
-          record: () {
-            store._canonicalTextInput = null;
-            for (final event in delta) {
-              _raws[event.id] = event.canonicalRaw!;
-              _events[event.id] = event;
-              _textRelations.add(event);
-              if (event.sequence > (_lastSequences[event.writer] ?? 0)) {
-                _lastSequences[event.writer] = event.sequence;
+      store._withCopySeedIndex(
+        () => _runSteps(
+          _admitDelta(
+            delta,
+            out,
+            orderedEvents: orderedEvents,
+            inputKey: inputKey,
+            record: () {
+              store._canonicalTextInput = null;
+              for (final event in delta) {
+                _raws[event.id] = event.canonicalRaw!;
+                _events[event.id] = event;
+                _textRelations.add(event);
+                if (event.sequence > (_lastSequences[event.writer] ?? 0)) {
+                  _lastSequences[event.writer] = event.sequence;
+                }
               }
-            }
-          },
+            },
+          ),
         ),
       );
+      return out.value;
     } finally {
       _textCandidate = null;
     }
   }
 
-  Set<String> _admitDelta(
-    List<LogEvent> delta, {
+  Iterable<String> _admitDelta(
+    List<LogEvent> delta,
+    _StepResult<Set<String>> out, {
     required List<LogEvent> Function() orderedEvents,
     required String? inputKey,
     required void Function() record,
-  }) {
+  }) sync* {
     final store = _store!, db = store.db;
     final incremental = _raws.isNotEmpty;
     db.execute('BEGIN IMMEDIATE');
@@ -5661,8 +5894,10 @@ class TaskSemanticValidator {
           ? store._firstDerivedActionSeeds(delta, _ready!)
           : null;
       final settledCandidate = baseSettled || firstActivitySeeds != null;
-      store._replaySemanticEvents(
+      yield 'validator.eligibility';
+      yield* store._replaySemanticEventsSteps(
         delta,
+        _StepResult(),
         incremental: incremental,
         settledDelta: settledCandidate,
       );
@@ -5674,8 +5909,9 @@ class TaskSemanticValidator {
       );
       // Native dependencies may still make a pure-text candidate pending.
       // Before accepting fallback readiness, restore every skipped global check.
+      yield 'validator.settled';
       if (settledCandidate && settled == null) {
-        store._validateSemanticReferences();
+        yield* store._validateSemanticReferencesSteps();
       }
       final Set<String> ready;
       if (settled != null) {
@@ -5683,20 +5919,22 @@ class TaskSemanticValidator {
         ready = settled;
       } else {
         fullReadinessRuns++;
-        ready = Set<String>.unmodifiable(
-          store._semanticReadyIds(orderedEvents()),
-        );
+        final readyIds = _StepResult<Set<String>>();
+        yield* store._semanticReadyIdsSteps(orderedEvents(), readyIds);
+        ready = Set<String>.unmodifiable(readyIds.value);
       }
       db.execute('COMMIT');
+      yield 'validator.commit';
       if (!incremental) fullRebuilds++;
       projectedEvents += delta.length;
       _ready = ready;
       _validatedInputKey = inputKey;
       record();
-      return ready;
+      out.value = ready;
+      yield 'validator.record';
     } catch (_) {
       if (!db.autocommit) db.execute('ROLLBACK');
-      close();
+      _reset();
       rethrow;
     }
   }
@@ -5709,6 +5947,7 @@ class TaskSemanticValidator {
     required String expectedBaseKey,
     required String inputKey,
   }) {
+    _requireIdle();
     final store = _store;
     if (store == null ||
         _ready == null ||
@@ -5914,7 +6153,10 @@ class TaskSemanticValidator {
     return Set.unmodifiable({..._ready!, ...delta.map((e) => e.id)});
   }
 
-  void _restoreCleanCache(List<LogEvent> candidate, {String? inputKey}) {
+  Iterable<String> _restoreCleanCache(
+    List<LogEvent> candidate, {
+    String? inputKey,
+  }) sync* {
     if (profile == null || locationKey == null || manifestDigest == null) {
       return;
     }
@@ -5925,6 +6167,37 @@ class TaskSemanticValidator {
       [_proofKey],
     );
     if (proofRows.isEmpty) return;
+    // Read the sealed rows one table at a time while the witness stands. Its
+    // triggers delete it in the same statement as any sealed row change, so
+    // an unchanged witness afterwards proves the tables were read unchanged.
+    final tables = TaskTables.forLocation(locationKey!);
+    final rows = <List<List<Object?>>>[];
+    var read = true;
+    try {
+      const page = 512;
+      for (final entry in _taskCacheTables(tables).indexed) {
+        final table = <List<Object?>>[];
+        while (true) {
+          final rows = _taskCacheTableRows(
+            source,
+            entry.$1,
+            entry.$2,
+            limit: page,
+            offset: table.length,
+          );
+          table.addAll(rows);
+          yield 'restore.read';
+          if (rows.length < page) break;
+        }
+        rows.add(table);
+      }
+    } on SqliteException {
+      read = false; // Damaged/missing cache tables: replay canonical records.
+    }
+    final standing = source.select(
+      'SELECT value FROM profile_metadata WHERE key=?',
+      [_proofKey],
+    );
     // Consume the witness durably before any restored state can be exposed.
     // A later crash then requires canonical rebuild, never retry of a Save.
     profile!.transaction(
@@ -5932,6 +6205,11 @@ class TaskSemanticValidator {
         _proofKey,
       ]),
     );
+    if (!read ||
+        standing.length != 1 ||
+        standing.single['value'] != proofRows.single['value']) {
+      return;
+    }
     try {
       final proof = jsonDecode(proofRows.single['value'] as String) as Map;
       if (proof['generation'] != 6 ||
@@ -5945,8 +6223,6 @@ class TaskSemanticValidator {
                   3) {
         return;
       }
-      final tables = TaskTables.forLocation(locationKey!);
-      final rows = _taskCacheRows(source, tables);
       final incoming = {for (final e in candidate) e.id: e};
       final cachedEvents = <LogEvent>[];
       for (final row in rows.first) {
@@ -5956,6 +6232,7 @@ class TaskSemanticValidator {
         }
         cachedEvents.add(event);
       }
+      yield 'restore.match';
       final ready = (proof['ready'] as List).cast<String>();
       final ids = cachedEvents.map((e) => e.id).toSet();
       // The owning history already computed the full canonical root. Reuse it
@@ -5971,6 +6248,7 @@ class TaskSemanticValidator {
       final cachedRevision = fullOwnedCandidate
           ? inputKey
           : _taskProjectionRevision(cachedEvents);
+      yield 'restore.revision';
       if (ready.toSet().length != ready.length ||
           !ready.every(ids.contains) ||
           proof['revision'] != cachedRevision) {
@@ -5980,7 +6258,7 @@ class TaskSemanticValidator {
       final target = _store!, names = _taskCacheTables(target.tables);
       target.db.execute('BEGIN IMMEDIATE');
       try {
-        _insertTaskCacheRows(target.db, names, rows);
+        yield* _insertTaskCacheRowsSteps(target.db, names, rows);
         target._validateTextBaseline();
         target.db.execute('COMMIT');
       } catch (_) {
@@ -6012,7 +6290,7 @@ class TaskSemanticValidator {
   }
 
   bool copyProjectionTo(TaskStore target, Iterable<LogEvent> events) {
-    if (_store == null || _ready == null) return false;
+    if (_store == null || _ready == null || _slicing) return false;
     final canonical = {for (final e in events) e.id: e.canonicalRaw!};
     if (canonical.length != _raws.length ||
         canonical.entries.any((e) => _raws[e.key] != e.value)) {
@@ -6040,6 +6318,7 @@ class TaskSemanticValidator {
     if (profile == null ||
         _store == null ||
         _ready == null ||
+        _slicing ||
         locationKey == null ||
         manifestDigest == null) {
       return;
@@ -6068,6 +6347,15 @@ class TaskSemanticValidator {
   }
 
   void close() {
+    _generation++;
+    if (_slicing) {
+      _slicing = false;
+      _textSelectionSuppressed = false;
+    }
+    _reset();
+  }
+
+  void _reset() {
     _validatedInputKey = null;
     _textCandidate = null;
     _textRelations = _TaskTextRelations();
