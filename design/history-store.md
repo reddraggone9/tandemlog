@@ -42,6 +42,8 @@ Forced full audits (Settings → Verify Logs, `refresh(forceFullAudit: true)`) i
 
 The Task projection witness (`app5.task.cache.<key>`) is still sealed at pause/close and consumed on open, but it no longer carries a digest of the projection rows. Instead, SQLite triggers on the nine sealed projection tables delete the witness in the same statement as any row change (for the metadata table, only its two sealed keys). A witness present at open therefore proves the rows are unchanged since the seal, and the open checks the event/row bijection and canonical revision but does not re-hash the projection (Lee 11-05: no full re-verification at start). The open requires all 27 triggers to exist; an older witness generation takes the strict path once.
 
+At startup, witness-guarded projection rows are read in pages of 512 between cooperative pauses. The restore is trusted only if the witness remains unchanged after the last page, then consumed. A change falls back to strict replay. Both strict replay and warm restore use a 4 ms cooperative validator budget; the private scratch transaction is discarded if validation is interrupted. Shared profile commits remain atomic and synchronous.
+
 ## What each check catches and misses
 
 | Check | Catches | Misses |
