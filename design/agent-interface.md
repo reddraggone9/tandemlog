@@ -164,7 +164,10 @@ entity, with writer names), and `verify` (the Settings integrity audit, read-onl
   the same "Also changes N other containers" scope report), remove one/remove,
   restore, move some (`food move-some <id> --count N --location L`, the row
   menu's Move some…), and bulk edit, including unify-by-rename. Products: set store link,
-  set minimum (`products set <id> --link URL --min 2`), and `products merge <src>
+  minimum and Keeps for (`products set <id> --link URL --min 2 --keeps-for "2 weeks"`),
+  apply a reviewed shelf-life list as one action (`products keeps-for <file>`, with
+  `--dry-run` then `--expect-plan`; it can create a product that has no containers
+  yet), and `products merge <src>
   --into <dst> [--keep source|target]`.
 - Undo (see below). Excluded: device-local settings (folder, appearance, device
   name).

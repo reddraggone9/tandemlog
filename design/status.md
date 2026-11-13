@@ -38,8 +38,13 @@ It contains, at feature level (first stable release in brackets):
 
 ## Implemented but unreleased
 
-None. `main` (`c494196`) differs from the `v2026.11.1` tag only by release evidence
+`main` (`c494196`) differs from the `v2026.11.1` tag only by release evidence
 and documentation.
+
+On branch `vex/food-keeps-for`, not on `main`: **Food shelf life ("Keeps for")**,
+approved by Lee 2026-11-10 ([food-shelf-life.md](food-shelf-life.md); its Build
+notes say what is built and tested). A format change (`product.edit` revision 2,
+`container.add` revision 3), so it ships in one release and every device updates.
 
 ## Commands
 
