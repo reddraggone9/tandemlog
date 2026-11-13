@@ -50,3 +50,5 @@ contradicting it. Rules dated 9-30–10-24 come from Lee's earlier decisions wit
 ## Evidence for Lee
 35. Review captures: dark theme, real native build, cropped Before | After; label widget or synthetic captures as such (10-26).
 36. Release notes: user-visible changes only, one change per bullet (10-27).
+
+37. Suggestions live in the field they change: dimmed until accepted, with an in-field apply button; no separate offer line (Lee 11-13).

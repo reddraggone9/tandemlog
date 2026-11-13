@@ -7,5 +7,6 @@ void main() {
   registerFoodShelfLifeWorkflowTests();
 }
 
+// Includes in-field suggestions, calendar start and progressive disclosure.
 void registerFoodShelfLifeWorkflowTests() =>
     shelf_life.registerFoodShelfLifeUiTests();

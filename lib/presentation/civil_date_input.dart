@@ -25,8 +25,10 @@ class CivilDateInput extends StatelessWidget {
     this.isOwnerMounted,
     this.onPickerChanged,
     this.pickerStart,
+    this.applySuggestion,
   });
 
+  final Widget? applySuggestion;
   final TextEditingController controller;
   final String label;
   final Key? fieldKey;
@@ -63,41 +65,50 @@ class CivilDateInput extends StatelessWidget {
       contentPadding: compactDecoration
           ? const EdgeInsetsDirectional.fromSTEB(12, 16, 0, 16)
           : null,
-      suffixIcon: IconButton(
-        tooltip: 'Choose $label',
-        visualDensity: compactDecoration ? VisualDensity.standard : null,
-        padding: compactDecoration ? EdgeInsets.zero : null,
-        constraints: compactDecoration
-            ? const BoxConstraints(minWidth: 48, minHeight: 48)
-            : null,
-        icon: const Icon(Icons.calendar_today_outlined),
-        onPressed: !enabled
-            ? null
-            : () async {
-                final parsed = DateTime.tryParse(controller.text);
-                onPickerChanged?.call(true);
-                try {
-                  final chosen = await _showFastDatePicker(
-                    context: context,
-                    initialDate:
-                        parsed != null &&
-                            parsed.year >= 1900 &&
-                            parsed.year <= 9999
-                        ? parsed
-                        : pickerStart?.call() ?? DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(9999, 12, 31),
-                  );
-                  if (chosen != null &&
-                      (isOwnerMounted?.call() ?? context.mounted)) {
-                    controller.text = formatCivilDate(chosen);
-                  }
-                } finally {
-                  onPickerChanged?.call(false);
-                }
-              },
+      suffixIcon: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ?applySuggestion,
+          IconButton(
+            tooltip: 'Choose $label',
+            visualDensity: compactDecoration ? VisualDensity.standard : null,
+            padding: compactDecoration ? EdgeInsets.zero : null,
+            constraints: compactDecoration
+                ? const BoxConstraints(minWidth: 48, minHeight: 48)
+                : null,
+            icon: const Icon(Icons.calendar_today_outlined),
+            onPressed: !enabled
+                ? null
+                : () async {
+                    final parsed = DateTime.tryParse(controller.text);
+                    onPickerChanged?.call(true);
+                    try {
+                      final chosen = await _showFastDatePicker(
+                        context: context,
+                        initialDate:
+                            parsed != null &&
+                                parsed.year >= 1900 &&
+                                parsed.year <= 9999
+                            ? parsed
+                            : pickerStart?.call() ?? DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(9999, 12, 31),
+                      );
+                      if (chosen != null &&
+                          (isOwnerMounted?.call() ?? context.mounted)) {
+                        controller.text = formatCivilDate(chosen);
+                      }
+                    } finally {
+                      onPickerChanged?.call(false);
+                    }
+                  },
+          ),
+        ],
       ),
       hintText: hint,
+      floatingLabelBehavior: applySuggestion != null
+          ? FloatingLabelBehavior.always
+          : null,
       errorText: errorText,
       errorMaxLines: 3,
     ),
