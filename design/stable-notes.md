@@ -1,30 +1,37 @@
-## What’s new
+# 2026.11.2-rc.1
 
-- **Activity log:** the list uses the full height of the window.
-- **Activity log:** a change to several items, such as a receipt import, is one entry ("3 foods added from a Walmart purchase") that lists the items.
+- Set a food’s **Keeps for** duration to estimate expiration dates for receipt imports and new entries.
 
-![Activity log, before and after. Before: a receipt import is one long entry reading "Product changed, Purchase recorded, Food added: Synthetic milk, Synthetic beans and 1 more". After: the log fills the window and the import reads "3 foods added from a Walmart purchase", followed by the item names.](media/next114/1-activity-list.png)
+  ![Before: no shelf-life field; After: Keeps for and the source of an estimated expiration date.](media/rc117/food-keeps-for.png)
 
-- **Activity log:** tap the arrow to expand a grouped entry in place; each item opens its own details.
+  ![Before: adding Carrots, cut leaves Expiration blank; After: its two-week Keeps for duration prefills 2026-11-23.](media/rc117/food-autofill.png)
 
-![Activity log, before and after. Before: the import is one long entry. After: the "3 foods added from a Walmart purchase" entry is expanded, listing Synthetic rice, Synthetic beans and Synthetic milk ×2, each with an arrow that opens its details.](media/next114/2-activity-expanded.png)
+- Remember a newly entered expiration duration for that food’s future entries.
 
-- **Activity log:** store links show the store's name, such as Walmart, and the entry's details open the link.
-- **Food:** store-link buttons name the store: Running low shows "Walmart", and the row menu reads "Open Walmart link".
-- Completing a repeating task reads "Completed 1 task. Next due 2026-11-10."
+  ![Before: entering Mango’s expiration offers no duration to save; After: Keeps for offers the 12-day interval to remember.](media/rc117/food-remember.png)
 
-![Completion notice, before and after. Before: "Completed 1 task. Next occurrence kept, due 2026-11-10." After: "Completed 1 task. Next due 2026-11-10."](media/next114/3-completion-notice.png)
+- Estimated expiration dates show **est.** in the Food list.
 
-- Switching user from the top-right menu now updates the task list right away.
-- While the app opens, it shows just its name and a moving bar, without a task count or filter.
-- If your data folder can't be opened, the screen says "Can't open your data folder", shows the error, and offers Try again and Settings.
+  ![Before: Strawberries shows 2026-11-14 without a marker; After: the same date is marked est.](media/rc117/food-estimated-list.png)
 
-![Data folder error, before and after. Before: a red "App history record is damaged." banner above the "A little less to remember." welcome screen. After: the heading "Can't open your data folder", the error text, and Try again and Settings buttons.](media/next114/4-open-failure.png)
+- New food entries and receipt imports prefill the food’s usual location.
 
-- If another device saved changes with a newer version, the app shows an Update screen instead of an error banner. The exact message is under Technical details, with Copy.
+  ![Before: Location is blank when adding Carrots, cut; After: Fridge is prefilled.](media/rc117/food-usual-location.png)
 
-![Update screen, before and after. After: Update Tandemlog, Update and Try again buttons, Settings on the gear, and collapsed Technical details.](media/next114/5-update.png)
+- Undated food can suggest an expiration date based on last time.
 
-- Starting the app is faster, especially on Android after it was closed in the background.
+  ![Before: an undated yogurt has an empty Expiration field; After: a dimmed date suggestion can be applied.](media/rc117/food-date-suggestion.png)
 
-- **Linux:** fixed an occasional crash when closing the app.
+- Food editors put **Location** directly below **Expiration**.
+- **Store link** now follows **Keep at least**.
+- Last-price dates now include the year (`YYYY-MM-DD`).
+- Long task titles can use up to six lines in the editor.
+
+  ![Before: the long task title is cut off after two lines at 200% text; After: all three lines are visible.](media/rc117/editor-title.png)
+
+- When editor buttons need more room, **Save changes** gets its own full-width row.
+
+  ![Before: large-text task actions wrap unevenly; After: Delete and Cancel sit above a full-width Save changes button.](media/rc117/editor-actions.png)
+
+- Repeat rules accept lists with “and” and serial commas, such as “every week on Monday and Friday”.
+- Normal workspace reopening has shorter pauses in its progress animation.
