@@ -320,7 +320,10 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     await tester.pumpAndSettle();
     expect(_text(tester, _keepsFor), '12 days');
     expect(_offer, findsNothing);
-    // A different date offers the new duration again.
+    // A different date offers the new duration again. On desktop the press
+    // took focus from Expiration, so click back into it first.
+    await tester.tap(_expiration);
+    await tester.pump();
     await tester.enterText(_expiration, '2026-11-21');
     await tester.pumpAndSettle();
     expect(find.text('Remember: keeps 2 weeks'), findsOneWidget);
