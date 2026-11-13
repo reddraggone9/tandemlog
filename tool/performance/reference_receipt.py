@@ -187,7 +187,9 @@ def measured_tree(repo, request):
         yield repo
         return
     with tempfile.TemporaryDirectory() as directory:
-        root = Path(directory)
+        # source_pins/import closure use resolved paths, including Windows
+        # short-name TEMP aliases. Keep the inventory base canonical too.
+        root = Path(directory).resolve()
         rows = subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-r', '-z',
                                         request['sourceRevision']]).decode().split('\0')
         inventory = []

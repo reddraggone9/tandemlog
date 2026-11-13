@@ -508,6 +508,22 @@ class BenchmarkSourceIdentityTests(ReceiptFixture):
         self.assertEqual(receipt.committed_identity(self.repo, self.head()), self.identity)
         self.assertTrue(self.verify()['referencePerformanceQualified'])
 
+    def test_measured_tree_canonicalizes_temporary_directory_alias(self):
+        # Windows TEMP commonly uses RUNNER~1 while resolved pins use the
+        # long username. A symlink reproduces the same path alias on Linux.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target, alias = root / 'actual', root / 'alias'
+            target.mkdir()
+            try:
+                alias.symlink_to(target, target_is_directory=True)
+            except OSError:
+                self.skipTest('Directory symlinks unavailable; v3 inventory test covers Windows TEMP')
+            with patch.object(receipt.tempfile, 'TemporaryDirectory') as temporary:
+                temporary.return_value.__enter__.return_value = str(alias)
+                with receipt.measured_tree(self.repo, self.request) as tree:
+                    self.assertEqual(tree, target.resolve())
+
     def test_unrelated_changes_do_not_void_receipt_even_when_dirty(self):
         for name in ('test/widget_test.dart', '.github/workflows/ci.yml',
                      'android/app/build.gradle', 'windows/runner/main.cpp',
