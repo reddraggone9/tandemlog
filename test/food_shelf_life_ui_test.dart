@@ -132,6 +132,7 @@ Future<List<_Edit>> _pump(
   Size size = const Size(1400, 900),
   double textScale = 1,
   List<(FoodDetails, int)>? adds,
+  Brightness brightness = Brightness.dark,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
@@ -143,7 +144,7 @@ Future<List<_Edit>> _pump(
       key: const ValueKey('ux-root'),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: tandemlogTheme(Brightness.dark),
+        theme: tandemlogTheme(brightness),
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(
             context,
@@ -562,17 +563,25 @@ void main() {
 
   // Widget-test renders for review (TANDEMLOG_UX_CAPTURES=<dir>): the real
   // Food page and editor, production dark theme, synthetic data.
-  for (final scale in [1.0, 2.0]) {
-    final tag = scale == 1 ? '' : '-2x-text';
-    testWidgets('review captures at ${scale}x text', (tester) async {
-      const phone = Size(412, 892);
+  for (final (tag, phone, scale, brightness) in [
+    ('', const Size(412, 892), 1.0, Brightness.dark),
+    ('-2x-text', const Size(412, 892), 2.0, Brightness.dark),
+    ('-light-390', const Size(390, 844), 1.0, Brightness.light),
+    ('-wide', const Size(1400, 900), 1.0, Brightness.dark),
+  ]) {
+    testWidgets('review captures$tag', (tester) async {
       if (Platform.environment['TANDEMLOG_UX_CAPTURES'] != null) {
         await tester.runAsync(() async {
           await loadUxIcons();
           await _loadRoboto();
         });
       }
-      await _pump(tester, size: phone, textScale: scale);
+      await _pump(
+        tester,
+        size: phone,
+        textScale: scale,
+        brightness: brightness,
+      );
       await captureUx(tester, 'keeps-for-01-list$tag');
       await _open(tester, 'Strawberries');
       await captureUx(tester, 'keeps-for-02-estimated-row$tag');
@@ -580,17 +589,32 @@ void main() {
       await tester.pumpAndSettle();
       await captureUx(tester, 'keeps-for-03-changed-estimate$tag');
       await tester.pumpWidget(const SizedBox());
-      await _pump(tester, size: phone, textScale: scale);
+      await _pump(
+        tester,
+        size: phone,
+        textScale: scale,
+        brightness: brightness,
+      );
       await _open(tester, 'Mango');
       await tester.enterText(_expiration, '2026-11-19');
       await tester.pumpAndSettle();
       await captureUx(tester, 'keeps-for-04-remember$tag');
       await tester.pumpWidget(const SizedBox());
-      await _pump(tester, size: phone, textScale: scale);
+      await _pump(
+        tester,
+        size: phone,
+        textScale: scale,
+        brightness: brightness,
+      );
       await _open(tester, 'Greek yogurt');
       await captureUx(tester, 'keeps-for-05-like-last-time$tag');
       await tester.pumpWidget(const SizedBox());
-      await _pump(tester, size: phone, textScale: scale);
+      await _pump(
+        tester,
+        size: phone,
+        textScale: scale,
+        brightness: brightness,
+      );
       await tester.tap(find.byTooltip('Add food'));
       await tester.pumpAndSettle();
       await tester.enterText(
