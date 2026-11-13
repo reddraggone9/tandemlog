@@ -25,7 +25,7 @@ class ReleaseTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name)
+        self.root = Path(self.tmp.name).resolve()
         self.sha = 'a' * 40
         self.asset = {'id': 1, 'name': 'installer.apk', 'digest': 'sha256:' + 'b' * 64, 'size': 3}
         self.release = dict(id=2, tag_name='v2030.1.1', prerelease=False, draft=True,
