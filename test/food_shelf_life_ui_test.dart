@@ -246,7 +246,10 @@ void main() {
     expect(tops, [...tops]..sort());
     expect(tops.toSet(), hasLength(tops.length));
     expect(_text(tester, _keepsFor), '1 week');
-    expect(find.text('Estimated: bought 2026-11-07 + 1 week'), findsOneWidget);
+    expect(
+      find.text('Estimated: bought 2026-11-07 +\u00a01\u00a0week'),
+      findsOneWidget,
+    );
     expect(_offer, findsNothing);
   });
 
@@ -641,6 +644,24 @@ void main() {
       await tester.pumpAndSettle();
       expect(_offer, findsNothing);
       expect(tester.takeException(), isNull);
+    });
+  }
+
+  // Last: the real font stays loaded for the rest of this file's run.
+  for (final size in [const Size(1400, 900), const Size(412, 892)]) {
+    testWidgets('the offer takes the helper line\'s place at '
+        '${size.width.toInt()} dp; nothing below moves', (tester) async {
+      await tester.runAsync(_loadRoboto);
+      await _pump(tester, size: size);
+      await _open(tester, 'Strawberries');
+      final location = find.widgetWithText(TextField, 'Location');
+      expect(_note, findsOneWidget);
+      final before = tester.getTopLeft(location).dy;
+      await tester.enterText(_expiration, '2026-11-12');
+      await tester.pumpAndSettle();
+      expect(_note, findsNothing);
+      expect(_offer, findsOneWidget);
+      expect(tester.getTopLeft(location).dy, before);
     });
   }
 }

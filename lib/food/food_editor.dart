@@ -331,7 +331,8 @@ class FoodEditorState extends State<FoodEditor> {
     if (!_estimate || text != original!.expiry) return null;
     final keeps = product?.keepsFor, day = _purchaseDay;
     return day != null && keeps != null && keeps.addTo(day) == text
-        ? 'Estimated: bought $day + ${keeps.label}'
+        // The sum wraps as one piece.
+        ? 'Estimated: bought $day +\u00a0${keeps.label.replaceAll(' ', '\u00a0')}'
         : day != null
         ? 'Estimated when bought $day'
         : 'Estimated date';
@@ -1212,13 +1213,33 @@ class FoodEditorState extends State<FoodEditor> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (note != null)
-                          Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              start: 16,
-                            ),
-                            child: _secondary(
-                              note,
-                              key: const ValueKey('food-expiry-note'),
+                          // As tall as the offer that can replace it, so the
+                          // fields below stay where they are.
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: 24),
+                            child: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              widthFactor: 1,
+                              heightFactor: 1,
+                              child: Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  start: 16,
+                                ),
+                                child: Text(
+                                  note,
+                                  key: const ValueKey('food-expiry-note'),
+                                  strutStyle: StrutStyle.fromTextStyle(
+                                    Theme.of(context).textTheme.labelLarge!,
+                                    forceStrutHeight: true,
+                                  ),
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                ),
+                              ),
                             ),
                           ),
                         if (offer != null)

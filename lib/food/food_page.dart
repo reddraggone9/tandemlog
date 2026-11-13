@@ -1659,26 +1659,35 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                 ),
                               // The date and place stay visibly separate,
                               // as before the Inbox label change.
-                              if (!inInboxSection &&
-                                  [
-                                    details.location,
-                                    details.retention,
-                                  ].any((value) => value.isNotEmpty))
-                                const Text('·'),
+                              // The separator wraps with the place it
+                              // introduces, never alone at a line's end.
                               if ([
                                 details.location,
                                 details.retention,
                               ].any((value) => value.isNotEmpty))
-                                Text(
-                                  [details.location, details.retention]
-                                      .where((value) => value.isNotEmpty)
-                                      .join(' · '),
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (!inInboxSection) ...[
+                                      const Text('·'),
+                                      const SizedBox(width: 8),
+                                    ],
+                                    Flexible(
+                                      child: Text(
+                                        [details.location, details.retention]
+                                            .where((value) => value.isNotEmpty)
+                                            .join(' · '),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
+                                            ),
                                       ),
+                                    ),
+                                  ],
                                 ),
                             ],
                           ),
