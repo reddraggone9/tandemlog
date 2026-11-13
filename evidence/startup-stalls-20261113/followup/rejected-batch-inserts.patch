@@ -1,0 +1,37 @@
+diff --git a/lib/storage/task_store.dart b/lib/storage/task_store.dart
+index af611ae7..3d3290be 100644
+--- a/lib/storage/task_store.dart
++++ b/lib/storage/task_store.dart
+@@ -5240,16 +5240,22 @@ Iterable<String> _insertTaskCacheRowsSteps(
+ ) sync* {
+   for (var i = 0; i < names.length; i++) {
+     if (rows[i].isEmpty) continue;
+-    final insert = db.prepare(
+-      'INSERT INTO ${names[i]} VALUES (${List.filled(rows[i].first.length, '?').join(',')})',
+-    );
+-    try {
+-      for (final row in rows[i]) {
+-        insert.execute(row);
+-        yield 'restore.insert';
+-      }
+-    } finally {
+-      insert.close();
++    // Bound each native call and stay below SQLite's portable variable limit.
++    // A batch retains the caller's transaction and all row-level proof guards.
++    final width = rows[i].first.length;
++    final batch = (900 ~/ width).clamp(1, 32);
++    for (var start = 0; start < rows[i].length; start += batch) {
++      final end = (start + batch).clamp(0, rows[i].length);
++      final values = <Object?>[];
++      for (var at = start; at < end; at++) {
++        values.addAll(rows[i][at]);
++      }
++      final tuple = '(${List.filled(width, '?').join(',')})';
++      db.execute(
++        'INSERT INTO ${names[i]} VALUES ${List.filled(end - start, tuple).join(',')}',
++        values,
++      );
++      yield 'restore.insert';
+     }
+   }
+ }
