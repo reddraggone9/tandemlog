@@ -399,9 +399,11 @@ Built: `FoodKeepsFor` and the derived usual location and suggested date
 (`lib/food/shelf_life.dart`); the product field and its wire revision; dated
 and placed receipt births; `est.` rows; the editor's field order, Keeps for
 field, three offers, calendar start date and estimate helper; Add and Add
-another autofill; agent CLI (`products set --keeps-for`, `keepsFor` on
-products, `estimated` on food rows, `expiry` and `location` on import report
-lines); the Activity label.
+another autofill; agent CLI (`products set --keeps-for`, `products keeps-for
+<file>` for the seed list, `keepsFor` on products, `estimated` on food rows,
+`expiry` and `location` on import report lines); the Activity label;
+performance coverage (`food.product.keepsFor`, `food.product.importEstimated.commit`
+and their `.undo`, at the receipt import's existing limits).
 
 Where the build differs from the method above:
 
@@ -439,11 +441,22 @@ Where the build differs from the method above:
 7. The estimate helper falls back to `Estimated when bought <day>` when the
    product's Keeps for has changed since the import.
 
-Still to do: the old-reader fixture (an r1-only build stops and writes
-nothing), seed tooling (one action through the agent CLI, including products
-with no containers), performance coverage registration, `schema.md` /
-`product-behavior.md` / `status.md` updates, native Linux and Android runs,
-dark-theme captures and the independent UX review.
+8. **Seed list:** `products keeps-for <file>` plans every entry against current
+   Food and writes one action (one Undo). An entry names a product ID or a
+   description; a description with no product becomes a product with no
+   containers, which Add then suggests and dates. Such a product has no row, so
+   until its first container exists its Keeps for can only be changed through
+   the CLI.
+
+Old installs: a decoder frozen before this format refuses both new revisions
+with the update message and reads every other record of the same history
+(`test/food_products_test.dart`). A whole-workspace run with the published
+2026.11.1 build as the reader has not been done.
+
+Still to do: that whole-workspace old-reader run, the first measured run of the
+new performance labels, native Linux and Android runs, and the independent UX
+review of the captures. The product-behavior summary is updated when this
+ships.
 
 ## Rough build size
 
