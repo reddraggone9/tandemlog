@@ -3,6 +3,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 
 def context(description):
     p = argparse.ArgumentParser(description=description)
@@ -15,6 +16,8 @@ def context(description):
 def configure(a):
     if not a.tag.startswith('v') or '/' in a.tag or '..' in a.tag:
         raise ValueError('Expected a version tag')
+    # The channel follows the tag (-rc.N is a prerelease); the gates recheck it against the source version.
+    a.prerelease = re.search(r'-rc\.[1-9][0-9]*$', a.tag) is not None
     a.repo_dir = a.repo_dir.resolve()
     a.output = a.output.resolve()
     a.output.mkdir(parents=True, exist_ok=True)

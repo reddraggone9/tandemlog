@@ -57,7 +57,7 @@ PY
 sudo -n -u nibbler /usr/bin/env -i HOME=/home/nibbler PATH=/usr/bin:/bin PYTHONDONTWRITEBYTECODE=1 \
   /usr/bin/python3 -B "$Q/source/tool/performance/reference_receipt.py" request \
   --repo "$Q/source" --controller "$CTRL" --output "$Q/request.json"
-# Launcher plan runs in coordinate-q16.sh with vex-adb up (controller r8 admits it idle).
+# Launcher plan runs in coordinate.sh with vex-adb up (controller r8 admits it idle).
 sudo -n /usr/bin/python3 -I -B - "$Q/request.json" "$QUAL_REV" > "$REF/fresh-request-bindings.json" <<'PY'
 import hashlib,json,sys
 raw=open(sys.argv[1],'rb').read(); r=json.loads(raw)

@@ -1,14 +1,14 @@
-"""Anonymous, fail-closed verification of the finalized stable release and prior releases.
+"""Anonymous, fail-closed verification of the finalized RC or stable release and prior releases.
 Input draft-release.json: source, releaseId, assets {name:{sha256,size}}.
 Input release-notes-published.md: exact independently reviewed dispatched notes.
 """
 import hashlib,json,re,urllib.request,os,subprocess,sys
 from pathlib import Path
 from release_context import context, configure, asset_inventory
-parser = context('Anonymously verify stable assets and frozen prior state.')
+parser = context('Anonymously verify published RC or stable assets and frozen prior state.')
 parser.add_argument('--build-tools', type=Path, required=True)
 args = configure(parser.parse_args())
-ROOT, TAG = args.output, args.tag
+ROOT, TAG, RC = args.output, args.tag, args.prerelease
 API = f'https://api.github.com/repos/{args.repository}'
 # Deliberately no Authorization header, credential access or inherited egress proxy.
 http=urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -22,10 +22,11 @@ def ident(r):
 state=json.loads((ROOT/'draft-release.json').read_text())
 release=j(API+'/releases/tags/'+TAG)
 assert release['id']==state['releaseId']
-assert not release['prerelease'] and not release['draft'] and release.get('immutable'),release
+assert release['prerelease'] is RC and not release['draft'] and release.get('immutable'),release
 latest=j(API+'/releases/latest')
 prior_latest=json.loads((ROOT/'prior-latest.json').read_text())
-assert latest['id']==release['id'] and latest['tag_name']==TAG
+# An RC leaves the frozen Latest in place; a stable becomes Latest.
+assert latest['id']==(prior_latest['id'] if RC else release['id']) and (RC or latest['tag_name']==TAG)
 assert state['tag']==TAG
 assert asset_inventory(release)==state['assets']
 ref=j(API+'/git/ref/tags/'+TAG)['object']
@@ -76,7 +77,7 @@ prior_tags={r['ref']:r['object'] for r in json.loads((ROOT/'prior-tags.json').re
 now_tags={r['ref']:r['object'] for r in j(API+'/git/matching-refs/tags/')}
 assert set(now_tags)==set(prior_tags)|{'refs/tags/'+TAG}
 assert all(now_tags[k]==v for k,v in prior_tags.items())
-result={'result':'PASS','release':release['html_url'],'releaseId':release['id'],'source':sha,'prerelease':False,'latest':True,
+result={'result':'PASS','release':release['html_url'],'releaseId':release['id'],'source':sha,'prerelease':RC,'latest':not RC,
         'immutable':release['immutable'],'stableLatest':latest['tag_name'],'publishedAt':release['published_at'],'notesMatchReviewedBytes':True,
         'apkSignerVersionVerified':True,'noteImagesVerified':len(images),'assets':verified,'priorReleasesUnchanged':len(prior),'priorTagsUnchanged':len(prior_tags)}
 (ROOT/'public-verification.json').write_text(json.dumps(result,indent=2)+'\n')

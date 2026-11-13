@@ -1,7 +1,7 @@
 """Verify exact downloaded candidate artifacts with the repository's own gate functions.
 
-Usage: python3 -I verify-candidate.py <merged-dist-dir> <source-sha>
-Writes candidate-verification.json next to this script. Never modifies artifacts.
+Usage: python3 verify-candidate.py <merged-dist-dir> <source-sha>
+Writes candidate-verification.json in --output. Never modifies artifacts.
 """
 import hashlib, json, os, subprocess, sys
 from pathlib import Path

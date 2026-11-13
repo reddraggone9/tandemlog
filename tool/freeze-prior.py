@@ -1,6 +1,6 @@
 """Freeze the public release/tag/Latest state anonymously before publishing.
 
-Usage: python3 -I freeze-prior.py   (writes prior-releases.json, prior-tags.json, prior-latest.json here)
+Usage: python3 freeze-prior.py   (writes prior-releases.json, prior-tags.json, prior-latest.json here)
 """
 import json, os, urllib.request
 from pathlib import Path

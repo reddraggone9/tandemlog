@@ -61,6 +61,100 @@ class ReleaseTests(unittest.TestCase):
         self.assertEqual(api.call_count, 2)
         self.assertEqual(json.loads((self.root/'draft-release.json').read_text())['phase'], 'published')
 
+    def publish_rc(self, prerelease=True, latest=1):
+        tag = 'v2030.1.1-rc.1'
+        self.release.update(tag_name=tag, name=tag + ' — experimental', prerelease=prerelease)
+        self.state['tag'] = tag
+        self.save('draft-release.json', self.state)
+        argv = ['publish-stable.py', '--repo-dir', str(self.root), '--output', str(self.root), '--tag', tag, 'publish']
+        with patch.object(sys, 'argv', argv):
+            g = runpy.run_path(str(TOOL / 'publish-stable.py'), run_name='test_module')
+        final = dict(self.release, draft=False, published_at='now', html_url='url')
+        api = unittest.mock.Mock(side_effect=[self.release, {'id': 1}, final, {'id': latest}])
+        g['publish'].__globals__.update(api=api, run=lambda *a: self.sha, all_releases=lambda: [self.release])
+        with contextlib.redirect_stdout(io.StringIO()):
+            g['publish']()
+        return api
+
+    def draft(self, tag, *flags, remote_main=None):
+        """Run draft() with every external command faked; returns the recorded commands."""
+        (self.root/'draft-release.json').unlink(missing_ok=True)
+        dist = self.root/'dist'; dist.mkdir(exist_ok=True)
+        argv = ['publish-stable.py', '--repo-dir', str(self.root), '--output', str(self.root), '--tag', tag, *flags,
+                'draft', '--dist', str(dist), '--run-id', '7', '--android-sha256', 'd' * 64]
+        with patch.object(sys, 'argv', argv):
+            g = runpy.run_path(str(TOOL / 'publish-stable.py'), run_name='test_module')
+        calls, main = [], 'e' * 40
+        notes = '![shot](media/x/1.png)\n'
+        pinned = notes.replace('(media/', f'(https://raw.githubusercontent.com/reddraggone9/tandemlog/{main}/design/media/')
+        def run(*a, cwd=None, extra=None):
+            a = [str(x) for x in a]; calls.append((a, extra or {}))
+            if 'worktree' in a:
+                Path(a[-2]).mkdir()
+            elif a[-1] == 'tool/candidate_source.py':
+                Path(extra['GITHUB_OUTPUT']).write_text(f'sha={self.sha}\n')
+            elif a[-1] == '.release-policy/release_assets.py':
+                (Path(cwd)/'public-assets').mkdir()
+                for n in range(4):
+                    (Path(cwd)/'public-assets'/f'asset{n}').write_bytes(b'x')
+            elif 'ls-remote' in a:
+                return f'{remote_main or main}\trefs/heads/main\n'
+            elif 'show' in a and a[-1].endswith('-notes.md'):
+                return notes
+            return main if 'rev-parse' in a else 'url'
+        digest = 'sha256:' + hashlib.sha256(b'x').hexdigest()
+        rel = dict(id=3, tag_name=tag, draft=True, prerelease='-rc.' in tag, target_commitish=self.sha, body=pinned,
+                   name=tag + (' — experimental' if '-rc.' in tag else ''),
+                   assets=[dict(name=f'asset{n}', digest=digest, size=1) for n in range(4)])
+        releases = unittest.mock.Mock(side_effect=[[], [rel]])
+        g['draft'].__globals__.update(run=run, all_releases=releases)
+        with contextlib.redirect_stdout(io.StringIO()):
+            g['draft'](dist, '7', 'd' * 64)
+        return calls
+
+    def test_rc_draft_runs_prerelease_gates_with_main_notes_and_pinned_media(self):
+        calls = self.draft('v2030.1.1-rc.1')
+        gates = [extra for a, extra in calls if a[0] == 'python3' and 'release_assets' not in a[-1]]
+        self.assertEqual([e['RELEASE_KIND'] for e in gates], ['prerelease'] * 2)
+        self.assertFalse(any('LEE_ACCEPTED_STABLE' in e for e in gates))
+        create = next(a for a, _ in calls if a[:3] == ['gh', 'release', 'create'])
+        self.assertIn('--prerelease', create)
+        self.assertIn('v2030.1.1-rc.1 — experimental', create)
+        self.assertIn(['git', '-C', str(self.root), 'show', 'e' * 40 + ':design/prerelease-notes.md'], [a for a, _ in calls])
+        self.assertIn(['git', '-C', str(self.root), 'cat-file', '-e', 'e' * 40 + ':design/media/x/1.png'], [a for a, _ in calls])
+        self.assertEqual(json.loads((self.root/'draft-release.json').read_text())['phase'], 'draft-verified')
+
+    def test_stable_draft_keeps_stable_gates_and_stale_main_refuses(self):
+        calls = self.draft('v2030.1.1', '--lee-accepted')
+        gates = [extra for a, extra in calls if a[0] == 'python3' and 'release_assets' not in a[-1]]
+        self.assertEqual([(e['RELEASE_KIND'], e['LEE_ACCEPTED_STABLE']) for e in gates], [('stable', 'true')] * 2)
+        create = next(a for a, _ in calls if a[:3] == ['gh', 'release', 'create'])
+        self.assertNotIn('--prerelease', create)
+        self.assertIn(['git', '-C', str(self.root), 'show', 'e' * 40 + ':design/stable-notes.md'], [a for a, _ in calls])
+        with self.assertRaises(AssertionError):
+            self.draft('v2030.1.1', '--lee-accepted', remote_main='f' * 40)
+        self.assertFalse((self.root/'draft-release.json').exists())
+
+    def test_rc_publishes_as_prerelease_and_never_latest(self):
+        patch_args = self.publish_rc().call_args_list[2].args
+        self.assertIn('prerelease=true', patch_args)
+        self.assertIn('make_latest=false', patch_args)
+        self.assertNotIn('make_latest=true', patch_args)
+
+    def test_rc_tag_refuses_stable_draft_and_moved_latest(self):
+        with self.assertRaises(AssertionError):
+            self.publish_rc(prerelease=False)
+        with self.assertRaises(AssertionError):
+            self.publish_rc(latest=2)
+
+    def test_stable_tag_refuses_prerelease_draft_and_missing_acceptance(self):
+        self.release['prerelease'] = True
+        with self.assertRaises(AssertionError):
+            self.publish()
+        argv = ['publish-stable.py', '--repo-dir', str(self.root), '--output', str(self.root), '--tag', 'v2030.1.1', 'publish']
+        with patch.object(sys, 'argv', argv), contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            runpy.run_path(str(TOOL / 'publish-stable.py'), run_name='test_module')
+
     def test_changed_asset_refuses_publish(self):
         self.release['assets'][0]['size'] = 4
         with self.assertRaises(AssertionError):
@@ -131,23 +225,25 @@ class ReleaseTests(unittest.TestCase):
                 runpy.run_path(str(TOOL / 'freeze-prior.py'))
         self.assertFalse((self.root/'prior-tags.json').exists())
 
-    def verify_public(self, mutation=None):
+    def verify_public(self, mutation=None, version='2030.1.1', latest=None):
         body = b'accepted apk'
-        name = 'tandemlog-2030.1.1-android.apk'
-        release = dict(self.release, draft=False, immutable=True, html_url='url', published_at='now',
+        tag = 'v' + version
+        name = f'tandemlog-{version}-android.apk'
+        self.state['tag'] = tag
+        release = dict(self.release, tag_name=tag, prerelease='-rc.' in tag, draft=False, immutable=True, html_url='url', published_at='now',
                        assets=[dict(self.asset, name=name, size=len(body), digest='sha256:'+hashlib.sha256(body).hexdigest(),
                                     browser_download_url='https://download.invalid/apk')])
         self.state['assets'] = asset_inventory(release)
         self.save('draft-release.json', self.state)
-        self.save('prior-latest.json', {'tag_name':'v2029.1.1'})
+        self.save('prior-latest.json', {'id': 9, 'tag_name':'v2029.1.1'})
         self.save('prior-releases.json', [])
         self.save('prior-tags.json', [])
         (self.root/'release-notes-published.md').write_text('notes\n')
         if mutation:
             mutation(release)
-        responses = {'/releases/tags/v2030.1.1': release, '/releases/latest': release,
-                     '/git/ref/tags/v2030.1.1': {'object':{'type':'commit', 'sha':self.sha}},
-                     '/git/matching-refs/tags/': [{'ref':'refs/tags/v2030.1.1','object':{'sha':self.sha}}]}
+        responses = {'/releases/tags/'+tag: release, '/releases/latest': latest or release,
+                     '/git/ref/tags/'+tag: {'object':{'type':'commit', 'sha':self.sha}},
+                     '/git/matching-refs/tags/': [{'ref':'refs/tags/'+tag,'object':{'sha':self.sha}}]}
         def fetch(req, timeout):
             self.assertNotIn('Authorization', req.headers)
             if req.full_url == 'https://download.invalid/apk':
@@ -159,19 +255,29 @@ class ReleaseTests(unittest.TestCase):
         opener = unittest.mock.Mock()
         opener.open.side_effect = fetch
         android = unittest.mock.Mock()
-        android.version.return_value = ('2030.1.1', 999)
+        android.version.return_value = (version, 999)
         android.fingerprint.return_value = 'signer-pin'
         argv = ['verify-public.py','--repo-dir',str(self.root),'--output',str(self.root),
-                '--tag','v2030.1.1','--build-tools',str(self.root)]
+                '--tag',tag,'--build-tools',str(self.root)]
         with patch.object(sys,'argv',argv), patch('urllib.request.build_opener', return_value=opener), \
                 patch('subprocess.check_output', return_value='source bytes'), \
                 patch.dict(sys.modules, {'android_release':android}), contextlib.redirect_stdout(io.StringIO()):
             runpy.run_path(str(TOOL/'verify-public.py'))
-        android.verify_apk.assert_called_once_with('source bytes','source bytes','signer-pin',('2030.1.1',999))
+        android.verify_apk.assert_called_once_with('source bytes','source bytes','signer-pin',(version,999))
 
     def test_public_downloads_anonymously_and_verifies_signer(self):
         self.verify_public()
         self.assertTrue(json.loads((self.root/'public-verification.json').read_text())['apkSignerVersionVerified'])
+
+    def test_public_rc_is_prerelease_and_leaves_frozen_latest(self):
+        frozen = {'id': 9, 'tag_name': 'v2029.1.1'}
+        self.verify_public(version='2030.1.1-rc.1', latest=frozen)
+        result = json.loads((self.root/'public-verification.json').read_text())
+        self.assertEqual((result['prerelease'], result['latest']), (True, False))
+        with self.assertRaises(AssertionError):  # An RC that became Latest.
+            self.verify_public(version='2030.1.1-rc.1')
+        with self.assertRaises(AssertionError):  # A stable that did not.
+            self.verify_public(latest=frozen)
 
     def test_public_rejects_mutated_download(self):
         with self.assertRaises(AssertionError):

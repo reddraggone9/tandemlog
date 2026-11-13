@@ -51,7 +51,7 @@ Dispatch **Experimental prerelease** (`prerelease.yml`) on `main` with the tag, 
 
 The public assets are the three versioned installers plus the Windows portable ZIP. Releases are immutable once published and reject later uploads, so all four must be attached before publication (Lee, 2026-10-28).
 
-**Private-draft path.** When the candidate's workflow files differ from `main`'s, the Actions token cannot create the release. Create a private draft for the exact tag and candidate commit with the maintainer's own GitHub credential, pass its numeric ID as `draft_release_id`, let the workflow attach and verify the assets, then finalize the draft with the same credential after checking source and digests. The same gates run; nothing is clobbered.
+**Private-draft path.** When the candidate's workflow files differ from `main`'s, the Actions token cannot create the release. Create a private draft for the exact tag and candidate commit with the maintainer's own GitHub credential, pass its numeric ID as `draft_release_id`, let the workflow attach and verify the assets, then finalize the draft with the same credential after checking source and digests. The same gates run; nothing is clobbered. The [reusable private-draft commands](#reusable-private-draft-commands) do the whole path for an RC tag without the workflow: they run the same gates from `main`'s policy, pin the notes' media links, and finalize the draft as a prerelease that leaves Latest unchanged.
 
 ### 5. Verify the public release
 
@@ -243,16 +243,24 @@ No command dispatches CI, merges, edits main or rebuilds candidate bytes.
 ```sh
 python3 tool/freeze-prior.py --repo-dir REPO --tag TAG --output EVIDENCE
 python3 tool/verify-candidate.py --repo-dir REPO --tag TAG --output EVIDENCE --dist DIST --source FULL_SHA --build-tools ANDROID_BUILD_TOOLS
-python3 tool/publish-stable.py --repo-dir REPO --tag TAG --output EVIDENCE --lee-accepted --notes REPO/design/stable-notes.md --policy-revision origin/main draft --dist DIST --run-id RUN_ID --android-sha256 ACCEPTED_APK_SHA
-python3 tool/publish-stable.py --repo-dir REPO --tag TAG --output EVIDENCE --lee-accepted publish
+python3 tool/publish-stable.py --repo-dir REPO --tag TAG --output EVIDENCE [--lee-accepted] draft --dist DIST --run-id RUN_ID --android-sha256 ACCEPTED_APK_SHA
+python3 tool/publish-stable.py --repo-dir REPO --tag TAG --output EVIDENCE [--lee-accepted] publish
 python3 tool/verify-public.py --repo-dir REPO --tag TAG --output EVIDENCE --build-tools ANDROID_BUILD_TOOLS
 ```
+
+The tag selects the channel. An `-rc.N` tag runs the prerelease gates, uses
+`design/prerelease-notes.md`, and is finalized as an experimental prerelease that
+leaves Latest unchanged; it takes no `--lee-accepted`. A stable tag requires
+`--lee-accepted`, uses `design/stable-notes.md` and becomes Latest. Gate policy,
+notes and the commit their media links are pinned to come from the current remote
+`main`: fetch first, because the draft refuses a stale `origin/main`.
 
 The draft command writes its creating intent before the GitHub mutation. Recover
 an interrupted draft by inspecting the saved state and GitHub; do not delete state
 and retry. Publication verifies unchanged prior releases, exact draft bytes,
-source and notes before finalizing Latest. Public verification is anonymous and
-checks every asset, pinned note image, Latest, immutability and frozen prior tags.
+source and notes before finalizing. Public verification is anonymous and checks
+every asset, pinned note image, the prerelease flag, Latest (moved for a stable,
+unchanged for an RC), immutability and frozen prior tags.
 
 Qualification helpers migrated from q16 live in `tool/qualification/`. Use
 `qualification.py --help`: `prepare`, `run`, and `seal` are explicit separate
