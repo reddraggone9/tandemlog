@@ -448,15 +448,18 @@ Where the build differs from the method above:
    until its first container exists its Keeps for can only be changed through
    the CLI.
 
-Old installs: a decoder frozen before this format refuses both new revisions
-with the update message and reads every other record of the same history
-(`test/food_products_test.dart`). A whole-workspace run with the published
-2026.11.1 build as the reader has not been done.
+Old installs: the published stable 2026.11.1 code, run in its own process
+with its own profile, refuses a workspace that holds a Keeps for edit or a
+prefilled receipt birth, whether it is running when the record arrives or
+opens afterwards, on the device that wrote it and on a peer. It shows the
+update message, keeps its last view, refuses task and food writes and changes
+no byte of the shared folder (`test/food_shelf_life_old_reader_test.dart`). A
+decoder frozen before this format also reads every other record of the same
+history (`test/food_products_test.dart`).
 
-Still to do: that whole-workspace old-reader run, the first measured run of the
-new performance labels, native Linux and Android runs, and the independent UX
-review of the captures. The product-behavior summary is updated when this
-ships.
+Still to do: the first qualifying run of the new performance labels on the
+reference host (release time), native Linux and Android runs, and Lee's review
+of the captures. The product-behavior summary is updated when this ships.
 
 ## Rough build size
 
