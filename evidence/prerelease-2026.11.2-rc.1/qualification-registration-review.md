@@ -1,0 +1,2 @@
+Independent reviewer 35f6b8bd PASS: controller sole limits digest substitution, unchanged pressure/caps/lifetime/admission/cleanup; all existing budgets identical after removing four new Keeps for labels. 61 targeted tests passed. Noted old prose corrected in2090994. Full local Python310 tests pass2skip.
+Native preflight on b9f5b0fe stopped Reference limits differ before build or sample; preserved runs/rc117-formal logs. Corrected-source native2090994 passed median490ms, samples520/510/480/480/490; strict first launch2800ms.

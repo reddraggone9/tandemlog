@@ -1,0 +1,5 @@
+RC117 reference preparation: b9f5b0fe native fingerprint failed `Reference limits differ` before any build/sample. Four new Keeps for labels required the reference registration/controller limits pin to match existing hosted6045b956 limits.2090994 repairs pins; independent review confirms sole controller hash-string substitution and unchanged controls/budgets. Full local Python310 pass2skip.
+
+Original CI43463890483 passed every non-reference job except Windows Python: two release tooling assertions compared Windows8.3 temporary path with canonical resolved path.6de9d1f fixes test fixture normalization only. CI43465086773 retained; final changed-source CI43468510127. No unchanged-source redispatch.
+
+Formal native receipt at evidence/native-cold-start/current/result.json bound2090994: median490ms <=1000ms, samples520/510/480/480/490; strict first launch2800ms. Isolated synthetic workspace, private XDG_RUNTIME_DIR before dbus-run-session, no household portal/device/data operations. Raw local diagnostics /home/nibbler/tandemlog-startup-20261113/ws/formal-rc117 and runs/rc117-formal-fixed. Native source identity remains valid at6de9d1f (test-only change).

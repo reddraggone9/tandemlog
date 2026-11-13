@@ -18,10 +18,10 @@
       "purchaseLines": 34
     }
   },
-  "sourceRevision": "7cad759751ddb245f8d0f220415f20337397fc25",
+  "sourceRevision": "2090994d56b1a0bc15cc79dd13958c5c5534195a",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "18b4919d519524aa8a56bdbb127b30fb6cfaaf4a11732b360a5dd9f2b82d0f19",
+    "sha256": "2afefe81ee6b52335b0f11670b5eb32f454be599c61b3f9552deb44cef417172",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -40,11 +40,11 @@
         "mode": "100644"
       },
       "lib/agent/commands_more.dart": {
-        "sha256": "f86d972371b36e6b496deacbc9cb9c96f38d5975607caaaff2350fd3cebe06b1",
+        "sha256": "9787e0090aa0593ba171f3b0eee688ba2b45e774c23950bb62339614695651d5",
         "mode": "100644"
       },
       "lib/agent/commands_read.dart": {
-        "sha256": "d1ae6bbdf9207be993cbdb5f0b2e0a915df4b43b85bb02efe8af03d368b4765d",
+        "sha256": "782a1902ea0ca876a2e5976629c2e8d18c1bdd909c45e49f5656eece3bb2a0ed",
         "mode": "100644"
       },
       "lib/agent/commands_write.dart": {
@@ -60,7 +60,7 @@
         "mode": "100644"
       },
       "lib/agent/render.dart": {
-        "sha256": "50ed4a0e67f8d4bf86302b2c06bb5220d80680f8297859638aeae8a50349b4fa",
+        "sha256": "ada34e3f39fa21ced4753abc490baec1febde3bfe42311ea0d91a48816122e4f",
         "mode": "100644"
       },
       "lib/agent/text_undo.dart": {
@@ -116,7 +116,7 @@
         "mode": "100644"
       },
       "lib/domain/current_operation.dart": {
-        "sha256": "bd2e749ce1cc5d02322148b0758166785fd15af2f015d792bcd72a513b74044f",
+        "sha256": "175fcf2df09fa7e114ec6bfcb91782c56b460f27651bc16fe9f706d00b75c3e3",
         "mode": "100644"
       },
       "lib/domain/event.dart": {
@@ -144,7 +144,7 @@
         "mode": "100644"
       },
       "lib/domain/schedule.dart": {
-        "sha256": "695bf4c0c75fdc41c3207b075d48d57960ffe1e34975a47f2ecc808131bde91e",
+        "sha256": "f7dab71d757b3563c2d7a3de12e08f1065e06d99789467daba5415669438838f",
         "mode": "100644"
       },
       "lib/domain/task_view.dart": {
@@ -204,15 +204,15 @@
         "mode": "100644"
       },
       "lib/food/food_products.dart": {
-        "sha256": "632672b708dcb42d174d2d580ae59758c92876c5b54c1014fa5ddc097bced769",
+        "sha256": "47ed248ade68ff9b9cdb460eedf1aade66b45a10b16da9557898b9318ac1fb0d",
         "mode": "100644"
       },
       "lib/food/food_purchase_import.dart": {
-        "sha256": "67f80e9fed9e7e9aa5caac69fe33e2e1f064e6093b2134b5ff058bcd630f6163",
+        "sha256": "4e7682ef281e75fd9991d1dea968cd94ef3084ca0d12dccbea4cb95939817001",
         "mode": "100644"
       },
       "lib/food/food_record.dart": {
-        "sha256": "d6b56976d577e7414019fdabaad5a4db71f8083d2c35dffd62e745aab4aa9577",
+        "sha256": "54b96a9b54acb5da63d0b1b2bd26153dd42fb27b1fb48f71c704c643220ffce2",
         "mode": "100644"
       },
       "lib/food/food_rows.dart": {
@@ -220,11 +220,15 @@
         "mode": "100644"
       },
       "lib/food/food_store.dart": {
-        "sha256": "4e15a4c41909ae0fbbf6a9268372bd7a38d0078866c0885433c5f91030957cec",
+        "sha256": "94ead2e40845b9f4847fa9af4b14cb1e99f19a1eb8b6525f09baab76035593d3",
         "mode": "100644"
       },
       "lib/food/inventory.dart": {
-        "sha256": "82ce1d378cdaa2c8796bdd0593a88f1b2d2daffb45fa09439eaa53faa95740d7",
+        "sha256": "52fdde8828e2d2c151cb219ec535a943cdff0e419ebb99e56fb028355b4527fe",
+        "mode": "100644"
+      },
+      "lib/food/shelf_life.dart": {
+        "sha256": "5c2987a2c65215a2f60cccf4b177a064becbb1097c0537244501603f2fef0f38",
         "mode": "100644"
       },
       "lib/platform/foreground_importer.dart": {
@@ -620,7 +624,7 @@
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
-        "sha256": "5c684fba84ee332f0ad3890247f0e359486a53c0031a757d6ae2173d305a7da5",
+        "sha256": "a6be845c9da839e122b52f9e7e7a296b857cae6f6ef393816e0df16a776be9d9",
         "mode": "100644"
       },
       "tool/performance/cost_trace.dart": {
@@ -628,7 +632,7 @@
         "mode": "100644"
       },
       "tool/performance/coverage-v1.json": {
-        "sha256": "c8aff26690686cc28f8956c09ec710f476f946cfc864c3b7a78384ce9f088cb7",
+        "sha256": "bff99d2f0b0425225255beef61f66d0d136b250aba1b9aa432532d8fa22145cb",
         "mode": "100644"
       },
       "tool/performance/food_tail_diagnostic.dart": {
@@ -640,7 +644,7 @@
         "mode": "100644"
       },
       "tool/performance/limits-v1.json": {
-        "sha256": "142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8",
+        "sha256": "6045b956a7cc2392716da847927ddc3213a9fa8723f0a8a48b3f09a3a2eb90fc",
         "mode": "100644"
       },
       "tool/performance/native-cold-start-v1.json": {
@@ -660,7 +664,7 @@
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "225bad734340ea11d4394aad707b1df2e1b5d40d54b3d1580c1ab3b6b8076923",
+        "sha256": "7907a61c6f8e8a7f1e344c4f9c7c62d69c06fbb1c2a0ea31ca0250a16a28f3f0",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
@@ -685,9 +689,9 @@
       }
     }
   },
-  "binarySHA256": "a0f6552b83d8d3b9863327b3af8df10e41316d6c43bf60fd9d3a616eea16141a",
-  "appSHA256": "d7713721d1a538411efba4eac0230aea51951dbae73482fd8b8ea4c8473db400",
-  "hostProfileSHA256": "225bad734340ea11d4394aad707b1df2e1b5d40d54b3d1580c1ab3b6b8076923",
+  "binarySHA256": "869af5d804bc14609cbcbb5b5ac58d6199bca3f76bb136e8481e5df8faaa680e",
+  "appSHA256": "0156226e80a0086dbcb6fc621012fbf3006544df181a26c4c9fd9ba2921cdb6f",
+  "hostProfileSHA256": "7907a61c6f8e8a7f1e344c4f9c7c62d69c06fbb1c2a0ea31ca0250a16a28f3f0",
   "host": {
     "architecture": "x86_64",
     "kernel": "7.2.14-arch1-1",
@@ -702,8 +706,8 @@
     "initialized": true,
     "format": "app-action-v5",
     "workload": "mixed-v2",
-    "writer": "7cce6c5b-672d-4f4f-bd21-5f42cf8a969c",
-    "user": "e8ae2ad3-027d-484d-bf7b-630fcf390c90",
+    "writer": "2f500cfb-7ff1-4d1c-badd-78c13beb49eb",
+    "user": "8b21e1f3-de87-4ec3-baa4-48dad6635ddb",
     "rows": 2001,
     "records": 3667,
     "effectFamilies": {
@@ -721,66 +725,40 @@
     },
     "food": {
       "activeContainers": 522,
-      "groups": 482,
+      "groups": 484,
       "products": 551,
       "purchases": 34
     },
     "files": 4,
-    "historyBytes": 6419579,
-    "settings_sha256": "859fa4c9633682af5484b0d8458603622ae9f1c2a025df793b8f2bb55ccde171",
+    "historyBytes": 6419165,
+    "settings_sha256": "86a0fb5af1fa8fdad388251554da081efafeabf291266f02ae3a655f80c9e636",
     "native_sha256": "f00d5450c810e494dd11ad53ee71e85ce8e2af48c0f7cf265f8359c2ddda0c5c"
   },
   "loadAverage1m": {
-    "before": 5.49267578125,
-    "after": 5.453125
+    "before": 12.015625,
+    "after": 12.0947265625
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 2750,
-    "appMs": 2311,
+    "processMs": 2800,
+    "appMs": 2239,
     "food": {
       "activeContainers": 522,
-      "groups": 482,
+      "groups": 484,
       "products": 551,
       "purchases": 34
     },
-    "externalMs": 2746,
+    "externalMs": 2802,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 500,
-      "appMs": 373,
-      "food": {
-        "activeContainers": 522,
-        "groups": 482,
-        "products": 551,
-        "purchases": 34
-      },
-      "externalMs": 503,
-      "cleanWitnessVerified": true
-    },
-    {
-      "run": 3,
       "processMs": 520,
-      "appMs": 397,
+      "appMs": 387,
       "food": {
         "activeContainers": 522,
-        "groups": 482,
-        "products": 551,
-        "purchases": 34
-      },
-      "externalMs": 523,
-      "cleanWitnessVerified": true
-    },
-    {
-      "run": 4,
-      "processMs": 510,
-      "appMs": 391,
-      "food": {
-        "activeContainers": 522,
-        "groups": 482,
+        "groups": 484,
         "products": 551,
         "purchases": 34
       },
@@ -788,44 +766,70 @@
       "cleanWitnessVerified": true
     },
     {
-      "run": 5,
+      "run": 3,
       "processMs": 510,
       "appMs": 385,
       "food": {
         "activeContainers": 522,
-        "groups": 482,
+        "groups": 484,
         "products": 551,
         "purchases": 34
       },
-      "externalMs": 506,
+      "externalMs": 505,
+      "cleanWitnessVerified": true
+    },
+    {
+      "run": 4,
+      "processMs": 480,
+      "appMs": 360,
+      "food": {
+        "activeContainers": 522,
+        "groups": 484,
+        "products": 551,
+        "purchases": 34
+      },
+      "externalMs": 481,
+      "cleanWitnessVerified": true
+    },
+    {
+      "run": 5,
+      "processMs": 480,
+      "appMs": 356,
+      "food": {
+        "activeContainers": 522,
+        "groups": 484,
+        "products": 551,
+        "purchases": 34
+      },
+      "externalMs": 482,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
-      "processMs": 520,
-      "appMs": 389,
+      "processMs": 490,
+      "appMs": 367,
       "food": {
         "activeContainers": 522,
-        "groups": 482,
+        "groups": 484,
         "products": 551,
         "purchases": 34
       },
-      "externalMs": 519,
+      "externalMs": 493,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 510,
+    "medianMs": 490,
     "budgetMs": 1000,
     "passed": true,
     "samplesMs": [
-      500,
       520,
       510,
-      510,
-      520
+      480,
+      480,
+      490
     ],
-    "strictFirstLaunchMs": 2750
+    "strictFirstLaunchMs": 2800
   }
 }
