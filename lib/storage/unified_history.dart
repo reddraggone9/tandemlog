@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' show min;
 import 'dart:typed_data';
-import 'package:sqlite3/sqlite3.dart' show SqliteException;
+import 'package:sqlite3/sqlite3.dart' show Database, SqliteException;
 
 import 'package:uuid/uuid.dart';
 
@@ -41,7 +41,7 @@ typedef UnifiedEffectBuilder =
 class _FrameBudget {
   final _held = Stopwatch()..start();
 
-  bool get due => _held.elapsedMicroseconds >= 4000;
+  bool get due => _held.elapsedMicroseconds >= 8000;
 
   Future<void> pause() async {
     await Future<void>.delayed(Duration.zero);
@@ -491,60 +491,37 @@ final class UnifiedHistory {
             })
           >{};
       var reused = 0, catchUp = false;
-      final rowsByOwner = <String, List<StoredRow>>{};
-      final frames = _FrameBudget();
-      for (final owner in tails.keys) {
-        if (frames.due) await frames.pause();
-        final seal = seals[owner]!;
-        final rows = await _store.readWriterBetweenFrames(
-          owner,
-          seal,
-          frames.pause,
-        );
-        if (rows == null ||
-            rows.last.start != seal.lastStart ||
-            rows.last.start + rows.last.length + 1 != seal.end) {
-          return null;
-        }
-        rowsByOwner[owner] = rows;
-      }
-      // Workers decode the rows while this isolate rebuilds each writer's
-      // bytes from the same rows, a frame's worth at a time.
-      final decoding = _decodeStoredRows(rowsByOwner, frames)..ignore();
-      final prefixes = <String, BytesBuilder>{};
-      for (final MapEntry(key: owner, value: rows) in rowsByOwner.entries) {
-        final builder = prefixes[owner] = BytesBuilder(copy: false);
-        for (final row in rows) {
-          builder
-            ..add(utf8.encode(row.raw))
-            ..addByte(10);
-          if (frames.due) await frames.pause();
-        }
-      }
-      final decoded = await decoding;
+      // The profile's background owner reads every writer's rows, rebuilds
+      // their bytes and decodes them (in parallel workers of its own); this
+      // isolate only checks and publishes the result.
+      final restored = await profile.readOffIsolate(_restoreStoreJob, (
+        store: _store.key,
+        seals: {for (final owner in tails.keys) owner: seals[owner]!},
+      ));
+      if (restored == null) return null;
       for (final MapEntry(key: owner, value: tail) in tails.entries) {
         final seal = seals[owner]!;
-        final rows = rowsByOwner[owner]!;
+        final rows = restored[owner]!;
         final historicalCount = current.owners[owner]?['count'] as int? ?? 0;
-        if (historicalCount > rows.length) return null;
+        if (historicalCount > rows.ranges.length) return null;
         final migration = historicalCount == 0
             ? null
-            : rows[historicalCount - 1];
-        final builder = prefixes[owner]!;
+            : rows.ranges[historicalCount - 1];
+        final builder = BytesBuilder(copy: false)..add(rows.bytes);
         if (builder.length != seal.end) return null;
         final suffix = Uint8List.sublistView(tail, seal.end - seal.lastStart);
         final defer = _deferPeerCatchUp && owner != writer;
         if (defer && suffix.isNotEmpty) catchUp = true;
         if (!defer) builder.add(suffix);
         result[owner] = (
-          records: List.unmodifiable(decoded[owner]!),
+          records: List.unmodifiable(rows.records),
           bytes: Uint8List.fromList(builder.takeBytes()).asUnmodifiableView(),
           end: seal.end,
           migrationEnd: migration == null
               ? 0
               : migration.start + migration.length + 1,
         );
-        reused += rows.length;
+        reused += rows.ranges.length;
       }
       _storeSeals = Map.of(seals);
       decodedCacheReuses = reused;
@@ -565,63 +542,24 @@ final class UnifiedHistory {
     }
   }
 
-  /// Decodes stored rows in parallel short-lived isolates (pure data only;
-  /// no profile or native owner crosses), on this isolate if unavailable.
-  static Future<Map<String, List<UnifiedRecord>>> _decodeStoredRows(
-    Map<String, List<StoredRow>> rows,
-    _FrameBudget frames,
-  ) async {
-    const chunk = 400;
-    final jobs = <(String, int, List<StoredRow>)>[
-      for (final MapEntry(key: owner, value: list) in rows.entries)
-        for (var i = 0; i < list.length; i += chunk)
-          (owner, i, list.sublist(i, min(i + chunk, list.length))),
-    ];
-    List<List<UnifiedRecord>> parts;
-    try {
-      // Starting a worker copies its rows on this isolate. A worker that
-      // fails during a pause still reports through the wait below.
-      final workers = <Future<List<UnifiedRecord>>>[];
-      for (final job in jobs) {
-        if (frames.due) await frames.pause();
-        workers.add(
-          Isolate.run(
-            () => HistoryStore.decode(job.$3),
-            debugName: 'tandemlog-store-decode',
-          )..ignore(),
-        );
-      }
-      parts = await Future.wait(workers);
-    } on IsolateSpawnException {
-      parts = [for (final job in jobs) HistoryStore.decode(job.$3)];
-    } on UnsupportedError {
-      parts = [for (final job in jobs) HistoryStore.decode(job.$3)];
-    }
-    final result = <String, List<UnifiedRecord>>{};
-    for (var j = 0; j < jobs.length; j++) {
-      (result[jobs[j].$1] ??= []).addAll(parts[j]);
-    }
-    return result;
-  }
-
-  /// Inside the commit transaction: append each writer's newly admitted
-  /// records and move its seal to the protected head being written, or
-  /// rebuild the whole store when it is not known to match.
-  void _syncStore(
+  /// The history-store part of a commit: append each writer's newly
+  /// admitted records and move its seal to the protected head being written,
+  /// or rebuild the whole store when it is not known to match. Computed here,
+  /// executed by [_historyCommitJob] inside the commit transaction. A plan
+  /// that cannot be computed drops the store, as a failed write does.
+  _StorePlan _planStore(
     UnifiedManifest current,
     List<List<Object?>> heads,
     Map<String, List<UnifiedRecord>> records,
     Map<String, Map<int, ({int start, int length})>> offsets,
-    Map<String, Uint8List> observed, {
-    Map<UnifiedRecord, (String, String)>? encoded,
-  }) {
+    Map<String, Uint8List> observed,
+  ) {
     try {
       var seals = _storeSeals;
-      if (seals == null) {
-        _store.reset(_storeBinding(current));
-        seals = {};
-      }
+      final reset = seals == null ? _storeBinding(current) : null;
+      seals ??= {};
       final next = <String, HistorySeal>{};
+      final steps = <_StoreStep>[];
       for (final row in heads) {
         final owner = row[2] as String,
             sequence = row[3] as int,
@@ -629,10 +567,11 @@ final class UnifiedHistory {
             end = row[5] as int;
         final known = offsets[owner] ?? const {};
         var old = seals[owner];
+        var replace = false;
         if (old != null && old.sequence > 0 && known.containsKey(1)) {
           // This writer was re-read from byte 0 (audit or a prefix that could
           // not be reused): replace its rows with that strict decode.
-          _store.deleteWriter(owner);
+          replace = true;
           old = null;
         } else if (old != null &&
             old.sequence == sequence &&
@@ -670,19 +609,12 @@ final class UnifiedHistory {
         if (sequence > 0 && added.isEmpty) {
           throw StateError('History store seal moved without records.');
         }
-        _store.append(owner, added, seal, encoded: encoded);
+        steps.add((writer: owner, replace: replace, added: added, seal: seal));
         next[owner] = seal;
       }
-      _storeSeals = next;
+      return _StorePlan(reset: reset, steps: steps, next: next);
     } on Object {
-      // A store that cannot follow is dropped, never left half-current; the
-      // next open is strict and rebuilds it. Admission itself is unaffected.
-      _storeSeals = null;
-      try {
-        _store.drop();
-      } on SqliteException {
-        // Its seals no longer equal the protected heads: still strict.
-      }
+      return const _StorePlan.drop();
     }
   }
 
@@ -723,14 +655,20 @@ final class UnifiedHistory {
     return result;
   }
 
-  UnifiedRecord _decodeRecord(String raw, {bool force = false}) {
+  /// [decoded], when given, is `UnifiedRecord.decode(raw)` already done on a
+  /// background isolate; it is adopted exactly where a decode would run.
+  UnifiedRecord _decodeRecord(
+    String raw, {
+    bool force = false,
+    UnifiedRecord? decoded,
+  }) {
     final remembered = _decodedRecords.remove(raw);
     if (remembered != null && !force) {
       _decodedRecords[raw] = remembered;
       return remembered;
     }
     if (remembered != null) _decodedRecordBytes -= raw.length * 4;
-    final record = UnifiedRecord.decode(raw);
+    final record = decoded ?? UnifiedRecord.decode(raw);
     decodedRecords++;
     final cost = raw.length * 4;
     if (cost <= _decodedRecordBudget) {
@@ -768,6 +706,42 @@ final class UnifiedHistory {
     _projections[owner] = stage;
     publish();
   }
+
+  /// [attachProjectionInProfileQueue] whose bulk SQL may run on the profile's
+  /// background owner: [prestage] runs first, inside the same transaction as
+  /// [stage], and may set [ProfileTransaction.offloadCommit] when it wrote
+  /// little. Publication still happens only after COMMIT.
+  Future<void> attachProjectionInProfileQueueAsync(
+    Object owner,
+    UnifiedProjectionStage stage,
+    Future<void> Function(UnifiedSnapshot snapshot, ProfileTransaction tx)
+    prestage,
+  ) async {
+    if (_closed || _projections.containsKey(owner)) {
+      throw StateError('Invalid app projection attachment.');
+    }
+    final current = snapshot;
+    late void Function() publish;
+    await profile.transactionAsync((tx) async {
+      await prestage(current, tx);
+      publish = stage(current);
+    });
+    _projections[owner] = stage;
+    publish();
+  }
+
+  /// The Task revision a warm open restored, without consuming it.
+  String? peekReusedTaskProjectionRevision() =>
+      _semanticValidator?.reusedProjectionRevision;
+
+  /// The validator's private projection of exactly [candidate], for a copy
+  /// that an attach prestage runs on the profile's background owner.
+  TaskProjectionSource? validatedTaskProjectionSource(
+    UnifiedSnapshot candidate,
+    String revision,
+  ) => verifiesTaskRevision(candidate, revision)
+      ? _semanticValidator?.projectionSource(candidate.tasks)
+      : null;
 
   void detachProjectionInProfileQueue(Object owner) {
     _projections.remove(owner);
@@ -1295,6 +1269,16 @@ final class UnifiedHistory {
 
     final frames = _FrameBudget();
     final owners = ownerSet.toList()..sort();
+    // A strict read decodes every record. Start each large writer file's
+    // decode on its own background isolate now; the chain walk below still
+    // checks every record in order and adopts a decode only for the
+    // identical raw line, decoding anything else itself.
+    final predecoding = <String, Future<Map<int, (String, UnifiedRecord)>>>{
+      if (stored == null && previous == null)
+        for (final owner in owners)
+          if ((physicalNow[owner]?.length ?? 0) >= _predecodeBytes)
+            owner: _predecodeLines(physicalNow[owner]!),
+    };
     for (final owner in owners) {
       final name = unifiedLogName(owner);
       final exists = byName.containsKey(name);
@@ -1419,6 +1403,7 @@ final class UnifiedHistory {
       } else if (historicalCount > 0) {
         reusedHistoricalCoverage = false;
       }
+      final predecoded = await predecoding[owner];
       for (var i = start; i < bytes.length; i++) {
         if (bytes[i] != 10) {
           if (i - start >= maximumUnifiedRecordBytes) {
@@ -1434,7 +1419,12 @@ final class UnifiedHistory {
         final recordNumber = sequence + 1;
         try {
           final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
-          final r = _decodeRecord(raw, force: forceFullAudit);
+          final pre = predecoded?[start];
+          final r = _decodeRecord(
+            raw,
+            force: forceFullAudit,
+            decoded: pre != null && pre.$1 == raw ? pre.$2 : null,
+          );
           for (final e in r.effects) {
             final task = e.task;
             if (task != null) {
@@ -1629,52 +1619,54 @@ final class UnifiedHistory {
       _validatePreparedPrefix(current, result, pending.single);
     }
     if (!observe) return result;
-    final toEncode = <UnifiedRecord>[];
-    for (final entry in ownerRecords.entries) {
-      final from = _storeSeals?[entry.key]?.sequence ?? 0;
-      for (final record in entry.value) {
-        if (record.sequence > from ||
-            parsedOffsets[entry.key]?.containsKey(1) == true) {
-          toEncode.add(record);
-        }
-      }
-    }
-    final encodedParts = await _encodeStartupStore(toEncode);
-    final encoded = <UnifiedRecord, (String, String)>{
-      for (var i = 0; i < toEncode.length; i++) toEncode[i]: encodedParts[i],
-    };
+    final plan = _planStore(
+      current,
+      heads,
+      ownerRecords,
+      parsedOffsets,
+      observed,
+    );
     final publications = <void Function()>[];
-    var pendingAfterCommit = false;
     final retirePending =
         pending.isNotEmpty && _preparedComplete(result, pending.single);
-    profile.transaction(() {
-      profile.database.execute(
-        'INSERT OR IGNORE INTO profile_metadata VALUES (?,?)',
-        [_locationKey, locationBinding],
-      );
-      profile.database.execute(
-        'INSERT INTO protected_app_workspaces VALUES (?,?,?,?) ON CONFLICT(space) DO UPDATE SET observed=excluded.observed',
-        [current.space, current.epoch, rawManifest, canonicalDataJson(owners)],
-      );
-      for (final row in heads) {
-        profile.database.execute(
-          'INSERT OR REPLACE INTO protected_app_heads VALUES (?,?,?,?,?,?,?,?)',
-          row,
+    // Memory only: the same value the transaction body used to compute.
+    final pendingAfterCommit = !retirePending && _outbox(current).isNotEmpty;
+    // A strict open writes thousands of store rows; that SQL, record
+    // encoding and the COMMIT run on the profile's background owner. Small
+    // refreshes run the same job inline. Either way it is one transaction
+    // with the projection stages below; memory publishes only after COMMIT.
+    final offload = plan.offloads;
+    late final bool storeCurrent;
+    try {
+      await profile.transactionAsync((tx) async {
+        storeCurrent = await tx.run(
+          _historyCommitJob,
+          _HistoryCommit(
+            store: _store.key,
+            location: [_locationKey, locationBinding],
+            workspace: [
+              current.space,
+              current.epoch,
+              rawManifest,
+              canonicalDataJson(owners),
+            ],
+            heads: heads,
+            plan: plan,
+          ),
+          offload: offload,
         );
-      }
-      _syncStore(
-        current,
-        heads,
-        ownerRecords,
-        parsedOffsets,
-        observed,
-        encoded: encoded,
-      );
-      for (final stage in _projections.values) {
-        publications.add(stage(result));
-      }
-      pendingAfterCommit = !retirePending && _outbox(current).isNotEmpty;
-    });
+        for (final stage in _projections.values) {
+          publications.add(stage(result));
+        }
+      }, offloadCommit: offload);
+    } catch (_) {
+      // Seals are known only from committed rows; rebuild at the next commit.
+      _storeSeals = null;
+      rethrow;
+    }
+    // A store that cannot follow is dropped, never left half-current; the
+    // next open is strict and rebuilds it. Admission itself is unaffected.
+    _storeSeals = storeCurrent ? plan.next : null;
     if (retirePending) {
       _pending = null;
       _pendingBaseProof = null;
@@ -2110,7 +2102,19 @@ final class UnifiedHistory {
       publishTaskValidation(key, ready);
     }
 
+    // Pure Food admission is independent of the Task stages: start its worker
+    // first so it runs alongside them. Its result (or failure) is still taken
+    // only at its own stage, after the Task stages, as before.
+    Future<(String, FoodAdmission)>? startupFood;
+    Future<(String, FoodAdmission)> admitStartupFood() =>
+        startupFood ??= _admitStartupFood(
+          foodEffects.values.toList(),
+          m.referenceAuthors,
+          m.digest,
+        );
+
     Future<void> identifyTasksBetweenFrames() async {
+      if (priorKey == null) admitStartupFood().ignore();
       if (taskKey != null) return;
       semanticTaskSortRuns++;
       final identified = await _identifyStartupTasks(semanticTasks);
@@ -2192,10 +2196,8 @@ final class UnifiedHistory {
             admitted = admitFood();
             return;
           }
-          final input = foodEffects.values.toList();
-          final authors = m.referenceAuthors;
           // Pure admission only: no profile/native owner is sent to the worker.
-          final loaded = await _admitStartupFood(input, authors, m.digest);
+          final loaded = await admitStartupFood();
           final cached = _foodValidation.remove(loaded.$1);
           admitted = cached ?? loaded.$2;
           if (cached == null) fullFoodAdmissionRuns++;
@@ -2955,14 +2957,194 @@ Future<(String, FoodAdmission)> _admitStartupFood(
   );
 }, debugName: 'tandemlog-food-admission');
 
-Future<List<(String, String)>> _encodeStartupStore(
+typedef _RestoredWriter = ({
   List<UnifiedRecord> records,
-) => records.isEmpty
-    ? Future.value(const [])
-    : Isolate.run(
-        () => [
-          for (final record in records)
-            (record.encode(), UnifiedDecodedCache.typedFields(record)),
+  Uint8List bytes,
+  List<({int start, int length})> ranges,
+});
+
+/// A warm open's store read, on the profile's background owner: each
+/// writer's rows exactly as [HistoryStore.readWriter] checks them against
+/// its seal, the bytes they rebuild, and their decode (in parallel workers;
+/// pure data only). Null when any writer does not match its seal.
+Future<Map<String, _RestoredWriter>?> _restoreStoreJob(
+  Database db,
+  List<Database> _,
+  ({String store, Map<String, HistorySeal> seals}) args,
+) async {
+  final store = HistoryStore(db, args.store);
+  final rowsByOwner = <String, List<StoredRow>>{};
+  try {
+    for (final MapEntry(key: owner, value: seal) in args.seals.entries) {
+      final rows = store.readWriter(owner, seal);
+      if (rows == null ||
+          rows.isEmpty ||
+          rows.last.start != seal.lastStart ||
+          rows.last.start + rows.last.length + 1 != seal.end) {
+        return null;
+      }
+      rowsByOwner[owner] = rows;
+    }
+  } on SqliteException {
+    return null;
+  } on TypeError {
+    return null;
+  }
+  const chunk = 400;
+  final jobs = <(String, List<StoredRow>)>[
+    for (final MapEntry(key: owner, value: list) in rowsByOwner.entries)
+      for (var i = 0; i < list.length; i += chunk)
+        (owner, list.sublist(i, min(i + chunk, list.length))),
+  ];
+  final List<List<UnifiedRecord>> parts;
+  try {
+    parts = await Future.wait([
+      for (final job in jobs)
+        Isolate.run(
+          () => HistoryStore.decode(job.$2),
+          debugName: 'tandemlog-store-decode',
+        ),
+    ]);
+  } on RemoteError {
+    return null; // A failed worker decode cannot authorize a restore.
+  } on FormatException {
+    return null;
+  } on FormatFailure {
+    return null;
+  } on TypeError {
+    return null;
+  }
+  final records = <String, List<UnifiedRecord>>{};
+  for (var j = 0; j < jobs.length; j++) {
+    (records[jobs[j].$1] ??= []).addAll(parts[j]);
+  }
+  return {
+    for (final MapEntry(key: owner, value: rows) in rowsByOwner.entries)
+      owner: (
+        records: records[owner]!,
+        bytes: () {
+          final builder = BytesBuilder(copy: false);
+          for (final row in rows) {
+            builder
+              ..add(utf8.encode(row.raw))
+              ..addByte(10);
+          }
+          return builder.takeBytes();
+        }(),
+        ranges: [
+          for (final row in rows) (start: row.start, length: row.length),
         ],
-        debugName: 'tandemlog-store-encode',
-      );
+      ),
+  };
+}
+
+const _predecodeBytes = 64 * 1024;
+
+/// Every complete line of a writer file that decodes, by start offset, with
+/// its raw text. Lines that fail are left to the caller's own decode, which
+/// reports them with their position.
+Future<Map<int, (String, UnifiedRecord)>> _predecodeLines(Uint8List bytes) =>
+    Isolate.run(() {
+      final result = <int, (String, UnifiedRecord)>{};
+      var start = 0;
+      for (var i = 0; i < bytes.length; i++) {
+        if (bytes[i] != 10) continue;
+        if (i - start < maximumUnifiedRecordBytes) {
+          try {
+            final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
+            result[start] = (raw, UnifiedRecord.decode(raw));
+          } on Object {
+            // Decoded again, and reported, by the chain walk.
+          }
+        }
+        start = i + 1;
+      }
+      return result;
+    }, debugName: 'tandemlog-history-decode').catchError(
+      // Without it the chain walk decodes everything itself.
+      (Object _) => <int, (String, UnifiedRecord)>{},
+    );
+
+typedef _StoreStep = ({
+  String writer,
+  bool replace,
+  List<StoredRecord> added,
+  HistorySeal seal,
+});
+
+/// What a commit does to the history store; plain data, so it can be sent to
+/// the profile's background owner.
+final class _StorePlan {
+  const _StorePlan({
+    required this.reset,
+    required this.steps,
+    required this.next,
+  }) : drop = false;
+  const _StorePlan.drop()
+    : drop = true,
+      reset = null,
+      steps = const [],
+      next = null;
+  final bool drop;
+
+  /// The new binding when the whole store is rebuilt.
+  final String? reset;
+  final List<_StoreStep> steps;
+  final Map<String, HistorySeal>? next;
+
+  /// Worth an isolate: a rebuild, or enough rows that encoding, inserting
+  /// and syncing them would hold the UI isolate for more than a frame.
+  bool get offloads =>
+      reset != null ||
+      steps.fold(0, (n, s) => n + s.added.length) >= _offloadRecords;
+  static const _offloadRecords = 64;
+}
+
+final class _HistoryCommit {
+  const _HistoryCommit({
+    required this.store,
+    required this.location,
+    required this.workspace,
+    required this.heads,
+    required this.plan,
+  });
+  final String store;
+  final List<Object?> location, workspace;
+  final List<List<Object?>> heads;
+  final _StorePlan plan;
+}
+
+/// The SQL of a history commit, in its original order, inside the caller's
+/// transaction (on whichever isolate holds the connection). Returns whether
+/// the history store is current; a store failure drops the store without
+/// failing admission.
+bool _historyCommitJob(Database db, List<Database> _, _HistoryCommit c) {
+  db.execute('INSERT OR IGNORE INTO profile_metadata VALUES (?,?)', c.location);
+  db.execute(
+    'INSERT INTO protected_app_workspaces VALUES (?,?,?,?) ON CONFLICT(space) DO UPDATE SET observed=excluded.observed',
+    c.workspace,
+  );
+  for (final row in c.heads) {
+    db.execute(
+      'INSERT OR REPLACE INTO protected_app_heads VALUES (?,?,?,?,?,?,?,?)',
+      row,
+    );
+  }
+  final store = HistoryStore(db, c.store);
+  try {
+    if (c.plan.drop) throw StateError('History store cannot follow.');
+    if (c.plan.reset != null) store.reset(c.plan.reset!);
+    for (final step in c.plan.steps) {
+      if (step.replace) store.deleteWriter(step.writer);
+      store.append(step.writer, step.added, step.seal);
+    }
+    return true;
+  } on Object {
+    try {
+      store.drop();
+    } on SqliteException {
+      // Its seals no longer equal the protected heads: still strict.
+    }
+    return false;
+  }
+}

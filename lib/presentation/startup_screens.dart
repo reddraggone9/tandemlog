@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,8 +18,27 @@ bool needsAppUpdate(String? message) =>
 
 /// While the workspace opens: the app name and a moving bar, nothing that
 /// guesses at onboarding or failure (design/recovery.md).
-class StartupLoading extends StatelessWidget {
+class StartupLoading extends StatefulWidget {
   const StartupLoading({super.key});
+
+  @override
+  State<StartupLoading> createState() => _StartupLoadingState();
+}
+
+class _StartupLoadingState extends State<StartupLoading> {
+  late final _warmup = TextStyleWarmup(Theme.of(context).textTheme);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _warmup.start();
+  }
+
+  @override
+  void dispose() {
+    _warmup.stop();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Center(
@@ -38,6 +60,74 @@ class StartupLoading extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Lee 11-13 (60 fps): the first text laid out in a font weight or slant
+/// the engine has not matched yet makes it match one (Fontconfig on Linux,
+/// about 18 ms each on Bender), and the first list needed several at once:
+/// one 57-74 ms frame. While the loading bar runs, lay out one sample per
+/// variant the first list uses (weights 500 and 700 besides the title's 400,
+/// and the icon font), each in its own event-loop turn between frames, so
+/// the list finds them matched. Variants already matched cost microseconds.
+/// Starts after the opening's first frames so it does not delay reading
+/// settings; nothing is drawn.
+class TextStyleWarmup {
+  TextStyleWarmup(TextTheme theme)
+    : _samples = [
+        if (theme.bodyMedium case final base?)
+          for (final weight in const [FontWeight.w500, FontWeight.w700])
+            TextSpan(
+              text: _sample,
+              style: base.copyWith(fontWeight: weight),
+            ),
+        TextSpan(
+          text: String.fromCharCode(Icons.check.codePoint),
+          style: TextStyle(
+            fontFamily: Icons.check.fontFamily,
+            package: Icons.check.fontPackage,
+          ),
+        ),
+      ];
+
+  final List<TextSpan> _samples;
+  var _next = 0;
+  var _running = false;
+  Timer? _delay;
+  static const _startAfter = Duration(milliseconds: 150);
+  static const _sample = 'Tandemlog 0123456789';
+
+  void start() {
+    if (_running || _next >= _samples.length) return;
+    _running = true;
+    _delay = Timer(_startAfter, _afterNextFrame);
+  }
+
+  void stop() {
+    _running = false;
+    _delay?.cancel();
+  }
+
+  void _afterNextFrame() {
+    if (!_running) return;
+    SchedulerBinding.instance
+      ..addPostFrameCallback((_) {
+        // Its own event-loop turn, never inside a frame.
+        if (_running) Timer.run(_turn);
+      })
+      ..ensureVisualUpdate();
+  }
+
+  void _turn() {
+    if (!_running) return;
+    TextPainter(text: _samples[_next++], textDirection: TextDirection.ltr)
+      ..layout()
+      ..dispose();
+    if (_next >= _samples.length) {
+      _running = false;
+    } else {
+      _afterNextFrame();
+    }
+  }
 }
 
 /// Data from a newer version: plain words, Update first, then [actions];

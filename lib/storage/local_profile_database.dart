@@ -1,5 +1,8 @@
-import 'dart:io';
+import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi' show Pointer;
+import 'dart:io';
+import 'dart:isolate';
 
 import '../domain/event.dart' show isCanonicalId;
 import '../diagnostics/operation_observer.dart';
@@ -21,6 +24,64 @@ class LocalDatabaseFailure implements Exception {
 /// or alter profile state. Failures are counted and never change operation
 /// results, error identity, transaction ordering or queue admission.
 typedef ProfileDiagnosticObserver = OperationDiagnosticObserver;
+
+/// A unit of SQL work for [ProfileTransaction.run]. Must be a top-level or
+/// static function: it may run on a background isolate against borrowed
+/// handles to the same native connections, so it can use only [db] (the
+/// profile connection), [lent] (the extra connections passed to `run`, in
+/// order) and [args] (sendable), never profile or application state.
+typedef ProfileSqlJob<A, R> =
+    FutureOr<R> Function(Database db, List<Database> lent, A args);
+
+/// The open transaction of [LocalProfileDatabase.transactionAsync]. Its
+/// statements, whichever isolate runs them, belong to one BEGIN...COMMIT.
+final class ProfileTransaction {
+  ProfileTransaction._(this._profile);
+  final LocalProfileDatabase _profile;
+  bool _open = true;
+
+  /// Whether COMMIT (the WAL sync) runs on the background owner. The body
+  /// may clear it after writing too little for the sync to matter.
+  bool offloadCommit = true;
+
+  /// Runs [job] inside this transaction. With [offload] the connection (and
+  /// [lend], other connections the job uses, such as a private scratch
+  /// database) is lent to a background isolate until the job ends; meanwhile
+  /// every UI-isolate access through this profile fails instead of touching
+  /// it. Without [offload] the same job runs here, synchronously.
+  Future<R> run<A, R>(
+    ProfileSqlJob<A, R> job,
+    A args, {
+    bool offload = true,
+    List<Database> lend = const [],
+  }) async {
+    if (!_open) throw StateError('Profile transaction has ended.');
+    final db = _profile.database;
+    if (!offload || !LocalProfileDatabase.offloadAvailable) {
+      return await job(db, lend, args);
+    }
+    return _profile._lend(
+      lend,
+      () => _runBorrowed(job, args, _profile._database.handle.address, [
+        for (final other in lend) other.handle.address,
+      ]),
+    );
+  }
+}
+
+/// Isolate.run sends its closure's whole context: keep it to these values.
+Future<R> _runBorrowed<A, R>(
+  ProfileSqlJob<A, R> job,
+  A args,
+  int profile,
+  List<int> lent,
+) => Isolate.run(
+  () => job(_borrow(profile), [for (final a in lent) _borrow(a)], args),
+  debugName: 'tandemlog-profile-owner',
+);
+
+Database _borrow(int address) =>
+    sqlite3.fromPointer(Pointer.fromAddress(address), borrowed: true);
 
 /// App-owned local connection and database-file lease. At coordinated cutover,
 /// old local state is reset transactionally while retaining device preferences.
@@ -48,6 +109,37 @@ class LocalProfileDatabase {
   bool _closed = false;
   bool _poisoned = false;
   Future<void> _queue = Future<void>.value();
+  // Set while a background isolate holds the native connection (and any
+  // other lent handles); see [ProfileTransaction.run].
+  bool _lent = false;
+  bool _asyncTransaction = false;
+  static const lentMessage =
+      'Local profile connection is lent to its background owner.';
+
+  /// The bundled SQLite serializes each connection internally; a build
+  /// without threading support must never lend a handle to another isolate.
+  /// Tests turn it off to compare offloaded and inline results.
+  static bool offloadAvailable = !sqlite3.usedCompileOption('THREADSAFE=0');
+
+  bool get isLent => _lent;
+
+  Future<R> _lend<R>(List<Database> others, Future<R> Function() work) async {
+    if (_lent) throw StateError(lentMessage);
+    _lent = true;
+    _lentOthers.addAll(others);
+    try {
+      return await work();
+    } finally {
+      _lent = false;
+      _lentOthers.clear();
+    }
+  }
+
+  // Extra handles (validator scratch databases) lent with the profile.
+  static final _lentOthers = <Database>{};
+
+  /// True while [db] is lent to a background owner job.
+  static bool isLentDatabase(Database db) => _lentOthers.contains(db);
   final _workspaces = <String>{};
   Future<void>? _closing;
   ProfileDiagnosticObserver? diagnosticObserver;
@@ -165,6 +257,7 @@ class LocalProfileDatabase {
   /// One owner serializes short transactions. Do not dispose this connection
   /// from a workspace handle or hold transactions across provider I/O.
   Database get database {
+    if (_lent) throw StateError(lentMessage);
     if (_closed || _poisoned) {
       throw StateError(
         'Local profile database is closed or requires recovery.',
@@ -387,6 +480,9 @@ class LocalProfileDatabase {
     if (work is Future Function() && work is! Never Function()) {
       throw ArgumentError('Local database transactions must be synchronous.');
     }
+    if (_asyncTransaction || _lent) {
+      throw StateError('Nested local database transaction.');
+    }
     if (diagnosticObserver == null) return _transaction(work);
     return _diagnose('sqlite.transaction', () => _transaction(work));
   }
@@ -412,6 +508,61 @@ class LocalProfileDatabase {
       Error.throwWithStackTrace(error, stack);
     }
   }
+
+  /// One transaction whose SQL may run on a background isolate (see
+  /// [ProfileTransaction.run]), for commits too long for one UI frame. Call
+  /// only from [serialize]d work: the queue keeps every other profile
+  /// operation out until this returns. BEGIN IMMEDIATE runs here; [body] runs
+  /// its statements through the transaction (or synchronously through
+  /// [database] between jobs); COMMIT runs on the background owner when
+  /// [offloadCommit]. Any failure rolls the whole transaction back, exactly
+  /// like [transaction]. Memory must be published only after this completes.
+  Future<T> transactionAsync<T>(
+    Future<T> Function(ProfileTransaction tx) body, {
+    bool offloadCommit = true,
+  }) {
+    if (_asyncTransaction || _lent) {
+      throw StateError('Nested local database transaction.');
+    }
+    final db = database;
+    _executeControl(db, 'BEGIN IMMEDIATE', 'sqlite.begin');
+    _asyncTransaction = true;
+    final tx = ProfileTransaction._(this)..offloadCommit = offloadCommit;
+    Future<T> run() async {
+      try {
+        final result = await body(tx);
+        await tx.run(_commitJob, null, offload: tx.offloadCommit);
+        return result;
+      } catch (error, stack) {
+        // A failed or dead owner job leaves the handle with this isolate.
+        rollbackAfterFailure(error);
+        Error.throwWithStackTrace(error, stack);
+      } finally {
+        tx._open = false;
+        _asyncTransaction = false;
+      }
+    }
+
+    return observeAsynchronous('sqlite.transactionAsync', run);
+  }
+
+  /// Runs a read-only [job] (no transaction) on the background owner with
+  /// the connection lent, as [ProfileTransaction.run] does. Call only from
+  /// [serialize]d work.
+  Future<R> readOffIsolate<A, R>(ProfileSqlJob<A, R> job, A args) async {
+    if (_asyncTransaction) {
+      throw StateError('Use the open transaction for this job.');
+    }
+    final db = database;
+    if (!offloadAvailable) return await job(db, const [], args);
+    return _lend(
+      const [],
+      () => _runBorrowed(job, args, _database.handle.address, const []),
+    );
+  }
+
+  static void _commitJob(Database db, List<Database> _, void _) =>
+      db.execute('COMMIT');
 
   /// Common failure boundary for the few transaction sites that must await a
   /// legacy file adapter. Shared ingestion itself does not await within SQL.

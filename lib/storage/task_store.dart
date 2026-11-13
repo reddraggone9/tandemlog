@@ -389,13 +389,7 @@ class TaskStore {
 
   Iterable<String> _ensureProjectionIndexesSteps() sync* {
     if (_projectionIndexesReady) return;
-    for (final sql in [
-      'CREATE INDEX IF NOT EXISTS ${tables.events}_entity ON ${tables.events}(entity)',
-      "CREATE INDEX IF NOT EXISTS ${tables.events}_successor ON ${tables.events}(json_extract(semantic,'\$.data.successor.id'))",
-      "CREATE INDEX IF NOT EXISTS ${tables.events}_type_parent ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.parent'))",
-      "CREATE INDEX IF NOT EXISTS ${tables.events}_type_before ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.before'))",
-      "CREATE INDEX IF NOT EXISTS ${tables.views}_occurrence_due ON ${tables.views}(id) WHERE json_extract(raw,'\$.kind')='task' AND COALESCE(json_extract(raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(raw,'\$.successorSuppressed'),0)=0 AND json_extract(raw,'\$.schedule.dueDate') IS NULL AND json_extract(raw,'\$.schedule.scheduledDate') IS NOT NULL",
-    ]) {
+    for (final sql in _projectionIndexSql(tables)) {
       db.execute(sql);
       yield 'replay.indexes';
     }
@@ -1583,9 +1577,10 @@ class TaskStore {
           unified: history,
         );
         store!.space = history.manifest.space;
-        history.attachProjectionInProfileQueue(
+        await history.attachProjectionInProfileQueueAsync(
           store!,
           store!._stageUnifiedProjection,
+          store!._prestageUnifiedProjection,
         );
         return store!;
       });
@@ -1610,7 +1605,90 @@ class TaskStore {
   int historyScanReads = 0;
 
   EventClock? _stagedMaximumClock;
+
+  /// Tests turn this off to compare with the stage doing all the work.
+  static bool prestageAttach = true;
+
+  /// Stages that used a prestage's copy or view (diagnostics).
+  int prestagedProjectionUses = 0;
+
+  // Work an attach prestage already did for exactly this snapshot and
+  // revision, inside the transaction the stage is about to finish.
+  ({
+    UnifiedSnapshot snapshot,
+    String revision,
+    bool copied,
+    RecurringTextInput? textInput,
+    TaskViewSnapshot? view,
+  })?
+  _prestaged;
+
+  /// Before the first stage of a workspace open: the bulk SQL of the two
+  /// startup branches (copy the validator's projection, or reuse the warm
+  /// cache) and the read and decode of the visible rows run on the profile's
+  /// background owner, in the attach transaction. The stage then takes the
+  /// same branch and uses this work only if it matches exactly.
+  Future<void> _prestageUnifiedProjection(
+    UnifiedSnapshot snapshot,
+    ProfileTransaction tx,
+  ) async {
+    _prestaged = null;
+    final revision = unified!.validatedTaskRevision(snapshot);
+    if (!prestageAttach || _unifiedTaskRevision != null || revision == null) {
+      tx.offloadCommit = false;
+      return;
+    }
+    final warm = unified!.peekReusedTaskProjectionRevision() == revision;
+    final source = warm
+        ? null
+        : unified!.validatedTaskProjectionSource(snapshot, revision);
+    if (!warm && source == null) {
+      tx.offloadCommit = false; // The stage replays; nothing to prepare.
+      return;
+    }
+    // Only an empty previous view can be rebuilt elsewhere without copying
+    // it there; the stage computes any other view itself.
+    final previous = _currentView.rows.isEmpty ? _currentView : null;
+    final view = await tx.run(
+      _taskAttachJob,
+      (
+        target: tables,
+        source: source?.tables,
+        cleared: source == null ? const <String>[] : _projectionClearedTables,
+        previous: previous,
+      ),
+      lend: [?source?.db],
+    );
+    tx.offloadCommit = source != null;
+    _prestaged = (
+      snapshot: snapshot,
+      revision: revision,
+      copied: source != null,
+      textInput: source?.textInput,
+      view: view == null || view.rows.isEmpty ? null : view,
+    );
+  }
+
+  List<String> get _projectionClearedTables => [
+    tables.events,
+    tables.views,
+    tables.streams,
+    tables.streamRanges,
+    tables.textFields,
+    tables.textActors,
+    tables.textOutbox,
+    tables.positions,
+  ];
+
   void Function() _stageUnifiedProjection(UnifiedSnapshot snapshot) {
+    try {
+      return _stageUnifiedProjectionPrepared(snapshot);
+    } finally {
+      _prestaged = null;
+    }
+  }
+
+  void Function() _stageUnifiedProjectionPrepared(UnifiedSnapshot snapshot) {
     final before = _canonicalTextInput;
     final beforeScope = _textStageSnapshot;
     _textStageSnapshot = snapshot;
@@ -1705,19 +1783,22 @@ class TaskStore {
           _textBaseline = null;
           textWriteBlocked = null;
           _recurringTextMemo.clear();
-          for (final table in [
-            tables.events,
-            tables.views,
-            tables.streams,
-            tables.streamRanges,
-            tables.textFields,
-            tables.textActors,
-            tables.textOutbox,
-            tables.positions,
-          ]) {
-            db.execute('DELETE FROM $table');
-          }
-          if (unified!.copyValidatedTaskProjection(this, snapshot, revision)) {
+          final prestaged = _prestaged;
+          if (prestaged != null &&
+              prestaged.copied &&
+              identical(prestaged.snapshot, snapshot) &&
+              prestaged.revision == revision) {
+            // The background owner cleared these tables and copied the
+            // validated projection into them in this same transaction, as
+            // copyValidatedTaskProjection does below.
+            _invalidateCopySeedIndex();
+            _projectionIndexesReady = true;
+            _canonicalTextInput = prestaged.textInput;
+            _validateTextBaseline();
+            semanticProjectionReuses++;
+            prestagedProjectionUses++;
+          } else if (_clearProjectionTables() &&
+              unified!.copyValidatedTaskProjection(this, snapshot, revision)) {
             _validateTextBaseline();
             semanticProjectionReuses++;
           } else {
@@ -2477,10 +2558,26 @@ class TaskStore {
   // Diagnostic count of display-row decoding, excluding command guards.
   int displaySnapshotRowsDecoded = 0;
 
+  bool _clearProjectionTables() {
+    _prestaged = null; // Any prepared view described the copied rows.
+    for (final table in _projectionClearedTables) {
+      db.execute('DELETE FROM $table');
+    }
+    return true;
+  }
+
   TaskViewSnapshot _nextProjectionView(
     Set<String>? projectedIds, {
     required bool orderRebuilt,
   }) {
+    final prestaged = _prestaged?.view;
+    if (projectedIds == null && prestaged != null) {
+      // Read from the same rows inside this transaction; nothing since then
+      // writes views or positions (text baseline checks write metadata only).
+      displaySnapshotRowsDecoded += prestaged.rows.length;
+      prestagedProjectionUses++;
+      return prestaged;
+    }
     if (projectedIds != null && !orderRebuilt) {
       final changes = <String, Map<String, dynamic>?>{};
       for (final id in projectedIds) {
@@ -2506,10 +2603,8 @@ class TaskStore {
   }
 
   final Map<String, int> lastReadTimings = {};
-  String get _visibleRowsQuery =>
-      "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0";
-  String get _visibleRowsSql =>
-      '$_visibleRowsQuery ORDER BY ${tables.positions}.rank';
+  String get _visibleRowsQuery => _visibleRowsQueryFor(tables);
+  String get _visibleRowsSql => _visibleRowsSqlFor(tables);
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
     final records = db.select(_visibleRowsSql);
@@ -5206,6 +5301,65 @@ List<String> _taskCacheTables(TaskTables t) => [
   t.metadata,
 ];
 
+List<String> _projectionIndexSql(TaskTables tables) => [
+  'CREATE INDEX IF NOT EXISTS ${tables.events}_entity ON ${tables.events}(entity)',
+  "CREATE INDEX IF NOT EXISTS ${tables.events}_successor ON ${tables.events}(json_extract(semantic,'\$.data.successor.id'))",
+  "CREATE INDEX IF NOT EXISTS ${tables.events}_type_parent ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.parent'))",
+  "CREATE INDEX IF NOT EXISTS ${tables.events}_type_before ON ${tables.events}(json_extract(semantic,'\$.type'),json_extract(semantic,'\$.data.before'))",
+  "CREATE INDEX IF NOT EXISTS ${tables.views}_occurrence_due ON ${tables.views}(id) WHERE json_extract(raw,'\$.kind')='task' AND COALESCE(json_extract(raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(raw,'\$.successorSuppressed'),0)=0 AND json_extract(raw,'\$.schedule.dueDate') IS NULL AND json_extract(raw,'\$.schedule.scheduledDate') IS NOT NULL",
+];
+
+String _visibleRowsQueryFor(TaskTables t) =>
+    "SELECT ${t.views}.raw FROM ${t.views} JOIN ${t.positions} ON ${t.positions}.id=${t.views}.id WHERE json_extract(${t.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${t.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${t.views}.raw,'\$.successorSuppressed'),0)=0";
+
+String _visibleRowsSqlFor(TaskTables t) =>
+    '${_visibleRowsQueryFor(t)} ORDER BY ${t.positions}.rank';
+
+/// The validator's private projection: its scratch database (lent to the
+/// profile's background owner for the copy), tables and text input.
+typedef TaskProjectionSource = ({
+  Database db,
+  TaskTables tables,
+  RecurringTextInput? textInput,
+});
+
+typedef _TaskAttach = ({
+  TaskTables target,
+  TaskTables? source,
+  List<String> cleared,
+  TaskViewSnapshot? previous,
+});
+
+/// An attach prestage's SQL, in the stage's order: clear the projection
+/// tables and copy the validator's rows and indexes into them (as
+/// [TaskSemanticValidator.copyProjectionTo]), then read and decode the
+/// visible rows into the next view (as [TaskStore._nextProjectionView]).
+TaskViewSnapshot? _taskAttachJob(
+  Database db,
+  List<Database> lent,
+  _TaskAttach a,
+) {
+  if (a.source != null) {
+    for (final table in a.cleared) {
+      db.execute('DELETE FROM $table');
+    }
+    final rows = _taskCacheRows(lent.single, a.source!);
+    db.execute(
+      "DELETE FROM ${a.target.metadata} WHERE key IN ('order_projection','text_baseline_verified')",
+    );
+    _insertTaskCacheRows(db, _taskCacheTables(a.target), rows);
+    for (final sql in _projectionIndexSql(a.target)) {
+      db.execute(sql);
+    }
+  }
+  if (a.previous == null) return null;
+  final rows = db
+      .select(_visibleRowsSqlFor(a.target))
+      .map((r) => jsonDecode(r['raw'] as String) as Map<String, dynamic>)
+      .toList();
+  return TaskViewSnapshot.next(rows, a.previous!);
+}
+
 List<List<List<Object?>>> _taskCacheRows(Database db, TaskTables t) => [
   for (final entry in _taskCacheTables(t).indexed)
     _taskCacheTableRows(db, entry.$1, entry.$2),
@@ -5367,7 +5521,7 @@ final class TaskTextReadSelection {
 /// Cooperative time slices for [TaskSemanticValidator.validateBetweenFrames]:
 /// validation runs until [due], then [pause] lets a frame through.
 class TaskValidationFrames {
-  TaskValidationFrames({this.slice = const Duration(milliseconds: 4)});
+  TaskValidationFrames({this.slice = const Duration(milliseconds: 8)});
   final Duration slice;
   final _held = Stopwatch()..start();
 
@@ -5431,7 +5585,7 @@ class TaskSemanticValidator {
   int _generation = 0;
 
   void _requireIdle() {
-    if (_slicing) {
+    if (_slicing || _lent) {
       throw StateError('Task validation is already in progress.');
     }
   }
@@ -5485,6 +5639,7 @@ class TaskSemanticValidator {
     final store = _store;
     if (store == null ||
         _slicing ||
+        _lent ||
         _textSelectionSuppressed ||
         owningHistory?.ownsTaskValidator(this) != true ||
         _ready == null ||
@@ -6289,8 +6444,27 @@ class TaskSemanticValidator {
     }
   }
 
+  /// The scratch projection [copyProjectionTo] would copy for [events].
+  TaskProjectionSource? projectionSource(Iterable<LogEvent> events) {
+    if (_store == null || _ready == null || _slicing || _lent) return null;
+    final canonical = {for (final e in events) e.id: e.canonicalRaw!};
+    if (canonical.length != _raws.length ||
+        canonical.entries.any((e) => _raws[e.key] != e.value)) {
+      return null;
+    }
+    return (
+      db: _store!.db,
+      tables: _store!.tables,
+      textInput: _store!._canonicalTextInput,
+    );
+  }
+
+  // The scratch database is with the profile's background owner.
+  bool get _lent =>
+      _store != null && LocalProfileDatabase.isLentDatabase(_store!.db);
+
   bool copyProjectionTo(TaskStore target, Iterable<LogEvent> events) {
-    if (_store == null || _ready == null || _slicing) return false;
+    if (_store == null || _ready == null || _slicing || _lent) return false;
     final canonical = {for (final e in events) e.id: e.canonicalRaw!};
     if (canonical.length != _raws.length ||
         canonical.entries.any((e) => _raws[e.key] != e.value)) {
