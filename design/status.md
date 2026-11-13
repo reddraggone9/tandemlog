@@ -7,8 +7,8 @@ The dated log of every earlier build, trial and checkpoint is in
 
 ## Released
 
-Stable **2026.11.1 / build 116** is Latest, published 2026-11-07 from `ef71b88`
-(promotion of accepted 2026.11.1-rc.1/build115). [Receipts](../evidence/stable-2026.11.1/README.md).
+Stable **2026.11.2 / build 118** is Latest, published 2026-11-13 from `a17da44`
+(promotion of Lee-accepted 2026.11.2-rc.1/build117). [Receipts](../evidence/stable-2026.11.2/README.md).
 It contains, at feature level (first stable release in brackets):
 
 - **Tasks:** quick capture into Inbox, one or several at a time; tags; separate
@@ -18,6 +18,7 @@ It contains, at feature level (first stable release in brackets):
   Completed view and reopen; bulk selection and editing; session Undo;
   exact completion instants ([ADR0035](decisions/0035-exact-completion-instants.md), 2026.10.7).
 - **Food** (2026.10.4): physical containers with expiration, location and contents;
+  product Keeps for and expiration/location suggestions (2026.11.2);
   Stock/Inbox, Retained and Deleted views; responsive editor pane (2026.10.6);
   products and purchases, keep-in-stock minimums and Running low, receipt import
   into the Inbox (2026.10.9, [food-products.md](food-products.md)); row selection,
@@ -36,17 +37,14 @@ It contains, at feature level (first stable release in brackets):
 - **Platforms:** owner-signed Android APK; Windows installer and portable ZIP;
   Linux Flatpak bundle ([packaging/README.md](../packaging/README.md)).
 
-## Current prerelease
+## Current release line
 
-[2026.11.2-rc.1 / build117](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.2-rc.1)
-is an immutable prerelease, not Latest, published2026-11-13 from518be438.
-Keeps for, expiration/location suggestions, repeat-list grammar, shorter normal-open
-pauses, large-text editor fixes and reusable release tooling are included.
-[Release/native/public receipts](../evidence/prerelease-2026.11.2-rc.1/README.md).
-Stable promotion awaits Lee. No live seeds/cutover or physical-device install done.
-Format-changing RC trial needs a separate non-synced profile/workspace copy on Leela;
-preparation scripts exist but staging/usable launch are not verified.
-No app changes beyond this RC are on main; subsequent changes are evidence/docs.
+2026.11.2 promotes accepted RC117 without application changes: Keeps for,
+expiration/location suggestions, repeat-list grammar, shorter normal-open pauses,
+large-text editor fixes and reusable release tooling. Stable118 signed candidate,
+scripted exact Android/GTK upgrades from116 and117, CI and anonymous public checks
+passed. The RC remains an unchanged prerelease. No unreleased app changes on main.
+Owner-device rollout is tracked separately; no live seeds/cutover performed here.
 
 ## Commands
 

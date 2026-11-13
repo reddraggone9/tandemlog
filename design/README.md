@@ -1,8 +1,7 @@
 # Design map
 
-Stable 2026.11.1/build116 is Latest; 2026.11.2-rc.1/build117 is published as
-prerelease/not-Latest (checked 2026-11-13). [status.md](status.md) records scope,
-receipts and the pending isolated handoff/stable acceptance.
+Stable 2026.11.2/build118 is Latest; `main` has no unreleased app changes
+(checked 2026-11-13). [status.md](status.md) says what that release contains.
 
 Stack (Lee, 2026-09-30, [ADR0001](decisions/0001-client-and-storage.md)):
 Flutter/Dart, a private SQLite cache and canonical per-installation JSON logs in
