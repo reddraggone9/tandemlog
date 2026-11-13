@@ -101,6 +101,68 @@ void main() {
     return rows;
   }
 
+  test(
+    'paged store read preserves seal checks across page boundaries',
+    () async {
+      final db = sqlite3.openInMemory();
+      addTearDown(db.close);
+      db.execute(
+        'CREATE TABLE profile_metadata (key TEXT PRIMARY KEY, value TEXT)',
+      );
+      final key = 'a' * 64;
+      final history = HistoryStore(db, key)..reset('test');
+      final table = 'history_${key}_records';
+      for (var n = 1; n <= 256; n++) {
+        db.execute('INSERT INTO $table VALUES (?,?,?,?,?,?,?)', [
+          'writer',
+          n,
+          n * 10,
+          9,
+          'hash$n',
+          'raw$n',
+          'typed$n',
+        ]);
+      }
+      final seal = HistorySeal(256, 2570, 'hash256', 2560);
+      var pauses = 0;
+      Future<void> pause() async {
+        pauses++;
+        await Future<void>.delayed(Duration.zero);
+      }
+
+      expect(
+        await history.readWriterBetweenFrames('writer', seal, pause),
+        history.readWriter('writer', seal),
+      );
+      expect(pauses, 2);
+      db.execute('INSERT INTO $table VALUES (?,?,?,?,?,?,?)', [
+        'writer',
+        257,
+        2570,
+        9,
+        'extra',
+        'raw',
+        'typed',
+      ]);
+      expect(
+        await history.readWriterBetweenFrames('writer', seal, pause),
+        isNull,
+      );
+      db.execute('DELETE FROM $table WHERE seq=257');
+      db.execute("UPDATE $table SET hash='changed' WHERE seq=256");
+      expect(
+        await history.readWriterBetweenFrames('writer', seal, pause),
+        isNull,
+      );
+      db.execute("UPDATE $table SET hash='hash256' WHERE seq=256");
+      db.execute('DELETE FROM $table WHERE seq=128');
+      expect(
+        await history.readWriterBetweenFrames('writer', seal, pause),
+        isNull,
+      );
+    },
+  );
+
   test('first open with no store loads strictly and writes the store', () async {
     final writer = await seeded('${root.path}/a', 3);
     final existing = writer.unified!.snapshot.records.length;

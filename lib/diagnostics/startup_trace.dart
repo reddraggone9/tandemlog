@@ -16,8 +16,8 @@ class StartupTrace {
   final Stopwatch clock;
   final _phases = <String, int>{};
 
-  /// Two missed 60 Hz frames; a shorter gap does not read as a stall.
-  static const stallFloorMs = 32;
+  /// Include gaps near the 120 Hz frame budget, not just visible freezes.
+  static const stallFloorMs = 8;
   final _stalls = <List<int>>[];
   Timer? _heartbeat;
   int _lastBeat = 0, _longestStall = 0;

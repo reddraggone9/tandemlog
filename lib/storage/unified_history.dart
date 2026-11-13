@@ -41,7 +41,7 @@ typedef UnifiedEffectBuilder =
 class _FrameBudget {
   final _held = Stopwatch()..start();
 
-  bool get due => _held.elapsedMicroseconds >= 8000;
+  bool get due => _held.elapsedMicroseconds >= 4000;
 
   Future<void> pause() async {
     await Future<void>.delayed(Duration.zero);
@@ -496,7 +496,11 @@ final class UnifiedHistory {
       for (final owner in tails.keys) {
         if (frames.due) await frames.pause();
         final seal = seals[owner]!;
-        final rows = _store.readWriter(owner, seal);
+        final rows = await _store.readWriterBetweenFrames(
+          owner,
+          seal,
+          frames.pause,
+        );
         if (rows == null ||
             rows.last.start != seal.lastStart ||
             rows.last.start + rows.last.length + 1 != seal.end) {
@@ -608,8 +612,9 @@ final class UnifiedHistory {
     List<List<Object?>> heads,
     Map<String, List<UnifiedRecord>> records,
     Map<String, Map<int, ({int start, int length})>> offsets,
-    Map<String, Uint8List> observed,
-  ) {
+    Map<String, Uint8List> observed, {
+    Map<UnifiedRecord, (String, String)>? encoded,
+  }) {
     try {
       var seals = _storeSeals;
       if (seals == null) {
@@ -665,7 +670,7 @@ final class UnifiedHistory {
         if (sequence > 0 && added.isEmpty) {
           throw StateError('History store seal moved without records.');
         }
-        _store.append(owner, added, seal);
+        _store.append(owner, added, seal, encoded: encoded);
         next[owner] = seal;
       }
       _storeSeals = next;
@@ -1624,6 +1629,20 @@ final class UnifiedHistory {
       _validatePreparedPrefix(current, result, pending.single);
     }
     if (!observe) return result;
+    final toEncode = <UnifiedRecord>[];
+    for (final entry in ownerRecords.entries) {
+      final from = _storeSeals?[entry.key]?.sequence ?? 0;
+      for (final record in entry.value) {
+        if (record.sequence > from ||
+            parsedOffsets[entry.key]?.containsKey(1) == true) {
+          toEncode.add(record);
+        }
+      }
+    }
+    final encodedParts = await _encodeStartupStore(toEncode);
+    final encoded = <UnifiedRecord, (String, String)>{
+      for (var i = 0; i < toEncode.length; i++) toEncode[i]: encodedParts[i],
+    };
     final publications = <void Function()>[];
     var pendingAfterCommit = false;
     final retirePending =
@@ -1643,7 +1662,14 @@ final class UnifiedHistory {
           row,
         );
       }
-      _syncStore(current, heads, ownerRecords, parsedOffsets, observed);
+      _syncStore(
+        current,
+        heads,
+        ownerRecords,
+        parsedOffsets,
+        observed,
+        encoded: encoded,
+      );
       for (final stage in _projections.values) {
         publications.add(stage(result));
       }
@@ -1933,16 +1959,20 @@ final class UnifiedHistory {
       onTaskReady: onTaskReady,
       onTaskValidated: onTaskValidated,
     );
-    for (final stage in validation.stages) {
+    for (final stage in validation.betweenFrames) {
       if (frames.due) await frames.pause();
-      stage();
+      await stage();
     }
     return validation.result();
   });
 
   /// Semantic validation as ordered stages (Task identity, Task validation,
   /// Food admission). Every stage must run, in order, before [result].
-  ({List<void Function()> stages, FoodAdmission Function() result})
+  ({
+    List<void Function()> stages,
+    List<Future<void> Function()> betweenFrames,
+    FoodAdmission Function() result,
+  })
   _effectValidation(
     Iterable<UnifiedEffect> effects,
     UnifiedManifest m, {
@@ -2047,12 +2077,8 @@ final class UnifiedHistory {
       taskReady = _taskValidation.remove(revision);
     }
 
-    void validateTasks() {
-      final key = taskKey!;
-      var ready = taskReady;
-      if (ready == null) {
-        semanticValidationRuns++;
-        final validator = _semanticValidator ??= TaskSemanticValidator(
+    TaskSemanticValidator validatorForTasks() =>
+        _semanticValidator ??= TaskSemanticValidator(
           owningHistory: this,
           space: m.space,
           writer: writer,
@@ -2063,14 +2089,48 @@ final class UnifiedHistory {
           ),
           manifestDigest: m.digest,
         );
-        ready = validator.validate(semanticTasks, inputKey: key);
-      }
+
+    void publishTaskValidation(String key, Set<String> ready) {
       _taskValidation[key] = ready;
       if (_taskValidation.length > 4) {
         _taskValidation.remove(_taskValidation.keys.first);
       }
       onTaskReady?.call(ready);
       onTaskValidated?.call(key);
+    }
+
+    void validateTasks() {
+      final key = taskKey!;
+      var ready = taskReady;
+      if (ready == null) {
+        semanticValidationRuns++;
+        final validator = validatorForTasks();
+        ready = validator.validate(semanticTasks, inputKey: key);
+      }
+      publishTaskValidation(key, ready);
+    }
+
+    Future<void> identifyTasksBetweenFrames() async {
+      if (taskKey != null) return;
+      semanticTaskSortRuns++;
+      final identified = await _identifyStartupTasks(semanticTasks);
+      semanticTasks.clear();
+      semanticTasks.addAll(identified.$1);
+      taskKey = identified.$2;
+      taskReady = _taskValidation.remove(taskKey);
+    }
+
+    Future<void> validateTasksBetweenFrames() async {
+      final key = taskKey!;
+      var ready = taskReady;
+      if (ready == null) {
+        semanticValidationRuns++;
+        ready = await validatorForTasks().validateBetweenFrames(
+          semanticTasks,
+          inputKey: key,
+        );
+      }
+      publishTaskValidation(key, ready);
     }
 
     FoodAdmission admitFood() {
@@ -2124,6 +2184,21 @@ final class UnifiedHistory {
     late final FoodAdmission admitted;
     return (
       stages: [identifyTasks, validateTasks, () => admitted = admitFood()],
+      betweenFrames: [
+        identifyTasksBetweenFrames,
+        validateTasksBetweenFrames,
+        () async {
+          if (priorKey != null) {
+            admitted = admitFood();
+            return;
+          }
+          final input = food.values.toList();
+          final authors = m.referenceAuthors;
+          // Pure admission only: no profile/native owner is sent to the worker.
+          admitted = await _admitStartupFood(input, authors);
+          fullFoodAdmissionRuns++;
+        },
+      ],
       result: () => admitted,
     );
   }
@@ -2846,3 +2921,27 @@ abstract final class FileSystemEntityTypeCheck {
       await FileSystemEntity.type(path, followLinks: false) ==
       FileSystemEntityType.file;
 }
+
+Future<(List<LogEvent>, String)> _identifyStartupTasks(List<LogEvent> tasks) =>
+    Isolate.run(() {
+      tasks.sort(compareEvents);
+      return (tasks, TaskStore.canonicalTaskRevision(tasks));
+    }, debugName: 'tandemlog-task-revision');
+
+Future<FoodAdmission> _admitStartupFood(
+  List<FoodRecord> records,
+  Map<String, String> authors,
+) => Isolate.run(
+  () => admitFoodRecords(records, legacyOwners: authors),
+  debugName: 'tandemlog-food-admission',
+);
+
+Future<List<(String, String)>> _encodeStartupStore(
+  List<UnifiedRecord> records,
+) => Isolate.run(
+  () => [
+    for (final record in records)
+      (record.encode(), UnifiedDecodedCache.typedFields(record)),
+  ],
+  debugName: 'tandemlog-store-encode',
+);

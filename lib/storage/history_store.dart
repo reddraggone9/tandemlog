@@ -130,6 +130,47 @@ final class HistoryStore {
     return result;
   }
 
+  /// Read in bounded pages; queue ownership keeps the seals stable while
+  /// the loading animation gets event-loop turns between SQLite calls.
+  Future<List<StoredRow>?> readWriterBetweenFrames(
+    String writer,
+    HistorySeal seal,
+    Future<void> Function() pause,
+  ) async {
+    final result = <StoredRow>[];
+    String? lastHash;
+    for (var after = 0; after < seal.sequence;) {
+      final rows = db.select(
+        'SELECT seq,start_offset,length,hash,raw,typed FROM $_records WHERE writer=? AND seq>? ORDER BY seq LIMIT 128',
+        [writer, after],
+      );
+      if (rows.isEmpty) return null;
+      for (final row in rows) {
+        if (row['seq'] != result.length + 1) return null;
+        result.add((
+          start: row['start_offset'] as int,
+          length: row['length'] as int,
+          raw: row['raw'] as String,
+          typed: row['typed'] as String,
+        ));
+        lastHash = row['hash'] as String;
+      }
+      after = result.length;
+      await pause();
+    }
+    if (db.select(
+      'SELECT seq FROM $_records WHERE writer=? AND seq>? LIMIT 1',
+      [writer, result.length],
+    ).isNotEmpty) {
+      return null;
+    }
+    if (result.length != seal.sequence ||
+        result.isNotEmpty && lastHash != seal.hash) {
+      return null;
+    }
+    return result;
+  }
+
   /// Restores [rows] without re-hashing: trust comes from the seal and the
   /// open's fast check (Lee 11-05). Pure, so it may run in another isolate.
   static List<UnifiedRecord> decode(List<StoredRow> rows) =>
@@ -167,7 +208,12 @@ final class HistoryStore {
   /// Appends [records] (consecutive, after the writer's current seal) and
   /// moves the seal. Call inside the transaction that advances the writer's
   /// `protected_app_heads` row to the same sequence, hash and end.
-  void append(String writer, List<StoredRecord> records, HistorySeal seal) {
+  void append(
+    String writer,
+    List<StoredRecord> records,
+    HistorySeal seal, {
+    Map<UnifiedRecord, (String, String)>? encoded,
+  }) {
     if (records.isNotEmpty) {
       final insert = db.prepare('INSERT INTO $_records VALUES (?,?,?,?,?,?,?)');
       try {
@@ -178,8 +224,8 @@ final class HistoryStore {
             r.start,
             r.length,
             r.record.hash,
-            r.record.encode(),
-            UnifiedDecodedCache.typedFields(r.record),
+            encoded?[r.record]?.$1 ?? r.record.encode(),
+            encoded?[r.record]?.$2 ?? UnifiedDecodedCache.typedFields(r.record),
           ]);
         }
       } finally {
