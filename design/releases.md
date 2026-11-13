@@ -75,8 +75,8 @@ Send short notes and review media with the handoff. This trial does not replace 
 After Lee accepts the RC:
 
 1. Change only the version/build in `pubspec.yaml`, the metainfo release entry, `design/stable-notes.md` (the reviewed RC notes body, unless something changed) and, if needed, the README (below). Verify the reference qualification still matches; do not requalify a version-only change.
-2. Build a signed candidate for the stable name (step 2) and accept its exact artifacts as upgrades from the RC and from the previous stable (step 3). Do not relabel or rebuild RC artifacts inside publication.
-3. Publish as Latest. **Publish accepted stable release** (`stable.yml`, inputs: tag, candidate run ID, accepted APK hash, `lee_accepted`) runs the publication gates and creates the release. Since 2026.10.7 stables have instead been published by the private-draft method: run the same `candidate_source.py`, `publish_gate.py` and `release_assets.py` gates from the candidate source, create a private draft with all four assets, verify it, then finalize it as Latest. Either way no artifact is rebuilt.
+2. Build a signed candidate for the stable name (step 2) and run scripted hash, signing and upgrade checks on its exact artifacts from the RC and previous stable. A version-only promotion needs no new reviewer agents or manual lab walkthroughs (Lee, 2026-11-12). Do not relabel or rebuild RC artifacts inside publication.
+3. Publish as Latest. **The reusable private-draft tools** below replace unused `stable.yml`: run the same `candidate_source.py`, `publish_gate.py` and `release_assets.py` gates from the candidate source, create a private draft with all four assets, verify it, then finalize it as Latest. No artifact is rebuilt during publication.
 4. Verify the public release (step 5), including that earlier releases and tags are unchanged.
 5. Review the README against the released workflows and update it for meaningful user-visible capabilities. Keep it about what the app does, with a short accurate folder-sync explanation and install links.
 
@@ -232,3 +232,39 @@ At [repository Actions secrets](https://github.com/reddraggone9/tandemlog/settin
 Owner-only CLI alternative on the trusted machine: `base64 -w 0 /path/to/keystore | gh secret set ANDROID_KEYSTORE_BASE64 --repo reddraggone9/tandemlog`; use interactive `gh secret set NAME --repo reddraggone9/tandemlog` prompts for the other values. Do not place passwords in shell command arguments/history or send private material through chat/Library. Keep an owner-controlled encrypted backup. The supplied public certificate SHA-256 is pinned; the generated PKCS12 key alias is `tandemlog-release`. Only public fingerprints (64 hex digits without colons) belong in the repository. [GitHub's secret setup guide](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets) documents the UI and binary encoding convention.
 
 Only the main-gated manually dispatched signing job references these secrets, scoped to its build step. It decodes the keystore under runner temporary storage with restrictive permissions, disables persistent Gradle daemons, verifies the APK signer/package/version/non-debuggable flag/phone and emulator ABIs, and removes temporary material on success/failure/cancellation. It does not upload/cache the key or write key.properties. The workflow grants read-only repository access; no signing secrets are passed to PR/debug validation. Repository secrets themselves are not platform-restricted to this workflow: GitHub environment protection would be a separate owner-approved hardening decision, not something configured here.
+
+## Reusable private-draft commands
+
+Run from the repository root (Python 3; `gh` uses inherited authentication). All paths are
+explicit; keep `--output` outside the checkout, in private local evidence.
+No command dispatches CI, merges, edits main or rebuilds candidate bytes.
+`--lee-accepted` records an existing acceptance, not a request for one.
+
+```sh
+python3 tool/freeze-prior.py --repo-dir REPO --tag TAG --output EVIDENCE
+python3 tool/verify-candidate.py --repo-dir REPO --tag TAG --output EVIDENCE --dist DIST --source FULL_SHA --build-tools ANDROID_BUILD_TOOLS
+python3 tool/publish-stable.py --repo-dir REPO --tag TAG --output EVIDENCE --lee-accepted --notes REPO/design/stable-notes.md --policy-revision origin/main draft --dist DIST --run-id RUN_ID --android-sha256 ACCEPTED_APK_SHA
+python3 tool/publish-stable.py --repo-dir REPO --tag TAG --output EVIDENCE --lee-accepted publish
+python3 tool/verify-public.py --repo-dir REPO --tag TAG --output EVIDENCE --build-tools ANDROID_BUILD_TOOLS
+```
+
+The draft command writes its creating intent before the GitHub mutation. Recover
+an interrupted draft by inspecting the saved state and GitHub; do not delete state
+and retry. Publication verifies unchanged prior releases, exact draft bytes,
+source and notes before finalizing Latest. Public verification is anonymous and
+checks every asset, pinned note image, Latest, immutability and frozen prior tags.
+
+Qualification helpers migrated from q16 live in `tool/qualification/`. Use
+`qualification.py --help`: `prepare`, `run`, and `seal` are explicit separate
+actions taking the same absolute `--repo`, `--output`, `--lab`, `--controller`,
+`--dart`, `--native-library`, `--sqlite-library`, `--package-config` paths.
+The existing reviewed controller and libraries remain host-provisioned and pinned;
+package configuration comes from an explicit compatible prepared environment,
+not a hard-coded old run. Use background-pause admission before `run` per the host
+quiet-window procedure. The gate remains one-shot and sealing refuses failed
+results. Exact owned reference units have their terminal result saved before
+`reset-failed`; unrelated or active units are never reset. The external host
+health-monitor ignore is not changed here: drop/narrow it after rollout verifies
+all host-side producers use this cleanup path.
+
+Regression checks: `python3 -m unittest discover -s tool -p test_release_tooling.py`.
