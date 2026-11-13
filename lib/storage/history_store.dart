@@ -18,6 +18,16 @@ final class HistorySeal {
 /// ([length] excludes the LF).
 typedef StoredRecord = ({UnifiedRecord record, int start, int length});
 
+/// A record's stored row, serialized.
+typedef EncodedRow = ({
+  int sequence,
+  int start,
+  int length,
+  String hash,
+  String raw,
+  String typed,
+});
+
 /// A stored row before decoding.
 typedef StoredRow = ({int start, int length, String raw, String typed});
 
@@ -214,18 +224,35 @@ final class HistoryStore {
     HistorySeal seal, {
     Map<UnifiedRecord, (String, String)>? encoded,
   }) {
-    if (records.isNotEmpty) {
+    appendRows(writer, [
+      for (final r in records)
+        (
+          sequence: r.record.sequence,
+          start: r.start,
+          length: r.length,
+          hash: r.record.hash,
+          raw: encoded?[r.record]?.$1 ?? r.record.encode(),
+          typed:
+              encoded?[r.record]?.$2 ??
+              UnifiedDecodedCache.typedFields(r.record),
+        ),
+    ], seal);
+  }
+
+  /// [append] with each record's serialization already made.
+  void appendRows(String writer, List<EncodedRow> rows, HistorySeal seal) {
+    if (rows.isNotEmpty) {
       final insert = db.prepare('INSERT INTO $_records VALUES (?,?,?,?,?,?,?)');
       try {
-        for (final r in records) {
+        for (final r in rows) {
           insert.execute([
             writer,
-            r.record.sequence,
+            r.sequence,
             r.start,
             r.length,
-            r.record.hash,
-            encoded?[r.record]?.$1 ?? r.record.encode(),
-            encoded?[r.record]?.$2 ?? UnifiedDecodedCache.typedFields(r.record),
+            r.hash,
+            r.raw,
+            r.typed,
           ]);
         }
       } finally {

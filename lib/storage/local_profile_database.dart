@@ -127,13 +127,19 @@ class LocalProfileDatabase {
     if (_lent) throw StateError(lentMessage);
     _lent = true;
     _lentOthers.addAll(others);
+    final returned = Completer<void>();
+    _returned = returned.future;
     try {
       return await work();
     } finally {
       _lent = false;
-      _lentOthers.clear();
+      _lentOthers.removeAll(others);
+      returned.complete();
     }
   }
+
+  // Completes when the current (or last) lent job has given the handle back.
+  Future<void> _returned = Future<void>.value();
 
   // Extra handles (validator scratch databases) lent with the profile.
   static final _lentOthers = <Database>{};
@@ -517,6 +523,8 @@ class LocalProfileDatabase {
   /// [database] between jobs); COMMIT runs on the background owner when
   /// [offloadCommit]. Any failure rolls the whole transaction back, exactly
   /// like [transaction]. Memory must be published only after this completes.
+  /// [body] may await only this transaction's jobs: while it awaits anything
+  /// else the open transaction would be visible to other UI-isolate code.
   Future<T> transactionAsync<T>(
     Future<T> Function(ProfileTransaction tx) body, {
     bool offloadCommit = true,
@@ -534,7 +542,10 @@ class LocalProfileDatabase {
         await tx.run(_commitJob, null, offload: tx.offloadCommit);
         return result;
       } catch (error, stack) {
-        // A failed or dead owner job leaves the handle with this isolate.
+        // A body that failed without awaiting its job must not roll back
+        // under it: wait until the owner has given the handle back. A failed
+        // or dead owner job leaves the handle with this isolate.
+        if (_lent) await _returned;
         rollbackAfterFailure(error);
         Error.throwWithStackTrace(error, stack);
       } finally {

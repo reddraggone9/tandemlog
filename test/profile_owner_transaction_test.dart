@@ -135,6 +135,25 @@ void main() {
     expect(count(profile), 3);
   });
 
+  test('a body failing before its job ends rolls back after the job', () async {
+    final profile = await openProfile('unawaited');
+    await expectLater(
+      profile.serialize(
+        () => profile.transactionAsync((tx) async {
+          // Started, never awaited: the rollback must wait for the owner,
+          // or the job's remaining inserts would run outside a transaction.
+          tx.run(_insertThenSleep, (3000, 200)).ignore();
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+          throw const FormatException('body failed early');
+        }),
+      ),
+      throwsFormatException,
+    );
+    expect(profile.isLent, isFalse);
+    expect(count(profile), 0);
+    expect(profile.database.autocommit, isTrue);
+  });
+
   test('a UI failure after an offloaded job rolls the job back too', () async {
     final profile = await openProfile('ui-fail');
     await expectLater(

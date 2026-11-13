@@ -553,6 +553,7 @@ final class UnifiedHistory {
     Map<String, List<UnifiedRecord>> records,
     Map<String, Map<int, ({int start, int length})>> offsets,
     Map<String, Uint8List> observed,
+    Expando<(String, String)> encodings,
   ) {
     try {
       var seals = _storeSeals;
@@ -609,7 +610,25 @@ final class UnifiedHistory {
         if (sequence > 0 && added.isEmpty) {
           throw StateError('History store seal moved without records.');
         }
-        steps.add((writer: owner, replace: replace, added: added, seal: seal));
+        steps.add((
+          writer: owner,
+          replace: replace,
+          added: [
+            for (final a in added)
+              if (encodings[a.record] case final e?)
+                (
+                  sequence: a.record.sequence,
+                  start: a.start,
+                  length: a.length,
+                  hash: a.record.hash,
+                  raw: e.$1,
+                  typed: e.$2,
+                )
+              else
+                a,
+          ],
+          seal: seal,
+        ));
         next[owner] = seal;
       }
       return _StorePlan(reset: reset, steps: steps, next: next);
@@ -1269,11 +1288,13 @@ final class UnifiedHistory {
 
     final frames = _FrameBudget();
     final owners = ownerSet.toList()..sort();
+    // Store serializations made by the pre-decode workers, by record.
+    final encodings = Expando<(String, String)>('Store serialization');
     // A strict read decodes every record. Start each large writer file's
     // decode on its own background isolate now; the chain walk below still
     // checks every record in order and adopts a decode only for the
     // identical raw line, decoding anything else itself.
-    final predecoding = <String, Future<Map<int, (String, UnifiedRecord)>>>{
+    final predecoding = <String, Future<Map<int, _Predecoded>>>{
       if (stored == null && previous == null)
         for (final owner in owners)
           if ((physicalNow[owner]?.length ?? 0) >= _predecodeBytes)
@@ -1420,11 +1441,15 @@ final class UnifiedHistory {
         try {
           final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
           final pre = predecoded?[start];
+          final adopted = pre != null && pre.raw == raw ? pre : null;
           final r = _decodeRecord(
             raw,
             force: forceFullAudit,
-            decoded: pre != null && pre.$1 == raw ? pre.$2 : null,
+            decoded: adopted?.record,
           );
+          if (adopted != null && identical(r, adopted.record)) {
+            encodings[r] = adopted.encoded;
+          }
           for (final e in r.effects) {
             final task = e.task;
             if (task != null) {
@@ -1625,6 +1650,7 @@ final class UnifiedHistory {
       ownerRecords,
       parsedOffsets,
       observed,
+      encodings,
     );
     final publications = <void Function()>[];
     final retirePending =
@@ -2996,15 +3022,29 @@ Future<Map<String, _RestoredWriter>?> _restoreStoreJob(
       for (var i = 0; i < list.length; i += chunk)
         (owner, list.sublist(i, min(i + chunk, list.length))),
   ];
+  final decoding = Future.wait([
+    for (final job in jobs)
+      Isolate.run(
+        () => HistoryStore.decode(job.$2),
+        debugName: 'tandemlog-store-decode',
+      ),
+  ])..ignore();
+  // Rebuild each writer's bytes while the workers decode.
+  final bytes = {
+    for (final MapEntry(key: owner, value: rows) in rowsByOwner.entries)
+      owner: () {
+        final builder = BytesBuilder(copy: false);
+        for (final row in rows) {
+          builder
+            ..add(utf8.encode(row.raw))
+            ..addByte(10);
+        }
+        return builder.takeBytes();
+      }(),
+  };
   final List<List<UnifiedRecord>> parts;
   try {
-    parts = await Future.wait([
-      for (final job in jobs)
-        Isolate.run(
-          () => HistoryStore.decode(job.$2),
-          debugName: 'tandemlog-store-decode',
-        ),
-    ]);
+    parts = await decoding;
   } on RemoteError {
     return null; // A failed worker decode cannot authorize a restore.
   } on FormatException {
@@ -3022,15 +3062,7 @@ Future<Map<String, _RestoredWriter>?> _restoreStoreJob(
     for (final MapEntry(key: owner, value: rows) in rowsByOwner.entries)
       owner: (
         records: records[owner]!,
-        bytes: () {
-          final builder = BytesBuilder(copy: false);
-          for (final row in rows) {
-            builder
-              ..add(utf8.encode(row.raw))
-              ..addByte(10);
-          }
-          return builder.takeBytes();
-        }(),
+        bytes: bytes[owner]!,
         ranges: [
           for (final row in rows) (start: row.start, length: row.length),
         ],
@@ -3040,19 +3072,35 @@ Future<Map<String, _RestoredWriter>?> _restoreStoreJob(
 
 const _predecodeBytes = 64 * 1024;
 
+typedef _Predecoded = ({
+  String raw,
+  UnifiedRecord record,
+  (String, String) encoded,
+});
+
 /// Every complete line of a writer file that decodes, by start offset, with
 /// its raw text. Lines that fail are left to the caller's own decode, which
 /// reports them with their position.
-Future<Map<int, (String, UnifiedRecord)>> _predecodeLines(Uint8List bytes) =>
+/// Also each record's store serialization, so a strict open's commit sends
+/// the owner strings rather than record objects.
+Future<Map<int, _Predecoded>> _predecodeLines(Uint8List bytes) =>
     Isolate.run(() {
-      final result = <int, (String, UnifiedRecord)>{};
+      final result = <int, _Predecoded>{};
       var start = 0;
       for (var i = 0; i < bytes.length; i++) {
         if (bytes[i] != 10) continue;
         if (i - start < maximumUnifiedRecordBytes) {
           try {
             final raw = utf8.decode(Uint8List.sublistView(bytes, start, i));
-            result[start] = (raw, UnifiedRecord.decode(raw));
+            final record = UnifiedRecord.decode(raw);
+            result[start] = (
+              raw: raw,
+              record: record,
+              encoded: (
+                record.encode(),
+                UnifiedDecodedCache.typedFields(record),
+              ),
+            );
           } on Object {
             // Decoded again, and reported, by the chain walk.
           }
@@ -3062,13 +3110,14 @@ Future<Map<int, (String, UnifiedRecord)>> _predecodeLines(Uint8List bytes) =>
       return result;
     }, debugName: 'tandemlog-history-decode').catchError(
       // Without it the chain walk decodes everything itself.
-      (Object _) => <int, (String, UnifiedRecord)>{},
+      (Object _) => <int, _Predecoded>{},
     );
 
 typedef _StoreStep = ({
   String writer,
   bool replace,
-  List<StoredRecord> added,
+  // An EncodedRow, or a StoredRecord the owner serializes itself.
+  List<Object> added,
   HistorySeal seal,
 });
 
@@ -3136,7 +3185,19 @@ bool _historyCommitJob(Database db, List<Database> _, _HistoryCommit c) {
     if (c.plan.reset != null) store.reset(c.plan.reset!);
     for (final step in c.plan.steps) {
       if (step.replace) store.deleteWriter(step.writer);
-      store.append(step.writer, step.added, step.seal);
+      store.appendRows(step.writer, [
+        for (final a in step.added)
+          a is EncodedRow
+              ? a
+              : (
+                  sequence: (a as StoredRecord).record.sequence,
+                  start: a.start,
+                  length: a.length,
+                  hash: a.record.hash,
+                  raw: a.record.encode(),
+                  typed: UnifiedDecodedCache.typedFields(a.record),
+                ),
+      ], step.seal);
     }
     return true;
   } on Object {
