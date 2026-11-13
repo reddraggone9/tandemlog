@@ -425,6 +425,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       // Timestamped first list render, for cold-start measurement.
       if (marker == 'TANDEMLOG_READY_MS') {
         debugPrint(startupTrace.line('TANDEMLOG_FIRST_LIST'));
+
         // What the same open loaded for Food, after the measured frame, so a
         // benchmark can check its workload without timing this summary.
         final food = foodStore?.state;
@@ -553,6 +554,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint('TANDEMLOG_FIRST_FRAME_MS=${startup.elapsedMilliseconds}');
     });
+    startupTrace.watchStalls();
     _start();
   }
 
@@ -588,6 +590,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       error = failureMessage(e);
     }
     _appearanceReady();
+    // Only a start that reaches the task list reports its stalls.
+    if (error != null || store == null || user == null) startupTrace.dispose();
     if (!mounted) return;
     setState(() => busy = false);
     _configureImporter();
@@ -4723,6 +4727,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    startupTrace.dispose();
     // Capture route/native completion before disposing controllers. Normal
     // desktop exit already owns this same future even without an unmount.
     final shutdown = _shutdownOnce(

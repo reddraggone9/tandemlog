@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -5,10 +6,43 @@ import 'dart:io';
 /// once when the task list first renders: `TANDEMLOG_FIRST_LIST`. The line
 /// carries the wall time and, where `/proc` exists (Linux, Android), the
 /// process age, so a log reader can line it up with a launch.
+///
+/// [watchStalls] also reports how long the UI isolate went without returning
+/// to its event loop: no frame can be built during such a stretch, so the
+/// startup progress bar stands still. `stall_ms` is the longest stretch and
+/// `stalls` lists each one of at least [stallFloorMs] as `[start, length]`.
 class StartupTrace {
   StartupTrace(this.clock);
   final Stopwatch clock;
   final _phases = <String, int>{};
+
+  /// Two missed 60 Hz frames; a shorter gap does not read as a stall.
+  static const stallFloorMs = 32;
+  final _stalls = <List<int>>[];
+  Timer? _heartbeat;
+  int _lastBeat = 0, _longestStall = 0;
+
+  /// Starts a 1 ms heartbeat on the calling isolate; [line] ends it.
+  void watchStalls() {
+    if (_heartbeat != null) return;
+    _lastBeat = clock.elapsedMilliseconds;
+    _heartbeat = Timer.periodic(
+      const Duration(milliseconds: 1),
+      (_) => _beat(),
+    );
+  }
+
+  void _beat() {
+    final now = clock.elapsedMilliseconds, gap = now - _lastBeat;
+    if (gap > _longestStall) _longestStall = gap;
+    if (gap >= stallFloorMs) _stalls.add([_lastBeat, gap]);
+    _lastBeat = now;
+  }
+
+  void dispose() {
+    _heartbeat?.cancel();
+    _heartbeat = null;
+  }
 
   /// Records [phase] the first time only.
   void mark(String phase) =>
@@ -16,10 +50,17 @@ class StartupTrace {
 
   String line(String marker) {
     final age = processAgeMs();
+    final watched = _heartbeat != null;
+    if (watched) {
+      // The stretch that ends at this call counts too.
+      _beat();
+      dispose();
+    }
     return '$marker at=${DateTime.now().toIso8601String()} '
         'ms=${clock.elapsedMilliseconds}'
         '${age == null ? '' : ' process_ms=$age'} '
-        'phases=${jsonEncode(_phases)}';
+        'phases=${jsonEncode(_phases)}'
+        '${watched ? ' stall_ms=$_longestStall stalls=${jsonEncode(_stalls)}' : ''}';
   }
 
   /// Milliseconds since this process started, or null when unknown.
