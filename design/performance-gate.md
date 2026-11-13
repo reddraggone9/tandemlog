@@ -533,6 +533,16 @@ five warm launches per build):
 | 2026.11.1 code + heartbeat | 121–187 ms | 470–500 ms | 948 ms |
 | cooperative open | 46–55 ms | 470–500 ms | 778 ms |
 
+Formal native cold-start receipt on final source `7cad759` (same fixture/host):
+warm process-to-first-list 500/520/510/510/520 ms, median **510 ms**, passing
+the unchanged 1000 ms median budget. Warm stalls inside the open were
+44–53 ms; first-list frame stalls were 61–65 ms. Strict first launch was
+2750 ms with an **844 ms** longest validator stall. These are separately
+collected samples, not an interleaved speedup claim: responsiveness of the
+warm open improved, but uncached open still visibly blocks. Receipt:
+`evidence/native-cold-start/current/result.json`. Moving the validator remains
+deferred, not silently included in this work.
+
 The warm stall was one piece: Task sort and revision digest (~23 ms), the Task
 validator's warm restore (~46 ms), Food admission (~28 ms), commit (~4 ms) and
 the Task store open (~18 ms), back to back. The open now lets a frame run
