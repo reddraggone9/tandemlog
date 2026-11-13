@@ -1,6 +1,6 @@
 # Development status
 
-Current state only (checked 2026-11-12 against `git tag`, `git log` and the code).
+Current state only (checked 2026-11-13 against `git tag`, `git log` and the code).
 The dated log of every earlier build, trial and checkpoint is in
 [archive/status-history.md](archive/status-history.md); per-release receipts are in
 [releases.md](releases.md) and `evidence/`.
@@ -36,15 +36,17 @@ It contains, at feature level (first stable release in brackets):
 - **Platforms:** owner-signed Android APK; Windows installer and portable ZIP;
   Linux Flatpak bundle ([packaging/README.md](../packaging/README.md)).
 
-## Implemented but unreleased
+## Current prerelease
 
-`main` (`c494196`) differs from the `v2026.11.1` tag only by release evidence
-and documentation.
-
-On branch `vex/food-keeps-for`, not on `main`: **Food shelf life ("Keeps for")**,
-approved by Lee 2026-11-10 ([food-shelf-life.md](food-shelf-life.md); its Build
-notes say what is built and tested). A format change (`product.edit` revision 2,
-`container.add` revision 3), so it ships in one release and every device updates.
+[2026.11.2-rc.1 / build117](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.2-rc.1)
+is an immutable prerelease, not Latest, published2026-11-13 from518be438.
+Keeps for, expiration/location suggestions, repeat-list grammar, shorter normal-open
+pauses, large-text editor fixes and reusable release tooling are included.
+[Release/native/public receipts](../evidence/prerelease-2026.11.2-rc.1/README.md).
+Stable promotion awaits Lee. No live seeds/cutover or physical-device install done.
+Format-changing RC trial needs a separate non-synced profile/workspace copy on Leela;
+preparation scripts exist but staging/usable launch are not verified.
+No app changes beyond this RC are on main; subsequent changes are evidence/docs.
 
 ## Commands
 
@@ -92,11 +94,10 @@ performance qualification is in [performance-gate.md](performance-gate.md) and
   not survive the app being closed ([ADR0031](decisions/0031-coordinated-unified-cutover.md)).
 - One shared household space; private spaces, games and nutrition logging are
   deferred ([future-modules.md](future-modules.md)); time tracking was dropped.
-- Platform evidence limits: Android acceptance runs on an API 30 x86_64 emulator
-  plus Lee's phone for the RC handoff; Windows has hosted builds/tests and
+- Platform evidence limits: Android acceptance runs on an API 30 x86_64 emulator;
+  physical-device RC handoff coverage is recorded separately per release; Windows has hosted builds/tests and
   installer lifecycle checks, not a manual GUI pass; broader real-phone/provider
   and permission-revocation coverage is not done ([runtime-qa.md](runtime-qa.md)).
-- UX items deferred on 2026-10-31 (task selection checkbox meaning, Android 200%
-  editor action row, raw provider URI in Settings, tooltip linger on section
+- UX items deferred on 2026-10-31 (task selection checkbox meaning, raw provider URI in Settings, tooltip linger on section
   switch) are listed in [archive/followon-20261031.md](archive/followon-20261031.md#exact-deferred-list-ranked-owner-tandemlog-writer-revisit-next-ux-milestone);
   not re-checked since.

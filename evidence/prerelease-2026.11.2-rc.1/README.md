@@ -1,6 +1,7 @@
-# 2026.11.2-rc.1 / build117 — candidate preparation
+# 2026.11.2-rc.1 / build117 — published prerelease
 
-Qualified and exact candidate accepted with disclosed coverage gaps; not published yet. Stable remains 2026.11.1/build116.
+[Published](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.2-rc.1)
+2026-11-13T19:42:44Z, immutable prerelease/not-Latest; anonymous verification PASS. Stable remains 2026.11.1/build116.
 
 ## Scope
 
@@ -52,7 +53,9 @@ physical devices or live data touched, no seeds or stable promotion.
 
 ## Remaining before handoff
 
-Four-asset prerelease publication and anonymous public verification are pending.
+Four-asset prerelease publication and anonymous public verification PASS; see
+[publication receipts](publication/public-verification.json). All8 note images and
+public APK signer/version match; all52 prior releases/tags unchanged.
 Format-changing RC needs separate non-synced data copy/profile and portable ZIP on
 Leela, preserving stable. Private preparation scripts/runbook are ready, but device
 staging and usable-launch verification were not performed: this assignment
@@ -65,7 +68,7 @@ provenance checks in the initial migration. Corrected before CI: RC finalization
 sets prerelease true and Latest false, stable requires existing Lee acceptance,
 notes come from live main and image links pin that commit and exist before draft.
 All 24 targeted release-tool tests pass. Prior public-state freeze used the new
-tool (52 releases/tags, Latest v2026.11.1). No publication is claimed yet.
+tool (52 releases/tags, Latest v2026.11.1). The reviewed tools published this RC; publication receipts are linked above.
 
 ## Controlled qualification and formal native startup (2026-11-13)
 
