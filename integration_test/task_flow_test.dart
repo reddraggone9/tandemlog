@@ -1,5 +1,7 @@
 import 'food_products_workflow_test.dart'
     show registerFoodProductsWorkflowTests;
+import 'food_shelf_life_workflow_test.dart'
+    show registerFoodShelfLifeWorkflowTests;
 import 'profile_fixture.dart';
 import 'unified_history_workflow_test.dart'
     show registerUnifiedHistoryWorkflowTests;
@@ -334,6 +336,7 @@ void main() {
   // Reuse it; constructing another binding fails before any case can run.
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   registerFoodProductsWorkflowTests();
+  registerFoodShelfLifeWorkflowTests();
   // Integration bindings otherwise default to no timeout, overriding CLI bounds.
   binding.defaultTestTimeout = const Timeout(Duration(minutes: 3));
   registerStickyTaskGroupTests();
