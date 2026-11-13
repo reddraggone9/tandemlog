@@ -106,6 +106,12 @@ class CivilDateInput extends StatelessWidget {
         ],
       ),
       hintText: hint,
+      hintStyle: applySuggestion != null
+          ? TextStyle(
+              fontStyle: FontStyle.italic,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            )
+          : null,
       floatingLabelBehavior: applySuggestion != null
           ? FloatingLabelBehavior.always
           : null,

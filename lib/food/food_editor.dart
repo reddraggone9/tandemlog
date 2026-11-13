@@ -1029,6 +1029,10 @@ class FoodEditorState extends State<FoodEditor> {
                   keepsFor.text.isEmpty
               ? _expiryOffer!.$1
               : 'e.g. 5 days',
+          hintStyle: TextStyle(
+            fontStyle: FontStyle.italic,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: _expiryOffer != null && expiry.text.trim().isNotEmpty
               ? Row(
@@ -1043,6 +1047,7 @@ class FoodEditorState extends State<FoodEditor> {
                         _expiryOffer!.$1,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     ],
@@ -1285,6 +1290,8 @@ class FoodEditorState extends State<FoodEditor> {
                   );
                 },
               ),
+            if (field == 'link' && prices != null)
+              _secondary(prices, key: const ValueKey('food-product-prices')),
             if (field == 'link' &&
                 !_showKeepsFor &&
                 keepsFor.text.isEmpty &&
@@ -1297,8 +1304,6 @@ class FoodEditorState extends State<FoodEditor> {
                   label: const Text('Keeps for'),
                 ),
               ),
-            if (field == 'link' && prices != null)
-              _secondary(prices, key: const ValueKey('food-product-prices')),
           ],
         ],
       ),
