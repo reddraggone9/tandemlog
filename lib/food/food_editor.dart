@@ -84,7 +84,7 @@ class FoodEditorState extends State<FoodEditor> {
   late final FoodDetails? original;
 
   /// The day the edited row was bought, when all of it came from one day's
-  /// receipts; the offers under Expiration count from it.
+  /// receipts; the in-field suggestions count from it.
   late final String? _purchaseDay;
 
   /// `Like last time`: the date this Inbox row would get from the product's
@@ -791,7 +791,7 @@ class FoodEditorState extends State<FoodEditor> {
         : 'Also changes $others other ${others == 1 ? 'container' : 'containers'}';
   }
 
-  /// "Last \$3.48 · Walmart · Oct 20 · typical \$3.30" (decision 10).
+  /// "Last \$3.48 · Walmart · 2026-10-20 · typical \$3.30" (decision 10).
   String? _priceLine() {
     final last = product?.last;
     if (last == null) return null;

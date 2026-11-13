@@ -214,8 +214,7 @@ Suggestions must stay single-line and usable at 412 dp and 200% text.
   name, Brand, Location, Container size, Retention reason (it has no Expiration
   or product fields, as today).
 - The form is one column, so Tab order and the first-error focus order follow
-  the same list. Helper lines stay with their field: the estimate helper and the
-  offers under Expiration, the "Also changes N other containers" scope line
+  the same list. Helper lines stay with their field: the estimate helper under Expiration, suggestions inside the fields they change, the "Also changes N other containers" scope line
   under Container size, the last-price line under Store link.
 
 ## Method: offers (exact rules)
@@ -441,7 +440,7 @@ grouping (0.5), the three offers and the calendar start date (1.5), Add autofill
 of date and location (0.5), field order (0.25), agent CLI and seed (1), tests,
 performance coverage, captures and native acceptance (1.5).
 
-## Mock-ups
+## Round-1 mock-ups (historical; superseded by 2026-11-13 in-field suggestions)
 
 Widget-test captures (labelled as such per ux-principles 25): the real Food page
 and editor with the production dark theme, phone width 412 dp, rendered by
