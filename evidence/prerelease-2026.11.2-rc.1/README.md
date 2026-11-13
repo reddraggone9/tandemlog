@@ -42,3 +42,35 @@ sets prerelease true and Latest false, stable requires existing Lee acceptance,
 notes come from live main and image links pin that commit and exist before draft.
 All 24 targeted release-tool tests pass. Prior public-state freeze used the new
 tool (52 releases/tags, Latest v2026.11.1). No publication is claimed yet.
+
+## Controlled qualification and formal native startup (2026-11-13)
+
+Final changed-source CI [43468510127](https://github.com/reddraggone9/tandemlog/actions/runs/43468510127)
+passes all nine non-reference jobs: Linux, Windows, Android, hosted AOT correctness,
+four native workflow shards (274 cases total), and their exact-union verifier.
+The pre-receipt reference job alone is expected red. Hosted Python:310 tests on
+each platform; Windows Flutter:1909 passed/10 skipped. The signed candidate still
+needs its own complete matrix and exact-artifact acceptance.
+
+Qualification q17 (`76fe0f5e24537af72e12d1680fe588ba`) binds2090994 and
+relevant-source-v3 `2afefe81ee6b52335b0f11670b5eb32f454be599c61b3f9552deb44cef417172`.
+It remains valid after the Windows test-fixture-only6de9d1f change. All261 labels
+across3 shapes (783 observations), both history-growth rule sets, correctness,
+input pins and cleanup pass. Three first-pass misses cleared the gate's automatic
+same-invocation fresh-process confirmations; zero confirmed failures. No manual
+timing retry. Actual enforcing run18:18:32–18:21:39 UTC; clean completion18:21:43,
+within the original25-minute deadline, no owned processes, swap or OOM events.
+
+Formal native `native.coldStart.firstList`:490ms median under1000ms; five warm
+starts520/510/480/480/490ms, strict first launch2800ms. Synthetic isolated workspace,
+exact2090994 release build, private runtime/bus; no physical devices or live data.
+Both committed receipt verifiers pass at the final branch HEAD.
+
+See `qualification-summary.json`, `qualification-registration-review.md`, and
+`reference-native-preflight.md`; complete sealed receipts in
+`../reference-performance/current/` and `../native-cold-start/current/`.
+Pre-launch admission failures (not timing attempts) are retained privately: missing
+reference label registration, Windows8.3-path test fixture mismatch, inherited
+emulator/Gradle/privateADB5071, and quiet-host background readers/downloads.
+Budgets and controller controls were not loosened. All temporary audit, Sonarr and
+Transmission controls were restored and the maintenance fence released.

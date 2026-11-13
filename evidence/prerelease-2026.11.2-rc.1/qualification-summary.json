@@ -1,0 +1,51 @@
+{
+  "qualifiedRevision": "2090994d56b1a0bc15cc79dd13958c5c5534195a",
+  "ciSource": "6de9d1fa2efa4bb196cdd119cbfbb963ef1741d1",
+  "ciRun": 43468510127,
+  "ciNonReferencePassed": true,
+  "requestId": "76fe0f5e24537af72e12d1680fe588ba",
+  "relevantSource": "2afefe81ee6b52335b0f11670b5eb32f454be599c61b3f9552deb44cef417172",
+  "metricsPerShape": 261,
+  "shapes": 3,
+  "firstPassFailures": 3,
+  "automaticConfirmationsCleared": 3,
+  "confirmedFailures": [],
+  "releaseGateAccepted": true,
+  "timingLimitsPassed": true,
+  "correctnessAccepted": true,
+  "startedAtUTC": "2026-11-13T18:18:32.897641+00:00",
+  "finishedAtUTC": "2026-11-13T18:21:39.407669+00:00",
+  "nativeMedianMs": 490,
+  "nativeSamplesMs": [
+    520,
+    510,
+    480,
+    480,
+    490
+  ],
+  "nativeStrictFirstLaunchMs": 2800,
+  "nativeBudgetMs": 1000,
+  "noManualTimingRetries": true,
+  "allBackgroundControlsRestored": true,
+  "fenceReleased": true,
+  "hostedNativeWorkflows": {
+    "shards": [
+      69,
+      68,
+      69,
+      68
+    ],
+    "total": 274,
+    "unionPassed": true
+  },
+  "hostedWindowsFlutter": {
+    "passed": 1909,
+    "skipped": 10
+  },
+  "hostedPython": {
+    "linux": 310,
+    "windows": 310
+  },
+  "referenceMetricObservations": 783,
+  "growthRuleSetsAccepted": 2
+}
