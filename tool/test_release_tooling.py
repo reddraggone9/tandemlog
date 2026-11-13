@@ -189,6 +189,45 @@ class ReleaseTests(unittest.TestCase):
 
 
 class QualificationTests(unittest.TestCase):
+    def test_prepare_package_path_survives_sanitized_environment(self):
+        # Execute the production heredoc with the same empty environment used
+        # across sudo. Before the fix this raised KeyError(PACKAGE_CONFIG).
+        script = (TOOL/'qualification/prepare.sh').read_text()
+        block = script.split('import hashlib,json,pathlib,sys,urllib.parse\n', 1)[1].split('\nPY', 1)[0]
+        import os
+        sys.path.insert(0, str(TOOL/'performance'))
+        from reference_receipt import package_contract
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); repo = root/'repo'; (repo/'tool').mkdir(parents=True)
+            lock = b'locked'; (repo/'pubspec.lock').write_bytes(lock)
+            config = dict(configVersion=2, packages=[dict(name='tandemlog', rootUri='../', languageVersion='3.13', packageUri='lib/')])
+            profile = dict(packageNames=['tandemlog'], pubspecLockSHA256=hashlib.sha256(lock).hexdigest(), packageContractSHA256=package_contract(config))
+            # Keep source module files real; only the registration is fixture data.
+            import shutil
+            shutil.copytree(TOOL/'performance', repo/'tool/performance')
+            (repo/'tool/performance/reference-host-v1.json').write_text(json.dumps(profile))
+            source = root/'package_config.json'; source.write_text(json.dumps(config))
+            code = 'import hashlib,json,pathlib,sys,urllib.parse\n'+block
+            result = subprocess.run([sys.executable, '-I', '-B', '-', str(repo), str(source)], input=code,
+                                    env={'PATH': os.defpath}, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            generated = json.loads((repo/'.dart_tool/package_config.json').read_text())
+            self.assertEqual(generated['packages'][0]['rootUri'], repo.as_uri()+'/')
+
+    def test_prepare_accepts_schema2_observations_not_changed_hardware(self):
+        script = (TOOL/'qualification/prepare.sh').read_text()
+        block = script.split('import json,pathlib,sys\n', 1)[1].split('\nPY', 1)[0]
+        with tempfile.TemporaryDirectory() as tmp:
+            host = json.loads((TOOL/'performance/reference-host-v1.json').read_text())
+            observed = dict(host['environment'], kernel='new-kernel', python='new-python')
+            actual = Path(tmp)/'fingerprint.json'; actual.write_text(json.dumps(observed))
+            code = 'import json,pathlib,sys\n'+block
+            result = subprocess.run([sys.executable, '-B', '-', str(actual), str(TOOL.parent)], input=code, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            observed['cpuModel'] = 'wrong CPU'; actual.write_text(json.dumps(observed))
+            result = subprocess.run([sys.executable, '-B', '-', str(actual), str(TOOL.parent)], input=code, text=True, capture_output=True)
+            self.assertNotEqual(result.returncode, 0)
+
     def test_failed_units_read_before_reset(self):
         unit = 'tandemlog-reference-manager-' + 'a'*32 + '.service'
         with tempfile.TemporaryDirectory() as tmp:

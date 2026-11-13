@@ -21,10 +21,10 @@ sudo -n -u nibbler /usr/bin/env -i HOME=/home/nibbler PATH=/usr/bin:/bin \
   /usr/bin/git clone --no-checkout "$Q/source.bundle" "$Q/source"
 sudo -n -u nibbler /usr/bin/env -i HOME=/home/nibbler PATH=/usr/bin:/bin \
   /usr/bin/git -C "$Q/source" checkout --detach "$QUAL_REV"
-sudo -n -u nibbler /usr/bin/python3 -I -B - "$Q/source" <<'PY'
+sudo -n -u nibbler /usr/bin/python3 -I -B - "$Q/source" "$PACKAGE_CONFIG" <<'PY'
 import hashlib,json,pathlib,sys,urllib.parse
 repo=pathlib.Path(sys.argv[1])
-old=pathlib.Path(__import__('os').environ['PACKAGE_CONFIG'])
+old=pathlib.Path(sys.argv[2])
 config=json.loads(old.read_text())
 for package in config['packages']:
     package['rootUri']=(repo.as_uri()+'/' if package['name']=='tandemlog'
@@ -47,9 +47,12 @@ sudo -n -u nibbler /usr/bin/env -i HOME=/home/nibbler PATH=/usr/bin:/bin \
 sudo -n -u nibbler /usr/bin/env -i HOME=/home/nibbler PATH=/usr/bin:/bin PYTHONDONTWRITEBYTECODE=1 \
   /usr/bin/python3 -B "$Q/source/tool/performance/reference_receipt.py" fingerprint \
   --repo "$Q/source" --output "$Q" > "$REF/fingerprint.json"
-python3 - "$REF/fingerprint.json" "$PRODUCT/tool/performance/reference-host-v1.json" <<'PY'
-import json,sys
-assert json.load(open(sys.argv[1]))==json.load(open(sys.argv[2]))['environment']
+python3 - "$REF/fingerprint.json" "$PRODUCT" <<'PY'
+import json,pathlib,sys
+repo=pathlib.Path(sys.argv[2])
+sys.path.insert(0,str(repo/"tool/performance"))
+from reference_receipt import check_environment
+check_environment(json.load(open(sys.argv[1])),json.loads((repo/"tool/performance/reference-host-v1.json").read_text()))
 PY
 sudo -n -u nibbler /usr/bin/env -i HOME=/home/nibbler PATH=/usr/bin:/bin PYTHONDONTWRITEBYTECODE=1 \
   /usr/bin/python3 -B "$Q/source/tool/performance/reference_receipt.py" request \
