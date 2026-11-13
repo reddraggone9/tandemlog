@@ -59,6 +59,6 @@ The Task projection witness (`app5.task.cache.<key>`) is still sealed at pause/c
 
 - An older app can still open the profile (schema 6). If it keeps admitting, its heads move past the store seals and the next open of this version is strict and rebuilds the store.
 - Bump `HistoryStore.generation` whenever record decoding, the typed layout or admission rules change so that stored rows are no longer equivalent to a strict decode.
-- A strict open or rebuild inserts every row in one synchronous transaction on the UI isolate (about 100 ms more than the old strict open on Lee's 2,055-record history). The profile grows by roughly 1-2x the log bytes, and agent read and dry-run commands, which copy the profile, copy that too.
+- A strict open or rebuild prepares the raw/typed row serialization on a short-lived worker, then inserts every row in one synchronous transaction on the UI isolate. That transaction remains atomic with the protected heads; it is not split across animation frames. Warm reads use bounded 128-row pages with event-loop turns between them. The profile grows by roughly 1-2x the log bytes, and agent read and dry-run commands, which copy the profile, copy that too.
 - Each distinct folder location spelling keeps its own store, like the Task projection tables. Stores for locations that are no longer used are not cleaned up yet.
 - A crash in the foreground (no pause seal) still reopens the history from the store, but the Task projection is rebuilt strictly (about 1.1 s on the desktop harness).

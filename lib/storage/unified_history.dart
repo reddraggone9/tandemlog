@@ -2192,11 +2192,17 @@ final class UnifiedHistory {
             admitted = admitFood();
             return;
           }
-          final input = food.values.toList();
+          final input = foodEffects.values.toList();
           final authors = m.referenceAuthors;
           // Pure admission only: no profile/native owner is sent to the worker.
-          admitted = await _admitStartupFood(input, authors);
-          fullFoodAdmissionRuns++;
+          final loaded = await _admitStartupFood(input, authors, m.digest);
+          final cached = _foodValidation.remove(loaded.$1);
+          admitted = cached ?? loaded.$2;
+          if (cached == null) fullFoodAdmissionRuns++;
+          _foodValidation[loaded.$1] = admitted;
+          if (_foodValidation.length > 4) {
+            _foodValidation.remove(_foodValidation.keys.first);
+          }
         },
       ],
       result: () => admitted,
@@ -2928,20 +2934,35 @@ Future<(List<LogEvent>, String)> _identifyStartupTasks(List<LogEvent> tasks) =>
       return (tasks, TaskStore.canonicalTaskRevision(tasks));
     }, debugName: 'tandemlog-task-revision');
 
-Future<FoodAdmission> _admitStartupFood(
-  List<FoodRecord> records,
+Future<(String, FoodAdmission)> _admitStartupFood(
+  List<UnifiedEffect> effects,
   Map<String, String> authors,
-) => Isolate.run(
-  () => admitFoodRecords(records, legacyOwners: authors),
-  debugName: 'tandemlog-food-admission',
-);
+  String manifest,
+) => Isolate.run(() {
+  final byId = {for (final e in effects) e.food!.id: e};
+  final ids = byId.keys.toList()..sort();
+  final key = bytesDigest(
+    utf8.encode(
+      canonicalDataJson([
+        manifest,
+        ...ids.map((id) => byId[id]!.validationDigest),
+      ]),
+    ),
+  );
+  return (
+    key,
+    admitFoodRecords([for (final e in effects) e.food!], legacyOwners: authors),
+  );
+}, debugName: 'tandemlog-food-admission');
 
 Future<List<(String, String)>> _encodeStartupStore(
   List<UnifiedRecord> records,
-) => Isolate.run(
-  () => [
-    for (final record in records)
-      (record.encode(), UnifiedDecodedCache.typedFields(record)),
-  ],
-  debugName: 'tandemlog-store-encode',
-);
+) => records.isEmpty
+    ? Future.value(const [])
+    : Isolate.run(
+        () => [
+          for (final record in records)
+            (record.encode(), UnifiedDecodedCache.typedFields(record)),
+        ],
+        debugName: 'tandemlog-store-encode',
+      );

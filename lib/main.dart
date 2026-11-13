@@ -69,7 +69,10 @@ import 'food/food_store.dart';
 import 'food/food_record.dart';
 import 'food/inventory.dart' show FoodContainer;
 
+StartupTrace? _launchStartupTrace;
+
 void main() {
+  _launchStartupTrace = StartupTrace(Stopwatch()..start())..watchStalls();
   debugPrint('TANDEMLOG_MAIN');
   final binding = WidgetsFlutterBinding.ensureInitialized();
   binding.deferFirstFrame();
@@ -379,7 +382,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   String? pendingUserName;
   Future<void>? syncing;
   final startup = Stopwatch()..start();
-  late final startupTrace = StartupTrace(startup);
+  late final startupTrace = _launchStartupTrace ?? StartupTrace(startup);
   final viewElapsed = Stopwatch()..start();
   late final ViewTimeSource timeSource;
   late final ViewClock<TaskView> viewClock;
