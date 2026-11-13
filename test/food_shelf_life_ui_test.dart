@@ -192,7 +192,8 @@ Future<void> _loadRoboto() async {
       return;
     }
     final parent = directory.parent;
-    if (parent.path == directory.path) throw StateError('Roboto not found');
+    // A native run has no SDK beside it and already draws with real fonts.
+    if (parent.path == directory.path) return;
     directory = parent;
   }
 }
@@ -214,7 +215,11 @@ Future<void> _open(WidgetTester tester, String name, {int row = 0}) async {
   await tester.pumpAndSettle();
 }
 
-void main() {
+void main() => registerFoodShelfLifeUiTests();
+
+/// Also run under the native Linux binding by
+/// integration_test/food_shelf_life_workflow_test.dart.
+void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
   testWidgets('only dates estimated from Keeps for read est.', (tester) async {
     await _pump(tester);
     expect(
@@ -664,4 +669,4 @@ void main() {
       expect(tester.getTopLeft(location).dy, before);
     });
   }
-}
+});
