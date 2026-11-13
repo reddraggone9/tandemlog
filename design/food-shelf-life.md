@@ -87,12 +87,12 @@ suggestion on Inbox items that have one.
 ### 2. Row editor (one row)
 
 - **Question:** "When does this go bad, and where is it?"
-- **Shown, in order:** Food name, Brand, Expiration, Location, Keeps for,
+- **Shown, in order:** Food name, Brand, Expiration, Location, Keeps for (when applicable),
   Container size, Keep at least, Store link, Retention reason. Location is
   directly under Expiration because it is edited on nearly every item; Store
   link is last because it is almost never edited. Keeps for and Keep at least
   have Container size between them, since the names are easy to mix up. The
-  last-price line (`Last $2.98 · Walmart · Nov 7`) stays at the end of the
+  last-price line (`Last $2.98 · Walmart · 2026-11-07`) stays at the end of the
   product fields, now under Store link, next to the store it names.
 - For an estimated row, Expiration's helper line says where the date came from:
   `Estimated: bought 2026-11-07 + 3 weeks`. It hides once Expiration changes,
@@ -104,47 +104,19 @@ suggestion on Inbox items that have one.
   (one text field takes `5 days`, `2 weeks`, `3 months`).
 - **Next action:** fix the date or location, Save.
 
-### 3. Offers under Expiration (row editor)
+### 3. In-field suggestions (Lee 2026-11-13)
 
-One kind of offer, in one place: a quiet text button directly under
-Expiration, which does nothing unless pressed. At most one shows at a time,
-and only while it applies.
+Suggestions live in the field they change, dimmed until applied, with an
+accessible in-field apply button. Remember shows a dimmed duration in an empty
+Keeps for. Update keeps the current duration and shows `→ 5 days` dimmed.
+Like last time shows a dimmed ISO date in Expiration beside Apply and the
+calendar button; the calendar still opens on that date. Applying changes only
+the draft; Save and Undo semantics are unchanged. No offer line under Expiration.
 
-- **Remember** (`Remember: keeps 12 days`): Lee has picked a date for an Inbox
-  item whose product has no Keeps for, and the purchase day is known. Pressing
-  it puts `12 days` into Keeps for; Save writes the date and the product's Keeps
-  for in one action, one Undo, and he can clear Keeps for again before Save. Not
-  pressing it changes nothing: the date is saved, and the product's next import
-  arrives undated in the Inbox again. So a labeled product never gains a Keeps
-  for by being dated, however often that happens. Remember is offered only the
-  first time a product is dated: once it has a suggested date (below), dating it
-  shows no Remember, so labeled food is asked once and never again. Typing
-  Keeps for by hand always works.
-- **Update** (`Remember: keeps 5 days`): Lee changes an estimated date in the
-  row editor, and the new date implies a different duration than the product's
-  Keeps for. Pressing it replaces Keeps for (`1 week` → `5 days`). Same wording
-  as Remember, since it does the same thing. Add makes no offer: it has no
-  product fields, so a changed date there is just that container's date.
-- **Suggested date** (`Like last time: 2026-12-04`): an Inbox item whose
-  Expiration is still empty, whose product has no Keeps for, and which has an
-  earlier container with a purchase day and a date Lee set himself. The date is
-  this purchase day + that earlier gap. Pressing it types the date into
-  Expiration, where Lee checks it against the label and edits it like any typed
-  date. The calendar button opens on the same date instead of today. Nothing is
-  filled in or saved until he presses or picks. Once Expiration has any text,
-  the suggestion goes away and nothing replaces it.
-- **Why no pre-filled date on labeled food:** a store can sell food that sat on
-  its shelf for months, so a date from the usual gap would be confidently wrong
-  for exactly the items that most need checking, and nothing would prompt Lee to
-  read the label. Leaving them undated also keeps the Inbox meaning "no date
-  yet". The suggestion keeps the shortcut without that risk: it is only a
-  button, and the item stays in the Inbox until he dates it.
-- **How the offers avoid nagging:** no dialog, no second step, nothing after
-  Save; each disappears when it no longer applies; none appears in the bulk
-  editor or Add, for Retained or deleted rows, or when the purchase day is
-  unknown.
-- **Narrow screens and large text:** an offer label wraps to a second line
-  rather than clipping; at 2x text on 412 dp all three fit on one line.
+Keeps for is shown only for an existing value or an applicable Remember/Update
+offer; otherwise a small Keeps for add affordance sits with the rarely used
+product fields. Typing a date for labeled food with history never reveals it.
+Suggestions must stay single-line and usable at 412 dp and 200% text.
 
 ### 4. Add food and Add another (hand entry)
 
@@ -236,7 +208,7 @@ and only while it applies.
 
 ## Method: field order
 
-- Row editor: Food name, Brand, Expiration, Location, Keeps for, Container size,
+- Row editor: Food name, Brand, Expiration, Location, Keeps for (when applicable), Container size,
   Keep at least, Store link, Retention reason. Add: Food name, Brand,
   Expiration, Location, Container size, Containers to add. Bulk editor: Food
   name, Brand, Location, Container size, Retention reason (it has no Expiration
@@ -382,8 +354,8 @@ list):
   that order.
 - Add and Add another autofill date and location; typed text never overwritten;
   changing the autofilled date hides its helper and offers nothing.
-- UI at phone width (412 and 360 dp), 2x text and wide pane, including the
-  longest offer label (`Remember: keeps 10 weeks`) wrapping cleanly; dark theme
+- UI at phone width (412 and 360 dp), 2x text and wide pane, including in-field
+  duration/date hints and Apply buttons without overflow; dark theme
   captures; independent UX
   review against this brief and `ux-principles.md`.
 - Performance: import and product-edit actions keep their budgets under the
@@ -392,8 +364,8 @@ list):
 
 ## Build notes
 
-State on branch `vex/food-keeps-for` (2026-11-12). Implemented and covered by
-unit and widget tests; not yet run natively, captured or reviewed.
+State on branch `vex/food-keeps-for` (2026-11-13). Implemented and covered by
+unit and widget tests; native Linux and Android evidence is tracked in the private build handoff.
 
 Built: `FoodKeepsFor` and the derived usual location and suggested date
 (`lib/food/shelf_life.dart`); the product field and its wire revision; dated

@@ -17,7 +17,11 @@ Future<void> captureUx(WidgetTester tester, String name) async {
   if (app.darkTheme != null) {
     expect(app.darkTheme, tandemlogTheme(Brightness.dark));
   }
-  final directory = Platform.environment['TANDEMLOG_UX_CAPTURES'];
+  final directory =
+      Platform.environment['TANDEMLOG_UX_CAPTURES'] ??
+      (const String.fromEnvironment('TANDEMLOG_UX_CAPTURES').isEmpty
+          ? null
+          : const String.fromEnvironment('TANDEMLOG_UX_CAPTURES'));
   if (directory == null) return;
   final boundary = tester.renderObject<RenderRepaintBoundary>(
     find.byKey(const ValueKey('ux-root')),
@@ -34,6 +38,9 @@ Future<void> captureUx(WidgetTester tester, String name) async {
 }
 
 Future<void> loadUxIcons() async {
+  // Native app bundles already include MaterialIcons; only flutter_tester
+  // needs the SDK font installed explicitly.
+  if (!Platform.resolvedExecutable.contains('flutter_tester')) return;
   var directory = File(Platform.resolvedExecutable).parent;
   while (true) {
     final font = File(

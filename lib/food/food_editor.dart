@@ -184,6 +184,11 @@ class FoodEditorState extends State<FoodEditor> {
     link = TextEditingController(text: product?.links.firstOrNull ?? '');
     minimum = TextEditingController(text: product?.minimum?.toString() ?? '');
     keepsFor = TextEditingController(text: product?.keepsFor?.label ?? '');
+    for (final controller in [expiry, keepsFor]) {
+      controller.addListener(() {
+        if (mounted) setState(() {});
+      });
+    }
     final days = product == null
         ? const <String?>{}
         : {
@@ -284,7 +289,9 @@ class FoodEditorState extends State<FoodEditor> {
         : FoodKeepsFor.between(day, text);
   }
 
-  /// One quiet offer under Expiration: a label and what pressing it types
+  bool _showKeepsFor = false;
+
+  /// In-field suggestion and what pressing Apply types
   /// into the form. Nothing is saved until Save.
   (String, VoidCallback)? get _expiryOffer {
     final current = product, day = _purchaseDay;
@@ -293,7 +300,7 @@ class FoodEditorState extends State<FoodEditor> {
     if (text.isEmpty) {
       final suggested = _suggestedExpiry;
       return _fromInbox && current.keepsFor == null && suggested != null
-          ? ('Like last time: $suggested', () => expiry.text = suggested)
+          ? (suggested, () => expiry.text = suggested)
           : null;
     }
     final implied = _impliedKeepsFor;
@@ -312,10 +319,7 @@ class FoodEditorState extends State<FoodEditor> {
         text != original!.expiry &&
         draft != null;
     if ((!remember && !update) || draft?.addTo(day) == text) return null;
-    return (
-      'Remember: keeps ${implied.label}',
-      () => keepsFor.text = implied.label,
-    );
+    return (implied.label, () => keepsFor.text = implied.label);
   }
 
   /// Where an untouched date came from.
@@ -792,25 +796,10 @@ class FoodEditorState extends State<FoodEditor> {
     final last = product?.last;
     if (last == null) return null;
     final typical = product!.typicalUnitCost(DateTime.now());
-    final date = DateTime.parse(last.date);
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
     return [
       'Last ${foodMoney(last.unitCost, last.currency)}',
       if (last.store.isNotEmpty) last.store,
-      '${months[date.month - 1]} ${date.day}',
+      last.date,
       if (typical != null) 'typical ${foodMoney(typical, last.currency)}',
     ].join(' · ');
   }
@@ -956,6 +945,15 @@ class FoodEditorState extends State<FoodEditor> {
   FloatingLabelBehavior? _floatMixed(String field) =>
       mixed.contains(field) ? FloatingLabelBehavior.always : null;
 
+  Widget _applyOffer() => IconButton(
+    key: const ValueKey('food-expiry-offer'),
+    tooltip: expiry.text.trim().isEmpty
+        ? 'Apply suggested expiration ${_expiryOffer!.$1}'
+        : 'Apply Keeps for ${_expiryOffer!.$1}',
+    onPressed: saving || pending() ? null : _expiryOffer!.$2,
+    icon: const Icon(Icons.check),
+  );
+
   Widget _input(String field) {
     final enabled = !saving && !pending();
     return switch (field) {
@@ -1025,7 +1023,33 @@ class FoodEditorState extends State<FoodEditor> {
         controller: keepsFor,
         decoration: InputDecoration(
           labelText: 'Keeps for',
-          hintText: 'e.g. 5 days, 2 weeks, 3 months',
+          hintText:
+              _expiryOffer != null &&
+                  expiry.text.trim().isNotEmpty &&
+                  keepsFor.text.isEmpty
+              ? _expiryOffer!.$1
+              : 'e.g. 5 days',
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: _expiryOffer != null && expiry.text.trim().isNotEmpty
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (keepsFor.text.isNotEmpty) ...[
+                      Icon(
+                        Icons.arrow_right_alt,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      Text(
+                        _expiryOffer!.$1,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                    _applyOffer(),
+                  ],
+                )
+              : null,
           hintMaxLines: 1,
           errorText: _validation.errorFor('keepsFor'),
           errorMaxLines: 3,
@@ -1064,6 +1088,12 @@ class FoodEditorState extends State<FoodEditor> {
         focusNode: expiryFocus,
         autofocus: widget.template != null,
         label: 'Expiration',
+        hint: expiry.text.isEmpty && _expiryOffer != null
+            ? _expiryOffer!.$1
+            : 'YYYY-MM-DD',
+        applySuggestion: expiry.text.isEmpty && _expiryOffer != null
+            ? _applyOffer()
+            : null,
         // While the offer shows, the calendar opens on the date it offers.
         pickerStart: () {
           final suggested = _suggestedExpiry;
@@ -1180,8 +1210,17 @@ class FoodEditorState extends State<FoodEditor> {
             if (!bulk && group == null) 'count',
             if (bulk || group != null) 'retention',
           ].indexed) ...[
-            if (index > 0) const SizedBox(height: 12),
-            _validation.field(field, _bulkApply(field, _input(field))),
+            if (index > 0 &&
+                (field != 'keepsFor' ||
+                    _showKeepsFor ||
+                    keepsFor.text.isNotEmpty ||
+                    (_expiryOffer != null && expiry.text.trim().isNotEmpty)))
+              const SizedBox(height: 12),
+            if (field != 'keepsFor' ||
+                _showKeepsFor ||
+                keepsFor.text.isNotEmpty ||
+                (_expiryOffer != null && expiry.text.trim().isNotEmpty))
+              _validation.field(field, _bulkApply(field, _input(field))),
             if (field == 'size' && (bulk || product != null))
               // Follows the draft: typing another product's name says merge.
               ListenableBuilder(
@@ -1201,8 +1240,8 @@ class FoodEditorState extends State<FoodEditor> {
               ListenableBuilder(
                 listenable: Listenable.merge([expiry, keepsFor]),
                 builder: (context, _) {
-                  final note = _expiryNote, offer = _expiryOffer;
-                  if (note == null && offer == null) {
+                  final note = _expiryNote;
+                  if (note == null) {
                     return const SizedBox.shrink();
                   }
                   // Both start where the field's text starts.
@@ -1212,55 +1251,51 @@ class FoodEditorState extends State<FoodEditor> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (note != null)
-                          // As tall as the offer that can replace it, so the
-                          // fields below stay where they are.
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: 24),
-                            child: Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              widthFactor: 1,
-                              heightFactor: 1,
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.only(
-                                  start: 16,
+                        // As tall as the offer that can replace it, so the
+                        // fields below stay where they are.
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 24),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            widthFactor: 1,
+                            heightFactor: 1,
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                start: 16,
+                              ),
+                              child: Text(
+                                note,
+                                key: const ValueKey('food-expiry-note'),
+                                strutStyle: StrutStyle.fromTextStyle(
+                                  Theme.of(context).textTheme.labelLarge!,
+                                  forceStrutHeight: true,
                                 ),
-                                child: Text(
-                                  note,
-                                  key: const ValueKey('food-expiry-note'),
-                                  strutStyle: StrutStyle.fromTextStyle(
-                                    Theme.of(context).textTheme.labelLarge!,
-                                    forceStrutHeight: true,
-                                  ),
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
-                                      ),
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
                               ),
                             ),
                           ),
-                        if (offer != null)
-                          TextButton(
-                            key: const ValueKey('food-expiry-offer'),
-                            // The label lines up with the field text.
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsetsDirectional.symmetric(
-                                horizontal: 16,
-                              ),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              minimumSize: const Size(0, 32),
-                              visualDensity: VisualDensity.compact,
-                            ),
-                            onPressed: saving || pending() ? null : offer.$2,
-                            child: Text(offer.$1),
-                          ),
+                        ),
                       ],
                     ),
                   );
                 },
+              ),
+            if (field == 'link' &&
+                !_showKeepsFor &&
+                keepsFor.text.isEmpty &&
+                !(_expiryOffer != null && expiry.text.trim().isNotEmpty))
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton.icon(
+                  onPressed: () => setState(() => _showKeepsFor = true),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Keeps for'),
+                ),
               ),
             if (field == 'link' && prices != null)
               _secondary(prices, key: const ValueKey('food-product-prices')),

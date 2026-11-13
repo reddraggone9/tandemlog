@@ -265,7 +265,7 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     await tester.enterText(_expiration, '2026-11-12');
     await tester.pumpAndSettle();
     expect(_note, findsNothing);
-    expect(find.text('Remember: keeps 5 days'), findsOneWidget);
+    expect(find.text('5 days'), findsOneWidget);
     await tester.tap(_offer);
     await tester.pumpAndSettle();
     expect(_text(tester, _keepsFor), '5 days');
@@ -287,7 +287,7 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     await _open(tester, 'Strawberries');
     await tester.enterText(_expiration, '2026-11-21');
     await tester.pumpAndSettle();
-    expect(find.text('Remember: keeps 2 weeks'), findsOneWidget);
+    expect(find.text('2 weeks').last, findsOneWidget);
     await tester.tap(_save);
     await tester.pumpAndSettle();
     expect(edits.single.fields, unorderedEquals(['expiry', 'estimated']));
@@ -299,10 +299,10 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     final edits = await _pump(tester);
     await _open(tester, 'Mango');
     expect(_offer, findsNothing);
-    expect(_text(tester, _keepsFor), '');
+    expect(_keepsFor, findsNothing);
     await tester.enterText(_expiration, '2026-11-19');
     await tester.pumpAndSettle();
-    expect(find.text('Remember: keeps 12 days'), findsOneWidget);
+    expect(find.text('12 days'), findsOneWidget);
     await tester.tap(_save);
     await tester.pumpAndSettle();
     expect(edits.single.fields, ['expiry']);
@@ -326,7 +326,7 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     await tester.pump();
     await tester.enterText(_expiration, '2026-11-21');
     await tester.pumpAndSettle();
-    expect(find.text('Remember: keeps 2 weeks'), findsOneWidget);
+    expect(find.text('2 weeks').last, findsOneWidget);
     await tester.enterText(_keepsFor, '');
     await tester.pumpAndSettle();
     await tester.tap(_save);
@@ -358,7 +358,7 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     final edits = await _pump(tester);
     await _open(tester, 'Greek yogurt');
     expect(_text(tester, _expiration), '');
-    expect(find.text('Like last time: 2026-12-04'), findsOneWidget);
+    expect(find.text('2026-12-04'), findsOneWidget);
     await tester.tap(_offer);
     await tester.pumpAndSettle();
     expect(_text(tester, _expiration), '2026-12-04');
@@ -379,7 +379,10 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     await _pump(tester);
     await _open(tester, 'Greek yogurt');
     await tester.tap(
-      find.descendant(of: _expiration, matching: find.byType(IconButton)),
+      find.descendant(
+        of: _expiration,
+        matching: find.byTooltip('Choose Expiration'),
+      ),
     );
     await tester.pumpAndSettle();
     // Nothing is filled in until a day is picked: Cancel leaves it empty.
@@ -387,7 +390,10 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     await tester.pumpAndSettle();
     expect(_text(tester, _expiration), '');
     await tester.tap(
-      find.descendant(of: _expiration, matching: find.byType(IconButton)),
+      find.descendant(
+        of: _expiration,
+        matching: find.byTooltip('Choose Expiration'),
+      ),
     );
     await tester.pumpAndSettle();
     await tester.tap(find.text('OK'));
@@ -406,6 +412,29 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
     expect(_offer, findsNothing);
     expect(_note, findsNothing);
   });
+
+  testWidgets(
+    'Keeps for is disclosed only when useful; add reveals an editable field',
+    (tester) async {
+      await _pump(tester);
+      await _open(tester, 'Greek yogurt');
+      expect(_keepsFor, findsNothing);
+      expect(
+        find.descendant(of: _expiration, matching: _offer),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(find.widgetWithText(TextButton, 'Keeps for'));
+      await captureUx(tester, 'keeps-for-07-hidden-disclosure');
+      await tester.tap(find.widgetWithText(TextButton, 'Keeps for'));
+      await tester.pumpAndSettle();
+      expect(_keepsFor, findsOneWidget);
+      await tester.ensureVisible(_keepsFor);
+      await captureUx(tester, 'keeps-for-08-revealed');
+      await tester.enterText(_keepsFor, '3 days');
+      await tester.pumpAndSettle();
+      expect(_text(tester, _keepsFor), '3 days');
+    },
+  );
 
   testWidgets('Keeps for refuses text that is not a duration', (tester) async {
     final edits = await _pump(tester);
@@ -646,7 +675,7 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
       await _open(tester, 'Mango');
       await tester.enterText(_expiration, '2027-01-16');
       await tester.pumpAndSettle();
-      expect(find.text('Remember: keeps 10 weeks'), findsOneWidget);
+      expect(find.text('10 weeks'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.tap(_offer);
       await tester.pumpAndSettle();
@@ -657,19 +686,19 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
 
   // Last: the real font stays loaded for the rest of this file's run.
   for (final size in [const Size(1400, 900), const Size(412, 892)]) {
-    testWidgets('the offer takes the helper line\'s place at '
-        '${size.width.toInt()} dp; nothing below moves', (tester) async {
+    testWidgets('in-field offer replaces the estimate note at '
+        '${size.width.toInt()} dp', (tester) async {
       await tester.runAsync(_loadRoboto);
       await _pump(tester, size: size);
       await _open(tester, 'Strawberries');
       final location = find.widgetWithText(TextField, 'Location');
       expect(_note, findsOneWidget);
-      final before = tester.getTopLeft(location).dy;
+      expect(location, findsOneWidget);
       await tester.enterText(_expiration, '2026-11-12');
       await tester.pumpAndSettle();
       expect(_note, findsNothing);
       expect(_offer, findsOneWidget);
-      expect(tester.getTopLeft(location).dy, before);
+      expect(find.descendant(of: _keepsFor, matching: _offer), findsOneWidget);
     });
   }
 });
