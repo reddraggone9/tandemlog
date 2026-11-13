@@ -741,6 +741,21 @@ class FoodStore {
     );
   }
 
+  /// Sets a list of Keeps for values, creating products that do not exist
+  /// yet, planned against current Food as one action and one Undo. Returns
+  /// the planned edits; an empty plan appends nothing.
+  Future<List<FoodProductEdit>> applyKeepsFor(
+    List<FoodKeepsForEntry> entries, {
+    bool Function()? canCommit,
+  }) => _queue(() async {
+    var planned = const <FoodProductEdit>[];
+    await _freshCommandLocked(canCommit: canCommit, () {
+      planned = planFoodKeepsFor(state, entries);
+      return _productChanges(planned);
+    });
+    return planned;
+  });
+
   Future<void> changeContents(FoodContainer observed, Contents contents) async {
     final refs = observed.contentsEdits.keys.toList(),
         changes = <_FoodChange>[];

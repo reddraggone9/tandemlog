@@ -721,6 +721,83 @@ List<FoodProductStep> planFoodProductChanges(
   return steps;
 }
 
+/// One line of a shelf-life list: an existing product by ID, or a
+/// description that may not have a product yet (cut or cooked food).
+class FoodKeepsForEntry {
+  const FoodKeepsForEntry({this.product, this.description, this.keepsFor});
+  final String? product;
+  final FoodDetails? description;
+
+  /// Null clears the product's Keeps for.
+  final FoodKeepsFor? keepsFor;
+}
+
+/// Plans a list of Keeps for values as product edits for one action
+/// (design/food-shelf-life.md, Seed data). A description without a product
+/// becomes a product with no containers, so Add suggests it and dates it.
+/// Entries that already hold their value plan nothing.
+List<FoodProductEdit> planFoodKeepsFor(
+  FoodState state,
+  List<FoodKeepsForEntry> entries,
+) {
+  final steps = <FoodProductEdit>[];
+  final seen = <String>{};
+  for (final entry in entries) {
+    final description = entry.description;
+    if ((entry.product == null) == (description == null)) {
+      _invalid('shelf-life entry');
+    }
+    var root = entry.product == null
+        ? null
+        : state.catalog.resolve(entry.product!);
+    if (root != null && !state.products.containsKey(root)) {
+      throw FormatException('Unknown product ${entry.product}.');
+    }
+    if (description != null) {
+      description.validate();
+      root = state
+          .productsByDescription[foodDescriptionKey(
+            description.name,
+            description.brand,
+            description.size,
+          )]
+          ?.first
+          .id;
+    }
+    final Map<String, Object?> values;
+    if (root != null) {
+      values =
+          planFoodProductChanges(
+            state,
+            [root],
+            {'keepsFor': entry.keepsFor?.toJson()},
+          ).whereType<FoodProductEdit>().firstOrNull?.values ??
+          const {};
+    } else {
+      // A renamed or merged-away product keeps its derived ID.
+      final implicit = implicitFoodProductId(description!);
+      root = state.catalog.knows(implicit)
+          ? const Uuid().v5(
+              foodProductNamespace,
+              'tandemlog:food-product:shelf-life:v1\n'
+              '${canonicalDataJson([description.name, description.brand, description.size])}',
+            )
+          : implicit;
+      values = {
+        'name': description.name,
+        'brand': description.brand,
+        'size': description.size,
+        if (entry.keepsFor != null) 'keepsFor': entry.keepsFor!.toJson(),
+      };
+    }
+    if (!seen.add(root)) {
+      throw const FormatException('A product is listed twice.');
+    }
+    if (values.isNotEmpty) steps.add(FoodProductEdit(root, values));
+  }
+  return steps;
+}
+
 /// How an Add or import attaches new containers to a product.
 class FoodAddPlan {
   const FoodAddPlan({this.product, this.create});

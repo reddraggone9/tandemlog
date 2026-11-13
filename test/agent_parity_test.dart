@@ -44,6 +44,7 @@ const covered = {
     'products merge',
   ],
   'commitPurchaseImport': ['purchases import'],
+  'applyKeepsFor': ['products keeps-for'],
   'undoOperations': ['undo'],
   'undoRemovals': ['undo'],
   'verifyHistory': ['verify'],

@@ -859,6 +859,76 @@ void main() {
       );
 
       test(
+        'a shelf-life list is one action: edits, a new empty product, one Undo',
+        () async {
+          await food.add(const FoodDetails(name: 'Grapes'), 1);
+          await food.add(const FoodDetails(name: 'Milk'), 1);
+          final grapes = food.state.products.values
+              .firstWhere((p) => p.name == 'Grapes')
+              .id;
+          final before = records().length;
+          final entries = [
+            FoodKeepsForEntry(
+              product: grapes,
+              keepsFor: const FoodKeepsFor(2, 'week'),
+            ),
+            const FoodKeepsForEntry(
+              description: FoodDetails(name: 'Carrots, cut'),
+              keepsFor: FoodKeepsFor(2, 'week'),
+            ),
+          ];
+          final planned = await food.applyKeepsFor(entries);
+          expect(planned, hasLength(2));
+          final written = records().skip(before).toList();
+          expect(written.map((r) => r.currentOperation.revision), [2, 2]);
+          expect(tasks.unified!.snapshot.records.last.effects, hasLength(2));
+          final cut = food.state.products.values.firstWhere(
+            (p) => p.name == 'Carrots, cut',
+          );
+          expect(cut.containers, 0);
+          expect(cut.keepsFor, const FoodKeepsFor(2, 'week'));
+          expect(
+            cut.id,
+            implicitFoodProductId(const FoodDetails(name: 'Carrots, cut')),
+          );
+          expect(
+            food.state.products[grapes]!.keepsFor,
+            const FoodKeepsFor(2, 'week'),
+          );
+          expectReplayEquivalent();
+          // The same list again writes nothing.
+          expect(await food.applyKeepsFor(entries), isEmpty);
+          expect(records().length, before + 2);
+          // A hand entry joins the empty product.
+          await food.add(const FoodDetails(name: 'carrots, cut'), 1);
+          expect(
+            food.state.products.values.where(
+              (p) => p.name.toLowerCase() == 'carrots, cut',
+            ),
+            hasLength(1),
+          );
+          expect(food.state.products[cut.id]!.containers, 1);
+          await food.undoOperations(written);
+          expect(food.state.products[grapes]!.keepsFor, isNull);
+          expect(food.state.products[cut.id]!.keepsFor, isNull);
+          expectReplayEquivalent();
+          await expectLater(
+            food.applyKeepsFor([
+              FoodKeepsForEntry(
+                product: grapes,
+                keepsFor: const FoodKeepsFor(1, 'day'),
+              ),
+              const FoodKeepsForEntry(
+                description: FoodDetails(name: 'grapes'),
+                keepsFor: FoodKeepsFor(2, 'day'),
+              ),
+            ]),
+            throwsFormatException,
+          );
+        },
+      );
+
+      test(
         'usual location follows the most recently placed container',
         () async {
           await food.add(

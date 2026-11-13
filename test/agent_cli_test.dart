@@ -840,6 +840,109 @@ void main() {
     expect(cleared['product']['rev'], p['rev']);
   });
 
+  test('products keeps-for sets a reviewed list as one action', () async {
+    await setUpAgent();
+    for (final name in ['Grapes', 'Cilantro']) {
+      await json(['food', 'add', '--name', name, '--expiry', '2026-11-20']);
+    }
+    final products = {
+      for (final p in (await json(['products', 'list']))['products'] as List)
+        (p as Map)['name'] as String: p,
+    };
+    final list = File('${root.path}/keeps-for.json');
+    Future<Map<String, dynamic>> run(Object entries, [String? plan]) {
+      list.writeAsStringSync(jsonEncode(entries));
+      return json([
+        'products',
+        'keeps-for',
+        list.path,
+        if (plan == null) '--dry-run' else ...['--expect-plan', plan],
+      ]);
+    }
+
+    for (final bad in <Object>[
+      {'product': 'x'},
+      <Object>[],
+      [
+        {'product': products['Grapes']!['id'], 'keepsFor': 'a while'},
+      ],
+      [
+        {'keepsFor': '2 weeks'},
+      ],
+      [
+        {
+          'product': products['Grapes']!['id'],
+          'name': 'G',
+          'keepsFor': '1 day',
+        },
+      ],
+      [
+        {'product': products['Grapes']!['id'], 'keepsFor': '2 weeks'},
+        {'name': 'grapes', 'keepsFor': '1 week'},
+      ],
+    ]) {
+      expect((await run(bad))['error']['kind'], 'validation', reason: '$bad');
+    }
+    final entries = [
+      {'product': products['Grapes']!['id'], 'keepsFor': '2 weeks'},
+      // An existing product named by its description, any letter case.
+      {'name': 'cilantro', 'keepsFor': '14 days'},
+      {'name': 'Carrots, cut', 'keepsFor': '2 weeks'},
+    ];
+    final dry = await run(entries);
+    expect(dry['error'], isNull, reason: '$dry');
+    expect((await json(['products', 'list']))['total'], 2);
+    final unplanned = await json(['products', 'keeps-for', list.path]);
+    expect(unplanned['error']['kind'], 'validation');
+    final done = await run(entries, dry['planHash'] as String);
+    expect(done['actions'], hasLength(1), reason: '$done');
+    expect(done['changed'], hasLength(3));
+    final after = {
+      for (final p in (await json(['products', 'list']))['products'] as List)
+        (p as Map)['name'] as String: p,
+    };
+    expect(after['Grapes']!['keepsFor'], '2 weeks');
+    expect(after['Cilantro']!['keepsFor'], '14 days');
+    expect(after['Carrots, cut']!['keepsFor'], '2 weeks');
+    expect(after['Carrots, cut']!['containers'], 0);
+    // A hand entry of the new product joins it rather than making another.
+    await json([
+      'food',
+      'add',
+      '--name',
+      'Carrots, cut',
+      '--expiry',
+      '2026-11-30',
+    ]);
+    final joined = (await json(['products', 'list']))['products'] as List;
+    expect(joined, hasLength(3));
+    expect(
+      joined.singleWhere((p) => (p as Map)['name'] == 'Carrots, cut'),
+      containsPair('containers', 1),
+    );
+    // Applying the same list again plans nothing.
+    final again = await run(entries);
+    expect(again['effects'], isEmpty);
+    // One Undo takes the whole list back, including the created product's value.
+    final current = {
+      for (final p in joined) (p as Map)['id'] as String: p['rev'] as String,
+    };
+    final undone = await json([
+      'undo',
+      (done['actions'] as List).single as String,
+      for (final c in done['affected'] as List)
+        '--rev=${c['id']}=${current[c['id']]}',
+    ]);
+    expect(undone['error'], isNull, reason: '$undone');
+    final back = {
+      for (final p in (await json(['products', 'list']))['products'] as List)
+        (p as Map)['name'] as String: p,
+    };
+    expect(back['Grapes']!['keepsFor'], isNull);
+    expect(back['Cilantro']!['keepsFor'], isNull);
+    expect(back['Carrots, cut']!['keepsFor'], isNull);
+  });
+
   test('MCP lists every non-setup registry command and calls tools', () async {
     await setUpAgent();
     final server = McpServer(environment: env, profile: 'default');
