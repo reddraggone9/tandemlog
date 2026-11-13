@@ -102,12 +102,14 @@ class NativeColdStartTest(unittest.TestCase):
                 gate.verify(REPO, file)
 
     def test_verify_uses_registered_host_schema_without_unpinning_hardware(self):
-        host = gate.profile(REPO)
+        # Test host-schema handling independently of platform pub-get lock edits.
+        host = json.loads((REPO / gate.PROFILE).read_text())
         actual = {**host['environment'], 'kernel': 'recorded-kernel', 'python': 'recorded-python'}
         _, value = result([500] * 5, relevantSource={}, sourceRevision='synthetic',
                           hostProfileSHA256=gate.digest(REPO / gate.PROFILE), host=actual)
         with tempfile.TemporaryDirectory() as tmp, \
-                patch.object(gate, 'recorded_identity', return_value=({}, {})):
+                patch.object(gate, 'recorded_identity', return_value=({}, {})), \
+                patch.object(gate, 'profile', return_value=host):
             file = Path(tmp) / 'result.json'
             file.write_text(json.dumps(value))
             self.assertTrue(gate.verify(REPO, file)['passed'])
