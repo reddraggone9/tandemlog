@@ -516,13 +516,45 @@ The former **420 ms result and candidate 42111287310 describe the Task-only
 shape**, not the corrected mixed case. They remain historical evidence, not
 current mixed-workload acceptance. The first fresh mixed native measurement, on `7e7b028`, passed at 520 ms median (uncached first launch 2,500 ms; 480 Food rows in its receipt). After the Linux runner follow-up `e930f31` the case was measured again: **500 ms median** (500, 490, 500, 500, 500 ms), uncached first launch **2,550 ms**, receipt 3,667 records / 6,419,498 bytes / four writers and 522 active containers / 477 Food rows / 551 products / 34 purchases; every measured launch matches its own receipt. Food row counts differ between fixtures because generated identities affect selection and grouping; no sample is relabeled. This is the source-bound native case, not the controlled AOT qualification or signed-candidate/lab acceptance. See the committed receipts for exact boundaries and provenance.
 
-Off-UI-isolate opening remains deferred: SQLite/store ownership and Android SAF
-channels make that a larger safety-critical change. Decoding already uses worker
-isolates; validation/commits and the first full frame still occupy the UI thread.
-The bounded findings do not justify a broad rewrite or claim perfectly smooth
-startup. Phone after-history-store timing remains unmeasured (keyguard blocked
-an earlier attempt); no phone was accessed during this follow-up. Desktop
-software-rendered figures cannot be promoted to phone numbers.
+### UI stalls while opening (2026-11-13)
+
+`TANDEMLOG_FIRST_LIST` also reports `stall_ms`, the longest stretch between app
+start and the first list in which the UI isolate did not return to its event
+loop, and `stalls`, every such stretch of at least 32 ms as `[start, length]`
+(`StartupTrace.watchStalls`, a 1 ms heartbeat). No frame can be built during a
+stretch, so this is the standing progress bar of
+[ux-principles](ux-principles.md) rule 34. It is reported, not budgeted.
+
+Measured on the gate fixture (Bender, ext4, development harness, one strict and
+five warm launches per build):
+
+| Build | Warm: longest stall inside the open | Warm: process to first list | Strict: longest stall |
+|---|---|---|---|
+| 2026.11.1 code + heartbeat | 121–187 ms | 470–500 ms | 948 ms |
+| cooperative open | 46–55 ms | 470–500 ms | 778 ms |
+
+The warm stall was one piece: Task sort and revision digest (~23 ms), the Task
+validator's warm restore (~46 ms), Food admission (~28 ms), commit (~4 ms) and
+the Task store open (~18 ms), back to back. The open now lets a frame run
+between those stages, between stored writers and worker starts in the store
+restore (whose byte rebuild now overlaps the worker decode), and between the
+history, Task and Food stages of `WorkspaceSession.open`. The stages, their
+order and their inputs are unchanged; nothing is published before the commit,
+and the profile queue keeps other commands out, as it already did for the
+decode loop's pauses. Building the first list frame (~60 ms) follows the open
+and is not part of it.
+
+Still blocking: the validator's warm restore (one piece: it consumes its proof
+and copies the nine cache tables), and on a strict open the validator's full
+replay (~740 ms here), the store insert (~65 ms) and the Task projection
+rebuild (~90 ms). Removing those means running the Task validator off the UI
+isolate. It owns an in-memory SQLite store, the profile connection and the
+native text engine, and all three stay in use on the UI isolate after the open,
+so that remains a larger safety-critical change and is not done. Strict opens
+happen on first use, after a store generation change and after a foreground
+crash. Phone after-history-store timing remains unmeasured (keyguard blocked
+an earlier attempt). Desktop software-rendered figures cannot be promoted to
+phone numbers.
 
 ## History
 

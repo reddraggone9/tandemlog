@@ -35,6 +35,20 @@ typedef UnifiedEffectBuilder =
 
 // A same-session proof of the ORIGINAL reservation base, independent of any
 // protected head advanced by lost-acknowledgement reconciliation.
+/// Lets loading and refresh frames run while a long refresh holds the profile
+/// queue: yields to the event loop once the isolate has been kept for a
+/// frame's worth of work. Call only where nothing is half published.
+class _FrameBudget {
+  final _held = Stopwatch()..start();
+
+  bool get due => _held.elapsedMicroseconds >= 8000;
+
+  Future<void> pause() async {
+    await Future<void>.delayed(Duration.zero);
+    _held.reset();
+  }
+}
+
 class _PendingBaseProof {
   _PendingBaseProof(
     this.pending,
@@ -478,7 +492,9 @@ final class UnifiedHistory {
           >{};
       var reused = 0, catchUp = false;
       final rowsByOwner = <String, List<StoredRow>>{};
+      final frames = _FrameBudget();
       for (final owner in tails.keys) {
+        if (frames.due) await frames.pause();
         final seal = seals[owner]!;
         final rows = _store.readWriter(owner, seal);
         if (rows == null ||
@@ -488,7 +504,20 @@ final class UnifiedHistory {
         }
         rowsByOwner[owner] = rows;
       }
-      final decoded = await _decodeStoredRows(rowsByOwner);
+      // Workers decode the rows while this isolate rebuilds each writer's
+      // bytes from the same rows, a frame's worth at a time.
+      final decoding = _decodeStoredRows(rowsByOwner, frames)..ignore();
+      final prefixes = <String, BytesBuilder>{};
+      for (final MapEntry(key: owner, value: rows) in rowsByOwner.entries) {
+        final builder = prefixes[owner] = BytesBuilder(copy: false);
+        for (final row in rows) {
+          builder
+            ..add(utf8.encode(row.raw))
+            ..addByte(10);
+          if (frames.due) await frames.pause();
+        }
+      }
+      final decoded = await decoding;
       for (final MapEntry(key: owner, value: tail) in tails.entries) {
         final seal = seals[owner]!;
         final rows = rowsByOwner[owner]!;
@@ -497,12 +526,7 @@ final class UnifiedHistory {
         final migration = historicalCount == 0
             ? null
             : rows[historicalCount - 1];
-        final builder = BytesBuilder(copy: false);
-        for (final row in rows) {
-          builder
-            ..add(utf8.encode(row.raw))
-            ..addByte(10);
-        }
+        final builder = prefixes[owner]!;
         if (builder.length != seal.end) return null;
         final suffix = Uint8List.sublistView(tail, seal.end - seal.lastStart);
         final defer = _deferPeerCatchUp && owner != writer;
@@ -541,6 +565,7 @@ final class UnifiedHistory {
   /// no profile or native owner crosses), on this isolate if unavailable.
   static Future<Map<String, List<UnifiedRecord>>> _decodeStoredRows(
     Map<String, List<StoredRow>> rows,
+    _FrameBudget frames,
   ) async {
     const chunk = 400;
     final jobs = <(String, int, List<StoredRow>)>[
@@ -550,13 +575,19 @@ final class UnifiedHistory {
     ];
     List<List<UnifiedRecord>> parts;
     try {
-      parts = await Future.wait([
-        for (final job in jobs)
+      // Starting a worker copies its rows on this isolate. A worker that
+      // fails during a pause still reports through the wait below.
+      final workers = <Future<List<UnifiedRecord>>>[];
+      for (final job in jobs) {
+        if (frames.due) await frames.pause();
+        workers.add(
           Isolate.run(
             () => HistoryStore.decode(job.$3),
             debugName: 'tandemlog-store-decode',
-          ),
-      ]);
+          )..ignore(),
+        );
+      }
+      parts = await Future.wait(workers);
     } on IsolateSpawnException {
       parts = [for (final job in jobs) HistoryStore.decode(job.$3)];
     } on UnsupportedError {
@@ -1257,7 +1288,7 @@ final class UnifiedHistory {
       }
     }
 
-    final decodeBudget = Stopwatch()..start();
+    final frames = _FrameBudget();
     final owners = ownerSet.toList()..sort();
     for (final owner in owners) {
       final name = unifiedLogName(owner);
@@ -1484,10 +1515,7 @@ final class UnifiedHistory {
         // Complete input snapshots are already frozen and publication has not
         // begun. Let loading/refresh frames run between bounded decode slices;
         // the profile queue still excludes competing commands.
-        if (decodeBudget.elapsedMicroseconds >= 8000) {
-          await Future<void>.delayed(Duration.zero);
-          decodeBudget.reset();
-        }
+        if (frames.due) await frames.pause();
       }
       if (current.owners.containsKey(owner) &&
           (sequence < historicalCount ||
@@ -1544,12 +1572,16 @@ final class UnifiedHistory {
     // cannot conceal a malformed event or relax the app-wide format fence.
     var taskReady = <String>{};
     String? allTaskRevision;
-    final allAdmission = _validateEffects(
+    final allAdmission = await _validateEffectsBetweenFrames(
       admitted,
       current,
+      frames,
       onTaskReady: (ids) => taskReady = ids,
       onTaskValidated: (key) => allTaskRevision = key,
     );
+    // Last frame before publication; the commit below and the projection
+    // publications after it run without a break.
+    if (frames.due) await frames.pause();
     final publication = _publishActions(
       all,
       published,
@@ -1871,17 +1903,47 @@ final class UnifiedHistory {
     UnifiedManifest m, {
     void Function(Set<String>)? onTaskReady,
     void Function(String)? onTaskValidated,
-  }) => profile.observeSynchronous(
-    'history.semanticValidation',
-    () => _validateObservedEffects(
+  }) => profile.observeSynchronous('history.semanticValidation', () {
+    final validation = _effectValidation(
       effects,
       m,
       onTaskReady: onTaskReady,
       onTaskValidated: onTaskValidated,
-    ),
-  );
+    );
+    for (final stage in validation.stages) {
+      stage();
+    }
+    return validation.result();
+  });
 
-  FoodAdmission _validateObservedEffects(
+  /// [_validateEffects] for a refresh: the same stages in the same order, but
+  /// a frame may run between them. Only the caller's frozen inputs and this
+  /// history's validation state are touched, and the profile queue keeps every
+  /// other command out until the refresh ends.
+  Future<FoodAdmission> _validateEffectsBetweenFrames(
+    Iterable<UnifiedEffect> effects,
+    UnifiedManifest m,
+    _FrameBudget frames, {
+    void Function(Set<String>)? onTaskReady,
+    void Function(String)? onTaskValidated,
+  }) => profile.observeAsynchronous('history.semanticValidation', () async {
+    final validation = _effectValidation(
+      effects,
+      m,
+      onTaskReady: onTaskReady,
+      onTaskValidated: onTaskValidated,
+    );
+    for (final stage in validation.stages) {
+      if (frames.due) await frames.pause();
+      stage();
+    }
+    return validation.result();
+  });
+
+  /// Semantic validation as ordered stages (Task identity, Task validation,
+  /// Food admission). Every stage must run, in order, before [result].
+  ({List<void Function()> stages, FoodAdmission Function() result})
+  _effectValidation(
     Iterable<UnifiedEffect> effects,
     UnifiedManifest m, {
     void Function(Set<String>)? onTaskReady,
@@ -1930,8 +1992,8 @@ final class UnifiedHistory {
         );
     // Exact unchanged-set proof is order-independent. Do not regroup and sort
     // all Task history for an unrelated peer Food/header change.
-    String? key = sameTasks ? priorKey : null;
-    Set<String>? ready = sameTasks ? prior!.readyTaskIds : null;
+    String? taskKey = sameTasks ? priorKey : null;
+    Set<String>? taskReady = sameTasks ? prior!.readyTaskIds : null;
     // A delivered peer action usually only extends the exact ready set. Like an
     // owned append, its process key chains the prior key with the new events,
     // and the owning validator admits only that delta with the generic checks.
@@ -1957,9 +2019,9 @@ final class UnifiedHistory {
               priorKey,
               for (final e in added) [e.id, e.hash, e.integrityHash],
             ])))}';
-        ready = _taskValidation.remove(extensionKey);
-        if (ready == null) {
-          ready = _semanticValidator?.validateMonotonicDelta(
+        taskReady = _taskValidation.remove(extensionKey);
+        if (taskReady == null) {
+          taskReady = _semanticValidator?.validateMonotonicDelta(
             added,
             expectedBaseKey: priorKey,
             inputKey: extensionKey,
@@ -1968,86 +2030,102 @@ final class UnifiedHistory {
               return semanticTasks..sort(compareEvents);
             },
           );
-          if (ready != null) {
+          if (taskReady != null) {
             semanticValidationRuns++;
             monotonicTaskValidationRuns++;
           }
         }
-        if (ready != null) key = extensionKey;
+        if (taskReady != null) taskKey = extensionKey;
       }
     }
-    if (key == null) {
+    void identifyTasks() {
+      if (taskKey != null) return;
       semanticTaskSortRuns++;
       semanticTasks.sort(compareEvents);
-      key = TaskStore.canonicalTaskRevision(semanticTasks);
-      ready = _taskValidation.remove(key);
+      final revision = TaskStore.canonicalTaskRevision(semanticTasks);
+      taskKey = revision;
+      taskReady = _taskValidation.remove(revision);
     }
-    if (ready == null) {
-      semanticValidationRuns++;
-      final validator = _semanticValidator ??= TaskSemanticValidator(
-        owningHistory: this,
-        space: m.space,
-        writer: writer,
-        textEngine: textEngine,
-        profile: profile,
-        locationKey: bytesDigest(
-          utf8.encode('${folder.location}#app5:${m.epoch}'),
-        ),
-        manifestDigest: m.digest,
-      );
-      ready = validator.validate(semanticTasks, inputKey: key);
+
+    void validateTasks() {
+      final key = taskKey!;
+      var ready = taskReady;
+      if (ready == null) {
+        semanticValidationRuns++;
+        final validator = _semanticValidator ??= TaskSemanticValidator(
+          owningHistory: this,
+          space: m.space,
+          writer: writer,
+          textEngine: textEngine,
+          profile: profile,
+          locationKey: bytesDigest(
+            utf8.encode('${folder.location}#app5:${m.epoch}'),
+          ),
+          manifestDigest: m.digest,
+        );
+        ready = validator.validate(semanticTasks, inputKey: key);
+      }
+      _taskValidation[key] = ready;
+      if (_taskValidation.length > 4) {
+        _taskValidation.remove(_taskValidation.keys.first);
+      }
+      onTaskReady?.call(ready);
+      onTaskValidated?.call(key);
     }
-    _taskValidation[key] = ready;
-    if (_taskValidation.length > 4) {
-      _taskValidation.remove(_taskValidation.keys.first);
-    }
-    onTaskReady?.call(ready);
-    onTaskValidated?.call(key);
-    // Peer delivery can extend a fully admitted Food input just like an owned
-    // append. Prove every prior ID has the exact same canonical bytes first;
-    // removals, replacements, older clocks and pending dependencies fall back.
-    // A manifest/owner change cannot borrow the prior admission index.
-    if (priorKey != null) {
-      final priorFood = <String, String>{
-        for (final effect in prior!.effects)
-          if (effect.food != null) effect.food!.id: effect.raw,
-      };
-      if (priorFood.length <= foodRaw.length &&
-          priorFood.entries.every(
-            (entry) => foodRaw[entry.key] == entry.value,
-          )) {
-        final appended = appendReadyFoodRecords(prior.foodAdmission, [
-          for (final entry in food.entries)
-            if (!priorFood.containsKey(entry.key)) entry.value,
-        ], legacyOwners: m.referenceAuthors);
-        if (appended != null) {
-          incrementalFoodAdmissionRuns++;
-          return appended;
+
+    FoodAdmission admitFood() {
+      // Peer delivery can extend a fully admitted Food input just like an owned
+      // append. Prove every prior ID has the exact same canonical bytes first;
+      // removals, replacements, older clocks and pending dependencies fall back.
+      // A manifest/owner change cannot borrow the prior admission index.
+      if (priorKey != null) {
+        final priorFood = <String, String>{
+          for (final effect in prior!.effects)
+            if (effect.food != null) effect.food!.id: effect.raw,
+        };
+        if (priorFood.length <= foodRaw.length &&
+            priorFood.entries.every(
+              (entry) => foodRaw[entry.key] == entry.value,
+            )) {
+          final appended = appendReadyFoodRecords(prior.foodAdmission, [
+            for (final entry in food.entries)
+              if (!priorFood.containsKey(entry.key)) entry.value,
+          ], legacyOwners: m.referenceAuthors);
+          if (appended != null) {
+            incrementalFoodAdmissionRuns++;
+            return appended;
+          }
         }
       }
-    }
-    final foodIds = foodRaw.keys.toList()..sort();
-    final foodKey = bytesDigest(
-      utf8.encode(
-        canonicalDataJson([
-          m.digest,
-          ...foodIds.map((id) => foodEffects[id]!.validationDigest),
-        ]),
-      ),
-    );
-    var foodResult = _foodValidation.remove(foodKey);
-    if (foodResult == null) {
-      fullFoodAdmissionRuns++;
-      foodResult = admitFoodRecords(
-        food.values.toList(),
-        legacyOwners: m.referenceAuthors,
+      final foodIds = foodRaw.keys.toList()..sort();
+      final foodKey = bytesDigest(
+        utf8.encode(
+          canonicalDataJson([
+            m.digest,
+            ...foodIds.map((id) => foodEffects[id]!.validationDigest),
+          ]),
+        ),
       );
+      var foodResult = _foodValidation.remove(foodKey);
+      if (foodResult == null) {
+        fullFoodAdmissionRuns++;
+        foodResult = admitFoodRecords(
+          food.values.toList(),
+          legacyOwners: m.referenceAuthors,
+        );
+      }
+      _foodValidation[foodKey] = foodResult;
+      if (_foodValidation.length > 4) {
+        _foodValidation.remove(_foodValidation.keys.first);
+      }
+      return foodResult;
     }
-    _foodValidation[foodKey] = foodResult;
-    if (_foodValidation.length > 4) {
-      _foodValidation.remove(_foodValidation.keys.first);
-    }
-    return foodResult;
+
+    late final FoodAdmission admitted;
+    return (
+      stages: [identifyTasks, validateTasks, () => admitted = admitFood()],
+      result: () => admitted,
+    );
   }
 
   // Same-session only. Closing/crashing discards unacknowledged intent;

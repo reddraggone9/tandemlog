@@ -90,12 +90,18 @@ class WorkspaceSession {
     bool deferPeerCatchUp = false,
   }) async {
     bool live() => alive?.call() ?? true;
-    void phase(String name) => onPhase?.call(name);
+    // Each stage keeps the isolate for a while; a frame of the caller's
+    // loading screen may run before the next one starts.
+    Future<void> phase(String name) {
+      onPhase?.call(name);
+      return Future<void>.delayed(Duration.zero);
+    }
+
     UnifiedHistory? unified;
     TaskStore? tasks;
     try {
       final names = await folder.list();
-      phase('folderList');
+      onPhase?.call('folderList');
       if (names.isEmpty && readOnly) {
         throw const ReadOnlyWorkspaceWrite(
           'The workspace folder is empty. Initialize it first.',
@@ -115,9 +121,9 @@ class WorkspaceSession {
               textEngine: textEngine,
               deferPeerCatchUp: deferPeerCatchUp,
             );
-      phase('history');
+      await phase('history');
       tasks = await TaskStore.openUnified(unified);
-      phase('tasks');
+      await phase('tasks');
       if (!readOnly &&
           !tasks.sharedTextInitialized &&
           unified.snapshot.tasks.isEmpty) {
@@ -141,7 +147,7 @@ class WorkspaceSession {
         );
       }
       food = await FoodStore.openUnified(unified);
-      phase('food');
+      await phase('food');
       if (!live()) {
         await food.close();
         await tasks.close();
@@ -159,7 +165,7 @@ class WorkspaceSession {
             ? await tasks.migrateLoadedOccurrenceDates(canCommit: live)
             : await tasks.migrateOccurrenceDates(canCommit: live);
         migrationError = migration.error;
-        phase('migration');
+        onPhase?.call('migration');
         if (!live()) {
           await food.close();
           await tasks.close();
