@@ -23,14 +23,14 @@
       "findmnt -n -o FSTYPE -T measurement-path"
     ]
   },
-  "controllerSHA256": "f5e6262ee5c4665e1a5cf3b30728165f21651471b33eea79150c8090d78a8645",
+  "controllerSHA256": "2c5f47451afbdedc863c3c07923165e8e67d25f83a716d4dd88f0e743e20a982",
   "resourceBounds": {
     "memory.max": "6442450944",
     "memory.swap.max": "0",
     "cpu.max": "200000 100000",
     "pids.max": "128"
   },
-  "limitsSHA256": "142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8",
+  "limitsSHA256": "6045b956a7cc2392716da847927ddc3213a9fa8723f0a8a48b3f09a3a2eb90fc",
   "pubspecLockSHA256": "f78669e0f9f033c5404ea390826dff5a734736199db0d82e73e7e29cdd41a0ac",
   "compiledDependencies": {
     "count": 5281,
@@ -129,7 +129,7 @@
     "/bin/utils/gen_snapshot": "85d0beecbf834cc6e617dd5adb1b28008292ddd1198d7c476bf751c1460fcb7c",
     "/libtandemlog_text.so": "c9b95caeec732950a32d1c241e1ddb8298f1aaf1f3ee85742c3f1fbed1e789b2",
     "/libsqlite3.so": "d3d1eac2a4e0eb84f4e8d94d820e5963fddfd11aa95179ea215ddc3bc7bd1078",
-    "/tool/performance/limits-v1.json": "142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8"
+    "/tool/performance/limits-v1.json": "6045b956a7cc2392716da847927ddc3213a9fa8723f0a8a48b3f09a3a2eb90fc"
   },
   "libraryReregistration": {
     "reason": "sqlite3 3.8.0 (SQLite 3.54.1) and text-engine source changes on the 2026.10.8 line",

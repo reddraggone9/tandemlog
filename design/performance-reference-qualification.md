@@ -24,16 +24,16 @@ The current schema-v2 registration is in `tool/performance/reference-host-v1.jso
   to be present and consistent in each new receipt.
 - **Caps:** 6 GiB memory, no swap, 200% CPU, 128 tasks.
 - **Limits:** `limits-v1.json` SHA-256
-  `142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8`, also pinned in
-  `validate.yml`. It differs from `553896b3…` only in the gate-rule fields (`gateRule`,
-  `gateRuleSource`, `warmups: 0`, `samples: 1`); every budget number is unchanged.
+  `6045b956a7cc2392716da847927ddc3213a9fa8723f0a8a48b3f09a3a2eb90fc`, also pinned in
+  `validate.yml`. It retains the one-sample automatic-confirmation rule and every
+  existing budget, adding four Keeps for labels at the existing Food edit/undo limits.
 - **Toolchain and libraries:** Dart 3.13.4 `dart`/`gen_snapshot`, `libtandemlog_text.so`
   and `libsqlite3.so` by hash (`toolHashes`; libraries re-registered 2026-10-28, see
   `libraryReregistration`), plus the lockfile, package contract and compiled-dependency
   inventory. A native or dependency change needs new provenance review and
   re-registration before a request. Do not modify binaries or package roots to get a pass.
 - **Controller:** r8, SHA-256
-  `f5e6262ee5c4665e1a5cf3b30728165f21651471b33eea79150c8090d78a8645`, with its pressure
+  `2c5f47451afbdedc863c3c07923165e8e67d25f83a716d4dd88f0e743e20a982`, with its pressure
   module `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`. The
   controller source is private; only its hash is published. r8 admits the household's
   idle `vex-adb.service` ADB server, so qualification does not stop it
@@ -42,7 +42,7 @@ The current schema-v2 registration is in `tool/performance/reference-host-v1.jso
 ## Required roles
 
 - Hosted Linux/Windows/Android correctness/build/native checks remain required.
-  Hosted AOT uses `--hosted-advisory`, strict physical caps and all 257 metrics across
+  Hosted AOT uses `--hosted-advisory`, strict physical caps and all 261 metrics across
   all 3 shapes. Correctness, replay, integrity, coverage, source/tool/fixture drift,
   invalid growth contracts and incomplete child cleanup remain fatal. Only timing
   comparisons become advisory; every raw miss/log remains. No timing rerun.
@@ -143,14 +143,14 @@ retained as evidence, never retried on unchanged source.
    /usr/bin/python3 "$qualification_source/tool/performance/run_gate.py" \
      --repo "$qualification_source" --dart "$reviewed_dart" \
      --native-library "$reviewed_native" --sqlite-library "$reviewed_sqlite" \
-     --expected-limits-sha256 142b4e4f9cb15f2ab064ee0bcd83f9102035821e9d65245c87e1813f9e3673a8 \
+     --expected-limits-sha256 6045b956a7cc2392716da847927ddc3213a9fa8723f0a8a48b3f09a3a2eb90fc \
      --reference-request "$qualification_request" --output "$qualification_run"
    ```
 
    No `--measure-only`, `--hosted-advisory` or `--diagnose-costs`. Do not set SQLite
    LD_PRELOAD on the manager/shell; the driver applies it to actual Dart/AOT children.
    The fresh output must not exist. All 3 shapes retain identical current state and
-   initial prefixes, their module-specific history growth, all 257 labels, one sample
+   initial prefixes, their module-specific history growth, all 261 labels, one sample
    and no warmups, first-use fixtures and complete replay/prefix/native-owner
    assertions. Reruns follow the gate rule inside this invocation; nothing is
    discarded as an outlier. No foreground window is needed.
@@ -281,6 +281,10 @@ measure-only passes.
 All ordinary platform/correctness jobs remain hosted. Foreground/native-visible,
 physical-device, signing/candidate/release and live gates remain separate; a
 qualification authorizes none of them.
+
+The RC117 registration adds four Keeps for labels using the existing Food edit/undo
+budgets and growth limits; no existing budget or resource control changed. The
+controller differs only in its limits digest.
 
 ## History
 
