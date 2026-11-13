@@ -973,6 +973,135 @@ List<AgentCommand> moreCommands() => [
     },
   ),
   AgentCommand(
+    'products keeps-for',
+    'Set Keeps for on a list of products in one action (one Undo). The file '
+        'is a JSON list of {"product": ID, "keepsFor": "2 weeks"} for existing '
+        'products and {"name": …, "brand": …, "size": …, "keepsFor": …} for a '
+        'description; a description with no product yet (cut or cooked food) '
+        'is created with no containers, so Add suggests and dates it. '
+        '"keepsFor": "none" clears. New imports and hand entries use the '
+        'value; existing containers keep their dates.',
+    CommandKind.write,
+    const [
+      AgentArg(
+        'file',
+        'string',
+        'JSON list of shelf-life entries.',
+        required: true,
+        positional: true,
+      ),
+    ],
+    (call) async {
+      final state = foodState(call);
+      Never invalid(String message) => throw AgentFailure(
+        'validation',
+        message,
+        details: const {'field': 'file', 'error': 'invalid'},
+      );
+      final Object? decoded;
+      try {
+        decoded = jsonDecode(
+          utf8.decode(await readAgentInput(call.require('file'), 'file')),
+        );
+      } on FormatException {
+        invalid('The shelf-life list is not valid JSON.');
+      }
+      if (decoded is! List || decoded.isEmpty || decoded.length > 500) {
+        invalid('The shelf-life list must hold 1 to 500 entries.');
+      }
+      final entries = <FoodKeepsForEntry>[];
+      for (final (index, item) in decoded.indexed) {
+        final line = 'Entry ${index + 1}';
+        if (item is! Map ||
+            item['keepsFor'] is! String ||
+            item.keys.any(
+              (k) => !const {
+                'product',
+                'name',
+                'brand',
+                'size',
+                'keepsFor',
+              }.contains(k),
+            ) ||
+            item.entries.any((e) => e.value is! String) ||
+            (item['product'] == null) == (item['name'] == null) ||
+            (item['product'] != null &&
+                (item.containsKey('brand') || item.containsKey('size')))) {
+          invalid(
+            '$line needs "keepsFor" and either "product" or "name" '
+            '(with optional "brand" and "size").',
+          );
+        }
+        final text = item['keepsFor'] as String;
+        final keeps = text == 'none' ? null : FoodKeepsFor.parse(text);
+        if (text != 'none' && keeps == null) {
+          invalid('$line: Keeps for "$text". ${FoodKeepsFor.hint}');
+        }
+        if (item['product'] != null) {
+          entries.add(
+            FoodKeepsForEntry(
+              product: resolveId(
+                item['product'] as String,
+                state.products.keys,
+                'product',
+              ),
+              keepsFor: keeps,
+            ),
+          );
+        } else {
+          entries.add(
+            FoodKeepsForEntry(
+              description: FoodDetails(
+                name: (item['name'] as String).trim(),
+                brand: (item['brand'] as String? ?? '').trim(),
+                size: (item['size'] as String? ?? '').trim(),
+              ),
+              keepsFor: keeps,
+            ),
+          );
+        }
+      }
+      final before = ownHead(call);
+      final List<FoodProductEdit> planned;
+      try {
+        planned = await call.ws.session.food.applyKeepsFor(
+          entries,
+          canCommit: call.commitGuard(() => true),
+        );
+      } on FormatException catch (e) {
+        invalid(e.message);
+      }
+      final now = foodState(call).products;
+      final changed = [
+        for (final step in planned)
+          {
+            'product': step.product,
+            'name': now[step.product]?.name ?? step.values['name'],
+            'keepsFor': FoodKeepsFor.fromJson(step.values['keepsFor'])?.label,
+            'created': !state.products.containsKey(step.product),
+          },
+      ];
+      return writeResult(
+        call,
+        before,
+        [
+          'Keeps for: ${changed.length} changed, '
+              '${entries.length - changed.length} already set',
+          for (final c in changed)
+            '${c['name']} \u00b7 ${c['keepsFor'] ?? 'none'}'
+                '${c['created'] == true ? ' (new product)' : ''}',
+        ].join('\n'),
+        const [],
+        containerIds: [for (final step in planned) step.product],
+        extra: {
+          'changed': changed,
+          'unchanged': entries.length - changed.length,
+        },
+      );
+    },
+    requiresPlan: true,
+  ),
+  AgentCommand(
     'products merge',
     'Merge one product into another (containers and purchases move).',
     CommandKind.write,

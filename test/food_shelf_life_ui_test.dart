@@ -513,6 +513,34 @@ void main() {
     expect(_offer, findsNothing);
   });
 
+  testWidgets('bulk editor order: Location above Container size, no '
+      'shelf-life controls', (tester) async {
+    await _pump(tester);
+    await tester.longPress(find.text('Strawberries'));
+    await tester.pumpAndSettle();
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+    await tester.tap(find.text('Carrots, cut'));
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+    await tester.pumpAndSettle();
+    expect(find.text('Edit 2 containers'), findsOneWidget);
+    final tops = [
+      for (final label in [
+        'Food name',
+        'Brand',
+        'Location',
+        'Container size',
+        'Retention reason',
+      ])
+        tester.getTopLeft(find.text(label).last).dy,
+    ];
+    expect(tops, [...tops]..sort());
+    expect(tops.toSet(), hasLength(tops.length));
+    expect(_keepsFor, findsNothing);
+    expect(_expiration, findsNothing);
+    expect(_offer, findsNothing);
+    expect(_note, findsNothing);
+  });
+
   testWidgets('Add field order: Location under Expiration', (tester) async {
     await _pump(tester);
     await tester.tap(find.byTooltip('Add food'));
