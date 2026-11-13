@@ -1075,7 +1075,11 @@ class _EditorBodyState extends State<_EditorBody> {
                 ? () => repeatMenu.currentState?.showButtonMenu()
                 : null,
             minLines: key == 'description' ? 3 : 1,
-            maxLines: key == 'description' ? null : lines,
+            maxLines: key == 'description'
+                ? null
+                : key == 'title'
+                ? 6
+                : lines,
             inputFormatters: key == 'title' ? [TitleLineFormatter()] : null,
             keyboardType: key == 'title' ? TextInputType.text : null,
             textInputAction: key == 'title' ? TextInputAction.next : null,
@@ -1507,29 +1511,57 @@ class _EditorBodyState extends State<_EditorBody> {
       retry: widget.textSession?.hasPendingReceipt == true,
       onSubmit: submit,
     );
-    final actionButtons = failure != null && modalActionsInContent
-        // Give failed bulk actions the full footer width. A fixed Delete
-        // column otherwise wraps Save into an extra line and squeezes the
-        // readable notice at enlarged phone text.
-        ? Wrap(
-            alignment: WrapAlignment.end,
+    final actionButtons = () {
+      // Measure with the actual accessibility text scaler and button padding.
+      double labelWidth(String label) {
+        final painter = TextPainter(
+          text: TextSpan(
+            text: label,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout();
+        final width = painter.width;
+        painter.dispose();
+        return width;
+      }
+
+      final requiredWidth =
+          (deleteAction == null
+              ? 0
+              : (labelWidth('Delete') + 24).clamp(64.0, double.infinity) + 8) +
+          (labelWidth('Cancel') + 24).clamp(64.0, double.infinity) +
+          8 +
+          labelWidth('Save changes') +
+          48;
+      if (requiredWidth <= scheduleWidth) {
+        return Row(
+          children: [
+            ?deleteAction,
+            const Spacer(),
+            cancelAction,
+            const SizedBox(width: 8),
+            saveAction,
+          ],
+        );
+      }
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          OverflowBar(
+            alignment: MainAxisAlignment.spaceBetween,
+            overflowAlignment: OverflowBarAlignment.end,
             spacing: 8,
-            runSpacing: 4,
-            children: [?deleteAction, cancelAction, saveAction],
-          )
-        : Row(
-            children: [
-              ?deleteAction,
-              Expanded(
-                child: Wrap(
-                  alignment: WrapAlignment.end,
-                  spacing: 8,
-                  runSpacing: 4,
-                  children: [cancelAction, saveAction],
-                ),
-              ),
-            ],
-          );
+            overflowSpacing: 4,
+            children: [?deleteAction, cancelAction],
+          ),
+          const SizedBox(height: 8),
+          saveAction,
+        ],
+      );
+    }();
     final actions = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,

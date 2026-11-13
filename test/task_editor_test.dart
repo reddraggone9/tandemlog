@@ -732,7 +732,7 @@ void main() {
   );
 
   testWidgets(
-    'title grows from one to two lines and notes grow then scroll with caret',
+    'title grows to six lines and notes grow then scroll with caret',
     (tester) async {
       await mount(
         tester,
