@@ -416,7 +416,7 @@ void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
   testWidgets(
     'Keeps for is disclosed only when useful; add reveals an editable field',
     (tester) async {
-      await _pump(tester);
+      await _pump(tester, size: const Size(412, 892), textScale: 2);
       await _open(tester, 'Greek yogurt');
       expect(_keepsFor, findsNothing);
       expect(
