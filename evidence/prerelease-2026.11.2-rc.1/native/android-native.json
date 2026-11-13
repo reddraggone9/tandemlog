@@ -1,0 +1,185 @@
+{
+  "result": "COMPLETED_WITH_DISCLOSED_GAPS",
+  "platform": "Android retained API30 x86_64 emulator only",
+  "source": "518be438f18246c232c02149897a9e0801069604",
+  "candidate_run": "43482661551",
+  "apk_sha256": "5cc396e3ceddd825b025de2e6be5ba8fe179a9b14b4680d75b1a0db88aa5b2a2",
+  "assertions": {
+    "unicodeSavedReopenedExact": true,
+    "unicodeColdReopenedExact": true,
+    "repeatNextDue": true,
+    "repeatUndo": true,
+    "learnedDurationPersisted": true,
+    "updateOffer": true,
+    "explicitUpdatePersisted": true,
+    "manualCorrectionNoLearning": true,
+    "estimateUndoRestores": true,
+    "personSwitch": true,
+    "originalPersonRestored": true,
+    "finalIntegrityPassed": true
+  },
+  "walkthrough": [
+    {
+      "area": "startup/history/person",
+      "status": "PASS",
+      "observed": "Stable116 upgraded to exact117; usable cold phone launch without chooser/recovery; retained five completed Tasks and Seed beans Food/old Activity. Created synthetic RC117 Other, switched to usable empty Tasks and restored Synthetic Tester.",
+      "captures": [
+        "android-rc117-cold-phone-usable.png",
+        "android-rc117-retained-tasks-all.png",
+        "android-rc117-activity-old.png",
+        "android-rc117-other-person.png",
+        "android-rc117-original-person-restored.png"
+      ]
+    },
+    {
+      "area": "task editor/text",
+      "status": "PASS",
+      "observed": "Edited retained Seed water plants. Unicode title and exact three-line Notes saved/reopened and verified again after cold launches, including combining accent and bean emoji codepoint. Emulator font renders bean emoji as a missing glyph; bytes/codepoint survive.",
+      "title": "RC117 Seed water plants — café 水",
+      "notes": "RC117 line one café\nline two 水 🫘\nline three é",
+      "captures": [
+        "android-rc117-unicode-saved-reopen.png",
+        "android-rc117-unicode-cold-reopen.png"
+      ]
+    },
+    {
+      "area": "repeat/parser/selection/undo",
+      "status": "PASS",
+      "observed": "Daily rule every day when done, due2026-11-13, selected then completed. Toast names next due2026-11-14; next occurrence visible, selection cleared. Undo retracts untouched next occurrence, returns dueToday. Completed again; future occurrence persists cold reopen. No Redo offered in exercised UI. Initial unparsed capture sentence was just title, not counted as repeat proof.",
+      "captures": [
+        "android-rc117-repeat-selected.png",
+        "android-rc117-repeat-rule.png",
+        "android-rc117-repeat-real-complete.png",
+        "android-rc117-repeat-undo.png",
+        "android-rc117-cold-phone-usable.png"
+      ]
+    },
+    {
+      "area": "no Keeps for/undated/labeled",
+      "status": "PASS with fixture disclosure",
+      "observed": "Fresh undated rows came from explicit production-API synthetic peer fixture, not manual Add or receipt UI. Dated RC117 Labeled without Apply; date persisted, no Keeps learned. Subsequent source receipt yielded3undated Labeled containers with Fridge; native editor offers old date without assigning it.",
+      "captures": [
+        "android-rc117-peer-inbox.png",
+        "android-rc117-labeled-date-no-remember.png",
+        "android-rc117-labeled-reopen.png",
+        "android-rc117-labeled-suggestion-still-undated.png"
+      ]
+    },
+    {
+      "area": "opt-in learning/location/field order",
+      "status": "PASS",
+      "observed": "Receipt-linked RC117 Learn offers inline Apply Keeps for1week for Nov20 from Nov13 purchase. Explicit Apply then Save persists1week. Visible field order name/brand/expiration/location/Keeps/size/minimum/link. Four hardware Tabs reach Location with Fridge/Pantry suggestions at phone height. Clear Keeps leaves subsequent Add expiration blank and usual Fridge filled; undated manual Add cannot be saved under accepted required-expiration contract. Clearing was undone to leave1week for persistence.",
+      "captures": [
+        "android-rc117-remember-purchase-offer.png",
+        "android-rc117-learn-week-persisted.png",
+        "android-rc117-location-keyboard-traversal.png",
+        "android-rc117-cleared-add-undated.png"
+      ]
+    },
+    {
+      "area": "estimated/manual/transformed/Update/undo",
+      "status": "PASS for accepted-source semantics; prep differs",
+      "observed": "Manual Add and Add another prefill date/location. Accepted source treats hand entries as confirmed, NOT est. Receipt-born native rows show est. Editing an estimate toNov23 offers10days; saving without Apply keeps1week and confirms manualdate; undo restores estimate/date. Applying10days then saving persists10days; undone to1week. Separate RC117 Carrots cut learned3days and receipt rows show est.",
+      "captures": [
+        "android-rc117-add-learned-prefill.png",
+        "android-rc117-add-another-transformed.png",
+        "android-rc117-manual-correction-confirmed.png",
+        "android-rc117-update-ten-days-persisted.png",
+        "android-rc117-undo-estimate-restored.png",
+        "android-rc117-persistent-food.png",
+        "android-rc117-persistent-keeps-estimate.png"
+      ]
+    },
+    {
+      "area": "receipt import",
+      "status": "NATIVE UI GAP; separate exact-source API + Android replay evidence PASS",
+      "observed": "No native UI import performed. Private copy of current emulator canonical history was opened by exact-source production TaskStore/FoodStore using a new synthetic peer writer. Receipt commit includes births and existing-container link/edit; duplicate identical receipt leaves active count unchanged. Learned receipt count15; usual Fridge; noKeeps rows undated, learned rows dated/estimated. Pushed only synthetic peer append-only logfile into isolated SAF folder and inspected native rendering. Manual Add is NOT import proof.",
+      "captures": [
+        "android-rc117-persistent-food.png",
+        "android-rc117-estimated-editor.png"
+      ]
+    },
+    {
+      "area": "Search selection",
+      "status": "PREP CONTRACT MISMATCH",
+      "observed": "Native wide-layout established Search with selected still-visible Seed beans/RC117 Seed task. Focus alone keeps selection/editor; changing Search query clears selection/editor even when selected row remains visible. This is explicitly coded, not inferred: food_page.dart335-357 says resolve draft then clear selection. Tasks behaves the same. No native preservation claim. Phone Search field is hidden during selection; density80/sizeoverride were used only to exercise native tablet layout, then restored.",
+      "captures": [
+        "android-rc117-food-selected-in-search.png",
+        "android-rc117-food-search-focus-only.png",
+        "android-rc117-food-narrow-commit.png",
+        "android-rc117-task-search-selected.png",
+        "android-rc117-task-search-narrowed.png"
+      ]
+    },
+    {
+      "area": "large text",
+      "status": "PASS",
+      "observed": "390x850 phone at system font_scale1.6: Edit task/Add food titles and actionbuttons fully visible; task Save wraps into own full-width row, forms scroll; Location remains above size. Font restored1.0.",
+      "captures": [
+        "android-rc117-large-task-editor.png",
+        "android-rc117-large-food-editor.png",
+        "android-rc117-large-location-traversal.png"
+      ]
+    },
+    {
+      "area": "normal close/cold reopen/integrity",
+      "status": "PASS",
+      "observed": "Normal Android Back exits to launcher, relaunch usable; additional force-stop cold-launch coverage distinct from normal close. Final native Integrity passes2logs, complete canonical records; no repair. SQLite integrity and SAF binding/prefix preservation checked independently by labs.py.",
+      "captures": [
+        "android-rc117-normal-back-exit.png",
+        "android-rc117-normal-reopen-food.png",
+        "android-rc117-unicode-cold-reopen.png",
+        "android-rc117-final-normal-close.png"
+      ]
+    }
+  ],
+  "sourceContractDifferences": [
+    {
+      "expectation": "new manual Add may create undated container",
+      "observed": "Expiration is required, intentional current contract",
+      "source": "test/food_required_expiration_test.dart and lib/food/food_editor.dart"
+    },
+    {
+      "expectation": "manual Add another from Keeps saves est.",
+      "observed": "hand entry is confirmed; only imported auto-estimates use est.",
+      "source": "test/food_shelf_life_ui_test.dart:539 (hand entry never estimate), lib/food/food_editor.dart:212"
+    },
+    {
+      "expectation": "Search edits retain visible selection",
+      "observed": "Search input deliberately clears selection after resolving draft",
+      "source": "lib/food/food_page.dart:335, native Tasks/Food captures"
+    }
+  ],
+  "integrity": {
+    "sqlite": "ok",
+    "native": "passed",
+    "logs": 2,
+    "completeRecords": 46,
+    "canonicalBytes": 94305,
+    "repair": false
+  },
+  "cleanup": {
+    "emulatorAbsent": true,
+    "portsAbsent": {
+      "5049": true,
+      "5680": true,
+      "5681": true,
+      "8568": true
+    },
+    "errors": [],
+    "seconds": 2032.9134879400954
+  },
+  "preservation": {
+    "installUnchanged": true,
+    "allOriginalCanonicalPrefixesPreserved": true
+  },
+  "gaps": [
+    "No Windows GUI claim; hosted native Windows lifecycle and portable verified.",
+    "No native receipt-import UI exercised. GTK uses installed exact Flatpak bundled CLI plus native display. Android uses exact-source production API on a private canonical copy plus synthetic peer-log replay and native display.",
+    "No additional prior RC newer than stable116 exists; retained stable116-to117 upgrades covered.",
+    "GTK retained baseline has one preexisting person; no GTK multi-person startup claim. Android exercised creation, switching and restoring a second synthetic person.",
+    "Android original-prep expectations for Search selection/manual dates differ from accepted source; source-correct semantics observed, not falsely labeled as original-prep PASS.",
+    "Android emulator lacks bean emoji glyph; exact emoji codepoint persisted in saved and cold-reopened text."
+  ],
+  "reviewMethod": "Native screenshot/XML review by Android worker; finalizer independently reviewed four key images and verified all original capture hashes. Black/failed capture attempts are retained privately and not counted as passing evidence."
+}

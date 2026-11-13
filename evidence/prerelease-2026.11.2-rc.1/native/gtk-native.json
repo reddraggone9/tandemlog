@@ -1,0 +1,153 @@
+{
+  "result": "PASS",
+  "platform": "GTK Linux installed exact117 Flatpak",
+  "source": "518be438f18246c232c02149897a9e0801069604",
+  "candidate_run": "43482661551",
+  "reviewMethod": "Actual native screenshots inspected through image tool; semantic outcomes crosschecked against CLI receipts and source behavior, not input replay alone",
+  "checks": [
+    {
+      "id": "stable116-upgrade",
+      "result": "PASS",
+      "observed": "Exact downloaded Flatpak117 installed over retained stable116; pre-launch canonical and SQLite hashes byte-identical; no chooser/recovery dialog at launch.",
+      "capture": "gtk-rc117-startup.png"
+    },
+    {
+      "id": "retained-history",
+      "result": "PASS",
+      "observed": "Seed beans Food; retained task editable; Activity Oct28 entries visually retained.",
+      "capture": "gtk-rc117-retained-activity-old.png"
+    },
+    {
+      "id": "unicode-multiline",
+      "result": "PASS",
+      "observed": "Saved retained task title RC117 retained caf\u00e9 \u2713; Notes exact two lines RC117 multiline caf\u00e9 / Second line \u2014 preserved; reopened and cold persisted.",
+      "capture": "gtk-rc117-task-reopen.png"
+    },
+    {
+      "id": "daily-complete-undo",
+      "result": "PASS",
+      "observed": "DueNov13 daily when done complete displayed next dueNov14; successor visible; Undo retracted untouched next; recompleted then cold reopened Nov14.",
+      "capture": "gtk-rc117-repeat-complete.png"
+    },
+    {
+      "id": "repeat-separators",
+      "result": "PASS",
+      "observed": "New task rule every week on Monday, Wednesday, and Friday saved/reopened; completion next dueNov16; Undo restored dueNov13.",
+      "capture": "gtk-rc117-separator-complete.png"
+    },
+    {
+      "id": "large-text-dark",
+      "result": "PASS",
+      "observed": "Native gsettings text-scaling-factor2.0; 390x720 GTK task title wraps; Delete/Cancel/Save visible with bottom Save row; Food Location before Keeps for; keyboard focus and scrolling reachable.",
+      "capture": "gtk-rc117-task-editor-390-200text.png"
+    },
+    {
+      "id": "large-text-light",
+      "result": "PASS",
+      "observed": "Same actual native GTK390x720 at200% light; title and bottom actions readable, no clipping.",
+      "capture": "gtk-rc117-task-light-390-200text.png"
+    },
+    {
+      "id": "no-keeps-opt-in",
+      "result": "PASS",
+      "observed": "Receipt-imported Labeled arrived undated Inbox; manually dateNov20 without pressing ghost1week check; product Keeps for remained null in CLI products assertions.",
+      "capture": "gtk-rc117-labeled-date-offer.png"
+    },
+    {
+      "id": "remember",
+      "result": "PASS",
+      "observed": "Receipt-imported Kefir datedNov20, usual RC117 fridge; explicitly pressed Remember check;1week persisted and exact bundled CLI asserted it.",
+      "capture": "gtk-rc117-kefir-remembered.png"
+    },
+    {
+      "id": "manual-add",
+      "result": "PASS",
+      "observed": "First Add offers no Remember/Update. Add another prefills today+1week and usual location. Manual saved dates intentionally NOT est; accepted test/food_shelf_life_ui_test.dart lines496,539.",
+      "capture": "gtk-rc117-add-another-estimate.png"
+    },
+    {
+      "id": "exact-artifact-import",
+      "result": "PASS",
+      "observed": "Installed exact Flatpak bundled CLI different synthetic writer imported2 initial lines, then1 learned line, then3 mixed new/existing-product lines, then2 final lines; total8 receipt identities; every retry zero effects/actions and unchanged products/purchases. Native app displayed est row and Inbox/location. Not GUI receipt-import coverage.",
+      "capture": "gtk-rc117-import-learned-row.png"
+    },
+    {
+      "id": "manual-correction-no-update",
+      "result": "PASS",
+      "observed": "Edited imported estimatedNov20 toNov21 without Update; confirmed row lost est while product remained1week; Undo restoredNov20 est.",
+      "capture": "gtk-rc117-date-confirmed-keeps-unchanged.png"
+    },
+    {
+      "id": "explicit-update",
+      "result": "PASS",
+      "observed": "Repeated correction and explicitly pressed Update; product8days persisted.",
+      "capture": "gtk-rc117-keeps-updated-explicit.png"
+    },
+    {
+      "id": "clear-keeps",
+      "result": "PASS",
+      "observed": "Cleared Kefir duration via native UI; subsequent receipt line undated Inbox with RC117 fridge preserved; separate Labeled noKeeps import Inbox+RC117 shelf.",
+      "capture": "gtk-rc117-final-cold-reopen.png"
+    },
+    {
+      "id": "transformed-separate",
+      "result": "PASS",
+      "observed": "Independent synthetic transformed soup imported undated; native Remember2days/locationRC117 kitchen; subsequent import estimatedNov15, separate from Kefir/Labeled.",
+      "capture": "gtk-rc117-transformed-estimate.png"
+    },
+    {
+      "id": "selection",
+      "result": "PASS",
+      "observed": "Food two-row selection survived390\u21921280 viewport; typing Search clears it intentionally, as Tasks does. Original prep expectation of Search retaining selection contradicted accepted policy design/product-behavior.md301/test/food_selection_retention_test.dart112; corrected prep.",
+      "capture": "gtk-rc117-food-batch-wide.png"
+    },
+    {
+      "id": "final-persistence-integrity",
+      "result": "PASS",
+      "observed": "Cold reopen retained Inbox/date/estimate/location/history; native Integrity passed2logs60complete records122402bytes, no repair/pending/recovery.",
+      "capture": null,
+      "privateEvidence": "Final integrity screenshot kept private because it displays a synthetic local filesystem path."
+    }
+  ],
+  "gaps": [
+    "No Windows GUI claim; hosted installer/portable gates only.",
+    "Receipt import has no native GUI route exercised; exact installed bundled CLI plus actual GTK imported-result review is separate integration evidence.",
+    "Only one preexisting household person in retained lab; no multi-person startup claim."
+  ],
+  "prepCorrections": [
+    "Manual Add dates are confirmed even if prefilled; est is for imported calculated dates.",
+    "Typing/clearing Search intentionally clears selection; viewport/view/filter retention is different."
+  ],
+  "cleanExits": {
+    "app-15.exit": 0,
+    "app-11.exit": 0,
+    "app-14.exit": 0,
+    "app-12.exit": 0,
+    "app-13.exit": 0
+  },
+  "selectionRecheckCleanExits": {
+    "app-12.exit": 0,
+    "app-11.exit": 0
+  },
+  "preservation": {
+    "canonicalPrefixes": {
+      "2203cba1-c79d-4274-9259-6ce1e4c4d930.applog": {
+        "before": 54185,
+        "after": 99214,
+        "prefix": true
+      },
+      "tandemlog-space.json": {
+        "before": 491,
+        "after": 491,
+        "prefix": true
+      }
+    },
+    "installUnchanged": true
+  },
+  "binding": {
+    "protectedBindingAndSelectedPersonUnchanged": true,
+    "immutableStoreLocationEpochWriterMetadataUnchanged": true,
+    "installSettingsByteEquivalent": true,
+    "mutableProjectionCacheExpectedToChange": true
+  }
+}

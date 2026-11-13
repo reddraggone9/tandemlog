@@ -1,6 +1,6 @@
 # 2026.11.2-rc.1 / build117 — candidate preparation
 
-Not published or qualified yet. Stable remains 2026.11.1/build116.
+Qualified and exact candidate accepted with disclosed coverage gaps; not published yet. Stable remains 2026.11.1/build116.
 
 ## Scope
 
@@ -22,17 +22,41 @@ no live cutover or stable promotion is authorized by this release.
 ## Local checks
 
 Integrated app: format clean (508 files across lib/test/integration_test/tool/bin),
-analyze clean, full Flutter suite **1919 passed**. Final integrated Python tools **309 tests OK (2 skipped)**. The package-path and
+analyze clean, full Flutter suite **1919 passed**. Final integrated Python tools **310 tests OK (2 skipped)**. The package-path and
 schema-v2 host preparation regressions fail before the fix and pass after it.
 Shell syntax and git diff checks pass. No app Dart changed after the 1919-test run.
 Logs retained privately at /home/nibbler/rc117-{format,format-tools,analyze,unit,python-initial}.log.
 
-## Pending
+## Exact signed candidate and native acceptance
 
-Notes/media and tooling independent review, CI, controlled reference
-qualification, native cold-start receipt, signed candidate, exact native upgrade
-acceptance, four-asset prerelease publication/public verification, isolated
-Leela handoff. No release acceptance is claimed by the local suite.
+Candidate [43482661551](https://github.com/reddraggone9/tandemlog/actions/runs/43482661551)
+and main CI [43482632158](https://github.com/reddraggone9/tandemlog/actions/runs/43482632158)
+pass completely at source518be438, including reference receipts. Download waiter
+terminal success and complete inventory/checksums/provenance/signer/version gates
+pass. Four artifacts are accepted; APK SHA256
+`5cc396e3ceddd825b025de2e6be5ba8fe179a9b14b4680d75b1a0db88aa5b2a2`.
+
+Retained synthetic stable116->exact117 upgrades pass preservation, binding and
+integrity; Android SAF preserved. GTK17 native semantic checks and Android12
+assertions pass, with saved workflow reviews/captures. Both labs stopped cleanly;
+GTK has5 clean exit files plus2 selection-review exits. Search clears selection,
+manual Add requires expiration, hand-entered dates are confirmed: these are the
+accepted source contract, not regressions against mistaken preparation assumptions.
+
+Receipt-import GUI was not exercised: GTK uses exact installed Flatpak bundled
+CLI plus native display; Android exact-source production APIs on private synthetic
+canonical copy plus peer replay/native display. No Windows GUI claim (hosted native
+lifecycle and portable verification only). See [native evidence](native/README.md)
+and native/native-acceptance-summary.json for all coverage and limitations. No
+physical devices or live data touched, no seeds or stable promotion.
+
+## Remaining before handoff
+
+Four-asset prerelease publication and anonymous public verification are pending.
+Format-changing RC needs separate non-synced data copy/profile and portable ZIP on
+Leela, preserving stable. Private preparation scripts/runbook are ready, but device
+staging and usable-launch verification were not performed: this assignment
+prohibits touching Lee's devices/live data. Do not describe it as ready to test.
 
 ## Release tooling review
 
@@ -49,8 +73,8 @@ Final changed-source CI [43468510127](https://github.com/reddraggone9/tandemlog/
 passes all nine non-reference jobs: Linux, Windows, Android, hosted AOT correctness,
 four native workflow shards (274 cases total), and their exact-union verifier.
 The pre-receipt reference job alone is expected red. Hosted Python:310 tests on
-each platform; Windows Flutter:1909 passed/10 skipped. The signed candidate still
-needs its own complete matrix and exact-artifact acceptance.
+each platform; Windows Flutter:1909 passed/10 skipped. The later signed candidate passed its complete matrix and exact-artifact
+acceptance with the coverage qualifications above.
 
 Qualification q17 (`76fe0f5e24537af72e12d1680fe588ba`) binds2090994 and
 relevant-source-v3 `2afefe81ee6b52335b0f11670b5eb32f454be599c61b3f9552deb44cef417172`.

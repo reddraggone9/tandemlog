@@ -1,0 +1,69 @@
+{
+  "synthetic": true,
+  "source": "518be438f18246c232c02149897a9e0801069604",
+  "method": "production API on current copied Android canonical folder, only appended synthetic peer log replayed into Android SAF folder",
+  "nativeUiImport": false,
+  "firstReceipt": {
+    "method": "exact-source production purchase import on PRIVATE synthetic peer copy, replayed to native; not native UI import",
+    "first": "ready",
+    "second": "committed",
+    "count": 6
+  },
+  "learnedReceipt": {
+    "method": "exact-source production purchase import on PRIVATE synthetic peer copy, replayed to native; not native UI import",
+    "lines": [
+      {
+        "status": "recorded",
+        "matched": [],
+        "created": [
+          "c53c9de5-cc09-55c0-a11a-c324a38435bd",
+          "9488a637-4b9d-5727-b1d5-bf52438f8568",
+          "8b8de4e3-6438-5965-af69-676295be91a3"
+        ],
+        "expiry": null,
+        "location": "Fridge"
+      },
+      {
+        "status": "recorded",
+        "matched": [
+          "202a1cd5-35f9-4501-b5c5-fd73829b1d72"
+        ],
+        "created": [
+          "8f69358b-a310-5f7a-9e5e-20e1063b3a3a",
+          "715c383b-ccd9-564d-bcab-830f5b69b089"
+        ],
+        "expiry": "2026-11-20",
+        "location": "Fridge"
+      },
+      {
+        "status": "recorded",
+        "matched": [],
+        "created": [
+          "78f86721-8193-5abe-b31f-4f6e38d8af52",
+          "213d7f72-7201-549b-b73d-d8e3d5b9f6a7",
+          "6cf9432f-3468-5cd8-85d9-d3c332f0cf54"
+        ],
+        "expiry": "2026-11-16",
+        "location": "Fridge"
+      }
+    ],
+    "first": "ready",
+    "second": "committed",
+    "count": 15
+  },
+  "newReceiptRecords": 1,
+  "effectFamilies": {
+    "purchase.record": 3,
+    "container.add": 3,
+    "container.link": 1
+  },
+  "hasBirthAndEdit": true,
+  "peerPrefixPreserved": true,
+  "peerLogSha256": "adc7d58438362545561e9443cca1206de76b66e1280eb5b77522fff94e8a66c9",
+  "integrationSources": [
+    "lib/food/food_purchase_import.dart:422",
+    "lib/food/food_store.dart:663",
+    "test/food_shelf_life_ui_test.dart",
+    "test/food_shelf_life_old_reader_test.dart:175"
+  ]
+}

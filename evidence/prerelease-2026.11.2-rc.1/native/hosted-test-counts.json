@@ -1,0 +1,26 @@
+{
+  "candidate_run": "43482661551",
+  "source": "518be438f18246c232c02149897a9e0801069604",
+  "linux_flutter": {
+    "passed": 1919
+  },
+  "windows_flutter": {
+    "passed": 1909,
+    "skipped": 10
+  },
+  "linux_native_workflow_shards": [
+    69,
+    68,
+    69,
+    68
+  ],
+  "linux_native_workflow_total": 274,
+  "workflow_union": "PASS",
+  "python_gate_tests_per_linux_and_windows": [
+    107,
+    310
+  ],
+  "evidence": "Successful candidate hosted log terminal summaries; no native manual test-count conflation",
+  "native_rust_tests_per_linux_and_windows": 7,
+  "hosted_performance_correctness_tests": 11
+}
