@@ -28,7 +28,7 @@ import sys
 TOOL = Path(__file__).resolve().parent
 sys.path[:0] = [str(TOOL), str(TOOL.parent)]
 
-from reference_receipt import (PROFILE, fingerprint, profile, recorded_identity,  # noqa: E402
+from reference_receipt import (PROFILE, check_environment, fingerprint, profile, recorded_identity,  # noqa: E402
                                source_identity)
 
 BUDGET = 'tool/performance/native-cold-start-v1.json'
@@ -113,9 +113,9 @@ def verify(repo, path=None):
     current, committed = recorded_identity(repo, result.get('relevantSource'), result.get('sourceRevision'))
     need(result.get('relevantSource') == current == committed,
          'Native cold-start result is for other source; measure this source')
-    need(result.get('hostProfileSHA256') == digest(repo / PROFILE) and
-         result.get('host') == profile(repo)['environment'],
+    need(result.get('hostProfileSHA256') == digest(repo / PROFILE),
          'Native cold-start result is not from the registered reference host')
+    check_environment(result.get('host'), profile(repo))
     decision = judge(read_budget(repo), result)
     need(decision['passed'], f"{CASE}: median {decision['medianMs']} ms over the {decision['budgetMs']} ms budget "
                              f"(samples {decision['samplesMs']})")
@@ -132,8 +132,7 @@ def measure(repo, workspace, output, xdotool):
     repo, root = Path(repo).resolve(), Path(workspace).resolve()
     budget = read_budget(repo)
     host = fingerprint(root.parent)
-    need(host == profile(repo)['environment'],
-         f'Not the registered reference host/filesystem: {host}')
+    check_environment(host, profile(repo))
     dirty = subprocess.check_output(['git', '-C', str(repo), 'status', '--porcelain', '--untracked-files=no'],
                                     text=True).splitlines()
     need(not [line for line in dirty if not line[3:].startswith(('evidence/', 'design/'))],

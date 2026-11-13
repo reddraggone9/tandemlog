@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'performance'))
 import native_cold_start as gate  # noqa: E402
@@ -99,6 +100,27 @@ class NativeColdStartTest(unittest.TestCase):
             file.write_text(json.dumps(result([500] * 5)[1]))
             with self.assertRaises(gate.GateError):
                 gate.verify(REPO, file)
+
+    def test_verify_uses_registered_host_schema_without_unpinning_hardware(self):
+        host = gate.profile(REPO)
+        actual = {**host['environment'], 'kernel': 'recorded-kernel', 'python': 'recorded-python'}
+        _, value = result([500] * 5, relevantSource={}, sourceRevision='synthetic',
+                          hostProfileSHA256=gate.digest(REPO / gate.PROFILE), host=actual)
+        with tempfile.TemporaryDirectory() as tmp, \
+                patch.object(gate, 'recorded_identity', return_value=({}, {})):
+            file = Path(tmp) / 'result.json'
+            file.write_text(json.dumps(value))
+            self.assertTrue(gate.verify(REPO, file)['passed'])
+            for changed in ({**actual, 'cpuModel': 'other'},
+                            {k: v for k, v in actual.items() if k != 'kernel'}):
+                file.write_text(json.dumps({**value, 'host': changed}))
+                with self.assertRaises((gate.GateError, ValueError)):
+                    gate.verify(REPO, file)
+            file.write_text(json.dumps(value))
+            v1 = {**host, 'schemaVersion': 1, 'environment': {**actual, 'kernel': 'pinned-kernel'}}
+            with patch.object(gate, 'profile', return_value=v1):
+                with self.assertRaises((gate.GateError, ValueError)):
+                    gate.verify(REPO, file)
 
     def test_verify_refuses_a_result_for_other_source(self):
         committed = json.loads((REPO / gate.RESULT).read_text())
