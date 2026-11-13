@@ -112,6 +112,10 @@ class TandemlogApp extends StatefulWidget {
 
 class _TandemlogAppState extends State<TandemlogApp> {
   final appearance = ValueNotifier<Appearance>(Appearance.system);
+  // Appearance selects a theme; it does not change either theme definition.
+  // Keep these stable when saved settings replace the initial system choice.
+  late final lightTheme = tandemlogTheme(Brightness.light);
+  late final darkTheme = tandemlogTheme(Brightness.dark);
   @override
   void dispose() {
     appearance.dispose();
@@ -125,8 +129,8 @@ class _TandemlogAppState extends State<TandemlogApp> {
       title: 'Tandemlog',
       debugShowCheckedModeBanner: false,
       themeAnimationDuration: Duration.zero,
-      theme: tandemlogTheme(Brightness.light),
-      darkTheme: tandemlogTheme(Brightness.dark),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: switch (value) {
         Appearance.system => ThemeMode.system,
         Appearance.light => ThemeMode.light,
@@ -6126,406 +6130,168 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     title: groupTitle(group),
                     inset: compact ? 16 : 0,
                   ),
-                  SliverList.list(
-                    children: [
-                      for (final entry in group.entries) ...[
-                        Builder(
-                          key: ValueKey('task-row-${entry.task['id']}'),
-                          builder: (context) {
-                            final task = _displayTask(entry.task);
-                            final origin = store!;
-                            final id = task['id'] as String;
-                            final showChecklist =
-                                _checklistItems(task).isNotEmpty ||
-                                expandedChecklists.contains(id);
-                            final completed = searching
-                                ? task['completed'] == true
-                                : showCompleted;
-                            final recurrence =
-                                (task['schedule'] as Map)['recurrence']
-                                    as String?;
-                            final tile = Semantics(
-                              label: recurrence == null
-                                  ? null
-                                  : 'Repeats $recurrence',
-                              selected: selectedTasks.contains(task['id']),
-                              customSemanticsActions: {
-                                const CustomSemanticsAction(
-                                  label: 'Select task',
-                                ): () => _selectTask(
-                                  task,
-                                  gesture: SelectionGesture.longPress,
-                                ),
-                              },
-                              child: Focus(
-                                focusNode: rowFocus.putIfAbsent(
-                                  task['id'] as String,
-                                  () => FocusNode(debugLabel: task['title']),
-                                ),
-                                onFocusChange: (_) {
-                                  if (mounted) setState(() {});
-                                },
-                                onKeyEvent: (_, event) {
-                                  if (event is! KeyDownEvent) {
-                                    return KeyEventResult.ignored;
-                                  }
-                                  if (event.logicalKey ==
-                                          LogicalKeyboardKey.contextMenu ||
-                                      (event.logicalKey ==
-                                              LogicalKeyboardKey.f10 &&
-                                          HardwareKeyboard
-                                              .instance
-                                              .isShiftPressed)) {
-                                    _showTaskMenu(origin, task);
-                                    return KeyEventResult.handled;
-                                  }
-                                  if (!rowFocus[task['id']]!.hasPrimaryFocus) {
-                                    return KeyEventResult.ignored;
-                                  }
-                                  if (event.logicalKey ==
-                                      LogicalKeyboardKey.space) {
-                                    _selectTask(
-                                      task,
-                                      gesture: SelectionGesture.toggle,
-                                    );
-                                    return KeyEventResult.handled;
-                                  }
-                                  if (event.logicalKey ==
-                                          LogicalKeyboardKey.arrowUp ||
-                                      event.logicalKey ==
-                                          LogicalKeyboardKey.arrowDown) {
-                                    _focusRelativeTask(
-                                      task,
-                                      event.logicalKey ==
-                                              LogicalKeyboardKey.arrowUp
-                                          ? -1
-                                          : 1,
-                                      HardwareKeyboard.instance.isShiftPressed,
-                                    );
-                                    return KeyEventResult.handled;
-                                  }
-                                  return KeyEventResult.ignored;
-                                },
-                                child: ListRowSurface(
-                                  divider: false,
-                                  interactive: !busy,
-                                  focused: rowFocus[task['id']]!.hasFocus,
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    minVerticalPadding: 0,
-                                    minTileHeight: 48,
-                                    horizontalTitleGap: 8,
-                                    leading: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (!completed &&
-                                            entry.completionUnavailableReason !=
-                                                null)
-                                          UnavailableCompletion(
-                                            key: ValueKey(
-                                              'completion-unavailable-${task['id']}',
-                                            ),
-                                            title: task['title'] as String,
-                                            repeating: recurrence != null,
-                                            reason: entry
-                                                .completionUnavailableReason!,
-                                            onExplain: () =>
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      entry
-                                                          .completionUnavailableReason!,
-                                                    ),
-                                                  ),
-                                                ),
-                                          )
-                                        else
-                                          Tooltip(
-                                            message:
-                                                '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
-                                            child: TaskCompletionCheckbox(
-                                              repeating: recurrence != null,
-                                              value: completed,
-                                              // Disabling a native checkbox
-                                              // releases its keyboard focus.
-                                              // Keep it focusable while a save
-                                              // is pending; _act's busy guard
-                                              // rejects overlapping commands.
-                                              onChanged: (_) {
-                                                if (busy) return;
-                                                if (completed) {
-                                                  _reopen(task);
-                                                } else {
-                                                  _complete(task);
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                    selected: selectedTasks.contains(
-                                      task['id'],
-                                    ),
-                                    selectedTileColor: Theme.of(
-                                      context,
-                                    ).colorScheme.primaryContainer,
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ListRowBodyInkWell(
-                                          key: ValueKey(
-                                            'task-body-${task['id']}',
-                                          ),
-                                          canRequestFocus: false,
-                                          onSecondaryTapUp: busy
-                                              ? null
-                                              : (details) => _showTaskMenu(
-                                                  origin,
-                                                  task,
-                                                  position:
-                                                      details.globalPosition,
-                                                ),
-                                          overlayColor: listRowInkOverlay(
-                                            Theme.of(context).colorScheme,
-                                          ),
-                                          splashFactory:
-                                              InkRipple.splashFactory,
-                                          onTap: busy
-                                              ? null
-                                              : () => _selectTask(
-                                                  task,
-                                                  gesture:
-                                                      pointerSelectionGesture(),
-                                                ),
-                                          onLongPress: busy
-                                              ? null
-                                              : () => _selectTask(
-                                                  task,
-                                                  gesture: SelectionGesture
-                                                      .longPress,
-                                                ),
-                                          child: ConstrainedBox(
-                                            constraints: const BoxConstraints(
-                                              minHeight: 48,
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                top: 6,
-                                                bottom: showChecklist ? 0 : 6,
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: showChecklist
-                                                    ? MainAxisAlignment.end
-                                                    : MainAxisAlignment.center,
-                                                children: [
-                                                  _taskTitle(
-                                                    task,
-                                                    users,
-                                                    group.date,
-                                                    entry,
-                                                  ),
-
-                                                  if ((task['description']
-                                                          as String)
-                                                      .trim()
-                                                      .isNotEmpty)
-                                                    Text(
-                                                      (task['description']
-                                                              as String)
-                                                          .replaceAll(
-                                                            RegExp(r'\s+'),
-                                                            ' ',
-                                                          )
-                                                          .trim(),
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                            color: Theme.of(context)
-                                                                .colorScheme
-                                                                .onSurfaceVariant,
-                                                          ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        if (showChecklist)
-                                          _checklistDisclosure(origin, task),
-                                      ],
-                                    ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        KeyedSubtree(
-                                          key: taskMenuKeys.putIfAbsent(
-                                            id,
-                                            GlobalKey.new,
-                                          ),
-                                          child: IconButton(
-                                            key: ValueKey('task-menu-$id'),
-                                            constraints:
-                                                const BoxConstraints.tightFor(
-                                                  width: 48,
-                                                  height: 48,
-                                                ),
-                                            visualDensity:
-                                                VisualDensity.standard,
-                                            tooltip:
-                                                'Actions for ${task['title']}',
-                                            onPressed: busy
-                                                ? null
-                                                : () => _showTaskMenu(
-                                                    origin,
-                                                    task,
-                                                  ),
-                                            icon: const Icon(Icons.more_vert),
-                                          ),
-                                        ),
-                                        if (movable(task, true) ||
-                                            movable(task, false))
-                                          Draggable<String>(
-                                            data: task['id'],
-                                            maxSimultaneousDrags:
-                                                completed ||
-                                                    busy ||
-                                                    (selecting &&
-                                                        !selectedTasks.contains(
-                                                          task['id'],
-                                                        ))
-                                                ? 0
-                                                : 1,
-                                            dragAnchorStrategy:
-                                                pointerDragAnchorStrategy,
-                                            onDragStarted: () {
-                                              dragReleased = false;
-                                              setState(
-                                                () => taskDrag = (
-                                                  id: task['id'] as String,
-                                                  store: store,
-                                                  revision: viewRevision,
-                                                  snapshot: store!.taskSnapshot,
-                                                  completed:
-                                                      task['completed'] == true,
-                                                  everyone: all,
-                                                  upcoming: showUpcoming,
-                                                  user: user,
-                                                  tags: Set.of(selectedTags),
-                                                  selected:
-                                                      selecting &&
-                                                          selectedTasks
-                                                              .contains(
-                                                                task['id'],
-                                                              )
-                                                      ? Set.of(selectedTasks)
-                                                      : {task['id'] as String},
-                                                  query: searchQuery,
-                                                ),
-                                              );
-                                            },
-                                            onDragUpdate: (details) =>
-                                                _updateDragScroll(
-                                                  details.globalPosition,
-                                                ),
-                                            onDragEnd: (details) {
-                                              if (dragReleased &&
-                                                  taskDrag != null) {
-                                                _dropAtPointer(
-                                                  task['id'] as String,
-                                                  details.offset,
-                                                );
-                                              }
-                                              _stopDragScroll();
-                                              setState(() => taskDrag = null);
-                                            },
-                                            feedback: Material(
-                                              elevation: 4,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(
-                                                  12,
-                                                ),
-                                                child: SizedBox(
-                                                  width: 220,
-                                                  child: Text(
-                                                    task['title'],
-                                                    maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            child: Tooltip(
-                                              triggerMode:
-                                                  TooltipTriggerMode.manual,
-                                              message:
-                                                  'Drag to reorder within this group, date and time',
-                                              child: Semantics(
-                                                customSemanticsActions: {
-                                                  if (!selecting &&
-                                                      movable(task, true))
-                                                    const CustomSemanticsAction(
-                                                      label: 'Move up',
-                                                    ): () => _keyboardMove(
-                                                      task,
-                                                      true,
-                                                    ),
-                                                  if (!selecting &&
-                                                      movable(task, false))
-                                                    const CustomSemanticsAction(
-                                                      label: 'Move down',
-                                                    ): () => _keyboardMove(
-                                                      task,
-                                                      false,
-                                                    ),
-                                                },
-                                                label:
-                                                    'Drag ${task['title']} to reorder. Drag within the same group, date and time.',
-                                                child: const SizedBox(
-                                                  width: 48,
-                                                  height: 48,
-                                                  child: Icon(
-                                                    Icons.drag_indicator,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        else if (showChecklist)
-                                          // Keep the menu above child Delete when this
-                                          // task has no reorder neighbor.
-                                          const SizedBox(width: 48, height: 48),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                  SliverList.builder(
+                    itemCount: group.entries.length * 2,
+                    findChildIndexCallback: (key) {
+                      if (key is! ValueKey<String>) return null;
+                      final index = group.entries.indexWhere(
+                        (entry) => 'task-row-${entry.task['id']}' == key.value,
+                      );
+                      return index < 0 ? null : index * 2;
+                    },
+                    itemBuilder: (context, index) {
+                      if (index.isOdd) return const ListRowDivider();
+                      final entry = group.entries[index ~/ 2];
+                      return Builder(
+                        key: ValueKey('task-row-${entry.task['id']}'),
+                        builder: (context) {
+                          final task = _displayTask(entry.task);
+                          final origin = store!;
+                          final id = task['id'] as String;
+                          final showChecklist =
+                              _checklistItems(task).isNotEmpty ||
+                              expandedChecklists.contains(id);
+                          final completed = searching
+                              ? task['completed'] == true
+                              : showCompleted;
+                          final recurrence =
+                              (task['schedule'] as Map)['recurrence']
+                                  as String?;
+                          final tile = Semantics(
+                            label: recurrence == null
+                                ? null
+                                : 'Repeats $recurrence',
+                            selected: selectedTasks.contains(task['id']),
+                            customSemanticsActions: {
+                              const CustomSemanticsAction(
+                                label: 'Select task',
+                              ): () => _selectTask(
+                                task,
+                                gesture: SelectionGesture.longPress,
                               ),
-                            );
-                            return Column(
-                              key: ValueKey('task-block-$id'),
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                KeyedSubtree(
-                                  key: ValueKey('task-drop-$id'),
-                                  child: _TaskDragLifetime(
-                                    active: taskDrag?.id == id,
-                                    child: _reorderableTask(
-                                      task,
-                                      GestureDetector(
+                            },
+                            child: Focus(
+                              focusNode: rowFocus.putIfAbsent(
+                                task['id'] as String,
+                                () => FocusNode(debugLabel: task['title']),
+                              ),
+                              onFocusChange: (_) {
+                                if (mounted) setState(() {});
+                              },
+                              onKeyEvent: (_, event) {
+                                if (event is! KeyDownEvent) {
+                                  return KeyEventResult.ignored;
+                                }
+                                if (event.logicalKey ==
+                                        LogicalKeyboardKey.contextMenu ||
+                                    (event.logicalKey ==
+                                            LogicalKeyboardKey.f10 &&
+                                        HardwareKeyboard
+                                            .instance
+                                            .isShiftPressed)) {
+                                  _showTaskMenu(origin, task);
+                                  return KeyEventResult.handled;
+                                }
+                                if (!rowFocus[task['id']]!.hasPrimaryFocus) {
+                                  return KeyEventResult.ignored;
+                                }
+                                if (event.logicalKey ==
+                                    LogicalKeyboardKey.space) {
+                                  _selectTask(
+                                    task,
+                                    gesture: SelectionGesture.toggle,
+                                  );
+                                  return KeyEventResult.handled;
+                                }
+                                if (event.logicalKey ==
+                                        LogicalKeyboardKey.arrowUp ||
+                                    event.logicalKey ==
+                                        LogicalKeyboardKey.arrowDown) {
+                                  _focusRelativeTask(
+                                    task,
+                                    event.logicalKey ==
+                                            LogicalKeyboardKey.arrowUp
+                                        ? -1
+                                        : 1,
+                                    HardwareKeyboard.instance.isShiftPressed,
+                                  );
+                                  return KeyEventResult.handled;
+                                }
+                                return KeyEventResult.ignored;
+                              },
+                              child: ListRowSurface(
+                                divider: false,
+                                interactive: !busy,
+                                focused: rowFocus[task['id']]!.hasFocus,
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  minVerticalPadding: 0,
+                                  minTileHeight: 48,
+                                  horizontalTitleGap: 8,
+                                  leading: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (!completed &&
+                                          entry.completionUnavailableReason !=
+                                              null)
+                                        UnavailableCompletion(
+                                          key: ValueKey(
+                                            'completion-unavailable-${task['id']}',
+                                          ),
+                                          title: task['title'] as String,
+                                          repeating: recurrence != null,
+                                          reason: entry
+                                              .completionUnavailableReason!,
+                                          onExplain: () =>
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    entry
+                                                        .completionUnavailableReason!,
+                                                  ),
+                                                ),
+                                              ),
+                                        )
+                                      else
+                                        Tooltip(
+                                          message:
+                                              '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
+                                          child: TaskCompletionCheckbox(
+                                            repeating: recurrence != null,
+                                            value: completed,
+                                            // Disabling a native checkbox
+                                            // releases its keyboard focus.
+                                            // Keep it focusable while a save
+                                            // is pending; _act's busy guard
+                                            // rejects overlapping commands.
+                                            onChanged: (_) {
+                                              if (busy) return;
+                                              if (completed) {
+                                                _reopen(task);
+                                              } else {
+                                                _complete(task);
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  selected: selectedTasks.contains(task['id']),
+                                  selectedTileColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ListRowBodyInkWell(
+                                        key: ValueKey(
+                                          'task-body-${task['id']}',
+                                        ),
+                                        canRequestFocus: false,
                                         onSecondaryTapUp: busy
                                             ? null
                                             : (details) => _showTaskMenu(
@@ -6534,20 +6300,254 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                                 position:
                                                     details.globalPosition,
                                               ),
-                                        child: tile,
+                                        overlayColor: listRowInkOverlay(
+                                          Theme.of(context).colorScheme,
+                                        ),
+                                        splashFactory: InkRipple.splashFactory,
+                                        onTap: busy
+                                            ? null
+                                            : () => _selectTask(
+                                                task,
+                                                gesture:
+                                                    pointerSelectionGesture(),
+                                              ),
+                                        onLongPress: busy
+                                            ? null
+                                            : () => _selectTask(
+                                                task,
+                                                gesture:
+                                                    SelectionGesture.longPress,
+                                              ),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            minHeight: 48,
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 6,
+                                              bottom: showChecklist ? 0 : 6,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: showChecklist
+                                                  ? MainAxisAlignment.end
+                                                  : MainAxisAlignment.center,
+                                              children: [
+                                                _taskTitle(
+                                                  task,
+                                                  users,
+                                                  group.date,
+                                                  entry,
+                                                ),
+
+                                                if ((task['description']
+                                                        as String)
+                                                    .trim()
+                                                    .isNotEmpty)
+                                                  Text(
+                                                    (task['description']
+                                                            as String)
+                                                        .replaceAll(
+                                                          RegExp(r'\s+'),
+                                                          ' ',
+                                                        )
+                                                        .trim(),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          color: Theme.of(context)
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ),
+                                      if (showChecklist)
+                                        _checklistDisclosure(origin, task),
+                                    ],
+                                  ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      KeyedSubtree(
+                                        key: taskMenuKeys.putIfAbsent(
+                                          id,
+                                          GlobalKey.new,
+                                        ),
+                                        child: IconButton(
+                                          key: ValueKey('task-menu-$id'),
+                                          constraints:
+                                              const BoxConstraints.tightFor(
+                                                width: 48,
+                                                height: 48,
+                                              ),
+                                          visualDensity: VisualDensity.standard,
+                                          tooltip:
+                                              'Actions for ${task['title']}',
+                                          onPressed: busy
+                                              ? null
+                                              : () =>
+                                                    _showTaskMenu(origin, task),
+                                          icon: const Icon(Icons.more_vert),
+                                        ),
+                                      ),
+                                      if (movable(task, true) ||
+                                          movable(task, false))
+                                        Draggable<String>(
+                                          data: task['id'],
+                                          maxSimultaneousDrags:
+                                              completed ||
+                                                  busy ||
+                                                  (selecting &&
+                                                      !selectedTasks.contains(
+                                                        task['id'],
+                                                      ))
+                                              ? 0
+                                              : 1,
+                                          dragAnchorStrategy:
+                                              pointerDragAnchorStrategy,
+                                          onDragStarted: () {
+                                            dragReleased = false;
+                                            setState(
+                                              () => taskDrag = (
+                                                id: task['id'] as String,
+                                                store: store,
+                                                revision: viewRevision,
+                                                snapshot: store!.taskSnapshot,
+                                                completed:
+                                                    task['completed'] == true,
+                                                everyone: all,
+                                                upcoming: showUpcoming,
+                                                user: user,
+                                                tags: Set.of(selectedTags),
+                                                selected:
+                                                    selecting &&
+                                                        selectedTasks.contains(
+                                                          task['id'],
+                                                        )
+                                                    ? Set.of(selectedTasks)
+                                                    : {task['id'] as String},
+                                                query: searchQuery,
+                                              ),
+                                            );
+                                          },
+                                          onDragUpdate: (details) =>
+                                              _updateDragScroll(
+                                                details.globalPosition,
+                                              ),
+                                          onDragEnd: (details) {
+                                            if (dragReleased &&
+                                                taskDrag != null) {
+                                              _dropAtPointer(
+                                                task['id'] as String,
+                                                details.offset,
+                                              );
+                                            }
+                                            _stopDragScroll();
+                                            setState(() => taskDrag = null);
+                                          },
+                                          feedback: Material(
+                                            elevation: 4,
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(12),
+                                              child: SizedBox(
+                                                width: 220,
+                                                child: Text(
+                                                  task['title'],
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          child: Tooltip(
+                                            triggerMode:
+                                                TooltipTriggerMode.manual,
+                                            message:
+                                                'Drag to reorder within this group, date and time',
+                                            child: Semantics(
+                                              customSemanticsActions: {
+                                                if (!selecting &&
+                                                    movable(task, true))
+                                                  const CustomSemanticsAction(
+                                                    label: 'Move up',
+                                                  ): () =>
+                                                      _keyboardMove(task, true),
+                                                if (!selecting &&
+                                                    movable(task, false))
+                                                  const CustomSemanticsAction(
+                                                    label: 'Move down',
+                                                  ): () => _keyboardMove(
+                                                    task,
+                                                    false,
+                                                  ),
+                                              },
+                                              label:
+                                                  'Drag ${task['title']} to reorder. Drag within the same group, date and time.',
+                                              child: const SizedBox(
+                                                width: 48,
+                                                height: 48,
+                                                child: Icon(
+                                                  Icons.drag_indicator,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      else if (showChecklist)
+                                        // Keep the menu above child Delete when this
+                                        // task has no reorder neighbor.
+                                        const SizedBox(width: 48, height: 48),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                          return Column(
+                            key: ValueKey('task-block-$id'),
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              KeyedSubtree(
+                                key: ValueKey('task-drop-$id'),
+                                child: _TaskDragLifetime(
+                                  active: taskDrag?.id == id,
+                                  child: _reorderableTask(
+                                    task,
+                                    GestureDetector(
+                                      onSecondaryTapUp: busy
+                                          ? null
+                                          : (details) => _showTaskMenu(
+                                              origin,
+                                              task,
+                                              position: details.globalPosition,
+                                            ),
+                                      child: tile,
                                     ),
                                   ),
                                 ),
-                                if (expandedChecklists.contains(id))
-                                  _inlineChecklist(origin, task),
-                              ],
-                            );
-                          },
-                        ),
-                        const ListRowDivider(),
-                      ],
-                    ],
+                              ),
+                              if (expandedChecklists.contains(id))
+                                _inlineChecklist(origin, task),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
