@@ -17,7 +17,7 @@ FoodContainer _item(int n, FoodDetails details, {bool deleted = false}) =>
       contentsEdits: {},
     );
 
-// The pre-optimization algorithm is the differential oracle: expiry first,
+// The grouping oracle follows the product order: undated first, then expiry,
 // canonical descriptive key second, and physical container ID inside a group.
 List<FoodGroup> _previousGroups(Iterable<FoodContainer> values) {
   final grouped = <String, List<FoodContainer>>{};
@@ -28,9 +28,7 @@ List<FoodGroup> _previousGroups(Iterable<FoodContainer> values) {
       .map((items) => FoodGroup(items..sort((a, b) => a.id.compareTo(b.id))))
       .toList();
   result.sort((a, b) {
-    final date = (a.details.expiry ?? '9999-99-99').compareTo(
-      b.details.expiry ?? '9999-99-99',
-    );
+    final date = (a.details.expiry ?? '').compareTo(b.details.expiry ?? '');
     return date != 0
         ? date
         : a.details.displayGroupKey.compareTo(b.details.displayGroupKey);
@@ -82,8 +80,8 @@ void main() {
       final actual = FoodState(input).groups;
       expect(_description(actual), expected);
       expect(actual.length, 24, reason: 'Estimated certainty is excluded.');
-      expect(actual.first.details.expiry, '2026-10-01');
-      expect(actual.last.details.expiry, isNull);
+      expect(actual.first.details.expiry, isNull);
+      expect(actual.last.details.expiry, '2027-01-01');
       for (final group in actual) {
         expect(group.containers.length, 4);
         for (final item in group.containers) {
@@ -159,9 +157,9 @@ void main() {
     for (final view in FoodView.values) {
       final result = state.view(view, search: 'same', brands: {'No match'});
       expect(ids(result), [
+        expected([3]),
         expected([4]),
         expected([1, 2]),
-        expected([3]),
         expected([6]),
         expected([5]),
       ]);

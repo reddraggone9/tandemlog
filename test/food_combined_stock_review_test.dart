@@ -93,11 +93,11 @@ void main() {
         expect(matches.toSet(), state.containers.map((e) => e.id).toSet());
         expect(matches.length, state.containers.length);
         expect(matches, [
+          _id(1),
+          _id(3),
           _id(5),
           _id(4),
           _id(2),
-          _id(1),
-          _id(3),
           _id(9),
           _id(8),
           _id(7),

@@ -404,7 +404,7 @@ void main() {
           search: ' RICE ',
           reasons: {'Unrelated'},
         );
-        expect(groups.expand((g) => g.containers).map((c) => c.id), [b, c, a]);
+        expect(groups.expand((g) => g.containers).map((c) => c.id), [c, b, a]);
         expect(
           groups.every(
             (g) => g.containers.map((c) => c.deleted).toSet().length == 1,
@@ -528,7 +528,7 @@ void main() {
             reasons: {'Missing'},
           ),
         ),
-        [a, b, c],
+        [c, a, b],
       );
       expect(state.brands, ['Acme', 'Other']);
       expect(state.locations, ['Freezer', 'Pantry']);

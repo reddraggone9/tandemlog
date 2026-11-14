@@ -367,3 +367,18 @@ state. Row ⋮ Move some… splits a number of containers into their own row wit
 new Location as one Undo action. Rules and rationale are in
 [batch selection](batch-selection.md#row-level-food-selection-lee-2026-10-29)
 and [product behavior](product-behavior.md#approved-rc3-food-editing-refinements).
+
+## Undated-first ordering (Lee, 2026-11-14; next release)
+
+**UX brief / goal:** Find the container in front of you and set its expiration,
+including when Search matches similar products. Rows without an expiration come
+first, followed by dated rows in ascending expiration order. Existing descriptive
+tie-breaking and container grouping stay unchanged; no new controls or labels.
+The next action is the existing row editor.
+
+Normal Stock still renders its separate undated Inbox above dated Stock, with
+the same filters and section headings. Search still bypasses saved filters and
+combines active statuses without Inbox headings, but now places undated active
+rows before dated active rows. Retained similarly puts undated rows first.
+Deleted rows remain at the bottom of Search, ordered by deletion recency as in
+the normal Deleted view, rather than being promoted ahead of active food.

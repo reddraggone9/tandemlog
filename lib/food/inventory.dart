@@ -1151,8 +1151,10 @@ List<FoodGroup> _group(Iterable<FoodContainer> values, bool products) {
       )
       .toList();
   result.sort((a, b) {
-    final date = (a.value.details.expiry ?? '9999-99-99').compareTo(
-      b.value.details.expiry ?? '9999-99-99',
+    // Missing expirations need attention before dated food. Stock still builds
+    // its separate Inbox first; search uses this order without section headings.
+    final date = (a.value.details.expiry ?? '').compareTo(
+      b.value.details.expiry ?? '',
     );
     return date != 0 ? date : a.key.compareTo(b.key);
   });
