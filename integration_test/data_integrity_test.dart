@@ -187,9 +187,13 @@ void registerDataIntegrityTests() {
         expect(searchController.text, isEmpty);
         expect(state.capture.value, captureDraft);
         expect(await _logs(shared), before);
-        await tester.tap(find.text('Reference task'));
-        await tester.pumpAndSettle();
+        // Clearing Search keeps this visible selection and its editor, so
+        // the title now appears both in the row and in the editor's field.
+        expect(state.selectedTasks, unorderedEquals([task]));
         final title = find.widgetWithText(TextField, 'Title');
+        expect(title, findsOneWidget);
+        await tester.tap(find.byKey(ValueKey('task-body-$task')));
+        await tester.pumpAndSettle();
         await tester.enterText(title, 'Unsubmitted editor draft');
         state.importer.dispose();
         state.importer = null;
