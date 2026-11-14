@@ -362,7 +362,21 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     }
     if (!mounted) return;
     final rows = {for (final row in _grouping.rows) _rowKey(row): row};
-    final survivors = kept.where(rows.containsKey).toSet();
+    final survivors = kept
+        .intersection(_grouping.visibleRows)
+        .where(rows.containsKey)
+        .toSet();
+    if (replace && survivors.isEmpty) {
+      // Replacement was approved, but sync removed the last matching target.
+      // Dispose the retained surface without asking the same draft decision again.
+      final done = editorDone;
+      setState(() {
+        _editorBuilder = null;
+        _editingGroup = null;
+      });
+      await done;
+      if (!mounted) return;
+    }
     // Two-to-one returns the wide pane to that row's single editor.
     final single = _wide && before.length >= 2 && survivors.length == 1
         ? rows[survivors.single]

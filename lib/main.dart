@@ -2507,19 +2507,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   : bulkEditorKey.currentState?.canClose()) ??
               Future.value(true));
       if (okay && mounted && !retainSurface) {
-        editingText?.cancel();
-        if (editingText != null) {
-          editorStore?.releaseTextCapture(editingText!.capture);
-        }
-        setState(() {
-          editingTask = null;
-          editingBulk = null;
-          bulkConflict = false;
-          editorStore = null;
-          editingText = null;
-          textSaveCommand = null;
-          editingTextStatus = null;
-        });
+        _dismissApprovedEditor();
       }
       return okay;
     } finally {
@@ -2532,6 +2520,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
       _wakeSectionRequests();
     }
+  }
+
+  // The draft decision has already been approved; do not prompt twice.
+  void _dismissApprovedEditor() {
+    editingText?.cancel();
+    if (editingText != null) {
+      editorStore?.releaseTextCapture(editingText!.capture);
+    }
+    setState(() {
+      editingTask = null;
+      editingBulk = null;
+      bulkConflict = false;
+      editorStore = null;
+      editingText = null;
+      textSaveCommand = null;
+      editingTextStatus = null;
+    });
   }
 
   /// Search keeps the selected tasks that remain visible (Lee 2026-11-12).
@@ -2547,7 +2552,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       _invalidateView();
       return;
     }
-    final kept = selecting && shown != null
+    var kept = selecting && shown != null
         ? before.intersection(shown)
         : <String>{};
     final reopen = kept.isNotEmpty && wideLayout;
@@ -2557,6 +2562,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return;
     }
     if (!mounted) return;
+    // Sync can delete or hide targets while the dirty-draft prompt is open.
+    // Never reopen the retained surface using the pre-decision snapshot.
+    kept = kept.intersection(_taskIdsShownFor(value) ?? <String>{});
+    if (reopen && kept.isEmpty) _dismissApprovedEditor();
     lastSearchText = value;
     setState(() {
       if (kept.isEmpty) {
@@ -2574,7 +2583,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
     });
     _invalidateView();
-    if (reopen) await _openSelectionSession();
+    if (reopen && kept.isNotEmpty) await _openSelectionSession();
   }
 
   /// IDs of the tasks the current filters show for Search text [query], or
