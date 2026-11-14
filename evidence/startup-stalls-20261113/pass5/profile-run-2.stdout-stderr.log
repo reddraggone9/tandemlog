@@ -1,0 +1,20 @@
+MESA-EGL: warning: DRI3 error: Could not get DRI3 device
+MESA-EGL: warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(com.reddraggone9.tandemlog:992059): Atk-CRITICAL **: 17:55:23.933: atk_socket_embed: assertion 'plug_id != NULL' failed
+[IMPORTANT:flutter/shell/platform/embedder/embedder_surface_gl_impeller.cc(126)] Using the Impeller rendering backend (OpenGLESSDF).
+The Dart VM service is listening on http://127.0.0.1:41447/cgvHPdzUCXs=/
+TANDEMLOG_MAIN
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_ROWS {}
+TANDEMLOG_STARTUP_CACHE {"warmTaskProjectionReuses":1,"decodedCacheReuses":3667,"strictDecodedRecords":0}
+TANDEMLOG_READY_MS=407 FILES_READ=4
+TANDEMLOG_FIRST_LIST at=2026-11-13T17:55:24.408384 ms=411 process_ms=530 phases={"settings":37,"folderList":43,"history":340,"tasks":374,"food":376,"migration":377,"bound":377} stall_ms=57 stalls=[[0,22],[78,57],[144,9],[159,24],[183,8],[193,24],[217,8],[231,10],[249,8],[271,11],[282,10],[292,10],[302,14],[316,10],[326,8],[363,9],[382,29]]
+TANDEMLOG_FOOD {"activeContainers":522,"groups":482,"products":551,"purchases":34}
+embedder.cc (2615): 'FlutterEngineRemoveView' returned 'kInvalidArguments'. Remove view info was invalid. The implicit view cannot be removed.
+
+** (com.reddraggone9.tandemlog:992059): WARNING **: 17:55:24.784: Attempted to set message handler on an FlBinaryMessenger without an engine
+
+** (com.reddraggone9.tandemlog:992059): WARNING **: 17:55:24.784: Attempted to set message handler on an FlBinaryMessenger without an engine
+
+** (com.reddraggone9.tandemlog:992059): WARNING **: 17:55:24.784: Attempted to set message handler on an FlBinaryMessenger without an engine

@@ -1,0 +1,23 @@
+diff --git a/lib/storage/unified_history.dart b/lib/storage/unified_history.dart
+index afab3342..b3c06702 100644
+--- a/lib/storage/unified_history.dart
++++ b/lib/storage/unified_history.dart
+@@ -3022,13 +3022,11 @@ Future<Map<String, _RestoredWriter>?> _restoreStoreJob(
+       for (var i = 0; i < list.length; i += chunk)
+         (owner, list.sublist(i, min(i + chunk, list.length))),
+   ];
+-  final decoding = Future.wait([
+-    for (final job in jobs)
+-      Isolate.run(
+-        () => HistoryStore.decode(job.$2),
+-        debugName: 'tandemlog-store-decode',
+-      ),
+-  ])..ignore();
++  // Already on the background owner. Avoid nested isolate-group churn:
++  // parallel chunk workers can stop the UI isolate for shared-heap GC.
++  final decoding = Future.sync(() => [
++    for (final job in jobs) HistoryStore.decode(job.$2),
++  ]);
+   // Rebuild each writer's bytes while the workers decode.
+   final bytes = {
+     for (final MapEntry(key: owner, value: rows) in rowsByOwner.entries)

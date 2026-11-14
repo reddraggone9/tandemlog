@@ -1,0 +1,51 @@
+{
+  "definition": "Median of maximum heartbeat gaps whose START falls into phase; intervals may cross boundary. Zero means no recorded >=8ms gap.",
+  "phases": [
+    "entry-to-settings",
+    "settings-to-history",
+    "history-to-bound",
+    "bound-to-first-list"
+  ],
+  "rows": [
+    [
+      "strict",
+      "before",
+      [
+        22,
+        24,
+        11,
+        29
+      ]
+    ],
+    [
+      "strict",
+      "after",
+      [
+        22,
+        22,
+        10,
+        27
+      ]
+    ],
+    [
+      "warm",
+      "before",
+      [
+        23,
+        33,
+        10,
+        28
+      ]
+    ],
+    [
+      "warm",
+      "after",
+      [
+        23,
+        23,
+        0,
+        29
+      ]
+    ]
+  ]
+}

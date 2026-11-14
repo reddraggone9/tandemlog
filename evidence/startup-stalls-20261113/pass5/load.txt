@@ -1,0 +1,10 @@
+ 17:59:24 up 11 days, 19:48,  4 users,  load average: 9.77, 10.79, 12.62
+ 17:59:28 up 11 days, 19:48,  4 users,  load average: 9.39, 10.69, 12.58
+ 17:59:32 up 11 days, 19:48,  4 users,  load average: 9.04, 10.60, 12.54
+ 17:59:36 up 11 days, 19:48,  4 users,  load average: 8.71, 10.50, 12.50
+ 17:59:39 up 11 days, 19:48,  4 users,  load average: 8.71, 10.50, 12.50
+ 17:59:43 up 11 days, 19:48,  4 users,  load average: 8.34, 10.40, 12.45
+ 17:59:47 up 11 days, 19:48,  4 users,  load average: 7.99, 10.29, 12.40
+ 17:59:50 up 11 days, 19:48,  4 users,  load average: 7.67, 10.18, 12.36
+ 17:59:53 up 11 days, 19:48,  4 users,  load average: 7.67, 10.18, 12.36
+ 17:59:57 up 11 days, 19:48,  4 users,  load average: 7.37, 10.08, 12.31

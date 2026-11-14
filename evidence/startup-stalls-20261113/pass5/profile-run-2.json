@@ -1,0 +1,28 @@
+{
+  "run": 2,
+  "passed": false,
+  "cleanWitnessVerified": false,
+  "closeMode": "normal",
+  "external_ms": 531,
+  "marker": "TANDEMLOG_READY_MS=407 FILES_READ=4",
+  "phases": [
+    "TANDEMLOG_MAIN",
+    "TANDEMLOG_FIRST_FRAME_MS=18",
+    "TANDEMLOG_ROWS {}",
+    "TANDEMLOG_STARTUP_CACHE {\"warmTaskProjectionReuses\":1,\"decodedCacheReuses\":3667,\"strictDecodedRecords\":0}",
+    "TANDEMLOG_READY_MS=407 FILES_READ=4"
+  ],
+  "external_main_ms": 120,
+  "external_first_frame_ms": 143,
+  "shutdown": {
+    "requestedMode": "normal",
+    "normalExitVerified": true,
+    "method": "owned-window-WM_DELETE_WINDOW",
+    "pid": 992059,
+    "window": "4194308",
+    "globalFocusOrInput": false,
+    "processExit": 0,
+    "elapsedMs": 119.872
+  },
+  "process_exit": 0
+}

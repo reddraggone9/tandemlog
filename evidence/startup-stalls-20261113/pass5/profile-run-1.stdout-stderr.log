@@ -1,0 +1,20 @@
+MESA-EGL: warning: DRI3 error: Could not get DRI3 device
+MESA-EGL: warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(com.reddraggone9.tandemlog:991861): Atk-CRITICAL **: 17:55:21.240: atk_socket_embed: assertion 'plug_id != NULL' failed
+[IMPORTANT:flutter/shell/platform/embedder/embedder_surface_gl_impeller.cc(126)] Using the Impeller rendering backend (OpenGLESSDF).
+The Dart VM service is listening on http://127.0.0.1:32893/hRx71pNCq_o=/
+TANDEMLOG_MAIN
+TANDEMLOG_FIRST_FRAME_MS=19
+TANDEMLOG_ROWS {}
+TANDEMLOG_STARTUP_CACHE {"warmTaskProjectionReuses":0,"decodedCacheReuses":0,"strictDecodedRecords":3667}
+TANDEMLOG_READY_MS=2104 FILES_READ=8
+TANDEMLOG_FIRST_LIST at=2026-11-13T17:55:23.408365 ms=2107 process_ms=2410 phases={"settings":38,"folderList":43,"history":1929,"tasks":2072,"food":2075,"migration":2077,"bound":2077} stall_ms=30 stalls=[[0,23],[81,19],[116,19],[141,10],[154,10],[166,30],[204,19],[250,11],[266,21],[298,17],[327,13],[450,11],[466,12],[482,13],[500,12],[516,12],[536,14],[555,10],[569,9],[790,8],[798,10],[808,8],[816,10],[826,12],[870,9],[879,10],[889,8],[897,10],[907,8],[915,13],[928,8],[936,10],[946,8],[954,10],[964,8],[972,13],[985,8],[993,10],[1003,8],[1011,10],[1021,8],[1029,13],[1042,8],[1050,10],[1060,8],[1068,10],[1078,8],[1086,13],[1099,8],[1107,10],[1117,8],[1125,10],[1135,8],[1143,13],[1156,8],[1164,10],[1174,8],[1182,10],[1192,8],[1200,14],[1214,8],[1222,10],[1232,8],[1240,10],[1250,8],[1258,13],[1271,8],[1279,10],[1289,8],[1297,10],[1307,8],[1315,14],[1329,8],[1337,10],[1347,8],[1355,10],[1365,8],[1373,13],[1386,8],[1394,10],[1404,8],[1412,10],[1422,8],[1430,14],[1444,8],[1452,10],[1462,8],[1470,10],[1480,8],[1488,13],[1501,9],[1510,10],[1520,8],[1528,10],[1538,8],[1546,13],[1559,8],[1567,10],[1577,8],[1585,10],[1595,8],[1603,13],[1616,8],[1624,10],[1634,8],[1642,10],[1652,8],[1660,12],[1672,9],[1681,10],[1691,8],[1699,10],[1709,8],[1717,13],[1730,9],[1739,10],[1749,8],[1757,10],[1767,8],[1775,16],[1791,8],[1799,10],[1809,8],[1817,10],[1827,8],[1835,8],[1843,10],[1933,12],[1966,8],[2075,8],[2083,24]]
+TANDEMLOG_FOOD {"activeContainers":522,"groups":482,"products":551,"purchases":34}
+embedder.cc (2615): 'FlutterEngineRemoveView' returned 'kInvalidArguments'. Remove view info was invalid. The implicit view cannot be removed.
+
+** (com.reddraggone9.tandemlog:991861): WARNING **: 17:55:23.821: Attempted to set message handler on an FlBinaryMessenger without an engine
+
+** (com.reddraggone9.tandemlog:991861): WARNING **: 17:55:23.821: Attempted to set message handler on an FlBinaryMessenger without an engine
+
+** (com.reddraggone9.tandemlog:991861): WARNING **: 17:55:23.821: Attempted to set message handler on an FlBinaryMessenger without an engine
