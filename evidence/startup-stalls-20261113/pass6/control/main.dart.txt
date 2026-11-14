@@ -1,0 +1,75 @@
+import "dart:async";
+import "dart:io";
+import "package:flutter/material.dart";
+import "startup_trace.dart";
+
+final trace = StartupTrace(Stopwatch()..start())..watchStalls();
+final warm = Platform.environment["PROBE_WARMUP"] == "1";
+
+void main() {
+  trace.mark("main");
+  runApp(const App());
+}
+
+class App extends StatefulWidget {
+  const App({super.key});
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  var loaded = false;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => trace.mark("firstFrame"));
+    if (warm) {
+      var i = 0;
+      final styles = [FontWeight.w500, FontWeight.w700];
+      void turn() {
+        if (i < styles.length) {
+          (TextPainter(text: TextSpan(text: "Tandemlog 0123456789", style: TextStyle(fontFamily: "Roboto", fontSize: 14, fontWeight: styles[i])), textDirection: TextDirection.ltr)..layout()).dispose();
+        } else {
+          (TextPainter(text: TextSpan(text: String.fromCharCode(Icons.check.codePoint), style: TextStyle(fontFamily: Icons.check.fontFamily)), textDirection: TextDirection.ltr)..layout()).dispose();
+        }
+        if (++i < 3) Timer(const Duration(milliseconds: 40), turn);
+      }
+      Timer(const Duration(milliseconds: 150), turn);
+    }
+    Timer(const Duration(milliseconds: 400), () {
+      trace.mark("bound");
+      setState(() => loaded = true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        stdout.writeln(trace.line("PROBE_FIRST_LIST"));
+        Timer(const Duration(milliseconds: 100), () => exit(0));
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    home: Scaffold(
+      appBar: loaded ? AppBar(title: const Text("Tasks"), actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.settings))]) : null,
+      body: loaded
+          ? ListView.builder(
+              itemCount: 200,
+              itemBuilder: (c, i) => ListTile(
+                leading: Checkbox(value: i.isOdd, onChanged: (_) {}),
+                title: Text("Task number $i with a name", style: const TextStyle(fontWeight: FontWeight.w500)),
+                subtitle: Text("Due in $i days, repeats weekly"),
+                trailing: Text("$i", style: const TextStyle(fontWeight: FontWeight.w700)),
+              ),
+            )
+          : Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 240),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text("Tandemlog", style: Theme.of(context).textTheme.headlineSmall),
+                  const SizedBox(height: 16),
+                  const LinearProgressIndicator(),
+                ]),
+              ),
+            ),
+    ),
+  );
+}

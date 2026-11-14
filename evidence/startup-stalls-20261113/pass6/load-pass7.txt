@@ -1,0 +1,12 @@
+ 14:36:14 up 10:17,  2 users,  load average: 2.50, 4.94, 8.23
+ 14:36:17 up 10:17,  2 users,  load average: 2.46, 4.89, 8.20
+ 14:36:21 up 10:17,  2 users,  load average: 2.34, 4.83, 8.16
+ 14:36:24 up 10:17,  2 users,  load average: 2.34, 4.83, 8.16
+ 14:36:28 up 10:17,  2 users,  load average: 2.72, 4.86, 8.15
+ 14:36:31 up 10:17,  2 users,  load average: 2.90, 4.87, 8.13
+ 14:36:34 up 10:17,  2 users,  load average: 2.90, 4.87, 8.13
+ 14:36:38 up 10:17,  2 users,  load average: 2.83, 4.82, 8.10
+ 14:36:41 up 10:17,  2 users,  load average: 2.84, 4.79, 8.07
+ 14:36:44 up 10:18,  2 users,  load average: 2.84, 4.79, 8.07
+ 14:36:48 up 10:18,  2 users,  load average: 2.85, 4.76, 8.04
+ 14:36:51 up 10:18,  2 users,  load average: 2.87, 4.73, 8.02
