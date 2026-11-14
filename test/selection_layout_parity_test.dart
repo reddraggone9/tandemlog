@@ -541,80 +541,41 @@ void registerSelectionLayoutParityTests({
                 : find.byKey(const ValueKey('addTags'));
             await tester.enterText(draft, 'Unsaved parity draft');
             await tester.pumpAndSettle();
-            await tester.enterText(
-              search,
-              food ? 'Pane beans' : 'section task',
+            final dynamic state = tester.state(
+              find.byType(food ? FoodInventoryPage : TasksPage),
             );
+            Set<String> selected() =>
+                Set<String>.of(food ? state.bulkSelected : state.selectedTasks);
+            final both = selected();
+            expect(both, hasLength(2));
+            final prompt = find.text(
+              food ? 'Discard food changes?' : 'Unsaved changes',
+            );
+            final bulkEditor = food
+                ? find.byType(FoodEditor)
+                : find.byType(BulkTaskEditor);
+            final singleEditor = food
+                ? find.byType(FoodEditor)
+                : find.byType(TaskEditor);
+            final pane = tester.element(bulkEditor);
+            // Search keeps selected rows that remain visible (Lee
+            // 2026-11-12): while all of them show, nothing else changes.
+            final showsBoth = food ? 'Pane beans' : 'section task';
+            await tester.enterText(search, showsBoth);
             await tester.pumpAndSettle();
-            expect(
-              find.text(food ? 'Discard food changes?' : 'Unsaved changes'),
-              findsOneWidget,
-            );
-            await tester.tap(
-              find
-                  .widgetWithText(TextButton, food ? 'Keep editing' : 'Cancel')
-                  .last,
-            );
-            await tester.pumpAndSettle();
-            expect(tester.widget<TextField>(search).controller!.text, isEmpty);
+            expect(prompt, findsNothing);
+            expect(tester.element(bulkEditor), same(pane));
             expect(
               tester.widget<TextField>(draft).controller!.text,
               'Unsaved parity draft',
             );
-            final dynamic state = tester.state(
-              find.byType(food ? FoodInventoryPage : TasksPage),
-            );
-            expect(
-              food ? state.bulkSelected : state.selectedTasks,
-              hasLength(2),
-            );
-            await tester.enterText(
-              search,
-              food ? 'Pane beans' : 'section task',
-            );
+            expect(selected(), both);
+            // Hiding a selected row resolves the draft first; Cancel keeps
+            // the previous query, the draft and the selection.
+            final hidesSecond = food ? 'Pane beans 1' : 'Synthetic';
+            await tester.enterText(search, hidesSecond);
             await tester.pumpAndSettle();
-            await tester.tap(find.text('Discard'));
-            if (!food) {
-              await host.ready(tester, () => state.selectedTasks.isEmpty);
-            }
-            await tester.pumpAndSettle();
-            expect(food ? state.bulkSelected : state.selectedTasks, isEmpty);
-            expect(
-              food ? find.byType(FoodEditor) : find.byType(BulkTaskEditor),
-              findsNothing,
-            );
-            expect(compact(), isFalse);
-            await snap('searched');
-            // Clear search follows the same guarded close/clear lifecycle.
-            await tester.longPress(first);
-            if (!food) {
-              await host.ready(
-                tester,
-                () =>
-                    (tester.state(find.byType(TasksPage)) as dynamic)
-                            .selectedTasks
-                            .length ==
-                        1 &&
-                    find.byType(TaskEditor).evaluate().isNotEmpty,
-              );
-            }
-            await tester.pumpAndSettle();
-            await tester.tap(second);
-            if (!food) {
-              await host.ready(
-                tester,
-                () => find.byType(BulkTaskEditor).evaluate().isNotEmpty,
-              );
-            }
-            await tester.pumpAndSettle();
-            await tester.enterText(draft, 'Guarded Clear draft');
-            await tester.pumpAndSettle();
-            final clear = find.byTooltip(
-              food ? 'Clear food search' : 'Clear search',
-            );
-            expect(clear.hitTestable(), findsOneWidget);
-            await tester.tap(clear);
-            await tester.pumpAndSettle();
+            expect(prompt, findsOneWidget);
             await tester.tap(
               find
                   .widgetWithText(TextButton, food ? 'Keep editing' : 'Cancel')
@@ -623,25 +584,72 @@ void registerSelectionLayoutParityTests({
             await tester.pumpAndSettle();
             expect(
               tester.widget<TextField>(search).controller!.text,
-              food ? 'Pane beans' : 'section task',
-            );
-            expect(
-              food ? state.bulkSelected : state.selectedTasks,
-              hasLength(2),
+              showsBoth,
             );
             expect(
               tester.widget<TextField>(draft).controller!.text,
-              'Guarded Clear draft',
+              'Unsaved parity draft',
             );
-            await tester.tap(clear);
+            expect(selected(), both);
+            await tester.enterText(search, hidesSecond);
             await tester.pumpAndSettle();
             await tester.tap(find.text('Discard'));
+            if (!food) {
+              await host.ready(
+                tester,
+                () =>
+                    find.byType(BulkTaskEditor).evaluate().isEmpty &&
+                    find.byType(TaskEditor).evaluate().isNotEmpty,
+              );
+            }
+            await tester.pumpAndSettle();
+            // The row still shown stays selected; as with any two-to-one
+            // narrowing, the pane returns to that row's single editor.
+            expect(singleEditor, findsOneWidget);
+            expect(
+              tester.widget<TextField>(search).controller!.text,
+              hidesSecond,
+            );
+            if (food) {
+              expect(find.text('Edit 2 containers'), findsNothing);
+              expect(
+                tester
+                    .widget<TextField>(
+                      find.widgetWithText(TextField, 'Food name'),
+                    )
+                    .controller!
+                    .text,
+                'Pane beans 1',
+              );
+            } else {
+              expect(find.byType(BulkTaskEditor), findsNothing);
+              expect(selected(), hasLength(1));
+              expect(both, contains(selected().single));
+              expect(
+                selected().single,
+                isNot('00000000-0000-4000-8000-000000000088'),
+              );
+            }
+            expect(compact(), isFalse);
+            await snap('searched');
+            // Clear search shows the edited row again: no prompt, same editor.
+            final single = tester.element(singleEditor);
+            final clear = find.byTooltip(
+              food ? 'Clear food search' : 'Clear search',
+            );
+            expect(clear.hitTestable(), findsOneWidget);
+            await tester.tap(clear);
+            await tester.pumpAndSettle();
+            expect(prompt, findsNothing);
+            expect(tester.widget<TextField>(search).controller!.text, isEmpty);
+            expect(tester.element(singleEditor), same(single));
+            await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
             if (!food) {
               await host.ready(tester, () => state.selectedTasks.isEmpty);
             }
             await tester.pumpAndSettle();
-            expect(tester.widget<TextField>(search).controller!.text, isEmpty);
-            expect(food ? state.bulkSelected : state.selectedTasks, isEmpty);
+            expect(selected(), isEmpty);
+            expect(singleEditor, findsNothing);
           } else {
             expect(search.hitTestable(), findsNothing);
             await tester.tap(find.byKey(const ValueKey('edit-selected-tasks')));

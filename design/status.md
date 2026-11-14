@@ -43,7 +43,10 @@ It contains, at feature level (first stable release in brackets):
 expiration/location suggestions, repeat-list grammar, shorter normal-open pauses,
 large-text editor fixes and reusable release tooling. Stable118 signed candidate,
 scripted exact Android/GTK upgrades from116 and117, CI and anonymous public checks
-passed. The RC remains an unchanged prerelease. No unreleased app changes on main.
+passed. The RC remains an unchanged prerelease.
+
+Unreleased on main: Search keeps the selected rows it still shows, in Tasks and
+Food (Lee, 2026-11-12; [batch selection](batch-selection.md#audit-outcomes)).
 Owner-device rollout is tracked separately; no live seeds/cutover performed here.
 
 ## Commands

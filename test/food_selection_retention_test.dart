@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/food/food_editor.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 
@@ -109,31 +110,53 @@ Future<void> verifyFoodWideSelectionRetention(
 }
 
 void main() {
-  testWidgets('search input and Clear search clear selection as Tasks does', (
+  testWidgets('Search keeps selected rows that remain visible', (tester) async {
+    // Lee 2026-11-12: Tasks and Food keep selected rows that remain visible
+    // when Search changes.
+    final page = await _pump(tester);
+    await _toggle(tester, 'Beans');
+    await _toggle(tester, 'Rice');
+    await _search(tester, 'e'); // Beans and Rice both still match.
+    expect(page.bulkSelected, {_id(1), _id(2)});
+    expect(page.selecting, isTrue);
+    await _search(tester, 'Beans');
+    expect(page.bulkSelected, {_id(1)});
+    expect(page.selecting, isTrue);
+    expect(find.text('1 selected'), findsOneWidget);
+    await _clearSearch(tester);
+    // Hidden rows are dropped, not resurrected when the search widens.
+    expect(page.bulkSelected, {_id(1)});
+    expect(page.selecting, isTrue);
+    await tester.tap(find.text('Rice'));
+    await tester.pumpAndSettle();
+    expect(page.bulkSelected, {_id(1), _id(2)});
+    expect(find.widgetWithText(TextField, 'Food name'), findsNothing);
+  });
+
+  testWidgets('Search that hides every selected row ends selection', (
     tester,
   ) async {
     final page = await _pump(tester);
     await _toggle(tester, 'Beans');
     await _toggle(tester, 'Rice');
-    await _search(tester, 'Beans');
+    await _search(tester, 'Milk');
     expect(page.bulkSelected, isEmpty);
     expect(page.selecting, isFalse);
-    await _toggle(tester, 'Beans');
     await _clearSearch(tester);
     expect(page.bulkSelected, isEmpty);
-    expect(page.selecting, isFalse);
     await tester.tap(find.text('Rice'));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(TextField, 'Food name'), findsOneWidget);
   });
 
-  testWidgets('a cleared search selection cannot extend a later range', (
+  testWidgets('a search-hidden anchor cannot extend a later range', (
     tester,
   ) async {
     final page = await _pump(tester);
     await _toggle(tester, 'Rice');
     await _toggle(tester, 'Beans'); // Anchor Beans will become hidden.
     await _search(tester, 'Rice');
+    expect(page.bulkSelected, {_id(2)});
     await _clearSearch(tester);
     await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
     await tester.tap(find.text('Milk'));
@@ -142,7 +165,7 @@ void main() {
     expect(page.bulkSelected, {_id(3)});
   });
 
-  testWidgets('view changes retain selection while search bypasses the view', (
+  testWidgets('clearing a search keeps the rows its view still shows', (
     tester,
   ) async {
     final page = await _pump(tester);
@@ -152,11 +175,70 @@ void main() {
     await chooseFoodView(tester, 'Retained');
     expect(page.bulkSelected, {_id(1), _id(4)});
     await _clearSearch(tester);
-    expect(page.bulkSelected, isEmpty);
-    await _toggle(tester, 'Reserve');
+    expect(page.bulkSelected, {_id(4)});
+    expect(page.selecting, isTrue);
     await chooseFoodView(tester, 'Stock');
     expect(page.bulkSelected, isEmpty);
     expect(page.selecting, isTrue);
+  });
+
+  testWidgets('wide Search keeps the pane and guards a hidden target', (
+    tester,
+  ) async {
+    final page = await _pump(tester, wide: true);
+    await _search(tester, 'e');
+    await _toggle(tester, 'Beans');
+    await _toggle(tester, 'Reserve');
+    expect(find.text('Edit 2 containers'), findsOneWidget);
+    final brand = find.widgetWithText(TextField, 'Brand');
+    await tester.enterText(brand, 'Wide search draft');
+    await tester.pumpAndSettle();
+    final pane = tester.element(find.byType(FoodEditor));
+    final field = find.byKey(const ValueKey('food-search'));
+    // Both selected rows still match: no prompt, same pane and draft.
+    await tester.enterText(field, 's');
+    await tester.pumpAndSettle();
+    expect(find.text('Discard food changes?'), findsNothing);
+    expect(tester.element(find.byType(FoodEditor)), same(pane));
+    expect(
+      tester.widget<TextField>(brand).controller!.text,
+      'Wide search draft',
+    );
+    expect(page.bulkSelected, {_id(1), _id(4)});
+    // Clearing hides retained Reserve from Stock, so the draft is resolved.
+    await tester.tap(find.byTooltip('Clear food search'));
+    await tester.pumpAndSettle();
+    expect(find.text('Discard food changes?'), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, 'Keep editing').last);
+    await tester.pumpAndSettle();
+    expect(tester.widget<TextField>(field).controller!.text, 's');
+    expect(
+      tester.widget<TextField>(brand).controller!.text,
+      'Wide search draft',
+    );
+    expect(page.bulkSelected, {_id(1), _id(4)});
+    await tester.tap(find.byTooltip('Clear food search'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Discard'));
+    await tester.pumpAndSettle();
+    // Beans stays shown, so the pane returns to its single editor.
+    expect(tester.widget<TextField>(field).controller!.text, isEmpty);
+    expect(find.text('Edit 2 containers'), findsNothing);
+    expect(
+      tester
+          .widget<TextField>(find.widgetWithText(TextField, 'Food name'))
+          .controller!
+          .text,
+      'Beans',
+    );
+    expect(find.text('Reserve'), findsNothing);
+    // A plain-edited row that Search hides closes its clean editor.
+    await tester.enterText(field, 'Milk');
+    await tester.pumpAndSettle();
+    expect(find.byType(FoodEditor), findsNothing);
+    expect(page.bulkSelected, isEmpty);
+    expect(page.selecting, isFalse);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('More filters keeps visible selected and drops hidden IDs', (

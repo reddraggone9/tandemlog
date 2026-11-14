@@ -2534,14 +2534,71 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
+  /// Search keeps the selected tasks that remain visible (Lee 2026-11-12).
+  /// When all of them still show, the selection and any open editor are left
+  /// as they are. Otherwise the editor's draft is resolved first (Cancel
+  /// restores the previous query) and the selection continues with the tasks
+  /// still shown; a wide pane then edits those.
   Future<void> _changeSearch(String value) async {
-    if (!await _closeEditor()) {
-      search.text = lastSearchText;
+    final before = Set<String>.of(selectedTasks);
+    final shown = before.isEmpty ? null : _taskIdsShownFor(value);
+    if (shown != null && before.every(shown.contains)) {
+      setState(() => lastSearchText = value);
+      _invalidateView();
       return;
     }
+    final kept = selecting && shown != null
+        ? before.intersection(shown)
+        : <String>{};
+    final reopen = kept.isNotEmpty && wideLayout;
+    if (!await _closeEditor(retainSurface: reopen)) {
+      // A kept draft keeps the previous query, including Clear's button.
+      if (mounted) setState(() => search.text = lastSearchText);
+      return;
+    }
+    if (!mounted) return;
     lastSearchText = value;
-    _clearSelection();
+    setState(() {
+      if (kept.isEmpty) {
+        _clearSelection();
+        return;
+      }
+      selectedTasks
+        ..clear()
+        ..addAll(kept);
+      if (!kept.contains(selectionAnchor)) selectionAnchor = null;
+      // Two-to-one returns the wide pane to single editing, as a gesture does.
+      if (wideLayout && before.length >= 2 && kept.length == 1) {
+        selecting = false;
+        mobileEditorOpen = true;
+      }
+    });
     _invalidateView();
+    if (reopen) await _openSelectionSession();
+  }
+
+  /// IDs of the tasks the current filters show for Search text [query], or
+  /// null when the view cannot be projected now.
+  Set<String>? _taskIdsShownFor(String query) {
+    if (store == null || !timeSource.ready) return null;
+    try {
+      final trimmed = query.trim();
+      // The same inputs as the view projection, with the new query.
+      final view = projectTaskView(
+        rows,
+        timeSource.readTime(),
+        assignee: all ? null : user,
+        includeUpcoming: showUpcoming,
+        tags: Set.of(selectedTags),
+        searchQuery: trimmed,
+      ).value;
+      final entries = trimmed.isNotEmpty
+          ? [...view.open, ...view.completed]
+          : (showCompleted ? view.completed : view.open);
+      return {for (final entry in entries) entry.task['id'] as String};
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<void> _clearTaskSelection() async {
@@ -5512,14 +5569,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
+  /// Clear search is a Search change to empty text, with the same retention.
   Future<void> _clearSearch() async {
-    if (!_canSwitchTaskInput || !await _closeEditor() || !_canSwitchTaskInput) {
-      return;
-    }
+    if (!_canSwitchTaskInput) return;
     search.clear();
-    lastSearchText = '';
-    setState(_clearSelection);
-    _invalidateView();
+    await _changeSearch('');
   }
 
   Widget _searchField() => TextField(

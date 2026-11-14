@@ -345,10 +345,9 @@ Method changes from the proposal, made while implementing (no goal changes):
 Food uses Tasks' shared entry area: Search stays available alongside the wide
 selection editor; narrow selection replaces Search with count/Clear/Edit. One
 whole selected row uses its single editor; multiple rows open the bulk editor.
-Opening, closing and resizing follow the Tasks reference. Search closes guarded
-drafts and clears selection, matching Tasks today. The conflict with item (l)'s
-retention intent is recorded as an explicit question in
-[batch selection](batch-selection.md#audit-outcomes); Tasks' behavior was not changed.
+Opening, closing and resizing follow the Tasks reference. Search keeps the
+selected rows it still shows, as on Tasks (Lee, 2026-11-12; see
+[batch selection](batch-selection.md#audit-outcomes)).
 
 Food's entry area sits above the list, outside its scroll view, as on Tasks (Lee,
 2026-10-31): Search and the narrow count/Clear/Edit bar stay put while rows scroll.

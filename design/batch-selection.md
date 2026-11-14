@@ -107,19 +107,26 @@ Exit:
   does not exit explicit selecting mode; expanding the view does not resurrect
   IDs already pruned. This did not change Tasks' input/filter handlers.
 - Native audit of `5721659` (2026-10-28): Tasks' search-input and Clear search
-  handlers close the guarded editor and clear selection, even when all selected
-  rows still match. Food now follows that behavior; Cancel on the dirty-draft
-  prompt restores the previous query and keeps the selection/draft. Tasks'
-  behavior is unchanged; only its entry-area condition moved into the shared
-  component. At 5721659 Food already auto-opened the wide bulk pane, but still
-  covered Search with the compact bar and kept selection on editor Cancel.
-- **Question for Lee:** item (l)'s retention intent and Tasks' explicit search /
-  filter handlers disagree. Should both retain visible selected IDs through
-  those input changes? Recommendation: a separately approved follow-up making
-  both retain visible IDs after resolving any dirty draft. This change keeps
-  Tasks as the reference, including search clearing selection. Food view-menu /
-  More-filters retain the already-approved shared recomputation policy; Tasks'
-  own filter controls still explicitly clear. No silent Tasks behavior change.
+  handlers closed the guarded editor and cleared selection, even when all
+  selected rows still matched, and Food was made to match. Item (l)'s retention
+  intent disagreed; Lee approved the recommended follow-up on 2026-11-12:
+  "Tasks and Food keep selected rows that remain visible when Search changes".
+- **Search keeps visible selected rows (Lee, 2026-11-12).** Typing in or
+  clearing Search, in both sections:
+  - When every selected row (or the plain-edited row) still shows, nothing
+    else changes: no prompt, the same editor keeps its draft.
+  - When it hides some, the open editor's draft is resolved first; Cancel /
+    Keep editing restores the previous query with the draft and selection
+    intact. Hidden rows then leave the selection, the hidden range anchor is
+    forgotten, and a wide pane swaps in place to edit the rows still shown
+    (two-to-one returns to that row's single editor, as a gesture does).
+  - When it hides all of them, selection ends, since a wide layout shows no
+    count for an empty selection. Rows hidden by a search are not restored
+    when it widens again.
+  Tasks' own filter controls still clear selection explicitly; Food's view
+  menu and More filters keep the shared recomputation policy above.
+  Regression coverage: `test/food_selection_retention_test.dart` and the wide
+  cases of `test/selection_layout_parity_test.dart`.
 
 Undo:
 - Every bulk command is one Undo action in both sections: Task bulk edit/delete/
@@ -164,7 +171,7 @@ to the Food row ⋮ menu."
 
 `test/selection_layout_parity_test.dart` runs both sections at 390, 899, 900 and
 1400 logical pixels, including single/multi selection, last-row deselection,
-Search/Clear draft guards, narrow Edit/Cancel, resizing and guarded Select
+Search retention and its draft guard, narrow Edit/Cancel, resizing and guarded Select
 matching. `integration_test/selection_layout_parity_workflow_test.dart` repeats
 these workflows on native Linux and is registered in the main native CI suite.
 

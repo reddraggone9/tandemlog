@@ -330,31 +330,78 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     if (_wide) unawaited(_editSelection(replacingApproved: replace));
   }
 
-  /// Keep Tasks' search-input behavior: resolve the draft, then clear selection.
-  /// View recomputation still uses the shared visible-ID retention policy.
+  /// Search keeps the selected rows that remain visible, as on Tasks (Lee
+  /// 2026-11-12). When all of them (or the row being edited) still show, the
+  /// selection and any open editor are left as they are. Otherwise the
+  /// editor's draft is resolved first (Keep editing restores the previous
+  /// query) and the selection continues with the rows still shown; a wide
+  /// pane then edits those.
   Future<void> _changeSearch(String value) async {
-    if (!await requestCloseEditor()) {
-      if (!mounted) return;
-      search.text = _lastSearchText;
+    // The field already holds [value], so the grouping is the new query's.
+    final shown = _grouping.visibleRows;
+    final before = selectedRows.isNotEmpty
+        ? Set<String>.of(selectedRows)
+        : {if (_editingGroup != null) _rowKey(_editingGroup!)};
+    if (before.isNotEmpty && before.every(shown.contains)) {
+      setState(() => _lastSearchText = value);
       return;
     }
-    await editorDone;
+    final kept = selecting ? before.intersection(shown) : const <String>{};
+    final replace = _wide && kept.isNotEmpty && _editorBuilder != null;
+    if (replace) {
+      if (!await (_canReplaceEditor?.call() ?? Future.value(false))) {
+        _restoreSearch();
+        return;
+      }
+    } else {
+      if (!await requestCloseEditor()) {
+        _restoreSearch();
+        return;
+      }
+      await editorDone;
+    }
     if (!mounted) return;
+    final rows = {for (final row in _grouping.rows) _rowKey(row): row};
+    final survivors = kept.where(rows.containsKey).toSet();
+    // Two-to-one returns the wide pane to that row's single editor.
+    final single = _wide && before.length >= 2 && survivors.length == 1
+        ? rows[survivors.single]
+        : null;
     setState(() {
       _lastSearchText = value;
-      _clearBulkSelection();
+      if (survivors.isEmpty || single != null) {
+        _clearBulkSelection();
+        return;
+      }
+      selecting = true;
+      selectedRows
+        ..clear()
+        ..addAll(survivors);
+      if (!survivors.contains(_selectionAnchor)) _selectionAnchor = null;
     });
+    if (single != null) {
+      unawaited(
+        _edit(
+          group: single,
+          rows: {_rowKey(single)},
+          detailsCommand: widget.onDetails,
+          replacingApproved: replace,
+        ),
+      );
+    } else if (survivors.isNotEmpty && _wide) {
+      unawaited(_editSelection(replacingApproved: replace));
+    }
   }
 
+  /// Clear search is a Search change to empty text, with the same retention.
   Future<void> _clearSearch() async {
-    if (!await requestCloseEditor()) return;
-    await editorDone;
-    if (!mounted) return;
-    setState(() {
-      search.clear();
-      _lastSearchText = '';
-      _clearBulkSelection();
-    });
+    search.clear();
+    await _changeSearch('');
+  }
+
+  /// A kept draft keeps the previous query, including Clear's button.
+  void _restoreSearch() {
+    if (mounted) setState(() => search.text = _lastSearchText);
   }
 
   /// Opens the row holding [container] as a tap would (Activity log Open):
