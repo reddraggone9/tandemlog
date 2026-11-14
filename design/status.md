@@ -1,6 +1,6 @@
 # Development status
 
-Current state only (checked 2026-11-13 against `git tag`, `git log` and the code).
+Current state only (checked 2026-11-14 against `git tag`, `git log` and the code).
 The dated log of every earlier build, trial and checkpoint is in
 [archive/status-history.md](archive/status-history.md); per-release receipts are in
 [releases.md](releases.md) and `evidence/`.
@@ -45,8 +45,10 @@ large-text editor fixes and reusable release tooling. Stable118 signed candidate
 scripted exact Android/GTK upgrades from116 and117, CI and anonymous public checks
 passed. The RC remains an unchanged prerelease.
 
-Unreleased on main: Search keeps the selected rows it still shows, in Tasks and
-Food (Lee, 2026-11-12; [batch selection](batch-selection.md#audit-outcomes)).
+Next candidate 2026.11.3-rc.1/build119: Search keeps selected rows it still shows
+in Tasks and Food (Lee, 2026-11-12; [batch selection](batch-selection.md#audit-outcomes));
+undated Food sorts first, including Search, with normal Inbox/Stock grouping
+unchanged (Lee, 2026-11-14). Validation and publication are pending.
 Owner-device rollout is tracked separately; no live seeds/cutover performed here.
 
 ## Commands
