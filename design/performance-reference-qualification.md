@@ -34,7 +34,7 @@ The current schema-v2 registration is in `tool/performance/reference-host-v1.jso
   `validate.yml`. It retains the one-sample automatic-confirmation rule and every
   existing budget, adding four Keeps for labels at the existing Food edit/undo limits.
 - **Toolchain and libraries:** Dart 3.13.4 `dart`/`gen_snapshot`, `libtandemlog_text.so`
-  and `libsqlite3.so` by hash (`toolHashes`; libraries re-registered 2026-10-28, see
+  and `libsqlite3.so` by hash (`toolHashes`; libraries/dependencies re-registered 2026-11-15, see
   `libraryReregistration`), plus the lockfile, package contract and compiled-dependency
   inventory. A native or dependency change needs new provenance review and
   re-registration before a request. Do not modify binaries or package roots to get a pass.
@@ -679,3 +679,15 @@ growth comparisons use shapes measured within the same fresh invocation.
 The kernel update therefore needs fresh qualification, not new calibration or
 looser limits. The preflight-refused q19 had no sample; it remains immutable,
 and the new controller registration requires a fresh request.
+
+### Dependency registration refresh (2026-11-15)
+
+Reviewed crypto 3.0.8 and sqlite3 3.9.1 now bind the current lockfile and
+compiled dependency/SDK inventory in the host profile. The exact Linux SQLite
+asset SHA256 is `0a65852703763619a7a34633b4959b3b86c4103804a4dfe4e8b27b5de1c0647b`;
+its SQLite engine remains 3.54.1. Dart/gen_snapshot and the production text
+engine hashes, package contract/names, budgets, caps, controller and identity
+policy are unchanged. Inventory was derived with the runner/receipt functions
+in isolated compile-only preparation, without measuring or qualifying a workload.
+This registration is not a qualification: wait for other CI to be green before
+a fresh controlled request; retained receipts are not rewritten.

@@ -96,11 +96,11 @@ Audited PR8/PR9 are merged: download-artifact8.0.2, upload-artifact7.0.2, url_la
 | Dependency | Declared | Resolved | Purpose |
 |---|---|---|---|
 | flutter | `sdk: flutter` | Flutter SDK 3.47.5 (lock placeholder 0.0.0) | UI, services and platform integration |
-| sqlite3 | `3.8.0` | 3.8.0 | Local profile database (history store, projections); native asset hook bundling SQLite 3.54.1 |
+| sqlite3 | `3.9.1` | 3.9.1 | Local profile database (history store, projections); native asset hook bundling SQLite 3.54.1 |
 | ffi | `^2.2.0` | 2.2.0 | Native POSIX/Windows durability calls |
 | path_provider | `^2.1.5` | 2.1.6 | Per-user settings/cache directories |
 | file_selector | `^1.0.4` | 1.1.0 | Desktop folder selection |
-| crypto | `^3.0.6` | 3.0.7 | Canonical SHA-256 event chains and cache/settings identifiers |
+| crypto | `^3.0.8` | 3.0.8 | Canonical SHA-256 event chains and cache/settings identifiers |
 | uuid | `^4.5.1` | 4.6.0 | Task/event/device identities |
 | url_launcher | `^6.3.3` | 6.3.3 | Open task workspace in OS folder manager |
 | timezone | `0.11.2` | 0.11.2 | IANA zone interpretation for schedule/availability; bundled database 2026e |
@@ -118,7 +118,7 @@ SDK constraints differ: manifest Dart `>=3.9.0 <4.0.0`; resolved graph Dart `>=3
 
 ## Native dependencies and provenance
 
-- SQLite is **3.54.1**, from the default `sqlite3` 3.8.0 precompiled hook. Hook release tag `sqlite3-3.8.0`; per-target asset hashes and the local `sqlite3_libversion()` check are in [sqlite3 3.8.0](#sqlite3-380-replaces-held-pr13--2026-10-26). The reference host registers the Linux library by hash (`tool/performance/reference-host-v1.json`).
+- SQLite is **3.54.1**, from the default `sqlite3` 3.9.1 precompiled hook. Hook release tag `sqlite3-3.9.1`; exact five-target asset review and Linux identity/options check are recorded in the 2026-11-15 review below. The reference host registers the Linux library by hash (`tool/performance/reference-host-v1.json`).
 - Default download: `https://github.com/simolus3/sqlite3.dart/releases/download/$RELEASE_TAG/$FILENAME`. Package `hook/build.dart` and `lib/src/hook/compile/description.dart` choose/download assets and validate hashes, including cached bytes. No app `hooks.user_defines` override exists. The source-compilation fallback's amalgamation is **not** evidence of the default bundled version.
 - SQLCipher/OpenSSL/SQLite3 Multiple Ciphers entries exist upstream but the app does not select them; do not inventory those as shipped app dependencies.
 - Native/platform transitive Dart packages are fully listed below. Of particular interest: `hooks` 2.2.0, `code_assets` 1.2.1, `native_toolchain_c` 0.19.3, `jni`/`jni_flutter` 1.0.3, `jni_util` 1.0.0, `objective_c` 9.5.0, and federated file/path/URL implementations. These can introduce executable build hooks or platform build behavior despite not being direct app entries.
@@ -153,7 +153,7 @@ The pinned Flutter source provides strong framework selection, but engine/Dart b
 | actions/checkout | `3d3c42e5aac5ba805825da76410c181273ba90b1` | v7.0.1 | Source checkout |
 | actions/upload-artifact | `cf430e030ddbb5b0abf93d22962f4752f3646cd9` | v7.0.2 | Validation/candidate artifact retention |
 | actions/download-artifact | `9000827ccba6bdab643e8b6fd33ac0654aef8333` | v8.0.2 | Fetch exact candidate payload for promotion |
-| actions/setup-java | `b843ebf9b913146b38da2eaa7aeddf76074ae1ad` | v6.1.0 | Android Java installation |
+| actions/setup-java | `77dd5b2ce225ea11469928ac317850245a74ae78` | v6.2.0 | Android Java installation |
 
 Local setup-Flutter action and reusable validate workflow resolve with repository source; they are not independent third-party action versions. Action tag annotations above are local documentation, not separately verified tag attestations.
 
@@ -267,7 +267,7 @@ All hosted entries below are `https://pub.dev` package archives with their commi
 | code_assets | 1.2.1 | transitive | `bf394f466ba9205f1812a0433b392d6af280f155f56651eda7c18cc32ed493b8` |
 | collection | 1.19.1 | transitive | `2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76` |
 | cross_file | 0.3.5+5 | transitive | `f141ea4f277af142a0356955707f6556f37b03947d39d55585981a06ca437bd6` |
-| crypto | 3.0.7 | direct main | `c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf` |
+| crypto | 3.0.8 | direct main | `e3626ae6270383c9e3a549f34c9e4cd26c09ae6a9adaab2bf4737a00340efdc4` |
 | fake_async | 1.3.3 | direct dev | `5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44` |
 | ffi | 2.2.0 | direct main | `6d7fd89431262d8f3125e81b50d3847a091d846eafcd4fdb88dd06f36d705a45` |
 | file | 7.0.1 | transitive | `a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4` |
@@ -319,7 +319,7 @@ All hosted entries below are `https://pub.dev` package archives with their commi
 | record_use | 1.1.1 | transitive | `1cb8564af8d43b464294411db9217f5ec04891c6f22ee2c32d73ae05e88a6bd2` |
 | sky_engine | 0.0.0 | transitive | `Flutter SDK 3.47.5` |
 | source_span | 1.10.2 | transitive | `56a02f1f4cd1a2d96303c0144c93bd6d909eea6bee6bf5a0e0b685edbd4c47ab` |
-| sqlite3 | 3.8.0 | direct main | `5340531ad17f386ae444873f643f281060b6238cc702edeee6b1e90bc4c6874e` |
+| sqlite3 | 3.9.1 | direct main | `8765980411f9b6733534efe9d014fad0750fa649590598772c04692deb34886b` |
 | stack_trace | 1.12.2 | transitive | `277654b3034d17ac6f9f1cb5595db011b1d5d41e8806866db28e0abaa101c490` |
 | stream_channel | 2.1.4 | transitive | `969e04c80b8bcdf826f8f16579c7b14d780458bd97f56d107d3950fdbeef059d` |
 | string_scanner | 1.4.1 | transitive | `921cd31725b72fe181906c6a94d987c78e3b98c2e205b397ea399d4054872b43` |
@@ -369,3 +369,49 @@ The receipt records the unchanged package URLs/hashes, actual AppStream1.0.2 run
 ## Selective serde_json patch — 2026-10-12 (merged, 1.0.154 is the current pin)
 
 Production native serde_json1.0.151→1.0.154 has exact archive/VCS/signature/runtime-source/build-hook/license and resolved-feature review. Only its lock version/checksum and notice identifiers change; all46 other package records/edges/checksums remain unchanged, especially base64=0.22.1. base640.23.1 stays held for its new default unsafe SIMD and API changes. Defaults/std only are active; optional preserve_order/foldhash/arbitrary_precision/raw_value changes are excluded. No material user-facing or canonical-data change is identified. [Source audit and focused validation](../evidence/dependency-serde-json-2026-10-12/README.md) record actual Rust/native/parser/stable-v3/text/Undo/compatibility passes and required-CI boundary. Current advisory data identifies inherited informational smallstr unmaintained debt through Yrs, with owner/revisit/exit recorded there; no serde_json advisory or additional dependency update is included. Draft proposal only; no merge, publication, admission/signing policy change or production data operation.
+
+## Crypto 3.0.8 — 2026-11-15
+
+PR15's exact pub archive SHA-256 is
+`e3626ae6270383c9e3a549f34c9e4cd26c09ae6a9adaab2bf4737a00340efdc4`,
+matching pub.dev metadata and the lock pin; repository remains dart-lang/core.
+Review against 3.0.7 covers all changed runtime source: ByteConversionSink
+conversion, addSlice/HMAC finalization fix, in-place hash padding, MD5 round
+unrolling, SHA256 eight-round unrolling, SHA512 unsigned shifts and inline/bounds
+optimizations. The SHA constants and digest semantics remain unchanged. No native
+payloads, hooks, new process/network/file access or runtime dependencies are added;
+unused typed_data is dropped upstream. SDK floor remains ^3.4.0. Added upstream
+Wycheproof/test-fetch tooling is development-only and is not run by application
+resolution. Only crypto's direct constraint and lock entry change; no transitive
+lock entries change. Frozen historical hash/replay fixtures remain unchanged.
+Local validation and remaining release gates are recorded in this release's
+evidence rather than treating source review as release acceptance.
+
+## SQLite3 3.9.1 and setup-java 6.2.0 — 2026-11-15
+
+PR17 (sqlite3 3.9.0) was closed upstream, superseded by PR20 (3.9.1).
+The reviewed exact pub3.9.1 archive hash is
+`8765980411f9b6733534efe9d014fad0750fa649590598772c04692deb34886b`.
+All pub files match tag f144d1c56b22d5772d164c7c3f20eb1df482fcf3. Runtime
+dependencies and SDK floor are unchanged; the hook now closes HTTP clients and
+rejects non200 downloads, retaining origin/hash/cache verification. Optional
+tracing and interrupt FFI APIs are not adopted. All five shipped native assets
+were individually downloaded, hash-checked against package pins and GitHub
+digests, and inspected for ABI/imports/exports/options. They remain plain SQLite
+3.54.1, source id555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76;
+the ARM32 fix is retained. Exact Linux old/new execution confirms identical
+engine and compile options. Native bytes change to retain tracing symbols:
+re-register reference dependency/native pins before qualifying. No schema change.
+
+PR16 setup-java6.2.0 moves all four SHA pins to
+`77dd5b2ce225ea11469928ac317850245a74ae78`, retaining Node24 and Temurin21.
+Reviewed exact TypeScript/entry points and live shipped JS chunks, plus every
+changed production npm archive verified against committed integrity. Optional
+Maven mirrors, Corretto/Liberica resolution do not change retained configuration.
+Cache6.3.0, Undici6.29.1 and XML parser5.11.2 fixes and Azure graph changes
+introduce no install hooks or new standalone native payloads. Embedded CRC64
+WASM is byte-identical. Azure storage-blob downgrades12.33 to12.31 and drops
+Node26 workarounds: revisit before changing the action runtime from24.
+Clearance covers prebundled action usage only, not npm install or rebuild.
+Hosted exact-pin Android validation remains a release gate. Held AGP/Gradle
+PR1/2 are unchanged. Source review is not all-platform release acceptance.

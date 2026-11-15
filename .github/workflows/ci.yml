@@ -24,4 +24,5 @@ jobs:
   checks:
     uses: ./.github/workflows/validate.yml
     with:
+      require_reference_performance: false
       performance_calibration: ${{ github.event_name == 'workflow_dispatch' && inputs.calibrate_performance }}

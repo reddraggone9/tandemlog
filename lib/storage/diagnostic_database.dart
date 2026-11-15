@@ -97,6 +97,14 @@ class DiagnosticDatabase extends Database {
   @override
   set commitFilter(VoidPredicate? value) => delegate.commitFilter = value;
   @override
+  SqliteTraceCallback? get trace => delegate.trace;
+  @override
+  set trace(SqliteTraceCallback? callback) => delegate.trace = callback;
+  @override
+  void interrupt() => delegate.interrupt();
+  @override
+  bool get isInterrupted => delegate.isInterrupted;
+  @override
   set busyHandler(bool Function(int count)? handler) =>
       delegate.busyHandler = handler;
   @override
