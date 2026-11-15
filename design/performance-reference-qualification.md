@@ -33,7 +33,7 @@ The current schema-v2 registration is in `tool/performance/reference-host-v1.jso
   inventory. A native or dependency change needs new provenance review and
   re-registration before a request. Do not modify binaries or package roots to get a pass.
 - **Controller:** r8, SHA-256
-  `2c5f47451afbdedc863c3c07923165e8e67d25f83a716d4dd88f0e743e20a982`, with its pressure
+  `0d530d8df1eefa478aff8532ea6fb039e3be4f5d9b34ad3e4dee7da3e1d505c4`, with its pressure
   module `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`. The
   controller source is private; only its hash is published. r8 admits the household's
   idle `vex-adb.service` ADB server, so qualification does not stop it
@@ -651,3 +651,21 @@ same owned ADB server idle throughout. Two first-pass growth misses
 (`food-own-history:scaling:agent.write.purchaseImport2` and
 `food-own-history:scaling:converted.task.reopen.withChecklist`) each passed
 the gate's automatic same-label confirmation; no manual rerun was performed.
+
+### ARC accounting kernel refresh (2026-11-14)
+
+The exact kernel guard moves from 7.2.14-arch1-1 to 7.3.4-arch1-1 after
+review of upstream accounting implementations. `si_mem_available()` and
+`fs/proc/meminfo.c` are unchanged. The vmstat changes add counters without
+renaming pswpin/pswpout; PSI changes only the zero IRQ-delta early return.
+The same ZFS 2.4.4.r10.geb011f2aff-1 module and arc_os.c hash remain required,
+with zfs_arc_pc_percent=0. Conservative ARC credit and every pressure, admission,
+resource, timing and cleanup bound remain unchanged. The controller revision
+changes only that literal kernel pin; its new registered SHA256 is
+`0d530d8df1eefa478aff8532ea6fb039e3be4f5d9b34ad3e4dee7da3e1d505c4`. Prior controller and receipts are retained.
+
+No stored timing baseline is imported: absolute limits remain fixed, and both
+growth comparisons use shapes measured within the same fresh invocation.
+The kernel update therefore needs fresh qualification, not new calibration or
+looser limits. The preflight-refused q19 had no sample; it remains immutable,
+and the new controller registration requires a fresh request.
