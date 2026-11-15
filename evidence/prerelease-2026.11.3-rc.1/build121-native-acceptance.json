@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "scope": "Fresh exact signed121 Android API30 emulator and GTK synthetic upgrade acceptance from stable118 and RC117 only",
+  "completedUtc": "2026-11-15T13:38:31.756213+00:00",
+  "candidate": {
+    "source": "77dadb649e2ba6fafa0b7f613dc71b8717f96a55",
+    "candidate_run": "43713450238",
+    "version": "2026.11.3-rc.1",
+    "build": 121,
+    "apk_sha256": "66875d0b9053fdcb16ad6387145c6e24000b87f2c37035b9abd65a3f3903b058",
+    "flatpak_sha256": "a098f2506fa5e2b8e29dfd38991206549b85f861a99a0542e0cd023ddd81c2e7"
+  },
+  "matrix": {
+    "android118To121": {
+      "status": "PASS",
+      "receipt": "from-stable118/android-acceptance.json",
+      "review": "from-stable118/android-review.json",
+      "checks": 12,
+      "verifier": "verify-android-only.py",
+      "verifierExit": 0
+    },
+    "android117To121": {
+      "status": "PASS",
+      "receipt": "from-rc117/android-acceptance.json",
+      "review": "from-rc117/android-review.json",
+      "checks": 12,
+      "verifier": "verify-android-only.py",
+      "verifierExit": 0
+    },
+    "gtk118To121": {
+      "status": "PASS",
+      "receipt": "from-stable118-final/gtk-acceptance.json",
+      "review": "from-stable118-final/gtk-review.json",
+      "checks": 12,
+      "verifier": "verify-gtk.py",
+      "verifierExit": 0
+    },
+    "gtk117To121": {
+      "status": "PASS",
+      "receipt": "from-rc117-completion/gtk-acceptance.json",
+      "review": "from-rc117-completion/gtk-review.json",
+      "checks": 12,
+      "verifier": "verify-gtk.py",
+      "verifierExit": 0
+    }
+  },
+  "preservation": "PASS: Android UID/firstInstall/exact persisted SAF grant/binding; all four canonical prefixes and SQLite integrity; GTK clean normal exits twice",
+  "nativeCoverage": [
+    "Search visible selection retention/prune/clear and continued typing focus",
+    "dirty Keep editing/Discard and stale deletion",
+    "GTK Food hidden and surviving Shift anchors",
+    "Food Inbox above Stock; undated-first Stock/Retained/global Search; Deleted recency",
+    "save/reopen/process-cold reopen; retained history; native integrity",
+    "light/dark phone/narrow and wide views including actual 200% text"
+  ],
+  "coordinatorReview": {
+    "reviewedNativeImages": true,
+    "method": "Selected actual screenshots, plus detailed per-case workflow observations and artifact/preservation verifiers; not second full native execution",
+    "observed": "Both GTK hidden anchors select Milk only; surviving anchors select three. GTK390/200% and Android lower Task fields have reachable Cancel/Save. GTK Deleted Milk above Beans in both paths. Search Beans screenshot retains full query and unchanged food name."
+  },
+  "cleanup": "PASS: worker cleanup receipts checked by verifiers; owned Android ports absent and GTK children reaped/display removed",
+  "gaps": [
+    "Synthetic API30 only, no physical/API36 hardware-modifier or provider-sync acceptance",
+    "One GTK synthetic person; no Windows GUI claim",
+    "No new receipt-import/recurrence/Unicode-entry workflow claims; retained data rendering covered"
+  ],
+  "evidenceCaveats": [
+    "Failed120 acceptance preserved, no candidate acceptance reused",
+    "GTK original asynchronous lifecycle failure preserved; sequential documented continuations completed two normal exit0 cycles",
+    "Earlier misnamed/transitional screenshots preserved, corrected final manifests used. Earlier lk Search capture is not continued-typing focus proof; final selected/pruned Beans evidence supplies that proof.",
+    "Android visual closure restored only own signed121 after state and verified identical canonical hashes",
+    "Initial Android staging recopied identical Flatpak before platform guard correction; no GTK control/data operations by Android worker"
+  ],
+  "blockers": [],
+  "sourceEdits": false,
+  "publicationCiQualificationChanges": false,
+  "publicationAndLeela": "Outside this acceptance assignment; parent-owned, no authorization or completion claim"
+}

@@ -1,11 +1,18 @@
 # Development status
 
-Current state only (checked 2026-11-14 against `git tag`, `git log` and the code).
+Current state only (checked 2026-11-15 against release receipts and source).
 The dated log of every earlier build, trial and checkpoint is in
 [archive/status-history.md](archive/status-history.md); per-release receipts are in
 [releases.md](releases.md) and `evidence/`.
 
 ## Released
+
+Experimental **2026.11.3-rc.1 / build121** published 2026-11-15 from `77dadb6`.
+Search selection retention in Tasks/Food, undated Food first, faster long-history
+purchase imports. All four exact Android/GTK stable 118 and RC117 upgrade paths
+PASS; anonymous four-asset verification PASS. Not Latest; isolated Leela usable
+GUI handoff remains unverified on its locked desktop (not Windows GUI acceptance).
+[Receipts](../evidence/prerelease-2026.11.3-rc.1/README.md).
 
 Stable **2026.11.2 / build 118** is Latest, published 2026-11-13 from `a17da44`
 (promotion of Lee-accepted 2026.11.2-rc.1/build117). [Receipts](../evidence/stable-2026.11.2/README.md).
@@ -45,16 +52,15 @@ large-text editor fixes and reusable release tooling. Stable118 signed candidate
 scripted exact Android/GTK upgrades from116 and117, CI and anonymous public checks
 passed. The RC remains an unchanged prerelease.
 
-Next candidate 2026.11.3-rc.1/build119: Search keeps selected rows it still shows
-in Tasks and Food (Lee, 2026-11-12; [batch selection](batch-selection.md#audit-outcomes));
-undated Food sorts first, including Search, with normal Inbox/Stock grouping
-unchanged (Lee, 2026-11-14). The exact build119 candidate was blocked by
-Food Search focus loss when narrowing bulk selection to one row. The local
-[focus correction](batch-selection.md#rc119-food-search-focus-correction-2026-11-14-local)
-keeps typing in Search while returning the surviving row to its single editor.
-Changed-source qualification and exact-artifact acceptance must run again; the
-old q20 result does not qualify this correction. Publication remains pending.
-Owner-device rollout is tracked separately; no live seeds/cutover performed here.
+Published experimental 2026.11.3-rc.1/build 121 includes Search selection
+retention and undated Food ordering, the minimal Food Search focus and hidden
+range-anchor corrections, and faster purchase imports with long Food histories.
+Rejected candidates 119 and 120 remain unpublished. Fresh q24 qualification and
+exact signed121 acceptance passed; older q20/q23 results are not relabeled.
+All source, candidate, native and public acceptance records are in the release
+[evidence](../evidence/prerelease-2026.11.3-rc.1/README.md).
+Isolated Leela handoff completion remains separately tracked; no live install or
+cutover is implied by publication.
 
 ## Commands
 

@@ -1,4 +1,38 @@
-# 2026.11.3-rc.1 / build 121 — validation in progress
+# 2026.11.3-rc.1 / build 121 — published experimental prerelease
+
+## Published build121 acceptance
+
+Published [v2026.11.3-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.3-rc.1)
+on 2026-11-15 at 13:41:07Z, candidate 43713450238, exact source
+`77dadb649e2ba6fafa0b7f613dc71b8717f96a55`. Immutable prerelease, **not Latest**;
+stable2026.11.2/build118 remains Latest. Reusable private-draft repository tools
+ran all source/provenance/signer/inventory/checksum gates; no artifact rebuild.
+
+- Exact source CI 43711307056: all 10 jobs PASS, including reference verification.
+- q24 sealed benchmark reused only after repository v3 identity re-verification
+  PASS. Native cold-start 470ms retained. No benchmark/native timing rerun.
+- Exact signed121 APK and Flatpak freshly accepted over stable 118 and RC117:
+  all four paths, 12 native checks each, PASS. Canonical prefixes, install identity,
+  Android SAF grant, isolated binding, SQLite integrity and GTK normal exits pass.
+  See `build121-native-acceptance.json` for explicit exclusions and evidence caveats.
+- Final independent minimal anchor repair and actual notes recheck PASS;
+  three reviewed native synthetic Before/After comparisons and separate
+  purchase-import improvement bullet published. See `build121-notes-review.md`.
+- Anonymous public verification PASS: all four downloads match accepted hashes
+  and sizes; APK owner signer/version121/non-debuggable verified; source tag,
+  exact notes and all three commit-pinned image bytes verified; 54 prior releases
+  and 54 prior tags unchanged. See `publication/public-verification.json`.
+- Windows hosted install lifecycle and portable member provenance PASS. No Windows
+  GUI acceptance is claimed. Exact121 isolated Leela portable installation and
+  shortcut are staged; usable GUI launch remains unverified on its locked desktop.
+  Release step 6 handoff completion remains tracked separately by its owner; this
+  is not a publication gate under steps 3–5. Stable/live data untouched.
+
+### Historical validation record
+
+The following earlier pending/failed-candidate entries retain their original
+attribution and are superseded only by the exact build121 acceptance above.
+Rejected signed 119 and 120 were never published; q23 failure is not a pass.
 
 Scope: Tasks and Food retain selected rows that still match a changed Search;
 Food without expiration sorts before dated Food, including Search. Normal Inbox
@@ -7,7 +41,7 @@ schema, replay, migration or Undo changes.
 
 ## Review and local checks
 
-- Combined source is linear atop stable118; Search6ef5087 and ordering9ae31b4.
+- Combined source is linear atop stable 118; Search6ef5087 and ordering9ae31b4.
 - Independent code/docs review found a stale-target race across the dirty-editor
   prompt in both Search handlers; fixed in 8829707, with before-fail/after-pass regression coverage.
 - Full Python tooling: 310 tests pass, two skipped. Static analysis clean.
@@ -48,7 +82,7 @@ passed the policy-owned same-invocation confirmations; warnings remain in the
 receipt. Prior q20/current evidence is retained separately, not overwritten.
 Current reference and native receipts independently verified by repository tools.
 All paused household work restored. No budget/source-identity change.
-Exact signed120 Android/GTK stable118 and RC117 upgrade acceptance, Search focus
+Exact signed120 Android/GTK stable 118 and RC117 upgrade acceptance, Search focus
 regression, publication and anonymous verification remain pending. Windows GUI
 coverage remains Lee's isolated portable trial, not hosted CI.
 
