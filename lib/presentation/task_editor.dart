@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show setEquals;
 
 import 'bulk_apply.dart';
+import 'editor_dialog_gutter.dart';
 import 'tag_input.dart';
 import 'civil_date_input.dart';
 import '../domain/schedule.dart';
@@ -1680,21 +1681,23 @@ class _EditorBodyState extends State<_EditorBody> {
               horizontal: 16,
               vertical: 16,
             ),
-            titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            titlePadding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+            contentPadding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
             actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            title: heading,
-            content: SizedBox(
-              width: 480,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  content,
-                  if (actionsInContent) ...[
-                    if (failure != null) boundedFailureNotice(failure!),
-                    actions,
+            title: EditorDialogGutter(child: heading),
+            content: EditorDialogGutter(
+              child: SizedBox(
+                width: 480,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    content,
+                    if (actionsInContent) ...[
+                      if (failure != null) boundedFailureNotice(failure!),
+                      actions,
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
             actions: actionsInContent

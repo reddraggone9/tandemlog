@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../presentation/bulk_apply.dart';
+import '../presentation/editor_dialog_gutter.dart';
 import '../presentation/civil_date_input.dart';
 import '../presentation/free_text_autocomplete.dart';
 import '../presentation/form_validation.dart';
@@ -1404,11 +1405,11 @@ class FoodEditorState extends State<FoodEditor> {
             alignment: _placement.alignmentFor(context),
             scrollable: true,
             insetPadding: const EdgeInsets.all(16),
-            titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            titlePadding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+            contentPadding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
             actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            title: title,
-            content: content,
+            title: EditorDialogGutter(child: title),
+            content: EditorDialogGutter(child: content),
             actions: [if (error != null) _failureNotice(), ...actions],
           );
     return PopScope(

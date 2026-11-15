@@ -12,6 +12,12 @@ ThemeData tandemlogTheme(Brightness brightness) {
     scaffoldBackgroundColor: brightness == Brightness.light
         ? const Color(0xfff6f7f2)
         : colors.surface,
+    filledButtonTheme: const FilledButtonThemeData(
+      style: ButtonStyle(
+        minimumSize: WidgetStatePropertyAll(Size(64, 48)),
+        visualDensity: VisualDensity.standard,
+      ),
+    ),
     cardTheme: CardThemeData(color: colors.surfaceContainerLow),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: colors.surfaceContainerHigh,

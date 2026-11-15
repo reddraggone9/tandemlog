@@ -30,6 +30,8 @@ Each subject below has one source of truth; link to it rather than repeating it.
   and 2026.11.1).
 - [food-import-contract.md](food-import-contract.md): Food import contract v1.
 
+- [editor-spacing.md](editor-spacing.md): shared button minimum and accessible editor gutters.
+
 ## Architecture and storage
 
 - [architecture.md](architecture.md): module boundaries and bounded debt.
