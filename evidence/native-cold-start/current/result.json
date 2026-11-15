@@ -18,10 +18,10 @@
       "purchaseLines": 34
     }
   },
-  "sourceRevision": "e0f0d4a5221c741d256f6565bf589279eefd7581",
+  "sourceRevision": "ead92a263b103bca6fd9ca0969520078b0c9adfe",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "8950ffe90b00860a53819d515ce64932b9305a893317aca68e9d8b6401db0efd",
+    "sha256": "503d655b936e286d1baadcf798e0ee55d2c473e7dfcd4909f9dc7e536e18c23e",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -196,7 +196,7 @@
         "mode": "100644"
       },
       "lib/food/food_admission.dart": {
-        "sha256": "b417443805e4dc56781c7a5de3e3a225afc27addff6197bafe006ea47e5fe46d",
+        "sha256": "e947987f03bea7b4dfe6050248b6d03c1dec76ed0b7adedabe04a66307fc3f7b",
         "mode": "100644"
       },
       "lib/food/food_import.dart": {
@@ -288,7 +288,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "a874f9efd507523b8614d5924bc25bb71176a4e9677633b0d4e0b02389579288",
+        "sha256": "d13c719657f0f420faf622f5ee605eae8ed369afa4a6ea120efb57c7eaada735",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -663,12 +663,16 @@
         "sha256": "9983b285eef9d661f83c8c2df1fb7240f0dff83a30fe8ee4e554020b8a23e04e",
         "mode": "100644"
       },
+      "tool/performance/purchase_import_diagnostic.dart": {
+        "sha256": "8d18e87d439219605c7bb5cd0e455569d1f01ff10c9df58c9cf98ff6b1b6d775",
+        "mode": "100644"
+      },
       "tool/performance/reference-host-v1.json": {
         "sha256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
-        "sha256": "93f397805379c128d8bfc3163b528fd6735afee9f344ccbebed2d1f2d6d72e1e",
+        "sha256": "28a1a3a8488c81595aa0b9da89273a87d1912125cc83ceaa3f811940408c5012",
         "mode": "100644"
       },
       "tool/performance/run_ci.sh": {
@@ -689,8 +693,8 @@
       }
     }
   },
-  "binarySHA256": "3c026a2830edecf7e39fbd7e644f73ac1d4fc741a6e2efee792878172aedb3ec",
-  "appSHA256": "2f0bd77df489a39e2b198ad7ec9b37a2eb902ae1efd619c7db1e707c3716d2cb",
+  "binarySHA256": "1fb07ebb7174365ea5552a9775d8ff7ba3d84a21141f4368ffa47ac7cea1fa6a",
+  "appSHA256": "0644e6064d290792da7224bb8ffc2a401331a725741024bd2b28d8f04a02c3e9",
   "hostProfileSHA256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
   "host": {
     "architecture": "x86_64",
@@ -706,8 +710,8 @@
     "initialized": true,
     "format": "app-action-v5",
     "workload": "mixed-v2",
-    "writer": "bc7bc62d-6281-4419-9d44-d4698a0ed6cf",
-    "user": "15f87aa3-81be-4d50-a600-ddb618dfd900",
+    "writer": "4fc00a78-879c-4a87-bcd6-a3c3b0631021",
+    "user": "9a3adb9d-ee95-44f6-84e1-ec72e9b59a94",
     "rows": 2001,
     "records": 3667,
     "effectFamilies": {
@@ -725,111 +729,111 @@
     },
     "food": {
       "activeContainers": 522,
-      "groups": 481,
+      "groups": 480,
       "products": 550,
       "purchases": 34
     },
     "files": 4,
-    "historyBytes": 6418766,
-    "settings_sha256": "ff10382e1c5c94157088cbdf6f093f88074cd136a3abe59a2a50ef18cf173c68",
+    "historyBytes": 6418470,
+    "settings_sha256": "edc6c7c435980ceafc0cba01cdd48092a0592e856e809b978051a350425d1ade",
     "native_sha256": "f00d5450c810e494dd11ad53ee71e85ce8e2af48c0f7cf265f8359c2ddda0c5c"
   },
   "loadAverage1m": {
-    "before": 3.52490234375,
-    "after": 3.96337890625
+    "before": 4.140625,
+    "after": 4.28955078125
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 2690,
-    "appMs": 2276,
+    "processMs": 2860,
+    "appMs": 2391,
     "food": {
       "activeContainers": 522,
-      "groups": 481,
+      "groups": 480,
       "products": 550,
       "purchases": 34
     },
-    "externalMs": 2689,
+    "externalMs": 2859,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 530,
-      "appMs": 391,
+      "processMs": 490,
+      "appMs": 363,
       "food": {
         "activeContainers": 522,
-        "groups": 481,
+        "groups": 480,
         "products": 550,
         "purchases": 34
       },
-      "externalMs": 528,
+      "externalMs": 493,
       "cleanWitnessVerified": true
     },
     {
       "run": 3,
-      "processMs": 530,
-      "appMs": 400,
+      "processMs": 470,
+      "appMs": 351,
       "food": {
         "activeContainers": 522,
-        "groups": 481,
+        "groups": 480,
         "products": 550,
         "purchases": 34
       },
-      "externalMs": 525,
+      "externalMs": 476,
       "cleanWitnessVerified": true
     },
     {
       "run": 4,
-      "processMs": 540,
-      "appMs": 398,
+      "processMs": 470,
+      "appMs": 348,
       "food": {
         "activeContainers": 522,
-        "groups": 481,
+        "groups": 480,
         "products": 550,
         "purchases": 34
       },
-      "externalMs": 535,
+      "externalMs": 466,
       "cleanWitnessVerified": true
     },
     {
       "run": 5,
-      "processMs": 490,
-      "appMs": 367,
+      "processMs": 470,
+      "appMs": 354,
       "food": {
         "activeContainers": 522,
-        "groups": 481,
+        "groups": 480,
         "products": 550,
         "purchases": 34
       },
-      "externalMs": 486,
+      "externalMs": 477,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
       "processMs": 490,
-      "appMs": 370,
+      "appMs": 363,
       "food": {
         "activeContainers": 522,
-        "groups": 481,
+        "groups": 480,
         "products": 550,
         "purchases": 34
       },
-      "externalMs": 492,
+      "externalMs": 496,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 530,
+    "medianMs": 470,
     "budgetMs": 1000,
     "passed": true,
     "samplesMs": [
-      530,
-      530,
-      540,
       490,
+      470,
+      470,
+      470,
       490
     ],
-    "strictFirstLaunchMs": 2690
+    "strictFirstLaunchMs": 2860
   }
 }

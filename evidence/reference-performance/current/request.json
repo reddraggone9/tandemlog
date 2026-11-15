@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "3f568c343e64bb93d619af8d57dd82ad",
-  "issuedAtUTC": "2026-11-15T01:25:00.595980+00:00",
-  "sourceRevision": "e0f0d4a5221c741d256f6565bf589279eefd7581",
+  "requestId": "87fca4d9f16a9f3d43cc19789a4054ce",
+  "issuedAtUTC": "2026-11-15T08:30:18.191258+00:00",
+  "sourceRevision": "ead92a263b103bca6fd9ca0969520078b0c9adfe",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "8950ffe90b00860a53819d515ce64932b9305a893317aca68e9d8b6401db0efd",
+    "sha256": "503d655b936e286d1baadcf798e0ee55d2c473e7dfcd4909f9dc7e536e18c23e",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -181,7 +181,7 @@
         "mode": "100644"
       },
       "lib/food/food_admission.dart": {
-        "sha256": "b417443805e4dc56781c7a5de3e3a225afc27addff6197bafe006ea47e5fe46d",
+        "sha256": "e947987f03bea7b4dfe6050248b6d03c1dec76ed0b7adedabe04a66307fc3f7b",
         "mode": "100644"
       },
       "lib/food/food_import.dart": {
@@ -273,7 +273,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "a874f9efd507523b8614d5924bc25bb71176a4e9677633b0d4e0b02389579288",
+        "sha256": "d13c719657f0f420faf622f5ee605eae8ed369afa4a6ea120efb57c7eaada735",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -648,12 +648,16 @@
         "sha256": "9983b285eef9d661f83c8c2df1fb7240f0dff83a30fe8ee4e554020b8a23e04e",
         "mode": "100644"
       },
+      "tool/performance/purchase_import_diagnostic.dart": {
+        "sha256": "8d18e87d439219605c7bb5cd0e455569d1f01ff10c9df58c9cf98ff6b1b6d775",
+        "mode": "100644"
+      },
       "tool/performance/reference-host-v1.json": {
         "sha256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
-        "sha256": "93f397805379c128d8bfc3163b528fd6735afee9f344ccbebed2d1f2d6d72e1e",
+        "sha256": "28a1a3a8488c81595aa0b9da89273a87d1912125cc83ceaa3f811940408c5012",
         "mode": "100644"
       },
       "tool/performance/run_ci.sh": {

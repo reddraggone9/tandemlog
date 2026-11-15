@@ -1,4 +1,4 @@
-# 2026.11.3-rc.1 / build 119 — validation in progress
+# 2026.11.3-rc.1 / build 120 — validation in progress
 
 Scope: Tasks and Food retain selected rows that still match a changed Search;
 Food without expiration sorts before dated Food, including Search. Normal Inbox
@@ -32,3 +32,22 @@ linear buffers use reclaim-accounted slab represented in MemAvailable. Reviewed
 controller now grants zero extra ARC credit (raw availability only), preserving
 all pressure thresholds and workload bounds. Independent zero-credit review and all 310 local tooling checks passed (two
 skipped). Reviewed q20 qualification completed and sealed on e0f0d4a; no budgets relaxed.
+
+
+## Build120 superseding validation
+
+Candidate119/run43675529532 was rejected; it is not accepted for publication.
+Production fixes include the Food Search focus correction5050a395 and bounded
+admission memo hashingead92a2. Independent review PASS64; full host suite1928 PASS.
+Exact sourceead92a263b103bca6fd9ca0969520078b0c9adfe: CI43694706786 all nine
+non-reference jobs PASS (receipt alongside). Native cold-start median470ms PASS.
+q23 remains an immutable failed qualification; it is not reused or relabeled.
+q24 sealed on that exact source: absolute and both growth budgets PASS with
+zero extra ARC credit (raw available minimum9.65GiB). Three first-pass misses
+passed the policy-owned same-invocation confirmations; warnings remain in the
+receipt. Prior q20/current evidence is retained separately, not overwritten.
+Current reference and native receipts independently verified by repository tools.
+All paused household work restored. No budget/source-identity change.
+Exact signed120 Android/GTK stable118 and RC117 upgrade acceptance, Search focus
+regression, publication and anonymous verification remain pending. Windows GUI
+coverage remains Lee's isolated portable trial, not hosted CI.
