@@ -219,8 +219,20 @@ def source_identity(repo, scheme=IDENTITY_SCHEME):
     repo = Path(repo).resolve()
     compiled = benchmark_sources(repo) if scheme == IDENTITY_V3 else None
     includes = (lambda p: relevant_v3(p, compiled)) if compiled is not None else relevant
-    changed = subprocess.check_output(['git', '-C', str(repo), 'diff', 'HEAD', '--name-only', '-z']).decode().split('\0')
-    untracked = subprocess.check_output(['git', '-C', str(repo), 'ls-files', '--others', '--exclude-standard', '-z']).decode().split('\0')
+    # Scope Git's work, not just its returned names. A full-tree diff hashes/maps
+    # unrelated retained evidence (including large videos) after a fresh clone,
+    # overflowing the fixed manager cgroup before the Python filter can run.
+    # Literal pathspecs preserve the exact v3 closure, including deletions; older
+    # identities retain their original whole-tree-minus-exclusions meaning.
+    paths = ([':(top,literal)' + name for name in sorted(compiled)] +
+             [':(top,literal)' + name for name in ('tool/performance', 'native', 'pubspec.lock')]
+             if compiled is not None else
+             ['.', ':(top,exclude)evidence/**', ':(top,exclude)design/**',
+              ':(top,exclude,literal)README.md', ':(top,exclude,literal)AGENTS.md'])
+    changed = subprocess.check_output(['git', '-C', str(repo), 'diff', 'HEAD', '--no-renames',
+                                       '--name-only', '-z', '--', *paths]).decode().split('\0')
+    untracked = subprocess.check_output(['git', '-C', str(repo), 'ls-files', '--others',
+                                         '--exclude-standard', '-z', '--', *paths]).decode().split('\0')
     need(not any(p and includes(p) for p in changed + untracked), 'Relevant source is dirty or untracked')
     pins = {}
     inventory = []

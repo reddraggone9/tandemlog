@@ -23,6 +23,12 @@ The current schema-v2 registration is in `tool/performance/reference-host-v1.jso
   no old receipt is rewritten. The runner and verifier require both runtime versions
   to be present and consistent in each new receipt.
 - **Caps:** 6 GiB memory, no swap, 200% CPU, 128 tasks.
+  Input validation also runs within the separate fixed 128 MiB manager cap.
+  Dirty/untracked Git scans must be scoped to the recorded identity inputs before
+  Git reads files, not filtered only afterwards: hashing unrelated retained videos
+  in a fresh checkout can exhaust that manager without launching any workload.
+  V3 uses literal closure paths plus tooling/native/lockfile; older schemes retain
+  their original exclusions. This changes neither identity meaning nor budgets.
 - **Limits:** `limits-v1.json` SHA-256
   `6045b956a7cc2392716da847927ddc3213a9fa8723f0a8a48b3f09a3a2eb90fc`, also pinned in
   `validate.yml`. It retains the one-sample automatic-confirmation rule and every

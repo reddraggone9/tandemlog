@@ -147,6 +147,41 @@ class BulkIdentityTests(unittest.TestCase):
                                                          if receipt.relevant(n)}))
                     self.assertEqual(actual['files']['executable']['mode'], '100755')
 
+    def test_dirty_scan_is_scoped_before_git_reads_unrelated_evidence(self):
+        for name, content in {'tool/performance/benchmark.dart': b"import '../../lib/used.dart';\n",
+                              'lib/used.dart': b'const value = 1;\n',
+                              'lib/unrelated.dart': b'const other = 2;\n',
+                              'native/source': b'native', 'pubspec.lock': b'lock',
+                              'evidence/movie': b'not an identity input'}.items():
+            path = self.repo / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
+        self.git('add', '.')
+        self.git('commit', '-qm', 'closure')
+        original = subprocess.check_output
+        for scheme in (receipt.IDENTITY_V1, receipt.IDENTITY_V2, receipt.IDENTITY_V3):
+            with self.subTest(scheme=scheme):
+                with patch.object(receipt.subprocess, 'check_output', wraps=original) as git:
+                    expected = receipt.source_identity(self.repo, scheme)
+                scan = next(c.args[0] for c in git.call_args_list if 'diff' in c.args[0])
+                self.assertIn('--no-renames', scan)
+                paths = scan[scan.index('--') + 1:]
+                if scheme == receipt.IDENTITY_V3:
+                    self.assertIn(':(top,literal)lib/used.dart', paths)
+                    self.assertNotIn(':(top,literal)lib/unrelated.dart', paths)
+                    self.assertIn(':(top,literal)native', paths)
+                else:
+                    self.assertIn(':(top,exclude)evidence/**', paths)
+                # Changes outside the scheme still do not invalidate the identity.
+                (self.repo / 'evidence/movie').write_bytes(b'changed excluded content')
+                self.assertEqual(receipt.source_identity(self.repo, scheme), expected)
+                # Deletion of a closure input must still fail closed.
+                used = self.repo / 'lib/used.dart'
+                used.unlink()
+                with self.assertRaisesRegex(ValueError, 'dirty or untracked'):
+                    receipt.source_identity(self.repo, scheme)
+                used.write_bytes(b'const value = 1;\n')
+
     def test_duplicate_inventory_paths_are_rejected(self):
         original = subprocess.check_output
         for committed, command in ((False, 'ls-files'), (True, 'ls-tree')):
