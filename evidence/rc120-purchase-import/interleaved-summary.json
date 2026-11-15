@@ -1,0 +1,46 @@
+{
+  "dense-1": {
+    "before": {
+      "purchaseImportMs": [
+        234.676,
+        264.667,
+        248.922,
+        241.002
+      ],
+      "medianMs": 244.962,
+      "foodKeyMedianMs": 3.5335
+    },
+    "after": {
+      "purchaseImportMs": [
+        253.766,
+        236.253,
+        218.764,
+        221.668
+      ],
+      "medianMs": 228.9605,
+      "foodKeyMedianMs": 0.0655
+    }
+  },
+  "dense-food": {
+    "before": {
+      "purchaseImportMs": [
+        475.017,
+        450.335,
+        482.754,
+        444.182
+      ],
+      "medianMs": 462.676,
+      "foodKeyMedianMs": 20.556
+    },
+    "after": {
+      "purchaseImportMs": [
+        457.642,
+        376.031,
+        363.877,
+        401.257
+      ],
+      "medianMs": 388.644,
+      "foodKeyMedianMs": 0.1835
+    }
+  }
+}

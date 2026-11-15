@@ -1,0 +1,5 @@
+00:00 +0: loading /home/lee/.cache/tandemlog-rc117-qualification/test/startup_smoke_fixture_contract_test.dart
+00:00 +0: /home/lee/.cache/tandemlog-rc117-qualification/test/startup_smoke_fixture_contract_test.dart: startup synthetic seed is admitted by the actual startup contract without rewriting current canonical history
+00:00 +1: /home/lee/.cache/tandemlog-rc117-qualification/test/startup_smoke_fixture_contract_test.dart: startup synthetic seed is admitted by the actual startup contract without rewriting current canonical history
+00:02 +2: /home/lee/.cache/tandemlog-rc117-qualification/test/startup_smoke_fixture_contract_test.dart: installer synthetic seed is admitted by the actual startup contract without rewriting current canonical history
+00:05 +3: All tests passed!

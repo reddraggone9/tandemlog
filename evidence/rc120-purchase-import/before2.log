@@ -1,0 +1,20 @@
+Unhandled exception:
+Invalid argument(s): Couldn't resolve native function 'sqlite3_initialize' in 'package:sqlite3/src/ffi/libsqlite3.g.dart' : No asset with id 'package:sqlite3/src/ffi/libsqlite3.g.dart' found. No available native assets. Attempted to fallback to process lookup. /tmp/rc120-before: undefined symbol: sqlite3_initialize.
+
+#0      Native._ffi_resolver.#ffiClosure0 (dart:ffi-patch/ffi_patch.dart)
+#1      Native._ffi_resolver_function (dart:ffi-patch/ffi_patch.dart:1959)
+#2      sqlite3_initialize (package:sqlite3/src/ffi/libsqlite3.g.dart)
+#3      FfiBindings.sqlite3_initialize (package:sqlite3/src/ffi/bindings.dart:201)
+#4      Sqlite3Implementation.initialize (package:sqlite3/src/implementation/sqlite3.dart:32)
+#5      Sqlite3Implementation.open (package:sqlite3/src/implementation/sqlite3.dart:49)
+#6      FfiSqlite3.open (package:sqlite3/src/ffi/implementation.dart:29)
+#7      LocalProfileDatabase.open (package:tandemlog/storage/local_profile_database.dart:192)
+<asynchronous suspension>
+#8      Audit.open (file:///home/lee/.cache/tandemlog-rc117-qualification/tool/performance/benchmark.dart:151)
+<asynchronous suspension>
+#9      Audit.initialize (file:///home/lee/.cache/tandemlog-rc117-qualification/tool/performance/benchmark.dart:139)
+<asynchronous suspension>
+#10     scenario (file:///home/lee/.cache/tandemlog-rc117-qualification/tool/performance/benchmark.dart:431)
+<asynchronous suspension>
+#11     main (file:///home/lee/.cache/tandemlog-rc117-qualification/tool/performance/purchase_import_diagnostic.dart:46)
+<asynchronous suspension>

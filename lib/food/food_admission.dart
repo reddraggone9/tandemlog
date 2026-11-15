@@ -420,3 +420,21 @@ class FoodAdmission {
   bool? hasReadyRetraction(String operation) =>
       _index?.retracted.contains(operation);
 }
+
+/// A local admission memo is bound to exact bytes, not a persisted digest.
+/// Hash only the shape for bucket selection; equality checks every ID/raw pair.
+/// This avoids serializing and hashing the whole Food history on each open.
+final class FoodAdmissionInput {
+  FoodAdmissionInput(this.manifest, Map<String, String> records)
+    : records = Map.unmodifiable(records);
+  final String manifest;
+  final Map<String, String> records;
+  @override
+  int get hashCode => Object.hash(manifest, records.length);
+  @override
+  bool operator ==(Object other) =>
+      other is FoodAdmissionInput &&
+      manifest == other.manifest &&
+      records.length == other.records.length &&
+      records.entries.every((e) => other.records[e.key] == e.value);
+}

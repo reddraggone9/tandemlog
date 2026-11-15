@@ -290,7 +290,7 @@ final class UnifiedHistory {
         : null;
   }
 
-  final _foodValidation = <String, FoodAdmission>{};
+  final _foodValidation = <FoodAdmissionInput, FoodAdmission>{};
   // Reuse decoding only for identical canonical source strings. File bytes,
   // trusted prefixes, manifest policy, chains and admission are still checked.
   // Bound retained strings independently of the workspace/file byte limits.
@@ -1952,7 +1952,6 @@ final class UnifiedHistory {
     fullEffectValidationRuns++;
     final tasks = <LogEvent>[], food = <String, FoodRecord>{};
     final foodRaw = <String, String>{};
-    final foodEffects = <String, UnifiedEffect>{};
     for (final effect in effects.where((e) => e.isData)) {
       final e = effect.task;
       if (e != null) {
@@ -1964,7 +1963,6 @@ final class UnifiedHistory {
         }
         food[r.id] = r;
         foodRaw[r.id] = effect.raw;
-        foodEffects[r.id] = effect;
       }
     }
     final semanticTasks = tasks;
@@ -2097,15 +2095,7 @@ final class UnifiedHistory {
           }
         }
       }
-      final foodIds = foodRaw.keys.toList()..sort();
-      final foodKey = bytesDigest(
-        utf8.encode(
-          canonicalDataJson([
-            m.digest,
-            ...foodIds.map((id) => foodEffects[id]!.validationDigest),
-          ]),
-        ),
-      );
+      final foodKey = FoodAdmissionInput(m.digest, foodRaw);
       var foodResult = _foodValidation.remove(foodKey);
       if (foodResult == null) {
         fullFoodAdmissionRuns++;

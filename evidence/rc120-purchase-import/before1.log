@@ -1,0 +1,8 @@
+Unhandled exception:
+LateInitializationError: Field 'engine' has not been initialized.
+#0      Audit.dispose (file:///home/lee/.cache/tandemlog-rc117-qualification/tool/performance/benchmark.dart)
+<asynchronous suspension>
+#1      scenario (file:///home/lee/.cache/tandemlog-rc117-qualification/tool/performance/benchmark.dart:442)
+<asynchronous suspension>
+#2      main (file:///home/lee/.cache/tandemlog-rc117-qualification/tool/performance/purchase_import_diagnostic.dart:46)
+<asynchronous suspension>

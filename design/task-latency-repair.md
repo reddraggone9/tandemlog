@@ -643,3 +643,13 @@ retain the original fault and unsuccessful window-only prototype. Existing draft
 queue, native-owner and durability decisions stay unchanged; no forced exit,
 rendering override or performance-limit relaxation is introduced. Original
 uninstrumented CI smoke remains, with an additional deterministic disposal gate.
+
+## Food admission memo identity
+
+A fresh history open no longer sorts and cryptographically re-hashes all Food
+raw effects merely to look up its process-local admission memo. Its bounded
+four-entry memo uses an immutable manifest/ID/raw key: a cheap shape hash chooses
+a bucket, and exact byte equality decides reuse, including same-sized changed
+histories. Full Food validation on misses and all dependency/Undo/replay rules
+are unchanged. [RC120 diagnostic evidence](../evidence/rc120-purchase-import/README.md)
+is not reference qualification; original q23 remains failed and unsealed.
