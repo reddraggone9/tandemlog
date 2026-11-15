@@ -216,13 +216,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     if (!usable()) return;
     final rows = {for (final row in _grouping.rows) _rowKey(row): row};
     var selected = Set<String>.of(selectedRows);
-    var anchor = _selectionAnchor;
+    final anchor = _selectionAnchor;
     final editing = _editingGroup == null
         ? null
         : rows[_rowKey(_editingGroup!)];
     if (!selecting && editing != null) {
       selected = {_rowKey(editing)};
-      anchor = _rowKey(editing);
     }
     final result = nextListSelection<String>(
       selected: selected,
@@ -256,9 +255,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       if (!mounted || !usable()) return;
     }
     if (single != null) {
-      setState(_clearBulkSelection);
+      setState(() {
+        _clearBulkSelection();
+        _selectionAnchor = result.anchor;
+      });
       unawaited(
         _edit(
+          preserveSelectionAnchor: true,
           group: single,
           rows: {_rowKey(single)},
           detailsCommand: widget.onDetails,
@@ -386,10 +389,14 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final single = _wide && before.length >= 2 && survivors.length == 1
         ? rows[survivors.single]
         : null;
+    final anchor = survivors.contains(_selectionAnchor)
+        ? _selectionAnchor
+        : null;
     setState(() {
       _lastSearchText = value;
       if (survivors.isEmpty || single != null) {
         _clearBulkSelection();
+        _selectionAnchor = anchor;
         return;
       }
       selecting = true;
@@ -405,6 +412,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           rows: {_rowKey(single)},
           detailsCommand: widget.onDetails,
           replacingApproved: replace,
+          preserveSelectionAnchor: true,
           autofocus: false,
         ),
       );
@@ -1911,6 +1919,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   Future<void> _edit({
     FoodGroup? group,
+    bool preserveSelectionAnchor = false,
     bool replacingApproved = false,
     bool autofocus = true,
     FoodDetails? template,
@@ -1994,6 +2003,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     _requestEditorClose = () async =>
         await key.currentState?.requestClose() ?? false;
     _editingGroup = group;
+    // Search/selection transitions retain (or invalidate) the original anchor;
+    // only deliberately opening a row establishes a new one.
+    if (group != null && !preserveSelectionAnchor) {
+      _selectionAnchor = _rowKey(group);
+    }
     setState(
       () => _editorBuilder = (panel) => FoodEditor(
         key: key,

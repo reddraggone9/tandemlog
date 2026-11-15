@@ -9,3 +9,5 @@
 - Food without an expiration date sorts first, including in Search.
 
 ![Undated Food before and after in Search](media/search-food-20261114/food-undated-search-before-after.png)
+
+- Purchase imports are faster in workspaces with long Food histories.

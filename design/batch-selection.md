@@ -247,3 +247,14 @@ no CI configuration or declared release/performance cases were changed.
 The final full-suite and grouped-native logs are `/tmp/rc119-all-tests-final.log`
 and `/tmp/rc119-native-aggregate.log`; the temporary runner is retained at
 `/tmp/rc119_changed_area_local_test.dart` for inspection/reproduction.
+
+## Search range-anchor regression (2026-11-15)
+
+Search narrowing a wide Food selection to a single row returns to its ordinary
+editor, but must not turn that surviving row into a new range anchor. A hidden
+anchor stays forgotten after clearing Search: Shift-click then selects only the
+clicked row. An anchor that remains visible still starts the range. Ordinary
+single-row editing establishes an anchor as before. This applies the existing
+hidden-anchor rule, not a new selection model. The regression workflow starts by
+plain-editing Rice, Ctrl-selects Beans, searches Rice, clears Search, then
+Shift-clicks Milk; compact-only coverage missed the wide editor transition.

@@ -176,7 +176,48 @@ Future<void> verifyFoodSearchFocusRetention(
   await capture?.call('search-typing-survivor');
 }
 
+Future<void> verifyFoodHiddenSearchAnchor(
+  WidgetTester tester, {
+  Future<void> Function(String)? capture,
+}) async {
+  final page = await _pump(tester, wide: true);
+  await tester.tap(find.text('Rice').first);
+  await tester.pumpAndSettle();
+  await _toggle(tester, 'Beans');
+  await tester.enterText(find.byKey(const ValueKey('food-search')), 'Rice');
+  await tester.pumpAndSettle();
+  await _clearSearch(tester);
+  await capture?.call('hidden-anchor-before-shift');
+  await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+  await tester.tap(find.text('Milk').first);
+  await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+  await tester.pumpAndSettle();
+  await capture?.call('hidden-anchor-after-shift');
+  expect(page.bulkSelected, {_id(3)});
+  expect(find.text('Edit 2 containers'), findsNothing);
+  expect(tester.takeException(), isNull);
+}
+
 void main() {
+  testWidgets(
+    'wide Search forgets hidden anchor after returning to single editing',
+    verifyFoodHiddenSearchAnchor,
+  );
+
+  testWidgets('wide Search keeps a surviving range anchor', (tester) async {
+    final page = await _pump(tester, wide: true);
+    await _toggle(tester, 'Beans');
+    await _toggle(tester, 'Rice');
+    await _search(tester, 'Rice');
+    await _clearSearch(tester);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.tap(find.text('Milk').first);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.pumpAndSettle();
+    expect(page.bulkSelected, {_id(1), _id(2), _id(3)});
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Search keeps selected rows that remain visible', (tester) async {
     // Lee 2026-11-12: Tasks and Food keep selected rows that remain visible
     // when Search changes.

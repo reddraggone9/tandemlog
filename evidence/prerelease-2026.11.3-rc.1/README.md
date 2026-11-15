@@ -1,4 +1,4 @@
-# 2026.11.3-rc.1 / build 120 — validation in progress
+# 2026.11.3-rc.1 / build 121 — validation in progress
 
 Scope: Tasks and Food retain selected rows that still match a changed Search;
 Food without expiration sorts before dated Food, including Search. Normal Inbox
@@ -51,3 +51,15 @@ All paused household work restored. No budget/source-identity change.
 Exact signed120 Android/GTK stable118 and RC117 upgrade acceptance, Search focus
 regression, publication and anonymous verification remain pending. Windows GUI
 coverage remains Lee's isolated portable trial, not hosted CI.
+
+## Build121 reviewed anchor repair
+
+Signed120/run43704078041 is rejected and unpublished: exact GTK RC117 upgrade
+acceptance exposed a Search-hidden Food range anchor being resurrected by the
+wide single-editor transition. Build121 repairs only that transition and adds
+widget/native regressions; independent review 6c0f67da PASS, notes recheck PASS.
+Full host inventory1928 PASS plus two corrected-environment fixture checks PASS;
+native retention3, keyboard2, row selection6 and layout parity16 PASS.
+Private before/after captures and logs: rc121-anchor. q24 relevant-source-v3
+identity remains unchanged; no benchmark or cold-start measurement rerun.
+Fresh exact CI, signed candidate and artifact acceptance pending.
