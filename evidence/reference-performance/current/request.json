@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "76fe0f5e24537af72e12d1680fe588ba",
-  "issuedAtUTC": "2026-11-13T16:40:55.926024+00:00",
-  "sourceRevision": "2090994d56b1a0bc15cc79dd13958c5c5534195a",
+  "requestId": "3f568c343e64bb93d619af8d57dd82ad",
+  "issuedAtUTC": "2026-11-15T01:25:00.595980+00:00",
+  "sourceRevision": "e0f0d4a5221c741d256f6565bf589279eefd7581",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "2afefe81ee6b52335b0f11670b5eb32f454be599c61b3f9552deb44cef417172",
+    "sha256": "8950ffe90b00860a53819d515ce64932b9305a893317aca68e9d8b6401db0efd",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -209,7 +209,7 @@
         "mode": "100644"
       },
       "lib/food/inventory.dart": {
-        "sha256": "52fdde8828e2d2c151cb219ec535a943cdff0e419ebb99e56fb028355b4527fe",
+        "sha256": "408b8312e2f0e4a6f929f4be83b7ab967b6a4c4e101d72a73c745dac7a6c908a",
         "mode": "100644"
       },
       "lib/food/shelf_life.dart": {
@@ -649,7 +649,7 @@
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "7907a61c6f8e8a7f1e344c4f9c7c62d69c06fbb1c2a0ea31ca0250a16a28f3f0",
+        "sha256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
@@ -674,7 +674,7 @@
       }
     }
   },
-  "hostProfileSHA256": "7907a61c6f8e8a7f1e344c4f9c7c62d69c06fbb1c2a0ea31ca0250a16a28f3f0",
-  "controllerSHA256": "2c5f47451afbdedc863c3c07923165e8e67d25f83a716d4dd88f0e743e20a982",
-  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-next-20261113/controller/controller_r8.py"
+  "hostProfileSHA256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
+  "controllerSHA256": "4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba",
+  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-next-20261114/controller-zeroarc/controller_r8.py"
 }

@@ -18,10 +18,10 @@
       "purchaseLines": 34
     }
   },
-  "sourceRevision": "2090994d56b1a0bc15cc79dd13958c5c5534195a",
+  "sourceRevision": "e0f0d4a5221c741d256f6565bf589279eefd7581",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "2afefe81ee6b52335b0f11670b5eb32f454be599c61b3f9552deb44cef417172",
+    "sha256": "8950ffe90b00860a53819d515ce64932b9305a893317aca68e9d8b6401db0efd",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -224,7 +224,7 @@
         "mode": "100644"
       },
       "lib/food/inventory.dart": {
-        "sha256": "52fdde8828e2d2c151cb219ec535a943cdff0e419ebb99e56fb028355b4527fe",
+        "sha256": "408b8312e2f0e4a6f929f4be83b7ab967b6a4c4e101d72a73c745dac7a6c908a",
         "mode": "100644"
       },
       "lib/food/shelf_life.dart": {
@@ -664,7 +664,7 @@
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "7907a61c6f8e8a7f1e344c4f9c7c62d69c06fbb1c2a0ea31ca0250a16a28f3f0",
+        "sha256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
@@ -689,13 +689,13 @@
       }
     }
   },
-  "binarySHA256": "869af5d804bc14609cbcbb5b5ac58d6199bca3f76bb136e8481e5df8faaa680e",
-  "appSHA256": "0156226e80a0086dbcb6fc621012fbf3006544df181a26c4c9fd9ba2921cdb6f",
-  "hostProfileSHA256": "7907a61c6f8e8a7f1e344c4f9c7c62d69c06fbb1c2a0ea31ca0250a16a28f3f0",
+  "binarySHA256": "3c026a2830edecf7e39fbd7e644f73ac1d4fc741a6e2efee792878172aedb3ec",
+  "appSHA256": "2f0bd77df489a39e2b198ad7ec9b37a2eb902ae1efd619c7db1e707c3716d2cb",
+  "hostProfileSHA256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
   "host": {
     "architecture": "x86_64",
-    "kernel": "7.2.14-arch1-1",
-    "python": "3.14.9",
+    "kernel": "7.3.4-arch1-1",
+    "python": "3.14.10",
     "logicalCPUs": 16,
     "cpuModel": "12th Gen Intel(R) Core(TM) i5-12600KF",
     "filesystemType": "ext4"
@@ -706,15 +706,15 @@
     "initialized": true,
     "format": "app-action-v5",
     "workload": "mixed-v2",
-    "writer": "2f500cfb-7ff1-4d1c-badd-78c13beb49eb",
-    "user": "8b21e1f3-de87-4ec3-baa4-48dad6635ddb",
+    "writer": "bc7bc62d-6281-4419-9d44-d4698a0ed6cf",
+    "user": "15f87aa3-81be-4d50-a600-ddb618dfd900",
     "rows": 2001,
     "records": 3667,
     "effectFamilies": {
       "container.add": 564,
       "container.edit": 104,
       "container.remove": 92,
-      "product.edit": 183,
+      "product.edit": 182,
       "purchase.record": 34,
       "task.completed": 560,
       "task.created": 2000,
@@ -725,111 +725,111 @@
     },
     "food": {
       "activeContainers": 522,
-      "groups": 484,
-      "products": 551,
+      "groups": 481,
+      "products": 550,
       "purchases": 34
     },
     "files": 4,
-    "historyBytes": 6419165,
-    "settings_sha256": "86a0fb5af1fa8fdad388251554da081efafeabf291266f02ae3a655f80c9e636",
+    "historyBytes": 6418766,
+    "settings_sha256": "ff10382e1c5c94157088cbdf6f093f88074cd136a3abe59a2a50ef18cf173c68",
     "native_sha256": "f00d5450c810e494dd11ad53ee71e85ce8e2af48c0f7cf265f8359c2ddda0c5c"
   },
   "loadAverage1m": {
-    "before": 12.015625,
-    "after": 12.0947265625
+    "before": 3.52490234375,
+    "after": 3.96337890625
   },
   "strictFirstLaunch": {
     "run": 1,
-    "processMs": 2800,
-    "appMs": 2239,
+    "processMs": 2690,
+    "appMs": 2276,
     "food": {
       "activeContainers": 522,
-      "groups": 484,
-      "products": 551,
+      "groups": 481,
+      "products": 550,
       "purchases": 34
     },
-    "externalMs": 2802,
+    "externalMs": 2689,
     "cleanWitnessVerified": false
   },
   "warmStarts": [
     {
       "run": 2,
-      "processMs": 520,
-      "appMs": 387,
+      "processMs": 530,
+      "appMs": 391,
       "food": {
         "activeContainers": 522,
-        "groups": 484,
-        "products": 551,
+        "groups": 481,
+        "products": 550,
         "purchases": 34
       },
-      "externalMs": 514,
+      "externalMs": 528,
       "cleanWitnessVerified": true
     },
     {
       "run": 3,
-      "processMs": 510,
-      "appMs": 385,
+      "processMs": 530,
+      "appMs": 400,
       "food": {
         "activeContainers": 522,
-        "groups": 484,
-        "products": 551,
+        "groups": 481,
+        "products": 550,
         "purchases": 34
       },
-      "externalMs": 505,
+      "externalMs": 525,
       "cleanWitnessVerified": true
     },
     {
       "run": 4,
-      "processMs": 480,
-      "appMs": 360,
+      "processMs": 540,
+      "appMs": 398,
       "food": {
         "activeContainers": 522,
-        "groups": 484,
-        "products": 551,
+        "groups": 481,
+        "products": 550,
         "purchases": 34
       },
-      "externalMs": 481,
+      "externalMs": 535,
       "cleanWitnessVerified": true
     },
     {
       "run": 5,
-      "processMs": 480,
-      "appMs": 356,
+      "processMs": 490,
+      "appMs": 367,
       "food": {
         "activeContainers": 522,
-        "groups": 484,
-        "products": 551,
+        "groups": 481,
+        "products": 550,
         "purchases": 34
       },
-      "externalMs": 482,
+      "externalMs": 486,
       "cleanWitnessVerified": true
     },
     {
       "run": 6,
       "processMs": 490,
-      "appMs": 367,
+      "appMs": 370,
       "food": {
         "activeContainers": 522,
-        "groups": 484,
-        "products": 551,
+        "groups": 481,
+        "products": 550,
         "purchases": 34
       },
-      "externalMs": 493,
+      "externalMs": 492,
       "cleanWitnessVerified": true
     }
   ],
   "decision": {
     "case": "native.coldStart.firstList",
-    "medianMs": 490,
+    "medianMs": 530,
     "budgetMs": 1000,
     "passed": true,
     "samplesMs": [
-      520,
-      510,
-      480,
-      480,
+      530,
+      530,
+      540,
+      490,
       490
     ],
-    "strictFirstLaunchMs": 2800
+    "strictFirstLaunchMs": 2690
   }
 }

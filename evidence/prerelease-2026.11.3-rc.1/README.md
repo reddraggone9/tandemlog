@@ -24,13 +24,11 @@ schema, replay, migration or Undo changes.
 
 ## Release gates
 
-Hosted correctness/build/native CI, controlled reference performance, native
-cold-start receipt, signed candidate, exact-artifact Android/GTK upgrade checks,
-publication and anonymous verification are pending. No candidate is accepted or
+Source e0f0d4a: CI43662967224 all nine non-reference jobs PASS. Controlled q20 reference qualification sealed: absolute and both history-growth budgets PASS; two first-pass growth misses passed the gate-owned fresh-process confirmation. Native cold-start median 530 ms PASS. Signed candidate, exact-artifact Android/GTK checks, publication and anonymous verification remain pending. No candidate is accepted or
 published by this record. Windows GUI coverage is Lee's trial, not hosted CI.
 
 Independent accounting review rejected blanket evictable-DATA credit: small ZIO
 linear buffers use reclaim-accounted slab represented in MemAvailable. Reviewed
 controller now grants zero extra ARC credit (raw availability only), preserving
 all pressure thresholds and workload bounds. Independent zero-credit review and all 310 local tooling checks passed (two
-skipped). Fresh qualification pending; no timing result is implied.
+skipped). Reviewed q20 qualification completed and sealed on e0f0d4a; no budgets relaxed.
