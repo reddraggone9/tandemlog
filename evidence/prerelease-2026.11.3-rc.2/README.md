@@ -42,3 +42,21 @@ unit absent; music/Jellyfin restored and quiet fence released. Independent
 restoration timers inactive. Targeted ARC reclaim occurred only before admission,
 with c_max/module parameter unchanged and raw memory independently checked;
 no extra ARC credit was granted and no cache intervention occurred during timing.
+
+
+## Profiled repair
+
+Integrated ebb0d009 (independent worktree commitc0bb55c0). Diagnostic profiling
+identified stored-history decode isolate fan-out: ten workers per session and
+two concurrent session opens during a planned CLI import under the2CPU quota.
+One pure-data decode worker per restore preserves decoder, validation, ordering
+and fallback behavior while removing history-size-dependent spawn/transfer work.
+Matching bounded diagnostics: large purchase import428.728→278.161ms, growth
+1.98x→1.41x, whole-family CPU9.585→7.386s. These are explicitly diagnostic, not
+full qualification or substitutes for the failed original samples.
+Independent code/data-integrity reviewer1b43f2d9 PASS; binding/seal/tail/sequence/
+offset/migration/prefix checks unchanged, no instrumentation or budget edits.
+Affected133tests PASS. Integrated full1946Fluttertests PASS and analyzer clean.
+Terminal wrapper again reported descendant-cleanup unknown exit AFTER complete
+pass logs; not claimed as a clean wrapper exit. Native checks and fresh hosted
+CI/full exact-source qualification still required.
