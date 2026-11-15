@@ -13,6 +13,7 @@ import 'package:tandemlog/text/native_text_engine.dart';
 import 'package:uuid/uuid.dart';
 import '../integration_test/native_text_fixtures.dart';
 import 'support/frozen_recurrence_r3/current_operation.dart' as frozen;
+import 'support/historical_reader_dependencies.dart';
 
 // Real bytes from the current writer against the real RC109 reader. The frozen
 // operation decoder alone cannot show what an old device does with a whole
@@ -85,7 +86,13 @@ Future<Map<String, String>> _bytes(String folder) async => {
 Future<_Reader> _startReader(String root) async {
   Future<ProcessResult> git(List<String> args) =>
       Process.run('git', args, stdoutEncoding: null);
-  final archive = await git(['archive', _rc109, 'lib']);
+  final archive = await git([
+    'archive',
+    _rc109,
+    'lib',
+    'pubspec.yaml',
+    'pubspec.lock',
+  ]);
   expect(
     archive.exitCode,
     0,
@@ -106,31 +113,11 @@ Future<_Reader> _startReader(String root) async {
         .toString(),
     _rc109Decoder,
   );
-  // Same pinned packages (the lockfile did not change), other tandemlog root.
-  // Running the driver in place first materializes the sqlite native asset.
-  final probe = await Process.run(_dart(), [
-    'run',
-    '--verbosity=error',
-    'test/support/rc109_reader/driver.dart',
-    '--probe',
-  ]);
-  expect(probe.exitCode, 0, reason: '${probe.stdout}${probe.stderr}');
-  final config =
-      jsonDecode(await File('.dart_tool/package_config.json').readAsString())
-          as Map<String, dynamic>;
-  final base = Directory('.dart_tool').absolute.uri;
-  for (final package in (config['packages'] as List).cast<Map>()) {
-    package['rootUri'] = package['name'] == 'tandemlog'
-        ? Directory(tree).absolute.uri.toString()
-        : base.resolve('${package['rootUri']}/').toString();
-  }
-  await File(
-    '$tree/.dart_tool/package_config.json',
-  ).writeAsString(jsonEncode(config));
-  await File(
-    '.dart_tool/native_assets.yaml',
-  ).copy('$tree/.dart_tool/native_assets.yaml');
-  await File('test/support/rc109_reader/driver.dart').copy('$tree/driver.dart');
+  await prepareHistoricalReader(
+    tree: tree,
+    dart: _dart(),
+    driver: 'test/support/rc109_reader/driver.dart',
+  );
   return _Reader(
     await Process.start(_dart(), [
       '--packages=$tree/.dart_tool/package_config.json',
