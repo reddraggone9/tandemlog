@@ -66,6 +66,7 @@ Every RC comes with a ready-to-use isolated installation, not only a download li
 - **Android:** build the exact accepted RC source in release mode with a distinct application ID and a clear test label. Record source, the packaging-only changes, signer and hash, and tell Lee it is a test variant, not the byte-identical published APK.
 - **Windows:** use the accepted portable ZIP with a separate profile and shortcut (the installer shares stable's AppId, so it cannot sit beside stable).
 - Bind the test install only to a private, non-synced copy of realistic data, never the live workspace.
+- When refreshing an existing trial, preserve its **current mutable** workspace/profile, not an initial preparation byte hash. Retain immutable original-snapshot provenance and baseline current trial data before the refresh. Inspect SQLite metadata read-only so verification cannot checkpoint the profile being preserved.
 - Verify version, coexistence, the isolated binding and a usable launch. Report a locked or unavailable device as a blocker instead of skipping the step.
 - Tell him the app or shortcut name and what first use will ask for.
 

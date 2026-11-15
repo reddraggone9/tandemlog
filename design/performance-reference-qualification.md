@@ -705,3 +705,18 @@ alternate cache URI causes an AOT compile failure on the intentionally read-only
 source before measurement. Preserve that failed invocation, correct preparation,
 and use a fresh request; never make the sealed source writable or relabel the
 failure as a performance measurement.
+
+
+### Independent host copy admissions
+
+The host media/music quiet fence does not by itself fence every system copy
+producer. On Bender, inspect the backup timer as well as active backup/cold-copy
+writers. Save exact original timer/service state, prevent new backup admissions,
+and checkpoint an active restartable copy with a verified kernel freeze rather
+than killing its writer. Arm independent bounded restoration first; restore the
+original timer state and thaw/read back every owned checkpoint in `finally`.
+Freezing only a currently existing cgroup is insufficient when a timer can admit
+a new writer during continuous quiet grace. A naturally finished copy unit is
+not an error or something to recreate. The admission helper excludes an rsync
+only when its actual kernel cgroup receipt says frozen1; missing evidence stays
+blocked. None of this changes controller limits, timing samples or budgets.
