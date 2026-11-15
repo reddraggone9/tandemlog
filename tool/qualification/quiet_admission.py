@@ -31,12 +31,31 @@ MAX_LOAD_1M = 1.0
 me = os.getpid()
 
 
+def frozen_copy(pid, proc_root=Path('/proc'), cgroup_root=Path('/sys/fs/cgroup')):
+    """A kernel-frozen rsync cannot contend; unreadable evidence fails closed."""
+    try:
+        proc = proc_root / str(pid)
+        if (proc / 'comm').read_text().strip() != 'rsync':
+            return False
+        rows = (proc / 'cgroup').read_text().splitlines()
+        unified = [row[3:] for row in rows if row.startswith('0::')]
+        if len(unified) != 1 or not unified[0].startswith('/'):
+            return False
+        relative = Path(unified[0].lstrip('/'))
+        if '..' in relative.parts:
+            return False
+        events = (cgroup_root / relative / 'cgroup.events').read_text()
+        return ['frozen', '1'] in [line.split() for line in events.splitlines()]
+    except (OSError, ValueError):
+        return False
+
+
 def procs():
     p = subprocess.run(['pgrep', '-af', PATTERN], capture_output=True, text=True)
     out = []
     for line in p.stdout.splitlines():
         pid = int(line.split(None, 1)[0])
-        if pid == me or 'pgrep -af' in line or 'quiet-admission' in line:
+        if pid == me or 'pgrep -af' in line or 'quiet-admission' in line or frozen_copy(pid):
             continue
         out.append(line[:240])
     n = subprocess.run(['pgrep', '-l', NAME_PATTERN], capture_output=True, text=True)

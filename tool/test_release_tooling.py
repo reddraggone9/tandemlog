@@ -22,6 +22,26 @@ import quiet_admission
 
 
 class ReleaseTests(unittest.TestCase):
+    def test_frozen_copy_requires_kernel_receipt_and_rsync(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td); proc = root / 'proc' / '123'; proc.mkdir(parents=True)
+            group = root / 'groups' / 'system.slice' / 'copy.service'; group.mkdir(parents=True)
+            (proc / 'comm').write_text('rsync\n')
+            (proc / 'cgroup').write_text('0::/system.slice/copy.service\n')
+            check = lambda: quiet_admission.frozen_copy(123, root / 'proc', root / 'groups')
+            self.assertFalse(check())
+            (group / 'cgroup.events').write_text('populated 1\nfrozen 0\n')
+            self.assertFalse(check())
+            (group / 'cgroup.events').write_text('populated 1\nfrozen 1\n')
+            self.assertTrue(check())
+            (proc / 'comm').write_text('gradle\n')
+            self.assertFalse(check())
+            (proc / 'comm').write_text('rsync\n')
+            (proc / 'cgroup').write_text('0::/../escape\n')
+            self.assertFalse(check())
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
