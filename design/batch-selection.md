@@ -195,3 +195,55 @@ A successfully completed Task leaves the selection, like a deleted Task; other s
 Keyboard Up/Down reveal the complete target row, including at 320dp and 200%
 text. Full-width pinned heading paint must not distort row reveal coordinates;
 Tasks and the matching Deleted section in Food Search share this requirement.
+
+## RC119 Food Search focus correction (2026-11-14, local)
+
+UX brief: Search answers which rows match while preserving the selected visible
+survivors. Narrowing a wide bulk selection to one keeps the existing single-editor
+pattern; the next action is to finish typing the query, not edit the food name.
+No controls or layout change. Search-triggered editor replacements therefore
+suppress both scope and field autofocus; explicit row/Add actions retain it.
+The dirty-draft decision and hidden-target pruning rules are unchanged.
+
+The blocked build119 Android capture showed Search `Rece` and Food name
+`RC117 Receipt birthipt`: the replacement single editor's autofocus took the IME
+connection midway through `Receipt`. Tasks uses the same two-to-one transition,
+but its task editor has no autofocus request, so no Tasks source change is needed.
+Regression coverage sends continued input through the active text connection
+without tapping Search again, checks its focus/query and unchanged food name,
+and verifies that widening Search does not resurrect the dropped selection.
+The native Linux counterpart uses xdotool input against the active window.
+
+This source correction invalidates the old candidate identity's qualification:
+prior q20 PASS is historical evidence only, not qualification for this diff.
+Exact changed-artifact Android/GTK acceptance remains release-owner work; no
+publication or stable118/live-data changes are authorized by this local fix.
+
+Local verification uses Flutter 3.47.5/Dart 3.13.4 with the pinned SDK on PATH,
+localhost proxy variables removed, and the prepared native text library.
+The complete Flutter unit/widget suite passed **1,927 tests**; changed-file Dart
+analysis and formatting passed. The dedicated native GTK selection-retention
+workflow passed **2 tests**, including real xdotool typing after pruning.
+The initial full-suite invocation lacked Dart on PATH for two startup fixture
+subprocesses; both passed on rerun and the corrected full-suite run passed.
+The initial GTK build hit an unwritable shared `/tmp` Rust cache; a private
+`TANDEMLOG_TEXT_TARGET_DIR` resolved it without source changes.
+
+Visual check: reviewed the supplied blocked candidate's actual Android PNG,
+including `Rece` in Search and `RC117 Receipt birthipt` in the editor. The
+changed-source native GTK synthetic-fixture capture shows focused `Receipt`
+Search; its 640×480 window capture crops the wide editor offscreen, so unchanged
+name and exact surviving target are established by test assertions, not claimed
+from that crop. This is local debug workflow evidence, not Android candidate
+acceptance or a replacement for the release owner's exact-artifact walkthrough.
+
+All locally identifiable Food/shared-selection native tests then passed:
+**139 GTK tests** in 21m56s. A temporary grouped runner registered all 24
+`integration_test/food_*test.dart` entrypoints plus selection-layout parity and
+header-selection entrypoints, each in its own group. This avoids the local
+multi-executable launch failure observed when passing several integration files
+to one Flutter command. The runner was removed from the checkout after the run;
+no CI configuration or declared release/performance cases were changed.
+The final full-suite and grouped-native logs are `/tmp/rc119-all-tests-final.log`
+and `/tmp/rc119-native-aggregate.log`; the temporary runner is retained at
+`/tmp/rc119_changed_area_local_test.dart` for inspection/reproduction.

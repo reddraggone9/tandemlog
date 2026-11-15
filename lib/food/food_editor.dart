@@ -33,8 +33,12 @@ class FoodEditor extends StatefulWidget {
     this.onRemoveTargets,
     this.onRestoreTargets,
     this.today,
+    this.autofocus = true,
   });
   final bool panel;
+
+  /// Search-driven replacement must not take focus from the query.
+  final bool autofocus;
 
   /// The device's local day, for dating hand entries from Keeps for.
   final DateTime Function()? today;
@@ -962,7 +966,7 @@ class FoodEditorState extends State<FoodEditor> {
         errorText: _validation.errorFor('name'),
         enabled: enabled,
         controller: name,
-        autofocus: widget.template == null,
+        autofocus: widget.autofocus && widget.template == null,
         label: 'Food name',
         values: _productOptions.keys.toList(),
         // Once the typed name is a product's exact name there is nothing
@@ -984,7 +988,7 @@ class FoodEditorState extends State<FoodEditor> {
       'name' => TextField(
         enabled: enabled,
         controller: name,
-        autofocus: widget.template == null && !bulk,
+        autofocus: widget.autofocus && widget.template == null && !bulk,
         decoration: InputDecoration(
           labelText: 'Food name',
           hintText: _hint('name'),
@@ -1091,7 +1095,7 @@ class FoodEditorState extends State<FoodEditor> {
         },
         fieldKey: const ValueKey('food-expiration'),
         focusNode: expiryFocus,
-        autofocus: widget.template != null,
+        autofocus: widget.autofocus && widget.template != null,
         label: 'Expiration',
         hint: expiry.text.isEmpty && _expiryOffer != null
             ? _expiryOffer!.$1
@@ -1435,7 +1439,7 @@ class FoodEditorState extends State<FoodEditor> {
         },
         child: FocusScope(
           node: _focusScope,
-          autofocus: true,
+          autofocus: widget.autofocus,
           child: NotificationListener<ScrollMetricsNotification>(
             onNotification: (notification) {
               if (notification.depth == 0 &&

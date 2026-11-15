@@ -284,7 +284,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   /// One row uses its own editor; multiple rows use the bulk editor, just as
   /// Tasks opens its single editor for one selected task. Either edits the
   /// selected rows' current containers.
-  Future<void> _editSelection({bool replacingApproved = false}) {
+  Future<void> _editSelection({
+    bool replacingApproved = false,
+    bool autofocus = true,
+  }) {
     final rows = [
       for (final row in _grouping.rows)
         if (selectedRows.contains(_rowKey(row))) row,
@@ -296,10 +299,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             rows: {_rowKey(rows.single)},
             detailsCommand: widget.onDetails,
             replacingApproved: replacingApproved,
+            autofocus: autofocus,
           )
         : _edit(
             rows: {for (final row in rows) _rowKey(row)},
             replacingApproved: replacingApproved,
+            autofocus: autofocus,
           );
   }
 
@@ -400,10 +405,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           rows: {_rowKey(single)},
           detailsCommand: widget.onDetails,
           replacingApproved: replace,
+          autofocus: false,
         ),
       );
     } else if (survivors.isNotEmpty && _wide) {
-      unawaited(_editSelection(replacingApproved: replace));
+      unawaited(_editSelection(replacingApproved: replace, autofocus: false));
     }
   }
 
@@ -1906,6 +1912,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Future<void> _edit({
     FoodGroup? group,
     bool replacingApproved = false,
+    bool autofocus = true,
     FoodDetails? template,
     Set<String>? rows,
     FutureOr<void> Function(FoodDetails, int)? addCommand,
@@ -1991,6 +1998,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       () => _editorBuilder = (panel) => FoodEditor(
         key: key,
         panel: panel,
+        autofocus: autofocus,
         group: currentGroup(),
         template: template,
         targets: currentTargets(),

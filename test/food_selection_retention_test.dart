@@ -12,6 +12,7 @@ String _id(int n) => '00000000-0000-4000-8000-${n.toString().padLeft(12, '0')}';
 Future<FoodInventoryPageState> _pump(
   WidgetTester tester, {
   bool wide = false,
+  Map<String, String> names = const {},
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = Size(wide ? 1400 : 800, 900);
@@ -34,7 +35,7 @@ Future<FoodInventoryPageState> _pump(
               action: FoodAction.add,
               targets: [_id(entry.$1 + 1)],
               details: FoodDetails(
-                name: entry.$2.$1,
+                name: names[entry.$2.$1] ?? entry.$2.$1,
                 brand: entry.$2.$2,
                 retention: entry.$2.$3,
                 expiry: '2026-11-01',
@@ -109,6 +110,72 @@ Future<void> verifyFoodWideSelectionRetention(
   expect(tester.takeException(), isNull);
 }
 
+Future<void> verifyFoodSearchFocusRetention(
+  WidgetTester tester, {
+  Future<void> Function(String)? typeText,
+  Future<void> Function(String)? capture,
+}) async {
+  Future<void> typeQuery(String query) async {
+    if (typeText != null) {
+      await typeText(query);
+    } else {
+      tester.testTextInput.enterText(query);
+    }
+  }
+
+  final page = await _pump(
+    tester,
+    wide: true,
+    names: {'Beans': 'RC117 Receipt birth', 'Rice': 'RC117 Labeled undated'},
+  );
+  await _toggle(tester, 'RC117 Receipt birth');
+  await _toggle(tester, 'RC117 Labeled undated');
+  final search = find.byKey(const ValueKey('food-search'));
+  await tester.tap(search);
+  await typeQuery('e');
+  await tester.pumpAndSettle();
+  expect(page.bulkSelected, {_id(1), _id(2)});
+  await typeQuery('Rece');
+  await tester.pumpAndSettle();
+  final input = find.descendant(
+    of: search,
+    matching: find.byType(EditableText),
+  );
+  expect(tester.widget<EditableText>(input).focusNode.hasFocus, isTrue);
+  // Continue through the active IME connection, without refocusing Search.
+  for (final query in ['Recei', 'Receip', 'Receipt']) {
+    await typeQuery(query);
+    await tester.pumpAndSettle();
+  }
+  expect(tester.widget<TextField>(search).controller!.text, 'Receipt');
+  expect(tester.widget<EditableText>(input).focusNode.hasFocus, isTrue);
+  final name = find.widgetWithText(TextField, 'Food name');
+  expect(
+    tester.widget<TextField>(name).controller!.text,
+    'RC117 Receipt birth',
+  );
+  expect(find.byType(FoodEditor), findsOneWidget);
+  expect(page.bulkSelected, isEmpty); // The survivor is now plain-edited.
+  expect(
+    tester
+        .widget<FoodEditor>(find.byType(FoodEditor))
+        .group!
+        .containers
+        .map((c) => c.id),
+    [_id(1)],
+  );
+  await capture?.call('search-receipt-typing-survivor');
+  await typeQuery('');
+  await tester.pumpAndSettle();
+  expect(
+    tester.widget<TextField>(name).controller!.text,
+    'RC117 Receipt birth',
+  );
+  expect(find.text('Edit 2 containers'), findsNothing);
+  expect(find.byType(FoodEditor), findsOneWidget);
+  await capture?.call('search-typing-survivor');
+}
+
 void main() {
   testWidgets('Search keeps selected rows that remain visible', (tester) async {
     // Lee 2026-11-12: Tasks and Food keep selected rows that remain visible
@@ -181,6 +248,11 @@ void main() {
     expect(page.bulkSelected, isEmpty);
     expect(page.selecting, isTrue);
   });
+
+  testWidgets(
+    'wide Search narrowing to one keeps typing in Search',
+    verifyFoodSearchFocusRetention,
+  );
 
   testWidgets('wide Search keeps the pane and guards a hidden target', (
     tester,

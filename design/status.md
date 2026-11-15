@@ -48,7 +48,12 @@ passed. The RC remains an unchanged prerelease.
 Next candidate 2026.11.3-rc.1/build119: Search keeps selected rows it still shows
 in Tasks and Food (Lee, 2026-11-12; [batch selection](batch-selection.md#audit-outcomes));
 undated Food sorts first, including Search, with normal Inbox/Stock grouping
-unchanged (Lee, 2026-11-14). Validation and publication are pending.
+unchanged (Lee, 2026-11-14). The exact build119 candidate was blocked by
+Food Search focus loss when narrowing bulk selection to one row. The local
+[focus correction](batch-selection.md#rc119-food-search-focus-correction-2026-11-14-local)
+keeps typing in Search while returning the surviving row to its single editor.
+Changed-source qualification and exact-artifact acceptance must run again; the
+old q20 result does not qualify this correction. Publication remains pending.
 Owner-device rollout is tracked separately; no live seeds/cutover performed here.
 
 ## Commands
