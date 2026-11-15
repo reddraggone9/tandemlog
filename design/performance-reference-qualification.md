@@ -691,3 +691,17 @@ policy are unchanged. Inventory was derived with the runner/receipt functions
 in isolated compile-only preparation, without measuring or qualifying a workload.
 This registration is not a qualification: wait for other CI to be green before
 a fresh controlled request; retained receipts are not rewritten.
+
+
+### Prepared package cache metadata
+
+Before preparing an immutable reference checkout, use the canonical host cache
+for the prepared Flutter environment (`PUB_CACHE=/home/nibbler/.pub-cache` on the
+registered Bender host). Check that `.dart_tool/package_config.json` records that
+same `pubCache` URI, matching the pinned controller environment. Matching package
+source bytes alone is insufficient: Dart's native-assets preparation checks the
+metadata and may attempt a Pub rewrite even with explicit `--packages`. A stale
+alternate cache URI causes an AOT compile failure on the intentionally read-only
+source before measurement. Preserve that failed invocation, correct preparation,
+and use a fresh request; never make the sealed source writable or relabel the
+failure as a performance measurement.

@@ -1,0 +1,52 @@
+{
+  "correctnessAccepted": false,
+  "measurementCompleted": null,
+  "releaseGateAccepted": false,
+  "timingLimitsPassed": null,
+  "confirmedFailures": [
+    "food-own-history:scaling:agent.write.purchaseImport2"
+  ],
+  "rerunJudgments": [
+    {
+      "label": "dense-1:writer300.refresh.food.unchanged",
+      "kind": "absolute",
+      "firstPassMs": 10.535,
+      "rerunMs": 8.453,
+      "boundMs": 10,
+      "failedAgain": false
+    },
+    {
+      "label": "food-own-history:scaling:agent.write.purchaseImport2",
+      "kind": "growth",
+      "firstPass": {
+        "smallSampleMs": 148.443,
+        "largeSampleMs": 465.95,
+        "boundMs": 433.99675
+      },
+      "rerun": {
+        "smallSampleMs": 139.583,
+        "largeSampleMs": 655.436,
+        "boundMs": 414.06175
+      },
+      "failedAgain": true
+    },
+    {
+      "label": "food-own-history:scaling:converted.checklist.delete",
+      "kind": "growth",
+      "firstPass": {
+        "smallSampleMs": 13.893,
+        "largeSampleMs": 20.659,
+        "boundMs": 20.36625
+      },
+      "rerun": {
+        "smallSampleMs": 11.839,
+        "largeSampleMs": 11.881,
+        "boundMs": 17.79875
+      },
+      "failedAgain": false
+    }
+  ],
+  "error": "Same label failed its first pass and its rerun: food-own-history:scaling:agent.write.purchaseImport2",
+  "startedAtUTC": "2026-11-15T17:34:46.646217+00:00",
+  "finishedAtUTC": "2026-11-15T17:37:32.379338+00:00"
+}
