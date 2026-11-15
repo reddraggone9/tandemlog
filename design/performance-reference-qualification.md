@@ -33,7 +33,7 @@ The current schema-v2 registration is in `tool/performance/reference-host-v1.jso
   inventory. A native or dependency change needs new provenance review and
   re-registration before a request. Do not modify binaries or package roots to get a pass.
 - **Controller:** r8, SHA-256
-  `0d530d8df1eefa478aff8532ea6fb039e3be4f5d9b34ad3e4dee7da3e1d505c4`, with its pressure
+  `4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba`, with its pressure
   module `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`. The
   controller source is private; only its hash is published. r8 admits the household's
   idle `vex-adb.service` ADB server, so qualification does not stop it
@@ -659,10 +659,14 @@ review of upstream accounting implementations. `si_mem_available()` and
 `fs/proc/meminfo.c` are unchanged. The vmstat changes add counters without
 renaming pswpin/pswpout; PSI changes only the zero IRQ-delta early return.
 The same ZFS 2.4.4.r10.geb011f2aff-1 module and arc_os.c hash remain required,
-with zfs_arc_pc_percent=0. Conservative ARC credit and every pressure, admission,
-resource, timing and cleanup bound remain unchanged. The controller revision
-changes only that literal kernel pin; its new registered SHA256 is
-`0d530d8df1eefa478aff8532ea6fb039e3be4f5d9b34ad3e4dee7da3e1d505c4`. Prior controller and receipts are retained.
+with zfs_arc_pc_percent=0. Independent source and live-sysfs review found that
+small linear ZIO data buffers can use reclaim-accounted slab already included
+in MemAvailable. The controller therefore grants **zero additional ARC credit**;
+effective availability equals raw MemAvailable. This removes possible double
+counting conservatively. Pressure thresholds, admission, resource, timing and
+cleanup bounds remain unchanged. The revision changes the kernel pin and extra
+ARC credit only; its new registered SHA256 is
+`4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba`. Prior controller and receipts are retained.
 
 No stored timing baseline is imported: absolute limits remain fixed, and both
 growth comparisons use shapes measured within the same fresh invocation.
