@@ -60,3 +60,26 @@ Affected133tests PASS. Integrated full1946Fluttertests PASS and analyzer clean.
 Terminal wrapper again reported descendant-cleanup unknown exit AFTER complete
 pass logs; not claimed as a clean wrapper exit. Native checks and fresh hosted
 CI/full exact-source qualification still required.
+
+
+## Repaired source accepted for signed-candidate build
+
+Exact sourcee5a36ed3: all10 hosted jobs CI43743649759 PASS, dispatched once for
+that graph after local1946tests/analyze and native restored-history9/Food5 PASS.
+Fresh cold-start median550ms PASS (560/550/560/550/550; strict first2670ms).
+Fresh controlled reference request3c90570285f760b119339d6deb28582e compiled,
+measured ONCE and sealed; absolute and both history-growth budgets PASS,
+relevant-source-v3 SHA2e31fb667dc90bd7d7f769ab2f89df8a39c0c32ed8811898f9409b020e20f293.
+Original executor/final/cleanup independently consistent, allpins/correctness/
+timing/release gates true, no remaining exact processes/owned active units.
+Three first misses passed only their automatic same-invocation confirmations;
+original warnings retained in the sealed bundle. PriorRC121/q24 bundle retained
+separately; earlierRC122 failures never overwritten or reused as acceptance.
+Repository reference and cold-start verifiers both independently PASS.
+
+Restoration verified: exact Transmission settings/container restored, backup
+writer thawed, backup.timer restored to originalactive after stopping its new
+admissions during measurement; background music/Jellyfin restored and quiet fence
+released. Exact fallback timer inactive. Already-finished cold-copy unit absent.
+No ARC parameter or budget change; targeted reclaim only before admission.
+Native artifact acceptance, signed candidate and publication remain pending.

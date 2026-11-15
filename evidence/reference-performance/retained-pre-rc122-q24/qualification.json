@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "requestId": "87fca4d9f16a9f3d43cc19789a4054ce",
+  "binarySHA256VerifiedAtExport": "70ab772801a09d3d20c95aca5465cc821304a5110d963202b3a2775916e4ac15",
+  "fixtureBytesVerifiedAtExport": true,
+  "files": {
+    "dense-2-attempt-0.log": "89aac5fc12bbdf69df0e8246a0cea26e2864ed3f09bbd5a352c8eb6b30b4f8df",
+    "rerun-dense-1-converted-task-commands.log": "1a042e1eb00bf4f105ad4d245d07fdb6ba382a93b44413efec44e851abc2f35c",
+    "rerun-dense-2-converted-task-commands.log": "2fdd56cbf60596d475a5aaddf57c0bbd627a3ade110095408eb12345023170b1",
+    "dense-2-generate.log": "eae6727443b797e5db1b72d6737843b12ad4a6c1879befb9680753c87cb239e5",
+    "gate-result.json": "542d4afaf676a6cfde5cbe6fcf0a05e26fe0ce6745f67c52f0cd65562a9f6e32",
+    "rerun-dense-1-food-products.log": "98862d1d7deb25bea0160504d17986dc27656f33b3d55d5300ddedf71c658dbe",
+    "rerun-dense-food-food-products.log": "6a9915f2f6d60b3930dcf92079d582ac2412721aee6ce3a9d30867950e1e59a7",
+    "request.json": "b0bf662dcc7729c6696c9c7a57a5b2e7bf2d7e4485041a3adb2d41fd16ec6490",
+    "dense-food-attempt-0.log": "0d0cc7bf8c8242971453abfbd04c56aacfe6a86fa39168d5ffdca0d322e2b8db",
+    "dense-food-generate.log": "c4bdea9cb10f5daa0f68bead7c244e12ca253512f134b1d1abebe182aa83702d",
+    "compile.log": "2c1a27d99f6e096a3977b536ab80740d46d5fad140bc56e49165dc8739eb9de2",
+    "dense-1-attempt-0.log": "51174c26b12e712854014e61ddb4209e1fae981ca5025bb9302ba566914770f6",
+    "dense-1-generate.log": "4c6e4a20176d77028d4db47ad60e4b7e774e4c1cd494652cb05e33a56723de68",
+    "cleanup.json": "8653af9975d18aca8c3730ec1960ff7841b569ca34ef04603e1f7de209f85e15",
+    "fixture-dense-2/fixture.json": "1f13a694d3a5c10f4f775cd3e22a38e6c3c09ab6f3a76767486a471abc95fd1e",
+    "fixture-dense-1/fixture.json": "2074c7ba01c72ebccbfd931eac0527b67e5a8529f2b5738a6c219148dcea4c0d",
+    "fixture-dense-food/fixture.json": "17d09feb5c48d6e4ff8bccfc904f2345feb29d62cf08c7f4895d277a7e26452c"
+  }
+}

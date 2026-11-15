@@ -1,5 +1,5 @@
 {
-  "requestId": "87fca4d9f16a9f3d43cc19789a4054ce",
+  "requestId": "3c90570285f760b119339d6deb28582e",
   "controllerSHA256": "4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba",
   "ownedUnitsInactive": true,
   "ownedProcessesAbsent": true,
@@ -10,8 +10,8 @@
   "oomKills": 0,
   "resourceCaptureBoundary": "work-complete/pre-exit",
   "verifiedCompletionCapture": true,
-  "completionCaptureSHA256": "920967cd5cb3decaa8ea7ff8913055257117c0d5090403b241c7688f646e7eeb",
-  "completedAtUTC": "2026-11-15T10:22:46.392329+00:00",
-  "deadlineUTC": "2026-11-15T10:44:42.871830+00:00",
+  "completionCaptureSHA256": "97ac5f3be3277917f3a2b554bc1f436c023bfdbeff55c733b3c4444e9b4c2897",
+  "completedAtUTC": "2026-11-15T18:33:38.710281+00:00",
+  "deadlineUTC": "2026-11-15T18:55:33.166615+00:00",
   "errors": []
 }

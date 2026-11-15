@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "87fca4d9f16a9f3d43cc19789a4054ce",
-  "issuedAtUTC": "2026-11-15T08:30:18.191258+00:00",
-  "sourceRevision": "ead92a263b103bca6fd9ca0969520078b0c9adfe",
+  "requestId": "3c90570285f760b119339d6deb28582e",
+  "issuedAtUTC": "2026-11-15T17:54:08.835490+00:00",
+  "sourceRevision": "e5a36ed3bedc6bda5be4287c5a9141bd9095373d",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "503d655b936e286d1baadcf798e0ee55d2c473e7dfcd4909f9dc7e536e18c23e",
+    "sha256": "2e31fb667dc90bd7d7f769ab2f89df8a39c0c32ed8811898f9409b020e20f293",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -233,7 +233,7 @@
         "mode": "100644"
       },
       "lib/storage/diagnostic_database.dart": {
-        "sha256": "566e37df4ad4a212c4b645e8ae432faefe38ea5d1075e46d9f2336f6b8db3587",
+        "sha256": "d3755d96a9c2abb52821bda3caea01c5056c23ef1371488719d0632bdabeffd7",
         "mode": "100644"
       },
       "lib/storage/history_store.dart": {
@@ -273,7 +273,7 @@
         "mode": "100644"
       },
       "lib/storage/unified_history.dart": {
-        "sha256": "d13c719657f0f420faf622f5ee605eae8ed369afa4a6ea120efb57c7eaada735",
+        "sha256": "c1a17f508df4afb5577cea051c9e89bae98c74c6d1f5dfd436bde89cdf1ffe91",
         "mode": "100644"
       },
       "lib/storage/unified_manifest.dart": {
@@ -605,7 +605,7 @@
         "mode": "100644"
       },
       "pubspec.lock": {
-        "sha256": "f78669e0f9f033c5404ea390826dff5a734736199db0d82e73e7e29cdd41a0ac",
+        "sha256": "4e96fd717fe52afc6e529508c4207f5162266230f8aeca1bfa8f705957285acf",
         "mode": "100644"
       },
       "tool/performance/benchmark.dart": {
@@ -653,7 +653,7 @@
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
+        "sha256": "6c93e796c1e3101bd4608377a5193afd844472d2caf8d45a921ecff646acd15c",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
@@ -678,7 +678,7 @@
       }
     }
   },
-  "hostProfileSHA256": "33fea5209c2aa32f48d3932f3c3f81e16b3d4234cd0ffb00f0ecc73702e05dae",
+  "hostProfileSHA256": "6c93e796c1e3101bd4608377a5193afd844472d2caf8d45a921ecff646acd15c",
   "controllerSHA256": "4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba",
   "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-next-20261114/controller-zeroarc/controller_r8.py"
 }
