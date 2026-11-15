@@ -7,12 +7,15 @@ The dated log of every earlier build, trial and checkpoint is in
 
 ## Released
 
-Experimental **2026.11.3-rc.1 / build121** published 2026-11-15 from `77dadb6`.
-Search selection retention in Tasks/Food, undated Food first, faster long-history
-purchase imports. All four exact Android/GTK stable 118 and RC117 upgrade paths
-PASS; anonymous four-asset verification PASS. Not Latest; isolated Leela usable
-GUI handoff remains unverified on its locked desktop (not Windows GUI acceptance).
-[Receipts](../evidence/prerelease-2026.11.3-rc.1/README.md).
+Experimental **2026.11.3-rc.2 / build122** published 2026-11-15 from `7e280f19`.
+Larger painted button targets and retained Task/Food editor side spacing at large
+text sizes; reviewed routine dependencies and development receipt reporting.
+Fresh source CI and controlled reference qualification PASS; exact Android/GTK
+stable118 and RC121 upgrades PASS. Anonymous four-asset/signer/immutable/prior-tag
+verification PASS. Prerelease, not Latest. Exact portable RC122 staged on Leela's
+isolated copy/profile with separate shortcut; usable Windows GUI launch remains
+unverified on the locked Screen-saver desktop. No Windows GUI acceptance claimed.
+[Receipts](../evidence/prerelease-2026.11.3-rc.2/README.md).
 
 Stable **2026.11.2 / build 118** is Latest, published 2026-11-13 from `a17da44`
 (promotion of Lee-accepted 2026.11.2-rc.1/build117). [Receipts](../evidence/stable-2026.11.2/README.md).
@@ -52,15 +55,16 @@ large-text editor fixes and reusable release tooling. Stable118 signed candidate
 scripted exact Android/GTK upgrades from116 and117, CI and anonymous public checks
 passed. The RC remains an unchanged prerelease.
 
-Published experimental 2026.11.3-rc.1/build 121 includes Search selection
-retention and undated Food ordering, the minimal Food Search focus and hidden
-range-anchor corrections, and faster purchase imports with long Food histories.
-Rejected candidates 119 and 120 remain unpublished. Fresh q24 qualification and
-exact signed121 acceptance passed; older q20/q23 results are not relabeled.
-All source, candidate, native and public acceptance records are in the release
-[evidence](../evidence/prerelease-2026.11.3-rc.1/README.md).
-Isolated Leela handoff completion remains separately tracked; no live install or
-cutover is implied by publication.
+Published experimental 2026.11.3-rc.2/build122 includes the prior RC121 Search
+selection/undated Food work plus reviewed housekeeping. A genuine CLI purchase
+import growth miss was profiled and fixed by bounding history decode to one
+worker per restore; the fresh exact source passed the unchanged full reference
+gate. Prior failed compile/qualification evidence is retained, not relabeled.
+Exact signed122 acceptance and anonymous publication verification passed.
+All source/candidate/native/public records are in the release
+[evidence](../evidence/prerelease-2026.11.3-rc.2/README.md).
+Isolated Leela GUI handoff completion remains separately tracked; no stable
+promotion, live install or cutover is implied by publication.
 
 ## Commands
 

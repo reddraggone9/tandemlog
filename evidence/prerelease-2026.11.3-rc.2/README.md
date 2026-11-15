@@ -1,10 +1,10 @@
-# Housekeeping RC122 — validation in progress
+# Housekeeping RC122 — published experimental prerelease
 
 Source is based on main f25eb97e, which already contains published RC121 including prior RC119 work. No old candidate artifacts or claims are reused as acceptance of RC122.
 
 Changes: shared FilledButton minimum painted height48dp with unconstrained growth; real16dp Task/Food dialog gutters at2x; reviewed crypto3.0.8, sqlite3 3.9.1 and setup-java6.2.0. Diagnostic SQLite trace/interrupt methods transparently delegate, without enabling tracing. Historical-reader harness resolves its archived manifest/lock; production historical decoder bytes unchanged. Dev reference reporting advisory; candidate and reusable defaults remain fail-closed. No format change.
 
-Local checks:1946 Flutter tests PASS, analyze clean;312 Python tests PASS/2 skipped; native spacing16, retained Task error/keyboard6, Food form/IME/error matrix12variants, production Food5 PASS. Multi-file native launch/session infrastructure failures are preserved in private logs; isolated invocations passed. Broad task_flow aggregate stopped after54passing cases, not claimed as full native pass. Full hosted CI43734987630 dispatched once on executable source1afb55ef; later commits are version/release-note metadata only.
+Local checks:1946 Flutter tests PASS, analyze clean;312 Python tests PASS/2 skipped; native spacing16, retained Task error/keyboard6, Food form/IME/error matrix12variants, production Food5 PASS. Multi-file native launch/session infrastructure failures are preserved in private logs; isolated invocations passed. Broad task_flow aggregate stopped after54passing cases, not claimed as full native pass. Initial hosted CI43734987630 covered executable source1afb55ef; later source repairs each received fresh CI as recorded below.
 
 Native cold start on4d45be5e: median480ms<=1000ms; samples490/460/480/520/480ms; strict first launch2610ms reported, not budgeted. Quiet window requested/admitted, services restored and fence released after measurement. Canonical result committed separately.
 
@@ -12,7 +12,7 @@ Independent notes review PASS, see notes-review.md. Review captures previously s
 
 Architecture/docs/debt review: changes confined to shared style/layout and transparent diagnostic adapter; no new persistence format or duplicated business rules. Dependency exact source/native/runtime byte reviews retained privately in housekeeping investigation SQLITE.md and JAVA.md. Leela model-free updater already deployed separately; first scheduled skip-active observed, no newer stable installation yet exercised.
 
-Qualification, signed candidate, exact-artifact native acceptance and public verification remain pending. Stable and all live user data untouched.
+Qualification, signed candidate, exact-artifact native acceptance and anonymous public verification are completed in the final section below. Stable and all live user data untouched.
 
 
 ## Qualification blocker (2026-11-15)
@@ -33,7 +33,7 @@ Its Food own-history growth `agent.write.purchaseImport2` failed both the first
 sample (148.443ms small,465.95ms large,bound433.99675ms) and policy-owned
 confirmation (139.583ms small,655.436ms large,bound414.06175ms). Gate rejected it;
 no seal, candidate or publication exists. See confirmed-failure-summary.json.
-An independent profiling/fix worker owns the minimal performance repair.
+An independent profiling/fix worker subsequently produced the minimal repair recorded below.
 No unchanged-source qualification rerun, budget change or noise dismissal.
 
 All setup/restoration receipts retained privately. Exact downloader settings and
@@ -58,8 +58,8 @@ Independent code/data-integrity reviewer1b43f2d9 PASS; binding/seal/tail/sequenc
 offset/migration/prefix checks unchanged, no instrumentation or budget edits.
 Affected133tests PASS. Integrated full1946Fluttertests PASS and analyzer clean.
 Terminal wrapper again reported descendant-cleanup unknown exit AFTER complete
-pass logs; not claimed as a clean wrapper exit. Native checks and fresh hosted
-CI/full exact-source qualification still required.
+pass logs; not claimed as a clean wrapper exit. At that repair handoff, native checks and fresh hosted
+CI/full exact-source qualification were still required; subsequent completion is recorded below.
 
 
 ## Repaired source accepted for signed-candidate build
@@ -82,4 +82,50 @@ writer thawed, backup.timer restored to originalactive after stopping its new
 admissions during measurement; background music/Jellyfin restored and quiet fence
 released. Exact fallback timer inactive. Already-finished cold-copy unit absent.
 No ARC parameter or budget change; targeted reclaim only before admission.
-Native artifact acceptance, signed candidate and publication remain pending.
+Native artifact acceptance, signed candidate and publication subsequently completed as recorded below.
+
+
+## Published exact accepted RC122
+
+Signed candidate43747681400 on7e280f19910e02803f3f1aef156b121d4eede242 PASS,
+including mandatory reference/cold-start gates, full hosted correctness/platform
+builds and owner-signed non-debuggable universal APK. Shared durable waiter
+completed/downloaded all three artifact groups, inventory/checksum/source/signer/
+version/installed-lifecycle verification PASS. APK SHA911349e9ddbb71b05a566be4889b0aa3c815729c29a8bcbd85728c66fb60a805.
+Final independent notes review229004ef PASS over exact f25eb97e..7e280f19;
+text-only notes accepted, no meaningful UX change omitted.
+
+Independent exact-artifact Android407a8c43 and GTK422ee169 native acceptance PASS
+for both stable118→122 and previous publishedRC121→122. All install-time canonical
+bytes, binding/history/integrity preserved; synthetic edits append-only. Android
+UID/firstInstallTime and exact read/write SAF grant unchanged. Actual native dark
+2x Task/Food Save/Cancel/dirty recovery/reopen, scrolling/lower fields/keyboard
+reachability,48dp buttons and16dp inner gutters verified. Android narrow390dp and
+additionalwide780dp captured; GTK narrow/wide captured with physical keyboard,
+not mobile on-screen keyboard. Both cold-reopened; GTK four normal exit-zero
+closes total. All owned emulator/GTK processes/ports/display cleaned up. Inherited
+unchanged old Search/sort/pruning manual matrix explicitly NOT_RUN; mandatory
+current-change, history preservation and cleanup assertions retained. Full CI
+still covers unchanged functionality. Windows hosted setup lifecycle/portable
+inventory PASS; Windows GUI acceptance is not claimed.
+
+Published 2026-11-15T19:22:49Z (13:22CST):
+https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.3-rc.2
+Immutable experimental prerelease with all four exact accepted assets, not Latest.
+Anonymous verifier PASS on every public size/hash, APK signer/version/nondebuggable,
+reviewed notes, source/tag and immutable flag. Prior55 releases/tags unchanged;
+Latest remains stable2026.11.2/build118. No asset rebuilt or relabeled.
+
+Routine dependency PR15/16/20 CLOSED after released source; held1/2 untouched.
+Exact public portable RC122 staged with isolated existing copied workspace and
+fresh-writer profile on Leela, separate Start-menu **Tandemlog RC test** shortcut.
+Version/member hashes/profile binding/data preservation/launcher checks PASS.
+**Remaining real gap:** current input desktop is locked Screen-saver; usable GUI
+launch unverified without foreground takeover. No app GUI launched or desktop
+switched. All real-data-derived handoff evidence remains private. Stable/live
+install and data untouched; no stable promotion.
+
+Original harness Before/After captures were accurately labeled and relayed before
+RC work. Additional review media are genuine exact-candidate synthetic native
+Android/GTK captures under private native-prep and the household artifact directory;
+they are not release-note images. Parent handoff report lists exact paths.

@@ -1,0 +1,73 @@
+{
+  "source": "7e280f19910e02803f3f1aef156b121d4eede242",
+  "candidateRun": "43747681400",
+  "scope": "Exact synthetic native Android/GTK upgrades; Windows hosted installation/portable inventory only, GUI handoff unverified on locked desktop",
+  "cases": {
+    "from-stable118": {
+      "android": {
+        "status": "PASS",
+        "version": "2026.11.3-rc.2",
+        "build": 122,
+        "apkSHA256": "911349e9ddbb71b05a566be4889b0aa3c815729c29a8bcbd85728c66fb60a805",
+        "flatpakSHA256": "d55d2960a18a9eaea0a2dabc699e4c2f14857eb50a9d8ac8836f97f4152f3ac7",
+        "cleanup": {
+          "errors": [],
+          "emulatorAbsent": true,
+          "portsAbsent": {
+            "5049": true,
+            "5680": true,
+            "5681": true,
+            "8568": true
+          }
+        },
+        "scope": "Current changed workflows, protected binding/history/integrity/prefixes/cold reopen; inherited unchanged manual Search/sort/pruning explicitly NOT_RUN"
+      },
+      "gtk": {
+        "status": "PASS",
+        "version": "2026.11.3-rc.2",
+        "build": 122,
+        "apkSHA256": "911349e9ddbb71b05a566be4889b0aa3c815729c29a8bcbd85728c66fb60a805",
+        "flatpakSHA256": "d55d2960a18a9eaea0a2dabc699e4c2f14857eb50a9d8ac8836f97f4152f3ac7",
+        "cleanup": {
+          "errors": [],
+          "displaySocketGone": true,
+          "allChildrenReaped": true
+        },
+        "scope": "Current changed workflows, protected binding/history/integrity/prefixes/cold reopen; inherited unchanged manual Search/sort/pruning explicitly NOT_RUN"
+      }
+    },
+    "from-rc121": {
+      "android": {
+        "status": "PASS",
+        "version": "2026.11.3-rc.2",
+        "build": 122,
+        "apkSHA256": "911349e9ddbb71b05a566be4889b0aa3c815729c29a8bcbd85728c66fb60a805",
+        "flatpakSHA256": "d55d2960a18a9eaea0a2dabc699e4c2f14857eb50a9d8ac8836f97f4152f3ac7",
+        "cleanup": {
+          "errors": [],
+          "emulatorAbsent": true,
+          "portsAbsent": {
+            "5049": true,
+            "5680": true,
+            "5681": true,
+            "8568": true
+          }
+        },
+        "scope": "Current changed workflows, protected binding/history/integrity/prefixes/cold reopen; inherited unchanged manual Search/sort/pruning explicitly NOT_RUN"
+      },
+      "gtk": {
+        "status": "PASS",
+        "version": "2026.11.3-rc.2",
+        "build": 122,
+        "apkSHA256": "911349e9ddbb71b05a566be4889b0aa3c815729c29a8bcbd85728c66fb60a805",
+        "flatpakSHA256": "d55d2960a18a9eaea0a2dabc699e4c2f14857eb50a9d8ac8836f97f4152f3ac7",
+        "cleanup": {
+          "errors": [],
+          "displaySocketGone": true,
+          "allChildrenReaped": true
+        },
+        "scope": "Current changed workflows, protected binding/history/integrity/prefixes/cold reopen; inherited unchanged manual Search/sort/pruning explicitly NOT_RUN"
+      }
+    }
+  }
+}
