@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:math' show min;
 import 'dart:typed_data';
 import 'package:sqlite3/sqlite3.dart' show SqliteException;
 
@@ -506,7 +505,7 @@ final class UnifiedHistory {
       }
       // Workers decode the rows while this isolate rebuilds each writer's
       // bytes from the same rows, a frame's worth at a time.
-      final decoding = _decodeStoredRows(rowsByOwner, frames)..ignore();
+      final decoding = _decodeStoredRows(rowsByOwner)..ignore();
       final prefixes = <String, BytesBuilder>{};
       for (final MapEntry(key: owner, value: rows) in rowsByOwner.entries) {
         final builder = prefixes[owner] = BytesBuilder(copy: false);
@@ -561,41 +560,25 @@ final class UnifiedHistory {
     }
   }
 
-  /// Decodes stored rows in parallel short-lived isolates (pure data only;
+  /// Decodes stored rows on one short-lived worker (pure data only;
   /// no profile or native owner crosses), on this isolate if unavailable.
   static Future<Map<String, List<UnifiedRecord>>> _decodeStoredRows(
     Map<String, List<StoredRow>> rows,
-    _FrameBudget frames,
   ) async {
-    const chunk = 400;
-    final jobs = <(String, int, List<StoredRow>)>[
-      for (final MapEntry(key: owner, value: list) in rows.entries)
-        for (var i = 0; i < list.length; i += chunk)
-          (owner, i, list.sublist(i, min(i + chunk, list.length))),
-    ];
-    List<List<UnifiedRecord>> parts;
+    // One worker owns the restore decode. A planned CLI commit opens two
+    // histories concurrently; a worker per 400 rows multiplied isolate startup
+    // and transfer overhead as history grew under the two-CPU reference quota.
+    Map<String, List<UnifiedRecord>> decode() => {
+      for (final entry in rows.entries)
+        entry.key: HistoryStore.decode(entry.value),
+    };
+    Map<String, List<UnifiedRecord>> result;
     try {
-      // Starting a worker copies its rows on this isolate. A worker that
-      // fails during a pause still reports through the wait below.
-      final workers = <Future<List<UnifiedRecord>>>[];
-      for (final job in jobs) {
-        if (frames.due) await frames.pause();
-        workers.add(
-          Isolate.run(
-            () => HistoryStore.decode(job.$3),
-            debugName: 'tandemlog-store-decode',
-          )..ignore(),
-        );
-      }
-      parts = await Future.wait(workers);
+      result = await Isolate.run(decode, debugName: 'tandemlog-store-decode');
     } on IsolateSpawnException {
-      parts = [for (final job in jobs) HistoryStore.decode(job.$3)];
+      result = decode();
     } on UnsupportedError {
-      parts = [for (final job in jobs) HistoryStore.decode(job.$3)];
-    }
-    final result = <String, List<UnifiedRecord>>{};
-    for (var j = 0; j < jobs.length; j++) {
-      (result[jobs[j].$1] ??= []).addAll(parts[j]);
+      result = decode();
     }
     return result;
   }
