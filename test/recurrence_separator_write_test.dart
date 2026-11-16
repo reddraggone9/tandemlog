@@ -95,7 +95,7 @@ void main() {
         }
       }
     } finally {
-      store.close();
+      await store.close();
       await root.delete(recursive: true);
     }
   });
