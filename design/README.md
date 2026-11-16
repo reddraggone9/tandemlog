@@ -1,6 +1,6 @@
 # Design map
 
-Stable 2026.11.2/build118 is Latest; `main`'s unreleased changes are listed in
+Stable 2026.11.3/build123 is Latest; `main`'s unreleased changes are listed in
 [status.md](status.md), which also says what that release contains.
 
 Stack (Lee, 2026-09-30, [ADR0001](decisions/0001-client-and-storage.md)):

@@ -12,7 +12,7 @@ successor derivation are not normalized. No format revision or migration.
 Independent review of b771036 accepted four Food fixes and release-note coverage,
 and identified recurrence compatibility as a blocker. Commit9cbc3fd fixes that
 at command capture; frozen stable123 parser checks cover created/edited records,
-completion successors and exact historical bytes. Compatibility recheck pending.
+completion successors and exact historical bytes. Independent read-only recheck of9cbc3fd PASS: no remaining compatibility blocker; frozen parser matches stable123 except its import.
 
 ## Local correctness and UX
 
@@ -26,6 +26,14 @@ cleared field remains visible/focused and product name remains Strawberries.
 No new screen/layout introduced. Narrow/light/large-text review was not supplied.
 Release notes independently accepted for exact feature diff; no explanatory media
 required by reviewer. Windows GUI remains Lee's own trial, not automated coverage.
+
+## Architecture review
+
+The fixes stay within existing Food product/editor and agent command boundaries.
+New-input separator normalization is centralized at TaskStore command capture and
+copies caller maps; decoding, replay, canonical history and successor semantics
+remain unchanged. No new dependency, persistence format or migration is introduced.
+The frozen parser is test-only compatibility evidence, not production duplication.
 
 ## Qualification, candidate and delivery
 
