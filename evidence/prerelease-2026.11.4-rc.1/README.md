@@ -37,7 +37,9 @@ The frozen parser is test-only compatibility evidence, not production duplicatio
 
 ## Qualification, candidate and delivery
 
-Pending final development CI, controlled reference qualification, signed candidate,
-exact Android/GTK upgrade acceptance, anonymous public verification and isolated
-trial handoff. This file is not an acceptance receipt until those are recorded.
+Final development CI [43838620223](https://github.com/reddraggone9/tandemlog/actions/runs/43838620223) passed all ten jobs on3bebd80. Original43835149642 passed nine jobs but failed Windows because the new regression test deleted its temp directory before asynchronous TaskStore.close completed. Test-only3bebd80 awaits closure; local targeted2PASS and hosted Windows unit suitePASS. No unchanged rerun.
+
+Final controlled-reference request `2d9b15fe79a9e9584945030648745883` qualified3bebd80 once; absolute and both growth budgetsPASS, original executor/finalizer exit0, verified work-complete boundary and all owned processes absent. Receipt committed66a9532, identity `fb903dc5505132fda84a086429cc668586a1e9b8f6467089759ebac306de668d`. Initial prelaunch refusal (retained private) was the stopped lab's remaining adb5054 server, not a measurement; it was stopped before the single admitted invocation. All paused background services and backup timer restored; purpose fence released.
+
+Signed candidate43847261578 dispatched once on main66a95323713159388a7e30fcbe33d1c86019f5e1. Pending candidate completion, exact Android/GTK upgrade acceptance, anonymous public verification and isolated trial handoff. This file is not an acceptance receipt until those are recorded.
 No live household data used or changed.
