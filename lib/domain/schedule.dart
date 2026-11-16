@@ -13,6 +13,22 @@ const supportedRecurrenceGrammar =
 /// literal.
 bool recurrenceRequiresRevision4(String text) => _Rule.parse(text).extended;
 
+/// Normalize separator whitespace only for newly submitted commands. Decoders,
+/// replay and successor derivation retain the exact historical recurrence text.
+String normalizeNewRecurrenceInput(String text) {
+  _Rule.parse(text); // Validate before rewriting any input.
+  return text.replaceAllMapped(
+    RegExp(r'\s*,\s*(?:and\s+)?|\s+and\s+', caseSensitive: false),
+    (match) {
+      final separator = match[0]!;
+      // Keep already stable-supported spellings (and their revision) unchanged.
+      return const [', ', ' and ', ', and '].contains(separator.toLowerCase())
+          ? separator
+          : ', ';
+    },
+  );
+}
+
 const unchangedRecurrenceMessage =
     'The next occurrence would have the same dates. Complete this task later or edit its schedule.';
 

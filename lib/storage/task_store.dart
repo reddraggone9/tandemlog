@@ -2959,6 +2959,19 @@ class TaskStore {
     String? previousHash,
     LogEvent? pendingCreation,
   }) {
+    // This is local command capture, never canonical history admission/replay.
+    // Copy both maps so callers and previously decoded records stay untouched.
+    if ((type == 'task.created' ||
+            type == 'task.createdWithText' ||
+            type == 'task.edited') &&
+        data['schedule'] is Map &&
+        (data['schedule'] as Map)['recurrence'] is String) {
+      final schedule = Map<String, dynamic>.from(data['schedule'] as Map);
+      schedule['recurrence'] = normalizeNewRecurrenceInput(
+        schedule['recurrence'] as String,
+      );
+      data = {...data, 'schedule': schedule};
+    }
     final legacyTextChange =
         type == 'task.edited' &&
         (data.containsKey('title') || data.containsKey('description'));
