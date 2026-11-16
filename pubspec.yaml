@@ -1,7 +1,7 @@
 name: tandemlog
 description: Offline household tasks with portable canonical logs.
 publish_to: none
-version: 2026.11.3-rc.2+122
+version: 2026.11.3+123
 environment:
   sdk: '>=3.9.0 <4.0.0'
 dependencies:
