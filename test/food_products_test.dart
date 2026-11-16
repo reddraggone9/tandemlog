@@ -867,6 +867,19 @@ void main() {
               .firstWhere((p) => p.name == 'Grapes')
               .id;
           final before = records().length;
+          expect(
+            await food.applyKeepsFor([
+              const FoodKeepsForEntry(
+                description: FoodDetails(name: 'Absent'),
+                keepsFor: null,
+              ),
+            ]),
+            isEmpty,
+          );
+          expect(
+            food.state.products.values.any((p) => p.name == 'Absent'),
+            isFalse,
+          );
           final entries = [
             FoodKeepsForEntry(
               product: grapes,

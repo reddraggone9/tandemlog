@@ -2,6 +2,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/schedule.dart';
 
 void main() {
+  test('recurrence lists accept separator whitespace variants', () {
+    for (final text in [
+      'Monday,Thursday',
+      'Monday,  Thursday',
+      'Monday  and  Thursday',
+      'Monday,  and  Thursday',
+    ]) {
+      expect(
+        TaskSchedule(
+          dueDate: '2026-11-16',
+          recurrence: 'every week on $text',
+        ).next(DateTime.utc(2026, 11, 16)).dueDate,
+        '2026-11-19',
+      );
+    }
+  });
+
   test(
     'completion guard compares actual occurrence dates, not rendered bounds',
     () {

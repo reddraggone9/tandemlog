@@ -1,4 +1,7 @@
-# 2026.11.3-rc.2
+# 2026.11.4-rc.1
 
-- Buttons are easier to tap at large text sizes.
-- Task and Food editors keep comfortable side spacing at large text sizes.
+- Clearing Keeps for no longer moves typing into Food name.
+- Expiration dates edited through the agent interface are no longer marked estimated.
+- Clearing Keeps for for a nonexistent product no longer creates an empty product.
+- Keeps for accepts years as well as days, weeks and months.
+- Repeat lists accept missing or extra spaces around separators.

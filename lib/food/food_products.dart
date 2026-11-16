@@ -774,6 +774,7 @@ List<FoodProductEdit> planFoodKeepsFor(
           ).whereType<FoodProductEdit>().firstOrNull?.values ??
           const {};
     } else {
+      if (entry.keepsFor == null) continue;
       // A renamed or merged-away product keeps its derived ID.
       final implicit = implicitFoodProductId(description!);
       root = state.catalog.knows(implicit)

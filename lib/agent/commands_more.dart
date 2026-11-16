@@ -134,7 +134,7 @@ FoodDetails _withChanges(FoodDetails base, AgentCall call) => FoodDetails(
       : call.string('expiry') == 'none'
       ? null
       : call.string('expiry'),
-  estimated: base.estimated,
+  estimated: call.string('expiry') == null ? base.estimated : false,
   retention: call.string('retention')?.trim() ?? base.retention,
   location: call.string('location')?.trim() ?? base.location,
 );
@@ -690,6 +690,10 @@ List<AgentCommand> moreCommands() => [
               targets.any((t) => t.details.toJson()[f] != after[f]))
             f,
       ];
+      if (call.string('expiry') != null &&
+          targets.any((t) => t.details.estimated != false)) {
+        fields.add('estimated');
+      }
       final changes = <String, Object?>{
         for (final f in productFields)
           if (call.string(f) != null &&

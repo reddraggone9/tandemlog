@@ -460,9 +460,10 @@ class _Rule {
     throw unsupported(text);
   }
 
-  /// One list grammar for weekdays and months: ', ', ' and ' or ', and '.
+  /// One list grammar for weekdays and months: commas and/or 'and', with
+  /// optional comma spacing and flexible whitespace around 'and'.
   static List<String> splitList(String text) =>
-      text.split(RegExp(r', and |, | and '));
+      text.split(RegExp(r'\s*,\s*(?:and\s+)?|\s+and\s+'));
 
   static FormatException unsupported(String text) => FormatException(
     'Unsupported recurrence: $text. $supportedRecurrenceGrammar',

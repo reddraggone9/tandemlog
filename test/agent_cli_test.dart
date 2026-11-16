@@ -827,6 +827,37 @@ void main() {
     final listed = jsonEncode(await json(['food', 'list']));
     expect(listed, contains('"expiry":"2026-11-04","estimated":true'));
     expect('"estimated":true'.allMatches(listed), hasLength(1));
+    final estimatedRow = ((await json(['food', 'list']))['rows'] as List)
+        .firstWhere((r) => r['estimated'] == true);
+    final estimated = await json([
+      'food',
+      'show',
+      estimatedRow['containers'][0]['id'] as String,
+    ]);
+    expect(estimated['details']['estimated'], true);
+    final edited = await json([
+      'food',
+      'edit',
+      estimated['id'] as String,
+      '--rev=${estimated['id']}=${estimated['rev']}',
+      '--expiry',
+      '2026-11-09',
+    ]);
+    expect(edited['error'], isNull, reason: '$edited');
+    final updated = await json(['food', 'show', estimated['id'] as String]);
+    expect(updated['details']['estimated'], false);
+    final undated = await json([
+      'food',
+      'edit',
+      estimated['id'] as String,
+      '--rev=${estimated['id']}=${updated['rev']}',
+      '--expiry',
+      'none',
+    ]);
+    expect(undated['error'], isNull, reason: '$undated');
+    final inbox = await json(['food', 'show', estimated['id'] as String]);
+    expect(inbox['details']['expiry'], isNull);
+    expect(inbox['details']['estimated'], false);
     final cleared = await json([
       'products',
       'set',

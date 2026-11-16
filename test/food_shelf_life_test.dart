@@ -9,6 +9,8 @@ void main() {
     expect(FoodKeepsFor.parse('2wk'), const FoodKeepsFor(2, 'week'));
     expect(FoodKeepsFor.parse('3 months'), const FoodKeepsFor(3, 'month'));
     expect(FoodKeepsFor.parse('3 mo.'), const FoodKeepsFor(3, 'month'));
+    expect(FoodKeepsFor.parse('1 year'), const FoodKeepsFor(12, 'month'));
+    expect(FoodKeepsFor.parse('2 yr'), const FoodKeepsFor(24, 'month'));
     expect(FoodKeepsFor.parse('10'), const FoodKeepsFor(10, 'day'));
     for (final bad in [
       '',
@@ -16,7 +18,7 @@ void main() {
       'two weeks',
       '1000 days',
       '121 months',
-      '2 years',
+      '11 years',
       '-3 days',
       '1.5 weeks',
       '2 weeks 3 days',

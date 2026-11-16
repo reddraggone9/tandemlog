@@ -476,3 +476,13 @@ Food name autofocus in the row editor, and the centered "Also changes N other
 containers" line (all existing app behavior; the padding is already on the open
 UX list). If Lee finds "Keeps for" and "Keep at least"
 confusable even apart, the fallback label is "Shelf life".
+
+## Review corrections (2026-11-16)
+
+An existing Keeps for remains disclosed while cleared and retyped, keeping its
+input focus and leaving Food name untouched. This restores the existing editor
+workflow without changing its layout or adding controls.
+Agent Expiration writes, including clearing the date, explicitly clear the
+estimate flag. Clearing Keeps for on an unknown description is a no-op.
+Year input (year/yr/y, plural forms) is normalized to months, within the existing
+120-month limit; persisted units and wire revisions are unchanged.

@@ -220,6 +220,22 @@ void main() => registerFoodShelfLifeUiTests();
 /// Also run under the native Linux binding by
 /// integration_test/food_shelf_life_workflow_test.dart.
 void registerFoodShelfLifeUiTests() => group('Food shelf life', () {
+  testWidgets(
+    'clearing an existing Keeps for preserves field and typing focus',
+    (tester) async {
+      await _pump(tester);
+      await _open(tester, 'Strawberries');
+      await tester.enterText(_keepsFor, '');
+      await tester.pumpAndSettle();
+      expect(_keepsFor, findsOneWidget);
+      await captureUx(tester, 'review-cleared-keeps-for');
+      tester.testTextInput.enterText('5 days');
+      await tester.pumpAndSettle();
+      expect(_text(tester, _keepsFor), '5 days');
+      expect(find.widgetWithText(TextField, 'Strawberries'), findsOneWidget);
+    },
+  );
+
   testWidgets('only dates estimated from Keeps for read est.', (tester) async {
     await _pump(tester);
     expect(

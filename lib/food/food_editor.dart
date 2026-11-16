@@ -189,6 +189,7 @@ class FoodEditorState extends State<FoodEditor> {
     link = TextEditingController(text: product?.links.firstOrNull ?? '');
     minimum = TextEditingController(text: product?.minimum?.toString() ?? '');
     keepsFor = TextEditingController(text: product?.keepsFor?.label ?? '');
+    _showKeepsFor = keepsFor.text.isNotEmpty;
     for (final controller in [expiry, keepsFor]) {
       controller.addListener(() {
         if (mounted) setState(() {});

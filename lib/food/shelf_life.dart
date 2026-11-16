@@ -40,14 +40,16 @@ class FoodKeepsFor {
       r'^(\d{1,3})\s*([a-z]*)\.?$',
     ).firstMatch(text.trim().toLowerCase());
     if (match == null) return null;
+    final years = {'y', 'yr', 'yrs', 'year', 'years'}.contains(match[2]!);
     final unit = switch (match[2]!) {
       '' || 'd' || 'day' || 'days' => 'day',
       'w' || 'wk' || 'wks' || 'week' || 'weeks' => 'week',
       'mo' || 'mos' || 'month' || 'months' => 'month',
+      'y' || 'yr' || 'yrs' || 'year' || 'years' => 'month',
       _ => null,
     };
     if (unit == null) return null;
-    final result = FoodKeepsFor(int.parse(match[1]!), unit);
+    final result = FoodKeepsFor(int.parse(match[1]!) * (years ? 12 : 1), unit);
     return result.valid ? result : null;
   }
 
