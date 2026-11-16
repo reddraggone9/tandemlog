@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "3c90570285f760b119339d6deb28582e",
-  "issuedAtUTC": "2026-11-15T17:54:08.835490+00:00",
-  "sourceRevision": "e5a36ed3bedc6bda5be4287c5a9141bd9095373d",
+  "requestId": "2d9b15fe79a9e9584945030648745883",
+  "issuedAtUTC": "2026-11-16T09:40:16.437497+00:00",
+  "sourceRevision": "3bebd80b8849adbd2f0163a5a1cf6c945ea0d280",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "2e31fb667dc90bd7d7f769ab2f89df8a39c0c32ed8811898f9409b020e20f293",
+    "sha256": "fb903dc5505132fda84a086429cc668586a1e9b8f6467089759ebac306de668d",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -25,7 +25,7 @@
         "mode": "100644"
       },
       "lib/agent/commands_more.dart": {
-        "sha256": "9787e0090aa0593ba171f3b0eee688ba2b45e774c23950bb62339614695651d5",
+        "sha256": "b5af9866ae42f532c00218b6e02e04fb35ba1e566a85e134ff01f06161c5d615",
         "mode": "100644"
       },
       "lib/agent/commands_read.dart": {
@@ -129,7 +129,7 @@
         "mode": "100644"
       },
       "lib/domain/schedule.dart": {
-        "sha256": "f7dab71d757b3563c2d7a3de12e08f1065e06d99789467daba5415669438838f",
+        "sha256": "9fbe3c658b1e6e8bfaabd8187260195de5628d9f8b46fd7ab64b49692705128e",
         "mode": "100644"
       },
       "lib/domain/task_view.dart": {
@@ -189,7 +189,7 @@
         "mode": "100644"
       },
       "lib/food/food_products.dart": {
-        "sha256": "47ed248ade68ff9b9cdb460eedf1aade66b45a10b16da9557898b9318ac1fb0d",
+        "sha256": "ca672e20e4841f4d18a6465c0f02472c12ab774e019cc291141e83399f972dac",
         "mode": "100644"
       },
       "lib/food/food_purchase_import.dart": {
@@ -213,7 +213,7 @@
         "mode": "100644"
       },
       "lib/food/shelf_life.dart": {
-        "sha256": "5c2987a2c65215a2f60cccf4b177a064becbb1097c0537244501603f2fef0f38",
+        "sha256": "4f99e4684c30cfdd995a76f08a173535832eeaa9dcb4f4f61e1e6c1d4b385b4e",
         "mode": "100644"
       },
       "lib/platform/foreground_importer.dart": {
@@ -261,7 +261,7 @@
         "mode": "100644"
       },
       "lib/storage/task_store.dart": {
-        "sha256": "92a251bd27f55bf140c686c56f4dc290c61aa0cd4544e976b11346c1197cf978",
+        "sha256": "110307de268d19c6400f3d99ffb724d188ddadb2f1f818919b1b87c1e339169b",
         "mode": "100644"
       },
       "lib/storage/task_tables.dart": {
