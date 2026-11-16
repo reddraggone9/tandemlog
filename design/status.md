@@ -1,14 +1,14 @@
 # Development status
 
-Current state only (checked 2026-11-15 against release receipts and source).
+Current state only (checked 2026-11-16 against release receipts and source).
 The dated log of every earlier build, trial and checkpoint is in
 [archive/status-history.md](archive/status-history.md); per-release receipts are in
 [releases.md](releases.md) and `evidence/`.
 
 ## Released
 
-Stable **2026.11.3 / build 123** is Latest, published 2026-11-15 from `a6de3d53`
-(promotion of Lee-accepted 2026.11.3-rc.2/build122, covering RC121 and RC122). [Receipts](../evidence/stable-2026.11.3/README.md).
+Stable **2026.11.4 / build 125** is Latest, published 2026-11-16 from `d8832f17`
+(promotion of Lee-accepted 2026.11.4-rc.1/build124). [Receipts](../evidence/stable-2026.11.4/README.md).
 It contains, at feature level (first stable release in brackets):
 
 - **Tasks:** quick capture into Inbox, one or several at a time; tags; separate
@@ -19,7 +19,7 @@ It contains, at feature level (first stable release in brackets):
   changes (2026.11.3); session Undo;
   exact completion instants ([ADR0035](decisions/0035-exact-completion-instants.md), 2026.10.7).
 - **Food** (2026.10.4): physical containers with expiration, location and contents;
-  product Keeps for and expiration/location suggestions (2026.11.2);
+  product Keeps for and expiration/location suggestions (2026.11.2), Keeps for in years (2026.11.4);
   Stock/Inbox, Retained and Deleted views, undated food first (2026.11.3);
   responsive editor pane (2026.10.6);
   products and purchases, keep-in-stock minimums and Running low, receipt import
@@ -41,22 +41,17 @@ It contains, at feature level (first stable release in brackets):
 
 ## Current prerelease
 
-**2026.11.4-rc.1 / build124** is published as an experimental prerelease, not Latest.
-Five weekly-review fixes cover Keeps for focus, manual expiry estimates, absent-product
-clearing, years and Repeat separator whitespace. Exact Android/GTK acceptance and
-anonymous all-four-asset verification PASS. [Evidence](../evidence/prerelease-2026.11.4-rc.1/README.md).
-Stable2026.11.3 remains Latest; no stable promotion is authorized yet.
+None open. 2026.11.4-rc.1/build124 was promoted to stable 2026.11.4 and remains an unchanged prerelease.
 
 ## Current release line
 
-2026.11.3 promotes accepted RC122 without application changes. Since stable118:
-Search keeps still-visible Tasks/Food selections, undated Food sorts first,
-faster purchase imports on long Food histories (history decode bounded to one
-worker per restore), 48dp painted button minimums and 16dp editor gutters at
-large text, reviewed routine dependencies and informative development receipt
-reporting. Signed candidate, scripted exact Android/GTK upgrades from RC122 and
-stable118, re-reviewed cumulative notes and anonymous public checks passed.
-[Evidence](../evidence/stable-2026.11.3/README.md). The RCs remain unchanged prereleases.
+2026.11.4 promotes accepted RC124 without application changes. Since stable123:
+clearing Keeps for keeps typing in Keeps for, agent-edited expiration dates are no
+longer marked estimated, clearing Keeps for on a nonexistent product is a no-op,
+Keeps for accepts years, and Repeat lists tolerate missing/extra separator spaces
+(new input normalized to stable123-readable spelling). Signed candidate, scripted
+exact Android/GTK upgrades from RC124 and stable123 and anonymous public checks
+passed. [Evidence](../evidence/stable-2026.11.4/README.md).
 
 ## Commands
 
