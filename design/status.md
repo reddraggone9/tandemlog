@@ -7,29 +7,21 @@ The dated log of every earlier build, trial and checkpoint is in
 
 ## Released
 
-Experimental **2026.11.3-rc.2 / build122** published 2026-11-15 from `7e280f19`.
-Larger painted button targets and retained Task/Food editor side spacing at large
-text sizes; reviewed routine dependencies and development receipt reporting.
-Fresh source CI and controlled reference qualification PASS; exact Android/GTK
-stable118 and RC121 upgrades PASS. Anonymous four-asset/signer/immutable/prior-tag
-verification PASS. Prerelease, not Latest. Exact portable RC122 staged on Leela's
-isolated copy/profile with separate shortcut; usable Windows GUI launch remains
-unverified on the locked Screen-saver desktop. No Windows GUI acceptance claimed.
-[Receipts](../evidence/prerelease-2026.11.3-rc.2/README.md).
-
-Stable **2026.11.2 / build 118** is Latest, published 2026-11-13 from `a17da44`
-(promotion of Lee-accepted 2026.11.2-rc.1/build117). [Receipts](../evidence/stable-2026.11.2/README.md).
+Stable **2026.11.3 / build 123** is Latest, published 2026-11-15 from `a6de3d53`
+(promotion of Lee-accepted 2026.11.3-rc.2/build122, covering RC121 and RC122). [Receipts](../evidence/stable-2026.11.3/README.md).
 It contains, at feature level (first stable release in brackets):
 
 - **Tasks:** quick capture into Inbox, one or several at a time; tags; separate
   start/due date rows with optional times; recurring schedules matched against
   Obsidian Tasks; one-level checklists with item notes and ordering;
   collaborative title/notes editing across devices; assignees, Search and Filter;
-  Completed view and reopen; bulk selection and editing; session Undo;
+  Completed view and reopen; bulk selection and editing, kept across Search
+  changes (2026.11.3); session Undo;
   exact completion instants ([ADR0035](decisions/0035-exact-completion-instants.md), 2026.10.7).
 - **Food** (2026.10.4): physical containers with expiration, location and contents;
   product Keeps for and expiration/location suggestions (2026.11.2);
-  Stock/Inbox, Retained and Deleted views; responsive editor pane (2026.10.6);
+  Stock/Inbox, Retained and Deleted views, undated food first (2026.11.3);
+  responsive editor pane (2026.10.6);
   products and purchases, keep-in-stock minimums and Running low, receipt import
   into the Inbox (2026.10.9, [food-products.md](food-products.md)); row selection,
   bulk editing and Move some (2026.10.10, [batch-selection.md](batch-selection.md)).
@@ -49,22 +41,14 @@ It contains, at feature level (first stable release in brackets):
 
 ## Current release line
 
-2026.11.2 promotes accepted RC117 without application changes: Keeps for,
-expiration/location suggestions, repeat-list grammar, shorter normal-open pauses,
-large-text editor fixes and reusable release tooling. Stable118 signed candidate,
-scripted exact Android/GTK upgrades from116 and117, CI and anonymous public checks
-passed. The RC remains an unchanged prerelease.
-
-Published experimental 2026.11.3-rc.2/build122 includes the prior RC121 Search
-selection/undated Food work plus reviewed housekeeping. A genuine CLI purchase
-import growth miss was profiled and fixed by bounding history decode to one
-worker per restore; the fresh exact source passed the unchanged full reference
-gate. Prior failed compile/qualification evidence is retained, not relabeled.
-Exact signed122 acceptance and anonymous publication verification passed.
-All source/candidate/native/public records are in the release
-[evidence](../evidence/prerelease-2026.11.3-rc.2/README.md).
-Isolated Leela GUI handoff completion remains separately tracked; no stable
-promotion, live install or cutover is implied by publication.
+2026.11.3 promotes accepted RC122 without application changes. Since stable118:
+Search keeps still-visible Tasks/Food selections, undated Food sorts first,
+faster purchase imports on long Food histories (history decode bounded to one
+worker per restore), 48dp painted button minimums and 16dp editor gutters at
+large text, reviewed routine dependencies and informative development receipt
+reporting. Signed candidate, scripted exact Android/GTK upgrades from RC122 and
+stable118, re-reviewed cumulative notes and anonymous public checks passed.
+[Evidence](../evidence/stable-2026.11.3/README.md). The RCs remain unchanged prereleases.
 
 ## Commands
 
