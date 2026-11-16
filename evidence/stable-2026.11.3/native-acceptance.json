@@ -1,0 +1,95 @@
+{
+  "result": "PASS",
+  "completedUtc": "2026-11-16T03:13:55.047159+00:00",
+  "candidate_run": "43791785415",
+  "source": "a6de3d53e0dda6b172e446d5a89c32be0e73adab",
+  "version": "2026.11.3",
+  "build": 123,
+  "apk_sha256": "f26f909b8d2a7516d060d9ef8e69a184cf8ee5bc5efca276304f1be5bf72c3b2",
+  "flatpak_sha256": "0e68043d372164ca1799d55f42841614fb4e641b2681f41c87d0f5cf42bbd65e",
+  "exactArtifactUpgrades": {
+    "122 -> 123": {
+      "android": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "persistedSafReadWriteGrantPreserved": true,
+        "packageUidAndFirstInstallTimePreserved": true,
+        "coldLaunchAfterInstall": 1,
+        "normalReopen": 1,
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 2,
+          "records": 59,
+          "bytes": 119080
+        }
+      },
+      "gtk": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "coldLaunches": 2,
+        "normalExitCodes": [
+          0,
+          0
+        ],
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 3,
+          "records": 72,
+          "bytes": 142844
+        },
+        "usableRenderedHistoryVerified": true
+      }
+    },
+    "118 -> 123": {
+      "android": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "persistedSafReadWriteGrantPreserved": true,
+        "packageUidAndFirstInstallTimePreserved": true,
+        "coldLaunchAfterInstall": 1,
+        "normalReopen": 1,
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 2,
+          "records": 46,
+          "bytes": 94305
+        }
+      },
+      "gtk": {
+        "installDidNotModifyStoredData": true,
+        "canonicalManifestUnchanged": true,
+        "priorCanonicalLogsPrefixPreserved": true,
+        "bindingAndSelectedPersonPreserved": true,
+        "sqliteIntegrity": "ok",
+        "cleanup": "PASS",
+        "coldLaunches": 2,
+        "normalExitCodes": [
+          0,
+          0
+        ],
+        "fullCanonicalAudit": {
+          "passed": true,
+          "logs": 4,
+          "records": 64,
+          "bytes": 125894
+        },
+        "usableRenderedHistoryVerified": true
+      }
+    }
+  },
+  "windowsCoverage": "Candidate hosted-runner installer lifecycle and portable inventory checks only; no additional Windows GUI coverage claimed.",
+  "scope": "Version-only stable promotion; scripted acceptance on retained synthetic Android emulator and isolated GTK Flatpak labs. No reviewer agents, RC feature matrix, physical/owner devices, owner data, source edits or publishing.",
+  "receiptPrivacy": "Sanitized: no local folder paths, device serials, writer/user identifiers, credentials or synthetic record text."
+}

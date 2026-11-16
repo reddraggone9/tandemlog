@@ -1,0 +1,31 @@
+{
+  "id": 43791785415,
+  "name": "Build signed candidate",
+  "head_branch": "main",
+  "head_sha": "a6de3d53e0dda6b172e446d5a89c32be0e73adab",
+  "path": ".github/workflows/android-candidate.yml",
+  "run_number": 148,
+  "event": "workflow_dispatch",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-11-16T02:22:38Z",
+  "updated_at": "2026-11-16T02:53:53Z",
+  "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/43791785415",
+  "run_attempt": 1,
+  "downloadedFiles": {
+    "tandemlog-linux-x64.flatpak": "0e68043d372164ca1799d55f42841614fb4e641b2681f41c87d0f5cf42bbd65e",
+    "linux-install-smoke.json": "e93b96972b620fc9536e5fa5f5312c0ce3168ca7b97fd5c6a56181ffca581d1f",
+    "linux-SHA256SUMS.txt": "2f9f5047ff4b9de86994c50203e2108ddcde5f87589647a116e38ccffb148428",
+    "linux-startup.json": "1e4364a23774b923dbd40aebc4cf6ee70c0fdd1f99dd85f4f5b55d5bcadfeb57",
+    "tandemlog-windows-x64-unsigned-setup.exe": "2646d7a7249dcc86e1675caab28bdbed48acbf59dfd8e49ddcf9de0ea7710be2",
+    "windows-portable-SHA256SUMS.txt": "9e9e74c313c886a2ce1f4ebd3abefb42363c524abd9007fb96fca86c52cd1666",
+    "windows-install-smoke.json": "b16c87301e5e68fd93445cd931af6985388d33b0659780b6c3b44a4a36bec047",
+    "tandemlog-windows-x64-unsigned-portable.zip": "9fd1b381db93758ed7d905874835c394d7d10accf1f3d8a53db5a00c8046d8d9",
+    "windows-portable-provenance.json": "5c3a0a5e5c43374698de5077b5b8a0dbceb5b47343cae8e76b693344dd658c39",
+    "windows-SHA256SUMS.txt": "6e1f0726db1dd828a6742a8a0897defd59b6dc1dbf0f7525176deaa8a4bf70b9",
+    "android-release-metadata.json": "6436daa91cfb2c0658795e8660c330a090c5d6fceead0fae09d4ed370776dbb7",
+    "android-SHA256SUMS.txt": "b1d7fd0d723610800e229d01d053c224ab664c39e52e56b42d511ec808c61748",
+    "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "tandemlog-android.apk": "f26f909b8d2a7516d060d9ef8e69a184cf8ee5bc5efca276304f1be5bf72c3b2"
+  }
+}
