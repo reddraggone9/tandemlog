@@ -1,0 +1,41 @@
+{
+  "source": "3a9e7d8fe2f4e60a553dcedcbe518ba29c68abac",
+  "candidate_run": "43853267396",
+  "version": "2026.11.4-rc.1",
+  "build": 124,
+  "apk": "/home/lee/vex/private/tandemlog-rc124/corrected-candidate43853267396/candidate-download/dist/tandemlog-android.apk",
+  "apk_sha256": "6bcd16b24699a449afd53ce61bbd6c79ce7c68ef27ccfc54b3b79cffe6224515",
+  "flatpak": "/home/lee/vex/private/tandemlog-rc124/corrected-candidate43853267396/candidate-download/dist/tandemlog-linux-x64.flatpak",
+  "flatpak_sha256": "c64727eede775e8cc561894d7c366eab914f7d848c0189b0e753015aa98304f6",
+  "result": "PASS_CHANGED_WORKFLOWS",
+  "timestamp": "2026-11-16T11:41:05.368017+00:00",
+  "upgraded_from": "2026.11.3 build123 retained synthetic Android/GTK labs",
+  "gates": "candidate-verification.json PASS; waiter success/exited/success/0 before installation",
+  "workflow_results": {
+    "empty_keeps_focus": "Both native platforms clear and immediately type replacement; captured field focus retained; canonical writes only product keepsFor, no product name mutation",
+    "years": "Both native platforms saved/reopened 1 year as12 months, 2 years as24 months; cleared to null; existing expiration unchanged",
+    "repeat": "Both native platforms saved/reopened Monday,Tuesday, Wednesday; Monday, Tuesday,Wednesday; Monday ,  Tuesday ,   Wednesday; all three persist identical normalized schedule. Monday,,Tuesday rejected visibly on both",
+    "manual_expiry": "Exact Flatpak CLI changed estimated synthetic container to2026-12-24; persisted details estimated=false and fields expiry+estimated; CLI reread confirms",
+    "missing_product_clear": "Exact Flatpak CLI dry-run and commit unchanged=1, changed=[]; no phantom product; canonical applog hashes exactly unchanged across commit"
+  },
+  "preservation": {
+    "canonical_prefix": "PASS both platforms; manifest identical",
+    "sqlite_integrity": "PASS before/installed/after",
+    "android_identity": "userId and firstInstallTime unchanged; persisted TandemlogFinalV3QA grant retained",
+    "native_integrity": "Settings audits PASS Android2logs65records128309bytes; GTK3logs79records154592bytes",
+    "cold_reopen": "Android twice retained Tasks; GTK twice retained Tasks, both WM_DELETE_WINDOW normal exits0"
+  },
+  "receipt_files": [
+    "candidate-verification.json",
+    "exact-flatpak-cli.json",
+    "persisted-operations.json",
+    "normal-exit.json"
+  ],
+  "evidence_root": "/home/lee/vex/private/tandemlog-rc124/native",
+  "coverage_notes": [
+    "Literal numeric 1,2,3 is not supported Repeat grammar: exercised equivalent three-weekday separator lists, not numeric schedules.",
+    "Years persistence and existing dates verified; new-container year-derived date estimation not independently exercised.",
+    "Installed snapshot began before first launch but private SQLite extraction required adb root, completed after workflows; installed/package+grants captured before workflows, authoritative before/after snapshots preserved.",
+    "No real phone/provider sync or owner foreground used; Windows outside this native acceptance scope."
+  ]
+}

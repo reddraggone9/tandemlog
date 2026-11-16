@@ -39,6 +39,14 @@ It contains, at feature level (first stable release in brackets):
 - **Platforms:** owner-signed Android APK; Windows installer and portable ZIP;
   Linux Flatpak bundle ([packaging/README.md](../packaging/README.md)).
 
+## Current prerelease
+
+**2026.11.4-rc.1 / build124** is published as an experimental prerelease, not Latest.
+Five weekly-review fixes cover Keeps for focus, manual expiry estimates, absent-product
+clearing, years and Repeat separator whitespace. Exact Android/GTK acceptance and
+anonymous all-four-asset verification PASS. [Evidence](../evidence/prerelease-2026.11.4-rc.1/README.md).
+Stable2026.11.3 remains Latest; no stable promotion is authorized yet.
+
 ## Current release line
 
 2026.11.3 promotes accepted RC122 without application changes. Since stable118:
