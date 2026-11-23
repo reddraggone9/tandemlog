@@ -18,6 +18,8 @@ PACKAGES = {
     'libxmlb2_0.3.18-1_amd64.deb': 'main/libx/libxmlb',
     'libstemmer0d_2.2.0-4build1_amd64.deb': 'main/s/snowball',
 }
+# archive.ubuntu.com answers 403 to urllib's default Python-urllib agent (seen 2026-11-23).
+USER_AGENT = 'tandemlog-ci/1 (+https://github.com/reddraggone9/tandemlog)'
 
 
 def load_packages(manifest=MANIFEST):
@@ -38,7 +40,12 @@ def load_packages(manifest=MANIFEST):
     return packages
 
 
-def download_packages(directory, packages, opener=urllib.request.urlopen):
+def open_archive_url(url, timeout):
+    request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
+    return urllib.request.urlopen(request, timeout=timeout)
+
+
+def download_packages(directory, packages, opener=open_archive_url):
     directory = Path(directory)
     directory.mkdir(parents=True)
     verified = []
@@ -92,7 +99,7 @@ os.execve(str(target), [str(target), *args], env)
     return wrapper
 
 
-def prepare_tools(destination, packages, opener=urllib.request.urlopen):
+def prepare_tools(destination, packages, opener=open_archive_url):
     destination = Path(destination).resolve()
     destination.mkdir(parents=True)
     # Verify the entire closure before any package extraction or executable read.

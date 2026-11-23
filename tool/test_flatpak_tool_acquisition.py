@@ -78,6 +78,14 @@ class AcquisitionContracts(unittest.TestCase):
                 tools.download_packages(self.root / f'download-{i}', [package],
                                         opener=lambda *_, **__: Response(payload, url))
 
+    def test_archive_requests_send_explicit_user_agent(self):
+        with patch.object(tools.urllib.request, 'urlopen') as urlopen:
+            tools.open_archive_url(self.packages[0]['url'], timeout=30)
+        request = urlopen.call_args.args[0]
+        self.assertEqual(request.full_url, self.packages[0]['url'])
+        self.assertEqual(request.get_header('User-agent'), tools.USER_AGENT)
+        self.assertEqual(urlopen.call_args.kwargs, {'timeout': 30})
+
     def test_read_only_package_metadata_rejects_wrong_architecture(self):
         package = self.packages[0]
         path = self.root / package['file']
