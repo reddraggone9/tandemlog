@@ -2641,6 +2641,8 @@ void main() {
     expect(plain['expiry'], isNull);
     expect(plain['retention'], '');
     expect(plain['location'], 'Fridge');
+    expect(plain.containsKey('estimated'), isTrue);
+    expect(plain['estimated'], isNull);
 
     // Keeps for: today + Keeps for, never the source container's date.
     final yogurt = await addOne('Yogurt');
@@ -2662,6 +2664,7 @@ void main() {
     final dated = await another(yogurt);
     expect(dated['expiry'], FoodKeepsFor.parse('2 weeks')!.addTo(today()));
     expect(dated['retention'], '');
+    expect(dated['estimated'], isNull);
 
     // An explicit --expiry still wins.
     expect(

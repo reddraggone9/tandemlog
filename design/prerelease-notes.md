@@ -1,4 +1,5 @@
 # 2026.11.5-rc.1
 
-- Agent product suggestions for receipt lines now match on product names, singular or plural, not on a shared brand alone.
-- Agent "add another" now dates the new container as the app does (today plus Keeps for, or blank) instead of copying the original's date.
+- `purchases plan` suggests existing products by name, singular or plural, closest match first, instead of on a shared brand alone.
+- `food add-another` now dates the new container as the app does (today plus the product's Keeps for, or blank) instead of copying the original's date.
+- `food add-another` no longer copies the original container's retention reason.

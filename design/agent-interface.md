@@ -220,7 +220,8 @@ the CLI's own next start compares and cleans, as the app does.
    minting a near-duplicate. Up to three, best first; a product qualifies only
    when its name shares a word with the line's name (singular or plural), so a
    shared brand alone never does. More shared name words rank first, then a
-   product name the line covers more of, then a matching brand.
+   product name the line covers more of, then a matching brand, then more
+  containers, then name.
 2. `purchases import plan.json --dry-run` gives the per-line report: product,
    purchase new or present, hand entries matched, Inbox containers to create.
 3. `purchases import plan.json --expect-plan <hash>` commits one action with
