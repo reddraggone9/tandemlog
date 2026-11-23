@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "purpose": "controlled-reference-performance-v1",
-  "requestId": "2d9b15fe79a9e9584945030648745883",
-  "issuedAtUTC": "2026-11-16T09:40:16.437497+00:00",
-  "sourceRevision": "3bebd80b8849adbd2f0163a5a1cf6c945ea0d280",
+  "requestId": "52e14803d3340c25a0596e12ebeb68a1",
+  "issuedAtUTC": "2026-11-23T17:05:19.330252+00:00",
+  "sourceRevision": "c4438feb2e2256e5e07972455748f6d5e086bace",
   "relevantSource": {
     "scheme": "relevant-source-v3",
-    "sha256": "fb903dc5505132fda84a086429cc668586a1e9b8f6467089759ebac306de668d",
+    "sha256": "5ee4a44ea192759afcc8b1fd723b2f5dc48491017eff7c31f60d4c6c3148b743",
     "files": {
       "lib/agent/agent_profile.dart": {
         "sha256": "4e476c2f3467b326f596c6c35840116349cd73f838ed505d73a47cb0574fa949",
@@ -25,7 +25,7 @@
         "mode": "100644"
       },
       "lib/agent/commands_more.dart": {
-        "sha256": "b5af9866ae42f532c00218b6e02e04fb35ba1e566a85e134ff01f06161c5d615",
+        "sha256": "b2048d351ba4d9350804c203fc98d9d9fdaf6a5d4339623bcbb36e79b27eb0ad",
         "mode": "100644"
       },
       "lib/agent/commands_read.dart": {
@@ -193,7 +193,7 @@
         "mode": "100644"
       },
       "lib/food/food_purchase_import.dart": {
-        "sha256": "4e7682ef281e75fd9991d1dea968cd94ef3084ca0d12dccbea4cb95939817001",
+        "sha256": "5ca2ebffcdb6b685abd6341d703d6515c7c52d0c66ea8f484167201b334b1bac",
         "mode": "100644"
       },
       "lib/food/food_record.dart": {
@@ -261,7 +261,7 @@
         "mode": "100644"
       },
       "lib/storage/task_store.dart": {
-        "sha256": "110307de268d19c6400f3d99ffb724d188ddadb2f1f818919b1b87c1e339169b",
+        "sha256": "9e7232c09aacd3e7b371b8e89885ec613a7640a680ac190f5938df03fcef0ba1",
         "mode": "100644"
       },
       "lib/storage/task_tables.dart": {
@@ -653,7 +653,7 @@
         "mode": "100644"
       },
       "tool/performance/reference-host-v1.json": {
-        "sha256": "6c93e796c1e3101bd4608377a5193afd844472d2caf8d45a921ecff646acd15c",
+        "sha256": "f56287684bde10ee0fdff9007c4ea3b5047fa391c41650d5591694bf846e31b2",
         "mode": "100644"
       },
       "tool/performance/reference_receipt.py": {
@@ -678,7 +678,7 @@
       }
     }
   },
-  "hostProfileSHA256": "6c93e796c1e3101bd4608377a5193afd844472d2caf8d45a921ecff646acd15c",
-  "controllerSHA256": "4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba",
-  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-next-20261114/controller-zeroarc/controller_r8.py"
+  "hostProfileSHA256": "f56287684bde10ee0fdff9007c4ea3b5047fa391c41650d5591694bf846e31b2",
+  "controllerSHA256": "d3a975d2e91c4ef2c78db59ee420d848940322e923bc79f267321a26d01b6ef6",
+  "controllerPath": "/home/nibbler/tandemlog-perf-20261022-evidence/vex-next-20261123/controller-zeroarc-k735/controller_r8.py"
 }
