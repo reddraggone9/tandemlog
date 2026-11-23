@@ -15,11 +15,14 @@ import 'package:tandemlog/agent/commands_read.dart' show taskRevSql;
 import 'package:tandemlog/agent/mcp_server.dart';
 import 'package:tandemlog/agent/registry.dart';
 import 'package:tandemlog/agent/render.dart' show revOf;
+import 'package:tandemlog/domain/wall_time.dart' show timeZoneLocation;
+import 'package:tandemlog/food/shelf_life.dart' show FoodKeepsFor;
 import 'package:tandemlog/food/food_store.dart' show StaleFoodState;
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/domain/event.dart' show LogEvent;
 import 'package:tandemlog/storage/unified_record.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'package:uuid/uuid.dart';
 
 /// In-process agent CLI against private synthetic workspaces; the packaged
@@ -2513,6 +2516,158 @@ void main() {
     for (final id in movedIds) {
       expect((await show(id))['details']['location'], 'Pantry');
     }
+    expect((await json(['verify']))['error'], isNull);
+  });
+
+  test(
+    'purchases plan names the product a receipt line most likely is',
+    () async {
+      await setUpAgent();
+      for (final (name, brand, size) in [
+        ('Whole Wheat Bread', 'Great Value', '20 oz'),
+        ('Large Eggs', 'Great Value', '12 ct'),
+        ('Shredded Cheddar', 'Great Value', '8 oz'),
+        ('Peanut Butter', 'Great Value', '40 oz'),
+        ('Sour Cream', 'Great Value', '16 oz'),
+        ('Milk', 'Great Value', '1 gal'),
+        ('Butter', 'Great Value', '1 lb'),
+        ('Strawberry', '', ''),
+        ('Banana', '', ''),
+        ('Tomatoes', '', ''),
+      ]) {
+        final added = await json([
+          'food',
+          'add',
+          '--name',
+          name,
+          if (brand.isNotEmpty) ...['--brand', brand],
+          if (size.isNotEmpty) ...['--size', size],
+          '--expiry',
+          '2026-12-01',
+        ]);
+        expect(added['error'], isNull, reason: '$added');
+      }
+      var key = 0;
+      Map<String, Object> line(String name, [String? brand, String? size]) => {
+        'source': {'kind': 'test', 'key': 'r#${++key}'},
+        'date': '2026-11-22',
+        'store': 'Walmart',
+        'amount': 100,
+        'quantity': 1,
+        'name': name,
+        'brand': ?brand,
+        'size': ?size,
+      };
+      final lines = File('${root.path}/lines.json')
+        ..writeAsStringSync(
+          jsonEncode([
+            line('GV Whole Milk', 'Great Value', '1 gal'),
+            line('Whole Milk', null, '1 gal'),
+            line('Strawberries', null, '1 lb'),
+            line('Bananas'),
+            line('Milk', 'Great Value', '1 Gallon'),
+            line('Paper Towels', 'Great Value'),
+            line('Tomato'),
+            line('Salted Butter', 'Great Value'),
+          ]),
+        );
+      final plan = await json(['purchases', 'plan', lines.path]);
+      expect(plan['error'], isNull, reason: '$plan');
+      final likely = {
+        for (final s in plan['suggestions'] as List)
+          (s as Map)['line']: [
+            for (final p in s['likely'] as List) (p as Map)['name'],
+          ],
+      };
+      // Shared brand words alone never make a product likely; a name word does,
+      // singular or plural, and the closest name comes first.
+      expect(likely[1], ['Milk', 'Whole Wheat Bread']);
+      expect(likely[2], ['Milk', 'Whole Wheat Bread']);
+      expect(likely[3], ['Strawberry']);
+      expect(likely[4], ['Banana']);
+      expect(likely[5], ['Milk']);
+      expect(likely.containsKey(6), isFalse);
+      expect(likely[7], ['Tomatoes']);
+      expect(likely[8], ['Butter', 'Peanut Butter']);
+    },
+  );
+
+  test('food add-another dates new containers as the app does', () async {
+    await setUpAgent();
+    String today() {
+      final now = tz.TZDateTime.now(timeZoneLocation('America/Chicago'));
+      return DateTime.utc(
+        now.year,
+        now.month,
+        now.day,
+      ).toIso8601String().substring(0, 10);
+    }
+
+    Future<Map> show(String id) => json(['food', 'show', id]);
+    Future<String> addOne(String name) async {
+      final added = await json([
+        'food',
+        'add',
+        '--name',
+        name,
+        '--expiry',
+        '2026-01-01',
+        '--location',
+        'Fridge',
+      ]);
+      final id = ((added['affected'] as List).single as Map)['id'] as String;
+      final kept = await json([
+        'food',
+        'edit',
+        id,
+        '--rev=$id=${(await show(id))['rev']}',
+        '--retention',
+        'Leftovers',
+      ]);
+      expect(kept['error'], isNull, reason: '$kept');
+      return id;
+    }
+
+    Future<Map> another(String id, [List<String> extra = const []]) async {
+      final added = await json(['food', 'add-another', id, ...extra]);
+      expect(added['error'], isNull, reason: '$added');
+      final newId = ((added['affected'] as List).single as Map)['id'];
+      return (await show(newId as String))['details'] as Map;
+    }
+
+    // No Keeps for: Expiration starts blank, as the app's Add another.
+    final soup = await addOne('Soup');
+    final plain = await another(soup);
+    expect(plain['expiry'], isNull);
+    expect(plain['retention'], '');
+    expect(plain['location'], 'Fridge');
+
+    // Keeps for: today + Keeps for, never the source container's date.
+    final yogurt = await addOne('Yogurt');
+    final product =
+        ((await json(['products', 'list']))['products'] as List).singleWhere(
+              (p) => (p as Map)['name'] == 'Yogurt',
+            )
+            as Map;
+    final set = await json([
+      'products',
+      'set',
+      product['id'] as String,
+      '--if-rev',
+      product['rev'] as String,
+      '--keeps-for',
+      '2 weeks',
+    ]);
+    expect(set['error'], isNull, reason: '$set');
+    final dated = await another(yogurt);
+    expect(dated['expiry'], FoodKeepsFor.parse('2 weeks')!.addTo(today()));
+    expect(dated['retention'], '');
+
+    // An explicit --expiry still wins.
+    expect(
+      (await another(yogurt, ['--expiry', '2027-02-03']))['expiry'],
+      '2027-02-03',
+    );
     expect((await json(['verify']))['error'], isNull);
   });
 }

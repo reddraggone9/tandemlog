@@ -7,6 +7,67 @@ import '../domain/event.dart' show isCanonicalId;
 import '../domain/event_chain.dart' show canonicalDataJson;
 import 'inventory.dart';
 
+/// Existing products a receipt line without a product ID most likely is, best
+/// first (design/agent-interface.md, purchase import step 1). A product
+/// qualifies only when its name shares a word with the line's name, singular
+/// or plural, so a shared brand alone never makes it likely. More shared name
+/// words rank higher, then a product name the line covers more of, then a
+/// matching brand, then more containers.
+List<FoodProductSummary> likelyFoodProducts(
+  FoodState state, {
+  required String name,
+  String brand = '',
+  int limit = 3,
+}) {
+  final words = _foodWords(name), all = _foodWords('$name $brand');
+  bool has(Set<String> line, String word) =>
+      line.any((w) => _sameFoodWord(w, word));
+  final ranked = <(FoodProductSummary, int, double, bool)>[];
+  for (final p in state.products.values) {
+    final own = _foodWords(p.name);
+    final shared = own.where((w) => has(words, w)).length;
+    if (shared == 0) continue;
+    final brandWords = _foodWords(p.brand);
+    ranked.add((
+      p,
+      shared,
+      shared / own.length,
+      brandWords.isNotEmpty && brandWords.every((w) => has(all, w)),
+    ));
+  }
+  ranked.sort((a, b) {
+    for (final c in [
+      b.$2.compareTo(a.$2),
+      b.$3.compareTo(a.$3),
+      (b.$4 ? 1 : 0) - (a.$4 ? 1 : 0),
+      b.$1.containers.compareTo(a.$1.containers),
+      a.$1.name.compareTo(b.$1.name),
+      a.$1.id.compareTo(b.$1.id),
+    ]) {
+      if (c != 0) return c;
+    }
+    return 0;
+  });
+  return [for (final r in ranked.take(limit)) r.$1];
+}
+
+Set<String> _foodWords(String text) => {
+  for (final w in text.toLowerCase().split(
+    RegExp(r'[^\p{L}\p{N}]+', unicode: true),
+  ))
+    if (w.length > 2) w,
+};
+
+/// Equal, or one is the other's plural: banana/bananas, tomato/tomatoes,
+/// strawberry/strawberries.
+bool _sameFoodWord(String a, String b) {
+  bool plural(String one, String many) =>
+      many == '${one}s' ||
+      many == '${one}es' ||
+      (one.endsWith('y') && many == '${one.substring(0, one.length - 1)}ies');
+  return a == b || plural(a, b) || plural(b, a);
+}
+
 /// Receipt lines prepared by Vex's YNAB itemization workflow
 /// (design/food-products.md, section 5). Tandemlog validates and commits; it
 /// never parses receipts.

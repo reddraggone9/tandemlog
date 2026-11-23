@@ -53,6 +53,15 @@ Keeps for accepts years, and Repeat lists tolerate missing/extra separator space
 exact Android/GTK upgrades from RC124 and stable123 and anonymous public checks
 passed. [Evidence](../evidence/stable-2026.11.4/README.md).
 
+## Unreleased since 2026.11.4
+
+- Agent `purchases plan` ranks its likely-product suggestions: name words only
+  (singular or plural), never a shared brand alone.
+- Agent `food add-another` dates new containers as the app's Add another (today +
+  Keeps for, else blank) instead of copying the source's date; retention blank.
+- A Task Save that changes Title/Notes and Repeat together normalizes Repeat list
+  separators like other saves (stable123-readable spelling).
+
 ## Commands
 
 The build needs Flutter 3.47.5 (pinned in `.github/actions/setup-flutter`) and the

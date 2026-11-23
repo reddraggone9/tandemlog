@@ -159,7 +159,9 @@ entity, with writer names), and `verify` (the Settings integrity audit, read-onl
   and zone, This occurrence, Repeat, tags, assignee), complete, reopen, delete,
   move/reorder (same-date rule), bulk edit (schedule/assignee/tag deltas), bulk
   delete, and checklist add/edit/check/uncheck/delete/reorder.
-- Food: add (count; expiry required as in the app, or `--inbox`), add another,
+- Food: add (count; expiry required as in the app, or `--inbox`), add another
+  (as the row menu: expiry defaults to today + the product's Keeps for, else
+  none, and retention starts blank),
   edit (expiry, location, retention reason; name/brand/size edit the product, with
   the same "Also changes N other containers" scope report), remove one/remove,
   restore, move some (`food move-some <id> --count N --location L`, the row
@@ -215,7 +217,10 @@ the CLI's own next start compares and cleans, as the app does.
    `space`, `importId` and `sourceSha256`, and writes the canonical immutable plan
    v1. For lines without a product ID, it lists likely existing products, so the
    agent links "GV Whole Milk 1 gal" to the existing Milk product instead of
-   minting a near-duplicate.
+   minting a near-duplicate. Up to three, best first; a product qualifies only
+   when its name shares a word with the line's name (singular or plural), so a
+   shared brand alone never does. More shared name words rank first, then a
+   product name the line covers more of, then a matching brand.
 2. `purchases import plan.json --dry-run` gives the per-line report: product,
    purchase new or present, hand entries matched, Inbox containers to create.
 3. `purchases import plan.json --expect-plan <hash>` commits one action with

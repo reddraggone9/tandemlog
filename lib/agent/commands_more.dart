@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'package:uuid/uuid.dart';
 
 import '../application/task_text_session.dart';
 import '../application/text_save_command.dart';
+import '../domain/wall_time.dart' show timeZoneLocation;
 import '../food/food_purchase_import.dart';
 import '../food/inventory.dart';
 import '../storage/task_store.dart';
@@ -138,6 +140,16 @@ FoodDetails _withChanges(FoodDetails base, AgentCall call) => FoodDetails(
   retention: call.string('retention')?.trim() ?? base.retention,
   location: call.string('location')?.trim() ?? base.location,
 );
+
+/// Today's date (YYYY-MM-DD) in the CLI's time zone.
+String _today(AgentCall call) {
+  final now = tz.TZDateTime.now(timeZoneLocation(call.options.timeZone!));
+  return DateTime.utc(
+    now.year,
+    now.month,
+    now.day,
+  ).toIso8601String().substring(0, 10);
+}
 
 const _foodFieldArgs = [
   AgentArg('expiry', 'string', 'Expiry date YYYY-MM-DD, or "none".'),
@@ -754,7 +766,12 @@ List<AgentCommand> moreCommands() => [
         positional: true,
       ),
       const AgentArg('count', 'integer', 'Number of containers (default 1).'),
-      const AgentArg('expiry', 'string', 'Expiry date YYYY-MM-DD, or "none".'),
+      const AgentArg(
+        'expiry',
+        'string',
+        'Expiry date YYYY-MM-DD, or "none". Default: today + the product\'s '
+            'Keeps for, else none.',
+      ),
       const AgentArg('location', 'string', 'Location.'),
       const AgentArg(
         'request-id',
@@ -768,8 +785,22 @@ List<AgentCommand> moreCommands() => [
       final known = {for (final c in store.state.containers) c.id};
       final count = call.integer('count') ?? 1;
       final before = ownHead(call);
+      // As the app's Add another: Expiration starts blank or today + the
+      // product's Keeps for, never the source's date; retention starts blank.
+      final base = source.details;
+      final keeps = store.state.products[source.product]?.keepsFor;
       await store.add(
-        _withChanges(source.details, call),
+        _withChanges(
+          FoodDetails(
+            name: base.name,
+            brand: base.brand,
+            size: base.size,
+            expiry: keeps?.addTo(_today(call)),
+            estimated: null,
+            location: base.location,
+          ),
+          call,
+        ),
         count,
         ids: requestIds(call, count),
       );
@@ -1243,25 +1274,21 @@ List<AgentCommand> moreCommands() => [
           );
         }
         if (j['product'] == null) {
-          final terms = '${j['name']} ${j['brand'] ?? ''}'
-              .toLowerCase()
-              .split(RegExp(r'\s+'))
-              .where((t) => t.length > 2)
-              .toSet();
-          final likely = state.products.values
-              .where(
-                (p) => terms.any('${p.name} ${p.brand}'.toLowerCase().contains),
-              )
-              .take(3)
-              .map(
-                (p) => {
-                  'product': p.id,
-                  'name': p.name,
-                  'brand': p.brand,
-                  'size': p.size,
-                },
-              )
-              .toList();
+          final likely =
+              likelyFoodProducts(
+                    state,
+                    name: '${j['name'] ?? ''}',
+                    brand: '${j['brand'] ?? ''}',
+                  )
+                  .map(
+                    (p) => {
+                      'product': p.id,
+                      'name': p.name,
+                      'brand': p.brand,
+                      'size': p.size,
+                    },
+                  )
+                  .toList();
           if (likely.isNotEmpty) {
             suggestions.add({'line': i + 1, 'likely': likely});
           }

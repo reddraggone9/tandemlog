@@ -1,10 +1,14 @@
 import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
+import 'package:tandemlog/application/task_text_session.dart';
+import 'package:tandemlog/application/text_save_command.dart';
 import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/domain/schedule.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/text/native_text_engine.dart';
 import 'support/stable123_schedule.dart' as stable;
 
 // Frozen verbatim from stable123 a6de3d53, except its wall_time import.
@@ -99,4 +103,70 @@ void main() {
       await root.delete(recursive: true);
     }
   });
+
+  test(
+    'a text Save that also changes Repeat persists supported separators',
+    () async {
+      final root = await Directory.systemTemp.createTemp('separator-text-');
+      final engine = NativeTextEngine(
+        libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
+      );
+      final store = await TaskStore.open(
+        LocalLogFolder('${root.path}/logs'),
+        '${root.path}/profile',
+        textEngine: engine,
+      );
+      try {
+        final user = const Uuid().v4(), task = const Uuid().v4();
+        await store.command(user, 'user.created', {'name': 'Example'});
+        String seed(String text) =>
+            sha256.convert(engine.seedText(text).bytes).toString();
+        await store.command(task, 'task.createdWithText', {
+          'title': 'Example',
+          'description': '',
+          'assignee': user,
+          'tags': <String>[],
+          'text': {
+            'codec': 'yrs-v1',
+            'adapter': 1,
+            'seeds': {'title': seed('Example'), 'description': seed('')},
+          },
+        });
+        final capture = await store.captureTaskText(task);
+        final session = TaskTextSession(capture);
+        try {
+          // Title and Repeat in one Save is a task.textEdited, not task.edited.
+          session.replace('title', 'Example 2');
+          final saved = await TextSaveCommand(store, session).save(
+            fields: {
+              'schedule': {
+                'dueDate': '2026-11-16',
+                'recurrence': 'every week on Monday,Thursday',
+              },
+            },
+            tags: const [],
+            observedTagRefs: const {},
+          );
+          final event = LogEvent.decode(saved.receipt!.raw);
+          expect(event.type, 'task.textEdited');
+          final schedule = Map<String, dynamic>.from(
+            event.data['schedule'] as Map,
+          );
+          expect(schedule['recurrence'], 'every week on Monday, Thursday');
+          stable.TaskSchedule.fromJson(schedule);
+          final row = store.rows.singleWhere((r) => r['id'] == task);
+          expect(
+            (row['schedule'] as Map)['recurrence'],
+            'every week on Monday, Thursday',
+          );
+        } finally {
+          session.cancel();
+        }
+      } finally {
+        await store.close();
+        engine.dispose();
+        await root.delete(recursive: true);
+      }
+    },
+  );
 }

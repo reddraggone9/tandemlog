@@ -2963,7 +2963,8 @@ class TaskStore {
     // Copy both maps so callers and previously decoded records stay untouched.
     if ((type == 'task.created' ||
             type == 'task.createdWithText' ||
-            type == 'task.edited') &&
+            type == 'task.edited' ||
+            type == 'task.textEdited') &&
         data['schedule'] is Map &&
         (data['schedule'] as Map)['recurrence'] is String) {
       final schedule = Map<String, dynamic>.from(data['schedule'] as Map);
