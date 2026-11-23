@@ -153,7 +153,7 @@ The pinned Flutter source provides strong framework selection, but engine/Dart b
 | actions/checkout | `3d3c42e5aac5ba805825da76410c181273ba90b1` | v7.0.1 | Source checkout |
 | actions/upload-artifact | `cf430e030ddbb5b0abf93d22962f4752f3646cd9` | v7.0.2 | Validation/candidate artifact retention |
 | actions/download-artifact | `9000827ccba6bdab643e8b6fd33ac0654aef8333` | v8.0.2 | Fetch exact candidate payload for promotion |
-| actions/setup-java | `77dd5b2ce225ea11469928ac317850245a74ae78` | v6.2.0 | Android Java installation |
+| actions/setup-java | `d1374f8ac74474200d16ef8ecee22c7ae7a51880` | v6.3.0 | Android Java installation |
 
 Local setup-Flutter action and reusable validate workflow resolve with repository source; they are not independent third-party action versions. Action tag annotations above are local documentation, not separately verified tag attestations.
 
@@ -415,3 +415,20 @@ Node26 workarounds: revisit before changing the action runtime from24.
 Clearance covers prebundled action usage only, not npm install or rebuild.
 Hosted exact-pin Android validation remains a release gate. Held AGP/Gradle
 PR1/2 are unchanged. Source review is not all-platform release acceptance.
+
+## setup-java 6.3.0 — 2026-11-23
+
+PR21 moves all four SHA pins from 6.2.0 to
+`d1374f8ac74474200d16ef8ecee22c7ae7a51880` (the `v6.3.0` tag commit), retaining
+Node24 and Temurin21. Five upstream commits: the Java problem matcher now defaults
+off (`problem-matcher: false`; only PR annotations change, build failures still
+fail), architecture inputs are validated against a fixed token pattern, Microsoft
+OpenJDK 25.0.5.0.2 and JetBrains hotfix selection (neither distribution is used
+here), and fast-xml-parser 5.12.0 / fast-xml-builder 1.3.1 / strnum 2.5.1 /
+is-unsafe 2.0.3. Reviewed exact tag tarballs: the shipped `dist/cleanup/230` chunk
+is the former `80` cache/Azure bundle renumbered, differing only by those XML
+package fixes (negative-zero string handling); `dist/setup/772` is the renumbered
+Microsoft installer. No new child-process, network or eval use in changed shipped
+code; no install hooks. The Temurin path is unchanged. Clearance covers
+prebundled action usage only. Hosted exact-pin Android validation remains a
+release gate.
