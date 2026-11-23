@@ -1,0 +1,34 @@
+{
+  "result": "PASS",
+  "release": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.11.5",
+  "releaseId": 455941282,
+  "source": "ef94d788e60c133fab3ae8c216a6e39f7e3529a7",
+  "prerelease": false,
+  "latest": true,
+  "immutable": true,
+  "stableLatest": "v2026.11.5",
+  "publishedAt": "2026-11-23T20:13:45Z",
+  "notesMatchReviewedBytes": true,
+  "apkSignerVersionVerified": true,
+  "noteImagesVerified": 0,
+  "assets": {
+    "tandemlog-2026.11.5-android.apk": {
+      "sha256": "be38b49bfc5962e0f31a96ae2ea5608b777e70bc692a79d621f24fed3a5bb32c",
+      "size": 70123893
+    },
+    "tandemlog-2026.11.5-linux-x64.flatpak": {
+      "sha256": "4b54b1caced3463d6bf38afe4fd0f2c09b655a63820b9e15097491134c3a378f",
+      "size": 11923168
+    },
+    "tandemlog-2026.11.5-windows-x64-portable.zip": {
+      "sha256": "262e9376ecf72e6b75e651fda22f6acff8c496176c0c0dd04f8aa0202b9ec131",
+      "size": 20293127
+    },
+    "tandemlog-2026.11.5-windows-x64-setup.exe": {
+      "sha256": "a6a8bb6f3febf26d8cd71baee883c9f7d76e15fdfa1d9ff482e50662a2df59e1",
+      "size": 16650752
+    }
+  },
+  "priorReleasesUnchanged": 60,
+  "priorTagsUnchanged": 60
+}

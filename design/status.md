@@ -7,8 +7,8 @@ The dated log of every earlier build, trial and checkpoint is in
 
 ## Released
 
-Stable **2026.11.4 / build 125** is Latest, published 2026-11-16 from `d8832f17`
-(promotion of Lee-accepted 2026.11.4-rc.1/build124). [Receipts](../evidence/stable-2026.11.4/README.md).
+Stable **2026.11.5 / build 127** is Latest, published 2026-11-23 from `ef94d788`
+(promotion of Lee-accepted 2026.11.5-rc.1/build126). [Receipts](../evidence/stable-2026.11.5/README.md).
 It contains, at feature level (first stable release in brackets):
 
 - **Tasks:** quick capture into Inbox, one or several at a time; tags; separate
@@ -41,31 +41,21 @@ It contains, at feature level (first stable release in brackets):
 
 ## Current prerelease
 
-**2026.11.5-rc.1 / build126** is published as an experimental prerelease, not Latest.
-Agent `purchases plan` suggestions need a shared name word, `food add-another` dates
-new containers as the app does with blank retention, and text-edit saves normalize
-Repeat separators. Exact Android/GTK acceptance and anonymous all-four-asset
-verification PASS. [Evidence](../evidence/prerelease-2026.11.5-rc.1/README.md).
-Stable 2026.11.4 remains Latest; no stable promotion is authorized yet.
+None open. 2026.11.5-rc.1/build126 was promoted to stable 2026.11.5 and remains an unchanged prerelease.
 
 ## Current release line
 
-2026.11.4 promotes accepted RC124 without application changes. Since stable123:
-clearing Keeps for keeps typing in Keeps for, agent-edited expiration dates are no
-longer marked estimated, clearing Keeps for on a nonexistent product is a no-op,
-Keeps for accepts years, and Repeat lists tolerate missing/extra separator spaces
-(new input normalized to stable123-readable spelling). Signed candidate, scripted
-exact Android/GTK upgrades from RC124 and stable123 and anonymous public checks
-passed. [Evidence](../evidence/stable-2026.11.4/README.md).
+2026.11.5 promotes accepted RC126 without application changes. Since stable125:
+agent `purchases plan` suggests existing products only on a shared name word
+(singular or plural, closest first), agent `food add-another` dates new containers
+as the app does (today plus Keeps for, or blank) with blank retention, and text-edit
+saves normalize Repeat separators. Signed candidate, scripted exact Android/GTK
+upgrades from RC126 and stable125 and anonymous public checks passed.
+[Evidence](../evidence/stable-2026.11.5/README.md).
 
-## Unreleased since 2026.11.4
+## Unreleased since 2026.11.5
 
-- Agent `purchases plan` ranks its likely-product suggestions: name words only
-  (singular or plural), never a shared brand alone.
-- Agent `food add-another` dates new containers as the app's Add another (today +
-  Keeps for, else blank) instead of copying the source's date; retention blank.
-- A Task Save that changes Title/Notes and Repeat together normalizes Repeat list
-  separators like other saves (stable123-readable spelling).
+Nothing yet.
 
 ## Commands
 
