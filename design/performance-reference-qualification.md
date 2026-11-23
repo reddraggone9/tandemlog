@@ -39,7 +39,7 @@ The current schema-v2 registration is in `tool/performance/reference-host-v1.jso
   inventory. A native or dependency change needs new provenance review and
   re-registration before a request. Do not modify binaries or package roots to get a pass.
 - **Controller:** r8, SHA-256
-  `4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba`, with its pressure
+  `d3a975d2e91c4ef2c78db59ee420d848940322e923bc79f267321a26d01b6ef6`, with its pressure
   module `f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10`. The
   controller source is private; only its hash is published. r8 admits the household's
   idle `vex-adb.service` ADB server, so qualification does not stop it
@@ -679,6 +679,20 @@ growth comparisons use shapes measured within the same fresh invocation.
 The kernel update therefore needs fresh qualification, not new calibration or
 looser limits. The preflight-refused q19 had no sample; it remains immutable,
 and the new controller registration requires a fresh request.
+
+### ARC accounting kernel refresh (2026-11-23)
+
+The exact kernel guard moves from 7.3.4-arch1-1 to 7.3.5-arch1-1. The upstream
+7.3.4→7.3.5 incremental patch (kernel.org sha256 `3525ae46…67bf`) leaves
+`si_mem_available()` (`mm/show_mem.c`), `fs/proc/meminfo.c`, `mm/vmstat.c` and
+`kernel/sched/psi.c` untouched; its `mm/` changes are allocation-policy and
+fault fixes (atomic reserve access, costly `__GFP_NORETRY` slowpath, MGLRU tier
+bounds), not counter or watermark semantics. The Arch delta adds no accounting
+change. ZFS 2.4.4.r10.geb011f2aff-1, the arc_os.c hash and zfs_arc_pc_percent=0
+are unchanged. The revision changes only that literal; zero extra ARC credit,
+thresholds and every bound stay as before. New registered SHA256
+`d3a975d2e91c4ef2c78db59ee420d848940322e923bc79f267321a26d01b6ef6`; the prior controller and receipts are retained.
+As in 2026-11-14, a kernel change needs fresh qualification, not calibration.
 
 ### Dependency registration refresh (2026-11-15)
 

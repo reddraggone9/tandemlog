@@ -22,7 +22,7 @@ import sys
 import time
 
 CONTROLLER = None
-CONTROLLER_HASH = '4bf208fedb8033115888def45fe190a95febcbaecf2f76f55d3a4354244a36ba'
+CONTROLLER_HASH = 'd3a975d2e91c4ef2c78db59ee420d848940322e923bc79f267321a26d01b6ef6'
 PRESSURE_HASH = 'f67076216c21ae898dd0728132bbbfe388af307b8734c056f0ab5d05b7797e10'
 CLEAN = {'HOME': '/root', 'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'PYTHONDONTWRITEBYTECODE': '1'}
 PATH_KEYS = ('repo', 'request', 'output', 'dart', 'native_library', 'sqlite_library')
