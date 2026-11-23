@@ -1,0 +1,117 @@
+{
+  "scope": "Scripted version-only stable promotion on retained synthetic labs (Android emulator + isolated GTK Flatpak) as left by RC126 acceptance; RC126 workflow review reused (Lee 11-12: no new reviewers or manual walkthroughs for version-only promotion).",
+  "cases": {
+    "from-rc126": {
+      "case": "from-rc126",
+      "candidate": {
+        "source": "ef94d788e60c133fab3ae8c216a6e39f7e3529a7",
+        "candidate_run": "45250859311",
+        "version": "2026.11.5",
+        "build": 127,
+        "apk_sha256": "be38b49bfc5962e0f31a96ae2ea5608b777e70bc692a79d621f24fed3a5bb32c",
+        "flatpak_sha256": "4b54b1caced3463d6bf38afe4fd0f2c09b655a63820b9e15097491134c3a378f"
+      },
+      "started": "2026-11-23T14:10:49-0600",
+      "baseline": {
+        "android": [
+          126,
+          "2026.11.5-rc.1"
+        ],
+        "gtk": "2026.11.5-rc.1"
+      },
+      "identity": {
+        "userId": "10168",
+        "firstInstallTime": "2026-09-30 17:04:11"
+      },
+      "installUnchangedCanonical": {
+        "android": 3,
+        "gtk": 4
+      },
+      "android": [
+        "launch",
+        "cold-reopen1",
+        "cold-reopen2"
+      ],
+      "gtk": [
+        {
+          "coldReopen": 1,
+          "window": "2097157",
+          "normalExitStatus": 0
+        },
+        {
+          "coldReopen": 2,
+          "window": "2097156",
+          "normalExitStatus": 0
+        }
+      ],
+      "afterUsePrefixPreserved": {
+        "android": 3,
+        "gtk": 4
+      },
+      "sqliteIntegrity": [
+        "android-profile/files/local.sqlite",
+        "gtk/local.sqlite"
+      ],
+      "result": "PASS",
+      "finished": "2026-11-23T14:11:44-0600"
+    },
+    "from-stable125": {
+      "case": "from-stable125",
+      "candidate": {
+        "source": "ef94d788e60c133fab3ae8c216a6e39f7e3529a7",
+        "candidate_run": "45250859311",
+        "version": "2026.11.5",
+        "build": 127,
+        "apk_sha256": "be38b49bfc5962e0f31a96ae2ea5608b777e70bc692a79d621f24fed3a5bb32c",
+        "flatpak_sha256": "4b54b1caced3463d6bf38afe4fd0f2c09b655a63820b9e15097491134c3a378f"
+      },
+      "started": "2026-11-23T14:11:47-0600",
+      "restore": {
+        "android": "pm install -r -d exact public 125 APK; RC126 before/ canonical+profile restored",
+        "gtk": "exact public 125 Flatpak reinstalled; RC126 before/gtk restored"
+      },
+      "baseline": {
+        "android": [
+          125,
+          "2026.11.4"
+        ],
+        "gtk": "2026.11.4"
+      },
+      "identity": {
+        "userId": "10168",
+        "firstInstallTime": "2026-09-30 17:04:11"
+      },
+      "installUnchangedCanonical": {
+        "android": 3,
+        "gtk": 3
+      },
+      "android": [
+        "launch",
+        "cold-reopen1",
+        "cold-reopen2"
+      ],
+      "gtk": [
+        {
+          "coldReopen": 1,
+          "window": "2097156",
+          "normalExitStatus": 0
+        },
+        {
+          "coldReopen": 2,
+          "window": "2097156",
+          "normalExitStatus": 0
+        }
+      ],
+      "afterUsePrefixPreserved": {
+        "android": 3,
+        "gtk": 3
+      },
+      "sqliteIntegrity": [
+        "android-profile/files/local.sqlite",
+        "gtk/local.sqlite"
+      ],
+      "result": "PASS",
+      "finished": "2026-11-23T14:12:45-0600"
+    }
+  }
+}
