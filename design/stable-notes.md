@@ -1,7 +1,5 @@
-# 2026.11.4
+# 2026.11.5
 
-- Clearing Keeps for no longer moves typing into Food name.
-- Expiration dates edited through the agent interface are no longer marked estimated.
-- Clearing Keeps for for a nonexistent product no longer creates an empty product.
-- Keeps for accepts years as well as days, weeks and months.
-- Repeat lists accept missing or extra spaces around separators.
+- `purchases plan` suggests existing products by name, singular or plural, closest match first, instead of on a shared brand alone.
+- `food add-another` now dates the new container as the app does (today plus the product's Keeps for, or blank) instead of copying the original's date.
+- `food add-another` no longer copies the original container's retention reason.
