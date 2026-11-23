@@ -1,6 +1,6 @@
 # Development status
 
-Current state only (checked 2026-11-16 against release receipts and source).
+Current state only (checked 2026-11-23 against release receipts and source).
 The dated log of every earlier build, trial and checkpoint is in
 [archive/status-history.md](archive/status-history.md); per-release receipts are in
 [releases.md](releases.md) and `evidence/`.
@@ -41,7 +41,12 @@ It contains, at feature level (first stable release in brackets):
 
 ## Current prerelease
 
-None open. 2026.11.4-rc.1/build124 was promoted to stable 2026.11.4 and remains an unchanged prerelease.
+**2026.11.5-rc.1 / build126** is published as an experimental prerelease, not Latest.
+Agent `purchases plan` suggestions need a shared name word, `food add-another` dates
+new containers as the app does with blank retention, and text-edit saves normalize
+Repeat separators. Exact Android/GTK acceptance and anonymous all-four-asset
+verification PASS. [Evidence](../evidence/prerelease-2026.11.5-rc.1/README.md).
+Stable 2026.11.4 remains Latest; no stable promotion is authorized yet.
 
 ## Current release line
 

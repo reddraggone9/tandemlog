@@ -1,0 +1,89 @@
+{
+  "candidateRun": "45228517132",
+  "source": "f5de444d283d3ccaa85b6abd081c2b7be98e2418",
+  "version": "2026.11.5-rc.1",
+  "build": 126,
+  "apkSha256": "85e794289e305ad6a73ac260eb3985723a49c62515ad21fcadc2f3729d52267b",
+  "flatpakSha256": "7d0a13988d76b16a9cf8662b9bbb3ba8dca830c1f562ad1bc5bf7513009e2376",
+  "upgradeFrom": {
+    "version": "2026.11.4",
+    "build": 125,
+    "apkSha256": "0e3b000e9898003c66d68d00b3e9b08275f0f936f9885cbc85bdf4da7dd1d492",
+    "note": "retained RC124 labs left on public stable125 by the stable-2026.11.4 acceptance; installed APK bytes verified equal to the public asset"
+  },
+  "canonicalUnchangedByInstall": {
+    "android": true,
+    "gtk": true
+  },
+  "canonicalPrefixAfterUse": {
+    "android": true,
+    "gtk": true
+  },
+  "sqliteIntegrity": true,
+  "androidInstallIdentity": "userId and firstInstallTime unchanged (2026-09-30 17:04:11)",
+  "folderGrantRetained": true,
+  "exactFlatpakCli": {
+    "purchasesPlanLikely": {
+      "1": [
+        "RC117 Kefir"
+      ],
+      "3": [
+        "Seed beans",
+        "RC121 Beans"
+      ],
+      "4": [
+        "RC117 transformed soup"
+      ]
+    },
+    "brandOnlyLineSuggested": false,
+    "addAnotherKeepsFor1Week": {
+      "name": "RC117 manual yogurt",
+      "brand": "",
+      "expiry": "2026-11-30",
+      "estimated": null,
+      "retention": "",
+      "location": "RC117 fridge",
+      "size": ""
+    },
+    "addAnotherNoKeepsFor": {
+      "name": "RC117 Kefir",
+      "brand": "",
+      "expiry": null,
+      "estimated": null,
+      "retention": "",
+      "location": "RC117 fridge",
+      "size": ""
+    },
+    "textEditRepeatStored": "every week on Monday, Thursday",
+    "verify": {
+      "v": 1,
+      "passed": true,
+      "logs": 3,
+      "records": 75,
+      "bytes": 148565
+    }
+  },
+  "gtk": {
+    "coldReopens": 2,
+    "normalExitStatus": [
+      0,
+      0
+    ],
+    "appShowsCliWrites": "undated add-another in Inbox; 18 active containers"
+  },
+  "android": {
+    "coldReopens": 2,
+    "activityStartStatus": [
+      "ok",
+      "ok"
+    ],
+    "foodListUsable": true
+  },
+  "notCovered": [
+    "Windows GUI (Lee's own trial; hosted install/portable gates passed)",
+    "app text editor path for task.textEdited (exercised through exact CLI tasks edit; store-level test covers both)",
+    "Android CLI does not exist; Android changes are none beyond shared engine"
+  ],
+  "at": "2026-11-23T18:07:15.248671+00:00",
+  "result": "PASS"
+}
